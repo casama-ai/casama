@@ -73,7 +73,7 @@ Directory _dir(Command<int> c) {
   final path = given ?? Platform.environment['CASAMA_SELFHOST_DIR'] ?? Directory.current.path;
   final d = Directory(path);
   if (!File(p.join(d.path, 'install.sh')).existsSync()) {
-    throw CliError('not_a_checkout', 'No install.sh in ${d.path}. Clone github.com/stackwares/casama and pass --dir.');
+    throw CliError('not_a_checkout', 'No install.sh in ${d.path}. Pass --dir with a Casama Engine checkout.');
   }
   return d;
 }

@@ -16,7 +16,7 @@ brew install stackwares/tap/casama
 
 ### Release binaries
 
-Each CLI release on [GitHub](https://github.com/casama-ai/casama/releases) (tagged `cli-v<version>`)
+Each CLI release on [GitHub](https://github.com/stackwares/casama-releases/releases) (tagged `cli-v<version>`)
 has a native binary for each platform, with a SHA-256 checksum file next to it:
 
 | Platform | File |
