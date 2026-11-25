@@ -56,8 +56,8 @@ describe("routine ideas and plugins", () => {
   it("pins a plugin to a full commit on GitHub", () => {
     const p = {
       description: "Example.",
-      url: "https://github.com/stackwares/casama/tree/main/examples/hello-plugin",
-      commit: "6efc18250f69b9c2938b689076384237324136e3",
+      url: "https://github.com/casama-ai/casama/tree/main/examples/hello-plugin",
+      commit: "9ae3da77b6fd95fff461cf7c7b48c0289096eed6",
       adds: ["A skill"],
     };
     expect(checkPluginDocument(p).errors).toEqual([]);

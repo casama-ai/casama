@@ -120,7 +120,7 @@ cron.
 ```json
 { "description": "A small example plugin: a stand-up skill and a notes server.",
   "url": "https://github.com/casama-ai/casama/tree/main/examples/hello-plugin",
-  "commit": "6efc18250f69b9c2938b689076384237324136e3",
+  "commit": "9ae3da77b6fd95fff461cf7c7b48c0289096eed6",
   "icon": "puzzle",
   "adds": ["A stand-up skill", "A notes server on the bot's computer"] }
 ```
