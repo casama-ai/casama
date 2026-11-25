@@ -1,0 +1,17 @@
+# Flutter test files that must run in their own isolate (not bundled into a shard).
+# One path per line, relative to client/ (for example: test/companion_io_test.dart).
+# Add a file here only if it has @TestOn constraints or process-global state that cannot
+# be cleanly reset in tearDown.
+
+test/companion_io_test.dart # @TestOn('mac-os || linux')
+test/admin_security_gate_test.dart # isolate-global gate/clock state
+test/app_browser_panel_test.dart # isolate-global platform/browser state
+test/app_lock_test.dart # isolate-global app-lock state
+test/call_background_test.dart # isolate-global CallKit/audio-session channel state
+test/coding_agents_test.dart # isolate-global state
+test/desktop_sign_in_test.dart # real loopback listener / HttpOverrides
+test/local_mcp_test.dart # isolate-global state
+test/mascot_lottie_test.dart # Lottie asset/animation state
+test/navigation_test.dart # isolate-global layout/platform state
+test/painted_cover_test.dart # isolate-global reduce-motion/ticker state
+test/route_title_test.dart # isolate-global browser title state

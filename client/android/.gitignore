@@ -1,0 +1,27 @@
+gradle-wrapper.jar
+/.gradle
+/captures/
+/gradlew
+/gradlew.bat
+/local.properties
+GeneratedPluginRegistrant.java
+.cxx/
+# Kotlin compiler caches from Gradle builds.
+.kotlin/
+
+# Remember to never publicly share your keystore.
+# See https://flutter.dev/to/reference-keystore
+key.properties
+**/*.keystore
+**/*.jks
+
+# Crashlytics mapping file id, written by scripts/package-android.sh for each official build (D-416).
+app/src/main/res/values/crashlytics_mapping_id.xml
+app/src/main/res/values/firebase_ids.xml
+app/src/main/assets/sentry-debug-meta.properties
+
+# Written by scripts/app-browser-switch.sh: compiles the phone browser in (docs/PHONE-BROWSER-PLAN.md).
+app-browser.on
+
+# Written by scripts/app-functions-switch.sh: compiles AppFunctions in (docs/ANDROID-APPFUNCTIONS-PLAN.md).
+app-functions.on

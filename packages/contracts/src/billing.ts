@@ -1,0 +1,309 @@
+import { z } from "@hono/zod-openapi";
+import { Uuid } from "./common.ts";
+import { BillingComp } from "./comps.ts";
+import { SavedLimitReset } from "./limit-resets.ts";
+
+const ts = z.iso.datetime({ offset: true });
+const Source = z.enum(["dodo", "app_store", "google_play"]).openapi("BillingSource");
+const Limits = z.record(z.string(), z.number());
+
+export const Plan = z
+  .object({
+    code: z.string(),
+    name: z.string(),
+    /** `week` plans are only listed for apps that ask for them (`?periods=week`, D-432). */
+    interval: z.enum(["none", "week", "month", "year"]),
+    limits: Limits,
+    price_label: z.string().nullable(),
+    /** Can be bought with web checkout (Dodo). */
+    web: z.boolean(),
+    store_product_ids: z.record(z.string(), z.string()),
+    /** The plan the paywall opens on: its tier for a Free workspace, its period for everyone (D-332). */
+    paywall_default: z.boolean().optional(),
+    /** Marked "Most popular" on the paywall (D-332). */
+    paywall_popular: z.boolean().optional(),
+  })
+  .openapi("Plan");
+
+export const CreditPack = z
+  .object({
+    code: z.string(),
+    name: z.string(),
+    credits_usd: z.number(),
+    web: z.boolean(),
+    /** The web price (D-244); store prices come from the store and are higher. */
+    price_label: z.string().nullable().optional(),
+    store_product_ids: z.record(z.string(), z.string()).optional(),
+  })
+  .openapi("CreditPack");
+
+export const PlanCatalog = z
+  .object({
+    enabled: z.boolean(),
+    plans: z.array(Plan),
+    packs: z.array(CreditPack),
+  })
+  .openapi("PlanCatalog");
+
+export const Subscription = z
+  .object({
+    id: Uuid,
+    source: Source,
+    plan_code: z.string(),
+    status: z.string(),
+    current_period_end: ts.nullable(),
+    cancel_at_period_end: z.boolean(),
+  })
+  .openapi("Subscription");
+
+export const BillingSummary = z
+  .object({
+    enabled: z.boolean().openapi({ description: "False on self-hosted servers: no paywall" }),
+    plan_code: z.string(),
+    plan_name: z.string(),
+    interval: z.string(),
+    limits: Limits,
+    unlimited: z.boolean(),
+    valid_until: ts.nullable(),
+    source: z.enum(["default", "dodo", "app_store", "google_play"]),
+    cancel_at_period_end: z.boolean(),
+    extra_seats: z
+      .number()
+      .int()
+      .optional()
+      .openapi({ description: "People paid for beyond the plan's seats (D-249)" }),
+    trial_available: z
+      .boolean()
+      .optional()
+      .openapi({ description: "The owner can still start a plan's free trial (D-249)" }),
+    resets: z.array(SavedLimitReset).optional(),
+    credits_usd: z.number(),
+    daily: z
+      .object({
+        used_usd: z.number().openapi({ description: "Spent today (UTC) on the server's keys" }),
+        cap_usd: z.number().openapi({ description: "The plan's daily cap on the server's keys" }),
+        resets_at: ts.openapi({ description: "Next midnight UTC, when the day's spend resets" }),
+      })
+      .nullable()
+      .optional()
+      .openapi({
+        description:
+          "Today's spend against the plan's daily cap; runs stop when it is reached (D-311). Null when no cap applies",
+      }),
+    computer_hours: z
+      .object({
+        used_hours: z
+          .number()
+          .openapi({ description: "Hosted computer hours used this month (UTC)" }),
+        limit_hours: z.number().openapi({ description: "The plan's computer hours a month" }),
+        resets_at: ts.openapi({
+          description: "The first of next month (UTC), when the hours reset",
+        }),
+      })
+      .nullable()
+      .optional()
+      .openapi({
+        description:
+          "This month's hosted computer hours against the plan's. Past them only computers stop; chat keeps running on credits (D-442). Null when no limit applies",
+      }),
+    sandbox: z.boolean().optional().openapi({
+      description:
+        "The plan was bought with a store test account (TestFlight, App Review, Play license testers): it has tester limits (docs/SANDBOX-LIMITS-PLAN.md)",
+    }),
+    comp: BillingComp.nullable().optional().openapi({
+      description:
+        "A plan given free by Casama, while it runs (docs/COMP-PLANS-PLAN.md). `source` then says default, for older apps",
+    }),
+    casama_models: z.enum(["on", "off"]).optional().openapi({
+      description:
+        "Whether Casama's own model keys are available on this workspace's plan (docs/OWN-KEYS-PLAN.md §6)",
+    }),
+    casama_models_note: z.string().nullable().optional().openapi({
+      description:
+        "Optional note from the instance owner when Casama's models are turned off (§3.3)",
+    }),
+    subscriptions: z.array(Subscription),
+    providers: z.array(Source),
+  })
+  .openapi("BillingSummary");
+
+/** A Dodo Payments discount code: 3–64 letters, digits, hyphens or underscores. */
+export const DiscountCode = z
+  .string()
+  .trim()
+  .regex(
+    /^[A-Za-z0-9_-]{3,64}$/,
+    "Discount codes are 3 to 64 letters, digits, hyphens or underscores",
+  )
+  .openapi({
+    description: "Discount code (case-insensitive, 3–64 letters, digits, hyphens or underscores)",
+  });
+
+export const CheckoutRequest = z
+  .object({
+    plan_code: z.string().optional(),
+    pack_code: z.string().optional(),
+    return_url: z.url().optional(),
+    discount_code: DiscountCode.optional(),
+    expected_total: z
+      .number()
+      .int()
+      .optional()
+      .openapi({ description: "Immediate total from preview, in minor units (e.g. cents)" }),
+    expected_currency: z
+      .string()
+      .length(3)
+      .optional()
+      .openapi({ description: "ISO 4217 currency code matching expected_total (e.g. USD)" }),
+    new_subscription_only: z.boolean().optional().openapi({
+      description:
+        "Only start a new subscription. When the workspace already has one, answer 409 subscription_exists instead of changing it (the app previews first)",
+    }),
+  })
+  .refine((v) => !!v.plan_code !== !!v.pack_code, {
+    message: "Give exactly one of plan_code or pack_code",
+  })
+  .openapi("CheckoutRequest");
+
+export const PlanChangePreviewRequest = z
+  .object({
+    plan_code: z.string().min(1),
+    discount_code: DiscountCode.optional(),
+  })
+  .openapi("PlanChangePreviewRequest");
+
+export const PlanChangePreview = z
+  .object({
+    plan_code: z.string(),
+    plan_name: z.string(),
+    interval: z.enum(["week", "month", "year"]),
+    currency: z.string().openapi({ description: "ISO 4217 currency code (e.g. USD)" }),
+    immediate_total: z
+      .number()
+      .int()
+      .openapi({ description: "Total charged now including tax, in minor units (e.g. cents)" }),
+    immediate_tax: z
+      .number()
+      .int()
+      .openapi({ description: "Tax included in immediate_total, in minor units" }),
+    credit: z.number().int().openapi({
+      description: "Credit for the unused part of the current period, in minor units",
+    }),
+    recurring_pre_tax: z
+      .number()
+      .int()
+      .openapi({ description: "Renewal price before tax, in minor units" }),
+    next_billing_date: ts.nullable(),
+    discount_applied: z.boolean(),
+    discount_code: z.string().nullable().optional(),
+    discount_percent: z.number().nullable().optional().openapi({
+      description: "Percentage off (e.g. 25 for 25% off) when a percentage code applies",
+    }),
+    discount_amount: z.number().int().nullable().optional().openapi({
+      description:
+        "What a flat code takes off the renewal price, in minor units of `currency` (the difference between the renewal price without and with it)",
+    }),
+    discount_cycles: z
+      .number()
+      .int()
+      .nullable()
+      .optional()
+      .openapi({ description: "Number of renewals the code applies to; null means every renewal" }),
+    discount_preserved: z.boolean().optional().openapi({
+      description:
+        "Whether the discount stays on later plan changes. When false, it ends if the plan changes again",
+    }),
+    replaces_discount: z.boolean().optional().openapi({
+      description:
+        "The code replaces a discount the subscription keeps today (Dodo's `discount_codes` replaces them)",
+    }),
+    replaced_discount_percent: z.number().nullable().optional().openapi({
+      description: "The replaced discount's percentage, when it was a percentage discount",
+    }),
+  })
+  .openapi("PlanChangePreview");
+
+export const SeatsRequest = z
+  .object({
+    extra: z
+      .number()
+      .int()
+      .min(0)
+      .max(100)
+      .openapi({ description: "People to pay for beyond the plan's seats" }),
+  })
+  .openapi("SeatsRequest");
+
+export const PortalRequest = z.object({ return_url: z.url().optional() }).openapi("PortalRequest");
+
+export const RedirectUrl = z.object({ url: z.url() }).openapi("RedirectUrl");
+
+/**
+ * A checkout page, or `changed: true` when an existing web subscription was moved to the plan in
+ * place (D-248); `url` is then the return page, so older apps that open it still land somewhere.
+ */
+export const CheckoutResult = z
+  .object({ url: z.url(), changed: z.boolean().optional() })
+  .openapi("CheckoutResult");
+
+export const PurchaseRequest = z
+  .object({
+    source: z.enum(["app_store", "google_play"]),
+    product_id: z.string().min(1),
+    transaction_id: z.string().optional().openapi({ description: "App Store transaction id" }),
+    purchase_token: z.string().optional().openapi({ description: "Google Play purchase token" }),
+  })
+  .openapi("PurchaseRequest");
+
+export const BillingUsageItem = z
+  .object({
+    kind: z.string(),
+    instance: z.string().nullable().openapi({ description: "Casama Link instance, if any" }),
+    quantity: z.number(),
+    cost_usd: z.number(),
+  })
+  .openapi("BillingUsageItem");
+
+export const CreditEntry = z
+  .object({
+    delta: z.number(),
+    reason: z.string(),
+    note: z.string().nullable(),
+    balance_after: z.number(),
+    created_at: ts,
+  })
+  .openapi("CreditEntry");
+
+export const BillingUsage = z
+  .object({
+    period_start: ts,
+    items: z.array(BillingUsageItem),
+    total_usd: z.number(),
+    credits: z.array(CreditEntry),
+  })
+  .openapi("BillingUsage");
+
+export const LinkKey = z
+  .object({
+    id: Uuid,
+    instance_name: z.string(),
+    key_hint: z.string(),
+    scopes: z.array(z.string()),
+    last_used_at: ts.nullable(),
+    created_at: ts,
+  })
+  .openapi("LinkKey");
+
+export const CreateLinkKeyRequest = z
+  .object({
+    instance_name: z.string().min(1).max(80),
+    scopes: z
+      .array(z.enum(["computers", "models", "remote_access", "push"]))
+      .min(1)
+      .optional(),
+  })
+  .openapi("CreateLinkKeyRequest");
+
+export const CreatedLinkKey = LinkKey.extend({
+  key: z.string().openapi({ description: "Shown once; set it as CASAMA_CLOUD_KEY" }),
+}).openapi("CreatedLinkKey");

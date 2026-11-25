@@ -1,0 +1,8 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <!-- Merged only with CASAMA_ANDROID_AD_ID=0 (D-573): removes the advertising id permission that
+         Meta's SDK (facebook-core) and firebase_analytics would otherwise merge in. Play refuses such a
+         bundle while its Advertising ID declaration says Yes, so don't send one to Play unless the
+         declaration goes back to No. -->
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID" tools:node="remove" />
+</manifest>

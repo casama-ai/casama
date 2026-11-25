@@ -1,0 +1,498 @@
+//
+// AUTO-GENERATED FILE, DO NOT MODIFY!
+//
+
+// ignore_for_file: unused_element
+import 'package:casama_api/src/model/site_kind.dart';
+import 'package:casama_api/src/model/local_capabilities.dart';
+import 'package:copy_with_extension/copy_with_extension.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+part 'created_local_device.g.dart';
+
+
+@CopyWith()
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class CreatedLocalDevice {
+  /// Returns a new [CreatedLocalDevice] instance.
+  CreatedLocalDevice({
+
+    required  this.id,
+
+    required  this.orgId,
+
+    required  this.userId,
+
+    required  this.computerId,
+
+    required  this.name,
+
+    required  this.platform,
+
+     this.system,
+
+     this.osVersion,
+
+    required  this.capabilities,
+
+    required  this.allowedRoots,
+
+    required  this.allowedBotIds,
+
+     this.allBots,
+
+     this.browserMode,
+
+     this.allowedSites,
+
+     this.blockedSites,
+
+     this.neverAskSites,
+
+     this.allowedKinds,
+
+     this.allowedCodingAgents,
+
+    required  this.enabled,
+
+    required  this.online,
+
+    required  this.lastSeenAt,
+
+    required  this.createdAt,
+
+    required  this.token,
+  });
+
+  @JsonKey(
+    
+    name: r'id',
+    required: true,
+    includeIfNull: false,
+  )
+
+
+  final String id;
+
+
+
+  @JsonKey(
+    
+    name: r'org_id',
+    required: true,
+    includeIfNull: false,
+  )
+
+
+  final String orgId;
+
+
+
+  @JsonKey(
+    
+    name: r'user_id',
+    required: true,
+    includeIfNull: false,
+  )
+
+
+  final String userId;
+
+
+
+  @JsonKey(
+    
+    name: r'computer_id',
+    required: true,
+    includeIfNull: true,
+  )
+
+
+  final String? computerId;
+
+
+
+  @JsonKey(
+    
+    name: r'name',
+    required: true,
+    includeIfNull: false,
+  )
+
+
+  final String name;
+
+
+
+      /// \"chrome\": a browser-only device (Casama for Chrome, D-323): no computer, browser tools only. \"app\": the browser inside the Casama app on a phone or tablet; listed only with all_platforms=true, because older apps read this strictly
+  @JsonKey(
+    
+    name: r'platform',
+    required: true,
+    includeIfNull: false,
+  )
+
+
+  final CreatedLocalDevicePlatformEnum platform;
+
+
+
+      /// For platform \"app\": which system the device runs
+  @JsonKey(
+    
+    name: r'system',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final CreatedLocalDeviceSystemEnum? system;
+
+
+
+      /// What the desktop app reported when it last connected, e.g. \"macOS 26.2\"
+  @JsonKey(
+    
+    name: r'os_version',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final String? osVersion;
+
+
+
+  @JsonKey(
+    
+    name: r'capabilities',
+    required: true,
+    includeIfNull: false,
+  )
+
+
+  final LocalCapabilities capabilities;
+
+
+
+  @JsonKey(
+    
+    name: r'allowed_roots',
+    required: true,
+    includeIfNull: false,
+  )
+
+
+  final List<String> allowedRoots;
+
+
+
+  @JsonKey(
+    
+    name: r'allowed_bot_ids',
+    required: true,
+    includeIfNull: false,
+  )
+
+
+  final List<String> allowedBotIds;
+
+
+
+      /// In-app browser: every bot the person can chat with may use it; false limits it to allowed_bot_ids
+  @JsonKey(
+    
+    name: r'all_bots',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final bool? allBots;
+
+
+
+      /// In-app browser: \"ask\" (choice card when it helps), \"computer\" (always the bot's computer), \"device\" (prefer this device)
+  @JsonKey(
+    
+    name: r'browser_mode',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final CreatedLocalDeviceBrowserModeEnum? browserMode;
+
+
+
+      /// Browser: sites bots may act on without asking (D-323 C6)
+  @JsonKey(
+    
+    name: r'allowed_sites',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final List<String>? allowedSites;
+
+
+
+      /// Browser: sites bots may never act on
+  @JsonKey(
+    
+    name: r'blocked_sites',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final List<String>? blockedSites;
+
+
+
+      /// In-app browser: sites remembered as the bot's computer (never show the choice card)
+  @JsonKey(
+    
+    name: r'never_ask_sites',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final List<String>? neverAskSites;
+
+
+
+      /// Browser: off-by-default kinds of site switched back on; they still ask
+  @JsonKey(
+    
+    name: r'allowed_kinds',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final List<SiteKind>? allowedKinds;
+
+
+
+      /// Coding agents beyond the built-in five that the owner allowed on this computer (D-370)
+  @JsonKey(
+    
+    name: r'allowed_coding_agents',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final List<String>? allowedCodingAgents;
+
+
+
+  @JsonKey(
+    
+    name: r'enabled',
+    required: true,
+    includeIfNull: false,
+  )
+
+
+  final bool enabled;
+
+
+
+  @JsonKey(
+    
+    name: r'online',
+    required: true,
+    includeIfNull: false,
+  )
+
+
+  final bool online;
+
+
+
+  @JsonKey(
+    
+    name: r'last_seen_at',
+    required: true,
+    includeIfNull: true,
+  )
+
+
+  final DateTime? lastSeenAt;
+
+
+
+  @JsonKey(
+    
+    name: r'created_at',
+    required: true,
+    includeIfNull: false,
+  )
+
+
+  final DateTime createdAt;
+
+
+
+      /// Device token, shown once; the app keeps it in secure storage
+  @JsonKey(
+    
+    name: r'token',
+    required: true,
+    includeIfNull: false,
+  )
+
+
+  final String token;
+
+
+
+
+
+    @override
+    bool operator ==(Object other) => identical(this, other) || other is CreatedLocalDevice &&
+      other.id == id &&
+      other.orgId == orgId &&
+      other.userId == userId &&
+      other.computerId == computerId &&
+      other.name == name &&
+      other.platform == platform &&
+      other.system == system &&
+      other.osVersion == osVersion &&
+      other.capabilities == capabilities &&
+      other.allowedRoots == allowedRoots &&
+      other.allowedBotIds == allowedBotIds &&
+      other.allBots == allBots &&
+      other.browserMode == browserMode &&
+      other.allowedSites == allowedSites &&
+      other.blockedSites == blockedSites &&
+      other.neverAskSites == neverAskSites &&
+      other.allowedKinds == allowedKinds &&
+      other.allowedCodingAgents == allowedCodingAgents &&
+      other.enabled == enabled &&
+      other.online == online &&
+      other.lastSeenAt == lastSeenAt &&
+      other.createdAt == createdAt &&
+      other.token == token;
+
+    @override
+    int get hashCode =>
+        id.hashCode +
+        orgId.hashCode +
+        userId.hashCode +
+        (computerId == null ? 0 : computerId.hashCode) +
+        name.hashCode +
+        platform.hashCode +
+        (system == null ? 0 : system.hashCode) +
+        (osVersion == null ? 0 : osVersion.hashCode) +
+        capabilities.hashCode +
+        allowedRoots.hashCode +
+        allowedBotIds.hashCode +
+        allBots.hashCode +
+        browserMode.hashCode +
+        allowedSites.hashCode +
+        blockedSites.hashCode +
+        neverAskSites.hashCode +
+        allowedKinds.hashCode +
+        allowedCodingAgents.hashCode +
+        enabled.hashCode +
+        online.hashCode +
+        (lastSeenAt == null ? 0 : lastSeenAt.hashCode) +
+        createdAt.hashCode +
+        token.hashCode;
+
+  factory CreatedLocalDevice.fromJson(Map<String, dynamic> json) => _$CreatedLocalDeviceFromJson(json);
+
+  Map<String, dynamic> toJson() => _$CreatedLocalDeviceToJson(this);
+
+  @override
+  String toString() {
+    return toJson().toString();
+  }
+
+}
+
+/// \"chrome\": a browser-only device (Casama for Chrome, D-323): no computer, browser tools only. \"app\": the browser inside the Casama app on a phone or tablet; listed only with all_platforms=true, because older apps read this strictly
+enum CreatedLocalDevicePlatformEnum {
+    /// \"chrome\": a browser-only device (Casama for Chrome, D-323): no computer, browser tools only. \"app\": the browser inside the Casama app on a phone or tablet; listed only with all_platforms=true, because older apps read this strictly
+@JsonValue(r'macos')
+macos(r'macos'),
+    /// \"chrome\": a browser-only device (Casama for Chrome, D-323): no computer, browser tools only. \"app\": the browser inside the Casama app on a phone or tablet; listed only with all_platforms=true, because older apps read this strictly
+@JsonValue(r'windows')
+windows(r'windows'),
+    /// \"chrome\": a browser-only device (Casama for Chrome, D-323): no computer, browser tools only. \"app\": the browser inside the Casama app on a phone or tablet; listed only with all_platforms=true, because older apps read this strictly
+@JsonValue(r'linux')
+linux(r'linux'),
+    /// \"chrome\": a browser-only device (Casama for Chrome, D-323): no computer, browser tools only. \"app\": the browser inside the Casama app on a phone or tablet; listed only with all_platforms=true, because older apps read this strictly
+@JsonValue(r'chrome')
+chrome(r'chrome'),
+    /// \"chrome\": a browser-only device (Casama for Chrome, D-323): no computer, browser tools only. \"app\": the browser inside the Casama app on a phone or tablet; listed only with all_platforms=true, because older apps read this strictly
+@JsonValue(r'app')
+app(r'app');
+
+const CreatedLocalDevicePlatformEnum(this.value);
+
+final String value;
+
+@override
+String toString() => value;
+}
+
+
+/// For platform \"app\": which system the device runs
+enum CreatedLocalDeviceSystemEnum {
+    /// For platform \"app\": which system the device runs
+@JsonValue(r'ios')
+ios(r'ios'),
+    /// For platform \"app\": which system the device runs
+@JsonValue(r'android')
+android(r'android'),
+    /// For platform \"app\": which system the device runs
+@JsonValue(r'macos')
+macos(r'macos'),
+    /// For platform \"app\": which system the device runs
+@JsonValue(r'linux')
+linux(r'linux'),
+    /// For platform \"app\": which system the device runs
+@JsonValue(r'windows')
+windows(r'windows');
+
+const CreatedLocalDeviceSystemEnum(this.value);
+
+final String value;
+
+@override
+String toString() => value;
+}
+
+
+/// In-app browser: \"ask\" (choice card when it helps), \"computer\" (always the bot's computer), \"device\" (prefer this device)
+enum CreatedLocalDeviceBrowserModeEnum {
+    /// In-app browser: \"ask\" (choice card when it helps), \"computer\" (always the bot's computer), \"device\" (prefer this device)
+@JsonValue(r'ask')
+ask(r'ask'),
+    /// In-app browser: \"ask\" (choice card when it helps), \"computer\" (always the bot's computer), \"device\" (prefer this device)
+@JsonValue(r'computer')
+computer(r'computer'),
+    /// In-app browser: \"ask\" (choice card when it helps), \"computer\" (always the bot's computer), \"device\" (prefer this device)
+@JsonValue(r'device')
+device(r'device');
+
+const CreatedLocalDeviceBrowserModeEnum(this.value);
+
+final String value;
+
+@override
+String toString() => value;
+}
+
+

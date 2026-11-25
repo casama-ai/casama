@@ -1,0 +1,25 @@
+# Written by the sync from Casama's private repository.
+node_modules/
+dist/
+.turbo/
+coverage/
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+.dart_tool/
+build/
+pubspec_overrides.yaml
+*.secret
+*.secrets.json
+dart-defines*.json
+client/config/telemetry.json
+client/config/maps.json
+.live/
+live-check*.log
+*service-account*.json
+GoogleService-Info.plist
+google-services.json
+__pycache__/
+.wrangler/

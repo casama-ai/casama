@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "notes": "One vocabulary for the assistants that use Casama (D-567 §5): the hosted MCP's tools, Siri's App Intents (D-564) and the Android AppFunctions. The same action means the same thing everywhere. null: that side doesn't offer it, on purpose. Tests on each side check their list against this file (apps/server/test/assistant-actions.test.ts for MCP and Siri).",
+  "actions": [
+    {
+      "action": "ask_bot",
+      "mcp": "ask_bot",
+      "siri": "AskBotIntent",
+      "android": "askBot"
+    },
+    {
+      "action": "what_needs_me",
+      "mcp": "what_needs_me",
+      "siri": "WhatNeedsMeIntent",
+      "android": "whatNeedsMe"
+    },
+    {
+      "action": "run_routine",
+      "mcp": "run_routine",
+      "siri": "RunRoutineIntent",
+      "android": "runRoutine"
+    },
+    {
+      "action": "list_bots",
+      "mcp": "list_bots",
+      "siri": "BotEntity",
+      "android": "listBots"
+    },
+    {
+      "action": "list_routines",
+      "mcp": "list_routines",
+      "siri": "RoutineEntity",
+      "android": "listRoutines"
+    },
+    {
+      "action": "open_in_casama",
+      "mcp": null,
+      "siri": "OpenChatIntent",
+      "android": "openInCasama"
+    },
+    {
+      "action": "list_approvals",
+      "mcp": "list_approvals",
+      "siri": null,
+      "android": null
+    },
+    {
+      "action": "decide_approval",
+      "mcp": "decide_approval",
+      "siri": null,
+      "android": null,
+      "gemini": "never decides: returns the approval's link in Casama (D-567 §4.4)"
+    }
+  ]
+}

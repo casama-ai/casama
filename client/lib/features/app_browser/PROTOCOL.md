@@ -1,0 +1,163 @@
+# The phone browser: how its three parts talk
+
+docs/PHONE-BROWSER-PLAN.md is the plan. This file is the contract between the parts in the app.
+
+```
+server ── device socket ── Dart (this folder) ── casama/app_browser channel ── native web area
+                                                                                 └ page script
+```
+
+Everything here is compiled in only with `--dart-define=CASAMA_APP_BROWSER=true` (and the native
+flag, see "Build switch"). Without it the app has no web area.
+
+## 1. Server to app: the device socket
+
+The same socket the desktop app uses (`client/lib/features/companion/companion_io.dart`):
+`wss://<api>/v1/local-computer/connect`, header `Authorization: Device <token>`, plus
+`x-casama-os: "iOS 26.1"` or `"Android 16"`.
+
+- Server sends `{type:"ready", device_id, computer_id:null}` once.
+- Server sends `{type:"request", id, method:"POST", path:"/browser/<action>", body:<base64 JSON>}`
+  and `{type:"cancel", id}`.
+- App answers `{type:"response", id, status:200, headers:{}}`, one
+  `{type:"chunk", id, data:<base64 JSON of the result>}`, then `{type:"end", id}`.
+- `GET /health` answers `{ok:true}`. Anything else is 404 `{ok:false, code:"not_found"}`.
+- Every answer to a `/browser/*` call is status 200, including `{ok:false, ...}` results. A call the
+  server cancels, or one in flight when the socket closes, gets no answer.
+- `x-casama-os` is `"iOS <version>"` on iPhone; on Android Dart only knows `"Android"` (Dart reports
+  the kernel's version there).
+- The app sends `{type:"hello", platform:"app", version}` on open and every 20 seconds.
+
+The request body (`BrowserCall` in `packages/contracts/src/browser.ts`, plus what the server adds):
+
+```
+{ action, args, run: { id, bot_id, bot_name, conversation_id },
+  policy: { blocked_sites, allowed_sites, allowed_kinds, own_urls },
+  expect?: "<fingerprint>" }
+```
+
+The result is a `BrowserResult`: `{ok:true, text, url?, image?:{data, media_type},
+file?:{name, media_type, data}}` or `{ok:false, code, message}`.
+
+Actions the app answers:
+
+| action | what the app does | result |
+|---|---|---|
+| `open` | site gate on `args.url`, then load it and wait for the page to settle (15 s cap) | `text: "Opened <title>"`, `url` |
+| `snapshot`, `read`, `extract`, `scroll`, `wait` | page script command of the same name | its `text`, plus `url` |
+| `url` | native `url` | `text: <url>`, `url` |
+| `probe` | page script `probe` with `args` (`{ref}` or `{focused:true}`) | `text: JSON.stringify({facts, fingerprint})` |
+| `ask` | show the step ask (`args.reason`, `args.step`, `args.name`, `run.bot_name`); wait up to 5 minutes | `text: "allow"`, `"deny"` or `"timeout"` |
+| `handoff` | show "Your turn" with `args.reason`; answer at once | `text: "shown"` |
+| `click` | page script `locate` (with `expect` as `fingerprint`); with real taps, native `tap` at its x,y and the answer is `locate`'s `text` (no second command: the tap may have opened another page); otherwise `click` with `synthetic:true` | `text`, `url` |
+| `fill`, `type`, `press` | page script, passing `expect` as `fingerprint` | `text`, `url` |
+
+**The bot's cursor** (docs/BOT-CURSOR-PLAN.md §5). Dart draws a cursor above the web area, never in
+the page, at the spot each step is about to act on. A `click` uses its `locate`'s x,y (on iPhone a
+`locate` is sent first, only for this). A `fill` with a ref sends a `locate` first, only for this,
+and its failure changes nothing: the `fill` reports its own. Then Dart waits a beat (250 ms) so the
+cursor is seen to land before the page changes. `type`, `press` and `scroll` move nothing: the
+cursor shows them where it already is. The spot is in the page's CSS px, which are the web area's
+points, so nothing is passed to native and no message here changed.
+| `upload` | page script `upload` with `args.ref` and `args.file` (`name`, `media_type`, `data`) | `text` |
+| `download` | site gate on `args.url`, page script `download` | `file`, `text` |
+| `screenshot` | native `screenshot` | `image: {data, media_type:"image/jpeg"}`, `text: ""` |
+| `dialog` | answer the pending page dialog with `args.accept`, `args.text` | `text` |
+| `tabs` | one page | `text: "1: <title> <url> (current)"` |
+| `switch_tab` | with `args.url`: same as `open`; otherwise nothing | `text` |
+| `stop` | the bot is done: hide the "working" state, keep the page | `text: "Done"` |
+| `console`, `network`, `page_text` | never arrive (the server refuses them); answer `unsupported` | |
+
+Codes the app produces itself: `refused` (a site that is never allowed), `asked_denied` (the person
+said no to a site), `handed_off`, `away` (the chat is no longer on screen, or the person took
+over and didn't hand back within 8 minutes), `unsupported`, `error`, and whatever the page script
+returns (`stale_ref`, `covered`, `page_changed`, ...).
+
+Every call first checks that the run's conversation is the chat on screen. If it isn't, the answer
+is `away`. A call for a different run than the one working ends the earlier run's session.
+
+While the person has taken over (they touched the page) or a handoff's "Your turn" is showing,
+calls wait for Hand Back, up to 8 minutes (`stop` and `handoff` don't wait). The worker uses this to
+hand a step to the person (D-571): it sends `handoff`, then a `url` call that answers on Hand Back,
+and cancels that call after its own 5 minutes. A held call the server cancels leaves "Your turn" as
+it is (the reply ending clears it); Stop answers it as stopped. After the person taps
+Stop, every later call of that run answers `away`; a different run may use the page again.
+
+A `dialog` call with no page dialog open answers `error`. `screenshot` passes `args.quality`
+(default 70) to native.
+
+## 2. Site gate (Dart)
+
+Before a main-frame navigation loads, and again on the address a page lands on:
+
+1. `about:blank` is allowed; a non-http(s) address is refused.
+2. Casama's own addresses (`casama.ai`, `casama.link`, `kasama.ai`, their subdomains, and the
+   hosts of `policy.own_urls`) are refused.
+3. `policy.blocked_sites` (workspace and this phone's "never" list) are refused.
+4. Off-by-default kinds (banking, health, passwords, government) are refused unless the kind is in
+   `policy.allowed_kinds`; a switched-on kind asks every run.
+5. `policy.allowed_sites` and sites answered "once" in this run are allowed.
+6. Everything else asks: Once, Always, Never. "Always" and "never" are saved on the device row
+   (`PATCH /v1/local-devices/{id}` with `allowed_sites` / `blocked_sites`). No answer in 5 minutes
+   is no.
+
+Matching is the server's: `example.com` matches itself and its subdomains, `*.example.com` only
+subdomains, a leading `www.` is ignored. The reference is `appSiteDecision` in
+`packages/domain/src/app-browser-sites.ts`. `pnpm --filter @casama/domain gen:app-browser` writes
+the lists the Dart code reads (`client/assets/app_browser/guard.json`: Casama's domains, the
+hosts of each off-by-default kind, and a regular expression per kind for the host) and the cases
+the Dart code must reproduce (`client/test/fixtures/app_browser_sites.json`: for each case a
+policy name, the "once" list, a url, and the expected `{kind, host?, why?, site_kind?}`). Sites
+added by the server without a release come from `GET /v1/browser-guard`.
+
+The gate applies to a bot's steps. When the person browses by hand (Sign In to a Site), only
+steps 1 and 2 apply.
+
+## 3. Dart to native: `casama/app_browser`
+
+One web area per app, created on first use and kept while the app lives. The platform view type is
+`casama/app_browser_view` (no creation params).
+
+Methods Dart calls (all return a map or null; errors are `PlatformException`):
+
+| method | args | returns |
+|---|---|---|
+| `supported` | | `{supported: bool, reason: String?, realTaps: bool}` |
+| `load` | `url` | |
+| `command` | `json`: the page-script command as a JSON **string** (see `packages/page-agent/README.md`); `timeout_ms` optional, default 30000 (Dart sends 30000) | `{json: <the answer as a JSON string>}` (Dart also accepts the answer as a map) |
+| `tap` | `x`, `y` (CSS px in the viewport) | (Android only) |
+| `keyboard` | `allowed: bool`: whether the page may open the soft keyboard. Dart sends `false` when a bot starts driving or asking, `true` on Take Over and "Your turn"; a real touch opens it natively without waiting for Dart. Shut, the web view gives the page no input connection, so a bot's tap or a page's autofocus can't pop the keyboard up | (Android only; starts shut) |
+| `screenshot` | `quality` (default 70) | `{data: base64 jpeg}` |
+| `url` | | `{url, title, loading: bool, canGoBack: bool, canGoForward: bool}` |
+| `back`, `forward`, `reload`, `stop` | | |
+| `answerDialog` | `accept: bool`, `text: String?` | |
+| `clearData` | `host: String?` (null clears everything) | |
+| `dispose` | | |
+
+Methods native calls on Dart:
+
+| method | args | Dart returns |
+|---|---|---|
+| `navigate` | `url`, `redirect: bool`, `user: bool` (started by a real touch) | `true` to let it load. While a bot works, a new site shows the site ask first, so the answer can take up to 5 minutes: don't block the UI thread on it (Android: cancel the navigation and `load` the address again when Dart says `true`) |
+| `pageStarted` | `url` | |
+| `pageFinished` | `url`, `title` | |
+| `landed` | `url` (the address actually committed, after redirects) | `true` to keep it; `false` makes native load `about:blank` (it can also wait for a site ask) |
+| `userTouched` | | (a real finger touched the web area; **never** for native's own `tap`. Dart also ignores one within 800 ms of a `tap` it sent) |
+| `dialog` | `kind` (`alert`/`confirm`/`prompt`), `message` | (answered later with `answerDialog`) |
+| `gone` | `reason` | (the web content process ended; the page is lost) |
+
+## 4. Build switch
+
+- Dart: `const bool.fromEnvironment('CASAMA_APP_BROWSER')`. Every entry point into this folder
+  checks it, so a build without it tree-shakes the folder away.
+- iOS: Swift flag `CASAMA_APP_BROWSER` (the files are wrapped in `#if CASAMA_APP_BROWSER`).
+- Android: Gradle property `casamaAppBrowser=true` adds the `appBrowser` source set and the
+  `androidx.webkit` dependency.
+- Linux: `client/linux/app-browser.on` (or `CASAMA_APP_BROWSER=1`) builds
+  `libcasama_app_browser.so`, loaded at runtime (docs/LINUX-BROWSER-PLAN.md).
+- Windows: `client/windows/app-browser.on` (or `CASAMA_APP_BROWSER=1`) compiles
+  `client/windows/app_browser/` into the runner: WebView2 in a child window over the Flutter view,
+  the page script in an isolated world through the DevTools protocol, the same channel methods as
+  Linux (`pageWindow` is a no-op). Set `CASAMA_APP_BROWSER_LOG` to a file path for a debug log
+  (docs/WINDOWS-BROWSER-PLAN.md §7.1).
+- `scripts/` release builds leave all three off until the plan's Stage 2 release.

@@ -1,0 +1,8 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Merged unless CASAMA_ANDROID_AD_ID=0 (D-573): the advertising id for Meta's SDK only
+         (docs/ADS-ATTRIBUTION-PLAN.md, Decision 3, partly reversing D-397). Meta reads it only while
+         "Help measure our ads" is on and the SDK runs; Google Analytics never collects it
+         (google_analytics_adid_collection_enabled stays false in src/main). Play's Advertising ID
+         declaration says Yes, for Advertising or marketing, to match (client/store/README.md). -->
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
+</manifest>

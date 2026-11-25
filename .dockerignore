@@ -1,0 +1,9 @@
+# The computer image builds from the repository root (infra/images/computer/Dockerfile.*).
+**/node_modules
+**/.turbo
+**/dist
+**/.dart_tool
+**/build
+.git
+client
+.env

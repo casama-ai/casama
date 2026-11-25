@@ -1,0 +1,194 @@
+import { z } from "@hono/zod-openapi";
+import { Uuid } from "./common.ts";
+
+const ts = z.iso.datetime({ offset: true });
+
+export const Transcription = z
+  .object({ text: z.string(), provider: z.string(), seconds: z.number() })
+  .openapi("Transcription");
+
+export const VoiceSessionRequest = z
+  .object({
+    bot_id: Uuid,
+    conversation_id: Uuid.optional(),
+    call_id: Uuid.optional().openapi({
+      description:
+        "An answered phone call: the session uses its conversation and the bot speaks first",
+    }),
+  })
+  .openapi("VoiceSessionRequest");
+
+export const VoiceSession = z
+  .object({
+    provider: z.enum(["gemini"]).openapi({
+      description: "Gemini Live over a WebSocket, the only live-call provider (D-260)",
+    }),
+    model: z.string(),
+    client_secret: z.string().openapi({
+      description: "Gemini's single-use token (the access_token query parameter)",
+    }),
+    expires_at: ts,
+    connect_url: z.string().openapi({
+      description: "Open a WebSocket here with ?access_token=<client_secret>",
+    }),
+    setup: z.record(z.string(), z.unknown()).nullable().openapi({
+      description: "Send {setup: <this>} as the first message (add sessionResumption to reconnect)",
+    }),
+    conversation_id: Uuid,
+    tools: z.number().int(),
+    /** The bot opens the conversation: it greets the person, or says why it phoned (D-234). */
+    speak_first: z.boolean(),
+    live_call_id: Uuid.openapi({
+      description:
+        "The server's record of this call (D-327): send turns, heartbeats and the final transcript with it",
+    }),
+    limits: z
+      .object({
+        silence_seconds: z.number().int().openapi({
+          description: "Hang up after this long with nobody speaking and no job running",
+        }),
+        heartbeat_seconds: z.number().int().openapi({
+          description:
+            "Send a heartbeat this often; the server ends a call that stops sending them",
+        }),
+        max_call_seconds: z.number().int().openapi({ description: "The longest the call may run" }),
+        warning_seconds: z.number().int().openapi({
+          description: "How long before max_call_seconds the bot should warn the person",
+        }),
+        app_ends_at_max: z.boolean().openapi({
+          description:
+            "True when the app must end the call at max_call_seconds itself (it isn't relayed); false when the server's relay does",
+        }),
+      })
+      .optional()
+      .openapi({ description: "Call limits (D-426); older servers don't send them" }),
+  })
+  .openapi("VoiceSession");
+
+export const PhoneCall = z
+  .object({
+    id: Uuid,
+    bot_id: Uuid,
+    bot_name: z.string(),
+    reason: z.string(),
+    status: z.enum(["ringing", "answered", "declined", "missed", "cancelled"]),
+    conversation_id: Uuid.nullable(),
+    expires_at: ts,
+    created_at: ts,
+  })
+  .openapi("PhoneCall");
+
+export const VoiceToolRequest = z
+  .object({
+    bot_id: Uuid,
+    conversation_id: Uuid,
+    call_id: z.string().min(1).max(200),
+    name: z.string().min(1).max(200),
+    arguments: z.record(z.string(), z.unknown()).optional(),
+    live_call_id: Uuid.optional().openapi({
+      description: "The call this tool runs on (D-327): stop_task stops the jobs started on it",
+    }),
+  })
+  .openapi("VoiceToolRequest");
+
+export const VoiceToolResult = z
+  .object({
+    status: z.enum(["completed", "failed", "waiting_approval", "running"]),
+    run_id: Uuid.openapi({
+      description:
+        "The tool's run; for stop_task, the run it stopped. All zeros when the tool started no run",
+    }),
+    output: z
+      .string()
+      .openapi({ description: "Give this to the realtime model as the function output" }),
+    approval_id: Uuid.nullable(),
+  })
+  .openapi("VoiceToolResult");
+
+const CallTurnRole = z.enum(["user", "assistant"]);
+const CallTurnId = z.string().min(1).max(100).openapi({
+  description: "The app's id for the turn; a turn sent twice with the same id is saved once",
+});
+
+const GeminiUsage = z.object({
+  input_audio_tokens: z.number().int().min(0),
+  input_text_tokens: z.number().int().min(0),
+  output_audio_tokens: z.number().int().min(0),
+  output_text_tokens: z.number().int().min(0),
+});
+
+export const VoiceTranscriptRequest = z
+  .object({
+    conversation_id: Uuid,
+    live_call_id: Uuid.optional().openapi({
+      description:
+        "The call (D-327): ends its server record. Turns already sent with /v1/voice/transcript/turns aren't sent again",
+    }),
+    turns: z
+      .array(
+        z.object({
+          role: CallTurnRole,
+          text: z.string().min(1).max(20_000),
+          id: CallTurnId.optional(),
+        }),
+      )
+      .max(500),
+    seconds: z
+      .number()
+      .int()
+      .min(0)
+      .max(24 * 3600),
+    provider: z.enum(["gemini", "openai"]).optional().openapi({
+      description:
+        "Which live-call provider the call used. Every call is Gemini Live now (D-260); openai is still accepted from older apps.",
+    }),
+    usage: GeminiUsage.optional().openapi({
+      description:
+        "Gemini Live: the call's token counts from usageMetadata, so usage records the real cost instead of a per-minute estimate",
+    }),
+    ended: z.enum(["person", "bot", "dropped", "idle", "limit", "replaced"]).optional().openapi({
+      description:
+        "How the call ended, for its card: the person hung up, the bot did (end_call), it dropped, it went quiet, a limit ended it, or another call took its place",
+    }),
+  })
+  .openapi("VoiceTranscriptRequest");
+
+/** A next step on a call's card (call card plan §3.3): start it as a chat run, or dismiss it. */
+export const CallStepRequest = z
+  .object({ action: z.enum(["start", "dismiss"]) })
+  .openapi("CallStepRequest");
+
+export const CallStepResult = z
+  .object({
+    run_id: Uuid.nullable().openapi({ description: "The chat run a started step became" }),
+  })
+  .openapi("CallStepResult");
+
+/** Turns saved while the call goes on (D-327), so a call that dies keeps its transcript. */
+export const VoiceTurnsRequest = z
+  .object({
+    live_call_id: Uuid,
+    turns: z
+      .array(z.object({ id: CallTurnId, role: CallTurnRole, text: z.string().min(1).max(20_000) }))
+      .min(1)
+      .max(100),
+  })
+  .openapi("VoiceTurnsRequest");
+
+/** Every 30 seconds while a call is live (D-327); a call with no heartbeat for 2 minutes is ended by the server. */
+export const VoiceHeartbeatRequest = z
+  .object({
+    usage: GeminiUsage.optional().openapi({
+      description: "Gemini Live's token counts so far, billed if the call ends without the app",
+    }),
+  })
+  .openapi("VoiceHeartbeatRequest");
+
+export const VoiceHeartbeat = z
+  .object({
+    ended: z.boolean().openapi({
+      description:
+        "The server already ended this call (no heartbeat in time); the app should hang up",
+    }),
+  })
+  .openapi("VoiceHeartbeat");

@@ -1,0 +1,1048 @@
+{
+  "fares_strip": {
+    "component": "Fares",
+    "from": {
+      "label": "Manila",
+      "codes": ["MNL"],
+      "country": "PH"
+    },
+    "to": {
+      "label": "Tokyo",
+      "codes": ["HND", "NRT"],
+      "country": "JP"
+    },
+    "depart": "2027-03-12",
+    "travellers": {
+      "adults": 1,
+      "children": 0,
+      "infants": 0
+    },
+    "cabin": "economy",
+    "currency": "PHP",
+    "sort": "best",
+    "roundTrip": false,
+    "cheapest": 6692,
+    "fastest": 260,
+    "options": [
+      {
+        "id": "9f3936ad7d85",
+        "price": 6692,
+        "airlines": ["Cebu Pacific"],
+        "minutes": 270,
+        "out": {
+          "from": "MNL",
+          "to": "NRT",
+          "depart": "2027-03-12T12:15",
+          "arrive": "2027-03-12T17:45",
+          "minutes": 270,
+          "stops": 0,
+          "via": [],
+          "airlines": ["Cebu Pacific"],
+          "flights": ["5J5056"],
+          "segments": [
+            {
+              "from": "MNL",
+              "to": "NRT",
+              "depart": "2027-03-12T12:15",
+              "arrive": "2027-03-12T17:45",
+              "minutes": 270,
+              "airline": "Cebu Pacific",
+              "code": "5J",
+              "flight": "5J5056",
+              "cabin": "Economy"
+            }
+          ]
+        },
+        "bags": {
+          "cabin": 1,
+          "checked": 0
+        },
+        "link": "https://kiwi.com/u/uzfsqq2bch"
+      },
+      {
+        "id": "55d73ee9f111",
+        "price": 6915,
+        "airlines": ["Cebu Pacific"],
+        "minutes": 260,
+        "out": {
+          "from": "MNL",
+          "to": "NRT",
+          "depart": "2027-03-12T06:15",
+          "arrive": "2027-03-12T11:35",
+          "minutes": 260,
+          "stops": 0,
+          "via": [],
+          "airlines": ["Cebu Pacific"],
+          "flights": ["5J5054"],
+          "segments": [
+            {
+              "from": "MNL",
+              "to": "NRT",
+              "depart": "2027-03-12T06:15",
+              "arrive": "2027-03-12T11:35",
+              "minutes": 260,
+              "airline": "Cebu Pacific",
+              "code": "5J",
+              "flight": "5J5054",
+              "cabin": "Economy"
+            }
+          ]
+        },
+        "bags": {
+          "cabin": 1,
+          "checked": 0
+        },
+        "link": "https://kiwi.com/u/b4gvbq7qjf"
+      }
+    ],
+    "airports": {
+      "MNL": {
+        "name": "Ninoy Aquino International",
+        "city": "Manila"
+      },
+      "NRT": {
+        "name": "Narita International",
+        "city": "Tokyo"
+      }
+    },
+    "strip": [
+      {
+        "date": "2027-03-09",
+        "price": 6996
+      },
+      {
+        "date": "2027-03-10",
+        "price": 6766
+      },
+      {
+        "date": "2027-03-11",
+        "price": 6766
+      },
+      {
+        "date": "2027-03-12",
+        "price": 6692
+      },
+      {
+        "date": "2027-03-13",
+        "price": 7220
+      },
+      {
+        "date": "2027-03-14",
+        "price": 7260
+      },
+      {
+        "date": "2027-03-15",
+        "price": 7300
+      }
+    ],
+    "live": {
+      "source": {
+        "id": "kiwi",
+        "name": "Kiwi.com",
+        "url": "https://www.kiwi.com/"
+      },
+      "fetchedAt": "2026-11-21T21:02:50.276Z",
+      "staleAfter": "2026-11-21T21:32:50.276Z",
+      "views": [
+        "2027-03-09",
+        "2027-03-10",
+        "2027-03-11",
+        "2027-03-12",
+        "2027-03-13",
+        "2027-03-14",
+        "2027-03-15"
+      ]
+    }
+  },
+  "fares_stops": {
+    "component": "Fares",
+    "from": {
+      "label": "Manila",
+      "codes": ["MNL"],
+      "country": "PH"
+    },
+    "to": {
+      "label": "Sapporo",
+      "codes": ["CTS", "OKD"],
+      "country": "JP"
+    },
+    "depart": "2027-03-12",
+    "travellers": {
+      "adults": 1,
+      "children": 0,
+      "infants": 0
+    },
+    "cabin": "economy",
+    "currency": "PHP",
+    "sort": "best",
+    "roundTrip": false,
+    "cheapest": 10139,
+    "fastest": 510,
+    "options": [
+      {
+        "id": "b5adefe40af1",
+        "price": 10139,
+        "airlines": ["Cebu Pacific", "Peach Aviation"],
+        "minutes": 560,
+        "out": {
+          "from": "MNL",
+          "to": "CTS",
+          "depart": "2027-03-12T06:15",
+          "arrive": "2027-03-12T16:35",
+          "minutes": 560,
+          "stops": 1,
+          "via": ["NRT"],
+          "airlines": ["Cebu Pacific", "Peach Aviation"],
+          "flights": ["5J5054", "MM571"],
+          "segments": [
+            {
+              "from": "MNL",
+              "to": "NRT",
+              "depart": "2027-03-12T06:15",
+              "arrive": "2027-03-12T11:35",
+              "minutes": 260,
+              "airline": "Cebu Pacific",
+              "code": "5J",
+              "flight": "5J5054",
+              "cabin": "Economy"
+            },
+            {
+              "from": "NRT",
+              "to": "CTS",
+              "depart": "2027-03-12T14:45",
+              "arrive": "2027-03-12T16:35",
+              "minutes": 110,
+              "airline": "Peach Aviation",
+              "code": "MM",
+              "flight": "MM571",
+              "cabin": "Economy"
+            }
+          ],
+          "layovers": [
+            {
+              "at": "NRT",
+              "minutes": 190
+            }
+          ]
+        },
+        "bags": {
+          "cabin": 1,
+          "checked": 0
+        },
+        "link": "https://kiwi.com/u/qwmxjwpvws",
+        "flags": ["separate_tickets"]
+      },
+      {
+        "id": "3f96ce282b50",
+        "price": 10918,
+        "airlines": ["Cebu Pacific", "Jetstar Japan"],
+        "minutes": 510,
+        "out": {
+          "from": "MNL",
+          "to": "CTS",
+          "depart": "2027-03-12T06:15",
+          "arrive": "2027-03-12T15:45",
+          "minutes": 510,
+          "stops": 1,
+          "via": ["NRT"],
+          "airlines": ["Cebu Pacific", "Jetstar Japan"],
+          "flights": ["5J5054", "GK109"],
+          "segments": [
+            {
+              "from": "MNL",
+              "to": "NRT",
+              "depart": "2027-03-12T06:15",
+              "arrive": "2027-03-12T11:35",
+              "minutes": 260,
+              "airline": "Cebu Pacific",
+              "code": "5J",
+              "flight": "5J5054",
+              "cabin": "Economy"
+            },
+            {
+              "from": "NRT",
+              "to": "CTS",
+              "depart": "2027-03-12T13:55",
+              "arrive": "2027-03-12T15:45",
+              "minutes": 110,
+              "airline": "Jetstar Japan",
+              "code": "GK",
+              "flight": "GK109",
+              "cabin": "Economy"
+            }
+          ],
+          "layovers": [
+            {
+              "at": "NRT",
+              "minutes": 140
+            }
+          ]
+        },
+        "bags": {
+          "cabin": 1,
+          "checked": 0
+        },
+        "link": "https://kiwi.com/u/c2nq3t86cz",
+        "flags": ["separate_tickets"]
+      },
+      {
+        "id": "e4cf36d85ff1",
+        "price": 11355,
+        "airlines": ["Jetstar Japan", "Peach Aviation"],
+        "minutes": 775,
+        "out": {
+          "from": "MNL",
+          "to": "CTS",
+          "depart": "2027-03-12T00:50",
+          "arrive": "2027-03-12T14:45",
+          "minutes": 775,
+          "stops": 1,
+          "via": ["NRT"],
+          "airlines": ["Jetstar Japan", "Peach Aviation"],
+          "flights": ["GK40", "MM567"],
+          "segments": [
+            {
+              "from": "MNL",
+              "to": "NRT",
+              "depart": "2027-03-12T00:50",
+              "arrive": "2027-03-12T06:10",
+              "minutes": 260,
+              "airline": "Jetstar Japan",
+              "code": "GK",
+              "flight": "GK40",
+              "cabin": "Economy"
+            },
+            {
+              "from": "NRT",
+              "to": "CTS",
+              "depart": "2027-03-12T12:55",
+              "arrive": "2027-03-12T14:45",
+              "minutes": 110,
+              "airline": "Peach Aviation",
+              "code": "MM",
+              "flight": "MM567",
+              "cabin": "Economy"
+            }
+          ],
+          "layovers": [
+            {
+              "at": "NRT",
+              "minutes": 405
+            }
+          ]
+        },
+        "bags": {
+          "cabin": 1,
+          "checked": 0
+        },
+        "link": "https://kiwi.com/u/d2pqrvmzk4",
+        "flags": ["separate_tickets"]
+      },
+      {
+        "id": "fa4f0027526d",
+        "price": 11744,
+        "airlines": ["Jetstar Japan", "Peach Aviation"],
+        "minutes": 530,
+        "out": {
+          "from": "MNL",
+          "to": "CTS",
+          "depart": "2027-03-12T00:50",
+          "arrive": "2027-03-12T10:40",
+          "minutes": 530,
+          "stops": 1,
+          "via": ["NRT"],
+          "airlines": ["Jetstar Japan", "Peach Aviation"],
+          "flights": ["GK40", "MM563"],
+          "segments": [
+            {
+              "from": "MNL",
+              "to": "NRT",
+              "depart": "2027-03-12T00:50",
+              "arrive": "2027-03-12T06:10",
+              "minutes": 260,
+              "airline": "Jetstar Japan",
+              "code": "GK",
+              "flight": "GK40",
+              "cabin": "Economy"
+            },
+            {
+              "from": "NRT",
+              "to": "CTS",
+              "depart": "2027-03-12T08:50",
+              "arrive": "2027-03-12T10:40",
+              "minutes": 110,
+              "airline": "Peach Aviation",
+              "code": "MM",
+              "flight": "MM563",
+              "cabin": "Economy"
+            }
+          ],
+          "layovers": [
+            {
+              "at": "NRT",
+              "minutes": 160
+            }
+          ]
+        },
+        "bags": {
+          "cabin": 1,
+          "checked": 0
+        },
+        "link": "https://kiwi.com/u/nvqxbmd43v",
+        "flags": ["separate_tickets"]
+      }
+    ],
+    "airports": {
+      "MNL": {
+        "name": "Ninoy Aquino International",
+        "city": "Manila"
+      },
+      "CTS": {
+        "name": "New Chitose",
+        "city": "Sapporo"
+      },
+      "NRT": {
+        "name": "Narita International",
+        "city": "Tokyo"
+      }
+    },
+    "live": {
+      "source": {
+        "id": "kiwi",
+        "name": "Kiwi.com",
+        "url": "https://www.kiwi.com/"
+      },
+      "fetchedAt": "2026-11-21T21:02:50.282Z",
+      "staleAfter": "2026-11-21T21:32:50.282Z"
+    }
+  },
+  "fare_details": {
+    "component": "FareDetails",
+    "from": {
+      "label": "Manila",
+      "codes": ["MNL"],
+      "country": "PH"
+    },
+    "to": {
+      "label": "Sapporo",
+      "codes": ["CTS", "OKD"],
+      "country": "JP"
+    },
+    "depart": "2027-03-12",
+    "travellers": {
+      "adults": 1,
+      "children": 0,
+      "infants": 0
+    },
+    "cabin": "economy",
+    "currency": "PHP",
+    "roundTrip": false,
+    "position": 1,
+    "of": 4,
+    "option": {
+      "id": "b5adefe40af1",
+      "price": 10139,
+      "airlines": ["Cebu Pacific", "Peach Aviation"],
+      "minutes": 560,
+      "out": {
+        "from": "MNL",
+        "to": "CTS",
+        "depart": "2027-03-12T06:15",
+        "arrive": "2027-03-12T16:35",
+        "minutes": 560,
+        "stops": 1,
+        "via": ["NRT"],
+        "airlines": ["Cebu Pacific", "Peach Aviation"],
+        "flights": ["5J5054", "MM571"],
+        "segments": [
+          {
+            "from": "MNL",
+            "to": "NRT",
+            "depart": "2027-03-12T06:15",
+            "arrive": "2027-03-12T11:35",
+            "minutes": 260,
+            "airline": "Cebu Pacific",
+            "code": "5J",
+            "flight": "5J5054",
+            "cabin": "Economy"
+          },
+          {
+            "from": "NRT",
+            "to": "CTS",
+            "depart": "2027-03-12T14:45",
+            "arrive": "2027-03-12T16:35",
+            "minutes": 110,
+            "airline": "Peach Aviation",
+            "code": "MM",
+            "flight": "MM571",
+            "cabin": "Economy"
+          }
+        ],
+        "layovers": [
+          {
+            "at": "NRT",
+            "minutes": 190
+          }
+        ]
+      },
+      "bags": {
+        "cabin": 1,
+        "checked": 0
+      },
+      "link": "https://kiwi.com/u/qwmxjwpvws",
+      "flags": ["separate_tickets"]
+    },
+    "airports": {
+      "MNL": {
+        "name": "Ninoy Aquino International",
+        "city": "Manila"
+      },
+      "CTS": {
+        "name": "New Chitose",
+        "city": "Sapporo"
+      },
+      "NRT": {
+        "name": "Narita International",
+        "city": "Tokyo"
+      }
+    },
+    "live": {
+      "source": {
+        "id": "kiwi",
+        "name": "Kiwi.com",
+        "url": "https://www.kiwi.com/"
+      },
+      "fetchedAt": "2026-11-21T21:02:50.282Z",
+      "staleAfter": "2026-11-21T21:32:50.282Z"
+    }
+  },
+  "fare_calendar": {
+    "component": "FareCalendar",
+    "from": {
+      "label": "Manila",
+      "codes": ["MNL"],
+      "country": "PH"
+    },
+    "to": {
+      "label": "Tokyo",
+      "codes": ["HND", "NRT"],
+      "country": "JP"
+    },
+    "month": "2027-03",
+    "travellers": {
+      "adults": 1,
+      "children": 0,
+      "infants": 0
+    },
+    "cabin": "economy",
+    "currency": "PHP",
+    "roundTrip": false,
+    "days": [
+      {
+        "date": "2027-03-01",
+        "price": 6740,
+        "level": "low"
+      },
+      {
+        "date": "2027-03-02",
+        "price": 6780,
+        "level": "low"
+      },
+      {
+        "date": "2027-03-03",
+        "price": 6820,
+        "level": "low"
+      },
+      {
+        "date": "2027-03-04",
+        "price": 6860,
+        "level": "low"
+      },
+      {
+        "date": "2027-03-05",
+        "price": 6900,
+        "level": "low"
+      },
+      {
+        "date": "2027-03-06",
+        "price": 6940,
+        "level": "low"
+      },
+      {
+        "date": "2027-03-07",
+        "price": 6980,
+        "level": "low"
+      },
+      {
+        "date": "2027-03-08",
+        "price": 7020,
+        "level": "low"
+      },
+      {
+        "date": "2027-03-09",
+        "price": 7060,
+        "level": "low"
+      },
+      {
+        "date": "2027-03-10",
+        "price": 7100,
+        "level": "low"
+      },
+      {
+        "date": "2027-03-11",
+        "price": 7140,
+        "level": "low"
+      },
+      {
+        "date": "2027-03-12",
+        "price": 7180,
+        "level": "low"
+      },
+      {
+        "date": "2027-03-13",
+        "price": 7220,
+        "level": "low"
+      },
+      {
+        "date": "2027-03-14",
+        "price": 7260,
+        "level": "low"
+      },
+      {
+        "date": "2027-03-15",
+        "price": 6766,
+        "level": "low"
+      },
+      {
+        "date": "2027-03-16",
+        "price": 6766,
+        "level": "low"
+      },
+      {
+        "date": "2027-03-17",
+        "price": 7000,
+        "level": "low"
+      },
+      {
+        "date": "2027-03-18",
+        "price": 9736,
+        "level": "mid"
+      },
+      {
+        "date": "2027-03-19",
+        "price": 11200,
+        "level": "high"
+      },
+      {
+        "date": "2027-03-20",
+        "price": 11200,
+        "level": "high"
+      },
+      {
+        "date": "2027-03-21",
+        "price": 11200,
+        "level": "high"
+      },
+      {
+        "date": "2027-03-22",
+        "price": 16300,
+        "level": "high"
+      },
+      {
+        "date": "2027-03-23",
+        "price": 16450,
+        "level": "high"
+      },
+      {
+        "date": "2027-03-24",
+        "price": 16600,
+        "level": "high"
+      },
+      {
+        "date": "2027-03-25",
+        "price": 16750,
+        "level": "high"
+      },
+      {
+        "date": "2027-03-26",
+        "price": 16900,
+        "level": "high"
+      },
+      {
+        "date": "2027-03-27",
+        "price": 17050,
+        "level": "high"
+      },
+      {
+        "date": "2027-03-28",
+        "price": 17200,
+        "level": "high"
+      },
+      {
+        "date": "2027-03-29",
+        "price": 17350,
+        "level": "high"
+      },
+      {
+        "date": "2027-03-30",
+        "price": 17500,
+        "level": "high"
+      },
+      {
+        "date": "2027-03-31",
+        "price": 17650,
+        "level": "high"
+      }
+    ],
+    "cheapest": {
+      "date": "2027-03-01",
+      "price": 6740
+    },
+    "months": {
+      "prev": "2027-02",
+      "next": "2027-04"
+    },
+    "live": {
+      "source": {
+        "id": "kiwi",
+        "name": "Kiwi.com",
+        "url": "https://www.kiwi.com/"
+      },
+      "fetchedAt": "2026-11-21T21:02:50.285Z",
+      "staleAfter": "2026-11-22T03:02:50.285Z",
+      "views": ["2027-02", "2027-04"]
+    }
+  },
+  "fare_explore": {
+    "component": "FareExplore",
+    "from": {
+      "label": "Manila",
+      "codes": ["MNL"],
+      "country": "PH"
+    },
+    "where": {
+      "kind": "anywhere",
+      "label": "Anywhere"
+    },
+    "depart": "2027-03",
+    "travellers": {
+      "adults": 1,
+      "children": 0,
+      "infants": 0
+    },
+    "cabin": "economy",
+    "currency": "PHP",
+    "roundTrip": false,
+    "places": [
+      {
+        "city": "Kalibo",
+        "country": "Philippines",
+        "cc": "PH",
+        "code": "KLO",
+        "price": 2068,
+        "date": "2027-03-30",
+        "stops": 0,
+        "minutes": 65,
+        "lat": 11.68,
+        "lng": 122.38,
+        "link": "https://kiwi.com/u/prypy84g5h"
+      },
+      {
+        "city": "Bacolod",
+        "country": "Philippines",
+        "cc": "PH",
+        "code": "BCD",
+        "price": 2288,
+        "date": "2027-03-17",
+        "stops": 0,
+        "minutes": 70,
+        "lat": 10.78,
+        "lng": 123.02,
+        "link": "https://kiwi.com/u/qkvrkg2c5q"
+      },
+      {
+        "city": "Caticlan",
+        "country": "Philippines",
+        "cc": "PH",
+        "code": "MPH",
+        "price": 2364,
+        "date": "2027-03-04",
+        "stops": 0,
+        "minutes": 60,
+        "lat": 11.92,
+        "lng": 121.95,
+        "link": "https://kiwi.com/u/byqbcfu4c6"
+      },
+      {
+        "city": "Tacloban",
+        "country": "Philippines",
+        "cc": "PH",
+        "code": "TAC",
+        "price": 2419,
+        "date": "2027-03-10",
+        "stops": 0,
+        "minutes": 80,
+        "lat": 11.23,
+        "lng": 125.03,
+        "link": "https://kiwi.com/u/quvg8p8z3y"
+      },
+      {
+        "city": "Iloilo City",
+        "country": "Philippines",
+        "cc": "PH",
+        "code": "ILO",
+        "price": 2425,
+        "date": "2027-03-02",
+        "stops": 0,
+        "minutes": 75,
+        "lat": 10.83,
+        "lng": 122.49,
+        "link": "https://kiwi.com/u/9552z7634r"
+      },
+      {
+        "city": "Cebu",
+        "country": "Philippines",
+        "cc": "PH",
+        "code": "CEB",
+        "price": 2521,
+        "date": "2027-03-03",
+        "stops": 0,
+        "minutes": 90,
+        "lat": 10.31,
+        "lng": 123.98,
+        "link": "https://kiwi.com/u/by2jq2tjm4"
+      },
+      {
+        "city": "Puerto Princesa",
+        "country": "Philippines",
+        "cc": "PH",
+        "code": "PPS",
+        "price": 2652,
+        "date": "2027-03-01",
+        "stops": 0,
+        "minutes": 85,
+        "lat": 9.74,
+        "lng": 118.76,
+        "link": "https://kiwi.com/u/pbp75ddwwy"
+      },
+      {
+        "city": "Dumaguete",
+        "country": "Philippines",
+        "cc": "PH",
+        "code": "DGT",
+        "price": 2873,
+        "date": "2027-03-04",
+        "stops": 0,
+        "minutes": 90,
+        "lat": 9.33,
+        "lng": 123.3,
+        "link": "https://kiwi.com/u/hfjm6z7cy9"
+      },
+      {
+        "city": "Cagayan de Oro",
+        "country": "Philippines",
+        "cc": "PH",
+        "code": "CGY",
+        "price": 3032,
+        "date": "2027-03-03",
+        "stops": 0,
+        "minutes": 100,
+        "lat": 8.61,
+        "lng": 124.46,
+        "link": "https://kiwi.com/u/rycy8yrp2j"
+      },
+      {
+        "city": "Davao",
+        "country": "Philippines",
+        "cc": "PH",
+        "code": "DVO",
+        "price": 3154,
+        "date": "2027-03-03",
+        "stops": 0,
+        "minutes": 115,
+        "lat": 7.13,
+        "lng": 125.65,
+        "link": "https://kiwi.com/u/g7qynxtq34"
+      },
+      {
+        "city": "Panglao",
+        "country": "Philippines",
+        "cc": "PH",
+        "code": "TAG",
+        "price": 3189,
+        "date": "2027-03-06",
+        "stops": 0,
+        "minutes": 90,
+        "lat": 9.57,
+        "lng": 123.77,
+        "link": "https://kiwi.com/u/pqjnv8q5nd"
+      },
+      {
+        "city": "Hong Kong",
+        "country": "Hong Kong",
+        "cc": "HK",
+        "code": "HKG",
+        "price": 3913,
+        "date": "2027-03-07",
+        "stops": 0,
+        "minutes": 150,
+        "lat": 22.31,
+        "lng": 113.91,
+        "link": "https://kiwi.com/u/ds7xuy37b6"
+      },
+      {
+        "city": "Macau",
+        "country": "Macau",
+        "cc": "MO",
+        "code": "MFM",
+        "price": 4226,
+        "date": "2027-03-30",
+        "stops": 0,
+        "minutes": 130,
+        "lat": 22.15,
+        "lng": 113.59,
+        "link": "https://kiwi.com/u/7b2cjb626c"
+      },
+      {
+        "city": "Taipei",
+        "country": "Taiwan",
+        "cc": "TW",
+        "code": "TPE",
+        "price": 4495,
+        "date": "2027-03-08",
+        "stops": 0,
+        "minutes": 150,
+        "lat": 25.08,
+        "lng": 121.23,
+        "link": "https://kiwi.com/u/jv45v232b5"
+      },
+      {
+        "city": "Kaohsiung",
+        "country": "Taiwan",
+        "cc": "TW",
+        "code": "KHH",
+        "price": 4744,
+        "date": "2027-03-29",
+        "stops": 0,
+        "minutes": 105,
+        "lat": 22.58,
+        "lng": 120.35,
+        "link": "https://kiwi.com/u/dfgqb9ur9r"
+      }
+    ],
+    "cheapest": 2068,
+    "live": {
+      "source": {
+        "id": "kiwi",
+        "name": "Kiwi.com",
+        "url": "https://www.kiwi.com/"
+      },
+      "fetchedAt": "2026-11-21T21:02:50.286Z",
+      "staleAfter": "2026-11-21T21:32:50.286Z",
+      "views": [
+        "KLO",
+        "BCD",
+        "MPH",
+        "TAC",
+        "ILO",
+        "CEB",
+        "PPS",
+        "DGT",
+        "CGY",
+        "DVO",
+        "TAG",
+        "HKG",
+        "MFM",
+        "TPE",
+        "KHH"
+      ]
+    }
+  },
+  "fare_trend": {
+    "component": "FareTrend",
+    "from": {
+      "label": "Manila",
+      "codes": ["MNL"],
+      "country": "PH"
+    },
+    "to": {
+      "label": "Tokyo",
+      "codes": ["HND", "NRT"],
+      "country": "JP"
+    },
+    "depart": "2027-03-12",
+    "travellers": {
+      "adults": 1,
+      "children": 0,
+      "infants": 0
+    },
+    "cabin": "economy",
+    "currency": "PHP",
+    "roundTrip": false,
+    "cheapest": 6692,
+    "typical": {
+      "low": 6200,
+      "high": 11800,
+      "level": "low",
+      "history": [
+        [1792713600, 8200],
+        [1792886400, 8613],
+        [1793059200, 8976],
+        [1793232000, 9243],
+        [1793404800, 9381],
+        [1793577600, 9369],
+        [1793750400, 9203],
+        [1793923200, 8897],
+        [1794096000, 8480],
+        [1794268800, 7993],
+        [1794441600, 7483],
+        [1794614400, 7003],
+        [1794787200, 6600],
+        [1794960000, 6314],
+        [1795132800, 6171],
+        [1795305600, 6183],
+        [1795478400, 6341],
+        [1795651200, 6626],
+        [1795824000, 6999],
+        [1795996800, 7415],
+        [1796169600, 7824],
+        [1796342400, 8175],
+        [1796515200, 8424],
+        [1796688000, 8541],
+        [1796860800, 8505],
+        [1797033600, 8317],
+        [1797206400, 7993],
+        [1797379200, 7562],
+        [1797552000, 7068],
+        [1797724800, 6560]
+      ]
+    },
+    "seen": {
+      "low": 6171,
+      "high": 9381,
+      "days": 58
+    },
+    "searchUrl": "https://www.google.com/travel/flights",
+    "live": {
+      "source": {
+        "id": "serpapi",
+        "name": "Google Flights",
+        "url": "https://www.google.com/travel/flights"
+      },
+      "fetchedAt": "2026-11-21T21:02:50.287Z",
+      "staleAfter": "2026-11-21T21:32:50.287Z"
+    }
+  },
+  "fare_watches": {
+    "component": "FareWatches",
+    "count": 2,
+    "limit": 5,
+    "summary": "2 price watches",
+    "live": {
+      "source": {
+        "name": "Casama"
+      },
+      "fetchedAt": "2026-11-21T21:02:50.289Z"
+    }
+  }
+}

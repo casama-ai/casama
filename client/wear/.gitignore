@@ -1,0 +1,14 @@
+/.gradle
+/.kotlin
+/build
+/app/build
+/local.properties
+/captures/
+.cxx/
+# The signing key lives in client/android/key.properties (never committed).
+key.properties
+**/*.keystore
+**/*.jks
+# Generated per official release build for R8 mapping uploads (D-539).
+/app/src/main/res/values/crashlytics_mapping_id.xml
+/app/src/main/assets/sentry-debug-meta.properties

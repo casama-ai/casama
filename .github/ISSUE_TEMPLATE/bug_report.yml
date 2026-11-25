@@ -1,0 +1,55 @@
+name: Bug report
+description: Something isn't working
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. Please check existing issues first. Never paste secrets, keys, tokens or personal details (emails, phone numbers, chat contents). A problem with your account or a purchase? Use **Settings → Help & support** in the app instead.
+  - type: textarea
+    id: what
+    attributes: { label: What happened, description: Steps to reproduce, as exact as you can. }
+    validations: { required: true }
+  - type: textarea
+    id: expected
+    attributes: { label: What you expected }
+    validations: { required: true }
+  - type: dropdown
+    id: where
+    attributes:
+      label: Where
+      multiple: true
+      options:
+        [
+          App (iOS),
+          App (Android),
+          App (macOS),
+          App (Windows),
+          App (Linux),
+          App (web),
+          Apple Watch,
+          Wear OS,
+          Browser extension,
+          CLI,
+          SDK (TypeScript or Dart),
+          MCP server,
+          Plugin checker,
+          Docs,
+          Casama Cloud,
+        ]
+    validations: { required: true }
+  - type: input
+    id: version
+    attributes:
+      {
+        label: Version or commit,
+        description: "For example the app's About screen, `casama --version`, or `git rev-parse --short HEAD`.",
+      }
+  - type: textarea
+    id: logs
+    attributes:
+      {
+        label: Logs,
+        description: "Relevant output (CLI output, browser console, app error details). Remove anything private.",
+        render: shell,
+      }

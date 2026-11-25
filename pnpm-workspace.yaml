@@ -1,0 +1,17 @@
+# Written by the sync from Casama's private repository: the open TypeScript packages.
+packages:
+  - apps/extension
+  - docs-site
+  - infra/egress-proxy
+  - packages/client
+  - packages/contracts
+  - packages/formats
+  - packages/mcp
+  - packages/plugin-check
+  - packages/safety
+
+allowBuilds:
+  protobufjs: false
+  esbuild: false
+  sharp: false
+  "@openapitools/openapi-generator-cli": false

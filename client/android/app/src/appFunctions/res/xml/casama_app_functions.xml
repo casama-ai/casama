@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- What Gemini reads about Casama's AppFunctions as a whole (androidx.appfunctions'
+     AppFunctionAppMetadata styleable; D-567). Approvals stay in Casama (plan §4.4). -->
+<AppFunctionAppMetadata xmlns:appfn="http://schemas.android.com/apk/res-auto"
+    appfn:displayDescription="Ask your Casama bots for help, see what needs you, and run your routines."
+    appfn:instructions="Casama is the person's own team of AI bots. Use listBots to find a bot's exact name before askBot, and listRoutines before runRoutine. askBot starts a new chat each time and waits about 25 seconds for the reply; when the status is working, tell the person they will get a notification. Casama never approves or denies a request through an assistant: when the person wants to answer one, call openInCasama with place approval and the id from whatNeedsMe. Say the message field to the person; never invent a reply." />

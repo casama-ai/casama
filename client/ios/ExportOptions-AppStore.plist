@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>method</key><string>app-store-connect</string>
+  <key>teamID</key><string>V8V5US964Z</string>
+  <key>signingStyle</key><string>manual</string>
+  <key>signingCertificate</key><string>Apple Distribution</string>
+  <key>uploadSymbols</key><true/>
+  <key>provisioningProfiles</key>
+  <dict>
+    <key>ai.casama.app</key><string>Casama iOS App Store ai.casama.app</string>
+    <key>ai.casama.app.CasamaShare</key><string>Casama iOS App Store ai.casama.app.CasamaShare</string>
+    <key>ai.casama.app.CasamaWidgets</key><string>Casama iOS App Store ai.casama.app.CasamaWidgets</string>
+    <key>ai.casama.app.watchkitapp</key><string>Casama iOS App Store ai.casama.app.watchkitapp</string>
+    <key>ai.casama.app.watchkitapp.widgets</key><string>Casama iOS App Store ai.casama.app.watchkitapp.widgets</string>
+    <key>ai.casama.app.safari</key><string>Casama Safari Extension App Store</string>
+  </dict>
+</dict>
+</plist>

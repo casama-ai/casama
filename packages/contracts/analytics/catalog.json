@@ -1,0 +1,2934 @@
+{
+  "version": 1,
+  "notes": "Source of truth for product analytics events (ANALYTICS-PLAN \u00a76). Names are permanent. `pnpm gen` writes client/lib/core/analytics_events.g.dart from this file; packages/contracts/test/analytics-catalog.test.ts checks it against the code.",
+  "forbidden_property_words": [
+    "message",
+    "text",
+    "content",
+    "token",
+    "input",
+    "output",
+    "body",
+    "args",
+    "prompt",
+    "email",
+    "persona",
+    "secret",
+    "password",
+    "credential",
+    "cookie",
+    "authorization",
+    "name",
+    "title",
+    "url",
+    "phone",
+    "query"
+  ],
+  "super_properties": ["app", "environment", "platform", "distribution", "server_kind", "source"],
+  "events": [
+    {
+      "name": "sign_in_started",
+      "by": ["client"],
+      "description": "A sign-in method was started.",
+      "properties": {
+        "method": {
+          "type": "string",
+          "values": [
+            "password",
+            "email_code",
+            "apple",
+            "google",
+            "passkey",
+            "sso",
+            "desktop_browser"
+          ]
+        },
+        "surface": {
+          "type": "string",
+          "values": ["sign_in"]
+        },
+        "is_sign_up": {
+          "type": "boolean"
+        }
+      },
+      "funnels": ["F1"]
+    },
+    {
+      "name": "sign_in_failed",
+      "by": ["client"],
+      "description": "A password or code sign-in did not work.",
+      "properties": {
+        "method": {
+          "type": "string",
+          "values": ["password", "email_code"]
+        },
+        "is_sign_up": {
+          "type": "boolean"
+        },
+        "reason": {
+          "type": "string",
+          "values": ["rejected", "invalid_code"]
+        }
+      },
+      "funnels": ["F1"]
+    },
+    {
+      "name": "sign_in_completed",
+      "by": ["client"],
+      "description": "Signed out then in on this device (not a cold start with a saved session).",
+      "properties": {},
+      "funnels": ["F1"],
+      "ga4_twin": { "name": "login", "params": [] }
+    },
+    {
+      "name": "two_step_completed",
+      "by": ["client"],
+      "description": "The two-step code was accepted.",
+      "properties": {},
+      "funnels": ["F1"]
+    },
+    {
+      "name": "signed_up",
+      "by": ["server"],
+      "description": "A new account exists (swept from new profiles). admitted_via: how it got past Casama Cloud's waitlist (D-427).",
+      "properties": {
+        "method": {
+          "type": "string"
+        },
+        "admitted_via": {
+          "type": "string",
+          "values": ["batch", "hand", "code", "none"]
+        }
+      },
+      "funnels": ["F1", "F2"],
+      "ga4_twin": { "name": "sign_up", "params": ["method"] }
+    },
+    {
+      "name": "signed_out",
+      "by": ["client"],
+      "description": "The session ended; a new anonymous identity follows.",
+      "properties": {},
+      "funnels": []
+    },
+    {
+      "name": "account_deletion_requested",
+      "by": ["server"],
+      "description": "Account deletion was requested.",
+      "properties": {
+        "owned_workspaces": {
+          "type": "number"
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "inactivity_resting",
+      "by": ["server"],
+      "description": "A workspace nobody used for 30 days started resting: its background work pauses (D-498). Counts of what paused.",
+      "properties": {
+        "routines": {
+          "type": "number"
+        },
+        "watchers": {
+          "type": "number"
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "inactivity_resumed",
+      "by": ["server"],
+      "description": "Someone came back to a resting workspace and its background work started again (D-498).",
+      "properties": {
+        "days_away": {
+          "type": "number"
+        },
+        "routines": {
+          "type": "number"
+        },
+        "watchers": {
+          "type": "number"
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "inactivity_files_removed",
+      "by": ["server"],
+      "description": "A computer's saved files were removed after 6 months unused (D-498).",
+      "properties": {
+        "bytes": {
+          "type": "number"
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "inactivity_account_removed",
+      "by": ["server"],
+      "description": "An account unused for 12 months (24 if it ever paid) was scheduled for removal (D-498).",
+      "properties": {
+        "paid": {
+          "type": "boolean"
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "onboarding_begin",
+      "by": ["server"],
+      "description": "Onboarding started: the space and bot are made in one step when someone signs up.",
+      "properties": {
+        "path": {
+          "type": "string",
+          "values": ["auto"]
+        }
+      },
+      "funnels": ["F2"],
+      "ga4_twin": { "name": "tutorial_begin", "params": ["path"] }
+    },
+    {
+      "name": "guided_setup_opened",
+      "by": ["client"],
+      "description": "The desktop app's guided setup (Run on This Mac) was opened.",
+      "properties": {},
+      "funnels": []
+    },
+    {
+      "name": "guided_setup_step",
+      "by": ["client"],
+      "description": "A guided setup step was done, skipped or failed.",
+      "properties": {
+        "step": {
+          "type": "string",
+          "values": ["docker", "server", "account", "ai", "phone"]
+        },
+        "action": {
+          "type": "string",
+          "values": [
+            "download",
+            "started",
+            "done",
+            "failed",
+            "signed_in",
+            "created",
+            "link_started",
+            "paired",
+            "skipped"
+          ]
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "onboarding_step_view",
+      "by": ["server"],
+      "description": "A Welcome chat step was shown.",
+      "properties": {
+        "step": {
+          "type": "string",
+          "values": [
+            "name",
+            "google",
+            "focus",
+            "scope",
+            "model",
+            "connect",
+            "phone",
+            "invite",
+            "first_value",
+            "offer_setup",
+            "interview",
+            "learned",
+            "done"
+          ]
+        },
+        "step_index": {
+          "type": "number"
+        }
+      },
+      "funnels": ["F2"]
+    },
+    {
+      "name": "onboarding_step_done",
+      "by": ["client", "server"],
+      "description": "An onboarding step was answered.",
+      "properties": {
+        "step": {
+          "type": "string",
+          "values": [
+            "name",
+            "google",
+            "focus",
+            "scope",
+            "model",
+            "connect",
+            "phone",
+            "invite",
+            "first_value",
+            "offer_setup",
+            "interview",
+            "learned",
+            "done",
+            "name_overlay",
+            "manual_workspace",
+            "manual_join_code",
+            "manual_key",
+            "manual_bot"
+          ]
+        },
+        "action": {
+          "type": "string"
+        },
+        "choice": {
+          "type": "string"
+        }
+      },
+      "funnels": ["F2"]
+    },
+    {
+      "name": "onboarding_complete",
+      "by": ["client", "server"],
+      "description": "Onboarding finished.",
+      "properties": {
+        "path": {
+          "type": "string",
+          "values": ["welcome_chat", "manual", "joined_team"]
+        }
+      },
+      "funnels": ["F2"],
+      "ga4_twin": { "name": "tutorial_complete", "params": ["path"] }
+    },
+    {
+      "name": "first_value",
+      "by": ["server"],
+      "description": "A person's first finished run of their own. admitted_via: how they got past Casama Cloud's waitlist (D-427).",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "values": ["chat", "voice"]
+        },
+        "minutes_since_signup": {
+          "type": "number"
+        },
+        "admitted_via": {
+          "type": "string",
+          "values": ["batch", "hand", "code", "none"]
+        }
+      },
+      "funnels": ["F2", "F3"]
+    },
+    {
+      "name": "milestone_reached",
+      "by": ["server"],
+      "description": "A once-only activation marker.",
+      "properties": {
+        "milestone": {
+          "type": "string",
+          "values": [
+            "first_bot_created",
+            "first_message",
+            "first_run_completed",
+            "first_connection",
+            "first_routine",
+            "first_computer",
+            "first_invite",
+            "first_approval",
+            "first_voice_call",
+            "first_purchase"
+          ]
+        },
+        "minutes_since_signup": {
+          "type": "number"
+        }
+      },
+      "funnels": ["F3"]
+    },
+    {
+      "name": "workspace_created",
+      "by": ["server"],
+      "description": "A workspace was created.",
+      "properties": {
+        "source": {
+          "type": "string",
+          "values": ["manual", "welcome", "telegram", "email", "messenger"]
+        },
+        "plan": {
+          "type": "string"
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "invite_created",
+      "by": ["server"],
+      "description": "An invite, link or code was made.",
+      "properties": {
+        "channel": {
+          "type": "string",
+          "values": ["email", "link", "code", "standing_link"]
+        },
+        "role": {
+          "type": "string"
+        },
+        "requires_approval": {
+          "type": "boolean"
+        },
+        "email_sent": {
+          "type": "boolean"
+        }
+      },
+      "funnels": ["F7"]
+    },
+    {
+      "name": "invite_shared",
+      "by": ["client"],
+      "description": "An invite link was copied or shared.",
+      "properties": {
+        "method": {
+          "type": "string",
+          "values": ["copy", "share"]
+        }
+      },
+      "funnels": ["F7"],
+      "ga4_twin": { "name": "share", "params": ["method"], "set": { "content_type": "invite" } }
+    },
+    {
+      "name": "referral_redeemed",
+      "by": ["server"],
+      "description": "A new person entered a friend's invite code (D-211).",
+      "properties": {
+        "has_reward": {
+          "type": "boolean"
+        },
+        "has_welcome": {
+          "type": "boolean"
+        }
+      },
+      "funnels": ["F7"]
+    },
+    {
+      "name": "referral_rewarded",
+      "by": ["server"],
+      "description": "A friend someone invited qualified: the inviter was rewarded, had reached the cap, or rewards were off; the friend may have got a welcome bonus (D-211).",
+      "properties": {
+        "outcome": {
+          "type": "string",
+          "values": ["rewarded", "capped", "none"]
+        },
+        "rewarded_count": {
+          "type": "number"
+        },
+        "welcome_given": {
+          "type": "boolean"
+        }
+      },
+      "funnels": ["F7"]
+    },
+    {
+      "name": "referral_shared",
+      "by": ["client"],
+      "description": "Someone copied or shared their personal invite link or code (D-211).",
+      "properties": {
+        "method": {
+          "type": "string",
+          "values": ["copy", "share", "copy_code"]
+        }
+      },
+      "funnels": ["F7"],
+      "ga4_twin": { "name": "share", "params": ["method"], "set": { "content_type": "referral" } }
+    },
+    {
+      "name": "partner_claimed",
+      "by": ["server"],
+      "description": "A new account was credited to a creator: their code typed, carried by a casama.ai/c/ link, or read from Google Play's install referrer (D-543).",
+      "properties": {
+        "via": {
+          "type": "string",
+          "values": ["typed", "link_web", "play_referrer"]
+        }
+      },
+      "funnels": ["F7"]
+    },
+    {
+      "name": "comp_granted",
+      "by": ["server"],
+      "description": "An instance owner gave someone a paid plan free for some months (COMP-PLANS-PLAN).",
+      "properties": {
+        "plan": { "type": "string" },
+        "months": { "type": "number" },
+        "from": { "type": "string", "values": ["grant"] }
+      },
+      "funnels": []
+    },
+    {
+      "name": "comp_redeemed",
+      "by": ["server"],
+      "description": "A workspace owner redeemed a gift code for a free plan (COMP-PLANS-PLAN).",
+      "properties": {
+        "plan": { "type": "string" },
+        "months": { "type": "number" }
+      },
+      "funnels": []
+    },
+    {
+      "name": "comp_ended",
+      "by": ["server"],
+      "description": "A free plan ended: its time ran out, the owner ended it, or a paid plan at least as high took over (COMP-PLANS-PLAN).",
+      "properties": {
+        "plan": { "type": "string" },
+        "months": { "type": "number" },
+        "reason": { "type": "string", "values": ["expired", "revoked", "replaced_by_purchase"] }
+      },
+      "funnels": []
+    },
+    {
+      "name": "comp_converted",
+      "by": ["server"],
+      "description": "A workspace that had a free plan started paying, during it or within 30 days of its end (COMP-PLANS-PLAN).",
+      "properties": {
+        "plan": { "type": "string" },
+        "paid_plan": { "type": "string" }
+      },
+      "funnels": []
+    },
+    {
+      "name": "join_completed",
+      "by": ["client"],
+      "description": "The join screen finished.",
+      "properties": {
+        "status": {
+          "type": "string",
+          "values": ["joined", "member", "requested"]
+        },
+        "via": {
+          "type": "string",
+          "values": ["link", "domain"]
+        }
+      },
+      "funnels": ["F7"],
+      "ga4_twin": { "name": "join_group", "params": ["via", "status"] }
+    },
+    {
+      "name": "waitlist_joined",
+      "by": ["server"],
+      "description": "An address joined Casama Cloud's waitlist (D-427). Personless; never the address.",
+      "properties": {
+        "source": {
+          "type": "string"
+        },
+        "self_hosting": {
+          "type": "boolean"
+        }
+      },
+      "funnels": ["F1"]
+    },
+    {
+      "name": "invite_claimed",
+      "by": ["server"],
+      "description": "An invite code was claimed for an address (D-427): on the website, in the app, at sign-up, or with an Apple or Google sign-in token. Personless; never the code or the address.",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "values": ["personal", "campaign", "one_time"]
+        },
+        "outcome": {
+          "type": "string",
+          "values": ["admitted", "waitlisted"]
+        },
+        "via": {
+          "type": "string",
+          "values": ["web", "app", "signup", "id_token"]
+        }
+      },
+      "funnels": ["F1"]
+    },
+    {
+      "name": "waitlist_admitted",
+      "by": ["server"],
+      "description": "Someone was let in past Casama Cloud's waitlist (D-427): by the daily batch, by an owner, or with a code. Personless.",
+      "properties": {
+        "via": {
+          "type": "string",
+          "values": ["batch", "hand", "code"]
+        }
+      },
+      "funnels": ["F1"]
+    },
+    {
+      "name": "signup_refused",
+      "by": ["server"],
+      "description": "Auth's sign-up hook turned a new account away (D-427 waitlist, D-145 allowlist, D-296 invited only). Personless.",
+      "properties": {
+        "reason": {
+          "type": "string",
+          "values": ["gate", "relay", "allowlist", "invited_only", "code_not_found", "code_used_up"]
+        }
+      },
+      "funnels": ["F1"]
+    },
+    {
+      "name": "member_joined",
+      "by": ["server"],
+      "description": "Someone joined a workspace.",
+      "properties": {
+        "via": {
+          "type": "string",
+          "values": ["email", "link", "code", "domain"]
+        },
+        "role": {
+          "type": "string"
+        }
+      },
+      "funnels": ["F7"]
+    },
+    {
+      "name": "join_requested",
+      "by": ["server"],
+      "description": "Someone asked to join and waits for an admin.",
+      "properties": {
+        "via": {
+          "type": "string",
+          "values": ["link", "code"]
+        }
+      },
+      "funnels": ["F7"]
+    },
+    {
+      "name": "join_request_decided",
+      "by": ["server"],
+      "description": "An admin decided a join request.",
+      "properties": {
+        "decision": {
+          "type": "string",
+          "values": ["approved", "declined"]
+        }
+      },
+      "funnels": ["F7"]
+    },
+    {
+      "name": "bot_created",
+      "by": ["server"],
+      "description": "A bot was created.",
+      "properties": {
+        "source": {
+          "type": "string",
+          "values": [
+            "manual",
+            "template",
+            "welcome",
+            "share_link",
+            "telegram",
+            "email",
+            "messenger"
+          ]
+        },
+        "template_id": {
+          "type": "string"
+        },
+        "autonomy": {
+          "type": "string",
+          "values": ["ask_always", "ask_risky", "autonomous"]
+        }
+      },
+      "funnels": ["F3"]
+    },
+    {
+      "name": "bot_shared",
+      "by": ["server"],
+      "description": "A bot was shared as a template.",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "values": ["template_link"]
+        },
+        "include_memories": {
+          "type": "boolean"
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "bot_picture_set",
+      "by": ["client"],
+      "description": "A bot got a picture of its own from the app (BOT-PICTURES-PLAN §10).",
+      "properties": {
+        "source": {
+          "type": "string",
+          "values": [
+            "camera",
+            "library",
+            "file",
+            "drop",
+            "paste",
+            "chat",
+            "recent",
+            "generated",
+            "recrop"
+          ]
+        },
+        "transparent": { "type": "boolean" },
+        "rotated": { "type": "boolean" },
+        "zoomed": { "type": "boolean" }
+      }
+    },
+    {
+      "name": "bot_picture_crop_cancelled",
+      "by": ["client"],
+      "description": "The picture cropper was closed without using the picture.",
+      "properties": {
+        "source": {
+          "type": "string",
+          "values": [
+            "camera",
+            "library",
+            "file",
+            "drop",
+            "paste",
+            "chat",
+            "recent",
+            "generated",
+            "recrop"
+          ]
+        }
+      }
+    },
+    {
+      "name": "bot_picture_removed",
+      "by": ["client"],
+      "description": "A bot stopped using its picture.",
+      "properties": {
+        "to": { "type": "string", "values": ["mascot", "initials"] }
+      }
+    },
+    {
+      "name": "bot_picture_undone",
+      "by": ["client"],
+      "description": "Undo right after changing a bot's picture.",
+      "properties": {}
+    },
+    {
+      "name": "bot_picture_drawn",
+      "by": ["server"],
+      "description": "Casama drew picture candidates for a bot (Make one with AI).",
+      "properties": {
+        "style": {
+          "type": "string",
+          "values": ["cloud", "soft3d", "watercolor", "flat", "pixel", "line", "photo"]
+        },
+        "count": { "type": "number" }
+      }
+    },
+    {
+      "name": "workspace_picture_set",
+      "by": ["client"],
+      "description": "A workspace got a picture of its own from the app (WORKSPACE-PICTURES-PLAN).",
+      "properties": {
+        "source": {
+          "type": "string",
+          "values": ["camera", "library", "file", "drop", "paste", "recent", "generated", "recrop"]
+        },
+        "transparent": { "type": "boolean" },
+        "rotated": { "type": "boolean" },
+        "zoomed": { "type": "boolean" }
+      }
+    },
+    {
+      "name": "workspace_picture_crop_cancelled",
+      "by": ["client"],
+      "description": "The workspace picture cropper was closed without using the picture.",
+      "properties": {
+        "source": {
+          "type": "string",
+          "values": ["camera", "library", "file", "drop", "paste", "recent", "generated", "recrop"]
+        }
+      }
+    },
+    {
+      "name": "workspace_picture_removed",
+      "by": ["client"],
+      "description": "A workspace stopped using its picture.",
+      "properties": {}
+    },
+    {
+      "name": "workspace_picture_undone",
+      "by": ["client"],
+      "description": "Undo right after changing a workspace's picture.",
+      "properties": {}
+    },
+    {
+      "name": "workspace_picture_drawn",
+      "by": ["server"],
+      "description": "Casama drew emblem picture candidates for a workspace (Make one with AI).",
+      "properties": {
+        "style": {
+          "type": "string",
+          "values": ["cloud", "soft3d", "watercolor", "flat", "pixel", "line", "photo"]
+        },
+        "count": { "type": "number" }
+      }
+    },
+    {
+      "name": "profile_photo_set",
+      "by": ["client"],
+      "description": "A person set their profile photo through the cropper.",
+      "properties": {
+        "source": { "type": "string", "values": ["camera", "library", "file", "drop", "paste"] },
+        "rotated": { "type": "boolean" },
+        "zoomed": { "type": "boolean" }
+      }
+    },
+    {
+      "name": "run_refused",
+      "by": ["server"],
+      "description": "A person's run did not start.",
+      "properties": {
+        "reason": {
+          "type": "string"
+        },
+        "surface": {
+          "type": "string",
+          "values": ["run"]
+        }
+      },
+      "funnels": ["F6"]
+    },
+    {
+      "name": "routine_created",
+      "by": ["server"],
+      "description": "A routine was created.",
+      "properties": {
+        "trigger_kind": {
+          "type": "string",
+          "values": ["schedule", "once", "webhook", "github", "message", "calendar", "device"]
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "watcher_created",
+      "by": ["server"],
+      "description": "A watcher was created.",
+      "properties": {
+        "kind": {
+          "type": "string"
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "canvas_set",
+      "by": ["server"],
+      "description": "A bot set a canvas on a person's Canvas widget (docs/BOT-WIDGET-PLAN.md): its template, whether it has a picture, how many entries or rotation items, and whether it came from a chat or a routine. Never its words.",
+      "properties": {
+        "template": {
+          "type": "string",
+          "values": ["text", "countdown", "number", "list", "picture"]
+        },
+        "has_picture": {
+          "type": "boolean"
+        },
+        "entries": {
+          "type": "number"
+        },
+        "rotation": {
+          "type": "boolean"
+        },
+        "trigger": {
+          "type": "string",
+          "values": ["chat", "routine", "other"]
+        },
+        "first": {
+          "type": "boolean"
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "canvas_allowed",
+      "by": ["client"],
+      "description": "The person answered a bot's first canvas preview: Show on my widgets or Not now.",
+      "properties": {
+        "choice": {
+          "type": "string",
+          "values": ["allow", "not_now"]
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "action_rule_created",
+      "by": ["server"],
+      "description": "An action rule was created.",
+      "properties": {
+        "decision": {
+          "type": "string"
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "skill_installed",
+      "by": ["client"],
+      "description": "A catalog skill was installed.",
+      "properties": {
+        "source": {
+          "type": "string",
+          "values": ["catalog"]
+        },
+        "skill_id": {
+          "type": "string"
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "page_published",
+      "by": ["server"],
+      "description": "A page was published.",
+      "properties": {
+        "visibility": {
+          "type": "string",
+          "values": ["private", "workspace", "public"]
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "site_published",
+      "by": ["server"],
+      "description": "A page was put on the web at its own address (docs/SITES-AND-DOMAINS-PLAN.md).",
+      "properties": {
+        "surface": {
+          "type": "string",
+          "values": ["app", "bot", "api"]
+        },
+        "indexable": {
+          "type": "boolean"
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "site_unpublished",
+      "by": ["server"],
+      "description": "A site was taken off the web (its page went private).",
+      "properties": {},
+      "funnels": []
+    },
+    {
+      "name": "domain_connect_started",
+      "by": ["server"],
+      "description": "A workspace started connecting a domain it owns. Never the domain itself.",
+      "properties": {
+        "tld": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string",
+          "values": ["connected", "registered"]
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "domain_connected",
+      "by": ["server"],
+      "description": "A domain's main host went live on a site.",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "values": ["connected", "registered"]
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "domain_connect_failed",
+      "by": ["server"],
+      "description": "A domain's main host couldn't be connected (DNS never found, or no certificate).",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "values": ["connected", "registered"]
+        },
+        "reason": {
+          "type": "string"
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "domain_search",
+      "by": ["server"],
+      "description": "Someone searched for a domain to buy (Find a Domain or a bot's domains.search). The query is never sent.",
+      "properties": {
+        "results": {
+          "type": "number"
+        },
+        "available": {
+          "type": "number"
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "domain_checkout_started",
+      "by": ["server"],
+      "description": "A domain purchase was started: a checkout opened, or the saved payment method charged.",
+      "properties": {
+        "tld": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string",
+          "values": ["register", "renew", "restore"]
+        },
+        "mode": {
+          "type": "string",
+          "values": ["checkout", "mandate"]
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "domain_purchased",
+      "by": ["server"],
+      "description": "A paid domain was registered and set up.",
+      "properties": {
+        "tld": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string",
+          "values": ["register", "renew", "restore"]
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "domain_order_failed",
+      "by": ["server"],
+      "description": "A paid domain order couldn't be completed and was refunded (or its refund failed).",
+      "properties": {
+        "tld": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string",
+          "values": ["register", "renew", "restore"]
+        },
+        "reason": {
+          "type": "string"
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "domain_renewed",
+      "by": ["server"],
+      "description": "A bought domain was renewed for a year (a charge on the saved method, or Renew Now).",
+      "properties": {
+        "tld": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string",
+          "values": ["renew"]
+        },
+        "mode": {
+          "type": "string",
+          "values": ["checkout", "mandate"]
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "domain_renewal_failed",
+      "by": ["server"],
+      "description": "A renewal charge on the saved payment method didn't go through.",
+      "properties": {
+        "tld": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string",
+          "values": ["renew"]
+        },
+        "step": {
+          "type": "string"
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "domain_expired",
+      "by": ["server"],
+      "description": "A bought domain passed its expiry date unrenewed.",
+      "properties": {
+        "tld": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string",
+          "values": ["registered"]
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "domain_transfer_out",
+      "by": ["server"],
+      "description": "A workspace owner got a bought domain's transfer code to move it to another registrar.",
+      "properties": {
+        "tld": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string",
+          "values": ["registered"]
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "media_uploaded",
+      "by": ["server"],
+      "description": "A file was uploaded straight to the server (Casama for Chrome's saves and attachments): kept in the Library or sent with a message.",
+      "properties": {
+        "purpose": {
+          "type": "string",
+          "values": ["library", "attachment"]
+        },
+        "converted": {
+          "type": "boolean"
+        },
+        "size_bytes": {
+          "type": "number"
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "chat_app_connected",
+      "by": ["server"],
+      "description": "A chat app was connected. hosted: through Casama's own shared bot (D-496). via: app (one-time link from the app), email (asked in Telegram, confirmed by email) or signup (a new account made from Telegram).",
+      "properties": {
+        "channel": {
+          "type": "string"
+        },
+        "hosted": {
+          "type": "boolean"
+        },
+        "via": {
+          "type": "string"
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "chat_app_connect_started",
+      "by": ["server"],
+      "description": "Someone asked for a one-time link to Casama's own bot in a chat app (D-496), or get@ mailed a setup or connect link (provider email, via signup or email; D-513).",
+      "properties": {
+        "provider": {
+          "type": "string"
+        },
+        "via": {
+          "type": "string"
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "chat_app_disconnected",
+      "by": ["server"],
+      "description": "A connection to Casama's own bot in a chat app was removed (D-496).",
+      "properties": {
+        "provider": {
+          "type": "string"
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "bot_email_claimed",
+      "by": ["server"],
+      "description": "A bot claimed its hosted email address.",
+      "properties": {
+        "surface": {
+          "type": "string"
+        }
+      },
+      "funnels": ["bot_email_onboarding"]
+    },
+    {
+      "name": "mail_received",
+      "by": ["server"],
+      "description": "A hosted address received a mail.",
+      "properties": {
+        "verdict": {
+          "type": "string"
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "mail_sent",
+      "by": ["server"],
+      "description": "A hosted address sent a mail.",
+      "properties": {},
+      "funnels": []
+    },
+    {
+      "name": "connection_started",
+      "by": ["client"],
+      "description": "The connect sheet started.",
+      "properties": {
+        "app_id": {
+          "type": "string"
+        },
+        "method": {
+          "type": "string"
+        },
+        "reconnect": {
+          "type": "boolean"
+        }
+      },
+      "funnels": ["F4"]
+    },
+    {
+      "name": "connection_added",
+      "by": ["server"],
+      "description": "A connection came up.",
+      "properties": {
+        "app_id": {
+          "type": "string"
+        },
+        "reconnect": {
+          "type": "boolean"
+        }
+      },
+      "funnels": ["F4"]
+    },
+    {
+      "name": "connection_failed",
+      "by": ["client", "server"],
+      "description": "A connection did not come up.",
+      "properties": {
+        "app_id": {
+          "type": "string"
+        },
+        "method": {
+          "type": "string"
+        },
+        "reconnect": {
+          "type": "boolean"
+        },
+        "reason": {
+          "type": "string",
+          "values": ["link_error", "oauth_error", "cancelled", "expired", "exception"]
+        }
+      },
+      "funnels": ["F4"]
+    },
+    {
+      "name": "model_key_added",
+      "by": ["server"],
+      "description": "A model key was added.",
+      "properties": {
+        "provider": {
+          "type": "string"
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "computer_start_requested",
+      "by": ["server"],
+      "description": "A computer start was requested.",
+      "properties": {
+        "kind": {
+          "type": "string"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "mode": {
+          "type": "string",
+          "values": ["provision", "restore"]
+        }
+      },
+      "funnels": ["F5"]
+    },
+    {
+      "name": "computer_ready",
+      "by": ["server"],
+      "description": "A computer is running.",
+      "properties": {
+        "kind": {
+          "type": "string"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "mode": {
+          "type": "string",
+          "values": ["provision", "restore"]
+        },
+        "start_ms": {
+          "type": "number"
+        }
+      },
+      "funnels": ["F5"]
+    },
+    {
+      "name": "computer_start_failed",
+      "by": ["server"],
+      "description": "A computer did not start.",
+      "properties": {
+        "kind": {
+          "type": "string"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "mode": {
+          "type": "string",
+          "values": ["provision", "restore"]
+        },
+        "reason": {
+          "type": "string"
+        }
+      },
+      "funnels": ["F5"]
+    },
+    {
+      "name": "live_view_failed",
+      "by": ["client"],
+      "description": "Live view fell back to screenshots.",
+      "properties": {
+        "fallback": {
+          "type": "string",
+          "values": ["screenshot"]
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "screen_card_shown",
+      "by": ["client"],
+      "description": "The bot's screen appeared in a small card in its chat (SCREEN-CARD-PLAN).",
+      "properties": {
+        "trigger": {
+          "type": "string",
+          "values": ["screen_step", "takeover"]
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "screen_card_opened",
+      "by": ["client"],
+      "description": "The screen card was tapped to open the full live view.",
+      "properties": {
+        "state": {
+          "type": "string",
+          "values": ["watching", "needs_you", "held", "done", "stale"]
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "screen_card_hidden",
+      "by": ["client"],
+      "description": "The person hid the screen card for the reply (the close button or its menu), or turned it off (its menu, the three-closes toast or the setting).",
+      "properties": {
+        "how": {
+          "type": "string",
+          "values": ["close", "menu", "setting"]
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "companion_paired",
+      "by": ["client"],
+      "description": "This computer was paired.",
+      "properties": {
+        "os": {
+          "type": "string"
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "device_data_toggled",
+      "by": ["client"],
+      "description": "A device data kind was switched.",
+      "properties": {
+        "kind": {
+          "type": "string"
+        },
+        "result": {
+          "type": "string",
+          "values": ["off", "granted", "denied"]
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "call_started",
+      "by": ["client"],
+      "description": "A live call connected or failed.",
+      "properties": {
+        "provider": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string",
+          "values": ["in_app"]
+        },
+        "result": {
+          "type": "string",
+          "values": ["connected", "failed"]
+        }
+      },
+      "funnels": ["F8"]
+    },
+    {
+      "name": "call_ended",
+      "by": ["server"],
+      "description": "A live call ended.",
+      "properties": {
+        "provider": {
+          "type": "string"
+        },
+        "duration_s": {
+          "type": "number"
+        },
+        "billable": {
+          "type": "boolean"
+        },
+        "ended_by": {
+          "type": "string",
+          "values": ["app", "server"]
+        }
+      },
+      "funnels": ["F8"]
+    },
+    {
+      "name": "call_summary_written",
+      "by": ["server"],
+      "description": "A finished call's card got its summary, or went without (call card plan).",
+      "properties": {
+        "status": {
+          "type": "string",
+          "values": ["ready", "skipped", "failed"]
+        },
+        "next_steps": {
+          "type": "number"
+        }
+      },
+      "funnels": ["F8"]
+    },
+    {
+      "name": "call_card_action",
+      "by": ["client"],
+      "description": "Someone used a call's card in the chat (call card plan).",
+      "properties": {
+        "action": {
+          "type": "string",
+          "values": [
+            "transcript_opened",
+            "step_started",
+            "step_dismissed",
+            "call_back",
+            "copied",
+            "shared",
+            "deleted"
+          ]
+        }
+      },
+      "funnels": ["F8"]
+    },
+    {
+      "name": "bot_call_answered",
+      "by": ["client"],
+      "description": "A call from a bot was answered or declined.",
+      "properties": {
+        "answer": {
+          "type": "string",
+          "values": ["accepted", "declined"]
+        }
+      },
+      "funnels": ["F8"]
+    },
+    {
+      "name": "limit_reached",
+      "by": ["server"],
+      "description": "A plan or credit limit stopped something.",
+      "properties": {
+        "kind": {
+          "type": "string"
+        },
+        "surface": {
+          "type": "string",
+          "values": ["bot", "computer", "run", "call", "mail"]
+        }
+      },
+      "funnels": ["F6"]
+    },
+    {
+      "name": "paywall_view",
+      "by": ["client"],
+      "description": "The paywall was opened: from a limit, from running out of credits, or from Billing.",
+      "properties": {
+        "source": {
+          "type": "string",
+          "values": ["limit", "credits_depleted", "settings"]
+        },
+        "paywall_kind": {
+          "type": "string",
+          "values": ["regular", "credits"]
+        },
+        "default_plan": {
+          "type": "string"
+        },
+        "default_period": {
+          "type": "string",
+          "values": ["week", "month", "year"]
+        }
+      },
+      "funnels": ["F6"],
+      "ga4_twin": {
+        "name": "view_item_list",
+        "params": ["source", "paywall_kind", "default_plan", "default_period"],
+        "set": { "item_list_id": "paywall", "item_list_name": "Casama plans" }
+      }
+    },
+    {
+      "name": "paywall_plan_select",
+      "by": ["client"],
+      "description": "A plan tier or billing period was selected on the paywall.",
+      "properties": {
+        "plan": {
+          "type": "string"
+        },
+        "interval": {
+          "type": "string",
+          "values": ["week", "month", "year"]
+        }
+      },
+      "funnels": ["F6"],
+      "ga4_twin": {
+        "name": "select_item",
+        "params": ["plan", "interval"],
+        "set": { "item_list_id": "paywall", "item_list_name": "Casama plans" }
+      }
+    },
+    {
+      "name": "paywall_dismiss",
+      "by": ["client"],
+      "description": "The paywall was closed without upgrading.",
+      "properties": {
+        "source": {
+          "type": "string",
+          "values": ["limit", "credits_depleted", "settings"]
+        }
+      },
+      "funnels": ["F6"]
+    },
+    {
+      "name": "purchase_started",
+      "by": ["client"],
+      "description": "Checkout or a store purchase started.",
+      "properties": {
+        "store": {
+          "type": "string",
+          "values": ["dodo", "app_store", "google_play", "store"]
+        },
+        "kind": {
+          "type": "string",
+          "values": ["subscription", "credit_pack"]
+        },
+        "product_id": {
+          "type": "string"
+        }
+      },
+      "funnels": ["F6"],
+      "ga4_twin": {
+        "name": "begin_checkout",
+        "params": ["store", "kind", "product_id"],
+        "set": { "currency": "USD" }
+      }
+    },
+    {
+      "name": "review_prompt_shown",
+      "by": ["client"],
+      "description": "The store's rating prompt was asked for after a good moment (D-305, D-460): moment is replyFinished, purchase, or firstReply (the first finished reply of a new person's first session); rules is the platform's rule set. The store doesn't say whether it showed or what they rated.",
+      "properties": {
+        "moment": {
+          "type": "string",
+          "values": ["replyFinished", "purchase", "firstReply"]
+        },
+        "rules": {
+          "type": "string",
+          "values": ["eager_android", "apple", "default"]
+        }
+      }
+    },
+    {
+      "name": "review_store_opened",
+      "by": ["client"],
+      "description": "Rate Casama in Help was tapped and opened the store page (D-460).",
+      "properties": {}
+    },
+    {
+      "name": "purchase_completed",
+      "by": ["client"],
+      "description": "The client's view of a store purchase.",
+      "properties": {
+        "outcome": {
+          "type": "string",
+          "values": ["purchased", "pending", "cancelled", "failed"]
+        },
+        "store": {
+          "type": "string",
+          "values": ["dodo", "app_store", "google_play", "store"]
+        },
+        "product_id": {
+          "type": "string"
+        }
+      },
+      "funnels": ["F6"]
+    },
+    {
+      "name": "restore_purchases",
+      "by": ["client"],
+      "description": "Restore purchases finished.",
+      "properties": {
+        "outcome": {
+          "type": "string",
+          "values": ["restored", "failed"]
+        },
+        "store": {
+          "type": "string",
+          "values": ["dodo", "app_store", "google_play", "store"]
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "checkout_created",
+      "by": ["server"],
+      "description": "A web checkout was created.",
+      "properties": {
+        "store": {
+          "type": "string",
+          "values": ["dodo"]
+        },
+        "kind": {
+          "type": "string",
+          "values": ["subscription", "credit_pack", "plan_change"]
+        },
+        "product_id": {
+          "type": "string"
+        },
+        "discount": {
+          "type": "boolean"
+        }
+      },
+      "funnels": ["F6"]
+    },
+    {
+      "name": "subscription_changed",
+      "by": ["server"],
+      "description": "A subscription changed status or plan, or renewal was turned off or back on (renewal_off, renewal_on).",
+      "properties": {
+        "store": {
+          "type": "string"
+        },
+        "plan": {
+          "type": "string"
+        },
+        "interval": {
+          "type": "string"
+        },
+        "product_id": {
+          "type": "string"
+        },
+        "change": {
+          "type": "string",
+          "values": [
+            "started",
+            "trial_started",
+            "trial_converted",
+            "renewed",
+            "recovered",
+            "grace",
+            "cancelled",
+            "expired",
+            "refunded",
+            "plan_changed",
+            "renewal_off",
+            "renewal_on"
+          ]
+        },
+        "from_status": {
+          "type": "string"
+        },
+        "to_status": {
+          "type": "string"
+        },
+        "sandbox": {
+          "type": "boolean",
+          "description": "Bought with a store test account (TestFlight, App Review, Play license testers); no money arrives"
+        }
+      },
+      "funnels": ["F6"]
+    },
+    {
+      "name": "purchase",
+      "by": ["server"],
+      "description": "Money arrived (revenue truth, with numeric USD value when known).",
+      "properties": {
+        "store": {
+          "type": "string"
+        },
+        "plan": {
+          "type": "string"
+        },
+        "interval": {
+          "type": "string"
+        },
+        "product_id": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string",
+          "values": ["new", "renewal", "credit_pack"]
+        },
+        "value": {
+          "type": "number"
+        }
+      },
+      "funnels": ["F6"]
+    },
+    {
+      "name": "acquisition_credited",
+      "by": ["server"],
+      "description": "The person's one credited source was frozen, shortly after sign-up (docs/ADS-ATTRIBUTION-PLAN.md §6.2). Sets acq_* person and GA4 user properties once.",
+      "properties": {
+        "acq_source": {
+          "type": "string"
+        },
+        "acq_medium": {
+          "type": "string"
+        },
+        "acq_campaign": {
+          "type": "string"
+        },
+        "acq_ad_set": {
+          "type": "string"
+        },
+        "acq_ad": {
+          "type": "string"
+        },
+        "acq_kind": {
+          "type": "string",
+          "values": [
+            "ad_click",
+            "play_referrer",
+            "meta_referrer",
+            "invite",
+            "referral",
+            "referral_site",
+            "site_page",
+            "self_reported",
+            "unknown"
+          ]
+        }
+      }
+    },
+    {
+      "name": "refund_issued",
+      "by": ["server"],
+      "description": "A refund was issued.",
+      "properties": {
+        "store": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string",
+          "values": ["subscription", "credit_pack"]
+        },
+        "value": {
+          "type": "number"
+        }
+      },
+      "funnels": [],
+      "ga4_twin": {
+        "name": "refund",
+        "params": ["store", "kind", "value"],
+        "set": { "currency": "USD" }
+      }
+    },
+    {
+      "name": "proactive_message_sent",
+      "by": ["server"],
+      "description": "A bot reached out first (D-247): a suggestion push, a timed one, or the summary after setup.",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "values": ["suggestion", "timed", "summary"]
+        },
+        "reason": {
+          "type": "string",
+          "values": ["setup", "connection", "event", "schedule", "other"]
+        },
+        "found": {
+          "type": "number"
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "message_reacted",
+      "by": ["client"],
+      "description": "A person reacted to a message with an emoji, or changed their reaction (D-331).",
+      "properties": {
+        "emoji": {
+          "type": "string"
+        },
+        "on": {
+          "type": "string",
+          "values": ["bot", "person"]
+        },
+        "surface": {
+          "type": "string",
+          "values": ["menu", "hover", "double_tap", "chip", "picker"]
+        },
+        "conversation_kind": {
+          "type": "string",
+          "values": ["direct", "group"]
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "message_reaction_removed",
+      "by": ["client"],
+      "description": "A person took back their reaction to a message (D-331).",
+      "properties": {
+        "on": {
+          "type": "string",
+          "values": ["bot", "person"]
+        },
+        "surface": {
+          "type": "string",
+          "values": ["menu", "hover", "chip"]
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "suggestion_resolved",
+      "by": ["server"],
+      "description": "A suggestion was accepted or dismissed (D-247).",
+      "properties": {
+        "result": {
+          "type": "string",
+          "values": ["accepted", "dismissed", "dismissed_forever"]
+        },
+        "age_hours": {
+          "type": "number"
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "proactive_muted",
+      "by": ["server"],
+      "description": "Someone tapped Less like this on a proactive message (D-153, D-247).",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "values": ["suggestions", "routine results"]
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "push_permission_result",
+      "by": ["client"],
+      "description": "The notification prompt was answered.",
+      "properties": {
+        "result": {
+          "type": "string",
+          "values": ["granted", "denied", "snoozed", "dismissed"]
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "push_opened",
+      "by": ["client"],
+      "description": "A notification was opened.",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "values": [
+            "approval",
+            "run",
+            "call",
+            "checkin",
+            "suggestion",
+            "mention",
+            "reply",
+            "other"
+          ]
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "app_startup_failed",
+      "by": ["client"],
+      "description": "The app could not reach its server at start.",
+      "properties": {
+        "reason": {
+          "type": "string",
+          "values": ["timeout", "unreachable", "error"]
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "app_active_daily",
+      "by": ["client"],
+      "description": "First use of the day on a server that is not Casama Cloud.",
+      "properties": {
+        "server_kind": {
+          "type": "string",
+          "values": ["self_hosted", "local", "unknown"]
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "app_error_shown",
+      "by": ["client"],
+      "description": "A failure the person saw.",
+      "properties": {
+        "error_code": {
+          "type": "string"
+        },
+        "http_status": {
+          "type": "number"
+        },
+        "kind": {
+          "type": "string",
+          "values": ["network", "server", "auth", "validation", "unknown"]
+        },
+        "screen": {
+          "type": "string"
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "starter_tapped",
+      "by": ["client"],
+      "description": "A starter request in an empty chat was tapped (D-338). source says whether a model wrote the list for them (ai) or rules picked it (rules, or app when the server couldn't be reached); position is its place in the list, from 0.",
+      "properties": {
+        "source": {
+          "type": "string",
+          "values": ["ai", "rules", "app"]
+        },
+        "position": {
+          "type": "number"
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "intro_video_opened",
+      "by": ["client"],
+      "description": "The intro film was opened (D-459). surface is where: the row in a new person's empty chat, or Help. player is app (the app's own full-screen player) or browser (Windows and Linux, or a film link that isn't a video file).",
+      "properties": {
+        "surface": {
+          "type": "string",
+          "values": ["empty_chat", "help"]
+        },
+        "player": {
+          "type": "string",
+          "values": ["app", "browser"]
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "intro_video_closed",
+      "by": ["client"],
+      "description": "The app's intro film player was closed (D-459). percent is how far into the film they got (0 to 100); played is false when it never started (offline, say).",
+      "properties": {
+        "percent": {
+          "type": "number"
+        },
+        "played": {
+          "type": "boolean"
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "intro_video_youtube",
+      "by": ["client"],
+      "description": "Watch on YouTube was tapped in the intro film player (D-459), at the end or after it couldn't play.",
+      "properties": {},
+      "funnels": []
+    },
+    {
+      "name": "intro_video_dismissed",
+      "by": ["client"],
+      "description": "The intro film row in an empty chat was closed without watching.",
+      "properties": {},
+      "funnels": []
+    },
+    {
+      "name": "feature_used",
+      "by": ["client"],
+      "description": "A feature was used (once a day per device).",
+      "properties": {
+        "feature": {
+          "type": "string",
+          "values": [
+            "dictation",
+            "read_aloud",
+            "voice_call",
+            "wake_word",
+            "quick_ask",
+            "edit_resend",
+            "branch_switch",
+            "search",
+            "pages",
+            "routines_run_now",
+            "projects",
+            "tasks_board",
+            "inbox",
+            "for_you",
+            "computer_live",
+            "computer_take_control",
+            "teach",
+            "gallery_look",
+            "share_template",
+            "group_chat",
+            "desktop_hotkey",
+            "share_extension",
+            "mac_menu",
+            "notch_opened",
+            "notch_action",
+            "menu_bar_panel",
+            "live_activity_started",
+            "live_notification_started",
+            "reactions",
+            "widget_opened",
+            "widget_action",
+            "siri_action",
+            "gemini_action",
+            "extension_panel",
+            "extension_chat",
+            "extension_capture"
+          ]
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "widgets_placed",
+      "by": ["client"],
+      "description": "Widgets this device has placed, once a day per device (D-405): how many, and whether any is on the Lock Screen; how many are Canvas widgets and whether one is on the Lock Screen (bot widgets).",
+      "properties": {
+        "count": {
+          "type": "number"
+        },
+        "lock_screen": {
+          "type": "boolean"
+        },
+        "canvas": {
+          "type": "number"
+        },
+        "canvas_lock_screen": {
+          "type": "boolean"
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "widget_action",
+      "by": ["client"],
+      "description": "A button in a widget or control was pressed and carried out by the app (D-405).",
+      "properties": {
+        "action": {
+          "type": "string",
+          "values": ["run", "do_it", "allow", "deny", "stop", "ask", "talk"]
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "siri_action",
+      "by": ["client"],
+      "description": "Siri or Shortcuts asked the app to act (docs/SIRI-AI-PLAN.md §15): which action, how it ended, and how long it waited in seconds. Never any words.",
+      "properties": {
+        "action": {
+          "type": "string",
+          "values": ["ask", "run", "needs", "send", "draft", "search", "open"]
+        },
+        "outcome": {
+          "type": "string",
+          "values": [
+            "replied",
+            "working",
+            "needs_you",
+            "hidden",
+            "no_credits",
+            "offline",
+            "signed_out",
+            "limited",
+            "opened_app",
+            "failed"
+          ]
+        },
+        "wait_s": {
+          "type": "number"
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "gemini_action",
+      "by": ["client"],
+      "description": "Gemini asked Casama's AppFunctions on Android to act through the app (docs/ANDROID-APPFUNCTIONS-PLAN.md §17, D-567): which action, how it ended, and how long it waited in seconds. Never any words.",
+      "properties": {
+        "action": {
+          "type": "string",
+          "values": ["ask", "needs", "run", "bots", "routines", "open"]
+        },
+        "outcome": {
+          "type": "string",
+          "values": [
+            "replied",
+            "working",
+            "needs_you",
+            "hidden",
+            "no_credits",
+            "offline",
+            "signed_out",
+            "limited",
+            "opened_app",
+            "failed",
+            "off"
+          ]
+        },
+        "wait_s": {
+          "type": "number"
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "watch_paired",
+      "by": ["server"],
+      "description": "A watch was signed in (D-410): from the phone app, or with a code the watch showed.",
+      "properties": {
+        "method": {
+          "type": "string",
+          "values": ["phone", "code"]
+        },
+        "platform": {
+          "type": "string",
+          "values": ["watchos", "wearos"]
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "watch_action",
+      "by": ["server"],
+      "description": "Something was done from a watch (D-410), and where on the watch: allowed or denied a request, did a suggestion, ran a routine, stopped a run, asked or replied, had a reply read aloud.",
+      "properties": {
+        "action": {
+          "type": "string",
+          "values": ["allow", "deny", "do_it", "run", "stop", "ask", "reply", "read_aloud"]
+        },
+        "surface": {
+          "type": "string",
+          "values": [
+            "app",
+            "notification",
+            "complication",
+            "smart_stack",
+            "tile",
+            "control",
+            "siri"
+          ]
+        },
+        "platform": {
+          "type": "string",
+          "values": ["watchos", "wearos"]
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "watch_screen_viewed",
+      "by": ["server"],
+      "description": "A screen of the watch app was shown (D-535), at most once a day per screen and watch, and where it was opened from. Sent by the watch to POST /v1/watch/events.",
+      "properties": {
+        "screen": {
+          "type": "string",
+          "values": [
+            "now",
+            "needs",
+            "request",
+            "suggestion",
+            "elsewhere",
+            "ask",
+            "run",
+            "chat",
+            "bots",
+            "up_next",
+            "brief",
+            "talk",
+            "settings"
+          ]
+        },
+        "surface": {
+          "type": "string",
+          "values": [
+            "app",
+            "notification",
+            "complication",
+            "smart_stack",
+            "tile",
+            "control",
+            "siri"
+          ]
+        },
+        "platform": {
+          "type": "string",
+          "values": ["watchos", "wearos"]
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "enable_analytics_sharing",
+      "by": ["client"],
+      "description": "Usage data sharing was turned on.",
+      "properties": {},
+      "funnels": []
+    },
+    {
+      "name": "disable_analytics_sharing",
+      "by": ["client"],
+      "description": "Usage data sharing was turned off.",
+      "properties": {},
+      "funnels": []
+    },
+    {
+      "name": "usage_daily",
+      "by": ["server"],
+      "description": "What a person did yesterday (rollup).",
+      "properties": {
+        "runs_started": {
+          "type": "number"
+        },
+        "runs_completed": {
+          "type": "number"
+        },
+        "runs_failed": {
+          "type": "number"
+        },
+        "runs_cancelled": {
+          "type": "number"
+        },
+        "bots_used": {
+          "type": "number"
+        },
+        "cost_usd": {
+          "type": "number"
+        },
+        "approvals_approved": {
+          "type": "number"
+        },
+        "approvals_denied": {
+          "type": "number"
+        }
+      },
+      "funnels": ["F3"]
+    },
+    {
+      "name": "workspace_daily",
+      "by": ["server"],
+      "description": "What happened in a workspace yesterday (rollup, personless).",
+      "properties": {
+        "runs_total": {
+          "type": "number"
+        },
+        "runs_failed": {
+          "type": "number"
+        },
+        "cost_usd": {
+          "type": "number"
+        },
+        "members_active": {
+          "type": "number"
+        },
+        "bots_active": {
+          "type": "number"
+        },
+        "computer_seconds": {
+          "type": "number"
+        },
+        "voice_seconds": {
+          "type": "number"
+        },
+        "dictation_seconds": {
+          "type": "number"
+        },
+        "approvals_approved": {
+          "type": "number"
+        },
+        "approvals_denied": {
+          "type": "number"
+        },
+        "runs_by_trigger_*": {
+          "type": "number"
+        }
+      },
+      "funnels": [],
+      "personless": true
+    },
+    {
+      "name": "help_place_opened",
+      "by": ["client"],
+      "description": "Someone tapped a clickable place link or Go to chip inside Casama Help.",
+      "properties": {
+        "place_id": {
+          "type": "string"
+        },
+        "from": {
+          "type": "string",
+          "values": ["link", "chip"]
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "feedback_sent",
+      "by": ["client"],
+      "description": "Someone sent feedback from Help & support (D-536). The kind only, never the text.",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "values": ["idea", "like", "dislike", "confusing"]
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "testimonial_submitted",
+      "by": ["server"],
+      "description": "Someone sent a sentence about Casama from the app's ask (D-545). Whether they ticked consent, never the words.",
+      "properties": {
+        "consent": {
+          "type": "boolean"
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "app_mentioned",
+      "by": ["server"],
+      "description": "A message mentioned a connected app with @ and resolved it for the run.",
+      "properties": {
+        "source": {
+          "type": "string",
+          "values": ["picker", "typed"]
+        },
+        "app_kind": {
+          "type": "string",
+          "values": ["mcp", "openapi", "composio", "pipedream", "local_mcp", "computer_mcp", "a2a"]
+        },
+        "app_id": {
+          "type": "string"
+        },
+        "preloaded": {
+          "type": "boolean"
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "app_mention_connect_started",
+      "by": ["client"],
+      "description": "Someone tapped Connect on an unconnected app from the chat @ menu.",
+      "properties": {
+        "app_id": {
+          "type": "string"
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "group_chat_from_mention",
+      "by": ["client"],
+      "description": "Someone opened or started a group chat by picking another bot from a direct chat @ menu.",
+      "properties": {},
+      "funnels": []
+    },
+    {
+      "name": "reset_given",
+      "by": ["server"],
+      "description": "A workspace was given a saved reset.",
+      "properties": {
+        "plan": {
+          "type": "string"
+        },
+        "campaign_id": {
+          "type": "string"
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "reset_used",
+      "by": ["server"],
+      "description": "A workspace owner used a saved reset.",
+      "properties": {
+        "plan": {
+          "type": "string"
+        },
+        "campaign_id": {
+          "type": "string"
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "reset_expired",
+      "by": ["server"],
+      "description": "An unused saved reset expired.",
+      "properties": {
+        "plan": {
+          "type": "string"
+        },
+        "campaign_id": {
+          "type": "string"
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "card_shown",
+      "by": ["server"],
+      "description": "A live data card was shown in a chat (docs/RICH-CARDS-PLAN.md §12): which card, which live tool, and the provider. Never places, symbols or words.",
+      "properties": {
+        "card": {
+          "type": "string",
+          "values": [
+            "Weather",
+            "Forecast",
+            "WeatherAlert",
+            "AirQuality",
+            "SunMoon",
+            "Quote",
+            "Watchlist",
+            "Currency",
+            "Holidays",
+            "Quake",
+            "Storm",
+            "Flight",
+            "Parcel",
+            "Fares",
+            "FareDetails",
+            "FareCalendar",
+            "FareExplore",
+            "FareWatches",
+            "FareTrend",
+            "FlightSearch",
+            "Score",
+            "Standings",
+            "WorldClock",
+            "Countdown",
+            "Summary",
+            "Definition",
+            "Media",
+            "Recipe",
+            "Comparison",
+            "ProsCons",
+            "Steps",
+            "Timeline",
+            "Calculator",
+            "Random",
+            "Translation",
+            "Contact",
+            "Quiz",
+            "Nutrition",
+            "Status",
+            "Dashboard",
+            "Carousel",
+            "Results",
+            "Event"
+          ]
+        },
+        "tool": {
+          "type": "string",
+          "values": [
+            "weather",
+            "air",
+            "sun",
+            "alerts",
+            "quote",
+            "markets",
+            "fx",
+            "time",
+            "holidays",
+            "quakes",
+            "storms",
+            "lookup",
+            "define",
+            "book",
+            "film",
+            "sports",
+            "flight",
+            "fares",
+            "parcel",
+            "fare_watches",
+            "dashboard",
+            "page"
+          ]
+        },
+        "provider": {
+          "type": "string"
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "card_refreshed",
+      "by": ["client"],
+      "description": "A live card fetched its data again without the model: on its own while on screen, from the refresh button, or for another view (RICH-CARDS-PLAN §4.4).",
+      "properties": {
+        "card": {
+          "type": "string",
+          "values": [
+            "Weather",
+            "Forecast",
+            "WeatherAlert",
+            "AirQuality",
+            "SunMoon",
+            "Quote",
+            "Watchlist",
+            "Currency",
+            "Holidays",
+            "Quake",
+            "Storm",
+            "Flight",
+            "Parcel",
+            "Fares",
+            "FareDetails",
+            "FareCalendar",
+            "FareExplore",
+            "FareWatches",
+            "FareTrend",
+            "FlightSearch",
+            "Score",
+            "Standings",
+            "WorldClock",
+            "Countdown",
+            "Summary",
+            "Definition",
+            "Media",
+            "Recipe",
+            "Comparison",
+            "ProsCons",
+            "Steps",
+            "Timeline",
+            "Calculator",
+            "Random",
+            "Translation",
+            "Contact",
+            "Quiz",
+            "Nutrition",
+            "Status",
+            "Dashboard",
+            "Carousel",
+            "Results",
+            "Event"
+          ]
+        },
+        "trigger": {
+          "type": "string",
+          "values": ["auto", "manual", "view"]
+        },
+        "result": {
+          "type": "string",
+          "values": ["ok", "stale", "error"]
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "fare_watch_started",
+      "by": ["client"],
+      "description": "The person started a price watch on a Fares card (FLIGHT-SEARCH-PLAN §9).",
+      "properties": {
+        "target": { "type": "boolean", "description": "Whether they set a target price" }
+      },
+      "funnels": []
+    },
+    {
+      "name": "fare_watch_stopped",
+      "by": ["client"],
+      "description": "The person stopped a price watch: on the Fares card, on the watches card or in Settings → Cards.",
+      "properties": {
+        "where": { "type": "string", "values": ["card", "settings", "watches_card"] }
+      },
+      "funnels": []
+    },
+    {
+      "name": "fare_view_opened",
+      "by": ["client"],
+      "description": "The person opened another view of a flight card without the bot (FLIGHT-CARDS-PLAN §5): a day on a Fares card's strip or on a calendar, or a place on an explore card. Never the route or the dates.",
+      "properties": {
+        "card": { "type": "string", "values": ["Fares", "FareCalendar", "FareExplore"] },
+        "view": { "type": "string", "values": ["day", "place"] }
+      },
+      "funnels": []
+    },
+    {
+      "name": "fare_details_opened",
+      "by": ["client"],
+      "description": "The person opened one fare in full from a Fares card's row (FLIGHT-CARDS-PLAN §3.2), on the card or inside another card's sheet.",
+      "properties": {
+        "where": { "type": "string", "values": ["card", "sheet"] }
+      },
+      "funnels": []
+    },
+    {
+      "name": "flight_search_sent",
+      "by": ["client"],
+      "description": "The person sent the flight search form (FLIGHT-CARDS-PLAN §3.5). Only the shape of the trip, never places or dates.",
+      "properties": {
+        "trip": { "type": "string", "values": ["return", "oneway"] },
+        "whole_month": { "type": "boolean", "description": "Whether they searched a whole month" },
+        "anywhere": { "type": "boolean", "description": "Whether the destination was Anywhere" }
+      },
+      "funnels": []
+    },
+    {
+      "name": "card_pinned",
+      "by": ["client"],
+      "description": "A live card was pinned to the person's widgets (RICH-CARDS-PLAN §4.5).",
+      "properties": {
+        "card": {
+          "type": "string",
+          "values": [
+            "Weather",
+            "Forecast",
+            "WeatherAlert",
+            "AirQuality",
+            "SunMoon",
+            "Quote",
+            "Watchlist",
+            "Currency",
+            "Holidays",
+            "Quake",
+            "Storm",
+            "Flight",
+            "Parcel",
+            "Fares",
+            "FareDetails",
+            "FareCalendar",
+            "FareExplore",
+            "FareWatches",
+            "FareTrend",
+            "FlightSearch",
+            "Score",
+            "Standings",
+            "WorldClock",
+            "Countdown",
+            "Summary",
+            "Definition",
+            "Media",
+            "Recipe",
+            "Comparison",
+            "ProsCons",
+            "Steps",
+            "Timeline",
+            "Calculator",
+            "Random",
+            "Translation",
+            "Contact",
+            "Quiz",
+            "Nutrition",
+            "Status",
+            "Dashboard",
+            "Carousel",
+            "Results",
+            "Event"
+          ]
+        },
+        "waiting": {
+          "type": "boolean"
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "card_unpinned",
+      "by": ["client"],
+      "description": "A pinned live card was taken off the widgets.",
+      "properties": {
+        "card": {
+          "type": "string",
+          "values": [
+            "Weather",
+            "Forecast",
+            "WeatherAlert",
+            "AirQuality",
+            "SunMoon",
+            "Quote",
+            "Watchlist",
+            "Currency",
+            "Holidays",
+            "Quake",
+            "Storm",
+            "Flight",
+            "Parcel",
+            "Fares",
+            "FareDetails",
+            "FareCalendar",
+            "FareExplore",
+            "FareWatches",
+            "FareTrend",
+            "FlightSearch",
+            "Score",
+            "Standings",
+            "WorldClock",
+            "Countdown",
+            "Summary",
+            "Definition",
+            "Media",
+            "Recipe",
+            "Comparison",
+            "ProsCons",
+            "Steps",
+            "Timeline",
+            "Calculator",
+            "Random",
+            "Translation",
+            "Contact",
+            "Quiz",
+            "Nutrition",
+            "Status",
+            "Dashboard",
+            "Carousel",
+            "Results",
+            "Event"
+          ]
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "card_shared",
+      "by": ["client"],
+      "description": "A card was shared as a picture or copied as text.",
+      "properties": {
+        "card": {
+          "type": "string",
+          "values": [
+            "Weather",
+            "Forecast",
+            "WeatherAlert",
+            "AirQuality",
+            "SunMoon",
+            "Quote",
+            "Watchlist",
+            "Currency",
+            "Holidays",
+            "Quake",
+            "Storm",
+            "Flight",
+            "Parcel",
+            "Fares",
+            "FareDetails",
+            "FareCalendar",
+            "FareExplore",
+            "FareWatches",
+            "FareTrend",
+            "FlightSearch",
+            "Score",
+            "Standings",
+            "WorldClock",
+            "Countdown",
+            "Summary",
+            "Definition",
+            "Media",
+            "Recipe",
+            "Comparison",
+            "ProsCons",
+            "Steps",
+            "Timeline",
+            "Calculator",
+            "Random",
+            "Translation",
+            "Contact",
+            "Quiz",
+            "Nutrition",
+            "Status",
+            "Dashboard",
+            "Carousel",
+            "Results",
+            "Event"
+          ]
+        },
+        "as": {
+          "type": "string",
+          "values": ["image", "text"]
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "card_reported",
+      "by": ["client"],
+      "description": "Someone reported wrong data on a live card (the card and provider are kept server-side, no words).",
+      "properties": {
+        "card": {
+          "type": "string",
+          "values": [
+            "Weather",
+            "Forecast",
+            "WeatherAlert",
+            "AirQuality",
+            "SunMoon",
+            "Quote",
+            "Watchlist",
+            "Currency",
+            "Holidays",
+            "Quake",
+            "Storm",
+            "Flight",
+            "Parcel",
+            "Fares",
+            "FareDetails",
+            "FareCalendar",
+            "FareExplore",
+            "FareWatches",
+            "FareTrend",
+            "FlightSearch",
+            "Score",
+            "Standings",
+            "WorldClock",
+            "Countdown",
+            "Summary",
+            "Definition",
+            "Media",
+            "Recipe",
+            "Comparison",
+            "ProsCons",
+            "Steps",
+            "Timeline",
+            "Calculator",
+            "Random",
+            "Translation",
+            "Contact",
+            "Quiz",
+            "Nutrition",
+            "Status",
+            "Dashboard",
+            "Carousel",
+            "Results",
+            "Event"
+          ]
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "own_provider_added",
+      "by": ["server"],
+      "description": "A Casama Cloud workspace added its own chat model key or ChatGPT plan (OWN-KEYS-PLAN §8).",
+      "properties": {
+        "provider": {
+          "type": "string"
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "model_source_changed",
+      "by": ["server"],
+      "description": "A workspace default or a bot's model source was changed (OWN-KEYS-PLAN §8).",
+      "properties": {
+        "scope": {
+          "type": "string",
+          "values": ["workspace", "bot"]
+        },
+        "to_source": {
+          "type": "string",
+          "values": ["workspace", "casama", "own"]
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "own_provider_required_shown",
+      "by": ["client"],
+      "description": "The blocked card for own_provider_required was shown or acted on (OWN-KEYS-PLAN §8).",
+      "properties": {
+        "surface": {
+          "type": "string",
+          "values": ["chat", "empty_chat", "create_bot", "setup"]
+        },
+        "outcome": {
+          "type": "string",
+          "values": ["shown", "add_key", "connect_chatgpt", "see_plans"]
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "keep_going_tapped",
+      "by": ["client"],
+      "description": "Keep Going under a reply whose run ran out of steps or time (D-505).",
+      "properties": {
+        "reason": {
+          "type": "string",
+          "values": ["max_steps_exceeded", "wall_time_exceeded"]
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "mcp_tool_call",
+      "by": ["server"],
+      "description": "A tool on the hosted MCP endpoint was called (D-567). client: the kind of app (gemini: Google's Connected Apps redirects). outcome redirected: it sent the person to Casama instead of acting (Gemini and approvals). Never arguments or results.",
+      "properties": {
+        "client": {
+          "type": "string",
+          "values": ["gemini", "claude", "chatgpt", "cursor", "other"]
+        },
+        "tool": { "type": "string" },
+        "outcome": { "type": "string", "values": ["ok", "error", "redirected"] }
+      },
+      "funnels": []
+    }
+  ]
+}

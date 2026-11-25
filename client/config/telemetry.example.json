@@ -1,0 +1,13 @@
+{
+  "SENTRY_DSN": "",
+  "POSTHOG_API_KEY": "",
+  "POSTHOG_HOST": "https://us.i.posthog.com",
+  "POSTHOG_ENVIRONMENT": "development",
+  "ERROR_REPORTING": "sentry",
+  "ANALYTICS_PROVIDERS": "",
+  "GA4_ENABLED": "false",
+  "FIREBASE_WEB_MEASUREMENT_ID": "",
+  "CRASHLYTICS_ENABLED": "false",
+  "META_APP_ID": "",
+  "META_CLIENT_TOKEN": ""
+}

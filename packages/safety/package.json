@@ -1,0 +1,15 @@
+{
+  "name": "@casama/safety",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Casama's safety rules: when a bot must ask first, what it may never do on websites, who may do what in a workspace, quiet hours, and how secrets are hidden from messages and logs.",
+  "type": "module",
+  "license": "AGPL-3.0-only",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  }
+}

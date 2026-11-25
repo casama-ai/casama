@@ -1,0 +1,1303 @@
+{
+  "stays": {
+    "component": "Stays",
+    "place": {
+      "label": "Tokyo",
+      "lat": 35.6812,
+      "lng": 139.7671
+    },
+    "checkIn": "2027-03-12",
+    "checkOut": "2027-03-15",
+    "nights": 3,
+    "guests": {
+      "adults": 2,
+      "children": 0,
+      "rooms": 1
+    },
+    "currency": "PHP",
+    "search": {
+      "where": "Tokyo"
+    },
+    "sort": "best",
+    "cheapest": 6592,
+    "stays": [
+      {
+        "id": "100-2217308",
+        "name": "Hotel Grand Arc Hanzomon",
+        "stars": 3,
+        "rating": {
+          "value": 8.8,
+          "max": 10,
+          "count": 7316
+        },
+        "area": "Tokyo, Japan",
+        "distance": "3.2 km to Akihabara Station",
+        "km": 2.1,
+        "lat": 35.68313980102539,
+        "lng": 139.74343872070312,
+        "imageUrl": "https://imgcy.trivago.com/c_fill,d_dummy.jpeg,e_sharpen:60,f_auto,h_267,q_40,w_400/partner-images/f0/43/83087e3525d8994d37108519d8c57165590b7dd200ce5df1e6922703382e",
+        "amenities": ["WiFi", "Parking", "A/C"],
+        "night": 9671,
+        "stay": 29013,
+        "deals": [
+          {
+            "site": "Booking.com",
+            "night": 9671,
+            "stay": 29013,
+            "terms": ["no_breakfast", "free_cancellation"],
+            "url": "https://www.trivago.com.ph/en-PH/lm/hotel-grand-arc-hanzomon-tokyo?cip=234716015&currencyCode=PHP&search=100-2217308%3Bdr-20270312-20270315%3Bdrs-40%3Brc-1-2&cds=FwagD6TW7CSQramJSK4F8T1fgJNtMiJ%2BKNDjigPD7k0RgjDYnKaYdHBQOv%2FZDDyH4EIaeFF59Ya%2Bzgk6XESjGeUmfnIRHhqDKGuWfO02nVM2EUAdcDXak4T4SXNxlTy36sP9tOcFOSPNZ5Vf8lSRgMAYeWPcizsL%2ButjMnniBgm%2FFUvdt%2B50phPgngEJl6w0LA%3D%3D&cdsOrigin=DEAL_ON_DEALFINDER"
+          },
+          {
+            "site": "Trip.com",
+            "night": 10599,
+            "stay": 31796,
+            "terms": ["no_breakfast", "free_cancellation", "pay_at_property"],
+            "url": "https://www.trivago.com.ph/en-PH/lm/hotel-grand-arc-hanzomon-tokyo?cip=234716015&currencyCode=PHP&search=100-2217308%3Bdr-20270312-20270315%3Bdrs-40%3Brc-1-2&cds=jjldQjh%2BRa4E7mvdUPq89A98rVMgcRbTmpV3LbvgK2w1hScPJPYm6ocvgD2Nff0gw6d5HvdftRepsxDi5oP1A8%2BZTIdkYcp%2FJLa8ERgKU6pGdLx%2F2CEwYASKjdI47c6j5J1RodGKjSUnaJiFbOFkf99yKAXVao7vdUMrOrmq%2Bt%2FugqfJHiMpNqWzSoRdu%2FuN&cdsOrigin=DEAL_ON_DEALFINDER"
+          },
+          {
+            "site": "Priceline",
+            "night": 10855,
+            "stay": 32565,
+            "terms": ["no_breakfast", "free_cancellation"],
+            "url": "https://www.trivago.com.ph/en-PH/lm/hotel-grand-arc-hanzomon-tokyo?cip=234716015&currencyCode=PHP&search=100-2217308%3Bdr-20270312-20270315%3Bdrs-40%3Brc-1-2&cds=YKvTn7H49PvLnuKwDdqLeUjGiMLBPGOkT2W%2B3eOuZx4kkG14nY%2F68Z8dRsIr6L019iADTJKTgruyrPUhHtfXVFS%2FNaJfaDyAocTMnyTapw540VqvRy6kTieFUgLURAS2ys5tJ6iUDSsamseuJ%2BX23CcM5whLU3gCsIPOrlclw23W1P2nwtg05G1M%2BIDJ&cdsOrigin=DEAL_ON_DEALFINDER"
+          }
+        ]
+      },
+      {
+        "id": "100-2617476",
+        "name": "Sotetsu Fresa Inn Nihombashi-Kayabacho",
+        "stars": 3,
+        "rating": {
+          "value": 8.3,
+          "max": 10,
+          "count": 11872
+        },
+        "area": "Tokyo, Japan",
+        "distance": "2.0 km to Akihabara Station",
+        "km": 1.2,
+        "lat": 35.68077087402344,
+        "lng": 139.7799530029297,
+        "imageUrl": "https://imgcy.trivago.com/c_fill,d_dummy.jpeg,e_sharpen:60,f_auto,h_267,q_40,w_400/partner-images/05/33/81ece17f7b9ca405f65d1020af1284a5ba3f78885bcb409d29d7b0d1a9be",
+        "amenities": ["WiFi", "A/C"],
+        "night": 7670,
+        "stay": 23010,
+        "deals": [
+          {
+            "site": "Booking.com",
+            "night": 7670,
+            "stay": 23010,
+            "terms": ["no_breakfast", "free_cancellation"],
+            "url": "https://www.trivago.com.ph/en-PH/lm/hotel-sotetsu-fresa-inn-nihombashi-kayabacho-tokyo?cip=234716015&currencyCode=PHP&search=100-2617476%3Bdr-20270312-20270315%3Bdrs-40%3Brc-1-2&cds=aB39pbED7KNHB7FG1pRATOrIhvCnCBa3BA7jfV79TIMjAgT1j3g1dxNTVrDDwyHtEl%2FLr7U%2B1FQAJz3p%2FPJP3CnADnlD9pK1RemfSERbMtuEzqxbJE38oe9Hg%2FmFk42xMih6hYdu5J6sdznr57WpW0m1uuvWbg76J4yUa1JKcIaFsZqXHnhlqGc5oRfQYent&cdsOrigin=DEAL_ON_DEALFINDER"
+          },
+          {
+            "site": "Trip.com",
+            "night": 7983,
+            "stay": 23948,
+            "terms": ["no_breakfast", "free_cancellation"],
+            "url": "https://www.trivago.com.ph/en-PH/lm/hotel-sotetsu-fresa-inn-nihombashi-kayabacho-tokyo?cip=234716015&currencyCode=PHP&search=100-2617476%3Bdr-20270312-20270315%3Bdrs-40%3Brc-1-2&cds=vrRMv7tX4DHZfoQBMcgZm33OvEeSqxao%2FvLhMfuVdOWcyzGdzXIWLlcxjV%2F9mfMvYQYySRYd5eNT7wHIGbwfigSW1v9k9eQAuLFb2qh1fxFn4sMEygUEtX7gsd4SKHyd4wRmlV6szUiy5ioi2KRLsqRwdu7B9BK7eKvRMxjijWFXlSMmiuWoiDT1CjUu&cdsOrigin=DEAL_ON_DEALFINDER"
+          },
+          {
+            "site": "trivago DEALS",
+            "night": 8632,
+            "stay": 25896,
+            "terms": ["no_breakfast", "free_cancellation"],
+            "url": "https://www.trivago.com.ph/en-PH/lm/hotel-sotetsu-fresa-inn-nihombashi-kayabacho-tokyo?cip=234716015&currencyCode=PHP&search=100-2617476%3Bdr-20270312-20270315%3Bdrs-40%3Brc-1-2&cds=e2ZUX9J6Oo%2B0ouKPfrvq2FbVo06QCqB9iXnJt5WZKn3rqswBoap72N7x51lg%2Bc27zNMAsWDM5VLn%2FN8N0qoevfEeNs42ncqkJuw5NDEzNkTGJqM77c%2BB2btcbyoAbCbiEkm5mULALa3cuyJltraBhgz0sQRdr475RSNKlOSnEfkkOVfH4qkAvIw4Y5CR2Q%3D%3D&cdsOrigin=DEAL_ON_DEALFINDER"
+          }
+        ]
+      },
+      {
+        "id": "100-5819096",
+        "name": "Dormy Inn Premium Tokyo Kodenmacho",
+        "stars": 3,
+        "rating": {
+          "value": 8.9,
+          "max": 10,
+          "count": 5669
+        },
+        "area": "Tokyo, Japan",
+        "distance": "Tokyo, 3.1 km to City center",
+        "km": 1.4,
+        "lat": 35.69034957885742,
+        "lng": 139.77813720703125,
+        "imageUrl": "https://imgcy.trivago.com/c_fill,d_dummy.jpeg,e_sharpen:60,f_auto,h_267,q_40,w_400/partner-images/1c/d5/2037566b6c7f2ef0eeefe90d2d7a8325aa11c42bab6a407ce5c8edefe946",
+        "amenities": ["WiFi", "Spa", "A/C"],
+        "night": 8391,
+        "stay": 25172,
+        "deals": [
+          {
+            "site": "Booking.com",
+            "night": 8391,
+            "stay": 25172,
+            "terms": ["no_breakfast", "free_cancellation"],
+            "url": "https://www.trivago.com.ph/en-PH/lm/hotel-dormy-inn-premium-tokyo-kodenmacho?cip=234716015&currencyCode=PHP&search=100-5819096%3Bdr-20270312-20270315%3Bdrs-40%3Brc-1-2&cds=rvRzjSc4IW4tSUd0Z%2FVYE0gqCyiLzYrKnqjnHu4soarjgao7fVA9N9wPl2asVFvEnWODRmEsT3sr3z9Y%2F4NYeGwoQccN2ZAnBk5bF3hI07XVa%2F7Fe25I6BsEuT28ZY%2F24TkhWxjuZCbF2C2LAf%2BSaWVDr5RnMSU3IpIdDW4iI9XwZDWYYHjyjWplTKk8dd8tIg%3D%3D&cdsOrigin=DEAL_ON_DEALFINDER"
+          },
+          {
+            "site": "Trip.com",
+            "night": 10537,
+            "stay": 31611,
+            "terms": ["no_breakfast", "free_cancellation"],
+            "url": "https://www.trivago.com.ph/en-PH/lm/hotel-dormy-inn-premium-tokyo-kodenmacho?cip=234716015&currencyCode=PHP&search=100-5819096%3Bdr-20270312-20270315%3Bdrs-40%3Brc-1-2&cds=We2MwXgxNC8LTk8HTMCgP6d5kbhg%2BgQ1Ktb0R0i98a%2B%2Fg5xbdpHGhZ9hq28QyXyMWGUGn0W2UrTJWflQdMXF1KfAa92yzymrtzy2rSaZvhqKU1KXFkFEeKPLFa0qs5ZSSKOcJy6%2BFuXNH6xfa20JOkE0hjp5H7o0ZBnCYDa5YYR56uLbnehwtrvH9uhCwQ%3D%3D&cdsOrigin=DEAL_ON_DEALFINDER"
+          },
+          {
+            "site": "trivago DEALS",
+            "night": 12274,
+            "stay": 36822,
+            "terms": ["no_breakfast", "free_cancellation"],
+            "url": "https://www.trivago.com.ph/en-PH/lm/hotel-dormy-inn-premium-tokyo-kodenmacho?cip=234716015&currencyCode=PHP&search=100-5819096%3Bdr-20270312-20270315%3Bdrs-40%3Brc-1-2&cds=CeilxY%2Fn4I8mmzE07QN0RH9w2y74IZ37nkdM6YrNYBDCyzeNcKHI8IudtkKcQVgIXvesu%2FfVv%2FbkhzRpQQxim6OETzwZHJvElQNGy9YoDcEuHWXtg9kRI%2FikTWEl5ZFjrGlBqlOqShQ41j41pjjwvrWIVFHe38q4k9jXV5oEgvJvi7V8i4BkTtWDbT9g6f8%3D&cdsOrigin=DEAL_ON_DEALFINDER"
+          }
+        ]
+      },
+      {
+        "id": "100-1154812",
+        "name": "Hotel Villa Fontaine Tokyo - Otemachi",
+        "stars": 3,
+        "rating": {
+          "value": 8.1,
+          "max": 10,
+          "count": 4714
+        },
+        "area": "Tokyo, Japan",
+        "distance": "1.9 km to Akihabara Station",
+        "km": 1,
+        "lat": 35.6905517578125,
+        "lng": 139.76690673828125,
+        "imageUrl": "https://imgcy.trivago.com/c_fill,d_dummy.jpeg,e_sharpen:60,f_auto,h_267,q_40,w_400/partner-images/00/5e/4e99a83806a468a7d82b5ebb943693b4aad3bdaabe20a41b1d18689cc768",
+        "amenities": ["WiFi", "A/C"],
+        "night": 8076,
+        "stay": 24228,
+        "deals": [
+          {
+            "site": "Agoda",
+            "night": 8076,
+            "stay": 24228,
+            "terms": ["no_breakfast", "non_refundable"],
+            "url": "https://www.trivago.com.ph/en-PH/lm/hotel-villa-fontaine-tokyo-otemachi?cip=234716015&currencyCode=PHP&search=100-1154812%3Bdr-20270312-20270315%3Bdrs-40%3Brc-1-2&cds=JyP3%2B8%2FQ9RMX7o34LkNtQO%2BWIiO7LVmuyAf3DjG0etsjCxSY3bNlgnFw5iZBjSFBODtR6tXjIUHKGss9VdtDTv6uA3KsGotOqPU7BZVx0%2FiSLRNVvEkrzc8%2FbN0HUvO6IaOKFBkFeOxLIM9LHn85kYTijFgsPjBtPKIBSNK9xG69ptfmlp4NOYVywV4JtQ%3D%3D&cdsOrigin=DEAL_ON_DEALFINDER"
+          },
+          {
+            "site": "Trip.com",
+            "night": 8506,
+            "stay": 25518,
+            "terms": ["no_breakfast", "free_cancellation"],
+            "url": "https://www.trivago.com.ph/en-PH/lm/hotel-villa-fontaine-tokyo-otemachi?cip=234716015&currencyCode=PHP&search=100-1154812%3Bdr-20270312-20270315%3Bdrs-40%3Brc-1-2&cds=4F6W%2F4n4PScERei%2BoyUIRrVSHrqkksh7yC4%2BorOAKHa75q73oFqIEkNBNyvSSs%2FR8L0QaNnzdCkMei2MZaFXCODPp3V94m9LvICPcVuGOt913GqxvYbBN2J60EhEdFbg2xm5%2BSFd6doJWHgS01uqbEdVJYk3E5GXRCIfNQpK5fi4lfurvRe%2FES3s8KBz&cdsOrigin=DEAL_ON_DEALFINDER"
+          },
+          {
+            "site": "Booking.com",
+            "night": 8675,
+            "stay": 26026,
+            "terms": ["no_breakfast", "free_cancellation"],
+            "url": "https://www.trivago.com.ph/en-PH/lm/hotel-villa-fontaine-tokyo-otemachi?cip=234716015&currencyCode=PHP&search=100-1154812%3Bdr-20270312-20270315%3Bdrs-40%3Brc-1-2&cds=B8xekYccgD0G9zCLnvi0O01LapJ4jfJJMcKuOTj0ojE8C77%2FQsSpheTplnM64EaJ%2F0AZNTVpcuJT4FDhzSczP%2Fzg1fJc10wczIqBuBN6NgkX1JCd5T8ysFQ0mrUAmf2GYcYoA7cv5XLGXJTKC3afbaVDsyuTeXjVXGWxxsZn7SuKawe8tS7%2FodYa5fOhpOv1&cdsOrigin=DEAL_ON_DEALFINDER"
+          }
+        ]
+      },
+      {
+        "id": "100-1328267",
+        "name": "Hotel Villa Fontaine Tokyo - Nihombashi Mitsukoshimae",
+        "stars": 3,
+        "rating": {
+          "value": 7.8,
+          "max": 10,
+          "count": 3741
+        },
+        "area": "Tokyo, Japan",
+        "distance": "1.4 km to Akihabara Station",
+        "km": 1.1,
+        "lat": 35.68613815307617,
+        "lng": 139.77737426757812,
+        "imageUrl": "https://imgcy.trivago.com/c_fill,d_dummy.jpeg,e_sharpen:60,f_auto,h_267,q_40,w_400/partner-images/c8/f5/3fbcc09420acf7442822f2de31131a339356ebd557fc4da72e62a72ed3a5",
+        "amenities": ["WiFi", "A/C"],
+        "night": 6592,
+        "stay": 19775,
+        "deals": [
+          {
+            "site": "Booking.com",
+            "night": 6592,
+            "stay": 19775,
+            "terms": ["no_breakfast", "free_cancellation"],
+            "url": "https://www.trivago.com.ph/en-PH/lm/hotel-villa-fontaine-tokyo-nihombashi-mitsukoshimae?cip=234716015&currencyCode=PHP&search=100-1328267%3Bdr-20270312-20270315%3Bdrs-40%3Brc-1-2&cds=PELIWcr37pZcKAMLh6TNmlOATQBAW%2FipOCAZddofLdisun7LiBjIBoUdQI%2FUOHlFJI97dHLmEr8bSRK31oVPTYFJx%2FfsprQWL1z1bfCq028oWMK95dklVK8fBnr7719o57FfOq9yjPFbTSfgsX6Ulg5pI%2Baax3LYhe%2B3CAhD0XLGrrPA%2BMbKOXkoS2lh%2Bw%3D%3D&cdsOrigin=DEAL_ON_DEALFINDER"
+          },
+          {
+            "site": "Priceline",
+            "night": 7362,
+            "stay": 22087,
+            "terms": ["no_breakfast", "free_cancellation"],
+            "url": "https://www.trivago.com.ph/en-PH/lm/hotel-villa-fontaine-tokyo-nihombashi-mitsukoshimae?cip=234716015&currencyCode=PHP&search=100-1328267%3Bdr-20270312-20270315%3Bdrs-40%3Brc-1-2&cds=QexGakKSEhYIBeL1Z6%2BeJi0x7yimTUTAZaOuOD1T%2BYhrgd%2BRwFR7pCqc7piaW51dt7MwaC5Z%2Bh7hyUIYp6x40UWFO6L7tu%2BNWHLIpl6ZLk%2B6F8cpkHixa14FKrACLBkhZbCUobkoLGxR3nTIlYDVxHMdu5JpW0TN0osPvDNtj3VjVMdrejfgAqVi&cdsOrigin=DEAL_ON_DEALFINDER"
+          },
+          {
+            "site": "trivago DEALS",
+            "night": 7874,
+            "stay": 23622,
+            "terms": ["no_breakfast", "free_cancellation"],
+            "url": "https://www.trivago.com.ph/en-PH/lm/hotel-villa-fontaine-tokyo-nihombashi-mitsukoshimae?cip=234716015&currencyCode=PHP&search=100-1328267%3Bdr-20270312-20270315%3Bdrs-40%3Brc-1-2&cds=PKnSuib46LInEG7eawmqWQbn9SzcMlA22P6g5KUAVC6JhUTG36NoqvYjkdQB9PpOsL8FgvWhn6FXa04a%2FdyHk5pONbSX16gIF9EAf8klDtL6PH%2BSse%2F%2BfEBEGuSZx77lyI7nDkpk9nfZhY8%2BPekz7xQEZgy1Y2cE%2F02zJWx%2BaVm%2BpqycN1bLTAoHeQ%3D%3D&cdsOrigin=DEAL_ON_DEALFINDER"
+          }
+        ]
+      },
+      {
+        "id": "100-10940628",
+        "name": "The Gate Hotel Tokyo by Hulic",
+        "stars": 4,
+        "rating": {
+          "value": 9.1,
+          "max": 10,
+          "count": 6003
+        },
+        "area": "Chiyoda, Japan",
+        "distance": "Chiyoda, 67.0 km to City center",
+        "km": 1,
+        "lat": 35.672950744628906,
+        "lng": 139.76156616210938,
+        "imageUrl": "https://imgcy.trivago.com/c_fill,d_dummy.jpeg,e_sharpen:60,f_auto,h_267,q_40,w_400/hotelier-images/bb/5d/86c5993e1dc4314e8712852429d81017ed6c108025120d2391b7c0fb9b7d",
+        "amenities": ["WiFi", "A/C", "Gym"],
+        "night": 20643,
+        "stay": 61928,
+        "deals": [
+          {
+            "site": "Trip.com",
+            "night": 20643,
+            "stay": 61928,
+            "terms": ["no_breakfast", "non_refundable"],
+            "url": "https://www.trivago.com.ph/en-PH/lm/the-gate-hotel-tokyo-by-hulic-chiyoda?cip=234716015&currencyCode=PHP&search=100-10940628%3Bdr-20270312-20270315%3Bdrs-40%3Brc-1-2&cds=WeoZ8odsXevv00C2vc3BTFu7mYft5m8kCB6%2Fe2qQJlz0znWOwLKZ7f7RaXLK0%2Fuby%2BwUri6BeVi4z2C6FKFt9M1UiILPcQbpF%2FIrY0jgYwsxqd8PSUQcYnpTqiPqpxklzWi6ePn24Jor%2BSEkgyZj6dSGFSAHRfeB5th%2FgfMfr4rbq5vWmXiU7l%2BXWlvTVNCEdHo%3D&cdsOrigin=DEAL_ON_DEALFINDER"
+          },
+          {
+            "site": "Booking.com",
+            "night": 23219,
+            "stay": 69657,
+            "terms": ["no_breakfast", "non_refundable"],
+            "url": "https://www.trivago.com.ph/en-PH/lm/the-gate-hotel-tokyo-by-hulic-chiyoda?cip=234716015&currencyCode=PHP&search=100-10940628%3Bdr-20270312-20270315%3Bdrs-40%3Brc-1-2&cds=klHAG8VY3BaYcdpB%2BXe4RJ4dhZToWyjLhyiRchxISXqROGyb61mJ2G%2FYhl9rzXJaTcHKGAo0TXlzBi4Sry9StAesv9nCHSrFrMU1RY8Mjm7ojV0HI8VJfK06xyuUQpxdrE9RjmjgEpjQ4WMegVI9FLpnGfsKM1G3BbDEJuZoR8QGVh7k9rXBAEb9VjDKyUPpIXo%3D&cdsOrigin=DEAL_ON_DEALFINDER"
+          },
+          {
+            "site": "trivago DEALS",
+            "night": 23842,
+            "stay": 71526,
+            "terms": ["no_breakfast", "non_refundable"],
+            "url": "https://www.trivago.com.ph/en-PH/lm/the-gate-hotel-tokyo-by-hulic-chiyoda?cip=234716015&currencyCode=PHP&search=100-10940628%3Bdr-20270312-20270315%3Bdrs-40%3Brc-1-2&cds=UGbKH3j%2FE1YYywApoYjbduDg1pCbN1Lvomeag3GTvjXn7QVudBxExdj1rdgLkOO0Uoys7ABEV0faDLGkNvnfP08FjRD%2Fsz8KB%2FYHsZpIdpM%2FZElxNuTWD%2B49V6jxl%2BBJgyVMsyrExJz%2BbyiQX2AC48t%2Ba38Eo0QST%2FO0qAAWLUnmROtg5Mm%2BFIcn%2BERxzMKNxiNZ&cdsOrigin=DEAL_ON_DEALFINDER"
+          }
+        ]
+      }
+    ],
+    "live": {
+      "source": {
+        "id": "trivago",
+        "name": "trivago",
+        "url": "https://www.trivago.com/"
+      },
+      "fetchedAt": "2026-11-22T08:00:00.000Z",
+      "staleAfter": "2026-11-22T08:30:00.000Z"
+    }
+  },
+  "stays_google": {
+    "component": "Stays",
+    "place": {
+      "label": "Tokyo",
+      "lat": 35.6812,
+      "lng": 139.7671
+    },
+    "checkIn": "2027-03-12",
+    "checkOut": "2027-03-15",
+    "nights": 3,
+    "guests": {
+      "adults": 2,
+      "children": 0,
+      "rooms": 1
+    },
+    "currency": "PHP",
+    "search": {
+      "where": "Tokyo"
+    },
+    "sort": "best",
+    "cheapest": 5569,
+    "stays": [
+      {
+        "id": "ChoI84KEy5HjiaeGARoNL2cvMTFkeGp4MnEyXxAB",
+        "name": "ONE@Tokyo by insomnia",
+        "stars": 3,
+        "rating": {
+          "value": 4.3,
+          "max": 5,
+          "count": 1031
+        },
+        "km": 5.6,
+        "lat": 35.711788899999995,
+        "lng": 139.81597779999998,
+        "imageUrl": "https://lh3.googleusercontent.com/grass-cs/AABkmLfqFv6ArOrLz7szrM-oyK11WKCXOhO_Slg5ULOD7s6cgtunakU0f8td5Lup_aqRMG8hoAf4zOZYAi0uAKAKdO9zJJ_4IXnnLhLifBpG-KEX-hwwjNYvAsRt459skD_KQNNXWrfgrw=s287-w287-h192-n-k-no-v1",
+        "images": [
+          "https://lh3.googleusercontent.com/grass-cs/AABkmLfqFv6ArOrLz7szrM-oyK11WKCXOhO_Slg5ULOD7s6cgtunakU0f8td5Lup_aqRMG8hoAf4zOZYAi0uAKAKdO9zJJ_4IXnnLhLifBpG-KEX-hwwjNYvAsRt459skD_KQNNXWrfgrw=s287-w287-h192-n-k-no-v1",
+          "https://lh3.googleusercontent.com/grass-cs/AABkmLf0FIGeCdJuFyIjyLk4ITX7V3U9bebgw7q0JmZ6xKQBB10c7DlztW-ky53zm3EcCLr4TMR4Ri1JTkEx1bEQCtRs38SRIWOAexnq1XPImIbtwOUhdHdSCPwWtNZ8od7O3IfP3zfvVr_ucLKf=s287-w287-h192-n-k-no-v1",
+          "https://lh3.googleusercontent.com/grass-cs/AABkmLd95khf7sqQUyqlm1_jMOH4E5Li_1YzHCz7T3MPl68S8U2B73ar2e3THc7EWGxcJ8PLk0_Tv04GOqYawG2N2suGixBUtQT84L0y9DUVr7s73LDkVTa1tjYmHJQWVVGw9Ca0CcdkWYuXDXE=s287-w287-h192-n-k-no-v1"
+        ],
+        "amenities": ["Free Wi-Fi", "Accessible", "Kid-friendly"],
+        "night": 8029,
+        "stay": 24088,
+        "deals": [],
+        "checkInTime": "3:00 PM",
+        "checkOutTime": "11:00 AM",
+        "nearby": [
+          {
+            "name": "Tokyo Skytree",
+            "how": "6 min walking"
+          },
+          {
+            "name": "Oshiage-Itchōme (Oshiage 1)",
+            "how": "1 min walking"
+          },
+          {
+            "name": "Haneda Airport",
+            "how": "33 min taxi"
+          }
+        ],
+        "about": "Industrial-chic quarters & a cafe in a choice hotel offering a rooftop lounge with skyline views.",
+        "address": "Sumida City, Tokyo, Japan",
+        "url": "https://onetokyo.solarehotels.com/?utm_source=google&utm_medium=gbp&utm_campaign=gbp_one"
+      },
+      {
+        "id": "ChkI_Zmo7NeSqYDfARoML2cvMXB0X18zcGttEAE",
+        "name": "Shinjuku Granbell Hotel",
+        "stars": 4,
+        "rating": {
+          "value": 4,
+          "max": 5,
+          "count": 3562
+        },
+        "km": 5.8,
+        "lat": 35.6964448,
+        "lng": 139.70572439999998,
+        "imageUrl": "https://lh3.googleusercontent.com/grass-cs/AABkmLdoYONKGQulD-3NPHb9v0n8r8JsvMdlnpHHS4TPmTHXhS1xDWrionA40ZMvuYyoM9SC1QbfCc3E4N1R_m_xpJ9yfWetUVjn_XHbmgCRfOmGujTFkWm-JiPukMblpmrULrUkEkrCAYXoekwv=s287-w287-h192-n-k-no-v1",
+        "images": [
+          "https://lh3.googleusercontent.com/grass-cs/AABkmLdoYONKGQulD-3NPHb9v0n8r8JsvMdlnpHHS4TPmTHXhS1xDWrionA40ZMvuYyoM9SC1QbfCc3E4N1R_m_xpJ9yfWetUVjn_XHbmgCRfOmGujTFkWm-JiPukMblpmrULrUkEkrCAYXoekwv=s287-w287-h192-n-k-no-v1",
+          "https://lh3.googleusercontent.com/grass-cs/AABkmLcpnWJ1nrHoMrukqNY2ieDmkKQsApeSO5Cf0_Bdz2fiXZW5vSxce5BgRevg33yLuAGdsz9HuaReCYgXPTagsrFfJRm2ZH54PXL4StohsgHEIIMXq49EKb-w0gyVukc2Bh9Nd8LUZqBsWMKE=s287-w287-h192-n-k-no-v1",
+          "https://lh3.googleusercontent.com/grass-cs/AABkmLdgllSYel16Wmr1ApjE61IaA3jTAf2GI20td2-i0uTfAF6hQK78xRZ6dNlwNm1ZF7idj2N2Wz1iR6YEN1Ct8ACmYOWwbWxLziheM3imtdU2effKrkojarlONhZVtz2YcmZ_dJ3r=s287-w287-h192-n-k-no-v1"
+        ],
+        "amenities": [
+          "Free Wi-Fi",
+          "Parking ($)",
+          "Bar",
+          "Restaurant",
+          "Kitchen in some rooms",
+          "Accessible"
+        ],
+        "night": 6631,
+        "stay": 19893,
+        "deals": [],
+        "checkInTime": "3:00 PM",
+        "checkOutTime": "11:00 AM",
+        "nearby": [
+          {
+            "name": "Shinjuku Golden-Gai",
+            "how": "4 min walking"
+          },
+          {
+            "name": "Haneda Airport",
+            "how": "36 min taxi"
+          },
+          {
+            "name": "restaurant G",
+            "how": "1 min walking"
+          }
+        ],
+        "about": "Polished lodging with a rooftop bar, an art gallery & a French/Italian restaurant, plus free Wi-Fi.",
+        "address": "Shinjuku City, Tokyo, Japan",
+        "url": "https://www.granbellhotel.jp/shinjuku/"
+      },
+      {
+        "id": "ChoIlor85t6x08LEARoNL2cvMTFmMGtxZDR3YhAB",
+        "name": "APA Hotel & Resort Ryogoku Ekimae Tower",
+        "stars": 3,
+        "rating": {
+          "value": 4.1,
+          "max": 5,
+          "count": 4333
+        },
+        "km": 3.1,
+        "lat": 35.6974261,
+        "lng": 139.7943487,
+        "imageUrl": "https://lh3.googleusercontent.com/grass-cs/AABkmLfL1BZIA9uJyUzeyn4oN2Dakhr8lidFzXquCiWlJRs3CUF6lHTgi7rWGfAIGXymnZszH3UKvkQSL8lWP0FvQnUfJ3RU30yW1M76Wna8lKjDOKfofKLDyf2Q21eD5cNPuRNkQXqP=s287-w287-h192-n-k-no-v1",
+        "images": [
+          "https://lh3.googleusercontent.com/grass-cs/AABkmLfL1BZIA9uJyUzeyn4oN2Dakhr8lidFzXquCiWlJRs3CUF6lHTgi7rWGfAIGXymnZszH3UKvkQSL8lWP0FvQnUfJ3RU30yW1M76Wna8lKjDOKfofKLDyf2Q21eD5cNPuRNkQXqP=s287-w287-h192-n-k-no-v1",
+          "https://lh3.googleusercontent.com/grass-cs/AABkmLfID5WVSm7tGBWEYm8L7MF8l_DtWWYlxBVVeaR9-0WaeCTRiNfTJcY_nQapRTtl5rKq7l2fhMRMBK2qA53egFUp4s5LY2XQwUrGrW7AIu5_RyXXsuF3aPY8_jeBA-ksNpm-gWbq=s287-w287-h192-n-k-no-v1",
+          "https://lh3.googleusercontent.com/grass-cs/AABkmLfdJj86Vj5yAU1hBjWEtFeqy9DBEz85KZyqLM300f5XFnSyMZ5ihqihJYqXB1DHARvT1YxClQlyYerjqQXUEzPRH3RtytQ0aPH0rQg5gbPAl2wbnwph12C0KKF1x5H0mjsOmzto=s287-w287-h192-n-k-no-v1"
+        ],
+        "amenities": [
+          "Public bath",
+          "Onsen",
+          "Open air bath",
+          "Free Wi-Fi",
+          "Parking ($)",
+          "Outdoor pool",
+          "Fitness center",
+          "Restaurant",
+          "Accessible"
+        ],
+        "night": 5569,
+        "stay": 16706,
+        "deals": [],
+        "checkInTime": "3:00 PM",
+        "checkOutTime": "10:00 AM",
+        "nearby": [
+          {
+            "name": "Sensō-ji",
+            "how": "7 min taxi"
+          },
+          {
+            "name": "Haneda Airport",
+            "how": "30 min taxi"
+          },
+          {
+            "name": "Japanese Dining Koyomi",
+            "how": "6 min walking"
+          }
+        ],
+        "about": "Streamlined rooms in an upmarket hotel offering a rooftop pool & international dining, plus a gym.",
+        "address": "Sumida City, Tokyo, Japan",
+        "url": "https://www.apahotel.com/resort/ryogokueki/?utm_source=google&utm_medium=maps"
+      },
+      {
+        "id": "ChcIvI7vkfKYm7MmGgsvZy8xMjFzNGY4chAB",
+        "name": "Tokyo Dome Hotel",
+        "stars": 4,
+        "rating": {
+          "value": 4.2,
+          "max": 5,
+          "count": 8906
+        },
+        "km": 2.8,
+        "lat": 35.7036666,
+        "lng": 139.7533928,
+        "imageUrl": "https://lh3.googleusercontent.com/grass-proxy/AIM7gW0o8yoiNdNbSw6be6-RLiYzx7PUOC2eR0VghT1wRQiEf_qKXJOjaGuI9_7Va7QTHK_92I5N3Tszory_K9jDKZOei2KBwy9XLz41KHHi3PYpgAhz8isBHWdWT6rn4DjLD2JVySf7dJrEMgIRlKvUnW21C4Fk80Lcf5_ttd-SNeKW0wd9vTyUfkE=s287-w287-h192-n-k-no-v1",
+        "images": [
+          "https://lh3.googleusercontent.com/grass-proxy/AIM7gW0o8yoiNdNbSw6be6-RLiYzx7PUOC2eR0VghT1wRQiEf_qKXJOjaGuI9_7Va7QTHK_92I5N3Tszory_K9jDKZOei2KBwy9XLz41KHHi3PYpgAhz8isBHWdWT6rn4DjLD2JVySf7dJrEMgIRlKvUnW21C4Fk80Lcf5_ttd-SNeKW0wd9vTyUfkE=s287-w287-h192-n-k-no-v1",
+          "https://lh3.googleusercontent.com/grass-cs/AABkmLdAEekVwxITTGVlBZTZeFpIWXV_bmkXSsvto27GcQ6oHFTqtUdmXoQAg_lqX9Ovj8EAyuX-lE-JQ_HjlZTCWlC5nToMQg_2TN8EMrKm462ltA6_jT4iIiROrB1Q13MxgtxSHv7tJMPaVNf8=s287-w287-h192-n-k-no-v1",
+          "https://lh3.googleusercontent.com/grass-cs/AABkmLeuiXBDgOJrwn84LIxvrQqVCkEOtwOhAiA_FZejYstuC2R0Tj48ewPbP-MrhYQu8W5I6GE44TE6k-duqJieZ9zTrbkFxxvUpsMuSnC-oQG2lfeO4im-Pjp0kvTNEANGVDa9m15TWc-BfJLf=s287-w287-h192-n-k-no-v1"
+        ],
+        "amenities": ["Free Wi-Fi", "Parking ($)", "Bar", "Restaurant", "Kid-friendly"],
+        "night": 12473,
+        "stay": 37418,
+        "deals": [],
+        "checkInTime": "2:00 PM",
+        "checkOutTime": "11:00 AM",
+        "nearby": [
+          {
+            "name": "Akihabara Electric Town",
+            "how": "6 min taxi"
+          },
+          {
+            "name": "Tokyo Dome Hotel",
+            "how": "2 min walking"
+          },
+          {
+            "name": "Haneda Airport",
+            "how": "31 min taxi"
+          }
+        ],
+        "about": "Polished high-rise lodging with restaurants & an outdoor pool, plus a salon & city views.",
+        "address": "Bunkyo City, Tokyo, Japan",
+        "url": "https://www.tokyodome-hotels.co.jp/?utm_source=google&utm_medium=google-business&utm_campaign=google-hotel_top"
+      }
+    ],
+    "live": {
+      "source": {
+        "id": "serpapi",
+        "name": "Google Hotels",
+        "url": "https://www.google.com/travel/hotels"
+      },
+      "fetchedAt": "2026-11-22T08:00:00.000Z",
+      "staleAfter": "2026-11-22T09:00:00.000Z"
+    }
+  },
+  "stay_details": {
+    "component": "StayDetails",
+    "place": {
+      "label": "Tokyo",
+      "lat": 35.6812,
+      "lng": 139.7671
+    },
+    "checkIn": "2027-03-12",
+    "checkOut": "2027-03-15",
+    "nights": 3,
+    "guests": {
+      "adults": 2,
+      "children": 0,
+      "rooms": 1
+    },
+    "currency": "PHP",
+    "search": {
+      "where": "Tokyo"
+    },
+    "stay": {
+      "id": "100-2217308",
+      "name": "Hotel Grand Arc Hanzomon",
+      "stars": 3,
+      "rating": {
+        "value": 8.8,
+        "max": 10,
+        "count": 7316
+      },
+      "area": "Tokyo, Japan",
+      "distance": "3.2 km to Akihabara Station",
+      "km": 2.1,
+      "lat": 35.68313980102539,
+      "lng": 139.74343872070312,
+      "imageUrl": "https://imgcy.trivago.com/c_fill,d_dummy.jpeg,e_sharpen:60,f_auto,h_267,q_40,w_400/partner-images/f0/43/83087e3525d8994d37108519d8c57165590b7dd200ce5df1e6922703382e",
+      "amenities": ["WiFi", "Parking", "A/C"],
+      "night": 9671,
+      "stay": 29013,
+      "deals": [
+        {
+          "site": "Booking.com",
+          "night": 9671,
+          "stay": 29013,
+          "terms": ["no_breakfast", "free_cancellation"],
+          "url": "https://www.trivago.com.ph/en-PH/lm/hotel-grand-arc-hanzomon-tokyo?cip=234716015&currencyCode=PHP&search=100-2217308%3Bdr-20270312-20270315%3Bdrs-40%3Brc-1-2&cds=FwagD6TW7CSQramJSK4F8T1fgJNtMiJ%2BKNDjigPD7k0RgjDYnKaYdHBQOv%2FZDDyH4EIaeFF59Ya%2Bzgk6XESjGeUmfnIRHhqDKGuWfO02nVM2EUAdcDXak4T4SXNxlTy36sP9tOcFOSPNZ5Vf8lSRgMAYeWPcizsL%2ButjMnniBgm%2FFUvdt%2B50phPgngEJl6w0LA%3D%3D&cdsOrigin=DEAL_ON_DEALFINDER"
+        },
+        {
+          "site": "Trip.com",
+          "night": 10599,
+          "stay": 31796,
+          "terms": ["no_breakfast", "free_cancellation", "pay_at_property"],
+          "url": "https://www.trivago.com.ph/en-PH/lm/hotel-grand-arc-hanzomon-tokyo?cip=234716015&currencyCode=PHP&search=100-2217308%3Bdr-20270312-20270315%3Bdrs-40%3Brc-1-2&cds=jjldQjh%2BRa4E7mvdUPq89A98rVMgcRbTmpV3LbvgK2w1hScPJPYm6ocvgD2Nff0gw6d5HvdftRepsxDi5oP1A8%2BZTIdkYcp%2FJLa8ERgKU6pGdLx%2F2CEwYASKjdI47c6j5J1RodGKjSUnaJiFbOFkf99yKAXVao7vdUMrOrmq%2Bt%2FugqfJHiMpNqWzSoRdu%2FuN&cdsOrigin=DEAL_ON_DEALFINDER"
+        },
+        {
+          "site": "Priceline",
+          "night": 10855,
+          "stay": 32565,
+          "terms": ["no_breakfast", "free_cancellation"],
+          "url": "https://www.trivago.com.ph/en-PH/lm/hotel-grand-arc-hanzomon-tokyo?cip=234716015&currencyCode=PHP&search=100-2217308%3Bdr-20270312-20270315%3Bdrs-40%3Brc-1-2&cds=YKvTn7H49PvLnuKwDdqLeUjGiMLBPGOkT2W%2B3eOuZx4kkG14nY%2F68Z8dRsIr6L019iADTJKTgruyrPUhHtfXVFS%2FNaJfaDyAocTMnyTapw540VqvRy6kTieFUgLURAS2ys5tJ6iUDSsamseuJ%2BX23CcM5whLU3gCsIPOrlclw23W1P2nwtg05G1M%2BIDJ&cdsOrigin=DEAL_ON_DEALFINDER"
+        }
+      ]
+    },
+    "position": 1,
+    "live": {
+      "source": {
+        "id": "trivago",
+        "name": "trivago",
+        "url": "https://www.trivago.com/"
+      },
+      "fetchedAt": "2026-11-22T08:00:00.000Z",
+      "staleAfter": "2026-11-22T08:30:00.000Z"
+    }
+  },
+  "stay_details_more": {
+    "component": "StayDetails",
+    "place": {
+      "label": "Tokyo",
+      "lat": 35.6812,
+      "lng": 139.7671
+    },
+    "checkIn": "2027-03-12",
+    "checkOut": "2027-03-15",
+    "nights": 3,
+    "guests": {
+      "adults": 2,
+      "children": 0,
+      "rooms": 1
+    },
+    "currency": "PHP",
+    "search": {
+      "where": "Tokyo"
+    },
+    "stay": {
+      "id": "100-2217308",
+      "name": "Hotel Grand Arc Hanzomon",
+      "stars": 3,
+      "rating": {
+        "value": 8.8,
+        "max": 10,
+        "count": 7316
+      },
+      "area": "Tokyo, Japan",
+      "distance": "3.2 km to Akihabara Station",
+      "km": 2.1,
+      "lat": 35.68313980102539,
+      "lng": 139.74343872070312,
+      "imageUrl": "https://imgcy.trivago.com/c_fill,d_dummy.jpeg,e_sharpen:60,f_auto,h_267,q_40,w_400/partner-images/f0/43/83087e3525d8994d37108519d8c57165590b7dd200ce5df1e6922703382e",
+      "amenities": [
+        "Wi-Fi",
+        "Wi-Fi in public areas",
+        "Restaurant",
+        "Bar",
+        "Breakfast",
+        "Breakfast buffet",
+        "Vending machines",
+        "Smoke-free property",
+        "Credit cards",
+        "NFC mobile payments",
+        "Cash",
+        "Front desk"
+      ],
+      "night": 9671,
+      "stay": 29013,
+      "deals": [
+        {
+          "site": "Booking.com",
+          "night": 9671,
+          "stay": 29013,
+          "terms": ["no_breakfast", "free_cancellation"],
+          "url": "https://www.trivago.com.ph/en-PH/lm/hotel-grand-arc-hanzomon-tokyo?cip=234716015&currencyCode=PHP&search=100-2217308%3Bdr-20270312-20270315%3Bdrs-40%3Brc-1-2&cds=FwagD6TW7CSQramJSK4F8T1fgJNtMiJ%2BKNDjigPD7k0RgjDYnKaYdHBQOv%2FZDDyH4EIaeFF59Ya%2Bzgk6XESjGeUmfnIRHhqDKGuWfO02nVM2EUAdcDXak4T4SXNxlTy36sP9tOcFOSPNZ5Vf8lSRgMAYeWPcizsL%2ButjMnniBgm%2FFUvdt%2B50phPgngEJl6w0LA%3D%3D&cdsOrigin=DEAL_ON_DEALFINDER"
+        },
+        {
+          "site": "Trip.com",
+          "night": 10599,
+          "stay": 31796,
+          "terms": ["no_breakfast", "free_cancellation", "pay_at_property"],
+          "url": "https://www.trivago.com.ph/en-PH/lm/hotel-grand-arc-hanzomon-tokyo?cip=234716015&currencyCode=PHP&search=100-2217308%3Bdr-20270312-20270315%3Bdrs-40%3Brc-1-2&cds=jjldQjh%2BRa4E7mvdUPq89A98rVMgcRbTmpV3LbvgK2w1hScPJPYm6ocvgD2Nff0gw6d5HvdftRepsxDi5oP1A8%2BZTIdkYcp%2FJLa8ERgKU6pGdLx%2F2CEwYASKjdI47c6j5J1RodGKjSUnaJiFbOFkf99yKAXVao7vdUMrOrmq%2Bt%2FugqfJHiMpNqWzSoRdu%2FuN&cdsOrigin=DEAL_ON_DEALFINDER"
+        },
+        {
+          "site": "Priceline",
+          "night": 10855,
+          "stay": 32565,
+          "terms": ["no_breakfast", "free_cancellation"],
+          "url": "https://www.trivago.com.ph/en-PH/lm/hotel-grand-arc-hanzomon-tokyo?cip=234716015&currencyCode=PHP&search=100-2217308%3Bdr-20270312-20270315%3Bdrs-40%3Brc-1-2&cds=YKvTn7H49PvLnuKwDdqLeUjGiMLBPGOkT2W%2B3eOuZx4kkG14nY%2F68Z8dRsIr6L019iADTJKTgruyrPUhHtfXVFS%2FNaJfaDyAocTMnyTapw540VqvRy6kTieFUgLURAS2ys5tJ6iUDSsamseuJ%2BX23CcM5whLU3gCsIPOrlclw23W1P2nwtg05G1M%2BIDJ&cdsOrigin=DEAL_ON_DEALFINDER"
+        },
+        {
+          "site": "Traveluro",
+          "night": 6740,
+          "stay": 20219,
+          "terms": [],
+          "url": "https://www.google.com/travel/lodging/clk?pc=AJ0xEyifp-hNkUJBdKEdJ7hwPRx4usIWB6rRxy7uw8IvBzCM4QeXgaI6jIOZASK8WDcYsgZkJfkH0OZLNE_QgRopVqqBUsPTL57n9yEmaCvUQuDuRQu-Qq6dgYzZtnUwlyQ_r-9AdweGvRrKf-Manm9I14ZNqdAILKb8hY3FWxiqlkSJRnt2RvoRk1bl&pcurl=https://www.traveluro.com/hotels/japan_jp_tokyo/353192_shinjuku-granbell-hotel?checkIn%3D2027-03-12%26checkOut%3D2027-03-15%26placeId%3DH353192%26campaignName%3DGoogle_MX%26currencyCode%3DPHP%26dealKey%3DCAIQowIiDAiXiojYBhDI7PeaASpKDQAg_EQVAACcQyUAIPxDLQAg_EMwATjDAkUAGL1FSgwI2YWI2AYQmNmV0gFiCkVjb25vbXkgRG9oAo0BHy38RKAB-ceYDagByAYwlwI4qMcVQOi_EEgDUgiImxpkAsgzuVjkA2IDCgEg%26countryCode%3DMX%26languageCode%3Den%26rule%3DGoogle_MX%26site%3Dlocaluniversal%26origin%3D31%26ads%3D%26priceDisplayedTotal%3D20219.43%26priceDisplayedTax%3D3369.90%26device%3Ddesktop%26adults%3D2%26children%3D0&s=ALZo0YLi0QgTPLvTToHLGQNv8yJu&ap=1"
+        },
+        {
+          "site": "Expedia.mx",
+          "night": 8178,
+          "stay": 24533,
+          "terms": ["free_cancellation"],
+          "url": "https://www.google.com/aclk?sa=l&ai=DChsSEwjD6ZLG-ZmYAxWkLdQBHZKqN2wYACICCAEQARoCb2E&co=1&gclid=EAIaIQobChMIw-mSxvmZmAMVpC3UAR2SqjdsEAoYASABEgI8kvD_BwE&cid=CAAS0gHkaHNkZFot_mta9wmR_D5rUm5DiERM_H2fQuT0EEhf70LnXQGgaPqRso3fasnYqza-EXOKbdGw42hrTJg0nwd_Rq3Gfk_aOHG27lLvGuMPGERZPOL4nTBaYIQf2g7aN_H_wla4aH0XL6WOTyd4y1jaDKco3icyXGesQpDiLmR8deX98qgI3FiJt1ZKqn6ye1YzNoa634A1bDZJ5mMzIb3ZxXBnokZj6ULGJnNHus1-Dnl1Apv-DdKCs4uUZKUprkjM-8flm5pmBtC5N-31pf7Eh7I&sig=AOD64_2BJZ5Tysh9o1Q0331UY8uWRv9gEQ&adurl"
+        },
+        {
+          "site": "Hotels.com",
+          "night": 8531,
+          "stay": 25592,
+          "terms": ["free_cancellation"],
+          "url": "https://www.google.com/aclk?sa=l&ai=DChsSEwjD6ZLG-ZmYAxWkLdQBHZKqN2wYACICCAEQDhoCb2E&co=1&gclid=EAIaIQobChMIw-mSxvmZmAMVpC3UAR2SqjdsEAoYAiABEgImMvD_BwE&cid=CAAS0gHkaHNkZFot_mta9wmR_D5rUm5DiERM_H2fQuT0EEhf70LnXQGgaPqRso3fasnYqza-EXOKbdGw42hrTJg0nwd_Rq3Gfk_aOHG27lLvGuMPGERZPOL4nTBaYIQf2g7aN_H_wla4aH0XL6WOTyd4y1jaDKco3icyXGesQpDiLmR8deX98qgI3FiJt1ZKqn6ye1YzNoa634A1bDZJ5mMzIb3ZxXBnokZj6ULGJnNHus1-Dnl1Apv-DdKCs4uUZKUprkjM-8flm5pmBtC5N-31pf7Eh7I&sig=AOD64_1l5Kly0nTRCe8_xabg8D8RBMPj5w&adurl"
+        },
+        {
+          "site": "Ikyu.com",
+          "night": 8752,
+          "stay": 26257,
+          "terms": ["free_cancellation"],
+          "url": "https://www.google.com/travel/lodging/clk?pc=AJ0xEyhdUQ52jaKgBMaNx5uCTp8l72KNwda8thk0XrZLvcBnyClFGAiZ3JU2RsBxq8B5Dxrf8S-A9s_hwJ9SuAtxC6Bt1eUZhaFZl8qncLQa7pKaJZ5Eqpy3iDtCzNeCRRHq_5FIj5Bb-H-Bcbruz78LqCJqd59VbXl_dAw618rPMOQj1HKxiQ&pcurl=https://www.ikyu.com/ikCo.ashx?cosid%3Dgooglehpa_enUS%26cosuid%3D_00080934_free%26surl%3D%252Fen-us%252F00080934%252F%253Fpln%253D10219813%2526rm%253D10047233%2526cid%253D20270312%2526cod%253D20270315%2526ppc%253D2%2526si%253D1%26adcid%3D%26adgid%3D%26adfid%3D00080934%26datetype%3Dselected&s=ALZo0YIhnUREtaGkm6x7Nm5rZzLA&ap=1"
+        },
+        {
+          "site": "JAPANiCAN.com",
+          "night": 8766,
+          "stay": 26297,
+          "terms": ["free_cancellation"],
+          "url": "https://www.google.com/aclk?sa=l&ai=DChsSEwjD6ZLG-ZmYAxWkLdQBHZKqN2wYACICCAEQIBoCb2E&co=1&gclid=EAIaIQobChMIw-mSxvmZmAMVpC3UAR2SqjdsEAoYBCABEgJyfPD_BwE&cid=CAAS0gHkaHNkZFot_mta9wmR_D5rUm5DiERM_H2fQuT0EEhf70LnXQGgaPqRso3fasnYqza-EXOKbdGw42hrTJg0nwd_Rq3Gfk_aOHG27lLvGuMPGERZPOL4nTBaYIQf2g7aN_H_wla4aH0XL6WOTyd4y1jaDKco3icyXGesQpDiLmR8deX98qgI3FiJt1ZKqn6ye1YzNoa634A1bDZJ5mMzIb3ZxXBnokZj6ULGJnNHus1-Dnl1Apv-DdKCs4uUZKUprkjM-8flm5pmBtC5N-31pf7Eh7I&sig=AOD64_0W6yZMJ1o_M0RJrrZKryeBJ8m7Uw&adurl"
+        }
+      ],
+      "images": [
+        "https://lh3.googleusercontent.com/grass-cs/AABkmLdoYONKGQulD-3NPHb9v0n8r8JsvMdlnpHHS4TPmTHXhS1xDWrionA40ZMvuYyoM9SC1QbfCc3E4N1R_m_xpJ9yfWetUVjn_XHbmgCRfOmGujTFkWm-JiPukMblpmrULrUkEkrCAYXoekwv=s287-w287-h192-n-k-no-v1",
+        "https://lh3.googleusercontent.com/grass-cs/AABkmLfe4Hozn0ztdm16XweUP8tg6zBvccN-bBaXY1iOK-4pjtEZ-HZTdhp55BTwccGqlWV2Sg5M3p6AVaHjTfW0JNrVonIjZL96nlVNHK_wosq7a4nU2k87yBhNxEYwXeNhqM0uz81kTqYux-uq=s287-w287-h192-n-k-no-v1",
+        "https://lh3.googleusercontent.com/grass-cs/AABkmLcpnWJ1nrHoMrukqNY2ieDmkKQsApeSO5Cf0_Bdz2fiXZW5vSxce5BgRevg33yLuAGdsz9HuaReCYgXPTagsrFfJRm2ZH54PXL4StohsgHEIIMXq49EKb-w0gyVukc2Bh9Nd8LUZqBsWMKE=s287-w287-h192-n-k-no-v1",
+        "https://lh3.googleusercontent.com/grass-cs/AABkmLdgllSYel16Wmr1ApjE61IaA3jTAf2GI20td2-i0uTfAF6hQK78xRZ6dNlwNm1ZF7idj2N2Wz1iR6YEN1Ct8ACmYOWwbWxLziheM3imtdU2effKrkojarlONhZVtz2YcmZ_dJ3r=s287-w287-h192-n-k-no-v1"
+      ],
+      "checkInTime": "3:00 PM",
+      "checkOutTime": "11:00 AM",
+      "nearby": [
+        {
+          "name": "Meiji Jingu",
+          "how": "10 min taxi"
+        },
+        {
+          "name": "Shinjuku Gyoen National Garden",
+          "how": "14 min public transport"
+        },
+        {
+          "name": "Harajuku",
+          "how": "14 min taxi"
+        },
+        {
+          "name": "Tokyo Tower",
+          "how": "25 min taxi"
+        }
+      ],
+      "about": "Near shops and restaurants in the bustling Shinjuku district, this posh hotel is 4 minutes' walk from Higashi-Shinjuku station and 4 km from Yoyogi Park. Sleek rooms offer free Wi-Fi and iPod docks, as well as tea and coffeemaking facilities, minifridges and flat-screen TVs. Upgraded rooms add kitch",
+      "address": "2 Chome-14-5 Kabukicho, Shinjuku City, Tokyo 160-0021, Japan",
+      "url": "https://www.granbellhotel.jp/shinjuku/"
+    },
+    "position": 1,
+    "live": {
+      "source": {
+        "id": "trivago",
+        "name": "trivago",
+        "url": "https://www.trivago.com/"
+      },
+      "sources": [
+        {
+          "id": "serpapi",
+          "name": "Google Hotels",
+          "url": "https://www.google.com/travel/hotels"
+        }
+      ],
+      "fetchedAt": "2026-11-22T08:00:00.000Z",
+      "staleAfter": "2026-11-22T08:30:00.000Z"
+    }
+  },
+  "stay_trend": {
+    "component": "StayTrend",
+    "place": {
+      "label": "Tokyo"
+    },
+    "currency": "PHP",
+    "class": 4,
+    "classes": [3, 4, 5],
+    "months": [
+      {
+        "month": "2027-01",
+        "average": 15546,
+        "low": 7350,
+        "high": 26461
+      },
+      {
+        "month": "2027-02",
+        "average": 19412,
+        "low": 10811,
+        "high": 31309
+      },
+      {
+        "month": "2027-03",
+        "average": 19494,
+        "low": 13690,
+        "high": 27640
+      },
+      {
+        "month": "2027-04",
+        "average": 24298,
+        "low": 12560,
+        "high": 39545
+      },
+      {
+        "month": "2027-05",
+        "average": 18363,
+        "low": 9409,
+        "high": 29425
+      },
+      {
+        "month": "2027-06",
+        "average": 18427,
+        "low": 8727,
+        "high": 31646
+      },
+      {
+        "month": "2027-07",
+        "average": 17197,
+        "low": 8042,
+        "high": 30285
+      }
+    ],
+    "byClass": {
+      "3": [
+        {
+          "month": "2027-01",
+          "average": 9105,
+          "low": 4295,
+          "high": 14974
+        },
+        {
+          "month": "2027-02",
+          "average": 12622,
+          "low": 7379,
+          "high": 19000
+        },
+        {
+          "month": "2027-03",
+          "average": 12398,
+          "low": 5792,
+          "high": 22302
+        },
+        {
+          "month": "2027-04",
+          "average": 14853,
+          "low": 8108,
+          "high": 24218
+        },
+        {
+          "month": "2027-05",
+          "average": 10912,
+          "low": 6366,
+          "high": 17074
+        },
+        {
+          "month": "2027-06",
+          "average": 10363,
+          "low": 5613,
+          "high": 16450
+        },
+        {
+          "month": "2027-07",
+          "average": 9817,
+          "low": 4993,
+          "high": 16043
+        }
+      ],
+      "4": [
+        {
+          "month": "2027-01",
+          "average": 15546,
+          "low": 7350,
+          "high": 26461
+        },
+        {
+          "month": "2027-02",
+          "average": 19412,
+          "low": 10811,
+          "high": 31309
+        },
+        {
+          "month": "2027-03",
+          "average": 19494,
+          "low": 13690,
+          "high": 27640
+        },
+        {
+          "month": "2027-04",
+          "average": 24298,
+          "low": 12560,
+          "high": 39545
+        },
+        {
+          "month": "2027-05",
+          "average": 18363,
+          "low": 9409,
+          "high": 29425
+        },
+        {
+          "month": "2027-06",
+          "average": 18427,
+          "low": 8727,
+          "high": 31646
+        },
+        {
+          "month": "2027-07",
+          "average": 17197,
+          "low": 8042,
+          "high": 30285
+        }
+      ],
+      "5": [
+        {
+          "month": "2027-01",
+          "average": 50117,
+          "low": 15667,
+          "high": 88082
+        },
+        {
+          "month": "2027-02",
+          "average": 48779,
+          "low": 18074,
+          "high": 84602
+        },
+        {
+          "month": "2027-03",
+          "average": 49739,
+          "low": 17638,
+          "high": 89263
+        },
+        {
+          "month": "2027-04",
+          "average": 64859,
+          "low": 21943,
+          "high": 125737
+        },
+        {
+          "month": "2027-05",
+          "average": 48226,
+          "low": 18692,
+          "high": 89706
+        },
+        {
+          "month": "2027-06",
+          "average": 46203,
+          "low": 17687,
+          "high": 77131
+        },
+        {
+          "month": "2027-07",
+          "average": 42774,
+          "low": 15926,
+          "high": 69552
+        }
+      ]
+    },
+    "cheapest": {
+      "month": "2027-01",
+      "average": 15546
+    },
+    "live": {
+      "source": {
+        "id": "trivago",
+        "name": "trivago",
+        "url": "https://www.trivago.com/"
+      },
+      "fetchedAt": "2026-11-22T08:00:00.000Z",
+      "staleAfter": "2026-11-23T08:00:00.000Z"
+    }
+  },
+  "products": {
+    "component": "Products",
+    "query": "wireless earbuds",
+    "country": "PH",
+    "currency": "PHP",
+    "budget": 5000,
+    "sort": "best",
+    "cheapest": 118,
+    "products": [
+      {
+        "id": "6830838209041902695",
+        "title": "P47 Wireless Bluetooth Headphones Headphones With Noise Cancellation Xmas Gifts",
+        "imageUrl": "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcR5ECyPerYzvqg6u7cRiHA6-04-Ir9YL8pCBpExz_JZi0xZN2MQfYKZO_dbGnjByufFDj3QbA4I3EdVgjJAHlhLt-YO6yLN",
+        "price": 599,
+        "store": "shopee.ph",
+        "manyStores": true,
+        "rating": {
+          "value": 5,
+          "count": 1800
+        },
+        "url": "https://www.google.com/search?ibp=oshop&q=wireless%20earbuds&prds=catalogid:6830838209041902695,productid:4941409099823078874,headlineOfferDocid:13824532097906185517,imageDocid:4018929172295576181,rds:PC_4417365417352027263|PROD_PC_4417365417352027263,gpcid:4417365417352027263,mid:576462896433726838,pvt:hg&hl=en&gl=ph&udm=28"
+      },
+      {
+        "id": "15319879854011478250",
+        "title": "Wireless Bluetooth Headphone For Kids Adjustable Cat Ear Headset With Mic Earphone Boy Girl Gift",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcSXxOdRpjGXMmlb08zh17TWo09E6GQ1kA4eu23iWj2ZsRagkXEVZR_m359_V1tNM5JPuXmX28H9ccZYp-nU9tgJn31j77RKk2IenWEZQMK-7HpYimqLKvBx",
+        "price": 118,
+        "store": "Shopee",
+        "rating": {
+          "value": 2.5,
+          "count": 2500
+        },
+        "url": "https://www.google.com/search?ibp=oshop&q=wireless%20earbuds&prds=catalogid:15319879854011478250,productid:2166330492428782851,headlineOfferDocid:1231669109250524481,imageDocid:16353932087623483424,rds:PC_16303223506271241897|PROD_PC_16303223506271241897,gpcid:16303223506271241897,mid:576462575312426564,pvt:hg&hl=en&gl=ph&udm=28"
+      },
+      {
+        "id": "13394993224174916901",
+        "title": "JBL Soundgear Clips",
+        "imageUrl": "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcQ6wbBe3bGXQdiO9ktdGOSNBpWMkKTKclG8jQjPRWGNTzesWl3bdc-TdXCuql2cr3aB4hWue_-WAQuTc4HVA7hRnPX8H8mbYAPoIwiv6Nh1Zvooq8ertcOPwi8",
+        "price": 4863.48,
+        "store": "Lazada Philippines",
+        "manyStores": true,
+        "rating": {
+          "value": 4.3,
+          "count": 646
+        },
+        "url": "https://www.google.com/search?ibp=oshop&q=wireless%20earbuds&prds=catalogid:13394993224174916901,productid:3613132335634019979,headlineOfferDocid:14089445674012071593,imageDocid:9631059587002361497,rds:PC_1011511055315249165|PROD_PC_1011511055315249165,gpcid:1011511055315249165,mid:576462845727989259,pvt:hg&hl=en&gl=ph&udm=28"
+      },
+      {
+        "id": "17882176634304257545",
+        "title": "New Bluetooth Headphones Wireless Headphones Noise Cancelling HD MIC Free for iPhone Android",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcR4l-APndAHmsH_hSAF5sCQGwSf9kMIa4N7POnqJ9SlwsiRxCH2oa6B-pz5d9TwmWIqkqowGop0i2HAd-i_s3HMc99qWWkRPIcRBS0GFlOtV4Xlzsehyfy2Vg",
+        "price": 222,
+        "store": "Shopee",
+        "rating": {
+          "value": 5,
+          "count": 432
+        },
+        "url": "https://www.google.com/search?ibp=oshop&q=wireless%20earbuds&prds=catalogid:17882176634304257545,productid:4115889550512582849,headlineOfferDocid:7560673317511883466,imageDocid:1103925908810505984,rds:PC_16476113827532679802|PROD_PC_16476113827532679802,gpcid:16476113827532679802,mid:576462916192605653,pvt:hg&hl=en&gl=ph&udm=28"
+      },
+      {
+        "id": "16348904602268763809",
+        "title": "JBL Endurance Pace",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcQKAW7DuCSJRJFjoBQrNWsEym7mnElD8--2BKO6TYeqJU4qQw-OdCSlCk9FoXXMfNFBoZW9irqVKJRPg2EYy6ZRQzSijBH1yOwLl2pT57su",
+        "price": 3667.06,
+        "store": "Broadwaylifestyle - Global",
+        "manyStores": true,
+        "rating": {
+          "value": 3.9,
+          "count": 560
+        },
+        "url": "https://www.google.com/search?ibp=oshop&q=wireless%20earbuds&prds=catalogid:16348904602268763809,productid:2668070183705300214,headlineOfferDocid:3175940000579878583,imageDocid:17407087678734959012,rds:PC_6872516531886785455|PROD_PC_6872516531886785455,gpcid:6872516531886785455,mid:576462845545636599,pvt:hg&hl=en&gl=ph&udm=28"
+      },
+      {
+        "id": "9261933754817149081",
+        "title": "Wireless Bluetooth Earphones Single Ear Hook Business Stereo Earbuds With Mic",
+        "imageUrl": "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcSXGHF9q0tMepEo6coGrv0tRzl09P4lmynBn2TCa_XLdGKxX_u4LFQFnXANtCliJAM9y-JOgxy0luWN5N0P1QPqYEwGdhe_q0vuPMsAOy-Amv3lpwsIK-d6",
+        "price": 500,
+        "store": "Shopee",
+        "rating": {
+          "value": 5,
+          "count": 2200
+        },
+        "url": "https://www.google.com/search?ibp=oshop&q=wireless%20earbuds&prds=productid:9261933754817149081,headlineOfferDocid:9261933754817149081,imageDocid:17877752622379640838,rds:PC_4115011488998028403|PROD_PC_4115011488998028403,pvt:hg&hl=en&gl=ph&udm=28"
+      },
+      {
+        "id": "16348904602268763809~2",
+        "title": "JBL Endurance Pace",
+        "imageUrl": "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcQKAW7DuCSJRJFjoBQrNWsEym7mnElD8--2BKO6TYeqJU4qQw-OdCSlCk9FoXXMfNFBoZW9irqVKJRPg2EYy6ZRQzSijBH1yOwLl2pT57su",
+        "price": 3837.88,
+        "store": "B&H Photo-Video-Audio",
+        "manyStores": true,
+        "rating": {
+          "value": 3.9,
+          "count": 560
+        },
+        "url": "https://www.google.com/search?ibp=oshop&q=wireless%20earbuds&prds=catalogid:16348904602268763809,productid:2668070183705300214,headlineOfferDocid:9253422602992281774,imageDocid:17407087678734959012,rds:PC_6872516531886785455|PROD_PC_6872516531886785455,gpcid:6872516531886785455,mid:576462845545636599,pvt:hg&hl=en&gl=ph&udm=28",
+        "badge": "PRICE DROP"
+      }
+    ],
+    "live": {
+      "source": {
+        "id": "serpapi",
+        "name": "Google Shopping",
+        "url": "https://shopping.google.com/"
+      },
+      "fetchedAt": "2026-11-22T08:00:00.000Z",
+      "staleAfter": "2026-11-22T11:00:00.000Z"
+    }
+  },
+  "products_shopify": {
+    "component": "Products",
+    "query": "wireless earbuds",
+    "country": "PH",
+    "currency": "PHP",
+    "budget": 5000,
+    "sort": "best",
+    "cheapest": 3100,
+    "products": [
+      {
+        "id": "gid://shopify/p/3rBgpKnxncl0huYurRPdMo",
+        "title": "JBL Tune Flex Earbuds - Ghost",
+        "imageUrl": "https://cdn.shopify.com/s/files/1/0575/3628/2777/files/JBLTuneFlexGhost_Buds_Case.png",
+        "price": 3100,
+        "oldPrice": 6900,
+        "store": "Plug",
+        "rating": {
+          "value": 4.9,
+          "count": 73
+        },
+        "url": "https://www.plug.tech/products/jbl-tune-flex-earbuds-ghost?_gsid=yXXGi6WL6wN4&utm_source=shopify&utm_medium=catalog"
+      }
+    ],
+    "more": true,
+    "live": {
+      "source": {
+        "id": "shopify",
+        "name": "Shopify",
+        "url": "https://www.shopify.com/"
+      },
+      "fetchedAt": "2026-11-22T08:00:00.000Z",
+      "staleAfter": "2026-11-22T08:10:00.000Z",
+      "views": ["item:gid://shopify/p/3rBgpKnxncl0huYurRPdMo"]
+    }
+  },
+  "product_details": {
+    "component": "ProductDetails",
+    "query": "wireless earbuds",
+    "country": "PH",
+    "currency": "PHP",
+    "budget": 5000,
+    "product": {
+      "id": "6830838209041902695",
+      "title": "JBL Soundgear Clips",
+      "imageUrl": "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcR5ECyPerYzvqg6u7cRiHA6-04-Ir9YL8pCBpExz_JZi0xZN2MQfYKZO_dbGnjByufFDj3QbA4I3EdVgjJAHlhLt-YO6yLN",
+      "price": 599,
+      "store": "shopee.ph",
+      "manyStores": true,
+      "rating": {
+        "value": 4.3,
+        "count": 646
+      },
+      "url": "https://www.google.com/search?ibp=oshop&q=wireless%20earbuds&prds=catalogid:6830838209041902695,productid:4941409099823078874,headlineOfferDocid:13824532097906185517,imageDocid:4018929172295576181,rds:PC_4417365417352027263|PROD_PC_4417365417352027263,gpcid:4417365417352027263,mid:576462896433726838,pvt:hg&hl=en&gl=ph&udm=28"
+    },
+    "brand": "JBL",
+    "images": [
+      "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcTo4JwgyuemPAQLlV9ECI9LQ4Dz4KKE71lYX2EYgsT6N2Z_ptCIr-Sv65-oeFachkvJj_n2tcG_R2C_HTcowDx5tjnhtoMzu1j112OF_EFQwVOymlIZnxF5",
+      "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcSUkzaGXNyv3JMgBzohJ8bIkfTROS_cX5bAxBwO2EfHcAyDQnKEuCgDVokCaDAGrKU7AUWK25AYLF46H8kUwSbBA-PlXibhPLebpP_PPMaRGaT1986rag4NTQ",
+      "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcQyN8hvIxKYDXmD5p6koJ9C--5B3c-6pZxjkLtEJttBPr-ea8Y6NRqxzF2wPDNrsr0ytDqF0LDHNKf2CI8fJI5nmaXNiZxbJyekd1R7iqPk0w_gXh12_tywIg",
+      "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcT6wtiJbTLrA4jCTKrCHcLBPxQjNxlSzrxvpUX0Nr-rKdz4K7Wxnl4VlaegMGNCPojJCugoWV4rkPUjaL17ABr9TldHGqv3caJz44MI7PiH6ON7futeKQU5iQAc"
+    ],
+    "features": [
+      "Headphone Cup Type: Open-ear",
+      "Body Part Use: Ear",
+      "Noise Cancellation Type: No active noise cancellation",
+      "Max Battery Life: 4 hours (Maximum talk time)",
+      "Battery Highlights: Speed charge",
+      "Recharge Time: 2 hours (from empty)",
+      "Rechargeable Battery: Yes",
+      "Style: Open-ear headphones, True wireless headphones"
+    ],
+    "offers": [
+      {
+        "store": "Lazada Philippines",
+        "price": 4863.48,
+        "delivery": "Free",
+        "total": 4863.48,
+        "url": "https://www.lazada.com.ph/products/jbl-jbl-clips-true-wireless-earbuds-with-high-resolution-audio-support-i15635665955-s133674111858.html?from_gmc=1&fl_tag=1"
+      },
+      {
+        "store": "datablitz.com.ph",
+        "price": 6095,
+        "total": 6095
+      },
+      {
+        "store": "i.Tech Philippines",
+        "price": 6095,
+        "delivery": "Free",
+        "total": 6095
+      },
+      {
+        "store": "B&H Photo-Video-Audio",
+        "price": 6398.6,
+        "total": 6398.6
+      },
+      {
+        "store": "abenson.com",
+        "price": 7499,
+        "oldPrice": 8299,
+        "total": 7499
+      },
+      {
+        "store": "JBL Store PH",
+        "price": 7469,
+        "delivery": "+ ₱1,700.00",
+        "total": 9169,
+        "url": "https://jblstore.com.ph/products/jbl-soundgear-clips?variant=42489532350558&country=PH&currency=PHP&utm_medium=product_sync&utm_source=google&utm_content=sag_organic&utm_campaign=sag_organic&srsltid=AYCX9vIF4ajtmxMcT6bLnSlUvG099eF75sAbC0maliOVuJ9A6oHB4lCGI0g"
+      },
+      {
+        "store": "OnWard PH",
+        "price": 7469,
+        "delivery": "+ ₱1,700.00",
+        "total": 9169
+      },
+      {
+        "store": "Shopee",
+        "price": 10798,
+        "total": 10798
+      }
+    ],
+    "reviews": [
+      {
+        "text": "The earbuds are extremely convenient and discreet. They stay securely in place even while running, and they don’t block the ear canal, so you can still hear ambient sounds. The sound is clear, and you can listen to audiobooks even on a bus,",
+        "rating": 4
+      },
+      {
+        "text": "For $150 these open ear earphones are definitely NOT worth the price at all. The build quality is cheap and the sound wasn’t much better. They constantly feel like they’re going to fall off of your ears, and they do. Definitely not glasses ",
+        "rating": 2
+      },
+      {
+        "text": "I have always used Samsung earbuds, which offer great sound, but I recently started looking for open-ear headphones. Because I spend most of my day taking calls for work, I really wanted a pair that allowed me to take calls easily and liste",
+        "rating": 5
+      }
+    ],
+    "position": 1,
+    "live": {
+      "source": {
+        "id": "serpapi",
+        "name": "Google Shopping",
+        "url": "https://shopping.google.com/"
+      },
+      "fetchedAt": "2026-11-22T08:00:00.000Z",
+      "staleAfter": "2026-11-22T11:00:00.000Z"
+    }
+  },
+  "product_details_shopify": {
+    "component": "ProductDetails",
+    "query": "wireless earbuds",
+    "country": "PH",
+    "currency": "PHP",
+    "budget": 5000,
+    "product": {
+      "id": "gid://shopify/p/3rBgpKnxncl0huYurRPdMo",
+      "title": "Heavys True Wireless EarBuds (H1E)",
+      "imageUrl": "https://cdn.shopify.com/s/files/1/0575/3628/2777/files/JBLTuneFlexGhost_Buds_Case.png",
+      "price": 3100,
+      "oldPrice": 6900,
+      "store": "Plug",
+      "rating": {
+        "value": 4.6,
+        "count": 358
+      },
+      "url": "https://www.plug.tech/products/jbl-tune-flex-earbuds-ghost?_gsid=yXXGi6WL6wN4&utm_source=shopify&utm_medium=catalog"
+    },
+    "images": [
+      "https://cdn.shopify.com/s/files/1/0565/7097/0186/files/H1E2.png",
+      "https://cdn.shopify.com/s/files/1/0565/7097/0186/files/heavysearbuds_1.jpg",
+      "https://cdn.shopify.com/s/files/1/0565/7097/0186/files/heavys_earbuds_shells_1.jpg",
+      "https://cdn.shopify.com/s/files/1/0565/7097/0186/files/InfographicH1EV03P2WhitetextNoBAckground_1.png",
+      "https://cdn.shopify.com/s/files/1/0565/7097/0186/files/InfographicH1EV03P1WhitetextNoBAckground_1_9cf72a12-c84c-4393-9bc6-79187dd6d0dd.png",
+      "https://cdn.shopify.com/s/files/1/0565/7097/0186/files/H1E_RIGHT_BUD_EXPLODE_v2.png",
+      "https://cdn.shopify.com/s/files/1/0565/7097/0186/files/earbudsinpalmofhandssmaller.png",
+      "https://cdn.shopify.com/s/files/1/0565/7097/0186/files/Screenshot2026-01-14at22.49.58.png"
+    ],
+    "features": [
+      "Patented magnet-based replaceable earbud design for easy maintenance and extended product life.",
+      "Dual chip set delivers immersive, genre-specific sound for a premium listening experience",
+      "Custom-tuned dynamic low-latency dual mic system ensures crystal clear communications",
+      "Active noise cancellation provides a distraction-free environment for listening anywhere",
+      "Patented magnet-based replaceable earbud design offers easy maintenance and longer product life",
+      "Lightweight, ergonomic build fits comfortably for extended wear"
+    ],
+    "offers": [
+      {
+        "store": "Heavys Pre-Order",
+        "price": 9800,
+        "total": 9800,
+        "url": "https://shop.heavys.com/products/heavys-wireless-earbuds-preorder?variant=42500097015897&_gsid=kgfoES7PEeVA&utm_source=shopify&utm_medium=catalog",
+        "checkoutUrl": "https://shop.heavys.com/buy/42500097015897:1?ucp/version=2026-08-25&attribution/utm_source=shopify&attribution/utm_medium=catalog&attribution/click_id_tag=_gsid&attribution/click_id_value=kgfoES7PEeVA&_gsid=kgfoES7PEeVA",
+        "variant": "HEAVYS Wireless EarBuds *PreOrder"
+      },
+      {
+        "store": "Heavys",
+        "price": 10000,
+        "oldPrice": 13600,
+        "total": 10000,
+        "url": "https://www.heavys.com/products/heavys-true-wireless-earbuds?variant=41866204840010&_gsid=kgfoES7PEeVA&utm_source=shopify&utm_medium=catalog",
+        "checkoutUrl": "https://www.heavys.com/buy/41866204840010:1?ucp/version=2026-08-25&attribution/utm_source=shopify&attribution/utm_medium=catalog&attribution/click_id_tag=_gsid&attribution/click_id_value=kgfoES7PEeVA&_gsid=kgfoES7PEeVA",
+        "variant": "Heavys True Wireless EarBuds (H1E)"
+      },
+      {
+        "store": "Heavys Pre-Order",
+        "price": 12000,
+        "total": 12000,
+        "url": "https://shop.heavys.com/products/heavys-wireless-earbuds-preorder?variant=42650717585497&_gsid=kgfoES7PEeVA&utm_source=shopify&utm_medium=catalog",
+        "checkoutUrl": "https://shop.heavys.com/buy/42650717585497:1?ucp/version=2026-08-25&attribution/utm_source=shopify&attribution/utm_medium=catalog&attribution/click_id_tag=_gsid&attribution/click_id_value=kgfoES7PEeVA&_gsid=kgfoES7PEeVA",
+        "variant": "HEAVYS Wireless EarBuds *PreOrder"
+      }
+    ],
+    "position": 1,
+    "live": {
+      "source": {
+        "id": "shopify",
+        "name": "Shopify",
+        "url": "https://www.shopify.com/"
+      },
+      "fetchedAt": "2026-11-22T08:00:00.000Z",
+      "staleAfter": "2026-11-22T08:10:00.000Z"
+    }
+  },
+  "product_details_bare": {
+    "component": "ProductDetails",
+    "query": "wireless earbuds",
+    "country": "PH",
+    "currency": "PHP",
+    "budget": 5000,
+    "product": {
+      "id": "6830838209041902695",
+      "title": "P47 Wireless Bluetooth Headphones Headphones With Noise Cancellation Xmas Gifts",
+      "imageUrl": "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcR5ECyPerYzvqg6u7cRiHA6-04-Ir9YL8pCBpExz_JZi0xZN2MQfYKZO_dbGnjByufFDj3QbA4I3EdVgjJAHlhLt-YO6yLN",
+      "price": 599,
+      "store": "shopee.ph",
+      "manyStores": true,
+      "rating": {
+        "value": 5,
+        "count": 1800
+      },
+      "url": "https://www.google.com/search?ibp=oshop&q=wireless%20earbuds&prds=catalogid:6830838209041902695,productid:4941409099823078874,headlineOfferDocid:13824532097906185517,imageDocid:4018929172295576181,rds:PC_4417365417352027263|PROD_PC_4417365417352027263,gpcid:4417365417352027263,mid:576462896433726838,pvt:hg&hl=en&gl=ph&udm=28"
+    },
+    "images": [
+      "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcR5ECyPerYzvqg6u7cRiHA6-04-Ir9YL8pCBpExz_JZi0xZN2MQfYKZO_dbGnjByufFDj3QbA4I3EdVgjJAHlhLt-YO6yLN"
+    ],
+    "features": [],
+    "offers": [
+      {
+        "store": "shopee.ph",
+        "price": 599,
+        "total": 599,
+        "url": "https://www.google.com/search?ibp=oshop&q=wireless%20earbuds&prds=catalogid:6830838209041902695,productid:4941409099823078874,headlineOfferDocid:13824532097906185517,imageDocid:4018929172295576181,rds:PC_4417365417352027263|PROD_PC_4417365417352027263,gpcid:4417365417352027263,mid:576462896433726838,pvt:hg&hl=en&gl=ph&udm=28"
+      }
+    ],
+    "live": {
+      "source": {
+        "id": "serpapi",
+        "name": "Google Shopping",
+        "url": "https://shopping.google.com/"
+      },
+      "fetchedAt": "2026-11-22T08:00:00.000Z",
+      "staleAfter": "2026-11-22T11:00:00.000Z"
+    }
+  }
+}

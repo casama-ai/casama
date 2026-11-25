@@ -1,0 +1,126 @@
+import 'package:material_ui/material_ui.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:casama/app.dart';
+import 'package:casama/core/backend.dart';
+import 'package:casama/core/providers.dart';
+import 'package:casama/features/chat/chat_screen.dart';
+import 'package:casama/features/groups/group_chats.dart';
+import 'package:casama/features/home/home_shell.dart' show groupBotsByFolder;
+import 'package:casama_sdk/casama_sdk.dart';
+
+import 'app_test.dart' show setSize;
+import 'fake_backend.dart';
+
+void main() {
+  testWidgets('the sidebar counts what each bot waits on, and a group chat opens from its own section', (tester) async {
+    await setSize(tester, const Size(1600, 1000));
+    final backend = FakeBackend()
+      ..groups.add(
+        Conversation(id: 'g1', botId: botId, title: 'Every Bot', lastMessageAt: null, createdAt: DateTime(2026), kind: ConversationKindEnum.group, botIds: [botId]),
+      );
+    await tester.pumpWidget(ProviderScope(overrides: [backendProvider.overrideWithValue(backend)], child: const CasamaApp()));
+    await tester.pumpAndSettle();
+    // One pending approval for Ada; its approval notification isn't counted a second time.
+    expect(find.descendant(of: find.byKey(const Key('sidebar-bot-$botId')), matching: find.text('1')), findsOneWidget);
+    expect(find.text('Group chats'), findsOneWidget);
+    expect(find.byType(GroupAvatar), findsOneWidget);
+
+    await tester.tap(find.byKey(const Key('sidebar-group-g1')));
+    await tester.pumpAndSettle();
+    expect(find.text('Select a bot to chat'), findsNothing);
+    expect(find.byType(ChatScreen), findsOneWidget);
+  });
+
+  testWidgets('on large screens with the sidebar open, a chat has no Back button, while a subpage pushed from it does', (tester) async {
+    await setSize(tester, const Size(1600, 1000));
+    final backend = FakeBackend();
+    await tester.pumpWidget(ProviderScope(overrides: [backendProvider.overrideWithValue(backend)], child: const CasamaApp()));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('sidebar-bot-$botId')));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(ChatScreen), findsOneWidget);
+    expect(find.byTooltip('Back'), findsNothing);
+
+    await tester.tap(find.text('Ada').last);
+    await tester.pumpAndSettle();
+    expect(find.byTooltip('Back'), findsOneWidget);
+
+    await tester.tap(find.byTooltip('Back'));
+    await tester.pumpAndSettle();
+    expect(find.byType(ChatScreen), findsOneWidget);
+    expect(find.byTooltip('Back'), findsNothing);
+  });
+
+  test('loose bots that are working or waiting on the person sort first, the rest keep their order (E3)', () {
+    final f = FakeBackend();
+    final bots = [
+      f.bot(id: 'a', name: 'A'),
+      f.bot(id: 'b', name: 'B', status: BotStatusEnum.working),
+      f.bot(id: 'c', name: 'C'),
+      f.bot(id: 'd', name: 'D', status: BotStatusEnum.waiting),
+      f.bot(id: 'e', name: 'E'),
+    ];
+    expect(groupBotsByFolder(bots, const []).single.$2.map((b) => b.id), ['b', 'd', 'a', 'c', 'e']);
+  });
+
+  testWidgets('a working bot scrolled out of view below shows a cue that scrolls to it (E3)', (tester) async {
+    await setSize(tester, const Size(1400, 820));
+    final backend = FakeBackend();
+    backend.extraBots.addAll([for (var i = 0; i < 20; i++) backend.bot(id: 'idle-$i', name: 'Idle $i')]);
+    // A folder at the end of the list holds a working bot.
+    backend.botFolder = 'Later';
+    backend.extraBots.add(backend.bot(id: 'busy', name: 'Busy', status: BotStatusEnum.working));
+    await tester.pumpWidget(ProviderScope(overrides: [backendProvider.overrideWithValue(backend)], child: const CasamaApp()));
+    // The working dots animate for ever, so no pumpAndSettle.
+    for (var i = 0; i < 10; i++) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+    expect(find.byKey(const Key('sidebarMoreWorking')), findsOneWidget);
+    expect(find.text('1 more working'), findsOneWidget);
+    await tester.tap(find.byKey(const Key('sidebarMoreWorking')));
+    for (var i = 0; i < 10; i++) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+    expect(find.byKey(const Key('sidebarMoreWorking')), findsNothing);
+    final row = tester.getRect(find.byKey(const Key('sidebar-bot-busy')));
+    expect(row.bottom, lessThanOrEqualTo(820));
+  });
+
+  test('answered requests and read notifications drop out of the badges', () async {
+    final backend = FakeBackend()
+      ..storedNotifications = [
+        NotificationView(id: 'a', kind: 'approval_request', title: '', body: '', createdAt: DateTime.now(), botId: botId),
+        NotificationView(id: 'r', kind: 'routine_result', title: '', body: '', link: '/bots/$botId/chat?c=c1', createdAt: DateTime.now(), botId: botId),
+        NotificationView(id: 'o', kind: 'routine_result', title: '', body: '', link: '/bots/other/chat', createdAt: DateTime.now(), botId: 'other'),
+        // Opens in the inbox, not in Ada's chat: opening the chat can't clear it, so it isn't
+        // on her badge (it kept the badge on while her chat was open).
+        NotificationView(id: 's', kind: 'suggestion', title: '', body: '', link: '/inbox?tab=0', createdAt: DateTime.now(), botId: botId),
+      ];
+    final container = ProviderContainer(overrides: [backendProvider.overrideWithValue(backend)]);
+    addTearDown(container.dispose);
+    final subs = [
+      container.listen(approvalsProvider, (_, _) {}),
+      container.listen(takeoversProvider, (_, _) {}),
+      container.listen(notificationsProvider, (_, _) {}),
+    ];
+    addTearDown(() {
+      for (final s in subs) {
+        s.close();
+      }
+    });
+    await container.read(notificationsProvider.future);
+    await container.read(approvalsProvider.future);
+    await container.read(takeoversProvider.future);
+    // Ada: the pending approval and the routine result (the approval notification isn't extra).
+    expect(container.read(botBadgeProvider(botId)), 2);
+    await container.read(notificationsProvider.notifier).markBotChatRead(botId);
+    expect(container.read(botBadgeProvider(botId)), 1);
+    expect(container.read(botBadgeProvider('other')), 1);
+    // The suggestion still waits in the inbox.
+    expect(container.read(notificationsProvider).value!.firstWhere((n) => n.id == 's').readAt, isNull);
+    expect(container.read(inboxBadgeProvider), 3);
+  });
+}

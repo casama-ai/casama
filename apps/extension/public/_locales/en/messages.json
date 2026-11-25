@@ -1,0 +1,14 @@
+{
+  "extName": {
+    "message": "Casama",
+    "description": "The extension's name in the browser and its store (Chrome Web Store, Edge Add-ons, Firefox Add-ons)."
+  },
+  "extDescription": {
+    "message": "Ask your AI bots about any page, save what matters, and answer what they need without leaving your tab.",
+    "description": "The store summary, at most 112 characters (Safari's limit; App Store Connect rejects longer)."
+  },
+  "actionTitle": {
+    "message": "Casama",
+    "description": "Tooltip on the toolbar button."
+  }
+}

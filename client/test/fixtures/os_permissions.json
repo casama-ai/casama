@@ -1,0 +1,163 @@
+{
+ "permissions": [
+  {
+   "id": "location",
+   "label": "Location",
+   "why": "So I can use where you are",
+   "platforms": {
+    "ios": "prompt",
+    "android": "prompt",
+    "web": "prompt"
+   }
+  },
+  {
+   "id": "location_always",
+   "label": "Location in the background",
+   "why": "So I can notice when you arrive or leave places",
+   "platforms": {
+    "ios": "prompt"
+   }
+  },
+  {
+   "id": "camera",
+   "label": "Camera",
+   "why": "So I can see through your camera when you ask",
+   "platforms": {
+    "ios": "prompt",
+    "web": "prompt"
+   }
+  },
+  {
+   "id": "microphone",
+   "label": "Microphone",
+   "why": "So you can talk to me",
+   "platforms": {
+    "ios": "prompt",
+    "android": "prompt",
+    "macos": "prompt",
+    "windows": "settings",
+    "web": "prompt"
+   }
+  },
+  {
+   "id": "speech",
+   "label": "Speech recognition",
+   "why": "So I can turn what you say into text",
+   "platforms": {
+    "ios": "prompt",
+    "macos": "prompt"
+   }
+  },
+  {
+   "id": "photos",
+   "label": "Photos",
+   "why": "So I can find and use your photos",
+   "platforms": {
+    "ios": "prompt"
+   }
+  },
+  {
+   "id": "contacts",
+   "label": "Contacts",
+   "why": "So I can look up the people you mention",
+   "platforms": {
+    "ios": "prompt",
+    "android": "prompt",
+    "macos": "prompt"
+   }
+  },
+  {
+   "id": "calendar",
+   "label": "Calendars",
+   "why": "So I can see and add events",
+   "platforms": {
+    "ios": "prompt",
+    "android": "prompt"
+   }
+  },
+  {
+   "id": "health",
+   "label": "Health",
+   "why": "So I can use your health summaries",
+   "platforms": {
+    "ios": "prompt",
+    "android": "prompt"
+   }
+  },
+  {
+   "id": "notifications",
+   "label": "Notifications",
+   "why": "So I can let you know when something's ready",
+   "platforms": {
+    "ios": "prompt",
+    "android": "prompt",
+    "macos": "prompt",
+    "windows": "settings",
+    "web": "prompt"
+   }
+  },
+  {
+   "id": "notification_access",
+   "label": "Notification access",
+   "why": "So I can read the notifications you share",
+   "platforms": {
+    "android": "settings"
+   }
+  },
+  {
+   "id": "accessibility",
+   "label": "Accessibility",
+   "why": "So I can see and click in your apps",
+   "platforms": {
+    "macos": "prompt"
+   }
+  },
+  {
+   "id": "screen_recording",
+   "label": "Screen Recording",
+   "why": "So I can take screenshots of your screen",
+   "platforms": {
+    "macos": "prompt"
+   },
+   "relaunch": [
+    "macos"
+   ]
+  },
+  {
+   "id": "automation",
+   "label": "Automation",
+   "why": "So I can control other apps for you",
+   "platforms": {
+    "macos": "prompt"
+   }
+  },
+  {
+   "id": "full_disk",
+   "label": "Full Disk Access",
+   "why": "So I can open files in protected folders",
+   "platforms": {
+    "macos": "settings"
+   }
+  },
+  {
+   "id": "shared_folders",
+   "label": "Shared folders",
+   "why": "So I can work with your files",
+   "platforms": {
+    "macos": "casama",
+    "windows": "casama",
+    "linux": "casama"
+   }
+  },
+  {
+   "id": "local_tools",
+   "label": "Local tools",
+   "why": "So I can use the tools you run on this computer",
+   "platforms": {
+    "macos": "casama",
+    "windows": "casama",
+    "linux": "casama"
+   }
+  }
+ ]
+}

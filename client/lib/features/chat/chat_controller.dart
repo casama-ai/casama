@@ -1,0 +1,2290 @@
+import 'dart:async';
+import 'dart:math';
+
+import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:casama_sdk/casama_sdk.dart';
+
+import '../../core/backend.dart';
+import '../../core/local_cache.dart';
+import '../../core/providers.dart';
+import '../../core/review_prompt.dart';
+import '../../core/server_reachability.dart';
+import '../../core/telemetry.dart';
+import '../computer/bot_cursors.dart';
+import '../island/run_tracker.dart';
+import '../permissions/permissions_request.dart';
+import '../testimonials/testimonials.dart';
+
+enum ToolStatus { running, done, failed }
+
+/// One entry in the chat: a message, a tool step, or a short notice.
+sealed class ChatEntry {
+  const ChatEntry();
+}
+
+class MessageEntry extends ChatEntry {
+  const MessageEntry({
+    required this.id,
+    required this.role,
+    required this.text,
+    this.streaming = false,
+    this.attachments = const [],
+    this.apps = const [],
+    this.siblingIndex = 1,
+    this.siblingCount = 1,
+    this.botId,
+    this.uploading = false,
+    this.failed = false,
+    this.runId,
+    this.at,
+  });
+  final String id;
+
+  /// When it was sent, in local time (D-387): the chat's day and pause labels and the message
+  /// menu read it. Set to now for a message still sending or a reply still streaming.
+  final DateTime? at;
+
+  /// The run that wrote it (D-307): the last reply of a run shows that run's usage line.
+  final String? runId;
+
+  /// Yours, and it didn't reach the server: shown with Try Again instead of being lost.
+  final bool failed;
+
+  /// Sent before its files finished uploading: shown at once, delivered when they are up.
+  final bool uploading;
+
+  /// The bot that wrote it, in group chats (D-118).
+  final String? botId;
+  final String role;
+  final String text;
+  final bool streaming;
+  final List<AttachmentRef> attachments;
+
+  /// Apps mentioned in this message (D-434).
+  final List<MessageAppMention> apps;
+
+  /// Edited versions of a message are siblings; arrows switch between them (D-108).
+  final int siblingIndex;
+  final int siblingCount;
+  MessageEntry copyWith({String? id, String? text, bool? streaming, List<AttachmentRef>? attachments, List<MessageAppMention>? apps, bool? uploading, bool? failed, String? botId}) => MessageEntry(
+        id: id ?? this.id,
+        role: role,
+        text: text ?? this.text,
+        streaming: streaming ?? this.streaming,
+        attachments: attachments ?? this.attachments,
+        apps: apps ?? this.apps,
+        siblingIndex: siblingIndex,
+        siblingCount: siblingCount,
+        botId: botId ?? this.botId,
+        uploading: uploading ?? this.uploading,
+        failed: failed ?? this.failed,
+        runId: runId,
+        at: at,
+      );
+}
+
+/// A message's files did not upload, so it was not sent.
+class UploadsFailed implements Exception {
+  const UploadsFailed();
+}
+
+class ToolEntry extends ChatEntry {
+  const ToolEntry({
+    required this.callId,
+    required this.tool,
+    required this.args,
+    this.output = '',
+    this.status = ToolStatus.running,
+    this.preview,
+    this.durationMs,
+    this.error,
+    this.artifactPath,
+    this.botId,
+    this.onComputer,
+  });
+  final String callId;
+  final String tool;
+  final Map<String, Object?> args;
+  final String output;
+  final ToolStatus status;
+  final String? preview;
+  final int? durationMs;
+  final String? error;
+  final String? artifactPath;
+
+  /// In a group chat, the bot whose step this is (D-118).
+  final String? botId;
+
+  /// The person's own computer this step ran on, by name (computer places); null on the bot's own.
+  final String? onComputer;
+
+  ToolEntry copyWith({String? output, ToolStatus? status, String? preview, int? durationMs, String? error, String? artifactPath, String? botId, String? onComputer}) => ToolEntry(
+    callId: callId,
+    tool: tool,
+    args: args,
+    output: output ?? this.output,
+    status: status ?? this.status,
+    preview: preview ?? this.preview,
+    durationMs: durationMs ?? this.durationMs,
+    error: error ?? this.error,
+    artifactPath: artifactPath ?? this.artifactPath,
+    botId: botId ?? this.botId,
+    onComputer: onComputer ?? this.onComputer,
+  );
+}
+
+/// The person's own computer an event names as its place (computer places), or null.
+String? personalPlaceName(ToolStartedEventPayloadPlace? place) => place?.kind == 'local' && place!.name.trim().isNotEmpty ? place.name.trim() : null;
+
+/// A tool call waiting for someone's decision; [decision] is set once resolved.
+class ApprovalEntry extends ChatEntry {
+  const ApprovalEntry({required this.approvalId, required this.tool, required this.args, required this.risk, this.decision, this.botId, this.onComputer});
+  final String approvalId;
+  final String tool;
+  final Map<String, Object?> args;
+  final String risk;
+  final String? decision;
+
+  /// The person's own computer the action would happen on, by name (computer places).
+  final String? onComputer;
+
+  /// In a group chat, the bot that's asking (D-118).
+  final String? botId;
+}
+
+/// A bot asking a person to take over its screen; [outcome] is set once resolved.
+class TakeoverEntry extends ChatEntry {
+  const TakeoverEntry({required this.computerId, required this.reason, this.outcome, this.note, this.takeoverId, this.loginHost, this.loginShared = false});
+  final String computerId;
+  final String reason;
+  final String? outcome;
+  final String? note;
+  /// Missing on requests from before Share login (TAKEOVER-SIGN-IN-PLAN).
+  final String? takeoverId;
+  /// The site the person may share a login for instead of taking over; null: Take Control only.
+  final String? loginHost;
+  /// Answered with a login rather than by taking the screen.
+  final bool loginShared;
+}
+
+/// A bot asking for a secret (D-101); the value is typed into the card and never kept here.
+class SecretEntry extends ChatEntry {
+  const SecretEntry({required this.requestId, required this.name, required this.service, required this.hosts, required this.reason, this.totp = false, this.outcome, this.loginHost});
+  /// A sign-in card in the in-app browser (D-511): the site whose login is asked for.
+  final String? loginHost;
+  final String requestId;
+  final bool totp;
+  final String name;
+  final String service;
+  final List<String> hosts;
+  final String reason;
+  final String? outcome;
+}
+
+/// A local MCP server needs its owner to sign in again on that computer (D-363).
+class McpSignInEntry extends ChatEntry {
+  const McpSignInEntry({required this.integrationId, required this.deviceId, required this.server, required this.label});
+  final String integrationId;
+  final String deviceId;
+  final String server;
+  final String label;
+}
+
+/// A connected MCP server asking the person something mid-call (MCP elicitation, D-363).
+class McpQuestionEntry extends ChatEntry {
+  const McpQuestionEntry({required this.questionId, required this.connection, required this.message, required this.schema, this.outcome});
+  final String questionId;
+  final String connection;
+  final String message;
+  final Map<String, Object?> schema;
+
+  /// accepted | declined | cancelled | expired once it's over.
+  final String? outcome;
+}
+
+/// Asking which browser to open a site in when sign-in is needed or the bot's computer is blocked
+/// (docs/IN-APP-BROWSER-PLAN.md §3).
+class BrowserChoiceEntry extends ChatEntry {
+  const BrowserChoiceEntry({
+    required this.choiceId,
+    required this.host,
+    required this.reason,
+    required this.deviceSystem,
+    required this.hasChrome,
+    this.outcome,
+    this.choice,
+    this.remember = false,
+  });
+  final String choiceId;
+  final String host;
+  final String reason;
+  final String? deviceSystem;
+  final bool hasChrome;
+
+  /// answered | expired | cancelled once it's over.
+  final String? outcome;
+
+  /// app | mine | computer once answered or expired.
+  final String? choice;
+  final bool remember;
+}
+
+/// A bot asking for one kind of the person's device data (D-149): a one-tap card.
+/// It comes as a run event and is not saved with the messages, so the controller keeps it by
+/// [runId] and puts it back under that run's messages whenever the thread reloads.
+class DeviceAccessEntry extends ChatEntry {
+  const DeviceAccessEntry({required this.kind, required this.reason, required this.botId, this.runId});
+  final DeviceKind kind;
+  final String reason;
+  final String botId;
+  final String? runId;
+}
+
+/// System permissions a device is missing (D-376): a row and a button per permission. Kept by run
+/// like [DeviceAccessEntry].
+class PermissionsEntry extends ChatEntry {
+  const PermissionsEntry({required this.request, this.runId});
+  final PermissionsRequest request;
+  final String? runId;
+}
+
+/// A bot set a canvas on the person's widgets (bot widgets, docs/BOT-WIDGET-PLAN.md §8.5): the
+/// canvas drawn as the widget draws it, with Show on my widgets / Not now the first time. Kept by
+/// run like [DeviceAccessEntry].
+class CanvasPreviewEntry extends ChatEntry {
+  const CanvasPreviewEntry({required this.preview, this.runId});
+  final CanvasPreviewEventPayload preview;
+  final String? runId;
+}
+
+/// A suggestion the bot posted in General (D-253): Do it opens a topic, Not now dismisses it.
+class SuggestionEntry extends ChatEntry {
+  const SuggestionEntry({required this.messageId, required this.suggestion});
+  final String messageId;
+  final MessageSuggestion suggestion;
+}
+
+/// Several suggestions in one card (D-257): a Do it on each, one Not now for the rest.
+class SuggestionListEntry extends ChatEntry {
+  const SuggestionListEntry({required this.messageId, required this.items});
+  final String messageId;
+  final List<MessageSuggestion> items;
+}
+
+/// A topic's result posted back to General (D-253): a link into the topic.
+class TopicLinkEntry extends ChatEntry {
+  const TopicLinkEntry({required this.messageId, required this.topic});
+  final String messageId;
+  final MessageTopic topic;
+}
+
+/// A call as one card (D-327 §8, call card plan): its card message once the call is over (null
+/// while it goes on), and the spoken turns that are folded into it instead of showing as bubbles.
+class CallRecapEntry extends ChatEntry {
+  const CallRecapEntry({
+    required this.messageId,
+    required this.call,
+    this.liveCallId,
+    this.turns = const [],
+    this.at,
+  });
+
+  /// The card message, or null for a call still going on (or one whose card hasn't come yet).
+  final String? messageId;
+  final MessageCall? call;
+  final String? liveCallId;
+  final List<CallTurnView> turns;
+
+  /// When the last thing in it happened.
+  final DateTime? at;
+
+  /// The row's key: the call, so a live card becomes the finished one in place.
+  String get key => liveCallId ?? messageId ?? 'call';
+}
+
+/// An older page in front of the chat's entries. A call whose card is already on screen (a card
+/// is always newer than its turns) gets the older page's turns of it put in front of its own,
+/// instead of a second card for the same call.
+List<ChatEntry> mergeEarlierCalls(List<ChatEntry> older, List<ChatEntry> current) {
+  final onScreen = <String, int>{
+    for (final (i, e) in current.indexed)
+      if (e is CallRecapEntry && e.liveCallId != null) e.key: i,
+  };
+  if (onScreen.isEmpty) return [...older, ...current];
+  final merged = [...current];
+  final kept = <ChatEntry>[];
+  for (final e in older) {
+    final at = e is CallRecapEntry ? onScreen[e.key] : null;
+    if (e is! CallRecapEntry || at == null) {
+      kept.add(e);
+      continue;
+    }
+    final card = merged[at] as CallRecapEntry;
+    final known = {for (final t in card.turns) t.messageId};
+    merged[at] = CallRecapEntry(
+      messageId: card.messageId,
+      call: card.call,
+      liveCallId: card.liveCallId,
+      turns: [for (final t in e.turns) if (!known.contains(t.messageId)) t, ...card.turns],
+      at: card.at,
+    );
+  }
+  return [...kept, ...merged];
+}
+
+/// One spoken turn of a call, shown inside its card.
+class CallTurnView {
+  const CallTurnView({required this.messageId, required this.role, required this.text, required this.at});
+  final String messageId;
+  final String role;
+  final String text;
+  final DateTime at;
+}
+
+/// A gallery card in a bot's reply (D-315): an item it suggests, or a skill it drafted.
+class GalleryCardEntry extends ChatEntry {
+  const GalleryCardEntry({required this.messageId, required this.part});
+  final String messageId;
+  final GalleryChatPart part;
+}
+
+/// An interactive UI the bot showed (D-086), rendered from A2UI messages.
+class UiEntry extends ChatEntry {
+  const UiEntry({required this.surfaceId, required this.messages});
+  final String surfaceId;
+  final List<Object?> messages;
+}
+
+/// [browserWait]: the run waits for the person to come back to the chat for their in-app browser
+/// (D-529); its text is the site (may be empty) and its [NoticeEntry.errorCode] is "expired" once it
+/// stopped waiting. It is taken away when the person came back.
+enum NoticeKind { memory, profileSaved, skill, checkpoint, computer, failed, cancelled, userControl, botControl, modelFallback, info, routine, browserWait }
+
+class NoticeEntry extends ChatEntry {
+  const NoticeEntry({required this.kind, required this.text, this.refId, this.errorCode, this.at, this.botId});
+  final NoticeKind kind;
+  final String text;
+
+  /// The checkpoint (checkpoint notices), the run (failures), the memory ("Remembered something")
+  /// or the computer (computer notices); [handBack] for a browser wait on Hand Back (D-571).
+  final String? refId;
+
+  /// [refId] of a [NoticeKind.browserWait] line whose run waits for Hand Back, not for the chat.
+  static const handBack = 'hand_back';
+
+  /// The bot whose memory it went to, in a group chat (D-118); otherwise the chat's bot.
+  final String? botId;
+  final String? errorCode;
+  final DateTime? at;
+}
+
+/// What a message was sent with: Retry after a failed run sends exactly this again (Fix 12).
+typedef SentMessage = ({String text, List<AttachmentRef> attachments, List<String> skills, List<MessageAppMention> apps, Map<String, Object?>? uiAction});
+
+class ChatState {
+  const ChatState({
+    this.conversationId,
+    this.entries = const [],
+    this.loading = false,
+    this.activeRunId,
+    this.lastRunId,
+    this.costUsd = 0,
+    this.tokens = 0,
+    this.lastSent,
+    this.answeredUi = const {},
+    this.offline = false,
+    this.activeBotId,
+    this.loadFailed = false,
+    this.hasEarlier = false,
+    this.loadingEarlier = false,
+    this.sending = false,
+    this.rerunId,
+    this.reactions = const {},
+    this.rechecking = false,
+  });
+
+  /// The bot's finished reply was taken back for a second look (a check before it reaches you):
+  /// the working line says so until the bot does something else, instead of the reply vanishing.
+  final bool rechecking;
+
+  /// Reactions by message id (D-331); messages without any are left out.
+  final Map<String, List<ReactionGroup>> reactions;
+
+  /// Your last message, when its run failed before it could start (found on opening the chat, so
+  /// [lastSent] doesn't know it). Try again reruns it as it was sent, with anything the app
+  /// doesn't show (such as a suggestion's action).
+  final String? rerunId;
+
+  /// A message is on its way and its run hasn't started yet: the chat already shows the bot
+  /// thinking, so a slow send doesn't look like nothing happened.
+  final bool sending;
+
+  /// The thread has messages older than the ones loaded (Fix 10); [loadingEarlier] while the next
+  /// page up is on its way.
+  final bool hasEarlier;
+  final bool loadingEarlier;
+  final String? conversationId;
+
+  /// The chat couldn't be loaded and nothing is saved on the device: the screen says so and
+  /// offers Try Again, instead of placeholders that never end.
+  final bool loadFailed;
+
+  /// In a group chat, the bot whose run is on screen: it heads "thinking" and the streaming reply.
+  final String? activeBotId;
+
+  /// Showing saved messages because the server couldn't be reached (D-112).
+  final bool offline;
+  final List<ChatEntry> entries;
+  final bool loading;
+  final String? activeRunId;
+  final String? lastRunId;
+  final double costUsd;
+  final int tokens;
+  final SentMessage? lastSent;
+
+  /// The last message sent from here can be sent again (words, files, or both).
+  bool get canRetry => lastSent != null || rerunId != null;
+
+  /// Bot UIs the person has already answered; they stay visible but can't be used again.
+  final Set<String> answeredUi;
+
+  bool get running => activeRunId != null;
+
+  ChatState copyWith({
+    String? conversationId,
+    List<ChatEntry>? entries,
+    bool? loading,
+    String? activeRunId,
+    bool clearActiveRun = false,
+    String? lastRunId,
+    double? costUsd,
+    int? tokens,
+    SentMessage? lastSent,
+    Set<String>? answeredUi,
+    bool? offline,
+    String? activeBotId,
+    bool? loadFailed,
+    bool? hasEarlier,
+    bool? loadingEarlier,
+    bool? sending,
+    String? rerunId,
+    Map<String, List<ReactionGroup>>? reactions,
+    bool? rechecking,
+  }) => ChatState(
+    rechecking: clearActiveRun ? false : (rechecking ?? this.rechecking),
+    reactions: reactions ?? this.reactions,
+    rerunId: rerunId ?? this.rerunId,
+    sending: sending ?? this.sending,
+    hasEarlier: hasEarlier ?? this.hasEarlier,
+    loadingEarlier: loadingEarlier ?? this.loadingEarlier,
+    loadFailed: loadFailed ?? this.loadFailed,
+    conversationId: conversationId ?? this.conversationId,
+    entries: entries ?? this.entries,
+    loading: loading ?? this.loading,
+    activeRunId: clearActiveRun ? null : (activeRunId ?? this.activeRunId),
+    lastRunId: lastRunId ?? this.lastRunId,
+    costUsd: costUsd ?? this.costUsd,
+    tokens: tokens ?? this.tokens,
+    lastSent: lastSent ?? this.lastSent,
+    answeredUi: answeredUi ?? this.answeredUi,
+    offline: offline ?? this.offline,
+    activeBotId: clearActiveRun ? null : (activeBotId ?? this.activeBotId),
+  );
+}
+
+/// Chat with one bot: loads a conversation, sends messages and applies live run events.
+class ChatController extends Notifier<ChatState> {
+  ChatController(this.botId);
+  final String botId;
+  StreamSubscription<RunEventItem>? _sub;
+
+  /// The newest event this chat applied for the run it follows. The watchdog compares it with the
+  /// server's, so a chat that stopped hearing its run (a dropped stream, a reload that failed
+  /// half-way) catches up instead of saying Thinking forever.
+  int _appliedSeq = 0;
+  Timer? _watchdog;
+
+  /// Watchdog ticks since the last event (or the last check that found the chat up to date).
+  int _silentTicks = 0;
+  bool _checkingRun = false;
+  int _quietChecks = 0;
+  bool _opening = false;
+  static const _watchdogTick = Duration(seconds: 10);
+
+  /// Ticks of silence before the server is asked: 20 s, then 40 s, 80 s and at most 160 s while
+  /// the run is only quiet (a long step, waiting on a person).
+  static const _stallTicks = 2;
+
+  /// The open conversation's activity from other devices and triggers (D-224).
+  StreamSubscription<ConversationActivity>? _watch;
+  String? _watching;
+
+  /// Allow cards by the run that asked (D-328). Run events are not part of the saved messages, so
+  /// without this a reload (the thread changed, the chat reopened) dropped the card.
+  final _deviceCards = <String, List<ChatEntry>>{};
+
+  /// Runs whose events were already read for Allow cards after a reload.
+  final _deviceCardsRead = <String>{};
+
+  /// [entries] with every kept Allow card after the last entry of the run that asked; a card of
+  /// the run still going with nothing saved yet goes last.
+  List<ChatEntry> _placeDeviceCards(List<ChatEntry> entries) {
+    final out = [for (final e in entries) if (e is! DeviceAccessEntry && e is! PermissionsEntry && e is! CanvasPreviewEntry) e];
+    if (_deviceCards.isEmpty) return out;
+    for (final MapEntry(key: run, value: cards) in _deviceCards.entries) {
+      final at = out.lastIndexWhere((e) => e is MessageEntry && e.runId == run);
+      if (at >= 0) {
+        out.insertAll(at + 1, cards);
+      } else if (run == state.activeRunId) {
+        out.addAll(cards);
+      }
+    }
+    return out;
+  }
+
+  /// After a reload: the latest run's Allow cards, read from its events when this controller
+  /// never saw them live (the app was closed, another device started it).
+  Future<void> _recoverDeviceCards(String id, List<ChatMessageView> messages) async {
+    final run = messages.reversed.map((m) => m.runId).nonNulls.firstOrNull;
+    if (run == null || _deviceCards.containsKey(run) || !_deviceCardsRead.add(run)) return;
+    final List<RunEventItem> events;
+    try {
+      events = await _backend.runEvents(run);
+    } catch (_) {
+      _deviceCardsRead.remove(run);
+      return;
+    }
+    for (final e in events) {
+      final card = _deviceCardOf(e);
+      if (card != null) _keepDeviceCard(card);
+    }
+    if (!_deviceCards.containsKey(run) || state.conversationId != id) return;
+    state = state.copyWith(entries: _placeDeviceCards(state.entries));
+  }
+
+  static ChatEntry? _deviceCardOf(RunEventItem e) {
+    // A bot's canvas (bot widgets): its preview card, kept and recovered the same way.
+    if (e case CanvasPreviewItem(:final event)) {
+      if (event.runId.isEmpty) return null;
+      return CanvasPreviewEntry(runId: event.runId, preview: event.payload);
+    }
+    // System permissions on a device (D-376): their own card, kept and recovered the same way.
+    if (e case DevicePermissionNeededItem(:final event)) {
+      final p = event.payload;
+      if (event.runId.isEmpty || p.permissions.isEmpty) return null;
+      return PermissionsEntry(
+        runId: event.runId,
+        request: PermissionsRequest(deviceRef: p.deviceRef, deviceName: p.deviceName, platform: p.platform, permissions: p.permissions.toList(), reason: p.reason, botId: p.botId),
+      );
+    }
+    final (String run, String kindValue, String reason, String bot) = switch (e) {
+      DeviceAccessRequestedItem(:final event) => (event.runId, event.payload.kind.value, event.payload.reason, event.payload.botId),
+      // Casama for Chrome's kinds come as their own event (D-323): the same one-tap card.
+      DeviceBrowserAccessRequestedItem(:final event) => (event.runId, event.payload.kind.value, event.payload.reason, event.payload.botId),
+      _ => ('', '', '', ''),
+    };
+    final kind = DeviceKind.values.where((k) => k.value == kindValue).firstOrNull;
+    if (run.isEmpty || kind == null) return null;
+    return DeviceAccessEntry(kind: kind, reason: reason, botId: bot, runId: run);
+  }
+
+  /// Keeps [card] for its run; false when that run already has a card for the kind (a replay).
+  bool _keepDeviceCard(ChatEntry card) {
+    final run = switch (card) {
+      DeviceAccessEntry(:final runId) || PermissionsEntry(:final runId) || CanvasPreviewEntry(:final runId) => runId,
+      _ => null,
+    };
+    if (run == null) return false;
+    final cards = _deviceCards.putIfAbsent(run, () => []);
+    final dup = switch (card) {
+      DeviceAccessEntry(:final kind, :final botId) => cards.any((c) => c is DeviceAccessEntry && c.kind == kind && c.botId == botId),
+      CanvasPreviewEntry(:final preview) => cards.any((c) => c is CanvasPreviewEntry && c.preview.canvasId == preview.canvasId),
+      PermissionsEntry(:final request) => cards.any(
+        (c) => c is PermissionsEntry && c.request.deviceRef == request.deviceRef && c.request.botId == request.botId && c.request.permissions.toSet().containsAll(request.permissions),
+      ),
+      _ => true,
+    };
+    if (dup) return false;
+    cards.add(card);
+    return true;
+  }
+
+  Backend get _backend => ref.read(backendProvider);
+
+  /// The island's run tracker (D-324): this chat reports its run's steps to it, so the tracker
+  /// reads no events for a run that is open here. Kept, since ref can't be read while disposing.
+  RunTracker? _tracker;
+
+  /// The run this chat last followed, for handing it back to the tracker when the chat closes
+  /// (state can't be read while disposing). The tracker ignores it if it has ended.
+  String? _followedRun;
+
+  /// The last run this chat started from the composer (not a check-in or a run picked up later).
+  String? _sentRun;
+  RunTracker get _runs {
+    final known = _tracker;
+    if (known != null) return known;
+    final tracker = ref.read(runTrackerProvider.notifier);
+    _tracker = tracker;
+    return tracker;
+  }
+
+  @override
+  ChatState build() {
+    // Messages that found no server go again by themselves once it answers (B1).
+    serverReachability.removeListener(_onReachability);
+    serverReachability.addListener(_onReachability);
+    ref.onDispose(() {
+      serverReachability.removeListener(_onReachability);
+      _sub?.cancel();
+      _watch?.cancel();
+      _watchdog?.cancel();
+      _refreshAgain?.cancel();
+      final run = _followedRun;
+      final tracker = _tracker;
+      // No provider may change while this one is disposed: hand the run back right after.
+      if (run != null && tracker != null) scheduleMicrotask(() => tracker.chatReleased(run));
+    });
+    return const ChatState();
+  }
+
+  /// Follows runs that start in [id] from anywhere else (another phone, a routine, a group
+  /// @mention): the thread reloads and the new run streams in, as if it had started here.
+  void _follow(String id) {
+    if (_watching == id) return;
+    _watch?.cancel();
+    _watching = id;
+    _watch = _backend.watchConversation(id).listen((activity) async {
+      // Someone's reaction (D-331): only that message's reactions are read again.
+      if (activity.reactionMessageId case final message?) {
+        if (state.conversationId == id) await _loadReactions(id, [message]);
+        return;
+      }
+      // A call card the server posted or rewrote (its summary, a step): the cards are read again.
+      if (activity.changedMessageId != null) {
+        if (state.conversationId == id) await _refreshCalls(id);
+        return;
+      }
+      // A person's message (D-413): from this device it is on screen already; from another one
+      // it is put in, also while the bot works (it joined that run, so nothing else will say).
+      if (activity.messageId case final message?) {
+        if (state.conversationId == id && !_shows(message)) await _catchUp(id);
+        return;
+      }
+      final runId = activity.runId;
+      // A message sent here attaches its own run; a moment's wait keeps this from racing it.
+      await Future<void>.delayed(const Duration(milliseconds: 400));
+      if (state.conversationId != id) return;
+      // A run is on screen: the thread isn't reloaded under it (its steps would go), but what
+      // was added meanwhile is put in. The new run is followed when this one ends.
+      if (state.running) {
+        if (runId != null && runId != state.activeRunId) await _catchUp(id);
+        return;
+      }
+      // Already following it, or a reconnect while nothing changed: open() checks anyway.
+      if (runId != null && state.lastRunId == runId) return;
+      // A background refresh: when the server is briefly unreachable, the next change tries again
+      // (an error here had nothing to catch it).
+      try {
+        await open(id);
+      } catch (e) {
+        debugPrint('chat refresh failed: $e');
+      }
+    });
+  }
+
+  void _unfollow() {
+    _watch?.cancel();
+    _watch = null;
+    _watching = null;
+  }
+
+  /// Reads the chat on screen again, for when the app comes back to the front. Live updates only
+  /// say what happens while the app listens: a reply, a routine's result or a message from the
+  /// person's other device that came while it was away was never heard, and the thread stayed
+  /// where it was until it was opened again.
+  Future<void> refresh() async {
+    final id = state.conversationId;
+    // No chat open, or one is being read right now (it will have the latest).
+    if (id == null || _opening) return;
+    // A run is on screen: its steps come on their own stream, and a reload would drop them.
+    // What else was added goes in around it.
+    if (state.running) {
+      await _catchUp(id);
+      return;
+    }
+    final before = _reads;
+    var read = false;
+    try {
+      read = await _startOpen(id, quiet: true);
+    } catch (_) {}
+    // Read, or another open took over meanwhile (it reads the same thread).
+    if (read || _opening || _reads != before) return;
+    // A phone just back from the background often fails its first request (the connection it
+    // kept is gone). One more try a moment later, before the chat says it is offline.
+    _refreshAgain?.cancel();
+    _refreshAgain = Timer(refreshRetry, () {
+      _refreshAgain = null;
+      if (state.conversationId != id || _opening || state.running || _reads != before) return;
+      unawaited(open(id).catchError((Object e) => debugPrint('chat refresh failed: $e')));
+    });
+  }
+
+  /// The wait before [refresh] tries again after a read that failed.
+  static const refreshRetry = Duration(seconds: 2);
+  Timer? _refreshAgain;
+
+  /// How many times a thread was read from the server.
+  int _reads = 0;
+
+  /// Whether the message with this id is on screen, or is one this device is sending right now.
+  bool _shows(String messageId) =>
+      _sending.containsValue(messageId) || state.entries.any((e) => e is MessageEntry && e.id == messageId);
+
+  bool _catchingUp = false;
+  bool _catchUpAgain = false;
+
+  /// Puts in the messages of the thread that this screen doesn't show yet, without reloading it
+  /// (D-413): a message from the person's other device, a routine's or another run's reply. A
+  /// reload would do it too, but it drops the steps of the run on screen. Each goes after the
+  /// message before it in the thread. The words of the run being followed come on its own stream.
+  Future<void> _catchUp(String id) async {
+    if (_catchingUp) {
+      _catchUpAgain = true;
+      return;
+    }
+    _catchingUp = true;
+    try {
+      do {
+        _catchUpAgain = false;
+        final List<ChatMessageView> messages;
+        try {
+          messages = await _backend.messages(id, limit: pageSize);
+        } catch (e) {
+          // A background read: the next change, or the next open, tries again.
+          debugPrint('chat catch-up failed: $e');
+          return;
+        }
+        if (state.conversationId != id) return;
+        final entries = [...state.entries];
+        var changed = false;
+        String? previous;
+        for (final m in messages) {
+          if (entries.any((e) => e is MessageEntry && e.id == m.id)) {
+            previous = m.id;
+            continue;
+          }
+          if (_sending.containsValue(m.id)) continue;
+          if (m.role != 'user' && m.runId != null && m.runId == state.activeRunId) continue;
+          final built = _entriesOf(id, [m]);
+          // Only messages that show as a bubble: the rest have no id on screen to tell them by.
+          if (!built.any((e) => e is MessageEntry && e.id == m.id)) continue;
+          final after = previous == null ? -1 : entries.lastIndexWhere((e) => e is MessageEntry && e.id == previous);
+          // Nothing before it is on screen: it is older than what is loaded, or the first message.
+          if (after < 0 && entries.isNotEmpty) {
+            if (previous != null) continue;
+            entries.insertAll(0, built);
+          } else {
+            entries.insertAll(after + 1, built);
+          }
+          previous = m.id;
+          changed = true;
+        }
+        if (changed) {
+          state = state.copyWith(entries: entries);
+          unawaited(_loadReactions(id, [for (final m in messages) m.id]));
+        }
+      } while (_catchUpAgain && state.conversationId == id);
+    } finally {
+      _catchingUp = false;
+    }
+  }
+
+  /// Reads the chat again for its call cards (a summary came, a step started, a call ended) and
+  /// puts each card in place of the one on screen, so the chat doesn't jump or lose a run.
+  Future<void> _refreshCalls(String id) async {
+    final List<ChatMessageView> messages;
+    try {
+      messages = await _backend.messages(id, limit: pageSize);
+    } catch (e) {
+      debugPrint('call card refresh failed: $e');
+      return;
+    }
+    if (state.conversationId != id) return;
+    final fresh = {
+      for (final e in _entriesOf(id, messages))
+        if (e is CallRecapEntry) e.key: e,
+    };
+    final entries = [...state.entries];
+    var changed = false;
+    var missing = false;
+    for (final card in fresh.values) {
+      final at = entries.indexWhere((e) => e is CallRecapEntry && e.key == card.key);
+      if (at < 0) {
+        missing = true;
+      } else {
+        // Turns an earlier page brought in stay (this read has only the newest page).
+        final shown = entries[at] as CallRecapEntry;
+        final fresh = {for (final t in card.turns) t.messageId};
+        entries[at] = CallRecapEntry(
+          messageId: card.messageId,
+          call: card.call,
+          liveCallId: card.liveCallId,
+          turns: [for (final t in shown.turns) if (!fresh.contains(t.messageId) && (card.turns.isEmpty || t.at.isBefore(card.turns.first.at))) t, ...card.turns],
+          at: card.at,
+        );
+        changed = true;
+      }
+    }
+    if (changed) state = state.copyWith(entries: entries);
+    // A card that isn't on screen yet (the call just ended): the chat reloads, unless a run is
+    // streaming, whose end reloads it anyway.
+    if (missing && !state.running) {
+      try {
+        await open(id);
+      } catch (e) {
+        debugPrint('chat refresh failed: $e');
+      }
+    }
+  }
+
+  /// Starts a next step from a call's card as a chat run, or puts it away; the card updates when
+  /// the server says so.
+  Future<void> callStep(String liveCallId, String stepId, {bool dismiss = false}) async {
+    final id = state.conversationId;
+    await _backend.updateCallStep(liveCallId, stepId, dismiss: dismiss);
+    if (id == null) return;
+    await _refreshCalls(id);
+    if (!dismiss && !state.running) {
+      try {
+        await open(id);
+      } catch (e) {
+        debugPrint('chat refresh failed: $e');
+      }
+    }
+  }
+
+  /// Deletes a call from the chat: its card and its transcript.
+  Future<void> deleteCall(String liveCallId) async {
+    await _backend.deleteCall(liveCallId);
+    final id = state.conversationId;
+    state = state.copyWith(
+      entries: [
+        for (final e in state.entries)
+          if (!(e is CallRecapEntry && e.liveCallId == liveCallId)) e,
+      ],
+    );
+    if (id != null) unawaited(_refreshCalls(id));
+  }
+
+  /// Opens a conversation (or the most recent one when null).
+  ChatState _fromMessages(
+    String id,
+    List<ChatMessageView> messages, {
+    bool offline = false,
+    bool hasEarlier = false,
+  }) {
+    return ChatState(
+      conversationId: id,
+      offline: offline,
+      hasEarlier: hasEarlier,
+      lastSent: state.conversationId == id ? state.lastSent : null,
+      loadingEarlier: state.conversationId == id && state.loadingEarlier,
+      entries: [
+        ..._placeDeviceCards([..._entriesOf(id, messages), ..._keptFailure(id, messages)]),
+        // A message on its way that this load already brought shows once, as the saved one.
+        for (final e in _notDelivered(id))
+          if (!(e is MessageEntry && messages.any((m) => m.id == _sending[e.id]))) e,
+      ],
+      answeredUi: {for (final m in messages) ?m.uiActionSurface},
+      reactions: state.conversationId == id ? state.reactions : const {},
+    );
+  }
+
+  static final _savedMessage = RegExp(r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
+
+  /// Reads the reactions on [messageIds] (D-331) and replaces what the chat shows for them.
+  Future<void> _loadReactions(String id, Iterable<String> messageIds) async {
+    final ids = [for (final m in messageIds) if (_savedMessage.hasMatch(m)) m];
+    if (ids.isEmpty) return;
+    final Map<String, List<ReactionGroup>> got;
+    try {
+      got = await _backend.reactions(id, ids);
+    } catch (e) {
+      // A background read: the next change or reload tries again.
+      debugPrint('reactions failed: $e');
+      return;
+    }
+    if (state.conversationId != id) return;
+    final next = {...state.reactions};
+    for (final m in ids) {
+      final g = got[m];
+      if (g == null || g.isEmpty) {
+        next.remove(m);
+      } else {
+        next[m] = g;
+      }
+    }
+    state = state.copyWith(reactions: next);
+  }
+
+  void _putReactions(String messageId, List<ReactionGroup> groups) {
+    final next = {...state.reactions};
+    if (groups.isEmpty) {
+      next.remove(messageId);
+    } else {
+      next[messageId] = groups;
+    }
+    state = state.copyWith(reactions: next);
+  }
+
+  /// Your reaction to a message (D-331): [emoji] sets or replaces it, null takes it back. Shown at
+  /// once; put back as it was when the server refuses.
+  Future<void> react(String messageId, String? emoji) async {
+    final id = state.conversationId;
+    if (id == null || !_savedMessage.hasMatch(messageId)) return;
+    final before = state.reactions[messageId] ?? const <ReactionGroup>[];
+    if (ReactionGroup.mineOf(before) == emoji) return;
+    _putReactions(messageId, ReactionGroup.withMine(before, emoji, me: _backend.userId));
+    try {
+      final after = emoji == null ? await _backend.removeReaction(id, messageId) : await _backend.setReaction(id, messageId, emoji);
+      if (state.conversationId == id) _putReactions(messageId, after);
+    } catch (_) {
+      if (state.conversationId == id) _putReactions(messageId, before);
+      rethrow;
+    }
+  }
+
+  /// A run that just failed (a limit reached) leaves its notice under your message; a reload
+  /// that still ends on that message keeps it, instead of dropping it and bringing it back.
+  List<ChatEntry> _keptFailure(String id, List<ChatMessageView> messages) {
+    if (state.conversationId != id || messages.lastOrNull?.role != 'user') return const [];
+    final last = state.entries.where((e) => !_local(e)).lastOrNull;
+    return last is NoticeEntry && last.kind == NoticeKind.failed ? [last] : const [];
+  }
+
+  /// Messages the server doesn't have yet, so a reload can't bring them back (Fix 11): ones that
+  /// failed to send (kept for Try Again), ones still waiting for their files, and ones on their
+  /// way (a reload that came before the server had the message used to drop its bubble).
+  bool _local(ChatEntry e) => e is MessageEntry && (e.failed || e.uploading || _sending.containsKey(e.id));
+
+  /// Messages being sent right now: the bubble's id, and the id the server will give the message
+  /// (the send's idempotency key). A reload that already brings the message replaces the bubble.
+  final _sending = <String, String>{};
+
+  List<ChatEntry> _notDelivered(String id) =>
+      state.conversationId == id ? [for (final e in state.entries) if (_local(e)) e] : (_parked[id] ?? const []);
+
+  /// Changes a message this device is still sending ([change] returning null removes it), in the
+  /// chat on screen or, once the person has moved to another chat, among the ones kept for when
+  /// they come back. Returns whether it was found.
+  bool _updateLocal(String conversationId, String localId, MessageEntry? Function(MessageEntry) change) {
+    bool mine(ChatEntry x) => x is MessageEntry && x.id == localId;
+    if (state.conversationId == conversationId) {
+      final i = state.entries.indexWhere(mine);
+      if (i < 0) return false;
+      final next = change(state.entries[i] as MessageEntry);
+      state = state.copyWith(entries: next == null ? ([...state.entries]..removeAt(i)) : ([...state.entries]..[i] = next));
+      return true;
+    }
+    final parked = _parked[conversationId];
+    final i = parked?.indexWhere(mine) ?? -1;
+    if (parked == null || i < 0) return false;
+    final next = change(parked[i] as MessageEntry);
+    final list = next == null ? ([...parked]..removeAt(i)) : ([...parked]..[i] = next);
+    if (list.isEmpty) {
+      _parked.remove(conversationId);
+    } else {
+      _parked[conversationId] = list;
+    }
+    return true;
+  }
+
+  /// The same, for chats this controller has moved away from: they come back with the chat.
+  final _parked = <String, List<ChatEntry>>{};
+
+  void _park() {
+    final id = state.conversationId;
+    if (id == null) return;
+    final mine = [for (final e in state.entries) if (_local(e)) e];
+    if (mine.isEmpty) {
+      _parked.remove(id);
+    } else {
+      _parked[id] = mine;
+    }
+  }
+
+  /// The chat's entries for [messages]; a message that hasn't changed keeps its entry, so its row
+  /// isn't built again.
+  List<ChatEntry> _entriesOf(String id, List<ChatMessageView> messages) {
+    final prevMessages = state.conversationId == id
+        ? <String, MessageEntry>{
+            for (final e in state.entries)
+              if (e is MessageEntry) e.id: e,
+          }
+        : const <String, MessageEntry>{};
+    // A call's spoken turns fold into its card (call card plan): the card where it is once the call
+    // is over, or a live card where the last turn is while it goes on.
+    final carded = <String>{
+      for (final m in messages) ?m.call?.liveCallId,
+    };
+    final turnsOf = <String, List<CallTurnView>>{};
+    final lastTurn = <String, String>{};
+    for (final m in messages) {
+      final c = m.callId;
+      if (c == null || m.call != null) continue;
+      (turnsOf[c] ??= []).add(
+        CallTurnView(messageId: m.id, role: m.role, text: m.text, at: m.createdAt.toLocal()),
+      );
+      lastTurn[c] = m.id;
+    }
+    return [
+        for (final m in messages)
+          if (m.callId case final c? when m.call == null) ...[
+            if (!carded.contains(c) && lastTurn[c] == m.id)
+              CallRecapEntry(
+                messageId: null,
+                call: null,
+                liveCallId: c,
+                turns: turnsOf[c] ?? const [],
+                at: m.createdAt.toLocal(),
+              ),
+          ] else ...[
+          // A routine's run starts with its instructions; the chat shows that it ran instead.
+          if (m.routineName != null)
+            NoticeEntry(
+              kind: NoticeKind.routine,
+              text: m.routineName!,
+              at: m.createdAt,
+            )
+          // A message that is only a card (a suggestion, a topic's link) gets no text entry: it
+          // would show as an empty bubble over the card.
+          // A call's recap is a card; its text is for apps without the card.
+          else if ((m.call == null && m.text.trim().isNotEmpty) ||
+              m.attachments.isNotEmpty ||
+              (m.ui.isEmpty && m.suggestion == null && m.suggestionList.isEmpty && m.topic == null && m.gallery.isEmpty && m.call == null))
+            switch (prevMessages[m.id]) {
+              final prev?
+                  when prev.role == m.role &&
+                      prev.text == m.text &&
+                      !prev.streaming &&
+                      prev.botId == m.botId &&
+                      prev.siblingIndex == m.siblingIndex &&
+                      prev.siblingCount == m.siblingCount &&
+                      prev.runId == m.runId &&
+                      prev.at == m.createdAt.toLocal() &&
+                      _sameAttachments(prev.attachments, m.attachments) &&
+                      _sameApps(prev.apps, m.apps) =>
+                prev,
+              _ => MessageEntry(
+                id: m.id,
+                role: m.role,
+                text: m.text,
+                attachments: m.attachments,
+                apps: m.apps,
+                siblingIndex: m.siblingIndex,
+                siblingCount: m.siblingCount,
+                botId: m.botId,
+                runId: m.runId,
+                at: m.createdAt.toLocal(),
+              ),
+            },
+          if (m.suggestion case final s?) SuggestionEntry(messageId: m.id, suggestion: s),
+          if (m.suggestionList.isNotEmpty) SuggestionListEntry(messageId: m.id, items: m.suggestionList),
+          if (m.topic case final t?) TopicLinkEntry(messageId: m.id, topic: t),
+          if (m.call case final c?)
+            CallRecapEntry(
+              messageId: m.id,
+              call: c,
+              liveCallId: c.liveCallId,
+              turns: c.liveCallId == null ? const [] : turnsOf[c.liveCallId] ?? const [],
+              at: m.createdAt.toLocal(),
+            ),
+          for (final u in m.ui)
+            UiEntry(surfaceId: u.surfaceId, messages: u.messages),
+          for (final g in m.gallery) GalleryCardEntry(messageId: m.id, part: g),
+        ],
+    ];
+  }
+
+  static bool _sameAttachments(List<AttachmentRef> a, List<AttachmentRef> b) {
+    if (identical(a, b)) return true;
+    if (a.length != b.length) return false;
+    for (var i = 0; i < a.length; i++) {
+      if (a[i].path != b[i].path ||
+          a[i].name != b[i].name ||
+          a[i].mimeType != b[i].mimeType ||
+          a[i].size != b[i].size) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  static bool _sameApps(List<MessageAppMention> a, List<MessageAppMention> b) {
+    if (identical(a, b)) return true;
+    if (a.length != b.length) return false;
+    for (var i = 0; i < a.length; i++) {
+      if (a[i] != b[i]) return false;
+    }
+    return true;
+  }
+
+  static bool _sameEntries(List<ChatEntry> a, List<ChatEntry> b) {
+    if (identical(a, b)) return true;
+    if (a.length != b.length) return false;
+    for (var i = 0; i < a.length; i++) {
+      if (!identical(a[i], b[i])) return false;
+    }
+    return true;
+  }
+
+  static bool _sameSet(Set<String> a, Set<String> b) =>
+      a.length == b.length && a.containsAll(b);
+
+  void _setIfChanged(ChatState next) {
+    if (state.conversationId == next.conversationId &&
+        state.loading == next.loading &&
+        state.loadFailed == next.loadFailed &&
+        state.hasEarlier == next.hasEarlier &&
+        state.loadingEarlier == next.loadingEarlier &&
+        state.offline == next.offline &&
+        state.activeRunId == next.activeRunId &&
+        _sameEntries(state.entries, next.entries) &&
+        _sameSet(state.answeredUi, next.answeredUi)) {
+      return;
+    }
+    state = next;
+  }
+
+  /// Opens a conversation: saved messages show at once (D-112), then the server's replace them.
+  /// Offline, the saved ones stay with a note.
+  /// A group chat (D-118): several bots answer one message, so after each run the thread reloads
+  /// and follows the next bot still working.
+  bool group = false;
+
+  /// How many messages a chat opens with, and how many each step up the thread adds (Fix 10).
+  static const pageSize = 60;
+
+  /// The window of the thread that is loaded: for which chat, how many messages, the oldest one,
+  /// and the thread's very first message once a page up has reached it.
+  String? _loadedFor;
+  var _loadedCount = 0;
+  String? _oldestId;
+  String? _firstId;
+
+  /// Loads the page of messages before the oldest one showing (scrolling to the top asks for it).
+  Future<void> loadEarlier() async {
+    final id = state.conversationId;
+    final before = _oldestId;
+    if (id == null || before == null || _loadedFor != id || !state.hasEarlier || state.loadingEarlier) return;
+    state = state.copyWith(loadingEarlier: true);
+    try {
+      final older = await _backend.messages(id, limit: pageSize, before: before);
+      // The chat changed, or reloaded onto another branch, while this was on its way.
+      if (state.conversationId != id || _oldestId != before) return;
+      _loadedCount += older.length;
+      if (older.isNotEmpty) _oldestId = older.first.id;
+      if (older.length < pageSize) _firstId = _oldestId;
+      state = state.copyWith(
+        entries: mergeEarlierCalls(_entriesOf(id, older), state.entries),
+        answeredUi: {...state.answeredUi, for (final m in older) ?m.uiActionSurface},
+        hasEarlier: older.length >= pageSize,
+        loadingEarlier: false,
+      );
+      unawaited(_loadReactions(id, [for (final m in older) m.id]));
+    } finally {
+      if (state.conversationId == id && state.loadingEarlier) state = state.copyWith(loadingEarlier: false);
+    }
+  }
+
+  /// Every open of a chat gets a number. An open that is no longer the newest stops where it is:
+  /// tapping one topic and then another used to let the slower first load put its thread, and
+  /// its working run, over the chat opened after it (D-413).
+  int _openGen = 0;
+
+  /// The open in flight, for a message sent while its chat is still loading.
+  Future<void>? _openDone;
+
+  /// [around]: a message to have loaded even when it is older than the first page (a search hit).
+  Future<void> open(String? conversationId, {String? around}) {
+    // New Chat from the menu bar (E1): the chat screen it goes to opens with no chat named, which
+    // would bring the newest conversation back; it stays blank instead.
+    if (_keepBlank) {
+      _keepBlank = false;
+      if (conversationId == null) return Future.value();
+    }
+    return _startOpen(conversationId, around: around);
+  }
+
+  /// Set by [newChat] with keepOnNextOpen.
+  bool _keepBlank = false;
+
+  /// Whether the thread was read from the server. [quiet]: a reload nobody asked for (the app came
+  /// back to the front); when the server can't be reached, the thread on screen stays as it is,
+  /// with no offline note.
+  Future<bool> _startOpen(String? conversationId, {String? around, bool quiet = false}) {
+    final gen = ++_openGen;
+    _opening = true;
+    final done = () async {
+      try {
+        return await _open(gen, conversationId, around: around, quiet: quiet);
+      } finally {
+        if (gen == _openGen) _opening = false;
+      }
+    }();
+    _openDone = done;
+    return done;
+  }
+
+  Future<bool> _open(int gen, String? conversationId, {String? around, bool quiet = false}) async {
+    bool stale() => gen != _openGen;
+    final sub = _sub;
+    _sub = null;
+    unawaited(sub?.cancel());
+    _releaseRun();
+    final keepCurrent =
+        state.entries.isNotEmpty &&
+        (conversationId == null || conversationId == state.conversationId);
+    _park();
+    if (!keepCurrent) {
+      state = const ChatState(loading: true);
+    }
+    final cache = ref.read(localCacheProvider);
+    var id = conversationId;
+    var showingCached = keepCurrent;
+
+    Future<void> loadCached(String targetId) async {
+      final cached = await cacheRead(cache, 'msgs:$targetId');
+      if (stale()) return;
+      if (cached is List && cached.isNotEmpty) {
+        try {
+          _setIfChanged(
+            _fromMessages(targetId, [
+              for (final j in cached)
+                ChatMessageView.fromJson(Map<String, dynamic>.from(j as Map)),
+            ]),
+          );
+          showingCached = true;
+        } catch (_) {}
+      }
+    }
+
+    if (id == null) {
+      final saved =
+          state.conversationId ?? await cacheRead(cache, 'lastconv:$botId');
+      if (stale()) return false;
+      if (saved is String && !showingCached) {
+        await loadCached(saved);
+        if (stale()) return false;
+      }
+      try {
+        final list = await _backend.conversations(botId);
+        if (stale()) return false;
+        id = list.isEmpty ? null : list.first.id;
+        unawaited(cacheWrite(cache, 'lastconv:$botId', id));
+      } catch (_) {
+        if (stale()) return false;
+        if (saved is! String) {
+          state = const ChatState(loadFailed: true);
+          return false;
+        }
+        id = saved;
+      }
+    }
+    if (id == null) {
+      state = const ChatState();
+      return true;
+    }
+    final key = 'msgs:$id';
+    if (!showingCached || state.conversationId != id) {
+      await loadCached(id);
+      if (stale()) return false;
+    }
+    final List<ChatMessageView> messages;
+    // A reload keeps what the person has already scrolled back through.
+    final want = _loadedFor == id && _loadedCount > pageSize ? _loadedCount : pageSize;
+    try {
+      messages = await _backend.messages(id, limit: want, around: around);
+    } catch (_) {
+      if (stale()) return false;
+      if (showingCached && state.conversationId == id) {
+        if (!quiet) state = state.copyWith(offline: true);
+        // Followed all the same: when the live connection is back, the thread reads again by itself.
+        _follow(id);
+        return false;
+      }
+      // Nothing to show (no saved copy, as on the web): say so, with a way to try again.
+      state = ChatState(conversationId: conversationId == null ? null : id, loadFailed: true);
+      return false;
+    }
+    if (stale()) return false;
+    unawaited(
+      cacheWrite(cache, key, [
+        for (final m
+            in messages.length > 100
+                ? messages.sublist(messages.length - 100)
+                : messages)
+          m.toJson(),
+      ]),
+    );
+    _reads++;
+    if (_loadedFor != id) _firstId = null;
+    _loadedFor = id;
+    _loadedCount = messages.length;
+    _oldestId = messages.firstOrNull?.id;
+    _setIfChanged(_fromMessages(id, messages, hasEarlier: messages.length >= want && _oldestId != _firstId));
+    // The thread now shows saved messages only: a run followed from here starts from its first event.
+    _appliedSeq = 0;
+    _follow(id);
+    unawaited(_loadReactions(id, [for (final m in messages) m.id]));
+    unawaited(_recoverDeviceCards(id, messages));
+    final active = await _backend.activeRun(id);
+    // Another chat was opened meanwhile: this one's run must not start streaming into it.
+    if (stale()) return false;
+    if (active != null) {
+      _attach(active);
+    } else {
+      await _showFailedStart(id, messages);
+    }
+    return true;
+  }
+
+  /// A chat whose last word is yours and whose run failed (a limit reached, the bot archived) says
+  /// why when it opens, with the fix and Try again, instead of a message with no reply. A reply
+  /// that ran out of steps or time (D-505) says so too, so Keep going is there after a reload.
+  Future<void> _showFailedStart(String id, List<ChatMessageView> messages) async {
+    final last = messages.lastOrNull;
+    // The bot's own words from a run that then failed ("On it…" before a provider error) count
+    // too: live, that failure showed a line under them, so a reload (or coming back from a call
+    // that hid the chat while it failed) must as well.
+    final partial = last != null && last.role == 'assistant' && !last.keepGoing && last.runId != null;
+    if (last == null || (last.role != 'user' && !last.keepGoing && !partial)) return;
+    final Run run;
+    try {
+      // Group chats (D-118): the message has no run id; the run it started points back at it.
+      final runId = last.runId ?? (group ? await _backend.runForMessage(last.id) : null);
+      if (runId == null) return;
+      run = await _backend.run(runId);
+    } catch (_) {
+      return;
+    }
+    // A stopped reply says so after a reload too, as it did live (E4).
+    if (run.status == RunStatus.cancelled) {
+      if (state.conversationId != id || state.running) return;
+      if (state.entries.any((e) => e is NoticeEntry && e.kind == NoticeKind.cancelled && e.refId == run.id)) return;
+      state = state.copyWith(entries: [...state.entries, NoticeEntry(kind: NoticeKind.cancelled, text: '', refId: run.id, at: run.endedAt)]);
+      return;
+    }
+    final error = run.error;
+    if (run.status != RunStatus.failed || error == null) return;
+    // Out of steps or time, the run's own last reply already says where it got to (D-214); only
+    // the Keep going part brings the notice back (D-505).
+    if (partial && const {'max_steps_exceeded', 'wall_time_exceeded'}.contains(error.code)) return;
+    if (state.conversationId != id || state.running) return;
+    if (state.entries.any((e) => e is NoticeEntry && e.kind == NoticeKind.failed && e.refId == run.id)) return;
+    state = state.copyWith(
+      entries: [
+        ...state.entries,
+        NoticeEntry(kind: NoticeKind.failed, text: error.message, refId: run.id, errorCode: error.code, at: run.endedAt),
+      ],
+      rerunId: last.role == 'user'
+          ? last.id
+          : partial
+          ? messages.where((m) => m.role == 'user' && m.runId == run.id).lastOrNull?.id
+          : null,
+    );
+  }
+
+  /// Edits a sent message and reruns from there; the old branch stays (D-108).
+  Future<void> edit(String messageId, String text, {List<AppMentionRef> apps = const []}) async {
+    final id = state.conversationId;
+    if (id == null || state.running || text.trim().isEmpty) return;
+    await _backend.editMessage(id, messageId, text.trim(), apps: apps);
+    await open(id);
+  }
+
+  /// The message of yours that [replyId] answered, when it can be asked again (sent, with text).
+  MessageEntry? questionFor(String replyId) {
+    final entries = state.entries;
+    final i = entries.indexWhere((e) => e is MessageEntry && e.id == replyId);
+    for (var j = i - 1; j >= 0; j--) {
+      final e = entries[j];
+      if (e is MessageEntry && e.role == 'user') {
+        return e.id.startsWith('local-') || e.failed || e.text.trim().isEmpty ? null : e;
+      }
+    }
+    return null;
+  }
+
+  /// Asks for a reply again (Add 11): the message it answered reruns as a new version, so the
+  /// old reply stays one arrow away (the same fork an edit makes, D-108).
+  Future<void> regenerate(String replyId) async {
+    final id = state.conversationId;
+    final asked = questionFor(replyId);
+    if (id == null || state.running || asked == null) return;
+    await _backend.editMessage(id, asked.id, asked.text.trim(), apps: [for (final a in asked.apps) a.toRef()]);
+    await open(id);
+  }
+
+  /// Deletes one message (Add 11) and reloads the thread.
+  Future<void> deleteMessage(String messageId) async {
+    final id = state.conversationId;
+    if (id == null || state.running) return;
+    await _backend.deleteMessage(id, messageId);
+    await open(id);
+  }
+
+  /// Shows the previous or next edited version of a message, with its own replies.
+  Future<void> switchBranch(String messageId, int delta) async {
+    final id = state.conversationId;
+    if (id == null || state.running) return;
+    final siblings = await _backend.messageSiblings(id, messageId);
+    final i = siblings.indexOf(messageId);
+    final next = i + delta;
+    if (i < 0 || next < 0 || next >= siblings.length) return;
+    await _backend.switchBranch(id, siblings[next]);
+    await open(id);
+  }
+
+  /// Starts a blank chat. [keepOnNextOpen]: the chat screen is about to open with no chat named
+  /// (New Chat from the menu bar, E1); that open keeps it blank instead of loading the newest one.
+  Future<void> newChat({bool keepOnNextOpen = false}) async {
+    _keepBlank = keepOnNextOpen;
+    // A chat still loading must not land on top of the new one.
+    _openGen++;
+    _opening = false;
+    await _sub?.cancel();
+    _releaseRun();
+    _unfollow();
+    _park();
+    state = const ChatState();
+  }
+
+  /// Messages go out in the order they were sent: each waits until the one before it has started
+  /// sending (which may mean waiting for that one's files).
+  Future<void> _sendQueue = Future.value();
+
+  /// Sends a message. [uploads], when given, completes once the [attachments] are on the
+  /// computer (true) or one of them failed (false): the message shows right away and is delivered
+  /// when they are up; if they fail it is taken back and [UploadsFailed] is thrown.
+  ///
+  /// A send that finds no server (a restart, a dropped connection) tries again by itself for
+  /// about 2 minutes ([sendRetryDelays]) while the bubble shows it sending; every try carries the
+  /// same [idempotencyKey], so the server posts the message once. Try Again passes the key back,
+  /// and so does the resend when the server answers again ([_onReachability]).
+  Future<void> send(String text, {List<AttachmentRef> attachments = const [], Map<String, Object?>? uiAction, List<String> skills = const [], List<MessageAppMention> apps = const [], Future<bool>? uploads, String? idempotencyKey}) async {
+    final trimmed = text.trim();
+    if (trimmed.isEmpty && attachments.isEmpty && uiAction == null) return;
+    _keepBlank = false;
+    // While the bot works, a plain message joins its run (it decides what to do with it); group
+    // chats and card answers wait for the run to end.
+    if (state.running && (group || uiAction != null)) return;
+    final key = idempotencyKey ?? newIdempotencyKey();
+    final turn = Completer<void>();
+    final before = _sendQueue;
+    _sendQueue = turn.future;
+    final SendMessageResponse sent;
+    MessageEntry? optimistic;
+    // The chat this message belongs to. The person may open another one before the send comes
+    // back; what the send does afterwards goes to this chat, never to the one on screen (D-413).
+    String? to;
+    try {
+      // Sent while the chat is still loading (no saved copy, as on the web): wait for it, instead
+      // of starting a new conversation because no id is known yet.
+      if (state.conversationId == null && _opening) {
+        try {
+          await _openDone;
+        } catch (_) {}
+      }
+      var conversationId = state.conversationId;
+      if (conversationId == null) {
+        final gen = _openGen;
+        await before;
+        conversationId = state.conversationId ?? (await _backend.createConversation(botId)).id;
+        if (gen == _openGen && state.conversationId == null) {
+          state = state.copyWith(conversationId: conversationId);
+          _follow(conversationId);
+        }
+        ref.invalidate(conversationsProvider(botId));
+      }
+      to = conversationId;
+      final local = MessageEntry(id: 'local-${DateTime.now().microsecondsSinceEpoch}', role: 'user', text: trimmed, attachments: attachments, apps: apps, uploading: uploads != null, at: DateTime.now());
+      optimistic = local;
+      _sending[local.id] = key;
+      if (state.conversationId == to) {
+        state = state.copyWith(
+          entries: [...state.entries, local],
+          lastSent: (text: trimmed, attachments: attachments, skills: skills, apps: apps, uiAction: uiAction),
+          sending: true,
+          // A flight card's "Open in chat" leaves the card usable (keepOpenUiEvents).
+          answeredUi: uiAction == null || keepOpenUiEvents.contains(uiAction['name']) ? null : {...state.answeredUi, '${uiAction['surface_id']}'},
+        );
+      }
+      await before;
+      if (uploads != null) {
+        final ready = await uploads;
+        if (!ready) {
+          _sending.remove(local.id);
+          _updateLocal(to, local.id, (_) => null);
+          optimistic = null;
+          throw const UploadsFailed();
+        }
+        _updateLocal(to, local.id, (m) => m.copyWith(uploading: false));
+      }
+      final target = to;
+      final appRefs = [for (final a in apps) a.toRef()];
+      sent = await _deliver(
+        () => _backend.send(target, trimmed, attachments: attachments, uiAction: uiAction, skills: skills, apps: appRefs, idempotencyKey: key),
+        // The request is on its way; the next message may go.
+        onWay: () {
+          if (!turn.isCompleted) turn.complete();
+        },
+      );
+    } catch (e) {
+      // It didn't reach the server: the bubble stays, marked, with what Try Again needs. In a chat
+      // the person has left meanwhile, it is there when they come back.
+      final o = optimistic;
+      final chat = to;
+      if (o != null && chat != null) {
+        _sending.remove(o.id);
+        if (_updateLocal(chat, o.id, (m) => m.copyWith(failed: true, uploading: false))) {
+          // The first failure counts for the resend window, however often it was tried since.
+          final since = _firstFailure[key] ??= DateTime.now();
+          _unsent[o.id] = (skills: skills, apps: apps, uiAction: uiAction, key: key, connection: isConnectionFailure(e), failedAt: since);
+        }
+      }
+      if (chat == null || state.conversationId == chat) state = state.copyWith(sending: false);
+      rethrow;
+    } finally {
+      if (!turn.isCompleted) turn.complete();
+    }
+    final shown = optimistic;
+    _sending.remove(shown.id);
+    _firstFailure.remove(key);
+    if (state.conversationId != to) {
+      // Another chat is on screen now. The message is sent; its run belongs to the chat it was
+      // sent in, so it isn't followed here (it used to stream into whatever chat was open, with
+      // a Stop button that stopped the other chat's run). The island and notifications follow it.
+      _updateLocal(to, shown.id, (_) => null);
+      _runs.startedHere(sent.runId, botId: botId, conversationId: to);
+      return;
+    }
+    // The bubble takes the id the server gave the message, so it can be edited right away (Fix 13)
+    // and a reload finds it unchanged. A reload that already brought the message wins. A two-step
+    // code the server kept as dots (D-497) shows as dots here too.
+    final at = state.entries.indexWhere((x) => x is MessageEntry && x.id == shown.id);
+    if (at >= 0) {
+      final known = state.entries.any((x) => x is MessageEntry && x.id == sent.messageId);
+      state = state.copyWith(
+        entries: known ? ([...state.entries]..removeAt(at)) : ([...state.entries]..[at] = (state.entries[at] as MessageEntry).copyWith(id: sent.messageId, text: sent.text)),
+      );
+    }
+    state = state.copyWith(sending: false);
+    // The run already on screen (the message joined it, or a reload attached it first): keep
+    // following it. Attaching again replayed its steps onto the ones already shown.
+    if (state.activeRunId == sent.runId) {
+      _runs.chatStarted(sent.runId, botId: botId, conversationId: to, sentHere: true);
+      return;
+    }
+    _attach(sent.runId, sentHere: true);
+  }
+
+  /// What failed messages were sent with, so Try Again sends exactly the same thing, with the
+  /// same idempotency key (an answer that was lost may mean the server has it already).
+  /// [connection]: it failed because no server answered (not a 4xx), so it may go again by
+  /// itself when the server is back; [failedAt]: when it first failed.
+  final _unsent = <String, ({List<String> skills, List<MessageAppMention> apps, Map<String, Object?>? uiAction, String key, bool connection, DateTime failedAt})>{};
+
+  /// When each message (by its idempotency key) first failed to send, kept across resends.
+  final _firstFailure = <String, DateTime>{};
+
+  /// Whether the resend of [_onReachability] is going.
+  bool _autoResending = false;
+
+  /// The server answers again: this chat's messages that failed for want of it go again, oldest
+  /// first and one at a time, each with its own key (the server posts a message once per key).
+  /// Only those that failed less than [autoResendWindow] ago; older ones keep Try Again, so a
+  /// stale message doesn't fire an hour later. Ones the server refused never go by themselves.
+  void _onReachability() {
+    if (serverReachability.value != Reachability.ok || _autoResending || !ref.mounted) return;
+    unawaited(_resendUnsent());
+  }
+
+  Future<void> _resendUnsent() async {
+    _autoResending = true;
+    try {
+      final now = DateTime.now();
+      final due = [
+        for (final e in state.entries)
+          if (e is MessageEntry && e.failed)
+            if (_unsent[e.id] case final u? when u.connection && now.difference(u.failedAt) < autoResendWindow) (id: e.id, at: u.failedAt),
+      ]..sort((a, b) => a.at.compareTo(b.at));
+      for (final m in due) {
+        if (!ref.mounted || serverReachability.value != Reachability.ok) return;
+        final u = _unsent[m.id];
+        // Try Again got there first (the bubble is gone), or the chat can't take it now.
+        if (u == null || (state.running && (group || u.uiAction != null))) continue;
+        try {
+          await resend(m.id);
+        } catch (e) {
+          // No server again: the rest wait for the next time it answers.
+          if (isConnectionFailure(e)) return;
+        }
+      }
+    } finally {
+      _autoResending = false;
+    }
+  }
+
+  /// Runs [attempt] until it reaches the server: a connection failure tries again after each of
+  /// [sendRetryDelays]; any other error, or the last failure, is thrown. [onWay] runs once the
+  /// first request is out.
+  Future<SendMessageResponse> _deliver(Future<SendMessageResponse> Function() attempt, {required void Function() onWay}) async {
+    for (var tries = 0; ; tries++) {
+      final sending = attempt();
+      onWay();
+      try {
+        return await sending;
+      } catch (e) {
+        if (tries >= sendRetryDelays.length || !isConnectionFailure(e) || !ref.mounted) rethrow;
+        await Future<void>.delayed(sendRetryDelays[tries]);
+        if (!ref.mounted) rethrow;
+      }
+    }
+  }
+
+  /// Sends a message that didn't reach the server again, in place of its failed bubble. The bubble
+  /// is taken off before anything waits, so a second call for it (Try Again while the resend on
+  /// reconnect goes) finds nothing and does nothing.
+  Future<void> resend(String id) async {
+    final i = state.entries.indexWhere((x) => x is MessageEntry && x.id == id && x.failed);
+    if (i < 0) return;
+    final m = state.entries[i] as MessageEntry;
+    final extra = _unsent.remove(id);
+    state = state.copyWith(entries: [...state.entries]..removeAt(i));
+    await send(m.text, attachments: m.attachments, skills: extra?.skills ?? const [], apps: extra?.apps ?? m.apps, uiAction: extra?.uiAction, idempotencyKey: extra?.key);
+  }
+
+  /// Drops a message that didn't reach the server.
+  void discardUnsent(String id) {
+    final u = _unsent.remove(id);
+    if (u != null) _firstFailure.remove(u.key);
+    state = state.copyWith(entries: [for (final e in state.entries) if (!(e is MessageEntry && e.id == id && e.failed)) e]);
+  }
+
+  /// Sends the last message again after its run failed: the words, the files, the skills picked
+  /// for it and a card's answer, as they were.
+  Future<void> retry() async {
+    final last = state.lastSent;
+    if (last != null) {
+      await send(last.text, attachments: last.attachments, skills: last.skills, apps: last.apps, uiAction: last.uiAction);
+      return;
+    }
+    final rerun = state.rerunId;
+    final sent = state.entries.whereType<MessageEntry>().where((e) => e.id == rerun).firstOrNull;
+    if (rerun == null || sent == null) return;
+    // The same words again: the server keeps the message's other parts and starts a new run.
+    await edit(rerun, sent.text);
+  }
+
+  Future<void> cancel() async {
+    final run = state.activeRunId;
+    if (run == null) return;
+    try {
+      await _backend.cancelRun(run);
+      await _settleCancel(run);
+    } on RunAlreadyFinished {
+      // It had already ended and this chat missed it: let it go and show how it ended, instead
+      // of a Stop button that does nothing.
+      _sub?.cancel();
+      if (state.activeRunId == run) state = state.copyWith(clearActiveRun: true);
+      _releaseRun();
+      ref.invalidate(botsProvider);
+      final conv = state.conversationId;
+      if (conv != null) await open(conv);
+    }
+  }
+
+  /// Stop was taken: the run says how it ended (run.cancelled puts the marker in). When that
+  /// event doesn't come within [cancelSettleWait] (a stream that dropped it), the run's status
+  /// decides (E4): a reply that finished before the stop landed ends as completed, with no
+  /// marker; otherwise the "cancelled" line goes in here and the chat stops showing it working.
+  Future<void> _settleCancel(String run) async {
+    final until = DateTime.now().add(cancelSettleWait);
+    while (ref.mounted && state.activeRunId == run && DateTime.now().isBefore(until)) {
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+    }
+    if (!ref.mounted || state.activeRunId != run) return;
+    RunStatus? status;
+    try {
+      status = (await _backend.run(run)).status;
+    } catch (_) {
+      // The server didn't say: the stop was taken, so the run is ending.
+    }
+    if (!ref.mounted || state.activeRunId != run) return;
+    if (status == RunStatus.completed || status == RunStatus.failed) {
+      // It finished on its own first: show how, as a reload would.
+      _sub?.cancel();
+      _runs.chatEnded(run, status!);
+      state = state.copyWith(clearActiveRun: true);
+      _releaseRun();
+      final conv = state.conversationId;
+      if (conv != null) await open(conv);
+      return;
+    }
+    _sub?.cancel();
+    _runs.chatEnded(run, RunStatus.cancelled);
+    final entries = [...state.entries];
+    if (!entries.any((x) => x is NoticeEntry && x.kind == NoticeKind.cancelled && x.refId == run)) {
+      entries.add(NoticeEntry(kind: NoticeKind.cancelled, text: '', refId: run));
+    }
+    _finishStreaming(entries);
+    state = state.copyWith(entries: entries, clearActiveRun: true);
+    _releaseRun();
+  }
+
+  /// This chat stopped following its run (another conversation, New chat, a lost stream): the
+  /// tracker reads that run's steps itself from now on. Ended runs ignore it.
+  void _releaseRun() {
+    final run = _followedRun;
+    _followedRun = null;
+    if (run != null) _runs.chatReleased(run);
+  }
+
+  /// Follows [runId]'s events. [sentHere]: this chat just started it.
+  /// [afterSeq]: picks up after the events already on screen (the watchdog reconnecting).
+  void _attach(String runId, {bool sentHere = false, int afterSeq = 0}) {
+    _sub?.cancel();
+    if (_followedRun != runId) _releaseRun();
+    final fresh = afterSeq == 0;
+    state = state.copyWith(activeRunId: runId, lastRunId: runId, costUsd: fresh ? 0 : null, tokens: fresh ? 0 : null);
+    _appliedSeq = afterSeq;
+    _silentTicks = 0;
+    _quietChecks = 0;
+    _startWatchdog(runId);
+    _followedRun = runId;
+    if (sentHere) _sentRun = runId;
+    _runs.chatStarted(runId, botId: botId, conversationId: state.conversationId, sentHere: sentHere);
+    // Group chats (D-118): the run may belong to any member (an @mention, the last speaker).
+    if (group) {
+      unawaited(
+        _backend.run(runId).then((r) {
+          if (state.activeRunId != runId) return;
+          _runs.chatStarted(runId, botId: r.botId, conversationId: state.conversationId);
+          // Words that streamed in before we knew the bot go under its name too, not "Assistant".
+          state = state.copyWith(
+            activeBotId: r.botId,
+            entries: [
+              for (final e in state.entries)
+                if (e is MessageEntry && e.role == 'assistant' && e.runId == runId && e.botId == null)
+                  e.copyWith(botId: r.botId)
+                // Steps and approvals that arrived before we knew the bot go under its name too.
+                else if (e is ToolEntry && e.botId == null)
+                  e.copyWith(botId: r.botId)
+                else if (e is ApprovalEntry && e.botId == null)
+                  ApprovalEntry(approvalId: e.approvalId, tool: e.tool, args: e.args, risk: e.risk, decision: e.decision, botId: r.botId, onComputer: e.onComputer)
+                else
+                  e,
+            ],
+          );
+        }).catchError((_) {}),
+      );
+    }
+    _sub = _backend
+        .watchRun(runId, afterSeq: afterSeq)
+        .listen(
+          (e) {
+            if (e.seq > _appliedSeq) _appliedSeq = e.seq;
+            _silentTicks = 0;
+            _quietChecks = 0;
+            try {
+              apply(e);
+            } catch (error, stack) {
+              unawaited(Telemetry.captureException(error, stack, context: {
+                'run_event': {'type': e.type, 'seq': '${e.seq}'},
+              }));
+            }
+          },
+          onDone: () {
+            // The stream closed and no ending was shown (the server ended the run without
+            // saying how, or the run is gone): nothing more will come, so nothing stays "Thinking".
+            final unsaid = state.activeRunId == runId;
+            if (unsaid) {
+              final entries = [...state.entries]..removeWhere((x) => x is MessageEntry && x.streaming && x.text.trim().isEmpty);
+              _finishStreaming(entries);
+              state = state.copyWith(entries: entries, clearActiveRun: true);
+            }
+            // Ended runs already told the tracker; one this chat lost track of is its to follow.
+            if (_followedRun == runId) _releaseRun();
+            ref.invalidate(botsProvider);
+            ref.invalidate(usageTodayProvider);
+            // Settings shows this month's spend; without this it keeps the figure from app start.
+            ref.invalidate(usageMonthProvider);
+            final conv = state.conversationId;
+            if (group && conv != null) unawaited(Future<void>.delayed(const Duration(milliseconds: 300), () => open(conv)));
+            if (!group && conv != null) {
+              // No ending shown: the saved thread says how it ended (a failure gets its notice).
+              if (unsaid) {
+                unawaited(open(conv).catchError((Object e) => debugPrint('chat refresh failed: $e')));
+                return;
+              }
+              // A message sent too late for that run gets a follow-up run; follow it too.
+              unawaited(
+                _backend.activeRun(conv).then((next) {
+                  if (next != null && next != runId && state.activeRunId == null && state.conversationId == conv) _attach(next);
+                }).catchError((_) {}),
+              );
+              // What was added to the chat while the run was on screen (D-413).
+              unawaited(_catchUp(conv));
+            }
+          },
+        );
+  }
+
+  final _followedWaiting = <String>{};
+
+  /// A run in this chat asked the person for something (an approval, the screen) while another
+  /// run is the one on screen (D-413): a second bot in a group chat, or a routine beside a reply.
+  /// Its card is shown only by following it, so this chat moves to that run; before, the card
+  /// stayed out of the chat until the run on screen ended, and the bot that asked looked stuck.
+  /// When it ends, the chat reloads and follows what is still going. Once per run: an old
+  /// notification must not pull the chat back.
+  void followWaiting(String conversationId, String runId) {
+    if (state.conversationId != conversationId || !state.running || state.activeRunId == runId) return;
+    if (!_followedWaiting.add(runId)) return;
+    _attach(runId);
+  }
+
+  void _startWatchdog(String runId) {
+    _watchdog?.cancel();
+    _watchdog = Timer.periodic(_watchdogTick, (_) => unawaited(_checkRun(runId)));
+  }
+
+  /// The safety net under the live stream: while a run is on screen and nothing has come in for a
+  /// while, ask the server how far the run is. Behind it (or nothing follows the run any more):
+  /// follow it again from the last event shown. Whatever stopped the stream, the chat catches up.
+  Future<void> _checkRun(String runId) async {
+    if (state.activeRunId != runId) {
+      _watchdog?.cancel();
+      _watchdog = null;
+      return;
+    }
+    if (_opening || _checkingRun) return;
+    final lost = _sub == null;
+    _silentTicks++;
+    // A run that is just quiet is asked less and less often.
+    if (!lost && _silentTicks < _stallTicks * (1 << _quietChecks.clamp(0, 3))) return;
+    _checkingRun = true;
+    try {
+      final run = await _backend.run(runId);
+      if (state.activeRunId != runId || _opening) return;
+      if (!lost && run.lastSeq <= _appliedSeq) {
+        _quietChecks++;
+        _silentTicks = 0;
+        return;
+      }
+      unawaited(Telemetry.captureException(StateError('chat stopped hearing its run'), null, warning: true, context: {
+        'run_stream': {'stage': lost ? 'unfollowed' : 'stalled', 'behind': run.lastSeq - _appliedSeq},
+      }));
+      _attach(runId, afterSeq: _appliedSeq);
+    } catch (_) {
+      // The server couldn't be reached: the next tick tries again.
+    } finally {
+      _checkingRun = false;
+    }
+  }
+
+  /// A reply that finished answers the failure above it: after Try Again works, the "no model" or
+  /// "provider error" line no longer describes the chat (a reload already drops it). Group chats keep
+  /// them: another member's run finishing doesn't undo this member's failure.
+  void _dropSupersededFailures(List<ChatEntry> entries, String finishedRunId) {
+    if (group) return;
+    entries.removeWhere((x) => x is NoticeEntry && x.kind == NoticeKind.failed && x.refId != finishedRunId);
+  }
+
+  NoticeEntry _failure(RunFailedEvent event) => NoticeEntry(
+    kind: NoticeKind.failed,
+    text: event.payload.message,
+    refId: event.runId,
+    errorCode: event.payload.errorCode,
+    at: event.ts,
+  );
+
+  /// Applies one run event to the chat (public for tests).
+  void apply(RunEventItem e) {
+    // The bot's cursor on its screen follows the reply's own steps (BOT-CURSOR-PLAN).
+    ref.read(botCursorsProvider).onRunEvent(e);
+    final entries = [...state.entries];
+    int indexWhere(bool Function(ChatEntry) test) => entries.lastIndexWhere(test);
+    // Back from checking its work: the bot is writing or doing something again.
+    if (state.rechecking && e is! UsageItem && e is! MessageCompletedItem) state = state.copyWith(rechecking: false);
+
+    switch (e) {
+      case MessageDeltaItem(:final event):
+        final run = state.activeRunId;
+        if (run != null) _runs.chatWriting(run);
+        final id = event.payload.messageId;
+        final i = indexWhere((x) => x is MessageEntry && x.id == id);
+        if (i < 0) {
+          entries.add(MessageEntry(id: id, role: 'assistant', text: event.payload.text, streaming: true, botId: state.activeBotId, runId: event.runId, at: event.ts.toLocal()));
+        } else {
+          final m = entries[i] as MessageEntry;
+          entries[i] = m.copyWith(text: m.text + event.payload.text);
+        }
+      case MessageCompletedItem(:final event):
+        final id = event.payload.messageId;
+        final text = event.payload.content.where((p) => p['type'] == 'text').map((p) => '${p['text'] ?? ''}').join();
+        // Media the reply made (a generated image or video) comes with the finished message.
+        final files = attachmentsOf(event.payload.content);
+        final i = indexWhere((x) => x is MessageEntry && x.id == id);
+        if (i < 0) {
+          // A reply that is only an interactive UI has no text bubble.
+          if (text.isNotEmpty || files.isNotEmpty) entries.add(MessageEntry(id: id, role: 'assistant', text: text, attachments: files, botId: state.activeBotId, runId: event.runId, at: event.ts.toLocal()));
+        } else if (text.isEmpty && files.isEmpty) {
+          // A reply taken back for a second look (D-231, D-269): say the bot is checking its work.
+          final shown = entries[i] as MessageEntry;
+          entries.removeAt(i);
+          if (shown.text.trim().isNotEmpty && state.running) {
+            state = state.copyWith(rechecking: true);
+          }
+        } else {
+          entries[i] = (entries[i] as MessageEntry).copyWith(text: text, streaming: false, attachments: files);
+        }
+        // Scripted replies (the welcome chat) carry their cards only in the finished message.
+        for (final u in uiPartsOf(event.payload.content)) {
+          if (indexWhere((x) => x is UiEntry && x.surfaceId == u.surfaceId) < 0) {
+            entries.add(UiEntry(surfaceId: u.surfaceId, messages: u.messages));
+          }
+        }
+        // Gallery cards (D-315) come with the finished message too.
+        for (final g in galleryPartsOf(event.payload.content)) {
+          if (indexWhere((x) => x is GalleryCardEntry && x.part.key == g.key) < 0) {
+            entries.add(GalleryCardEntry(messageId: id, part: g));
+          }
+        }
+      case UiShownItem(:final event):
+        if (indexWhere((x) => x is UiEntry && x.surfaceId == event.payload.surfaceId) < 0) {
+          entries.add(UiEntry(surfaceId: event.payload.surfaceId, messages: event.payload.messages));
+        }
+      case ToolStartedItem(:final event) when state.activeRunId != null && event.payload.tool.isNotEmpty:
+        _runs.chatStep(state.activeRunId!, event.payload.tool, event.payload.argsRedacted);
+        entries.add(ToolEntry(callId: event.payload.callId, tool: event.payload.tool, args: event.payload.argsRedacted, botId: state.activeBotId, onComputer: personalPlaceName(event.payload.place)));
+      case ToolStartedItem(:final event):
+        entries.add(ToolEntry(callId: event.payload.callId, tool: event.payload.tool, args: event.payload.argsRedacted, botId: state.activeBotId, onComputer: personalPlaceName(event.payload.place)));
+      case ToolOutputItem(:final event):
+        final i = indexWhere((x) => x is ToolEntry && x.callId == event.payload.callId);
+        if (i >= 0) {
+          final t = entries[i] as ToolEntry;
+          final out = t.output + event.payload.chunk;
+          entries[i] = t.copyWith(output: out.length > 20000 ? out.substring(out.length - 20000) : out);
+        }
+      case ToolCompletedItem(:final event):
+        final i = indexWhere((x) => x is ToolEntry && x.callId == event.payload.callId);
+        if (i >= 0) {
+          entries[i] = (entries[i] as ToolEntry).copyWith(
+            status: ToolStatus.done,
+            preview: event.payload.resultPreview,
+            durationMs: event.payload.durationMs,
+            artifactPath: event.payload.artifactPath,
+            // Where it really ran, when that is only known once it has (a browser's pick).
+            onComputer: personalPlaceName(event.payload.place),
+          );
+        }
+      case ToolFailedItem(:final event):
+        final i = indexWhere((x) => x is ToolEntry && x.callId == event.payload.callId);
+        if (i >= 0) {
+          entries[i] = (entries[i] as ToolEntry).copyWith(status: ToolStatus.failed, error: event.payload.message);
+        }
+      case ApprovalRequestedItem(:final event):
+        final run = state.activeRunId;
+        if (run != null) _runs.chatStatus(run, 'waiting_approval');
+        entries.add(
+          ApprovalEntry(
+            approvalId: event.payload.approvalId,
+            tool: event.payload.tool,
+            args: event.payload.argsRedacted,
+            risk: event.payload.risk.value,
+            botId: state.activeBotId,
+            onComputer: personalPlaceName(event.payload.place),
+          ),
+        );
+      case ApprovalResolvedItem(:final event):
+        final i = indexWhere((x) => x is ApprovalEntry && x.approvalId == event.payload.approvalId);
+        if (i >= 0) {
+          final a = entries[i] as ApprovalEntry;
+          entries[i] = ApprovalEntry(approvalId: a.approvalId, tool: a.tool, args: a.args, risk: a.risk, decision: event.payload.decision.value, botId: a.botId, onComputer: a.onComputer);
+        }
+        final run = state.activeRunId;
+        if (run != null) _runs.chatStatus(run, 'running');
+        ref.invalidate(approvalsProvider);
+      case SecretRequestedItem(:final event):
+        final p = event.payload;
+        entries.add(SecretEntry(requestId: p.requestId, name: p.name, service: p.service, hosts: p.allowedHosts.toList(), reason: p.reason, totp: p.kind.value == 'totp', loginHost: p.loginHost));
+      case DeviceAccessRequestedItem() || DeviceBrowserAccessRequestedItem() || DevicePermissionNeededItem() || CanvasPreviewItem():
+        // Kept by run so a reload puts it back; a replayed event (following the run again) adds nothing.
+        final card = _deviceCardOf(e);
+        if (card != null && _keepDeviceCard(card)) entries.add(card);
+      case LocalMcpSignInNeededItem(:final event):
+        final p = event.payload;
+        if (!entries.any((x) => x is McpSignInEntry && x.integrationId == p.integrationId)) {
+          entries.add(McpSignInEntry(integrationId: p.integrationId, deviceId: p.deviceId, server: p.server, label: p.label));
+        }
+      case McpQuestionItem(:final event):
+        final p = event.payload;
+        entries.add(McpQuestionEntry(questionId: p.questionId, connection: p.connection, message: p.message, schema: Map<String, Object?>.from(p.schema)));
+      case McpQuestionResolvedItem(:final event):
+        final i = indexWhere((x) => x is McpQuestionEntry && x.questionId == event.payload.questionId);
+        if (i >= 0) {
+          final q = entries[i] as McpQuestionEntry;
+          entries[i] = McpQuestionEntry(questionId: q.questionId, connection: q.connection, message: q.message, schema: q.schema, outcome: event.payload.outcome.value);
+        }
+      case SecretResolvedItem(:final event):
+        final i = indexWhere((x) => x is SecretEntry && x.requestId == event.payload.requestId);
+        if (i >= 0) {
+          final e = entries[i] as SecretEntry;
+          entries[i] = SecretEntry(requestId: e.requestId, name: e.name, service: e.service, hosts: e.hosts, reason: e.reason, totp: e.totp, loginHost: e.loginHost, outcome: event.payload.onPage == true ? 'on_page' : event.payload.outcome.value);
+        }
+      case TakeoverRequestedItem(:final event):
+        final run = state.activeRunId;
+        if (run != null) _runs.chatStatus(run, 'waiting_takeover');
+        entries.add(TakeoverEntry(computerId: event.payload.computerId, reason: event.payload.reason, takeoverId: event.payload.takeoverId, loginHost: event.payload.loginHost));
+        ref.invalidate(takeoversProvider);
+      case TakeoverResolvedItem(:final event):
+        final i = indexWhere((x) => x is TakeoverEntry && x.computerId == event.payload.computerId && x.outcome == null);
+        if (i >= 0) {
+          final t = entries[i] as TakeoverEntry;
+          entries[i] = TakeoverEntry(
+            computerId: t.computerId,
+            reason: t.reason,
+            outcome: event.payload.outcome.value,
+            note: event.payload.note,
+            takeoverId: t.takeoverId,
+            loginHost: event.payload.loginHost ?? t.loginHost,
+            loginShared: event.payload.loginHost != null,
+          );
+        }
+        final run = state.activeRunId;
+        if (run != null) _runs.chatStatus(run, 'running');
+        ref.invalidate(takeoversProvider);
+      case BrowserChoiceRequestedItem(:final event):
+        final run = state.activeRunId;
+        if (run != null) _runs.chatStatus(run, 'waiting_approval');
+        final p = event.payload;
+        entries.add(
+          BrowserChoiceEntry(
+            choiceId: p.choiceId,
+            host: p.host,
+            reason: p.reason.value,
+            deviceSystem: p.deviceSystem?.value,
+            hasChrome: p.hasChrome,
+          ),
+        );
+      case BrowserChoiceResolvedItem(:final event):
+        final i = indexWhere((x) => x is BrowserChoiceEntry && x.choiceId == event.payload.choiceId);
+        if (i >= 0) {
+          final c = entries[i] as BrowserChoiceEntry;
+          entries[i] = BrowserChoiceEntry(
+            choiceId: c.choiceId,
+            host: c.host,
+            reason: c.reason,
+            deviceSystem: c.deviceSystem,
+            hasChrome: c.hasChrome,
+            outcome: event.payload.outcome.value,
+            choice: event.payload.choice?.value,
+            remember: event.payload.remember ?? false,
+          );
+        }
+        final run = state.activeRunId;
+        if (run != null) _runs.chatStatus(run, 'running');
+      case BrowserWaitingItem(:final event):
+        final run = state.activeRunId;
+        if (run != null) _runs.chatStatus(run, 'waiting_approval');
+        entries.removeWhere((x) => x is NoticeEntry && x.kind == NoticeKind.browserWait && x.errorCode == null);
+        entries.add(NoticeEntry(
+          kind: NoticeKind.browserWait,
+          text: event.payload.host ?? '',
+          // The page is the person's turn and the run waits for Hand Back (D-571).
+          refId: event.payload.handBack == true ? NoticeEntry.handBack : null,
+        ));
+      case BrowserWaitingResolvedItem(:final event):
+        final i = indexWhere((x) => x is NoticeEntry && x.kind == NoticeKind.browserWait && x.errorCode == null);
+        if (i >= 0) {
+          // Back: the line has done its job. Otherwise it stays, saying the wait ended.
+          if (event.payload.outcome.value == 'back') {
+            entries.removeAt(i);
+          } else {
+            final n = entries[i] as NoticeEntry;
+            entries[i] = NoticeEntry(kind: n.kind, text: n.text, refId: n.refId, errorCode: 'expired');
+          }
+        }
+        final run = state.activeRunId;
+        if (run != null && event.payload.outcome.value != 'cancelled') _runs.chatStatus(run, 'running');
+      case LeaseChangedItem(:final event):
+        entries.add(
+          NoticeEntry(
+            kind: event.payload.holderType.value == 'user' ? NoticeKind.userControl : NoticeKind.botControl,
+            text: '',
+            refId: event.payload.computerId,
+          ),
+        );
+      // About you (D-169): a fact about the person went to their own profile; it can be undone.
+      case MemoryWrittenItem(:final event) when event.payload.scope == MemoryWrittenEventPayloadScopeEnum.profile:
+        entries.add(NoticeEntry(kind: NoticeKind.profileSaved, text: '', refId: event.payload.memoryId));
+      case MemoryWrittenItem(:final event):
+        entries.add(NoticeEntry(kind: NoticeKind.memory, text: '', refId: event.payload.memoryId, botId: state.activeBotId));
+      case SkillLoadedItem(:final event):
+        entries.add(NoticeEntry(kind: NoticeKind.skill, text: event.payload.name));
+      case ModelFallbackItem(:final event):
+        entries.add(NoticeEntry(kind: NoticeKind.modelFallback, text: event.payload.message));
+      // Things the person should know, e.g. a bot @mention that wasn't delivered (D-133).
+      case NoticeItem(:final event):
+        entries.add(NoticeEntry(kind: NoticeKind.info, text: event.payload.message));
+      case CheckpointCreatedItem(:final event):
+        entries.add(NoticeEntry(kind: NoticeKind.checkpoint, text: event.payload.label, refId: event.payload.checkpointId));
+      case ComputerStateItem(:final event):
+        final last = entries.isEmpty ? null : entries.last;
+        final text = event.payload.state.value;
+        // Which computer it is about: a bot may work on two (computer places), and the notice's
+        // words and its Restart belong to that one.
+        final about = event.payload.computerId;
+        if (last is NoticeEntry && last.kind == NoticeKind.computer && (last.refId == null || last.refId == about)) {
+          entries[entries.length - 1] = NoticeEntry(kind: NoticeKind.computer, text: text, refId: about);
+        } else {
+          entries.add(NoticeEntry(kind: NoticeKind.computer, text: text, refId: about));
+        }
+      case UsageItem(:final event):
+        state = state.copyWith(costUsd: event.payload.costUsd.toDouble(), tokens: (event.payload.tokensIn + event.payload.tokensOut).toInt());
+        return;
+      case RunFailedItem(:final event) when state.activeRunId != null:
+        _runs.chatEnded(state.activeRunId!, RunStatus.failed);
+        entries.add(_failure(event));
+        _finishStreaming(entries);
+        state = state.copyWith(entries: entries, clearActiveRun: true);
+        return;
+      case RunFailedItem(:final event):
+        entries.add(_failure(event));
+        _finishStreaming(entries);
+        state = state.copyWith(entries: entries, clearActiveRun: true);
+        return;
+      case RunCancelledItem():
+        final run = state.activeRunId;
+        if (run != null) _runs.chatEnded(run, RunStatus.cancelled);
+        // Stop may have put the marker in already (E4).
+        if (!entries.any((x) => x is NoticeEntry && x.kind == NoticeKind.cancelled && x.refId == e.runId)) {
+          entries.add(NoticeEntry(kind: NoticeKind.cancelled, text: '', refId: e.runId));
+        }
+        _finishStreaming(entries);
+        state = state.copyWith(entries: entries, clearActiveRun: true);
+        return;
+      case RunCompletedItem() when state.activeRunId != null:
+        _runs.chatEnded(state.activeRunId!, RunStatus.completed);
+        // A reply the person asked for finished: a milestone reply, or the first one of their first
+        // session, can ask for a rating (D-305, D-460). A new run in the next few seconds cancels it.
+        // Only a run the person sent from here can be the onboarding moment, not a check-in.
+        // When the store's sheet didn't show, the app's own "Tell us in a sentence" may (D-545, off
+        // unless the owner turns it on). Its answer never decides anything about the store's sheet.
+        final personAsked = state.activeRunId == _sentRun;
+        bool stillIdle() => ref.mounted && state.activeRunId == null;
+        final review = ref.read(reviewPromptProvider);
+        final testimonial = ref.read(testimonialAskProvider);
+        unawaited(() async {
+          final shown = await review.moment(
+            ReviewMoment.replyFinished,
+            personAsked: personAsked,
+            stillIdle: stillIdle,
+          );
+          if (!shown && personAsked) await testimonial.moment(stillIdle: stillIdle);
+        }());
+        entries.removeWhere((x) => x is MessageEntry && x.streaming);
+        _dropSupersededFailures(entries, e.runId);
+        _finishStreaming(entries);
+        state = state.copyWith(entries: entries, clearActiveRun: true);
+        return;
+      case RunCompletedItem():
+        // Partial text from a model step that crashed and was re-run never completes; drop it.
+        entries.removeWhere((x) => x is MessageEntry && x.streaming);
+        _dropSupersededFailures(entries, e.runId);
+        _finishStreaming(entries);
+        state = state.copyWith(entries: entries, clearActiveRun: true);
+        return;
+      // A gallery card shown during the run (D-315); the finished reply carries it too.
+      case UnknownRunEventItem(:final envelope) when envelope.type == 'gallery.shown':
+        for (final g in galleryPartsOf([envelope.payload])) {
+          if (indexWhere((x) => x is GalleryCardEntry && x.part.key == g.key) < 0) {
+            entries.add(GalleryCardEntry(messageId: 'run-${envelope.runId}', part: g));
+          }
+        }
+      default:
+        return;
+    }
+    state = state.copyWith(entries: entries);
+  }
+
+  void _finishStreaming(List<ChatEntry> entries) {
+    for (var i = 0; i < entries.length; i++) {
+      final x = entries[i];
+      if (x is MessageEntry && x.streaming) entries[i] = x.copyWith(streaming: false);
+      if (x is ToolEntry && x.status == ToolStatus.running) entries[i] = x.copyWith(status: ToolStatus.failed);
+    }
+  }
+}
+
+final chatControllerProvider = NotifierProvider.family<ChatController, ChatState, String>(ChatController.new);
+
+/// The waits between tries of a message send that found no server: about 2 minutes in all, so a
+/// server restart or a reboot (B2, 2026-11-24's was 4 minutes) rarely ends in "Not sent"; the
+/// resend when the server answers again covers the rest.
+@visibleForTesting
+List<Duration> sendRetryDelays = const [
+  Duration(seconds: 1),
+  Duration(seconds: 2),
+  Duration(seconds: 4),
+  Duration(seconds: 8),
+  Duration(seconds: 15),
+  Duration(seconds: 30),
+  Duration(seconds: 60),
+];
+
+/// How long Stop waits for the run's own run.cancelled before it puts the marker in itself.
+@visibleForTesting
+Duration cancelSettleWait = const Duration(seconds: 3);
+
+/// How long after it first failed a message that found no server still goes again by itself
+/// when the server answers. Older ones wait for Try Again.
+@visibleForTesting
+Duration autoResendWindow = const Duration(minutes: 10);
+
+/// Whether [e] means the request never got an answer from the server (no connection, a timeout,
+/// or a gateway with no server behind it), so trying again may work.
+bool isConnectionFailure(Object e) {
+  if (e is! DioException) return false;
+  switch (e.type) {
+    case DioExceptionType.connectionError:
+    case DioExceptionType.connectionTimeout:
+    case DioExceptionType.sendTimeout:
+    case DioExceptionType.receiveTimeout:
+      return true;
+    case DioExceptionType.unknown:
+      return e.response == null;
+    case DioExceptionType.badResponse:
+      final status = e.response?.statusCode;
+      return status == 502 || status == 503 || status == 504;
+    case DioExceptionType.transformTimeout:
+    case DioExceptionType.cancel:
+    case DioExceptionType.badCertificate:
+      return false;
+  }
+}
+
+/// A random version 4 UUID, for the Idempotency-Key of a message send.
+String newIdempotencyKey() {
+  final r = Random.secure();
+  final b = [for (var i = 0; i < 16; i++) r.nextInt(256)];
+  b[6] = (b[6] & 0x0f) | 0x40;
+  b[8] = (b[8] & 0x3f) | 0x80;
+  final h = [for (final x in b) x.toRadixString(16).padLeft(2, '0')].join();
+  return '${h.substring(0, 8)}-${h.substring(8, 12)}-${h.substring(12, 16)}-${h.substring(16, 20)}-${h.substring(20)}';
+}

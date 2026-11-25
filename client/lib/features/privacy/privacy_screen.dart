@@ -1,0 +1,419 @@
+import 'package:flutter/foundation.dart';
+
+import 'package:material_ui/material_ui.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:casama_sdk/casama_sdk.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+
+import '../../core/number_format.dart';
+import '../../core/date_format.dart';
+import '../../core/providers.dart';
+import '../../core/share.dart';
+import '../../core/widgets.dart';
+import '../../core/haptics.dart';
+import '../../core/analytics.dart';
+import '../../core/ads_attribution.dart';
+import '../../theme/app_colors.dart';
+import '../../theme/app_tokens.dart';
+import '../../ui/adaptive_modal.dart';
+import '../../ui/app_card.dart';
+import '../../ui/form_sheet.dart';
+import '../../ui/highlight_target.dart';
+import '../../ui/page.dart';
+import '../app_lock/confirm_identity.dart';
+import '../siri/siri_index.dart';
+import '../app_functions/app_functions.dart';
+import 'ai_consent_step.dart';
+
+final _retentionProvider = FutureProvider<int?>((ref) async {
+  final org = ref.watch(currentOrgProvider);
+  return org == null ? null : ref.watch(backendProvider).retentionDays(org.id);
+});
+
+final _workspaceAnalyticsOffProvider = FutureProvider.family<bool, String>(
+  (ref, orgId) => ref.watch(backendProvider).orgAnalyticsOptOut(orgId),
+);
+
+/// Overridable in tests: hands the export to the platform (share sheet, save dialog, download).
+final saveExportProvider = Provider<Future<void> Function(Uint8List bytes, String name, {Rect? origin})>(
+  (ref) =>
+      (bytes, name, {origin}) => shareFiles(
+        [XFile.fromData(bytes, name: name, mimeType: 'application/zip')],
+        names: [name],
+        origin: origin,
+      ),
+);
+
+/// Privacy (Phase 8, D-072): export your data, delete your account, and workspace retention.
+class PrivacyScreen extends ConsumerStatefulWidget {
+  const PrivacyScreen({super.key, this.highlight});
+
+  final String? highlight;
+
+  @override
+  ConsumerState<PrivacyScreen> createState() => _PrivacyScreenState();
+}
+
+class _PrivacyScreenState extends ConsumerState<PrivacyScreen> {
+  var _busy = false;
+
+  final _exportKey = GlobalKey();
+
+  Future<void> _export() async {
+    // The share sheet points at the Export row on iPad and macOS.
+    final anchor = _exportKey.currentContext;
+    final origin = anchor == null ? null : shareOrigin(anchor);
+    // Asks to unlock again first (D-375).
+    if (!await confirmIdentity(context, ref) || !mounted) return;
+    setState(() => _busy = true);
+    final l10n = context.l10n;
+    await runGuarded(context, () async {
+      final bytes = await ref.read(backendProvider).exportMyData();
+      final name = 'casama-export-${DateTime.now().toIso8601String().substring(0, 10)}.zip';
+      await ref.read(saveExportProvider)(bytes, name, origin: origin);
+      if (mounted) showSuccess(context, l10n.exportReady((bytes.length / 1024).humanizedCount(context.l10n.localeName, decimalDigits: 0)));
+    });
+    if (mounted) setState(() => _busy = false);
+  }
+
+  /// Bought domains in the workspaces this account owns, which the delete can take with it
+  /// (SITES-AND-DOMAINS-PLAN §7.10). Best effort: a workspace that can't be read lists none.
+  Future<List<String>> _boughtDomains() async {
+    final backend = ref.read(backendProvider);
+    if (backend.sitesConfig?.buyDomains != true) return const [];
+    final orgs = ref.read(organizationsProvider).value ?? const <OrganizationWithRole>[];
+    final names = <String>[];
+    for (final o in orgs.where((o) => o.role == OrgRole.owner)) {
+      try {
+        names.addAll([for (final d in await backend.domains(o.id)) if (d.kind == 'registered') d.name]);
+      } catch (_) {}
+    }
+    return names;
+  }
+
+  Future<void> _delete() async {
+    final l10n = context.l10n;
+    final email = ref.read(backendProvider).userEmail ?? '';
+    setState(() => _busy = true);
+    final domains = await _boughtDomains();
+    if (!mounted) return;
+    setState(() => _busy = false);
+    final ok = await showAdaptiveSheet<bool>(
+      context: context,
+      builder: (_) => _ConfirmDelete(email: email, domains: domains),
+    );
+    if (ok != true || !mounted) return;
+    if (!await confirmIdentity(context, ref) || !mounted) return;
+    final r = await runGuarded(context, () => ref.read(backendProvider).deleteAccount(email));
+    if (r != null && mounted) {
+      await showAdaptiveSheet<void>(
+        context: context,
+        dialogMaxWidth: 460,
+        builder: (c) => FormSheet(
+          icon: LucideIcons.circleCheck,
+          iconColor: c.appColors.positive,
+          title: l10n.accountDeleted,
+          subtitle: l10n.accountDeletedBody(r.purgeAfter.toLocal().formattedWeekdayDate(c)),
+          submitLabel: l10n.close,
+          showCancel: false,
+          onSubmit: () => Navigator.pop(c),
+          children: const [],
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final org = ref.watch(currentOrgProvider);
+    final isAdmin = org != null && org.role != OrgRole.member;
+    final retention = ref.watch(_retentionProvider).value;
+    final scheme = context.colorScheme;
+    return SubPage(
+      title: l10n.privacy,
+      children: [
+        FormNote(l10n.privacyIntro, icon: LucideIcons.shield),
+        if (ref.watch(backendProvider).ownProviders) ...[
+          const SizedBox(height: AppSpace.xs),
+          FormNote(l10n.ownProviderPrivacyNote, icon: LucideIcons.keyRound),
+        ],
+        SectionHeader(title: l10n.yourData),
+        GroupedCard(
+          children: [
+            HighlightTarget(
+              active: widget.highlight == 'export',
+              child: KeyedSubtree(
+                key: _exportKey,
+                child: GroupedTile(
+                  key: const Key('exportData'),
+                  icon: LucideIcons.download,
+                  title: l10n.exportMyData,
+                  subtitle: l10n.exportMyDataHelp,
+                  onTap: _busy ? null : _export,
+                  trailing: _busy
+                      ? const SizedBox.square(dimension: 20, child: CircularProgressIndicator(strokeWidth: 2))
+                      : Icon(LucideIcons.chevronRight, color: scheme.onSurfaceVariant.withValues(alpha: 0.7)),
+                ),
+              ),
+            ),
+            HighlightTarget(
+              active: widget.highlight == 'analytics',
+              child: FutureBuilder<bool>(
+                future: Analytics.isConsentEnabled(),
+                builder: (context, snapshot) {
+                  final enabled = snapshot.data ?? true;
+                  return GroupedTile(
+                    key: const Key('shareAnalyticsTile'),
+                    icon: LucideIcons.chartColumn,
+                    title: l10n.shareAnalytics,
+                    subtitle: l10n.shareAnalyticsHelp,
+                    trailing: Switch(
+                      key: const Key('shareAnalyticsSwitch'),
+                      value: enabled,
+                      onChanged: (val) async {
+                        await Analytics.setConsentEnabled(val);
+                        await Analytics.syncOptOut(ref.read(backendProvider).setAnalyticsOptOut);
+                        // "Help measure our ads" follows this switch (the server turns it off too).
+                        ref.invalidate(attributionStatusProvider);
+                        if (mounted) setState(() {});
+                      },
+                    ),
+                  );
+                },
+              ),
+            ),
+            // Spotlight and Siri on iPhone and Mac (docs/SIRI-AI-PLAN.md §6.4, decision 5).
+            if (!kIsWeb && (defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.macOS))
+              GroupedTile(
+                key: const Key('siriSpotlightTile'),
+                icon: LucideIcons.search,
+                title: l10n.siriSpotlightSetting,
+                subtitle: l10n.siriSpotlightSettingHelp,
+                trailing: Switch(
+                  key: const Key('siriSpotlightSwitch'),
+                  value: ref.watch(siriSpotlightProvider),
+                  onChanged: (on) => ref.read(siriSpotlightProvider.notifier).set(on),
+                ),
+              ),
+            // Gemini on Android through Casama's AppFunctions (docs/ANDROID-APPFUNCTIONS-PLAN.md §7.3,
+            // decision 6): only in builds with the switch on.
+            if (appFunctionsAvailable)
+              GroupedTile(
+                key: const Key('geminiTile'),
+                icon: LucideIcons.sparkles,
+                title: l10n.geminiSetting,
+                subtitle: l10n.geminiSettingHelp,
+                trailing: Switch(
+                  key: const Key('geminiSwitch'),
+                  value: ref.watch(geminiSwitchProvider),
+                  onChanged: (on) => ref.read(geminiSwitchProvider.notifier).set(on),
+                ),
+              ),
+            // "Help measure our ads" (docs/ADS-ATTRIBUTION-PLAN.md §8.2): only where it's offered.
+            if (ref.watch(attributionStatusProvider).value case final ads? when ads.offered)
+              HighlightTarget(
+                active: widget.highlight == 'ads',
+                child: FutureBuilder<bool>(
+                  future: Analytics.isConsentEnabled(),
+                  builder: (context, snapshot) {
+                    final usage = snapshot.data ?? true;
+                    return GroupedTile(
+                      key: const Key('measureAdsTile'),
+                      icon: LucideIcons.megaphone,
+                      title: l10n.measureAds,
+                      subtitle: usage ? l10n.measureAdsHelp : l10n.measureAdsNeedsUsageData,
+                      trailing: Switch(
+                        key: const Key('measureAdsSwitch'),
+                        value: usage && ads.measureAds,
+                        onChanged: usage
+                            ? (val) => runGuarded(
+                                context,
+                                () => ref.read(attributionStatusProvider.notifier).setMeasureAds(val),
+                              )
+                            : null,
+                      ),
+                    );
+                  },
+                ),
+              ),
+            // AI providers (D-421): withdrawing brings the consent step back before anything else is sent.
+            if (ref.watch(aiConsentAskedHereProvider) && ref.watch(aiConsentProvider) != null)
+              HighlightTarget(
+                active: widget.highlight == 'ai_consent',
+                child: GroupedTile(
+                  key: const Key('aiConsentTile'),
+                  icon: LucideIcons.sparkles,
+                  title: l10n.aiConsentTile,
+                  subtitle: l10n.aiConsentTileOn,
+                  trailing: TextButton(
+                    key: const Key('aiConsentWithdraw'),
+                    onPressed: () async {
+                      final ok = await showConfirm(
+                        context: context,
+                        title: l10n.aiConsentWithdrawQuestion,
+                        message: l10n.aiConsentWithdrawBody,
+                        confirmLabel: l10n.aiConsentWithdraw,
+                        confirmKey: const Key('aiConsentWithdrawConfirm'),
+                        destructive: true,
+                      );
+                      if (!ok || !context.mounted) return;
+                      await runGuarded(context, () => ref.read(aiConsentProvider.notifier).set(false));
+                    },
+                    child: Text(l10n.aiConsentWithdraw),
+                  ),
+                ),
+              ),
+          ],
+        ),
+        if (isAdmin) ...[
+          SectionHeader(title: l10n.workspace),
+          GroupedCard(
+            children: [
+              HighlightTarget(
+                active: widget.highlight == 'retention',
+                child: GroupedTile(
+                  icon: LucideIcons.history,
+                  title: l10n.runHistoryRetention,
+                  subtitle: l10n.runHistoryRetentionHelp,
+                  trailing: retention == null
+                      ? null
+                      : DropdownButton<int>(
+                          key: const Key('retention'),
+                          value: [30, 90, 180, 365, 730].contains(retention) ? retention : null,
+                          hint: Text(l10n.days(retention)),
+                          underline: const SizedBox.shrink(),
+                          borderRadius: AppRadius.tileAll,
+                          items: [
+                            for (final d in [30, 90, 180, 365, 730]) DropdownMenuItem(value: d, child: Text(l10n.days(d))),
+                          ],
+                          onChanged: hapticOnChanged((d) async {
+                            if (d == null) return;
+                            await runGuarded(context, () => ref.read(backendProvider).setRetentionDays(org.id, d));
+                            ref.invalidate(_retentionProvider);
+                          }, haptic: HapticsHelper.selection),
+                        ),
+                ),
+              ),
+              HighlightTarget(
+                active: widget.highlight == 'workspace_analytics',
+                child: Consumer(
+                  builder: (context, ref, _) {
+                    final off = ref.watch(_workspaceAnalyticsOffProvider(org.id)).value ?? false;
+                    return GroupedTile(
+                      key: const Key('workspaceAnalyticsTile'),
+                      icon: LucideIcons.chartColumn,
+                      title: l10n.workspaceAnalytics,
+                      subtitle: l10n.workspaceAnalyticsHelp,
+                      trailing: Switch(
+                        key: const Key('workspaceAnalyticsSwitch'),
+                        value: !off,
+                        onChanged: (val) async {
+                          await runGuarded(context, () => ref.read(backendProvider).setOrgAnalyticsOptOut(org.id, !val));
+                          ref.invalidate(_workspaceAnalyticsOffProvider(org.id));
+                        },
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ],
+        // Blocking (D-301): who can't invite you or link agents with you.
+        GroupedCard(
+          children: [
+            HighlightTarget(
+              active: widget.highlight == 'blocked',
+              child: GroupedTile(
+                key: const Key('blockedPeople'),
+                icon: LucideIcons.userX,
+                title: l10n.blockedPeople,
+                subtitle: l10n.blockedPeopleRow,
+                onTap: () => context.pushOnce('/settings/blocked'),
+              ),
+            ),
+          ],
+        ),
+        SectionHeader(title: l10n.dangerZone),
+        GroupedCard(
+          children: [
+            HighlightTarget(
+              active: widget.highlight == 'delete',
+              child: GroupedTile(
+                key: const Key('deleteAccount'),
+                icon: LucideIcons.trash2,
+                destructive: true,
+                title: l10n.deleteAccount,
+                subtitle: l10n.deleteAccountHelp,
+                onTap: _busy ? null : _delete,
+              ),
+            ),
+          ],
+        ),
+        // Unused accounts (docs/INACTIVE-ACCOUNTS-PLAN.md): what happens, said once, plainly.
+        FormNote(l10n.inactiveAccountsNote, icon: LucideIcons.hourglass),
+      ],
+    );
+  }
+}
+
+class _ConfirmDelete extends StatefulWidget {
+  const _ConfirmDelete({required this.email, this.domains = const []});
+  final String email;
+
+  /// Bought domains that go with the deleted workspaces.
+  final List<String> domains;
+  @override
+  State<_ConfirmDelete> createState() => _ConfirmDeleteState();
+}
+
+class _ConfirmDeleteState extends State<_ConfirmDelete> {
+  final _c = TextEditingController();
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final matches = _c.text.trim().toLowerCase() == widget.email.toLowerCase();
+    return FormSheet(
+      icon: LucideIcons.trash2,
+      destructive: true,
+      title: l10n.deleteAccountQuestion,
+      subtitle: l10n.deleteAccountConfirm(widget.email),
+      submitLabel: l10n.deleteAccount,
+      submitKey: const Key('confirmDelete'),
+      onSubmit: matches ? () => Navigator.pop(context, true) : null,
+      children: [
+        if (widget.domains.isNotEmpty)
+          AppCard(
+            key: const Key('deleteAccountDomains'),
+            borderColor: context.appColors.warning.withValues(alpha: 0.5),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(l10n.deleteAccountDomains, style: context.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700)),
+                const SizedBox(height: AppSpace.xs),
+                for (final name in widget.domains) Text('• $name', key: Key('deleteAccountDomain-$name')),
+                const SizedBox(height: AppSpace.xs),
+                Text(l10n.deleteAccountDomainsBody),
+              ],
+            ),
+          ),
+        TextField(
+          key: const Key('confirmEmail'),
+          controller: _c,
+          autofocus: true,
+          keyboardType: TextInputType.emailAddress,
+          onChanged: (_) => setState(() {}),
+          decoration: InputDecoration(labelText: l10n.email, hintText: widget.email, prefixIcon: const Icon(LucideIcons.atSign, size: 20)),
+        ),
+      ],
+    );
+  }
+}

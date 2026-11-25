@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Casama's AppFunctions for Gemini on Android 16+ (docs/ANDROID-APPFUNCTIONS-PLAN.md §7.2, D-567),
+     merged into the app only with the build switch on (scripts/app-functions-switch.sh,
+     CASAMA_APP_FUNCTIONS=1). KSP generates CasamaFunctionsService from CasamaFunctions.kt and the
+     schema casama_functions.xml in assets/. Store builds stay without it until the release that
+     describes the feature (plan decision 8). -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <application>
+        <service
+            android:name="ai.casama.app.CasamaFunctionsService"
+            android:permission="android.permission.BIND_APP_FUNCTION_SERVICE"
+            android:exported="true"
+            tools:targetApi="36">
+            <property
+                android:name="android.app.appfunctions.schema"
+                android:value="app_functions_schema.xsd" />
+            <property
+                android:name="android.app.appfunctions.v2"
+                android:value="casama_functions.xml" />
+            <intent-filter>
+                <action android:name="android.app.appfunctions.AppFunctionService" />
+            </intent-filter>
+        </service>
+        <property
+            android:name="android.app.appfunctions.app_metadata"
+            android:resource="@xml/casama_app_functions" />
+    </application>
+</manifest>
