@@ -50,3 +50,21 @@ export const previewReferral = createRoute({
   request: { query: z.object({ code: z.string().min(1).max(200) }) },
   responses: { 200: jsonResponse("Invite", ReferralPreview), 404: e404, 429: e429 },
 });
+
+export const letInWaitingFriend = createRoute({
+  operationId: "letInWaitingFriend",
+  method: "post",
+  path: "/v1/me/referral/waiting/{id}/let-in",
+  tags,
+  security,
+  summary: "Let in a friend who is waiting on your invite (uses one invite)",
+  description:
+    "They get the “You're in” email within a few minutes. Errors: 404 not_found (not yours, or no longer waiting), 409 no_invites, 404 waitlist_off.",
+  request: { params: z.object({ id: z.uuid() }) },
+  responses: {
+    200: jsonResponse("Invite friends", Referral),
+    401: e401,
+    404: e404,
+    409: e409,
+  },
+});

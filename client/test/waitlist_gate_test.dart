@@ -14,7 +14,10 @@ import 'package:casama_sdk/casama_sdk.dart'
         PublicConfigSignupGate,
         Referral,
         ReferralInvites,
-        SignupGateModeEnum;
+        ReferralInvitesWaitingInner,
+        SignupGateModeEnum,
+        WaitlistEntry,
+        WaitlistEntryInvitedBy;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -461,6 +464,50 @@ void main() {
     );
   });
 
+  testWidgets('Invite Friends lets in a friend waiting on your invite (D-592)', (tester) async {
+    await setSize(tester, const Size(500, 1600));
+    Referral withInvites(ReferralInvites invites) {
+      final r = FakeBackend().referralState;
+      return Referral(
+        enabled: r.enabled,
+        code: r.code,
+        link: r.link,
+        rewardUsd: r.rewardUsd,
+        welcomeUsd: r.welcomeUsd,
+        rewardCap: r.rewardCap,
+        invited: r.invited,
+        rewarded: r.rewarded,
+        pending: r.pending,
+        earnedUsd: r.earnedUsd,
+        invitedBy: r.invitedBy,
+        redeemUntil: r.redeemUntil,
+        invites: invites,
+      );
+    }
+
+    final kim = ReferralInvitesWaitingInner(id: 'w1', emailHint: 'k•••@gmail.com', since: DateTime.utc(2026, 11, 26));
+    // No invite to give yet: the friend shows, the button waits.
+    final backend = FakeBackend()
+      ..referralState = withInvites(ReferralInvites(total: 3, used: 0, left: 0, unlocked: false, waiting: [kim]));
+    await tester.pumpWidget(harness(backend, const InviteFriendsScreen()));
+    await tester.pumpAndSettle();
+    expect(find.text('Waiting for Your Invite'), findsOneWidget);
+    expect(find.text('k•••@gmail.com'), findsOneWidget);
+    final locked = tester.widget<FilledButton>(find.byKey(const Key('inviteWaitingLetIn-w1')));
+    expect(locked.onPressed, isNull);
+
+    backend.referralState = withInvites(ReferralInvites(total: 3, used: 0, left: 3, unlocked: true, waiting: [kim]));
+    await tester.pumpWidget(const SizedBox());
+    await tester.pumpWidget(harness(backend, const InviteFriendsScreen()));
+    await tester.pumpAndSettle();
+    expect(find.text('Letting them in uses one of your invites.'), findsOneWidget);
+    await tester.tap(find.byKey(const Key('inviteWaitingLetIn-w1')));
+    await tester.pumpAndSettle();
+    expect(backend.letInFriends, ['w1']);
+    expect(find.text('Waiting for Your Invite'), findsNothing);
+    expect(find.text('2 invites left'), findsOneWidget);
+  });
+
   testWidgets('Invite Friends without the gate shows no invites line', (
     tester,
   ) async {
@@ -664,6 +711,44 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('Let in ana@example.com?'), findsOneWidget);
       expect(backend.waitlistAdmits, isEmpty);
+      await tester.tap(find.byKey(const Key('confirmAdmitOne')));
+      await tester.pumpAndSettle();
+      expect(backend.waitlistAdmits, [1]);
+    });
+
+    testWidgets('warns before letting in someone waiting on a member\'s invite (D-592)', (tester) async {
+      await setSize(tester, const Size(900, 2600));
+      final backend = FakeBackend();
+      final e1 = backend.waitlistEntries.first;
+      backend.waitlistEntries = [
+        WaitlistEntry(
+          id: e1.id,
+          email: e1.email,
+          status: e1.status,
+          source_: e1.source_,
+          ref: e1.ref,
+          selfHosting: e1.selfHosting,
+          note: e1.note,
+          priority: 10,
+          inviteCode: 'ANA234',
+          admittedVia: null,
+          admittedAt: null,
+          joinedAt: null,
+          createdAt: e1.createdAt,
+          invitedBy: WaitlistEntryInvitedBy(name: 'Jo', invitesLeft: 0),
+        ),
+        ...backend.waitlistEntries.skip(1),
+      ];
+      await tester.pumpWidget(harness(backend, const AdminScreen(tab: 'waitlist')));
+      await tester.pumpAndSettle();
+      await unlockAdmin(tester);
+      expect(find.text('Invited by Jo · no invites left'), findsWidgets);
+      await tester.tap(find.byKey(const Key('waitlistActions-e1')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('waitlistAdmitOne-e1')));
+      await tester.pumpAndSettle();
+      expect(find.textContaining('Jo invited this person and gets to let them in'), findsOneWidget);
+      expect(find.text('Let In Anyway'), findsOneWidget);
       await tester.tap(find.byKey(const Key('confirmAdmitOne')));
       await tester.pumpAndSettle();
       expect(backend.waitlistAdmits, [1]);

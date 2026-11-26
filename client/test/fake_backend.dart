@@ -1620,6 +1620,35 @@ class FakeBackend implements Backend {
     referralCalls++;
     return referralState;
   }
+  final letInFriends = <String>[];
+  @override
+  Future<Referral> letInWaitingFriend(String id) async {
+    letInFriends.add(id);
+    final inv = referralState.invites;
+    if (inv == null || inv.left <= 0) _referralProblem(409, 'no_invites', 'You have no invites to give right now.');
+    final r = referralState;
+    return referralState = Referral(
+      enabled: r.enabled,
+      code: r.code,
+      link: r.link,
+      rewardUsd: r.rewardUsd,
+      welcomeUsd: r.welcomeUsd,
+      rewardCap: r.rewardCap,
+      invited: r.invited,
+      rewarded: r.rewarded,
+      pending: r.pending,
+      earnedUsd: r.earnedUsd,
+      invitedBy: r.invitedBy,
+      redeemUntil: r.redeemUntil,
+      invites: ReferralInvites(
+        total: inv.total,
+        used: inv.used + 1,
+        left: inv.left - 1,
+        unlocked: inv.unlocked,
+        waiting: [...?inv.waiting?.where((w) => w.id != id)],
+      ),
+    );
+  }
   @override
   Future<Referral> redeemReferral(String code) async {
     redeemedReferrals.add(code);

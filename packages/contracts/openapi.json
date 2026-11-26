@@ -31657,6 +31657,30 @@
               },
               "unlocked": {
                 "type": "boolean"
+              },
+              "waiting": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "email_hint": {
+                      "type": "string"
+                    },
+                    "since": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "email_hint",
+                    "since"
+                  ]
+                }
               }
             },
             "required": [
@@ -32279,6 +32303,27 @@
           "created_at": {
             "type": "string",
             "format": "date-time"
+          },
+          "invited_by": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "invites_left": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "name",
+              "invites_left"
+            ]
           }
         },
         "required": [
@@ -80136,6 +80181,74 @@
           },
           "401": {
             "description": "Not authenticated",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/me/referral/waiting/{id}/let-in": {
+      "post": {
+        "operationId": "letInWaitingFriend",
+        "tags": [
+          "referrals"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Let in a friend who is waiting on your invite (uses one invite)",
+        "description": "They get the “You're in” email within a few minutes. Errors: 404 not_found (not yours, or no longer waiting), 409 no_invites, 404 waitlist_off.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Invite friends",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Referral"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
             "content": {
               "application/problem+json": {
                 "schema": {

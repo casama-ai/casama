@@ -1783,6 +1783,9 @@ abstract class Backend {
   // Invite friends (D-211)
   Future<Referral> referral();
   Future<Referral> redeemReferral(String code);
+
+  /// Lets in a friend who claimed your invite while you had none to give (D-592). Uses one invite.
+  Future<Referral> letInWaitingFriend(String id);
   Future<ReferralPreview> previewReferral(String code);
   // Casama Partners (D-543): creator codes, who sent this person, and the person's own partner code.
   Future<PartnerMe> partnerMe();

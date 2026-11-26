@@ -3,6 +3,7 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:casama_api/src/model/referral_invites_waiting_inner.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -27,6 +28,8 @@ class ReferralInvites {
     required  this.left,
 
     required  this.unlocked,
+
+     this.waiting,
   });
 
   @JsonKey(
@@ -77,6 +80,18 @@ class ReferralInvites {
 
 
 
+  @JsonKey(
+    
+    name: r'waiting',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final List<ReferralInvitesWaitingInner>? waiting;
+
+
+
 
 
     @override
@@ -84,14 +99,16 @@ class ReferralInvites {
       other.total == total &&
       other.used == used &&
       other.left == left &&
-      other.unlocked == unlocked;
+      other.unlocked == unlocked &&
+      other.waiting == waiting;
 
     @override
     int get hashCode =>
         total.hashCode +
         used.hashCode +
         left.hashCode +
-        unlocked.hashCode;
+        unlocked.hashCode +
+        waiting.hashCode;
 
   factory ReferralInvites.fromJson(Map<String, dynamic> json) => _$ReferralInvitesFromJson(json);
 

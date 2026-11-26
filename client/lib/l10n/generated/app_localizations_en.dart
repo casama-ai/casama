@@ -18852,6 +18852,28 @@ class AppLocalizationsEn extends AppLocalizations {
       'Your invites unlock after your first finished chat.';
 
   @override
+  String get inviteWaitingTitle => 'Waiting for Your Invite';
+
+  @override
+  String get inviteWaitingUses => 'Letting them in uses one of your invites.';
+
+  @override
+  String get inviteWaitingNoneLeft =>
+      'You get an invite back when a friend you invited finishes their first chat.';
+
+  @override
+  String get inviteWaitingLetIn => 'Let In';
+
+  @override
+  String inviteWaitingLetInLabel(String email) {
+    return 'Let in $email';
+  }
+
+  @override
+  String get inviteWaitingDone =>
+      'They\'ll get an email to sign up in a few minutes.';
+
+  @override
   String inviteShareSaved(int count, String link) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -19037,6 +19059,37 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get adminWlAdmitOneBody =>
       'They get a \"You\'re in\" email, within today\'s email limit.';
+
+  @override
+  String adminWlInvitedBy(String name) {
+    return 'Invited by $name';
+  }
+
+  @override
+  String get adminWlInvitedByMember => 'Invited by a member';
+
+  @override
+  String adminWlInviterLeft(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count invites left',
+      one: '1 invite left',
+      zero: 'no invites left',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get adminWlTheMember => 'The member';
+
+  @override
+  String adminWlAdmitInvitedBody(String inviter) {
+    return '$inviter invited this person and gets to let them in: they\'re told as soon as they have an invite to give. Letting them in here doesn\'t use one of their invites.';
+  }
+
+  @override
+  String get adminWlAdmitAnyway => 'Let In Anyway';
 
   @override
   String get adminWlCopyEmail => 'Copy Email';
@@ -19496,7 +19549,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get adminWaitlistAdmitBody =>
-      'Each gets a \"You\'re in\" email, within today\'s email limit.';
+      'Each gets a \"You\'re in\" email, within today\'s email limit. People waiting on a member\'s invite are skipped: the member lets them in.';
 
   @override
   String adminWaitlistAdmitted(int count) {

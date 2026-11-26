@@ -812,6 +812,7 @@ import 'package:casama_api/src/model/redirect_url.dart';
 import 'package:casama_api/src/model/referral.dart';
 import 'package:casama_api/src/model/referral_invited_by.dart';
 import 'package:casama_api/src/model/referral_invites.dart';
+import 'package:casama_api/src/model/referral_invites_waiting_inner.dart';
 import 'package:casama_api/src/model/referral_preview.dart';
 import 'package:casama_api/src/model/refresh_live_card.dart';
 import 'package:casama_api/src/model/relay_analytics_request.dart';
@@ -1137,6 +1138,7 @@ import 'package:casama_api/src/model/voice_turns_request_turns_inner.dart';
 import 'package:casama_api/src/model/waitlist_batch.dart';
 import 'package:casama_api/src/model/waitlist_changed.dart';
 import 'package:casama_api/src/model/waitlist_entry.dart';
+import 'package:casama_api/src/model/waitlist_entry_invited_by.dart';
 import 'package:casama_api/src/model/waitlist_joined.dart';
 import 'package:casama_api/src/model/waitlist_page.dart';
 import 'package:casama_api/src/model/waitlist_proof.dart';
@@ -2948,6 +2950,8 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return ReferralInvitedBy.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'ReferralInvites':
           return ReferralInvites.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'ReferralInvitesWaitingInner':
+          return ReferralInvitesWaitingInner.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'ReferralPreview':
           return ReferralPreview.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'RefreshLiveCard':
@@ -3652,6 +3656,8 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return WaitlistChanged.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'WaitlistEntry':
           return WaitlistEntry.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'WaitlistEntryInvitedBy':
+          return WaitlistEntryInvitedBy.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'WaitlistJoined':
           return WaitlistJoined.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'WaitlistPage':

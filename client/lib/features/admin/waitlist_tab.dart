@@ -17,6 +17,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../core/backend.dart';
 import '../../core/date_format.dart';
+import '../../core/display_text.dart';
 import '../../core/providers.dart';
 import '../../core/widgets.dart';
 import '../../theme/app_colors.dart';
@@ -235,12 +236,19 @@ class _AdminWaitlistTabState extends ConsumerState<AdminWaitlistTab> {
 
   Future<void> _admitOne(WaitlistEntry e) async {
     final l10n = context.l10n;
+    // Someone waiting on a member's invite is the member's to let in (D-592): say so, and still
+    // allow it (press, a friend of the owner's).
+    final invitedBy = e.invitedBy;
     final ok = await showConfirm(
       context: context,
       icon: LucideIcons.userCheck,
       title: l10n.adminWlAdmitOneTitle(e.email),
-      message: l10n.adminWlAdmitOneBody,
-      confirmLabel: l10n.adminWlAdmitOne,
+      message: invitedBy == null
+          ? l10n.adminWlAdmitOneBody
+          : l10n.adminWlAdmitInvitedBody(
+              invitedBy.name.isUsable ? invitedBy.name!.trim() : l10n.adminWlTheMember,
+            ),
+      confirmLabel: invitedBy == null ? l10n.adminWlAdmitOne : l10n.adminWlAdmitAnyway,
       confirmKey: const Key('confirmAdmitOne'),
     );
     if (!ok || !mounted) return;
@@ -650,6 +658,18 @@ class _AdminWaitlistTabState extends ConsumerState<AdminWaitlistTab> {
     );
     bool hasNote(WaitlistEntry e) => e.note != null && e.note!.trim().isNotEmpty;
     Widget selfHosts() => AdminStatusPill(l10n.adminWaitlistSelfHosts, tone: AdminTone.info, icon: LucideIcons.server);
+    // Waiting on a member's invite (D-592): whose, and how many that member can give right now.
+    Widget? invited(WaitlistEntry e) {
+      final by = e.invitedBy;
+      if (by == null || e.status != WaitlistEntryStatusEnum.waiting) return null;
+      final who = by.name.isUsable ? l10n.adminWlInvitedBy(by.name!.trim()) : l10n.adminWlInvitedByMember;
+      return AdminStatusPill(
+        '$who · ${l10n.adminWlInviterLeft(by.invitesLeft)}',
+        key: Key('waitlistInvitedBy-${e.id}'),
+        tone: AdminTone.warning,
+        icon: LucideIcons.ticket,
+      );
+    }
     return AdminDataList<WaitlistEntry>(
       items: items,
       itemKey: (e) => Key('waitlistEntry-${e.id}'),
@@ -660,6 +680,7 @@ class _AdminWaitlistTabState extends ConsumerState<AdminWaitlistTab> {
         AdminStatusPill(_statusLabel(e.status), tone: _statusTone(e.status)),
         if (waitlistViaLabel(c, e.admittedVia) case final via?) AdminStatusPill(via, icon: LucideIcons.keyRound),
         if (e.selfHosting) selfHosts(),
+        ?invited(e),
         Padding(padding: const EdgeInsets.only(top: 2), child: TimeAgo(e.createdAt, style: muted)),
         if (hasNote(e)) SizedBox(width: double.infinity, child: note(e)),
       ],
@@ -683,7 +704,11 @@ class _AdminWaitlistTabState extends ConsumerState<AdminWaitlistTab> {
           cell: (c, e) => Wrap(
             spacing: 4,
             runSpacing: 4,
-            children: [AdminStatusPill(_statusLabel(e.status), tone: _statusTone(e.status)), if (e.selfHosting) selfHosts()],
+            children: [
+              AdminStatusPill(_statusLabel(e.status), tone: _statusTone(e.status)),
+              if (e.selfHosting) selfHosts(),
+              ?invited(e),
+            ],
           ),
         ),
         AdminColumn(

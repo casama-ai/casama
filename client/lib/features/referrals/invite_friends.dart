@@ -132,6 +132,19 @@ class _InviteFriendsScreenState extends ConsumerState<InviteFriendsScreen> {
   Future<void> _share(Referral r) =>
       sendInvite(context, r, InvitePlace.settings, origin: shareOrigin(context));
 
+  // A friend who tried this member's invite while they had none to give (D-592): the member lets
+  // them in with one of their invites, and the friend gets the "You're in" email.
+  Future<void> _letIn(String id) async {
+    setState(() => _busy = true);
+    final r = await runGuarded(context, () => ref.read(backendProvider).letInWaitingFriend(id));
+    if (!mounted) return;
+    setState(() => _busy = false);
+    if (r == null) return;
+    HapticFeedback.mediumImpact();
+    ref.invalidate(referralProvider);
+    showMessage(context, context.l10n.inviteWaitingDone);
+  }
+
   Future<void> _redeem() async {
     final code = _code.text.trim();
     if (code.isEmpty) return;
@@ -343,6 +356,32 @@ class _InviteFriendsScreenState extends ConsumerState<InviteFriendsScreen> {
       ] else if (partner?.enabled == true) ...[
         SectionHeader(title: l10n.partnerSection),
         const PartnerProgramTile(),
+      ],
+      if (r.invites case final invites? when invites.waiting?.isNotEmpty == true) ...[
+        SectionHeader(title: l10n.inviteWaitingTitle),
+        GroupedCard(
+          key: const Key('inviteWaiting'),
+          children: [
+            for (final w in invites.waiting!)
+              GroupedTile(
+                key: Key('inviteWaiting-${w.id}'),
+                icon: LucideIcons.userRound,
+                title: w.emailHint,
+                subtitle: invites.left > 0 ? l10n.inviteWaitingUses : invites.unlocked
+                    ? l10n.inviteWaitingNoneLeft
+                    : l10n.inviteFriendsInvitesLocked,
+                trailing: FilledButton.tonal(
+                  key: Key('inviteWaitingLetIn-${w.id}'),
+                  onPressed: invites.left > 0 && !_busy ? () => _letIn(w.id) : null,
+                  child: Semantics(
+                    label: l10n.inviteWaitingLetInLabel(w.emailHint),
+                    excludeSemantics: true,
+                    child: Text(l10n.inviteWaitingLetIn),
+                  ),
+                ),
+              ),
+          ],
+        ),
       ],
       SectionHeader(title: l10n.inviteFriendsProgress),
       GroupedCard(

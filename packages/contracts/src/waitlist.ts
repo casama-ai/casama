@@ -173,6 +173,19 @@ export const WaitlistEntry = z
     admitted_at: z.iso.datetime().nullable(),
     joined_at: z.iso.datetime().nullable(),
     created_at: z.iso.datetime(),
+    /**
+     * The member whose invite this person claimed while the member had none to give (D-592). The
+     * member lets them in, so batches skip them. Null for everyone else.
+     */
+    invited_by: z
+      .object({
+        /** The member's first name, when they set one. */
+        name: z.string().nullable(),
+        /** Invites the member can give right now (0 until theirs unlock). */
+        invites_left: z.number().int(),
+      })
+      .nullable()
+      .optional(),
   })
   .openapi("WaitlistEntry");
 

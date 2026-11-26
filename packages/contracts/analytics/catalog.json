@@ -408,6 +408,13 @@
       "funnels": ["F7"]
     },
     {
+      "name": "waiting_friend_let_in",
+      "by": ["server"],
+      "description": "A member let in a friend who had claimed their invite while they had none to give (D-592).",
+      "properties": {},
+      "funnels": ["F7"]
+    },
+    {
       "name": "referral_rewarded",
       "by": ["server"],
       "description": "A friend someone invited qualified: the inviter was rewarded, had reached the cap, or rewards were off; the friend may have got a welcome bonus (D-211).",

@@ -1632,6 +1632,9 @@ class SupabaseBackend implements Backend {
         redeemReferralRequest: RedeemReferralRequest(code: code),
       )).data!;
   @override
+  Future<Referral> letInWaitingFriend(String id) async =>
+      (await api.referrals.letInWaitingFriend(id: id)).data!;
+  @override
   Future<ReferralPreview> previewReferral(String code) async =>
       (await api.referrals.previewReferral(code: code)).data!;
   @override

@@ -30159,6 +30159,42 @@ abstract class AppLocalizations {
   /// **'Your invites unlock after your first finished chat.'**
   String get inviteFriendsInvitesLocked;
 
+  /// D-592. Invite Friends: friends who tried this member's invite while they had none to give.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for Your Invite'**
+  String get inviteWaitingTitle;
+
+  /// No description provided for @inviteWaitingUses.
+  ///
+  /// In en, this message translates to:
+  /// **'Letting them in uses one of your invites.'**
+  String get inviteWaitingUses;
+
+  /// No description provided for @inviteWaitingNoneLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'You get an invite back when a friend you invited finishes their first chat.'**
+  String get inviteWaitingNoneLeft;
+
+  /// No description provided for @inviteWaitingLetIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Let In'**
+  String get inviteWaitingLetIn;
+
+  /// No description provided for @inviteWaitingLetInLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Let in {email}'**
+  String inviteWaitingLetInLabel(String email);
+
+  /// No description provided for @inviteWaitingDone.
+  ///
+  /// In en, this message translates to:
+  /// **'They\'ll get an email to sign up in a few minutes.'**
+  String get inviteWaitingDone;
+
   /// D-588. The text a member shares while Casama Cloud is invite-only. count: the member's invites in all. Only about letting the friend in (App Store 3.2.2).
   ///
   /// In en, this message translates to:
@@ -30410,6 +30446,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'They get a \"You\'re in\" email, within today\'s email limit.'**
   String get adminWlAdmitOneBody;
+
+  /// D-592. Admin → Waitlist: this person claimed a member's invite while the member had none to give.
+  ///
+  /// In en, this message translates to:
+  /// **'Invited by {name}'**
+  String adminWlInvitedBy(String name);
+
+  /// No description provided for @adminWlInvitedByMember.
+  ///
+  /// In en, this message translates to:
+  /// **'Invited by a member'**
+  String get adminWlInvitedByMember;
+
+  /// No description provided for @adminWlInviterLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{no invites left} =1{1 invite left} other{{count} invites left}}'**
+  String adminWlInviterLeft(int count);
+
+  /// No description provided for @adminWlTheMember.
+  ///
+  /// In en, this message translates to:
+  /// **'The member'**
+  String get adminWlTheMember;
+
+  /// No description provided for @adminWlAdmitInvitedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{inviter} invited this person and gets to let them in: they\'re told as soon as they have an invite to give. Letting them in here doesn\'t use one of their invites.'**
+  String adminWlAdmitInvitedBody(String inviter);
+
+  /// No description provided for @adminWlAdmitAnyway.
+  ///
+  /// In en, this message translates to:
+  /// **'Let In Anyway'**
+  String get adminWlAdmitAnyway;
 
   /// No description provided for @adminWlCopyEmail.
   ///
@@ -31223,7 +31295,7 @@ abstract class AppLocalizations {
   /// No description provided for @adminWaitlistAdmitBody.
   ///
   /// In en, this message translates to:
-  /// **'Each gets a \"You\'re in\" email, within today\'s email limit.'**
+  /// **'Each gets a \"You\'re in\" email, within today\'s email limit. People waiting on a member\'s invite are skipped: the member lets them in.'**
   String get adminWaitlistAdmitBody;
 
   /// No description provided for @adminWaitlistAdmitted.

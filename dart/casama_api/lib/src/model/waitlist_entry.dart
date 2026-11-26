@@ -3,6 +3,7 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:casama_api/src/model/waitlist_entry_invited_by.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -45,6 +46,8 @@ class WaitlistEntry {
     required  this.joinedAt,
 
     required  this.createdAt,
+
+     this.invitedBy,
   });
 
   @JsonKey(
@@ -203,6 +206,18 @@ class WaitlistEntry {
 
 
 
+  @JsonKey(
+    
+    name: r'invited_by',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final WaitlistEntryInvitedBy? invitedBy;
+
+
+
 
 
     @override
@@ -219,7 +234,8 @@ class WaitlistEntry {
       other.admittedVia == admittedVia &&
       other.admittedAt == admittedAt &&
       other.joinedAt == joinedAt &&
-      other.createdAt == createdAt;
+      other.createdAt == createdAt &&
+      other.invitedBy == invitedBy;
 
     @override
     int get hashCode =>
@@ -235,7 +251,8 @@ class WaitlistEntry {
         (admittedVia == null ? 0 : admittedVia.hashCode) +
         (admittedAt == null ? 0 : admittedAt.hashCode) +
         (joinedAt == null ? 0 : joinedAt.hashCode) +
-        createdAt.hashCode;
+        createdAt.hashCode +
+        (invitedBy == null ? 0 : invitedBy.hashCode);
 
   factory WaitlistEntry.fromJson(Map<String, dynamic> json) => _$WaitlistEntryFromJson(json);
 

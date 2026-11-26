@@ -8172,6 +8172,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/me/referral/waiting/{id}/let-in": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Let in a friend who is waiting on your invite (uses one invite)
+         * @description They get the “You're in” email within a few minutes. Errors: 404 not_found (not yours, or no longer waiting), 409 no_invites, 404 waitlist_off.
+         */
+        post: operations["letInWaitingFriend"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/referral/preview": {
         parameters: {
             query?: never;
@@ -18749,6 +18769,13 @@ export interface components {
                 used: number;
                 left: number;
                 unlocked: boolean;
+                waiting?: {
+                    /** Format: uuid */
+                    id: string;
+                    email_hint: string;
+                    /** Format: date-time */
+                    since: string;
+                }[];
             };
         };
         ReferralPreview: {
@@ -18893,6 +18920,10 @@ export interface components {
             joined_at: string | null;
             /** Format: date-time */
             created_at: string;
+            invited_by?: {
+                name: string | null;
+                invites_left: number;
+            } | null;
         };
         WaitlistJoined: {
             /** @enum {boolean} */
@@ -50170,6 +50201,55 @@ export interface operations {
             };
             /** @description Not authenticated */
             401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    letInWaitingFriend: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Invite friends */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Referral"];
+                };
+            };
+            /** @description Not authenticated */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Conflict */
+            409: {
                 headers: {
                     [name: string]: unknown;
                 };

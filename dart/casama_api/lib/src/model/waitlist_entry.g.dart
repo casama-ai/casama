@@ -33,6 +33,8 @@ abstract class _$WaitlistEntryCWProxy {
 
   WaitlistEntry createdAt(DateTime createdAt);
 
+  WaitlistEntry invitedBy(WaitlistEntryInvitedBy? invitedBy);
+
   /// Creates a new instance with the provided field values.
   /// Omitted fields keep their values; explicit `null` clears nullable fields.
   /// The public API rejects `null` for non-nullable fields. To update a single field use `WaitlistEntry(...).copyWith.fieldName(value)`.
@@ -55,6 +57,7 @@ abstract class _$WaitlistEntryCWProxy {
     DateTime? admittedAt,
     DateTime? joinedAt,
     DateTime createdAt,
+    WaitlistEntryInvitedBy? invitedBy,
   });
 }
 
@@ -106,6 +109,10 @@ class _$WaitlistEntryCWProxyImpl implements _$WaitlistEntryCWProxy {
   @override
   WaitlistEntry createdAt(DateTime createdAt) => call(createdAt: createdAt);
 
+  @override
+  WaitlistEntry invitedBy(WaitlistEntryInvitedBy? invitedBy) =>
+      call(invitedBy: invitedBy);
+
   /// Creates a new instance with the provided field values.
   /// Omitted fields keep their values; explicit `null` clears nullable fields.
   /// The public API rejects `null` for non-nullable fields. To update a single field use `WaitlistEntry(...).copyWith.fieldName(value)`.
@@ -129,6 +136,7 @@ class _$WaitlistEntryCWProxyImpl implements _$WaitlistEntryCWProxy {
     Object? admittedAt = const $CopyWithPlaceholder(),
     Object? joinedAt = const $CopyWithPlaceholder(),
     Object? createdAt = const $CopyWithPlaceholder(),
+    Object? invitedBy = const $CopyWithPlaceholder(),
   }) {
     return WaitlistEntry(
       id: id == const $CopyWithPlaceholder() || id == null
@@ -184,6 +192,10 @@ class _$WaitlistEntryCWProxyImpl implements _$WaitlistEntryCWProxy {
           ? _value.createdAt
           // ignore: cast_nullable_to_non_nullable
           : createdAt as DateTime,
+      invitedBy: invitedBy == const $CopyWithPlaceholder()
+          ? _value.invitedBy
+          // ignore: cast_nullable_to_non_nullable
+          : invitedBy as WaitlistEntryInvitedBy?,
     );
   }
 }
@@ -248,6 +260,12 @@ WaitlistEntry _$WaitlistEntryFromJson(Map<String, dynamic> json) =>
             'created_at',
             (v) => DateTime.parse(v as String),
           ),
+          invitedBy: $checkedConvert(
+            'invited_by',
+            (v) => v == null
+                ? null
+                : WaitlistEntryInvitedBy.fromJson(v as Map<String, dynamic>),
+          ),
         );
         return val;
       },
@@ -259,6 +277,7 @@ WaitlistEntry _$WaitlistEntryFromJson(Map<String, dynamic> json) =>
         'admittedAt': 'admitted_at',
         'joinedAt': 'joined_at',
         'createdAt': 'created_at',
+        'invitedBy': 'invited_by',
       },
     );
 
@@ -277,6 +296,7 @@ Map<String, dynamic> _$WaitlistEntryToJson(WaitlistEntry instance) =>
       'admitted_at': instance.admittedAt?.toIso8601String(),
       'joined_at': instance.joinedAt?.toIso8601String(),
       'created_at': instance.createdAt.toIso8601String(),
+      'invited_by': ?instance.invitedBy?.toJson(),
     };
 
 const _$WaitlistEntryStatusEnumEnumMap = {

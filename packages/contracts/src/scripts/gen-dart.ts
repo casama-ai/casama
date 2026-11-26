@@ -118,7 +118,9 @@ const tmp = mkdtempSync(join(tmpdir(), "casama-gen-"));
 const specPath = join(tmp, "openapi.json");
 writeFileSync(specPath, JSON.stringify(doc));
 
-// 2. REST client.
+// 2. REST client. It keeps the version the last release gave it (`release(sdk)` bumps it by hand).
+const pubVersion =
+  /^version:\s*(\S+)/m.exec(readFileSync(join(apiDir, "pubspec.yaml"), "utf8"))?.[1] ?? "0.1.0";
 await ensureOpenApiGeneratorJar();
 rmSync(join(apiDir, "lib"), { recursive: true, force: true });
 execFileSync(
@@ -133,7 +135,7 @@ execFileSync(
     "-o",
     apiDir,
     "--global-property=apiTests=false,modelTests=false,apiDocs=false,modelDocs=false",
-    "--additional-properties=pubName=casama_api,pubVersion=0.1.0,serializationLibrary=json_serializable",
+    `--additional-properties=pubName=casama_api,pubVersion=${pubVersion},serializationLibrary=json_serializable`,
     // An enum member named `value` would clash with the generated enum's own `value` field.
     "--enum-name-mappings=value=plain",
   ],

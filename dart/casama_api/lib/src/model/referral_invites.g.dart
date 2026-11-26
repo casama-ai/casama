@@ -15,6 +15,8 @@ abstract class _$ReferralInvitesCWProxy {
 
   ReferralInvites unlocked(bool unlocked);
 
+  ReferralInvites waiting(List<ReferralInvitesWaitingInner>? waiting);
+
   /// Creates a new instance with the provided field values.
   /// Omitted fields keep their values; explicit `null` clears nullable fields.
   /// The public API rejects `null` for non-nullable fields. To update a single field use `ReferralInvites(...).copyWith.fieldName(value)`.
@@ -23,7 +25,13 @@ abstract class _$ReferralInvitesCWProxy {
   /// ```dart
   /// ReferralInvites(...).copyWith(id: 12, name: "My name")
   /// ```
-  ReferralInvites call({int total, int used, int left, bool unlocked});
+  ReferralInvites call({
+    int total,
+    int used,
+    int left,
+    bool unlocked,
+    List<ReferralInvitesWaitingInner>? waiting,
+  });
 }
 
 /// Callable proxy for `copyWith` functionality.
@@ -45,6 +53,10 @@ class _$ReferralInvitesCWProxyImpl implements _$ReferralInvitesCWProxy {
   @override
   ReferralInvites unlocked(bool unlocked) => call(unlocked: unlocked);
 
+  @override
+  ReferralInvites waiting(List<ReferralInvitesWaitingInner>? waiting) =>
+      call(waiting: waiting);
+
   /// Creates a new instance with the provided field values.
   /// Omitted fields keep their values; explicit `null` clears nullable fields.
   /// The public API rejects `null` for non-nullable fields. To update a single field use `ReferralInvites(...).copyWith.fieldName(value)`.
@@ -59,6 +71,7 @@ class _$ReferralInvitesCWProxyImpl implements _$ReferralInvitesCWProxy {
     Object? used = const $CopyWithPlaceholder(),
     Object? left = const $CopyWithPlaceholder(),
     Object? unlocked = const $CopyWithPlaceholder(),
+    Object? waiting = const $CopyWithPlaceholder(),
   }) {
     return ReferralInvites(
       total: total == const $CopyWithPlaceholder() || total == null
@@ -77,6 +90,10 @@ class _$ReferralInvitesCWProxyImpl implements _$ReferralInvitesCWProxy {
           ? _value.unlocked
           // ignore: cast_nullable_to_non_nullable
           : unlocked as bool,
+      waiting: waiting == const $CopyWithPlaceholder()
+          ? _value.waiting
+          // ignore: cast_nullable_to_non_nullable
+          : waiting as List<ReferralInvitesWaitingInner>?,
     );
   }
 }
@@ -92,20 +109,27 @@ extension $ReferralInvitesCopyWith on ReferralInvites {
 // JsonSerializableGenerator
 // **************************************************************************
 
-ReferralInvites _$ReferralInvitesFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('ReferralInvites', json, ($checkedConvert) {
-      $checkKeys(
-        json,
-        requiredKeys: const ['total', 'used', 'left', 'unlocked'],
-      );
-      final val = ReferralInvites(
-        total: $checkedConvert('total', (v) => (v as num).toInt()),
-        used: $checkedConvert('used', (v) => (v as num).toInt()),
-        left: $checkedConvert('left', (v) => (v as num).toInt()),
-        unlocked: $checkedConvert('unlocked', (v) => v as bool),
-      );
-      return val;
-    });
+ReferralInvites _$ReferralInvitesFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('ReferralInvites', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['total', 'used', 'left', 'unlocked']);
+  final val = ReferralInvites(
+    total: $checkedConvert('total', (v) => (v as num).toInt()),
+    used: $checkedConvert('used', (v) => (v as num).toInt()),
+    left: $checkedConvert('left', (v) => (v as num).toInt()),
+    unlocked: $checkedConvert('unlocked', (v) => v as bool),
+    waiting: $checkedConvert(
+      'waiting',
+      (v) => (v as List<dynamic>?)
+          ?.map(
+            (e) =>
+                ReferralInvitesWaitingInner.fromJson(e as Map<String, dynamic>),
+          )
+          .toList(),
+    ),
+  );
+  return val;
+});
 
 Map<String, dynamic> _$ReferralInvitesToJson(ReferralInvites instance) =>
     <String, dynamic>{
@@ -113,4 +137,5 @@ Map<String, dynamic> _$ReferralInvitesToJson(ReferralInvites instance) =>
       'used': instance.used,
       'left': instance.left,
       'unlocked': instance.unlocked,
+      'waiting': ?instance.waiting?.map((e) => e.toJson()).toList(),
     };

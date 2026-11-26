@@ -42,6 +42,20 @@ export const Referral = z
         used: z.number().int(),
         left: z.number().int(),
         unlocked: z.boolean(),
+        /**
+         * Friends who claimed your invite while you had none to give, still waiting (D-592). Let
+         * one in with `letInWaitingFriend`. Only a hint of each address is shown.
+         */
+        waiting: z
+          .array(
+            z.object({
+              id: z.uuid(),
+              /** "m•••@gmail.com" */
+              email_hint: z.string(),
+              since: z.iso.datetime(),
+            }),
+          )
+          .optional(),
       })
       .optional(),
   })

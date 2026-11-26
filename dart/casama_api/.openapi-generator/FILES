@@ -931,6 +931,7 @@ lib/src/model/redirect_url.dart
 lib/src/model/referral.dart
 lib/src/model/referral_invited_by.dart
 lib/src/model/referral_invites.dart
+lib/src/model/referral_invites_waiting_inner.dart
 lib/src/model/referral_preview.dart
 lib/src/model/refresh_live_card.dart
 lib/src/model/relay_analytics_request.dart
@@ -1274,6 +1275,7 @@ lib/src/model/voice_turns_request_turns_inner.dart
 lib/src/model/waitlist_batch.dart
 lib/src/model/waitlist_changed.dart
 lib/src/model/waitlist_entry.dart
+lib/src/model/waitlist_entry_invited_by.dart
 lib/src/model/waitlist_joined.dart
 lib/src/model/waitlist_page.dart
 lib/src/model/waitlist_proof.dart
