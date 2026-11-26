@@ -19,7 +19,7 @@ import { type GallerySource, registerGalleryTools } from "./gallery.ts";
 export * from "./docs.ts";
 export * from "./gallery.ts";
 
-export const VERSION = "0.2.2";
+export const VERSION = "0.2.3";
 
 type Session = { access_token: string; refresh_token?: string; expires_at?: number };
 

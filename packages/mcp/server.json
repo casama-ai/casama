@@ -3,7 +3,7 @@
   "name": "ai.casama/casama",
   "title": "Casama",
   "description": "Search Casama's docs and API reference, no sign-in. Optional: drive your Casama AI bots.",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "websiteUrl": "https://docs.casama.ai/guide/mcp",
   "repository": {
     "url": "https://github.com/casama-ai/casama",
@@ -20,7 +20,7 @@
     {
       "registryType": "npm",
       "identifier": "@casama/mcp",
-      "version": "0.2.2",
+      "version": "0.2.3",
       "transport": {
         "type": "stdio"
       }
