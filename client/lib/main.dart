@@ -26,6 +26,7 @@ import 'core/timeout_http_client.dart';
 import 'core/theme.dart';
 import 'features/app_lock/app_lock.dart';
 import 'features/app_lock/session_store.dart';
+import 'features/community/community.dart';
 import 'features/app_functions/app_functions_headless.dart';
 import 'features/link/keep_awake.dart';
 import 'features/selfhost/guided_setup.dart';
@@ -98,6 +99,8 @@ Future<(Widget, SupabaseBackend)> bootstrap(AppConfig config, {VoidCallback? onS
     retry: appProviderRetry,
     overrides: [
       backendProvider.overrideWithValue(backend),
+      // Casama Cloud or not, for the community card and the one-time star ask (D-577).
+      casamaCloudProvider.overrideWithValue(cloud),
       localCacheProvider.overrideWithValue(openLocalCache()),
       appearanceProvider.overrideWith(() => AppearanceNotifier(appearance)),
     ],

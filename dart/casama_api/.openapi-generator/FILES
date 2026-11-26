@@ -21,6 +21,7 @@ lib/src/api/casama_link_api.dart
 lib/src/api/channels_api.dart
 lib/src/api/chat_api.dart
 lib/src/api/checkins_api.dart
+lib/src/api/community_api.dart
 lib/src/api/comps_api.dart
 lib/src/api/computers_api.dart
 lib/src/api/creations_api.dart
@@ -1028,6 +1029,7 @@ lib/src/model/skill_update_check.dart
 lib/src/model/slack_install_link.dart
 lib/src/model/snooze_device_permissions200_response.dart
 lib/src/model/snooze_device_permissions_request.dart
+lib/src/model/star_ask.dart
 lib/src/model/start_agent_import_request.dart
 lib/src/model/start_agent_import_request_files_inner.dart
 lib/src/model/start_chat_link_request.dart

@@ -126,8 +126,9 @@ class CliContext {
       settings.get('api_url') ??
       defaultApiUrl;
 
+  /// Signs in as `casama-cli/<version>`, which marks the sign-in as the CLI's (D-577).
   Future<CasamaClient> client() async =>
-      _client ??= await CasamaClient.connect(apiUrl, sessions: sessions);
+      _client ??= await CasamaClient.connect(apiUrl, sessions: sessions, userAgent: 'casama-cli/$cliVersion');
 
   Future<CasamaClient> authedClient() async {
     final c = await client();

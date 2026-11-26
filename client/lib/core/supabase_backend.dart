@@ -1678,6 +1678,9 @@ class SupabaseBackend implements Backend {
       (await api.testimonials.listTestimonials(place: place)).data!.items;
   @override
   Future<TestimonialAsk> testimonialAsk() async => (await api.testimonials.getTestimonialAsk()).data!;
+
+  @override
+  Future<StarAsk> starAsk() async => (await api.community.getStarAsk()).data!;
   @override
   Future<void> submitTestimonial({required String quote, required bool consent, String? orgId, String? platform}) async {
     await api.testimonials.submitTestimonial(

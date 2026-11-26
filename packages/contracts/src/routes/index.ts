@@ -18,6 +18,7 @@ import * as channels from "./channels.ts";
 import * as chatExport from "./chat-export.ts";
 import * as chatMedia from "./chat-media.ts";
 import * as checkins from "./checkins.ts";
+import * as community from "./community.ts";
 import * as comps from "./comps.ts";
 import * as computers from "./computers.ts";
 import * as creations from "./creations.ts";
@@ -100,6 +101,7 @@ export const routes = {
   ...botTemplate,
   ...projects,
   ...checkins,
+  ...community,
   ...actionRules,
   ...agentImport,
   ...knowledge,
@@ -161,6 +163,7 @@ export {
   channels,
   chatMedia,
   checkins,
+  community,
   computers,
   connect,
   deviceData,

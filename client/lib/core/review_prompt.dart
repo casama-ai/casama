@@ -12,8 +12,9 @@ import 'remote_config.dart';
 /// The store's rating prompt (D-305, loosened by D-460), asked only after something went well.
 ///
 /// Every ask needs: no error message shown this session, nothing asked on this device within the
-/// rules' gap, the remote flag `review_prompt` not off, and a supported platform. Only the phone apps
-/// and the Mac App Store build ask; the web and direct downloads never do. The numbers (days of use,
+/// rules' gap, the GitHub star ask (D-577) not shown in the last seven days, the remote flag
+/// `review_prompt` not off, and a supported platform. Only the phone apps and the Mac App Store
+/// build ask; the web and direct downloads never do. The numbers (days of use,
 /// first-open age, gap, reply milestones) come from [ReviewRules], which differ per platform.
 /// - [ReviewMoment.replyFinished]: a milestone reply, and the rules' days of use and first-open age.
 /// - [ReviewMoment.purchase]: right away; the store shows it over the celebration.
@@ -135,6 +136,10 @@ class ReviewPrompt {
   static const _askedKey = 'casama.review.asked';
   static const _repliesKey = 'casama.review.replies';
   static const _firstRunKey = 'casama.review.firstRun';
+  // The GitHub star ask's record (features/community/community.dart): the two keep seven days
+  // apart, both ways (D-577).
+  static const _starAskedKey = 'casama.starAsk.asked';
+  static const _starGap = Duration(days: 7);
 
   /// How long after the first-run mark its first reply still counts as part of onboarding.
   static const firstRunWindow = Duration(hours: 24);
@@ -259,6 +264,8 @@ class ReviewPrompt {
       if (asked != null && now.difference(asked).inDays < rules.gapDays) {
         return false;
       }
+      final star = DateTime.tryParse(p.getString(_starAskedKey) ?? '');
+      if (star != null && now.difference(star) < _starGap) return false;
       if (!skipUseGates) {
         final days = p.getStringList(_daysKey) ?? const [];
         final first = DateTime.tryParse(p.getString(_firstKey) ?? '');

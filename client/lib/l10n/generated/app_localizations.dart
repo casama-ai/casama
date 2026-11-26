@@ -41089,6 +41089,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Thank you! We read every one.'**
   String get testimonialAskThanks;
+
+  /// No description provided for @communityTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Community'**
+  String get communityTitle;
+
+  /// No description provided for @communitySentence.
+  ///
+  /// In en, this message translates to:
+  /// **'Casama is open source. If it\'s useful to you, a star on GitHub helps other people find it.'**
+  String get communitySentence;
+
+  /// No description provided for @communityStarOnGitHub.
+  ///
+  /// In en, this message translates to:
+  /// **'Star on GitHub'**
+  String get communityStarOnGitHub;
+
+  /// No description provided for @communityDiscord.
+  ///
+  /// In en, this message translates to:
+  /// **'Discord'**
+  String get communityDiscord;
+
+  /// No description provided for @communityDiscordHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat with the team and other people who use Casama'**
+  String get communityDiscordHelp;
+
+  /// No description provided for @starAskTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Casama on GitHub'**
+  String get starAskTitle;
+
+  /// No description provided for @starAskNotNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get starAskNotNow;
 }
 
 class _AppLocalizationsDelegate

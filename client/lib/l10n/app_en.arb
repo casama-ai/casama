@@ -8356,5 +8356,12 @@
   "testimonialAskSomeone": "a Casama user",
   "testimonialAskSend": "Send",
   "testimonialAskNotNow": "Not Now",
-  "testimonialAskThanks": "Thank you! We read every one."
+  "testimonialAskThanks": "Thank you! We read every one.",
+  "communityTitle": "Community",
+  "communitySentence": "Casama is open source. If it's useful to you, a star on GitHub helps other people find it.",
+  "communityStarOnGitHub": "Star on GitHub",
+  "communityDiscord": "Discord",
+  "communityDiscordHelp": "Chat with the team and other people who use Casama",
+  "starAskTitle": "Casama on GitHub",
+  "starAskNotNow": "Not now"
 }

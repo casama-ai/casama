@@ -1585,6 +1585,33 @@
       "properties": {}
     },
     {
+      "name": "github_star_tap",
+      "by": ["client"],
+      "description": "A Star on GitHub link was tapped and opened casama.ai/github, which leads to the public repo (D-577). place: settings (Help & support, Community) or ask (the one-time Cloud ask). A link only: GitHub doesn't say whether they starred.",
+      "properties": {
+        "place": {
+          "type": "string",
+          "values": ["settings", "ask"]
+        }
+      }
+    },
+    {
+      "name": "github_star_ask_shown",
+      "by": ["client"],
+      "description": "The one-time \"Casama is open source\" ask showed after a finished reply on Casama Cloud (D-577). developer: the server saw a developer signal (GitHub connected, an API key, an MCP connection or a CLI sign-in).",
+      "properties": {
+        "developer": {
+          "type": "boolean"
+        }
+      }
+    },
+    {
+      "name": "github_star_ask_dismissed",
+      "by": ["client"],
+      "description": "The one-time ask was closed with Not now or by closing the sheet (D-577). It never shows again on this device.",
+      "properties": {}
+    },
+    {
       "name": "purchase_completed",
       "by": ["client"],
       "description": "The client's view of a store purchase.",

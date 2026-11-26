@@ -170,6 +170,13 @@ export const ANALYTICS_CLIENT_EVENTS: Record<string, string[]> = {
     "rules"
   ],
   "review_store_opened": [],
+  "github_star_tap": [
+    "place"
+  ],
+  "github_star_ask_shown": [
+    "developer"
+  ],
+  "github_star_ask_dismissed": [],
   "purchase_completed": [
     "outcome",
     "store",

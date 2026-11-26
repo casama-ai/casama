@@ -737,7 +737,7 @@ Map<String, String> _settingsSearchWords(AppLocalizations l10n, {String? orgName
   l10n.computers: 'computers machines docker sandbox desktop',
   l10n.deviceConnections: 'devices location health places folders watched apps browsers chrome extension phone permissions',
   l10n.useThisComputer: 'companion this computer mac local files',
-  l10n.helpAndSupport: 'help support contact ticket bug report feedback docs',
+  l10n.helpAndSupport: 'help support contact ticket bug report feedback docs community github star open source discord ideas board status',
   l10n.signOut: 'log out logout sign out',
 };
 

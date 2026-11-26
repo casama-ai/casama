@@ -25498,4 +25498,27 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get testimonialAskThanks => 'Thank you! We read every one.';
+
+  @override
+  String get communityTitle => 'Community';
+
+  @override
+  String get communitySentence =>
+      'Casama is open source. If it\'s useful to you, a star on GitHub helps other people find it.';
+
+  @override
+  String get communityStarOnGitHub => 'Star on GitHub';
+
+  @override
+  String get communityDiscord => 'Discord';
+
+  @override
+  String get communityDiscordHelp =>
+      'Chat with the team and other people who use Casama';
+
+  @override
+  String get starAskTitle => 'Casama on GitHub';
+
+  @override
+  String get starAskNotNow => 'Not now';
 }

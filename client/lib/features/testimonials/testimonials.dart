@@ -222,7 +222,8 @@ class _TestimonialQuoteState extends ConsumerState<TestimonialQuote> {
 ///
 /// Asks when: the flag `testimonial_ask` is on, no error showed this session, at least [minDays]
 /// days of use and [minReplies] finished replies, nothing asked on this device in [gapDays] days,
-/// the store's sheet didn't show in the last two days, and the server says this person may send one.
+/// the store's sheet didn't show in the last two days, the GitHub star ask (D-577) didn't show in the
+/// last seven, and the server says this person may send one.
 class TestimonialAskPrompt {
   TestimonialAskPrompt(
     this._ref, {
@@ -245,6 +246,8 @@ class TestimonialAskPrompt {
   // The store prompt's own records (review_prompt.dart): days of use, and when it last asked.
   static const _reviewDaysKey = 'casama.review.days';
   static const _reviewAskedKey = 'casama.review.asked';
+  // The GitHub star ask's (community.dart): it keeps seven days from every other ask (D-577).
+  static const _starAskedKey = 'casama.starAsk.asked';
 
   var _busy = false;
 
@@ -263,6 +266,10 @@ class TestimonialAskPrompt {
     if (asked != null && now.difference(asked).inDays < gapDays) return false;
     final store = DateTime.tryParse(p.getString(_reviewAskedKey) ?? '');
     if (store != null && now.difference(store).inHours < 48) return false;
+    final star = DateTime.tryParse(p.getString(_starAskedKey) ?? '');
+    if (star != null && now.difference(star) < const Duration(days: 7)) {
+      return false;
+    }
     return true;
   }
 

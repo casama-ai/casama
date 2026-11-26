@@ -52,11 +52,16 @@ class AuthException implements Exception {
 
 /// Minimal client for the Supabase Auth REST API (email and password, magic link, refresh).
 class AuthClient {
-  AuthClient({required this.supabaseUrl, required this.anonKey, http.Client? httpClient})
+  AuthClient({required this.supabaseUrl, required this.anonKey, this.userAgent, http.Client? httpClient})
       : _http = httpClient ?? http.Client();
 
   final String supabaseUrl;
   final String anonKey;
+
+  /// Sent as the User-Agent of every sign-in call, when set. Supabase Auth keeps it with the
+  /// session, so the server can tell, for example, that someone signed in with the `casama` CLI.
+  /// The app leaves it null.
+  final String? userAgent;
   final http.Client _http;
 
   Uri _uri(String path, [Map<String, String>? query]) =>
@@ -65,6 +70,7 @@ class AuthClient {
   Map<String, String> get _headers => {
         'apikey': anonKey,
         'content-type': 'application/json',
+        'user-agent': ?userAgent,
       };
 
   Future<Map<String, dynamic>> _post(String path, Map<String, dynamic> body,

@@ -1,4 +1,5 @@
 import 'package:casama/core/providers.dart';
+import 'package:casama/features/community/community.dart';
 import 'package:casama/features/settings/support_screen.dart';
 import 'package:casama/l10n/generated/app_localizations.dart';
 import 'package:casama_sdk/casama_sdk.dart';
@@ -25,6 +26,10 @@ Widget _app(
       launched?.add(uri);
       return launches;
     }),
+    communityOpenProvider.overrideWithValue((uri) async {
+      launched?.add(uri);
+      return launches;
+    }),
   ],
   child: MaterialApp(
     localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -37,7 +42,8 @@ void main() {
   testWidgets(
     'the Help page offers Casama Help, a person, the guides and copyable ids',
     (tester) async {
-      await setSize(tester, const Size(800, 1400));
+      // Tall enough for the ids under the Community group (D-577).
+      await setSize(tester, const Size(800, 2000));
       final backend = FakeBackend();
       final launched = <Uri>[];
       await tester.pumpWidget(
@@ -90,26 +96,72 @@ void main() {
     expect(find.byKey(const Key('supportRate')), findsNothing);
   });
 
-  testWidgets('Casama Cloud gets a Status row that opens status.casama.ai', (
-    tester,
-  ) async {
-    await setSize(tester, const Size(800, 1400));
-    final launched = <Uri>[];
-    await tester.pumpWidget(
-      _app(_CloudBackend(), const SupportScreen(), launched: launched),
+  for (final cloud in [true, false]) {
+    testWidgets(
+      'Community: GitHub, Discord, ideas and status, on ${cloud ? 'Casama Cloud' : 'any other server'} too (D-577)',
+      (tester) async {
+        await setSize(tester, const Size(800, 1400));
+        final launched = <Uri>[];
+        await tester.pumpWidget(
+          _app(
+            cloud ? _CloudBackend() : FakeBackend(),
+            const SupportScreen(),
+            launched: launched,
+          ),
+        );
+        await tester.pumpAndSettle();
+        expect(find.text('Community'), findsOneWidget);
+        expect(
+          find.text(
+            "Casama is open source. If it's useful to you, a star on GitHub helps other people find it.",
+          ),
+          findsOneWidget,
+        );
+        for (final (key, url) in [
+          ('communityStar', 'https://casama.ai/github'),
+          ('communityDiscord', 'https://discord.gg/e86XbXFHwz'),
+          ('communityIdeas', 'https://ideas.casama.ai'),
+          ('communityStatus', 'https://status.casama.ai'),
+        ]) {
+          await tester.ensureVisible(find.byKey(Key(key)));
+          await tester.tap(find.byKey(Key(key)));
+          await tester.pumpAndSettle();
+          expect(launched.last.toString(), url, reason: key);
+        }
+        expect(launched, hasLength(4));
+        // The old Cloud-only Status row moved into Community.
+        expect(find.byKey(const Key('supportStatus')), findsNothing);
+      },
     );
-    await tester.pumpAndSettle();
-    await tester.ensureVisible(find.byKey(const Key('supportStatus')));
-    await tester.tap(find.byKey(const Key('supportStatus')));
-    await tester.pumpAndSettle();
-    expect(launched.single.toString(), 'https://status.casama.ai');
+  }
+
+  testWidgets('on every platform, desktop builds too', (tester) async {
+    await setSize(tester, const Size(800, 1400));
+    addTearDown(() => debugDefaultTargetPlatformOverride = null);
+    for (final p in [TargetPlatform.windows, TargetPlatform.linux, TargetPlatform.macOS]) {
+      debugDefaultTargetPlatformOverride = p;
+      await tester.pumpWidget(_app(FakeBackend(), SupportScreen(key: Key(p.name))));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('communityStar')), findsOneWidget, reason: p.name);
+    }
+    debugDefaultTargetPlatformOverride = null;
   });
 
-  testWidgets('another server: no Casama Cloud Status row', (tester) async {
+  testWidgets('Casama\'s own ideas board shows once, under Community', (tester) async {
     await setSize(tester, const Size(800, 1400));
-    await tester.pumpWidget(_app(FakeBackend(), const SupportScreen()));
+    final backend = FakeBackend()
+      ..support = SupportConfig(
+        assistant: true,
+        tickets: true,
+        feedback: true,
+        ideasUrl: 'https://ideas.casama.ai',
+        email: 'support@casama.ai',
+        docsUrl: 'https://docs.casama.ai',
+      );
+    await tester.pumpWidget(_app(backend, const SupportScreen()));
     await tester.pumpAndSettle();
-    expect(find.byKey(const Key('supportStatus')), findsNothing);
+    expect(find.byKey(const Key('supportIdeas')), findsNothing);
+    expect(find.byKey(const Key('communityIdeas')), findsOneWidget);
   });
 
   testWidgets('no assistant on the server: the page leads with writing to us', (

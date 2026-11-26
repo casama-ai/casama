@@ -907,6 +907,7 @@ import 'package:casama_api/src/model/skill_update_check.dart';
 import 'package:casama_api/src/model/slack_install_link.dart';
 import 'package:casama_api/src/model/snooze_device_permissions200_response.dart';
 import 'package:casama_api/src/model/snooze_device_permissions_request.dart';
+import 'package:casama_api/src/model/star_ask.dart';
 import 'package:casama_api/src/model/start_agent_import_request.dart';
 import 'package:casama_api/src/model/start_agent_import_request_files_inner.dart';
 import 'package:casama_api/src/model/start_chat_link_request.dart';
@@ -3079,6 +3080,8 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return SnoozeDevicePermissions200Response.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'SnoozeDevicePermissionsRequest':
           return SnoozeDevicePermissionsRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'StarAsk':
+          return StarAsk.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'StartAgentImportRequest':
           return StartAgentImportRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'StartAgentImportRequestFilesInner':

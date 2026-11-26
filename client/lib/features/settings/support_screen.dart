@@ -25,6 +25,7 @@ import '../../ui/page.dart';
 import '../../ui/shell_header.dart';
 import '../chat/widgets/chat_markdown.dart';
 import '../chat/widgets/intro_video.dart';
+import '../community/community.dart';
 import '../../core/remote_content.dart';
 
 /// Help & support (D-298): Casama Help, the support assistant (Casama Cloud), a message to the
@@ -1325,8 +1326,10 @@ class _SupportScreenState extends ConsumerState<SupportScreen> {
                 subtitle: l10n.sendFeedbackRow,
                 onTap: () => showSendFeedback(context),
               ),
-            // The public ideas board (D-536), when this server has one.
-            if (config?.ideasUrl case final String ideas when ideas.isNotEmpty)
+            // The public ideas board (D-536), when this server has its own; Casama's is under
+            // Community (D-577).
+            if (config?.ideasUrl case final String ideas
+                when ideas.isNotEmpty && Uri.tryParse(ideas)?.host != Uri.parse(kIdeasUrl).host)
               GroupedTile(
                 key: const Key('supportIdeas'),
                 icon: LucideIcons.lightbulb,
@@ -1377,22 +1380,10 @@ class _SupportScreenState extends ConsumerState<SupportScreen> {
                 ),
                 onTap: ReviewPrompt.openStore,
               ),
-            // Casama Cloud's public status page (D-304), same rule as the "Can't reach" bar.
-            if (Uri.tryParse(backend.apiUrl)?.host == 'api.casama.ai')
-              GroupedTile(
-                key: const Key('supportStatus'),
-                icon: LucideIcons.activity,
-                title: l10n.supportStatus,
-                subtitle: l10n.supportStatusHelp,
-                trailing: Icon(
-                  LucideIcons.externalLink,
-                  size: 18,
-                  color: scheme.onSurfaceVariant,
-                ),
-                onTap: () => launch(remoteUri('status', 'https://status.casama.ai')),
-              ),
           ],
         ),
+        // The open-source project (D-577): GitHub, Discord, ideas and Cloud's status, everywhere.
+        const CommunityGroup(),
         SectionHeader(title: l10n.supportIds),
         FormNote(l10n.supportIdsHelp, icon: LucideIcons.info),
         GroupedCard(

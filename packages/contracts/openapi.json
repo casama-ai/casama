@@ -20351,6 +20351,21 @@
           "created_at"
         ]
       },
+      "StarAsk": {
+        "type": "object",
+        "properties": {
+          "ask": {
+            "type": "boolean"
+          },
+          "developer": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "ask",
+          "developer"
+        ]
+      },
       "ActionRule": {
         "type": "object",
         "properties": {
@@ -62950,6 +62965,93 @@
           },
           "401": {
             "description": "Not authenticated",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/me/star-ask": {
+      "get": {
+        "operationId": "getStarAsk",
+        "tags": [
+          "community"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Whether the app may ask you once to star Casama on GitHub, and whether you're a developer",
+        "description": "Casama Cloud only, and off when the remote flag github_star_ask is false. It only ever leads to a link: nothing stars for you and nothing is given for a star.",
+        "responses": {
+          "200": {
+            "description": "Star ask",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StarAsk"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited",
             "content": {
               "application/problem+json": {
                 "schema": {

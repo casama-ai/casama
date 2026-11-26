@@ -143,7 +143,7 @@ void main() {
     },
   );
 
-  testWidgets('Help & support links the ideas board when the server has one', (
+  testWidgets('Help & support links the server\'s own ideas board when it has one', (
     tester,
   ) async {
     await setSize(tester, const Size(390, 1400));
@@ -153,7 +153,7 @@ void main() {
         assistant: true,
         tickets: true,
         feedback: true,
-        ideasUrl: 'https://ideas.casama.ai',
+        ideasUrl: 'https://ideas.example.org',
         email: 'support@casama.ai',
         docsUrl: 'https://docs.casama.ai',
       );
@@ -177,7 +177,7 @@ void main() {
     await tester.ensureVisible(find.byKey(const Key('supportIdeas')));
     await tester.tap(find.byKey(const Key('supportIdeas')));
     await tester.pumpAndSettle();
-    expect(launched.single.toString(), 'https://ideas.casama.ai');
+    expect(launched.single.toString(), 'https://ideas.example.org');
   });
 
   testWidgets('owners post feedback to the ideas board in their own words', (

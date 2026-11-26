@@ -1,11 +1,11 @@
-Casama is an app for AI assistants ("bots"). Bots run on Casama's servers and their own cloud computers. New in 1.0: a browser inside the app a bot can use while you watch (below).
+Casama is an app for AI assistants ("bots"). Bots run on Casama's servers and their own cloud computers.
 
 SIGN IN WITH THE DEMO ACCOUNT
 1. Tap "Continue with Email", then "Use a Password Instead".
 2. Enter the demo email and password, tap "Sign in". No code or two-step sign-in.
 3. Agree that chats go to AI providers: "Agree and Continue".
-To try registration (invite-only), use invite code REVIEW-B8Z3Q8.
-The workspace shows the Free plan but has Pro limits and $50 of credits, so nothing needs buying.
+To try registration (invite-only), use invite code REVIEW-XXXXXX.
+The workspace is on the Free plan with Pro limits and $50 of credits; nothing needs buying.
 
 WHAT TO TRY
 - Chat: open the bot "Casama", ask "Compare three Italian restaurants in Lisbon in a table."
@@ -14,9 +14,10 @@ WHAT TO TRY
 - Calls: the phone icon in a chat starts a voice call.
 - Routines: chat title > Bot profile > Routines ("Morning brief").
 - Group chats: Chats > Group chats.
+- Community: Settings > Help & support > Community (GitHub, Discord, ideas, status). After a week, one sheet asks for a GitHub star; no reward.
 
 IN-APP BROWSER (new)
-A small WKWebView browser a bot can use on this iPhone while you watch.
+A WKWebView browser a bot uses on this iPhone while you watch.
 1. In the "Casama" chat send: "Open example.com on my phone and tell me the heading."
 2. A live card appears; tap it for the full browser with Stop and Take Over.
 3. If a site needs sign-in or blocks the bot's computer, a card asks where to open it: "On this phone" or the bot's computer, with "Remember for this site".
@@ -42,7 +43,7 @@ REGIONAL DIFFERENCES
 US storefront only: web checkout next to in-app purchase, and domain buying (Settings > Domains). Elsewhere: in-app purchase only. Not available in China mainland.
 
 REMOTE SETTINGS
-Server flags can turn off bot email, the welcome film, domain buying, the rating prompt and the in-app browser. They only hide features.
+Server flags can turn off bot email, the welcome film, domain buying, the rating prompt, the star ask and the in-app browser. They only hide features.
 
 ACCOUNT DELETION
 Settings > Privacy > Danger Zone > Delete My Account. Please don't delete the demo account.

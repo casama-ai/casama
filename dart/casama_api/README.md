@@ -291,6 +291,7 @@ Class | Method | HTTP request | Description
 [*CheckinsApi*](doc/CheckinsApi.md) | [**getBotCheckins**](doc/CheckinsApi.md#getbotcheckins) | **GET** /v1/bots/{id}/checkins | 
 [*CheckinsApi*](doc/CheckinsApi.md) | [**getForYou**](doc/CheckinsApi.md#getforyou) | **GET** /v1/for-you | Your feed in a workspace: the latest briefs, pending suggestions and approvals
 [*CheckinsApi*](doc/CheckinsApi.md) | [**setBotCheckins**](doc/CheckinsApi.md#setbotcheckins) | **PUT** /v1/bots/{id}/checkins | Turn a bot&#39;s morning brief and scans on or off, and set their times and daily cap
+[*CommunityApi*](doc/CommunityApi.md) | [**getStarAsk**](doc/CommunityApi.md#getstarask) | **GET** /v1/me/star-ask | Whether the app may ask you once to star Casama on GitHub, and whether you&#39;re a developer
 [*CompsApi*](doc/CompsApi.md) | [**adminCompSettings**](doc/CompsApi.md#admincompsettings) | **GET** /v1/admin/comp-settings | Free plan settings (instance owner)
 [*CompsApi*](doc/CompsApi.md) | [**createAdminCompCode**](doc/CompsApi.md#createadmincompcode) | **POST** /v1/admin/comp-codes | Make a gift code for one plan and length; the code is shown only once (instance owner)
 [*CompsApi*](doc/CompsApi.md) | [**grantAdminComp**](doc/CompsApi.md#grantadmincomp) | **POST** /v1/admin/comps | Give someone a plan free for some months (instance owner)
@@ -1710,6 +1711,7 @@ Class | Method | HTTP request | Description
  - [SlackInstallLink](doc/SlackInstallLink.md)
  - [SnoozeDevicePermissions200Response](doc/SnoozeDevicePermissions200Response.md)
  - [SnoozeDevicePermissionsRequest](doc/SnoozeDevicePermissionsRequest.md)
+ - [StarAsk](doc/StarAsk.md)
  - [StartAgentImportRequest](doc/StartAgentImportRequest.md)
  - [StartAgentImportRequestFilesInner](doc/StartAgentImportRequestFilesInner.md)
  - [StartChatLinkRequest](doc/StartChatLinkRequest.md)

@@ -209,6 +209,20 @@ void main() {
       expect(await p.moment(ReviewMoment.purchase), isFalse);
       expect(asked, 1);
     });
+
+    test('keeps seven days from the GitHub star ask (D-577)', () async {
+      final p = await prompt(TargetPlatform.iOS);
+      SharedPreferences.setMockInitialValues({
+        'casama.starAsk.asked': now.subtract(const Duration(days: 6, hours: 23)).toIso8601String(),
+      });
+      expect(await p.moment(ReviewMoment.purchase), isFalse);
+      expect(asked, 0);
+      SharedPreferences.setMockInitialValues({
+        'casama.starAsk.asked': now.subtract(const Duration(days: 7)).toIso8601String(),
+      });
+      expect(await p.moment(ReviewMoment.purchase), isTrue);
+      expect(asked, 1);
+    });
   });
   group('which builds can ask for a store review', () {
     bool supported(TargetPlatform platform, String distribution, {bool isWeb = false}) =>

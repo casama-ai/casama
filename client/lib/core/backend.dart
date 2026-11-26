@@ -1799,6 +1799,8 @@ abstract class Backend {
   // Admin → Testimonials (owner only).
   Future<List<PublicTestimonial>> testimonials({TestimonialPlace? place});
   Future<TestimonialAsk> testimonialAsk();
+  // The one-time GitHub star ask on Casama Cloud (D-577): allowed, and whether you're a developer.
+  Future<StarAsk> starAsk();
   Future<void> submitTestimonial({required String quote, required bool consent, String? orgId, String? platform});
   Future<List<AdminTestimonial>> adminTestimonials();
   Future<AdminTestimonial> adminCreateTestimonial(CreateAdminTestimonialRequest request);

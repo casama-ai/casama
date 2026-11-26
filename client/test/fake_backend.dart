@@ -1654,6 +1654,14 @@ class FakeBackend implements Backend {
   }
   @override
   Future<TestimonialAsk> testimonialAsk() async => testimonialAskState;
+
+  StarAsk starAskState = StarAsk(ask: true, developer: false);
+  int starAskCalls = 0;
+  @override
+  Future<StarAsk> starAsk() async {
+    starAskCalls++;
+    return starAskState;
+  }
   @override
   Future<void> submitTestimonial({required String quote, required bool consent, String? orgId, String? platform}) async {
     submittedTestimonials.add((quote: quote, consent: consent));

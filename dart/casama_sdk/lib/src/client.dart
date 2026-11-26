@@ -47,12 +47,14 @@ class CasamaClient {
   final SessionStore sessions;
 
   /// Connects to an API server and loads its public configuration, or uses [config] when the
-  /// caller already has it (saves a round trip).
-  static Future<CasamaClient> connect(String baseUrl, {SessionStore? sessions, PublicConfig? config}) async {
+  /// caller already has it (saves a round trip). [userAgent] goes with sign-in calls
+  /// ([AuthClient.userAgent]); the `casama` CLI sends `casama-cli/<version>`.
+  static Future<CasamaClient> connect(String baseUrl,
+      {SessionStore? sessions, PublicConfig? config, String? userAgent}) async {
     final dio = Dio(BaseOptions(baseUrl: baseUrl, connectTimeout: const Duration(seconds: 10), receiveTimeout: const Duration(seconds: 60)));
     final api = CasamaApi(dio: dio, interceptors: const []);
     config ??= (await api.getSystemApi().getConfig()).data!;
-    final auth = AuthClient(supabaseUrl: config.supabaseUrl, anonKey: config.supabaseAnonKey);
+    final auth = AuthClient(supabaseUrl: config.supabaseUrl, anonKey: config.supabaseAnonKey, userAgent: userAgent);
     final client = CasamaClient._(baseUrl, api, config, auth, sessions ?? MemorySessionStore());
     dio.interceptors.add(
       InterceptorsWrapper(
@@ -107,6 +109,9 @@ class CasamaClient {
 
   /// Testimonials (D-545): the public quotes, the app's ask, and Admin → Testimonials.
   TestimonialsApi get testimonials => api.getTestimonialsApi();
+
+  /// The open-source community (D-577): whether the app may ask once for a GitHub star.
+  CommunityApi get community => api.getCommunityApi();
 
   /// Free plans for friends (docs/COMP-PLANS-PLAN.md): gift codes, and the owner's grants.
   CompsApi get comps => api.getCompsApi();
