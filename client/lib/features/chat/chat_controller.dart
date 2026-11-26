@@ -17,6 +17,7 @@ import '../computer/bot_cursors.dart';
 import '../island/run_tracker.dart';
 import '../permissions/permissions_request.dart';
 import '../community/community.dart';
+import '../referrals/invite_ask.dart' show inviteAskProvider;
 import '../testimonials/testimonials.dart';
 
 enum ToolStatus { running, done, failed }
@@ -2219,13 +2220,14 @@ class ChatController extends Notifier<ChatState> {
         // Only a run the person sent from here can be the onboarding moment, not a check-in.
         // When the store's sheet didn't show, the app's own "Tell us in a sentence" may (D-545, off
         // unless the owner turns it on). Its answer never decides anything about the store's sheet.
-        // Last, on Casama Cloud, the one-time "Casama is open source" ask (D-577), which only counts
-        // the reply when another ask showed.
+        // Then, on Casama Cloud, the one-time "Casama is open source" ask (D-577), and last the
+        // one-time invite ask (D-588); each only counts the reply when another ask showed.
         final personAsked = state.activeRunId == _sentRun;
         bool stillIdle() => ref.mounted && state.activeRunId == null;
         final review = ref.read(reviewPromptProvider);
         final testimonial = ref.read(testimonialAskProvider);
         final star = ref.read(starAskProvider);
+        final invite = ref.read(inviteAskProvider);
         unawaited(() async {
           var shown = await review.moment(
             ReviewMoment.replyFinished,
@@ -2234,7 +2236,9 @@ class ChatController extends Notifier<ChatState> {
           );
           if (!personAsked) return;
           if (!shown) shown = await testimonial.moment(stillIdle: stillIdle);
-          await star.moment(stillIdle: stillIdle, anotherShown: shown);
+          shown = await star.moment(stillIdle: stillIdle, anotherShown: shown) || shown;
+          // While Cloud is invite-only: "Who else would use this?", once (D-588).
+          await invite.moment(stillIdle: stillIdle, anotherShown: shown);
         }());
         entries.removeWhere((x) => x is MessageEntry && x.streaming);
         _dropSupersededFailures(entries, e.runId);

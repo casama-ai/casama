@@ -18,6 +18,7 @@ import 'landing_labels.dart';
 import 'meta_sdk.dart';
 import 'providers.dart';
 import 'telemetry.dart';
+import 'tracking_permission.dart';
 
 /// Ads attribution in the app (docs/ADS-ATTRIBUTION-PLAN.md, Phases 1 and 3): the install record
 /// after sign-in, Meta's SDK behind its gates, the buyer before each purchase, and RevenueCat's
@@ -79,13 +80,19 @@ class AdsAttribution {
   }
 
   /// Posts this install's record once per sign-in, and again when Meta's anonymous id appears or
-  /// goes. Needs Casama Cloud, an install id and the "Share usage data" switch on. Never throws.
+  /// goes or the iPhone's tracking answer changes ([iosTracking], D-589). Needs Casama Cloud, an
+  /// install id and the "Share usage data" switch on. Never throws.
   static Future<void> postInstall({
     required String userId,
     required String? metaAnonId,
+    String? iosTracking,
     @visibleForTesting SharedPreferences? prefs,
     @visibleForTesting
-    Future<Map<String, Object?>> Function(String installId, String? metaAnonId)?
+    Future<Map<String, Object?>> Function(
+      String installId,
+      String? metaAnonId,
+      String? iosTracking,
+    )?
     collect,
   }) async {
     final b = backend;
@@ -99,11 +106,13 @@ class AdsAttribution {
     try {
       if (!await Analytics.isConsentEnabled()) return;
       final p = prefs ?? await SharedPreferences.getInstance();
-      final signature = '$userId|$installId|${metaAnonId ?? ''}';
+      final signature =
+          '$userId|$installId|${metaAnonId ?? ''}|${iosTracking ?? ''}';
       if (p.getString(_installSentKey) == signature) return;
       final body = await (collect ?? collectInstallRecord)(
         installId,
         metaAnonId,
+        iosTracking,
       );
       await b.postAttributionInstall(body);
       await p.setString(_installSentKey, signature);
@@ -123,10 +132,12 @@ class AdsAttribution {
   }
 
   /// The install record from this device: app and device details, Meta's anonymous id (only
-  /// while its SDK runs), GA4's app instance id, Google Play's referrer and the web's landing labels.
+  /// while its SDK runs), the iPhone's tracking answer, GA4's app instance id, Google Play's
+  /// referrer and the web's landing labels.
   static Future<Map<String, Object?>> collectInstallRecord(
     String installId,
     String? metaAnonId,
+    String? iosTracking,
   ) async {
     PackageInfo? info;
     try {
@@ -155,6 +166,7 @@ class AdsAttribution {
       screenDensity: view?.devicePixelRatio,
       cpuCores: deviceCpuCores(),
       metaAnonId: MetaSdk.running ? metaAnonId : null,
+      iosTracking: iosTracking,
       ga4AppInstanceId: await Analytics.ga4AppInstanceId(),
       playReferrer: await InstallTracker.playReferrerText(),
       landing: kIsWeb ? landingLabelsBody(Attribution.initialWeb) : null,
@@ -179,6 +191,7 @@ Map<String, Object?> installRecordBody({
   double? screenDensity,
   int? cpuCores,
   String? metaAnonId,
+  String? iosTracking,
   String? ga4AppInstanceId,
   String? playReferrer,
   Map<String, Object>? landing,
@@ -208,12 +221,21 @@ Map<String, Object?> installRecordBody({
     if (cpuCores != null && cpuCores > 0 && cpuCores <= 1024)
       'cpu_cores': cpuCores,
     'meta_anon_id': ?clip(metaAnonId, 100),
+    if (platform == 'ios' && _iosTrackingValues.contains(iosTracking))
+      'ios_tracking': iosTracking,
     if (ga4 != null && RegExp(r'^[A-Za-z0-9_-]+$').hasMatch(ga4))
       'ga4_app_instance_id': ga4,
     'play_referrer': ?clip(playReferrer, 2000),
     if (landing != null && landing.isNotEmpty) 'landing': landing,
   };
 }
+
+const _iosTrackingValues = {
+  'authorized',
+  'denied',
+  'restricted',
+  'not_determined',
+};
 
 /// RevenueCat's reserved source attributes from the person's frozen acquisition. Never `$fbAnonId`
 /// (RevenueCat's Meta forwarder stays off, Decision 1).
@@ -287,6 +309,7 @@ final adsAttributionSyncProvider = Provider<void>((ref) {
     if (status != null) {
       await AdsAttribution._saveMetaAllowed(userId, status.metaSdkAllowed);
     }
+    final tracking = ref.read(trackingPermissionProvider);
     final allowed = metaSdkMayStart(
       officialBuild: MetaConfig.officialBuild,
       hasKeys: MetaConfig.hasKeys,
@@ -298,9 +321,14 @@ final adsAttributionSyncProvider = Provider<void>((ref) {
           status?.metaSdkAllowed ??
           await AdsAttribution.savedMetaAllowed(userId),
       analyticsConsent: await Analytics.isConsentEnabled(),
+      trackingAllowed: tracking == TrackingStatus.authorized,
     );
     final anonId = await MetaSdk.apply(allowed);
-    await AdsAttribution.postInstall(userId: userId, metaAnonId: anonId);
+    await AdsAttribution.postInstall(
+      userId: userId,
+      metaAnonId: anonId,
+      iosTracking: tracking.wire,
+    );
     await syncSource();
   }
 
@@ -313,4 +341,8 @@ final adsAttributionSyncProvider = Provider<void>((ref) {
     }
   });
   ref.listen(currentOrgIdProvider, (_, _) => unawaited(syncSource()));
+  // Allow or Ask App Not to Track (D-589): start or stop Meta's SDK and tell the server.
+  ref.listen(trackingPermissionProvider, (prev, next) {
+    if (prev != next) unawaited(sync(ref.read(attributionStatusProvider).value));
+  });
 });

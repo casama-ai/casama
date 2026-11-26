@@ -32,4 +32,9 @@ CASAMA_WIDGET_DEBUG_PROFILE =
 CASAMA_FILE_PROVIDER_DEBUG_ENTITLEMENTS = CasamaFileProvider/CasamaFileProviderLocal.entitlements
 CASAMA_FILE_PROVIDER_DEBUG_SIGN_STYLE = Automatic
 CASAMA_FILE_PROVIDER_DEBUG_PROFILE =
+
+// The Share, Action and Safari extensions need no profile (their app group is team-prefixed), but
+// a Debug build signed with an Apple Development certificate has to sign them with it too, or Xcode
+// refuses to embed them ("not signed with the same certificate as the parent app").
+CASAMA_EXTENSION_DEBUG_SIGN_STYLE = Automatic
 #include? "Signing.local.xcconfig"

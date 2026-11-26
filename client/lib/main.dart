@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui' show DartPluginRegistrant;
 
 import 'package:dio/dio.dart';
 import 'package:material_ui/material_ui.dart';
@@ -11,9 +12,11 @@ import 'app.dart';
 import 'core/linux_file_dialogs.dart';
 import 'core/local_cache.dart';
 import 'core/ads_attribution.dart';
+import 'core/tracking_permission.dart';
 import 'core/ai_consent_device.dart';
 import 'core/config.dart';
 import 'core/desktop_window.dart';
+import 'core/inline_replies.dart';
 import 'core/open_links.dart';
 import 'core/link_browser.dart';
 import 'core/providers.dart';
@@ -29,6 +32,7 @@ import 'features/app_lock/app_lock.dart';
 import 'features/app_lock/session_store.dart';
 import 'features/community/community.dart';
 import 'features/app_functions/app_functions_headless.dart';
+import 'features/devices/device_events.dart' show connectBackgroundBackend;
 import 'features/link/keep_awake.dart';
 import 'features/selfhost/guided_setup.dart';
 import 'theme/appearance.dart';
@@ -87,6 +91,8 @@ Future<(Widget, SupabaseBackend)> bootstrap(AppConfig config, {VoidCallback? onS
   // Ads attribution (docs/ADS-ATTRIBUTION-PLAN.md): Casama Cloud only, after sign-in.
   AdsAttribution.cloud = cloud;
   AdsAttribution.backend = backend;
+  // Apple's tracking prompt (D-589): the official iPhone and iPad app on Casama Cloud only.
+  TrackingPermissionNotifier.cloud = cloud;
   // Bot pictures are served by this server; avatars everywhere ask it for them.
   BotAvatar.imageUrl = backend.botImageUrl;
   if (saved != null) unawaited(_refreshServerConfig(config.apiUrl, api, backend, saved, onServerMoved));
@@ -174,6 +180,21 @@ Future<void> appFunctionsMain() async {
 
 /// The headless Gemini container, held for the engine's life.
 ProviderContainer? appFunctionsContainer;
+
+/// The Dart side of an iPhone notification reply typed while Casama isn't running
+/// (docs/APPLE-INTEGRATIONS-PLAN.md §5.3): iOS starts the app in the background with no scene, so
+/// the app's engine never starts, and `NotificationsBridge` in AppDelegate.swift starts a headless
+/// engine on this entry point. It connects only the saved sign-in and the same backend, with no
+/// window and no app tree, sends the queued replies as the app does, and native code stops the
+/// engine once they're answered.
+@pragma('vm:entry-point')
+Future<void> inlineReplyMain() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // The plugins' Dart halves (preferences, the keychain): a no-op when the engine has already
+  // registered them for this entry point.
+  DartPluginRegistrant.ensureInitialized();
+  await runHeadlessInlineReplies(connectBackgroundBackend);
+}
 
 /// Connects to the server. The first frame is the launch cloud, which then plays; a failure offers a retry.
 class StartupGate extends StatefulWidget {

@@ -19,3 +19,5 @@ CASAMA_WIDGET_DEBUG_PROFILE = Casama Widgets Mac Development
 CASAMA_FILE_PROVIDER_DEBUG_ENTITLEMENTS = CasamaFileProvider/CasamaFileProvider.entitlements
 CASAMA_FILE_PROVIDER_DEBUG_SIGN_STYLE = Manual
 CASAMA_FILE_PROVIDER_DEBUG_PROFILE = Casama File Provider Mac Development
+// The Share, Action and Safari extensions: signed with the same certificate, no profile needed.
+CASAMA_EXTENSION_DEBUG_SIGN_STYLE = Manual

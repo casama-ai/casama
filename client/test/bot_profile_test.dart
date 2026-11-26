@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:casama_sdk/casama_sdk.dart';
+import 'package:casama/core/age_range.dart';
 import 'package:casama/core/local_cache.dart';
 import 'package:casama/core/providers.dart';
 import 'package:casama/features/bots/bot_profile_screen.dart';
@@ -408,6 +409,21 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.textContaining('Use this computer for bots'), findsOneWidget);
       expect(backend.placePreferenceSets, isEmpty);
+    });
+
+    testWidgets('teen mode shows no computer at all: no tile, no Computer, no Your computer', (tester) async {
+      await setSize(tester, const Size(800, 2400));
+      final backend = FakeBackend()
+        ..extraComputers = [local()]
+        ..botPlacesByBot[botId] = BotPlaces(botId: botId, mode: PlaceMode.auto, deviceId: null, places: [home(), mine()]);
+      await tester.pumpWidget(_profileApp(backend, _router()));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('botYourComputer')), findsOneWidget);
+      ProviderScope.containerOf(tester.element(find.byType(BotProfileScreen))).read(ageBandProvider.notifier).setBand(AgeBand.teen13to15);
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('botYourComputer')), findsNothing);
+      expect(find.byKey(const Key('botComputer')), findsNothing);
+      expect(find.byKey(const Key('botTile-computer')), findsNothing);
     });
 
     testWidgets('lent: the row names the computer and opens Works on; Computer lists only the bot\'s own', (tester) async {

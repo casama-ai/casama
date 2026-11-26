@@ -5172,6 +5172,24 @@ class AppLocalizationsEn extends AppLocalizations {
       'Turn on Share Usage Data to use this.';
 
   @override
+  String get trackingTile => 'Allow Tracking';
+
+  @override
+  String get trackingAllowed =>
+      'Allowed. Meta\'s SDK runs on this device and Casama can tell Meta when you join or subscribe after seeing our ad. Change it in the Settings app.';
+
+  @override
+  String get trackingNotAllowed =>
+      'Not allowed. Nothing from this device goes to Meta. Change it in the Settings app.';
+
+  @override
+  String get trackingNotAsked =>
+      'Casama hasn\'t asked yet. Until you allow it, nothing from this device goes to Meta.';
+
+  @override
+  String get trackingOpenSettings => 'Open Settings';
+
+  @override
   String get workspaceAnalytics => 'Usage Data for This Workspace';
 
   @override
@@ -18714,7 +18732,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get waitlistSubtitle =>
-      'We\'re letting people in every day. You\'ll get one email when it\'s your turn.';
+      'We let people in a few at a time. You\'ll get one email when it\'s your turn.';
 
   @override
   String get waitlistNote => 'What would you have a bot do first?';
@@ -18738,7 +18756,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get waitlistJoinedBody =>
-      'We\'re letting people in every day. You\'ll get one email when it\'s your turn, and nothing else unless you asked for the monthly email.';
+      'We let people in a few at a time. You\'ll get one email when it\'s your turn, and nothing else unless you asked for the monthly email. Know someone who uses Casama? An invite from them gets you in right away.';
 
   @override
   String get waitlistJoinedCode => 'Have an invite code? Enter it here.';
@@ -18832,6 +18850,77 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get inviteFriendsInvitesLocked =>
       'Your invites unlock after your first finished chat.';
+
+  @override
+  String inviteShareSaved(int count, String link) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'I saved you one of my $count Casama invites.',
+      one: 'I saved you my Casama invite.',
+    );
+    return '$_temp0 Casama is invite-only for now, and this gets you in right away: $link';
+  }
+
+  @override
+  String inviteShareSavedBonus(int count, String link, String amount) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'I saved you one of my $count Casama invites.',
+      one: 'I saved you my Casama invite.',
+    );
+    return '$_temp0 Casama is invite-only for now. This gets you in right away, and you get $amount of free usage after your first chat: $link';
+  }
+
+  @override
+  String inviteShareNamed(String name, String text) {
+    return '$name, $text';
+  }
+
+  @override
+  String get inviteNameTitle => 'Who\'s It For?';
+
+  @override
+  String get inviteNameHelp =>
+      'Add their first name and the invite page greets them by name. You can leave it empty.';
+
+  @override
+  String get inviteNameHint => 'First name';
+
+  @override
+  String get inviteNameShare => 'Share Invite';
+
+  @override
+  String get inviteAskTitle => 'Who Else Would Use This?';
+
+  @override
+  String inviteAskBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'You have $count invites to Casama. Each one lets a friend in right away.',
+      one: 'You have 1 invite to Casama. It lets a friend in right away.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String inviteAskRewardBoth(String amount) {
+    return 'You each get $amount of free usage after their first chat.';
+  }
+
+  @override
+  String inviteAskReward(String amount) {
+    return 'You get $amount of free usage after their first chat.';
+  }
+
+  @override
+  String get inviteAskSend => 'Send an Invite';
+
+  @override
+  String get inviteAskNotNow => 'Not Now';
 
   @override
   String get adminWaitlist => 'Waitlist';

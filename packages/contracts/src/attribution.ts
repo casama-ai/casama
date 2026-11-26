@@ -69,6 +69,14 @@ export const PostAttributionInstallRequest = z
       .max(100)
       .regex(/^[A-Za-z0-9_:.-]+$/)
       .optional(),
+    /** Only an `authorized` iPhone or iPad sends app events to Meta; ignored on other platforms. */
+    ios_tracking: z
+      .enum(["authorized", "denied", "restricted", "not_determined"])
+      .optional()
+      .openapi({
+        description:
+          "iPhone and iPad: the App Tracking Transparency state when the record was sent",
+      }),
     /** GA4's app instance id, for joining our record to GA4. */
     ga4_app_instance_id: z
       .string()

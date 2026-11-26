@@ -248,6 +248,8 @@ class TestimonialAskPrompt {
   static const _reviewAskedKey = 'casama.review.asked';
   // The GitHub star ask's (community.dart): it keeps seven days from every other ask (D-577).
   static const _starAskedKey = 'casama.starAsk.asked';
+  // The one-time invite ask's (invite_ask.dart, D-588): seven days apart too.
+  static const _inviteAskedKey = 'casama.inviteAsk.asked';
 
   var _busy = false;
 
@@ -266,9 +268,11 @@ class TestimonialAskPrompt {
     if (asked != null && now.difference(asked).inDays < gapDays) return false;
     final store = DateTime.tryParse(p.getString(_reviewAskedKey) ?? '');
     if (store != null && now.difference(store).inHours < 48) return false;
-    final star = DateTime.tryParse(p.getString(_starAskedKey) ?? '');
-    if (star != null && now.difference(star) < const Duration(days: 7)) {
-      return false;
+    for (final key in [_starAskedKey, _inviteAskedKey]) {
+      final at = DateTime.tryParse(p.getString(key) ?? '');
+      if (at != null && now.difference(at) < const Duration(days: 7)) {
+        return false;
+      }
     }
     return true;
   }

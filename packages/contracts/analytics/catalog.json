@@ -428,11 +428,18 @@
     {
       "name": "referral_shared",
       "by": ["client"],
-      "description": "Someone copied or shared their personal invite link or code (D-211).",
+      "description": "Someone copied or shared their personal invite link or code (D-211). place: settings (Invite Friends) or ask (the one-time ask after a reply, D-588). named: a friend's first name went on the link (?to=).",
       "properties": {
         "method": {
           "type": "string",
           "values": ["copy", "share", "copy_code"]
+        },
+        "place": {
+          "type": "string",
+          "values": ["settings", "ask"]
+        },
+        "named": {
+          "type": "boolean"
         }
       },
       "funnels": ["F7"],
@@ -1604,6 +1611,22 @@
           "type": "boolean"
         }
       }
+    },
+    {
+      "name": "invite_ask_shown",
+      "by": ["client"],
+      "description": "The one-time \"Who else would use this?\" ask showed after a finished reply on Casama Cloud while new accounts are by invitation and the person has invites left (D-588). invites_left: how many.",
+      "properties": {
+        "invites_left": {
+          "type": "number"
+        }
+      }
+    },
+    {
+      "name": "invite_ask_dismissed",
+      "by": ["client"],
+      "description": "The one-time invite ask was closed with Not now or by closing the sheet (D-588). It never shows again on this device.",
+      "properties": {}
     },
     {
       "name": "github_star_ask_dismissed",

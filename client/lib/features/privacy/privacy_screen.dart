@@ -14,6 +14,7 @@ import '../../core/widgets.dart';
 import '../../core/haptics.dart';
 import '../../core/analytics.dart';
 import '../../core/ads_attribution.dart';
+import '../../core/tracking_permission.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_tokens.dart';
 import '../../ui/adaptive_modal.dart';
@@ -236,6 +237,28 @@ class _PrivacyScreenState extends ConsumerState<PrivacyScreen> {
                       ),
                     );
                   },
+                ),
+              ),
+            // Apple's tracking prompt (D-589): what this iPhone or iPad answered, changed in the Settings app.
+            if (ref.watch(trackingPermissionProvider) case final tracking when tracking != TrackingStatus.unavailable)
+              HighlightTarget(
+                active: widget.highlight == 'tracking',
+                child: GroupedTile(
+                  key: const Key('trackingTile'),
+                  icon: LucideIcons.scanEye,
+                  title: l10n.trackingTile,
+                  subtitle: switch (tracking) {
+                    TrackingStatus.authorized => l10n.trackingAllowed,
+                    TrackingStatus.notDetermined => l10n.trackingNotAsked,
+                    _ => l10n.trackingNotAllowed,
+                  },
+                  trailing: tracking == TrackingStatus.restricted
+                      ? null
+                      : TextButton(
+                          key: const Key('trackingOpenSettings'),
+                          onPressed: () => ref.read(trackingPermissionProvider.notifier).openSettings(),
+                          child: Text(l10n.trackingOpenSettings),
+                        ),
                 ),
               ),
             // AI providers (D-421): withdrawing brings the consent step back before anything else is sent.

@@ -69,6 +69,7 @@ void main() {
       bool signedIn = true,
       bool? serverAllows = true,
       bool analyticsConsent = true,
+      bool trackingAllowed = true,
     }) => metaSdkMayStart(
       officialBuild: officialBuild,
       hasKeys: hasKeys,
@@ -78,6 +79,7 @@ void main() {
       signedIn: signedIn,
       serverAllows: serverAllows,
       analyticsConsent: analyticsConsent,
+      trackingAllowed: trackingAllowed,
     );
 
     test('opens only when every gate is open, on iOS and Android', () {
@@ -106,6 +108,14 @@ void main() {
       );
       expect(gate(serverAllows: null), isFalse, reason: 'no answer yet');
       expect(gate(analyticsConsent: false), isFalse, reason: 'usage data off');
+    });
+
+    test('iPhone and iPad need Allow in Apple\'s tracking prompt; Android has no such prompt (D-589)', () {
+      expect(gate(trackingAllowed: false), isFalse);
+      expect(
+        gate(platform: TargetPlatform.android, trackingAllowed: false),
+        isTrue,
+      );
     });
 
     test('this test build has no Meta keys, so it can never start', () {
@@ -141,6 +151,7 @@ void main() {
       final off = await AdsAttribution.collectInstallRecord(
         'abcdefgh12345678',
         'XZ1234-abcd',
+        null,
       );
       expect(off.containsKey('meta_anon_id'), isFalse);
       expect(off['install_id'], 'abcdefgh12345678');
@@ -151,6 +162,7 @@ void main() {
       final on = await AdsAttribution.collectInstallRecord(
         'abcdefgh12345678',
         'XZ1234-abcd',
+        null,
       );
       expect(on['meta_anon_id'], 'XZ1234-abcd');
     });
@@ -189,10 +201,56 @@ void main() {
       return backend;
     }
 
-    Future<Map<String, Object?>> collect(String id, String? anon) async => {
+    Future<Map<String, Object?>> collect(
+      String id,
+      String? anon,
+      String? tracking,
+    ) async => {
       'install_id': id,
       'meta_anon_id': ?anon,
+      'ios_tracking': ?tracking,
     };
+
+    test('carries the iPhone\'s tracking answer, only for iOS and only known values (D-589)', () {
+      Map<String, Object?> body(String platform, String? tracking) =>
+          installRecordBody(
+            installId: 'abcdefgh12345678',
+            platform: platform,
+            iosTracking: tracking,
+          );
+      expect(body('ios', 'authorized')['ios_tracking'], 'authorized');
+      expect(body('ios', 'denied')['ios_tracking'], 'denied');
+      expect(body('ios', 'not_determined')['ios_tracking'], 'not_determined');
+      expect(body('ios', null).containsKey('ios_tracking'), isFalse);
+      expect(body('ios', 'maybe').containsKey('ios_tracking'), isFalse);
+      expect(body('android', 'authorized').containsKey('ios_tracking'), isFalse);
+    });
+
+    test('posts again when the tracking answer changes (D-589)', () async {
+      final backend = await started();
+      AdsAttribution.cloud = true;
+      await AdsAttribution.postInstall(
+        userId: 'u1',
+        metaAnonId: null,
+        iosTracking: 'not_determined',
+        collect: collect,
+      );
+      await AdsAttribution.postInstall(
+        userId: 'u1',
+        metaAnonId: null,
+        iosTracking: 'not_determined',
+        collect: collect,
+      );
+      expect(backend.attributionInstalls, hasLength(1));
+      await AdsAttribution.postInstall(
+        userId: 'u1',
+        metaAnonId: null,
+        iosTracking: 'denied',
+        collect: collect,
+      );
+      expect(backend.attributionInstalls, hasLength(2));
+      expect(backend.attributionInstalls.last['ios_tracking'], 'denied');
+    });
 
     test('posts once per sign-in, again when Meta\'s id appears, and again after signing out', () async {
       final backend = await started();

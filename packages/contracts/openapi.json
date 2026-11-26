@@ -31425,6 +31425,16 @@
             "maxLength": 100,
             "pattern": "^[A-Za-z0-9_:.-]+$"
           },
+          "ios_tracking": {
+            "type": "string",
+            "enum": [
+              "authorized",
+              "denied",
+              "restricted",
+              "not_determined"
+            ],
+            "description": "iPhone and iPad: the App Tracking Transparency state when the record was sent"
+          },
           "ga4_app_instance_id": {
             "type": "string",
             "maxLength": 64,

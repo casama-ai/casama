@@ -82,30 +82,38 @@ class DeviceEventQueue {
 }
 
 /// A backend for work that runs without the app's UI (a geofence waking the app in the background).
+/// Null when nobody is signed in or it can't connect.
 Future<Backend?> backgroundBackend() async {
   try {
-    final config = await ServerAddress.load();
-    // The settings the app saved (D-158): a background wake may have little or no network.
-    final server = await ServerConfigCache.read(config.apiUrl) ?? (await CasamaClient.connect(config.apiUrl)).config;
-    try {
-      Supabase.instance.client;
-    } catch (_) {
-      // The same store as the app, so the sign-in is found when the app lock keeps it in the
-      // keychain (D-375).
-      await Supabase.initialize(
-        url: server.supabaseUrl,
-        publishableKey: server.supabaseAnonKey,
-        httpClient: TimeoutHttpClient(),
-        authOptions: FlutterAuthClientOptions(localStorage: AuthSessionStore.create(server.supabaseUrl)),
-      );
-    }
-    final supabase = Supabase.instance.client;
-    if (supabase.auth.currentSession == null) return null;
-    final api = await SupabaseBackend.connectApi(config.apiUrl, supabase, config: server);
-    return SupabaseBackend(supabase, api, config: server);
+    return await connectBackgroundBackend();
   } catch (_) {
     return null;
   }
+}
+
+/// [backgroundBackend], but failing to connect throws, so a caller can tell it from nobody being
+/// signed in (null): an iPhone notification reply typed while Casama wasn't running is dropped when
+/// signed out and kept for later when there's no connection (inline_replies.dart).
+Future<Backend?> connectBackgroundBackend() async {
+  final config = await ServerAddress.load();
+  // The settings the app saved (D-158): a background wake may have little or no network.
+  final server = await ServerConfigCache.read(config.apiUrl) ?? (await CasamaClient.connect(config.apiUrl)).config;
+  try {
+    Supabase.instance.client;
+  } catch (_) {
+    // The same store as the app, so the sign-in is found when the app lock keeps it in the
+    // keychain (D-375).
+    await Supabase.initialize(
+      url: server.supabaseUrl,
+      publishableKey: server.supabaseAnonKey,
+      httpClient: TimeoutHttpClient(),
+      authOptions: FlutterAuthClientOptions(localStorage: AuthSessionStore.create(server.supabaseUrl)),
+    );
+  }
+  final supabase = Supabase.instance.client;
+  if (supabase.auth.currentSession == null) return null;
+  final api = await SupabaseBackend.connectApi(config.apiUrl, supabase, config: server);
+  return SupabaseBackend(supabase, api, config: server);
 }
 
 /// Geofences are named `"place:<name>"`; entering one is "arrive", leaving it "leave".

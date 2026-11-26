@@ -7966,6 +7966,36 @@ abstract class AppLocalizations {
   /// **'Turn on Share Usage Data to use this.'**
   String get measureAdsNeedsUsageData;
 
+  /// Privacy settings on iPhone and iPad: the App Tracking Transparency answer for Casama (D-589). Apple's own name for the setting.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow Tracking'**
+  String get trackingTile;
+
+  /// No description provided for @trackingAllowed.
+  ///
+  /// In en, this message translates to:
+  /// **'Allowed. Meta\'s SDK runs on this device and Casama can tell Meta when you join or subscribe after seeing our ad. Change it in the Settings app.'**
+  String get trackingAllowed;
+
+  /// No description provided for @trackingNotAllowed.
+  ///
+  /// In en, this message translates to:
+  /// **'Not allowed. Nothing from this device goes to Meta. Change it in the Settings app.'**
+  String get trackingNotAllowed;
+
+  /// No description provided for @trackingNotAsked.
+  ///
+  /// In en, this message translates to:
+  /// **'Casama hasn\'t asked yet. Until you allow it, nothing from this device goes to Meta.'**
+  String get trackingNotAsked;
+
+  /// No description provided for @trackingOpenSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Settings'**
+  String get trackingOpenSettings;
+
   /// No description provided for @workspaceAnalytics.
   ///
   /// In en, this message translates to:
@@ -29952,7 +29982,7 @@ abstract class AppLocalizations {
   /// No description provided for @waitlistSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'We\'re letting people in every day. You\'ll get one email when it\'s your turn.'**
+  /// **'We let people in a few at a time. You\'ll get one email when it\'s your turn.'**
   String get waitlistSubtitle;
 
   /// No description provided for @waitlistNote.
@@ -29994,7 +30024,7 @@ abstract class AppLocalizations {
   /// No description provided for @waitlistJoinedBody.
   ///
   /// In en, this message translates to:
-  /// **'We\'re letting people in every day. You\'ll get one email when it\'s your turn, and nothing else unless you asked for the monthly email.'**
+  /// **'We let people in a few at a time. You\'ll get one email when it\'s your turn, and nothing else unless you asked for the monthly email. Know someone who uses Casama? An invite from them gets you in right away.'**
   String get waitlistJoinedBody;
 
   /// No description provided for @waitlistJoinedCode.
@@ -30128,6 +30158,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your invites unlock after your first finished chat.'**
   String get inviteFriendsInvitesLocked;
+
+  /// D-588. The text a member shares while Casama Cloud is invite-only. count: the member's invites in all. Only about letting the friend in (App Store 3.2.2).
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{I saved you my Casama invite.} other{I saved you one of my {count} Casama invites.}} Casama is invite-only for now, and this gets you in right away: {link}'**
+  String inviteShareSaved(int count, String link);
+
+  /// D-588. As inviteShareSaved, with the friend's welcome bonus.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{I saved you my Casama invite.} other{I saved you one of my {count} Casama invites.}} Casama is invite-only for now. This gets you in right away, and you get {amount} of free usage after your first chat: {link}'**
+  String inviteShareSavedBonus(int count, String link, String amount);
+
+  /// D-588. The shared text with the friend's first name in front, when one was given.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}, {text}'**
+  String inviteShareNamed(String name, String text);
+
+  /// No description provided for @inviteNameTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Who\'s It For?'**
+  String get inviteNameTitle;
+
+  /// No description provided for @inviteNameHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Add their first name and the invite page greets them by name. You can leave it empty.'**
+  String get inviteNameHelp;
+
+  /// No description provided for @inviteNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'First name'**
+  String get inviteNameHint;
+
+  /// No description provided for @inviteNameShare.
+  ///
+  /// In en, this message translates to:
+  /// **'Share Invite'**
+  String get inviteNameShare;
+
+  /// No description provided for @inviteAskTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Who Else Would Use This?'**
+  String get inviteAskTitle;
+
+  /// D-588. The one-time ask after a finished reply while Casama Cloud is invite-only. Never 'invite friends to get in' (App Store 3.2.2).
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{You have 1 invite to Casama. It lets a friend in right away.} other{You have {count} invites to Casama. Each one lets a friend in right away.}}'**
+  String inviteAskBody(int count);
+
+  /// No description provided for @inviteAskRewardBoth.
+  ///
+  /// In en, this message translates to:
+  /// **'You each get {amount} of free usage after their first chat.'**
+  String inviteAskRewardBoth(String amount);
+
+  /// No description provided for @inviteAskReward.
+  ///
+  /// In en, this message translates to:
+  /// **'You get {amount} of free usage after their first chat.'**
+  String inviteAskReward(String amount);
+
+  /// No description provided for @inviteAskSend.
+  ///
+  /// In en, this message translates to:
+  /// **'Send an Invite'**
+  String get inviteAskSend;
+
+  /// No description provided for @inviteAskNotNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Not Now'**
+  String get inviteAskNotNow;
 
   /// No description provided for @adminWaitlist.
   ///

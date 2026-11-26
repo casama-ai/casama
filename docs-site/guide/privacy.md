@@ -374,13 +374,19 @@ The full rules are in the [privacy policy](https://casama.ai/privacy#ads).
   visit to the website, also the ad's click id (`fbclid`), the IP address and the browser. For the
   iPhone, iPad and Android apps, Meta's anonymous id for the app and app and device details; on
   Android also Google Play's install referrer and, while the switch is on, the advertising ID through
-  Meta's SDK.
-- **Meta's SDK** in the iPhone, iPad and Android apps reports installs and app opens only. There is
-  no tracking prompt on iPhone or iPad, so Meta is told tracking isn't allowed there.
+  Meta's SDK; on iPhone and iPad, the advertising identifier through Meta's SDK only after you allow
+  tracking.
+- **Meta's SDK** in the iPhone, iPad and Android apps reports installs and app opens only.
+- **iPhone and iPad ask first.** Once, after the first setup screens, the app shows Apple's tracking
+  prompt. Only after **Allow** does Meta's SDK run and does the server tell Meta about your steps.
+  After **Ask App Not to Track** (or no answer), nothing about you goes to Meta by any route. The
+  app still reports its install to Apple's SKAdNetwork, which gives only anonymous totals. Change
+  the answer in the Settings app (Casama → Allow Tracking); **Settings → Privacy → Allow Tracking**
+  in Casama shows it.
 - **What Meta never gets:** names, email addresses (hashed or not), chats, files, bot or workspace
   content, device data, health data or Google user data.
-- **When nothing goes to Meta:** in the EEA, the UK and Switzerland; from the Mac, Windows, Linux and
-  watch apps and the browser extension; from self-hosted servers and community builds; when a
+- **When nothing goes to Meta:** in the EEA, the UK and Switzerland; from the iPhone and iPad app
+  without Allow; from the Mac, Windows, Linux and watch apps and the browser extension; from self-hosted servers and community builds; when a
   browser sends Global Privacy Control or Do Not Track.
 - **The switch:** **Settings → Privacy → Help measure our ads**, on by default where the law allows.
   Turning off **Share Usage Data** turns it off too, and so does a workspace admin turning usage data

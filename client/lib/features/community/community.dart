@@ -181,6 +181,8 @@ class StarAskPrompt {
   static const _reviewDaysKey = 'casama.review.days';
   static const _reviewAskedKey = 'casama.review.asked';
   static const _testimonialAskedKey = 'casama.testimonial.asked';
+  // The one-time invite ask's (features/referrals/invite_ask.dart, D-588).
+  static const _inviteAskedKey = 'casama.inviteAsk.asked';
 
   var _busy = false;
   StarAsk? _server;
@@ -204,7 +206,7 @@ class StarAskPrompt {
     final days = (p.getStringList(_reviewDaysKey) ?? const []).length;
     if (days < (developer ? devDays : minDays)) return false;
     final now = _now();
-    for (final key in [_reviewAskedKey, _testimonialAskedKey]) {
+    for (final key in [_reviewAskedKey, _testimonialAskedKey, _inviteAskedKey]) {
       final at = DateTime.tryParse(p.getString(key) ?? '');
       if (at != null && now.difference(at) < const Duration(days: gapDays)) {
         return false;

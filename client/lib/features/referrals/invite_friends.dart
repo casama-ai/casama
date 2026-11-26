@@ -20,6 +20,7 @@ import '../../ui/painted_cover.dart';
 import '../../ui/shell_header.dart';
 import '../auth/invite_gate.dart' show openHaveInvite;
 import '../workspaces/join_flow.dart' show JoinCard, JoinCardSkeleton;
+import 'invite_ask.dart' show InvitePlace, sendInvite;
 import 'partners.dart';
 
 /// Invite friends (D-211): your invite code and link, what it has earned you, and who invited you.
@@ -127,20 +128,9 @@ class _InviteFriendsScreenState extends ConsumerState<InviteFriendsScreen> {
     if (mounted) showMessage(context, context.l10n.inviteFriendsCopied);
   }
 
-  Future<void> _share(Referral r) {
-    Analytics.log('referral_shared', {'method': 'share'});
-    final l10n = context.l10n;
-    return shareText(
-      r.welcomeUsd > 0
-          ? l10n.inviteFriendsShareTextBonus(
-              r.link!,
-              r.code!,
-              creditLabel(context, r.welcomeUsd),
-            )
-          : l10n.inviteFriendsShareText(r.link!, r.code!),
-      origin: shareOrigin(context),
-    );
-  }
+  // While Casama Cloud is invite-only this asks who it's for first (D-588, invite_ask.dart).
+  Future<void> _share(Referral r) =>
+      sendInvite(context, r, InvitePlace.settings, origin: shareOrigin(context));
 
   Future<void> _redeem() async {
     final code = _code.text.trim();
@@ -326,7 +316,11 @@ class _InviteFriendsScreenState extends ConsumerState<InviteFriendsScreen> {
                     key: const Key('inviteFriendsShare'),
                     onPressed: () => _share(r),
                     icon: const Icon(LucideIcons.share2, size: 18),
-                    label: Text(l10n.inviteFriendsShare),
+                    label: Text(
+                      r.invites != null
+                          ? l10n.inviteAskSend
+                          : l10n.inviteFriendsShare,
+                    ),
                   ),
                 ),
                 const SizedBox(width: AppSpace.sm),

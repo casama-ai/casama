@@ -64,7 +64,9 @@ export const ANALYTICS_CLIENT_EVENTS: Record<string, string[]> = {
     "method"
   ],
   "referral_shared": [
-    "method"
+    "method",
+    "place",
+    "named"
   ],
   "join_completed": [
     "status",
@@ -176,6 +178,10 @@ export const ANALYTICS_CLIENT_EVENTS: Record<string, string[]> = {
   "github_star_ask_shown": [
     "developer"
   ],
+  "invite_ask_shown": [
+    "invites_left"
+  ],
+  "invite_ask_dismissed": [],
   "github_star_ask_dismissed": [],
   "purchase_completed": [
     "outcome",

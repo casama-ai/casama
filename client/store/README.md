@@ -121,19 +121,30 @@ App Store: the review account's workspace has encryption at rest on, because Cas
 health data only that way and a reviewer turning Health on was otherwise refused; the iOS review
 notes have an APPLE HEALTH section.
 
-## Measuring our ads with Meta (docs/ADS-ATTRIBUTION-PLAN.md, Phase 3)
+## Measuring our ads with Meta (docs/ADS-ATTRIBUTION-PLAN.md, Phase 3; D-589)
 
-The first build with Meta's SDK (`facebook_app_events`) tells Meta about the install and app opens,
-and Casama's server tells Meta when someone who saw an ad joins or pays. Casama never shows ads.
-It runs only on Casama Cloud, outside the EEA, UK and Switzerland, while Settings → Privacy →
-"Help measure our ads" and "Share usage data" are both on. Update the forms **before** that build
-goes to review (each change needs Oliver's yes):
+Meta's SDK (`facebook_app_events`) tells Meta about the install and app opens, and Casama's server
+tells Meta when someone who saw an ad joins or pays. Casama never shows ads. It runs only on Casama
+Cloud, outside the EEA, UK and Switzerland, while Settings → Privacy → "Help measure our ads" and
+"Share usage data" are both on. **On iPhone and iPad it also needs Allow in Apple's tracking
+prompt** (D-589). The app shows that prompt once, after the first-run pages. Without Allow, nothing
+about that person goes to Meta by any route. The Mac app has no Meta code and no prompt.
 
-- **App Store, App Privacy:** add the purpose **Developer's Advertising or Marketing** to **Device
-  ID**, **Product Interaction** and **Purchase History** (linked, as today). **Tracking stays No**:
-  there is no App Tracking Transparency prompt in v1 (Decision 2), no advertising id (IDFA) and no
-  email goes to Meta. `ios/Runner/PrivacyInfo.xcprivacy` declares the same purposes with
-  `NSPrivacyTracking` false; Meta's SDK ships its own privacy manifest.
+- **App Store, App Privacy** (change it when the first build with the prompt is submitted, never
+  before; each change needs Oliver's yes):
+  - Device ID, Product Interaction and Purchase History: linked, purposes **Developer's Advertising
+    or Marketing** and **Third-Party Advertising** (plus what they have today), and **used to track
+    you: Yes**.
+  - Other Data: add **Analytics**.
+  - The label is the same for the Mac app. The Mac review notes say tracking happens only in the
+    iPhone and iPad app, after Allow.
+  - `ios/Runner/PrivacyInfo.xcprivacy` matches. Its `NSPrivacyTracking` is false because the app
+    connects to no tracking domain itself. Meta's SDK ships its own manifest with its tracking
+    domain.
+- **App Store review notes:** say where the prompt appears. It comes after sign-in, the AI providers
+  step, the name and "how did you hear" pages, "Picks for you" and the notifications page. It shows
+  only if Settings → Privacy & Security → Tracking → "Allow Apps to Request to Track" is on. Settings
+  → Privacy → Allow Tracking shows the answer.
 - **Google Play, Data safety:** **Device or other IDs**, **App interactions** and **Purchase
   history**: **shared**, purpose **Advertising or marketing** (Meta is a third party here, not a
   service provider). Keep the existing collected purposes.
@@ -144,8 +155,8 @@ goes to review (each change needs Oliver's yes):
   bundle while the declaration said No. Every Android build keeps the permission
   (`android/app/src/adId`); `CASAMA_ANDROID_AD_ID=0` leaves it out, and Play refuses that build
   while the declaration says Yes.
-- The privacy policy (casama.ai/privacy) has a "Measuring our ads" part and names Meta in the
-  processors table.
+- The privacy policy (casama.ai/privacy) has a "Measuring our ads" part, names Meta in the
+  processors table, and says iPhone and iPad send nothing to Meta without Allow.
 
 ## Still open
 

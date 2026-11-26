@@ -43,6 +43,8 @@ const analyticsClientEvents = <String>{
   'review_store_opened',
   'github_star_tap',
   'github_star_ask_shown',
+  'invite_ask_shown',
+  'invite_ask_dismissed',
   'github_star_ask_dismissed',
   'purchase_completed',
   'restore_purchases',

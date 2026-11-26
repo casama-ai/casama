@@ -139,6 +139,8 @@ class ReviewPrompt {
   // The GitHub star ask's record (features/community/community.dart): the two keep seven days
   // apart, both ways (D-577).
   static const _starAskedKey = 'casama.starAsk.asked';
+  // The one-time invite ask's (features/referrals/invite_ask.dart, D-588): seven days apart too.
+  static const _inviteAskedKey = 'casama.inviteAsk.asked';
   static const _starGap = Duration(days: 7);
 
   /// How long after the first-run mark its first reply still counts as part of onboarding.
@@ -266,6 +268,8 @@ class ReviewPrompt {
       }
       final star = DateTime.tryParse(p.getString(_starAskedKey) ?? '');
       if (star != null && now.difference(star) < _starGap) return false;
+      final invite = DateTime.tryParse(p.getString(_inviteAskedKey) ?? '');
+      if (invite != null && now.difference(invite) < _starGap) return false;
       if (!skipUseGates) {
         final days = p.getStringList(_daysKey) ?? const [];
         final first = DateTime.tryParse(p.getString(_firstKey) ?? '');

@@ -41,6 +41,7 @@ import 'features/admin/admin_security_gate.dart';
 import 'core/remote_config.dart';
 import 'core/route_title.dart';
 import 'core/theme.dart';
+import 'core/tracking_permission.dart';
 import 'ui/app_scroll_behavior.dart';
 import 'ui/server_reachability_bar.dart';
 import 'theme/appearance.dart';
@@ -246,7 +247,9 @@ class _FirstRunSteps extends ConsumerWidget {
     final signInDone = ref.watch(signInFinishedProvider);
     // Consent to send chats to AI providers (D-421) comes before everything, the guided setup too.
     final consent = ref.watch(aiConsentNeededProvider);
-    final name = ref.watch(nameStepNeededProvider) ?? false;
+    final nameNeeded = ref.watch(nameStepNeededProvider);
+    final nameKnown = nameNeeded != null;
+    final name = nameNeeded ?? false;
     // "How did you hear about us?" (ADS-ATTRIBUTION-PLAN §6.3): once, on a new account's first run.
     final heardFrom = ref.watch(heardFromNeededProvider);
     // "Picks for you" (D-315) follows the name step on first run, when the gallery has sets.
@@ -256,6 +259,19 @@ class _FirstRunSteps extends ConsumerWidget {
       listenable: Listenable.merge([push.needsAsk, GuidedSetup.active]),
       builder: (context, _) {
         final ask = push.needsAsk.value;
+        // Apple's tracking prompt (D-589) waits until none of these pages is up, nor sign-in.
+        final clear =
+            signInDone &&
+            !consent &&
+            !GuidedSetup.active.value &&
+            nameKnown &&
+            !name &&
+            !heardFrom &&
+            !picks &&
+            !ask;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (context.mounted) ref.read(trackingPermissionProvider.notifier).firstRunClear(clear);
+        });
         if (consent) {
           return Stack(children: [ExcludeSemantics(child: child), _cover(context, const AiConsentStep())]);
         }

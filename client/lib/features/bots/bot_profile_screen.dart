@@ -226,7 +226,8 @@ class _BotProfileScreenState extends ConsumerState<BotProfileScreen> {
           (c) => c.kind == ComputerKindEnum.team || c.ownerBotId == bot.id,
         )
         .toList();
-    final places = ref.watch(botPlacesProvider(bot.id)).value;
+    // Teen mode has no computers, so not the person's own either (the server refuses it too).
+    final places = teen ? null : ref.watch(botPlacesProvider(bot.id)).value;
     final dirty = _dirty(bot);
     final name = _name!.text.trim().isEmpty ? bot.name : _name!.text.trim();
     // Casama Cloud chooses the model (D-188), so its name isn't shown there.

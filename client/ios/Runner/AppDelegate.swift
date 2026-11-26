@@ -1,5 +1,6 @@
 import AVFoundation
 import AppIntents
+import AppTrackingTransparency
 import AuthenticationServices
 import CoreLocation
 import Flutter
@@ -119,7 +120,8 @@ import WebKit
   }
 
   /// Inline text replies on REPLY notifications (Siri, AirPods, CarPlay, Lock Screen; §5.3): iOS
-  /// keeps the app running until Dart has sent the reply. Taps and buttons go to the plugins.
+  /// keeps the app running until Dart has sent the reply, in a headless engine when Casama wasn't
+  /// running (NotificationsBridge). Taps and buttons go to the plugins.
   override func userNotificationCenter(
     _ center: UNUserNotificationCenter,
     didReceive response: UNNotificationResponse,
@@ -288,6 +290,10 @@ import WebKit
     if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "CasamaMeta") {
       MetaBridge.attach(registrar.messenger())
     }
+    // Apple's tracking prompt and SKAdNetwork (D-589): asked by Dart after the first-run pages.
+    if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "CasamaTracking") {
+      TrackingBridge.attach(registrar.messenger())
+    }
     // Apple integrations (docs/APPLE-INTEGRATIONS-PLAN.md): Declared Age Range, Document Scanner,
     // AlarmKit, HomeKit, SpeechAnalyzer, Foundation Models and File Provider.
     if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "CasamaAgeRange") {
@@ -318,7 +324,7 @@ import WebKit
 // (FacebookAutoInitEnabled is false in Info.plist) and the app id and client token aren't in
 // Info.plist: they come from the build's dart-defines (META_APP_ID, META_CLIENT_TOKEN). Dart calls
 // `configure` only once every gate is open (official build, Casama Cloud, signed in, the server
-// allows it); this initializes the SDK, then sets the id and token, which the SDK supports (it
+// allows it, and Allow in Apple's tracking prompt on this device, D-589); this initializes the SDK, then sets the id and token, which the SDK supports (it
 // only logs a warning at init). Done through the Objective-C runtime so the Runner target doesn't
 // need to link FBSDKCoreKit itself (it comes with the facebook_app_events plugin).
 
@@ -368,6 +374,70 @@ enum MetaBridge {
     let selector = NSSelectorFromString(selectorName)
     guard cls.responds(to: selector) else { return nil }
     return cls.perform(selector)?.takeUnretainedValue() as? NSObject
+  }
+}
+
+// MARK: - App Tracking Transparency and SKAdNetwork (D-589, docs/ADS-ATTRIBUTION-PLAN.md §6.5).
+// Dart asks once, after the first-run pages and only while the app is active (iOS ignores a request
+// otherwise and the status stays "not determined"). Meta's SDK starts only after Allow. Casama shows
+// no screen of its own before Apple's prompt. `registerInstall` tells SKAdNetwork about the install
+// once, whatever the answer: Apple's private ad measurement, which sends no identifiers.
+
+enum TrackingBridge {
+  private static let registeredKey = "casama.skan_registered"
+
+  static func attach(_ messenger: FlutterBinaryMessenger) {
+    let channel = FlutterMethodChannel(name: "casama/tracking", binaryMessenger: messenger)
+    channel.setMethodCallHandler { call, result in
+      switch call.method {
+      case "status":
+        result(name(ATTrackingManager.trackingAuthorizationStatus))
+      case "request":
+        guard UIApplication.shared.applicationState == .active else {
+          result(name(ATTrackingManager.trackingAuthorizationStatus))
+          return
+        }
+        ATTrackingManager.requestTrackingAuthorization { status in
+          DispatchQueue.main.async { result(name(status)) }
+        }
+      case "openSettings":
+        if let url = URL(string: UIApplication.openSettingsURLString) {
+          UIApplication.shared.open(url)
+        }
+        result(nil)
+      case "registerInstall":
+        registerInstall()
+        result(nil)
+      default:
+        result(FlutterMethodNotImplemented)
+      }
+    }
+  }
+
+  private static func name(_ status: ATTrackingManager.AuthorizationStatus) -> String {
+    switch status {
+    case .authorized: return "authorized"
+    case .denied: return "denied"
+    case .restricted: return "restricted"
+    case .notDetermined: return "not_determined"
+    @unknown default: return "denied"
+    }
+  }
+
+  private static func registerInstall() {
+    let defaults = UserDefaults.standard
+    guard !defaults.bool(forKey: registeredKey) else { return }
+    let done: (Error?) -> Void = { error in
+      if error == nil { defaults.set(true, forKey: registeredKey) }
+    }
+    if #available(iOS 16.1, *) {
+      SKAdNetwork.updatePostbackConversionValue(0, coarseValue: .low, lockWindow: false, completionHandler: done)
+    } else if #available(iOS 15.4, *) {
+      SKAdNetwork.updatePostbackConversionValue(0, completionHandler: done)
+    } else {
+      SKAdNetwork.registerAppForAdNetworkAttribution()
+      defaults.set(true, forKey: registeredKey)
+    }
   }
 }
 
@@ -469,16 +539,52 @@ final class SignInSheet: NSObject, ASWebAuthenticationPresentationContextProvidi
 /// typed while Casama wasn't running survives until Dart next starts. While Dart works on it a
 /// background task keeps the app running and the notification's completion handler waits; both
 /// end when Dart answers or when iOS's background time runs out (the reply then stays queued).
+///
+/// Typed while Casama isn't running, a reply starts the app in the background with no scene, so
+/// the app's engine never starts. After a short wait for one, a headless engine runs
+/// `inlineReplyMain` (lib/main.dart, lib/core/inline_replies.dart): Dart sends the queue with the
+/// saved sign-in and this stops the engine once everything it took is answered. With no
+/// connection it stops early and the replies wait for the next start. Native code never calls the
+/// server or holds the sign-in itself.
+///
+/// The app's engine and the headless one can both listen (Casama opened while a reply is being
+/// sent). Each reply is held by at most one engine at a time: a take hands over only replies no
+/// engine holds, a new reply goes to one listening engine (the app's first), and replies a stopped
+/// engine held go back to the queue, to an engine still listening. Only the overlap of an engine
+/// stopped mid-send leans on the reply id being the server's idempotency key.
 final class NotificationsBridge {
   static let shared = NotificationsBridge()
   private static let pendingKey = "casama.notifications.pending_inline_replies"
-  private var channel: FlutterMethodChannel?
-  /// Dart has taken the queue, so its inlineReply handler is listening.
-  private var dartReady = false
+  /// How long a reply waits for the app's engine before a headless one starts.
+  private static let headlessDelay: TimeInterval = 1.5
+  /// The longest a headless engine runs, in case its Dart never answers.
+  private static let headlessLimit: TimeInterval = 60
+
+  /// One engine's end of the channel.
+  private final class Listener {
+    let channel: FlutterMethodChannel
+    /// Its Dart has taken the queue, so its inlineReply handler is listening.
+    var ready = false
+    /// Ids handed to its Dart and not yet answered, so a second take doesn't repeat them.
+    var inFlight = Set<String>()
+
+    init(_ channel: FlutterMethodChannel) {
+      self.channel = channel
+    }
+  }
+
+  /// The app's engine (the one with the UI).
+  private var app: Listener?
+  /// The headless engine's, while it runs.
+  private var headless: Listener?
+  private var headlessEngine: FlutterEngine?
+  /// Keeps the app running while the headless engine does.
+  private var headlessTask = UIBackgroundTaskIdentifier.invalid
+  private var headlessScheduled = false
+  /// Counts headless engines, so the time limit of one never stops a later one.
+  private var headlessRun = 0
   /// Replies Dart hasn't confirmed, oldest first.
   private var pending: [[String: String]]
-  /// Ids handed to this engine's Dart and not yet answered, so a second take doesn't repeat them.
-  private var inFlight = Set<String>()
   /// Finishes a reply's wait (its completion handler, its background task), by reply id.
   private var waiting: [String: () -> Void] = [:]
 
@@ -486,51 +592,71 @@ final class NotificationsBridge {
     pending = (UserDefaults.standard.array(forKey: Self.pendingKey) as? [[String: String]]) ?? []
   }
 
+  /// The app's engine. A new one replaces the last: whatever that one held goes back to the queue.
   func attach(_ messenger: FlutterBinaryMessenger) {
+    app = listen(on: messenger)
+    dispatch()
+  }
+
+  private func listen(on messenger: FlutterBinaryMessenger) -> Listener {
     let channel = FlutterMethodChannel(name: "casama/notifications", binaryMessenger: messenger)
-    channel.setMethodCallHandler { [weak self] call, result in
-      let args = call.arguments as? [String: Any] ?? [:]
-      switch call.method {
-      case "badge":
-        let count = max(0, (args["count"] as? Int) ?? 0)
-        if #available(iOS 16.0, *) {
-          UNUserNotificationCenter.current().setBadgeCount(count) { _ in }
-        } else {
-          UIApplication.shared.applicationIconBadgeNumber = count
-        }
+    let listener = Listener(channel)
+    channel.setMethodCallHandler { [weak self, weak listener] call, result in
+      guard let self else {
         result(nil)
-      case "clear":
-        guard let conversation = args["conversation_id"] as? String, !conversation.isEmpty else {
-          result(nil)
-          return
-        }
-        let center = UNUserNotificationCenter.current()
-        center.getDeliveredNotifications { delivered in
-          let ids = delivered.filter { $0.request.content.threadIdentifier == conversation }.map { $0.request.identifier }
-          if !ids.isEmpty { center.removeDeliveredNotifications(withIdentifiers: ids) }
-        }
-        result(nil)
-      case "takeAction":
-        // iOS buttons arrive through Firebase Messaging's tap handler.
-        result(nil)
-      case "takeInlineReplies":
-        result(self?.takeReplies() ?? [])
-      case "inlineReplyDone":
-        if let id = args["id"] as? String { self?.finish(id) }
-        result(nil)
-      default:
-        result(FlutterMethodNotImplemented)
+        return
       }
+      self.handle(call, result, from: listener)
     }
-    self.channel = channel
-    // A new engine: its Dart hasn't taken anything yet.
-    dartReady = false
-    inFlight.removeAll()
+    return listener
+  }
+
+  private func handle(_ call: FlutterMethodCall, _ result: @escaping FlutterResult, from listener: Listener?) {
+    let args = call.arguments as? [String: Any] ?? [:]
+    switch call.method {
+    case "badge":
+      let count = max(0, (args["count"] as? Int) ?? 0)
+      if #available(iOS 16.0, *) {
+        UNUserNotificationCenter.current().setBadgeCount(count) { _ in }
+      } else {
+        UIApplication.shared.applicationIconBadgeNumber = count
+      }
+      result(nil)
+    case "clear":
+      guard let conversation = args["conversation_id"] as? String, !conversation.isEmpty else {
+        result(nil)
+        return
+      }
+      let center = UNUserNotificationCenter.current()
+      center.getDeliveredNotifications { delivered in
+        let ids = delivered.filter { $0.request.content.threadIdentifier == conversation }.map { $0.request.identifier }
+        if !ids.isEmpty { center.removeDeliveredNotifications(withIdentifiers: ids) }
+      }
+      result(nil)
+    case "takeAction":
+      // iOS buttons arrive through Firebase Messaging's tap handler.
+      result(nil)
+    case "takeInlineReplies":
+      // An engine already replaced (or stopped) gets nothing: another one holds the queue now.
+      result(listener.map { take(for: $0) } ?? [])
+    case "inlineReplyDone":
+      if let id = args["id"] as? String { finish(id) }
+      result(nil)
+    case "stopInlineReplies":
+      // The headless engine has no connection: it stops, and what it hadn't answered waits for
+      // the next start.
+      result(nil)
+      if let listener, listener === headless {
+        DispatchQueue.main.async { self.stopHeadless() }
+      }
+    default:
+      result(FlutterMethodNotImplemented)
+    }
   }
 
   /// Hands an inline notification text reply to Dart, and calls [completion] once Dart has sent it
-  /// (or iOS's background time runs out). Queued until Dart is listening (a cold start from the
-  /// Lock Screen starts no Flutter engine, so then it waits for the next time Casama opens).
+  /// (or iOS's background time runs out). Queued until an engine listens; with no app engine on
+  /// its way (Casama wasn't running, so iOS connected no scene), a headless one is started for it.
   func deliverReply(botId: String, conversationId: String, text: String, completion: @escaping () -> Void) {
     guard Thread.isMainThread else {
       DispatchQueue.main.async { self.deliverReply(botId: botId, conversationId: conversationId, text: text, completion: completion) }
@@ -564,37 +690,148 @@ final class NotificationsBridge {
     }
     waiting[id] = end
     task = UIApplication.shared.beginBackgroundTask(withName: "casama.inline-reply") { end() }
-    send(payload)
+    dispatch()
+    if !held(id) { scheduleHeadless() }
   }
 
-  private func send(_ payload: [String: String]) {
-    guard dartReady, let channel, let id = payload["id"] else { return }
-    inFlight.insert(id)
-    channel.invokeMethod("inlineReply", arguments: payload) { [weak self] answer in
+  /// Whether an engine's Dart has the reply and hasn't answered yet.
+  private func held(_ id: String) -> Bool {
+    app?.inFlight.contains(id) == true || headless?.inFlight.contains(id) == true
+  }
+
+  /// Hands every queued reply no engine holds to a listening engine, the app's before the headless
+  /// one. With none listening they wait for the next take.
+  private func dispatch() {
+    guard let target = [app, headless].compactMap({ $0 }).first(where: { $0.ready }) else { return }
+    for reply in pending where !held(reply["id"] ?? "") {
+      send(reply, to: target)
+    }
+  }
+
+  private func send(_ payload: [String: String], to listener: Listener) {
+    guard let id = payload["id"] else { return }
+    listener.inFlight.insert(id)
+    listener.channel.invokeMethod("inlineReply", arguments: payload) { [weak self, weak listener] answer in
       guard let self else { return }
       if (answer as? NSObject) === FlutterMethodNotImplemented {
-        // Dart's handler is gone (its engine restarted): keep the reply for the next take.
-        self.inFlight.remove(id)
-        self.dartReady = false
+        // That engine's Dart handler is gone (its Dart restarted): the reply goes back for the
+        // next take, or to the other engine if it listens.
+        listener?.inFlight.remove(id)
+        listener?.ready = false
+        self.dispatch()
         return
       }
-      // Sent, or Dart gave up on it (signed out, an error): either way it's done.
+      if (answer as? String) == "later" {
+        // The headless engine has no connection: the reply stays queued for the next start and
+        // that engine stops (it asks to as well, with stopInlineReplies).
+        listener?.inFlight.remove(id)
+        listener?.ready = false
+        if let listener, listener === self.headless {
+          DispatchQueue.main.async { self.stopHeadless() }
+        }
+        return
+      }
+      // Sent, or Dart gave up on it (signed out, refused): either way it's done.
       self.finish(id)
     }
   }
 
-  private func takeReplies() -> [[String: String]] {
-    dartReady = true
-    let fresh = pending.filter { !inFlight.contains($0["id"] ?? "") }
-    for reply in fresh { if let id = reply["id"] { inFlight.insert(id) } }
+  /// A take: the replies no engine holds go to this one, which now listens for new ones.
+  private func take(for listener: Listener) -> [[String: String]] {
+    listener.ready = true
+    let fresh = pending.filter { !held($0["id"] ?? "") }
+    for reply in fresh { if let id = reply["id"] { listener.inFlight.insert(id) } }
+    // A headless engine that found nothing to send (the app's engine took it all) stops.
+    if listener === headless {
+      DispatchQueue.main.async { self.stopHeadlessIfIdle() }
+    }
     return fresh
   }
 
   private func finish(_ id: String) {
-    inFlight.remove(id)
+    app?.inFlight.remove(id)
+    headless?.inFlight.remove(id)
     pending.removeAll { $0["id"] == id }
     save()
     waiting[id]?()
+    if headless != nil {
+      // After this call has returned to Dart: the engine isn't stopped inside its own call.
+      DispatchQueue.main.async { self.stopHeadlessIfIdle() }
+    }
+  }
+
+  // MARK: The headless engine
+
+  /// Gives an app engine that may be starting (the person opened Casama right after replying) a
+  /// moment to take the reply, then starts the headless engine if it's still needed.
+  private func scheduleHeadless() {
+    guard headlessEngine == nil, !headlessScheduled else { return }
+    headlessScheduled = true
+    DispatchQueue.main.asyncAfter(deadline: .now() + Self.headlessDelay) { [weak self] in
+      guard let self else { return }
+      self.headlessScheduled = false
+      self.startHeadless()
+    }
+  }
+
+  /// Starts the headless engine when a reply waits with nobody to send it: no engine listening
+  /// and no scene connected, so no app engine running or on its way. Never while an app engine
+  /// runs: registering the plugins on a second engine moves channels some of them keep once per
+  /// app (Firebase Messaging's) to it, and the app's engine would lose them when it stops.
+  private func startHeadless() {
+    guard headlessEngine == nil,
+          pending.contains(where: { !held($0["id"] ?? "") }),
+          app?.ready != true,
+          UIApplication.shared.connectedScenes.isEmpty
+    else { return }
+    let engine = FlutterEngine(name: "casama-inline-replies", project: nil, allowHeadlessExecution: true)
+    guard engine.run(withEntrypoint: "inlineReplyMain") else { return }
+    // Before Dart can call anything: its first message reaches this thread after this returns.
+    GeneratedPluginRegistrant.register(with: engine)
+    guard let registrar = engine.registrar(forPlugin: "CasamaNotifications") else {
+      engine.destroyContext()
+      return
+    }
+    headless = listen(on: registrar.messenger())
+    headlessEngine = engine
+    headlessRun += 1
+    let run = headlessRun
+    headlessTask = UIApplication.shared.beginBackgroundTask(withName: "casama.inline-reply-engine") { [weak self] in
+      self?.stopHeadless()
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + Self.headlessLimit) { [weak self] in
+      guard let self, self.headlessRun == run else { return }
+      self.stopHeadless()
+    }
+  }
+
+  /// Stops the headless engine once its Dart has taken the queue and answered everything it held.
+  private func stopHeadlessIfIdle() {
+    guard let listener = headless, listener.ready else { return }
+    // A reply nobody holds goes to an engine first (none should be left, but never strand one).
+    dispatch()
+    if listener.inFlight.isEmpty { stopHeadless() }
+  }
+
+  /// Stops the headless engine (idle, out of time, or no connection). Replies it hadn't answered
+  /// stay queued: they go to the app's engine if that one listens, else they wait for the next
+  /// start, and their waits end so iOS can suspend the app.
+  private func stopHeadless() {
+    if let engine = headlessEngine {
+      headless?.channel.setMethodCallHandler(nil)
+      headless = nil
+      headlessEngine = nil
+      engine.destroyContext()
+    }
+    if headlessTask != .invalid {
+      UIApplication.shared.endBackgroundTask(headlessTask)
+      headlessTask = .invalid
+    }
+    dispatch()
+    guard app?.ready != true else { return }
+    for reply in pending {
+      if let id = reply["id"], !held(id) { waiting[id]?() }
+    }
   }
 
   private func save() {

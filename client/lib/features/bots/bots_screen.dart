@@ -18,6 +18,7 @@ import '../../core/plain_text.dart';
 import '../../core/date_format.dart';
 import '../groups/group_chats.dart';
 import '../inbox/for_you.dart';
+import '../referrals/invite_ask.dart' show InvitesButton;
 import '../../core/backend.dart';
 import '../../ui/motion.dart';
 import '../../ui/bot_activity.dart';
@@ -648,6 +649,8 @@ class BotsScreen extends ConsumerWidget {
                 tooltip: context.l10n.search,
                 onPressed: () => showWorkspaceSearch(context),
               ),
+            // While Cloud is invite-only and this person has invites to give (D-588).
+            const InvitesButton(),
             HeaderIconButton(
               key: const Key('createMenu'),
               icon: LucideIcons.plus,

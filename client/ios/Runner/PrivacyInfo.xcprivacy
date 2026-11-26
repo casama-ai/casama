@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<!-- Casama's privacy manifest (iOS). No tracking, no tracking domains. Device ID, Product
-     Interaction and Purchase History also serve Developer's Advertising or Marketing: Casama tells
-     Meta when someone who saw its ad joins or pays (docs/ADS-ATTRIBUTION-PLAN.md §8.4), with no
-     tracking prompt and no advertising id, so NSPrivacyTracking stays false. Every data type matches
-     the App Privacy answers published in App Store Connect (client/store/README.md); change both
-     together. Plugins, Flutter and the app extensions ship their own manifests. -->
+<!-- Casama's privacy manifest (iOS). Device ID, Product Interaction and Purchase History are also
+     used for tracking (D-589): after Allow in Apple's tracking prompt, Meta's SDK runs and Casama's
+     server tells Meta when someone who saw its ad installs, joins or pays (docs/ADS-ATTRIBUTION-PLAN.md
+     §8.4), so they carry Developer's and Third-Party Advertising and Tracking true. Without Allow,
+     neither happens. NSPrivacyTracking stays false here because this target connects to no tracking
+     domain itself (Apple blocks the listed domains without Allow, and api.casama.ai must keep
+     working); the server talks to Meta, and Meta's SDK ships its own manifest with its tracking
+     domain. Every data type matches the App Privacy answers published in App Store Connect
+     (client/store/README.md); change both together. Plugins, Flutter and the app extensions ship
+     their own manifests. -->
 <plist version="1.0">
 <dict>
 	<key>NSPrivacyTracking</key>
@@ -160,9 +164,9 @@
 			<key>NSPrivacyCollectedDataTypeLinked</key>
 			<true/>
 			<key>NSPrivacyCollectedDataTypeTracking</key>
-			<false/>
+			<true/>
 			<key>NSPrivacyCollectedDataTypePurposes</key>
-			<array><string>NSPrivacyCollectedDataTypePurposeAppFunctionality</string><string>NSPrivacyCollectedDataTypePurposeDeveloperAdvertising</string></array>
+			<array><string>NSPrivacyCollectedDataTypePurposeAppFunctionality</string><string>NSPrivacyCollectedDataTypePurposeAnalytics</string><string>NSPrivacyCollectedDataTypePurposeDeveloperAdvertising</string><string>NSPrivacyCollectedDataTypePurposeThirdPartyAdvertising</string></array>
 		</dict>
 		<dict>
 			<key>NSPrivacyCollectedDataType</key>
@@ -170,9 +174,9 @@
 			<key>NSPrivacyCollectedDataTypeLinked</key>
 			<true/>
 			<key>NSPrivacyCollectedDataTypeTracking</key>
-			<false/>
+			<true/>
 			<key>NSPrivacyCollectedDataTypePurposes</key>
-			<array><string>NSPrivacyCollectedDataTypePurposeAppFunctionality</string><string>NSPrivacyCollectedDataTypePurposeDeveloperAdvertising</string></array>
+			<array><string>NSPrivacyCollectedDataTypePurposeAppFunctionality</string><string>NSPrivacyCollectedDataTypePurposeDeveloperAdvertising</string><string>NSPrivacyCollectedDataTypePurposeThirdPartyAdvertising</string></array>
 		</dict>
 		<dict>
 			<key>NSPrivacyCollectedDataType</key>
@@ -180,9 +184,9 @@
 			<key>NSPrivacyCollectedDataTypeLinked</key>
 			<true/>
 			<key>NSPrivacyCollectedDataTypeTracking</key>
-			<false/>
+			<true/>
 			<key>NSPrivacyCollectedDataTypePurposes</key>
-			<array><string>NSPrivacyCollectedDataTypePurposeAppFunctionality</string><string>NSPrivacyCollectedDataTypePurposeAnalytics</string><string>NSPrivacyCollectedDataTypePurposeDeveloperAdvertising</string></array>
+			<array><string>NSPrivacyCollectedDataTypePurposeAppFunctionality</string><string>NSPrivacyCollectedDataTypePurposeAnalytics</string><string>NSPrivacyCollectedDataTypePurposeDeveloperAdvertising</string><string>NSPrivacyCollectedDataTypePurposeThirdPartyAdvertising</string></array>
 		</dict>
 		<dict>
 			<key>NSPrivacyCollectedDataType</key>
@@ -212,7 +216,7 @@
 			<key>NSPrivacyCollectedDataTypeTracking</key>
 			<false/>
 			<key>NSPrivacyCollectedDataTypePurposes</key>
-			<array><string>NSPrivacyCollectedDataTypePurposeAppFunctionality</string></array>
+			<array><string>NSPrivacyCollectedDataTypePurposeAppFunctionality</string><string>NSPrivacyCollectedDataTypePurposeAnalytics</string></array>
 		</dict>
 	</array>
 	<key>NSPrivacyAccessedAPITypes</key>

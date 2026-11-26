@@ -18689,6 +18689,11 @@ export interface components {
             screen_density?: number;
             cpu_cores?: number;
             meta_anon_id?: string;
+            /**
+             * @description iPhone and iPad: the App Tracking Transparency state when the record was sent
+             * @enum {string}
+             */
+            ios_tracking?: "authorized" | "denied" | "restricted" | "not_determined";
             ga4_app_instance_id?: string;
             play_referrer?: string;
             landing?: components["schemas"]["LandingLabels"];

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		006C4C84C94C846FADF8A364 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD3D9A9447A0EB3E60E2BC1E /* Foundation.framework */; };
+		06B2F9194DEB15B4AE122F68 /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = B30F549DD837AAD90314AC9B /* AppIcon.icon */; };
 		094CCB08D8EFFD2BE7AA4825 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD3D9A9447A0EB3E60E2BC1E /* Foundation.framework */; };
 		0A417F45C87E32A5EED30C40 /* OnDeviceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83D1B1D6170ED23783E301F3 /* OnDeviceModel.swift */; };
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
@@ -309,6 +310,7 @@
 		C5A1F1D0E2B3000000000001 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = CasamaFileProvider/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		A312838720468BFBAF85881A /* CasamaFileProviderExtension.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CasamaFileProviderExtension.swift; path = Shared/CasamaFileProviderExtension.swift; sourceTree = "<group>"; };
 		B28329C64B6F9CCC1440CE45 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B30F549DD837AAD90314AC9B /* AppIcon.icon */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.iconcomposer.icon; name = AppIcon.icon; path = AppIcon.icon; sourceTree = "<group>"; };
 		B370E26B455198A65289EFCC /* Pods_RunnerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RunnerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C09A9A2D202DC427236702D3 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = CasamaNotify/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		C59E16A9B89B4BE3FBE0F2C4 /* FocusFilter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FocusFilter.swift; path = Siri/FocusFilter.swift; sourceTree = "<group>"; };
@@ -619,6 +621,7 @@
 				7AA6BB103BA8E94C942A82C2 /* AlarmKitBridge.swift */,
 				9F75516A8D22141DD4E40105 /* DocumentScanner.swift */,
 				36FBB37BA5FEB8B64F2D8D8D /* HomeKitBridge.swift */,
+				B30F549DD837AAD90314AC9B /* AppIcon.icon */,
 			);
 			path = Runner;
 			sourceTree = "<group>";
@@ -1013,6 +1016,7 @@
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
 				4B5A0F1C2D3E4F5061728397 /* PrivacyInfo.xcprivacy in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
+				06B2F9194DEB15B4AE122F68 /* AppIcon.icon in Resources */,
 				7E58658917C6912789CC0B1B /* Skills.skillsbundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -50,6 +50,8 @@ class PostAttributionInstallRequest {
 
      this.metaAnonId,
 
+     this.iosTracking,
+
      this.ga4AppInstanceId,
 
      this.playReferrer,
@@ -233,6 +235,19 @@ class PostAttributionInstallRequest {
 
 
 
+      /// iPhone and iPad: the App Tracking Transparency state when the record was sent
+  @JsonKey(
+    
+    name: r'ios_tracking',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final PostAttributionInstallRequestIosTrackingEnum? iosTracking;
+
+
+
   @JsonKey(
     
     name: r'ga4_app_instance_id',
@@ -287,6 +302,7 @@ class PostAttributionInstallRequest {
       other.screenDensity == screenDensity &&
       other.cpuCores == cpuCores &&
       other.metaAnonId == metaAnonId &&
+      other.iosTracking == iosTracking &&
       other.ga4AppInstanceId == ga4AppInstanceId &&
       other.playReferrer == playReferrer &&
       other.landing == landing;
@@ -307,6 +323,7 @@ class PostAttributionInstallRequest {
         screenDensity.hashCode +
         cpuCores.hashCode +
         metaAnonId.hashCode +
+        iosTracking.hashCode +
         ga4AppInstanceId.hashCode +
         playReferrer.hashCode +
         landing.hashCode;
@@ -321,4 +338,28 @@ class PostAttributionInstallRequest {
   }
 
 }
+
+/// iPhone and iPad: the App Tracking Transparency state when the record was sent
+enum PostAttributionInstallRequestIosTrackingEnum {
+    /// iPhone and iPad: the App Tracking Transparency state when the record was sent
+@JsonValue(r'authorized')
+authorized(r'authorized'),
+    /// iPhone and iPad: the App Tracking Transparency state when the record was sent
+@JsonValue(r'denied')
+denied(r'denied'),
+    /// iPhone and iPad: the App Tracking Transparency state when the record was sent
+@JsonValue(r'restricted')
+restricted(r'restricted'),
+    /// iPhone and iPad: the App Tracking Transparency state when the record was sent
+@JsonValue(r'not_determined')
+notDetermined(r'not_determined');
+
+const PostAttributionInstallRequestIosTrackingEnum(this.value);
+
+final String value;
+
+@override
+String toString() => value;
+}
+
 

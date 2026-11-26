@@ -48,6 +48,8 @@
 	<string>Tell your bots when you arrive at or leave your named places, even when Casama is closed. Only the place name and time are shared, never your route.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Casama uses the microphone for dictation and live calls with your bots. Only after you agree, your voice goes to AI providers to answer you: Google Gemini for calls, OpenAI to turn dictation into text.</string>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>If you allow it, Casama tells Meta when you install, join or subscribe after seeing a Casama ad on Facebook or Instagram, so we can measure which ads work. Casama never shows ads and never shares your chats or files.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>When Casama's dictation service can't be reached, your device's own speech recognition turns what you say into text.</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
@@ -150,10 +152,11 @@
 	<false/>
 	<!-- Meta's SDK (docs/ADS-ATTRIBUTION-PLAN.md §6.5) never starts by itself: Dart starts it only on
 	     an official build pointed at Casama Cloud, signed in, where the server allows it ("Help
-	     measure our ads" on, analytics on, not EEA/UK/CH). Its app id and client token come from the
+	     measure our ads" on, analytics on, not EEA/UK/CH), and only after Allow in Apple's tracking
+	     prompt (NSUserTrackingUsageDescription, D-589). Its app id and client token come from the
 	     build's dart-defines at runtime (MetaBridge in AppDelegate.swift), not from this file. It
-	     reports the install and app opens only: no automatic events, no advertising id (no
-	     tracking prompt in v1, Decision 2). -->
+	     reports the install and app opens only, with no automatic events. The advertising id stays
+	     off here and Dart turns it on only after Allow. -->
 	<key>FacebookAutoInitEnabled</key>
 	<false/>
 	<key>FacebookAutoLogAppEventsEnabled</key>

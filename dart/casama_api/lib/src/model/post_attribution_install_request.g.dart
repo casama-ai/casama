@@ -35,6 +35,10 @@ abstract class _$PostAttributionInstallRequestCWProxy {
 
   PostAttributionInstallRequest metaAnonId(String? metaAnonId);
 
+  PostAttributionInstallRequest iosTracking(
+    PostAttributionInstallRequestIosTrackingEnum? iosTracking,
+  );
+
   PostAttributionInstallRequest ga4AppInstanceId(String? ga4AppInstanceId);
 
   PostAttributionInstallRequest playReferrer(String? playReferrer);
@@ -64,6 +68,7 @@ abstract class _$PostAttributionInstallRequestCWProxy {
     num? screenDensity,
     int? cpuCores,
     String? metaAnonId,
+    PostAttributionInstallRequestIosTrackingEnum? iosTracking,
     String? ga4AppInstanceId,
     String? playReferrer,
     LandingLabels? landing,
@@ -134,6 +139,11 @@ class _$PostAttributionInstallRequestCWProxyImpl
       call(metaAnonId: metaAnonId);
 
   @override
+  PostAttributionInstallRequest iosTracking(
+    PostAttributionInstallRequestIosTrackingEnum? iosTracking,
+  ) => call(iosTracking: iosTracking);
+
+  @override
   PostAttributionInstallRequest ga4AppInstanceId(String? ga4AppInstanceId) =>
       call(ga4AppInstanceId: ga4AppInstanceId);
 
@@ -169,6 +179,7 @@ class _$PostAttributionInstallRequestCWProxyImpl
     Object? screenDensity = const $CopyWithPlaceholder(),
     Object? cpuCores = const $CopyWithPlaceholder(),
     Object? metaAnonId = const $CopyWithPlaceholder(),
+    Object? iosTracking = const $CopyWithPlaceholder(),
     Object? ga4AppInstanceId = const $CopyWithPlaceholder(),
     Object? playReferrer = const $CopyWithPlaceholder(),
     Object? landing = const $CopyWithPlaceholder(),
@@ -230,6 +241,10 @@ class _$PostAttributionInstallRequestCWProxyImpl
           ? _value.metaAnonId
           // ignore: cast_nullable_to_non_nullable
           : metaAnonId as String?,
+      iosTracking: iosTracking == const $CopyWithPlaceholder()
+          ? _value.iosTracking
+          // ignore: cast_nullable_to_non_nullable
+          : iosTracking as PostAttributionInstallRequestIosTrackingEnum?,
       ga4AppInstanceId: ga4AppInstanceId == const $CopyWithPlaceholder()
           ? _value.ga4AppInstanceId
           // ignore: cast_nullable_to_non_nullable
@@ -287,6 +302,13 @@ PostAttributionInstallRequest _$PostAttributionInstallRequestFromJson(
       screenDensity: $checkedConvert('screen_density', (v) => v as num?),
       cpuCores: $checkedConvert('cpu_cores', (v) => (v as num?)?.toInt()),
       metaAnonId: $checkedConvert('meta_anon_id', (v) => v as String?),
+      iosTracking: $checkedConvert(
+        'ios_tracking',
+        (v) => $enumDecodeNullable(
+          _$PostAttributionInstallRequestIosTrackingEnumEnumMap,
+          v,
+        ),
+      ),
       ga4AppInstanceId: $checkedConvert(
         'ga4_app_instance_id',
         (v) => v as String?,
@@ -312,6 +334,7 @@ PostAttributionInstallRequest _$PostAttributionInstallRequestFromJson(
     'screenDensity': 'screen_density',
     'cpuCores': 'cpu_cores',
     'metaAnonId': 'meta_anon_id',
+    'iosTracking': 'ios_tracking',
     'ga4AppInstanceId': 'ga4_app_instance_id',
     'playReferrer': 'play_referrer',
   },
@@ -334,6 +357,9 @@ Map<String, dynamic> _$PostAttributionInstallRequestToJson(
   'screen_density': ?instance.screenDensity,
   'cpu_cores': ?instance.cpuCores,
   'meta_anon_id': ?instance.metaAnonId,
+  'ios_tracking':
+      ?_$PostAttributionInstallRequestIosTrackingEnumEnumMap[instance
+          .iosTracking],
   'ga4_app_instance_id': ?instance.ga4AppInstanceId,
   'play_referrer': ?instance.playReferrer,
   'landing': ?instance.landing?.toJson(),
@@ -346,4 +372,11 @@ const _$AttributionPlatformEnumMap = {
   AttributionPlatform.windows: 'windows',
   AttributionPlatform.linux: 'linux',
   AttributionPlatform.web: 'web',
+};
+
+const _$PostAttributionInstallRequestIosTrackingEnumEnumMap = {
+  PostAttributionInstallRequestIosTrackingEnum.authorized: 'authorized',
+  PostAttributionInstallRequestIosTrackingEnum.denied: 'denied',
+  PostAttributionInstallRequestIosTrackingEnum.restricted: 'restricted',
+  PostAttributionInstallRequestIosTrackingEnum.notDetermined: 'not_determined',
 };

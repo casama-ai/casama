@@ -1,6 +1,9 @@
 import 'dart:async';
 
+import 'package:app_links/app_links.dart';
+import 'package:facebook_app_events/facebook_app_events.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart' show MethodChannel;
 
 import 'distribution.dart';
 
@@ -28,7 +31,9 @@ class MetaConfig {
 }
 
 /// Whether Meta's SDK may run on this device right now. Every gate must be open; with no answer
-/// from the server ([serverAllows] null) it stays off.
+/// from the server ([serverAllows] null) it stays off. On an iPhone or iPad the person must also
+/// have tapped Allow in Apple's tracking prompt ([trackingAllowed], D-589); Android has no such
+/// prompt and ignores it.
 bool metaSdkMayStart({
   required bool officialBuild,
   required bool hasKeys,
@@ -38,6 +43,7 @@ bool metaSdkMayStart({
   required bool signedIn,
   required bool? serverAllows,
   required bool analyticsConsent,
+  required bool trackingAllowed,
 }) =>
     officialBuild &&
     hasKeys &&
@@ -46,7 +52,8 @@ bool metaSdkMayStart({
     (platform == TargetPlatform.iOS || platform == TargetPlatform.android) &&
     signedIn &&
     serverAllows == true &&
-    analyticsConsent;
+    analyticsConsent &&
+    (platform != TargetPlatform.iOS || trackingAllowed);
 
 /// What reaches the native SDK. A fake in tests.
 abstract class MetaSdkDriver {
@@ -109,16 +116,61 @@ class MetaSdk {
   }
 }
 
-/// Meta's SDK is left out of the App Store review build 107: its own privacy manifest declares
-/// tracking, and v1 has no tracking prompt (App Review 5.1.2). The app had no Meta keys, so it
-/// never started anyway. Every call says it isn't here.
+/// The real SDK through facebook_app_events, with the keys set by `casama/meta`
+/// (AppDelegate.swift and MainActivity.kt). iOS and Android only.
 class FacebookSdkDriver implements MetaSdkDriver {
-  @override
-  Future<void> start() async => throw StateError('Meta SDK not in this build');
+  static const _channel = MethodChannel('casama/meta');
+  final _fb = FacebookAppEvents();
+
+  bool get _supported =>
+      !kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.iOS ||
+          defaultTargetPlatform == TargetPlatform.android);
+
+  bool get _ios => defaultTargetPlatform == TargetPlatform.iOS;
 
   @override
-  Future<void> stop() async {}
+  Future<void> start() async {
+    if (!_supported || !MetaConfig.hasKeys) {
+      throw StateError('Meta SDK unavailable here');
+    }
+    // iOS: the link that opened the app, which reached the app before the SDK ran (Android's SDK
+    // keeps it from process start by itself).
+    String? link;
+    if (_ios) {
+      try {
+        final uri = await AppLinks().getInitialLink().timeout(
+          const Duration(seconds: 2),
+        );
+        if (uri != null && (uri.scheme == 'https' || uri.scheme == 'http')) {
+          link = uri.toString();
+        }
+      } catch (_) {}
+    }
+    await _channel.invokeMethod<void>('configure', {
+      'appId': MetaConfig.appId,
+      'clientToken': MetaConfig.clientToken,
+      'url': ?link,
+    });
+    await _fb.initializeSdk();
+    await _fb.setAutoLogAppEventsEnabled(false);
+    // iOS only gets here after Allow in Apple's tracking prompt (D-589); the SDK reads the
+    // prompt's answer itself and sends the advertising id only while it's Allow. Android: Meta may
+    // read it while it runs (Decision 3). Google Analytics never does, on either.
+    await _fb.setAdvertiserIdCollectionEnabled(true);
+    await _fb.activateApp();
+  }
 
   @override
-  Future<String?> anonymousId() async => null;
+  Future<void> stop() async {
+    if (!_supported) return;
+    await _fb.setAutoLogAppEventsEnabled(false);
+    await _fb.setAdvertiserIdCollectionEnabled(false);
+  }
+
+  @override
+  Future<String?> anonymousId() async {
+    if (!_supported) return null;
+    return _fb.getAnonymousId();
+  }
 }
