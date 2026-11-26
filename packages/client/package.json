@@ -5,6 +5,11 @@
   "type": "module",
   "license": "Apache-2.0",
   "homepage": "https://docs.casama.ai/develop/typescript",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/casama-ai/casama.git",
+    "directory": "packages/client"
+  },
   "bugs": {
     "email": "support@casama.ai"
   },

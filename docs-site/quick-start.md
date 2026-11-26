@@ -77,6 +77,11 @@ Open the bot's computer to watch it work. When it wants to do something risky, a
 in the chat and as a notification. What it makes, such as the table above, reports, pictures and
 sites, is kept in the [Library](/guide/library).
 
+::: tip Is it working?
+Casama is open source. If it's useful to you, a
+[star on GitHub](https://github.com/casama-ai/casama) helps other people find it.
+:::
+
 ## Next steps
 
 - Connect your tools: [Apps and connections](/guide/connections)

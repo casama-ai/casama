@@ -163,6 +163,13 @@ function trackDocsEngagement() {
     const a = target?.closest?.("a[href]") as HTMLAnchorElement | null;
     if (!a) return;
     const href = a.getAttribute("href") || "";
+    // Links to the GitHub repo (D-577): the nav's star link and GitHub icon, or a link in a page.
+    if (/^https:\/\/github\.com\/casama-ai\/casama\/?(#.*)?$/.test(href)) {
+      countDocsEvent("github_click", {
+        place: a.closest(".VPNav, .VPNavScreen, .VPSocialLinks") ? "docs_nav" : "docs_page",
+      });
+      return;
+    }
     if (!/^https:\/\/app\.casama\.ai(\/|$|\?)/.test(href)) return;
     try {
       const u = new URL(href);

@@ -8,6 +8,9 @@ this repo: the apps, `computerd`, the safety rules, the SDKs, the CLI, the MCP s
   reproduce it.
 - Have an idea? Start a [discussion](https://github.com/casama-ai/casama/discussions) before writing
   a large change, so we can agree on the approach.
+- Want something small to start with? Look for a
+  [`good first issue`](https://github.com/casama-ai/casama/labels/good%20first%20issue) and say
+  you're taking it.
 - Found a security issue? Don't open an issue; follow [SECURITY.md](SECURITY.md).
 
 The Casama Engine (the API, worker, agent and database behind Casama Cloud) is not in this repo, so

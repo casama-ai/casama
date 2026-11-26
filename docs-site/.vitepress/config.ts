@@ -249,6 +249,8 @@ export default defineConfig({
       { text: "Self-hosting (paused)", link: "/self-hosting/" },
       { text: "Build on Casama", link: "/develop/api" },
       { text: "API", link: "/api/", target: "_self" },
+      // D-577: the repo, asked for plainly; the count lives on GitHub.
+      { text: "Star on GitHub", link: repo, noIcon: true },
     ],
     sidebar: [
       {

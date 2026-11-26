@@ -13,6 +13,21 @@
   <a href="https://discord.gg/e86XbXFHwz">Discord</a>
 </p>
 
+<p align="center">
+  <a href="https://casama.ai">
+    <img src="media/casama-demo-v9.gif" width="800" alt="A Casama bot works in Google Flights on its own computer while you watch: real apps, the way you'd use them">
+  </a>
+</p>
+
+<p align="center">
+  <strong>Try it:</strong> <a href="https://app.casama.ai">open the web app</a>, or
+  <a href="https://casama.ai/download">get the app</a> for your phone, computer or watch.
+</p>
+
+<p align="center">
+  Casama is open source. If it's useful to you, a star on GitHub helps other people find it.
+</p>
+
 ---
 
 ## What is Casama?

@@ -10,6 +10,9 @@ For a map of the code, read [How Casama is built](/develop/architecture) first.
   first, so you agree on the approach before you write it.
 - Found a security issue? Don't open an issue. Follow
   [SECURITY.md](https://github.com/casama-ai/casama/blob/main/SECURITY.md).
+- Want something small to start with? Look for a
+  [`good first issue`](https://github.com/casama-ai/casama/labels/good%20first%20issue) and say
+  you're taking it.
 
 ## What's in the repository
 
