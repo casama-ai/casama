@@ -28,11 +28,11 @@ import '../media/media_kind.dart';
 ///
 /// A film link that isn't a video file (`.mp4`, `.m4v`, `.mov`, `.webm`, `.m3u8`), say a YouTube
 /// page, opens in the browser instead, so any https link set there works.
-const kIntroFilmUrl = 'https://casama.ai/assets/film/casama-film-v10-16x9.mp4';
+const kIntroFilmUrl = 'https://casama.ai/assets/film/casama-film-v11-16x9.mp4';
 const kIntroFilmVerticalUrl =
-    'https://casama.ai/assets/film/casama-film-v10-9x16.mp4';
-const kIntroYoutubeUrl = 'https://www.youtube.com/watch?v=QCdp2VIByDs';
-const kIntroYoutubeVerticalUrl = 'https://www.youtube.com/shorts/sJCxBlKYgKk';
+    'https://casama.ai/assets/film/casama-film-v11-9x16.mp4';
+const kIntroYoutubeUrl = 'https://www.youtube.com/watch?v=TmOAjwF3cYI';
+const kIntroYoutubeVerticalUrl = 'https://www.youtube.com/shorts/_g2Efz-J5kc';
 
 /// A phone held upright gets the 9:16 cut; everything else 16:9 (casama.ai's film dialog rule).
 bool introUpright(Size screen) =>
