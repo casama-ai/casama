@@ -1,6 +1,6 @@
 {
   "name": "@casama/plugin-check",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Check an Agent Plugins 1.0 package the way Casama checks it at install.",
   "type": "module",
   "license": "Apache-2.0",

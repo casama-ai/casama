@@ -1,6 +1,6 @@
 {
   "name": "@casama/client",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Typed TypeScript client for the Casama HTTP API, generated from its OpenAPI document, with helpers to ask a bot and watch its runs.",
   "type": "module",
   "license": "Apache-2.0",

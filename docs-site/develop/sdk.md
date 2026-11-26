@@ -12,7 +12,7 @@ document. `casama_sdk` re-exports it, so one import gives you everything.
 ```yaml
 # pubspec.yaml
 dependencies:
-  casama_sdk: ^0.1.0
+  casama_sdk: ^0.2.0
 ```
 
 ```sh
