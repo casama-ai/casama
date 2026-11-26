@@ -57,7 +57,7 @@
 	<!-- The feed Sparkle reads before Dart sets it (core/updater.dart kUpdateFeedBase); without it
 	     Sparkle logs "SUFeedURL missing" at launch. package-macos-appstore.sh deletes it. -->
 	<key>SUFeedURL</key>
-	<string>https://raw.githubusercontent.com/stackwares/casama-releases/main/appcast-macos.xml</string>
+	<string>https://raw.githubusercontent.com/casama-ai/casama-releases/main/appcast-macos.xml</string>
 	<!-- Checks every 6 hours and installs on quit, without Sparkle's first-run question; Settings
 	     turns automatic checks off (casama/mac setAutoUpdateChecks). -->
 	<key>SUEnableAutomaticChecks</key>

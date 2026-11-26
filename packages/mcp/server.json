@@ -1,12 +1,12 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
-  "name": "io.github.stackwares/casama",
+  "name": "ai.casama/casama",
   "title": "Casama",
   "description": "Search Casama's docs and API reference, no sign-in. Optional: drive your Casama AI bots.",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "websiteUrl": "https://docs.casama.ai/guide/mcp",
   "repository": {
-    "url": "https://github.com/stackwares/casama",
+    "url": "https://github.com/casama-ai/casama",
     "source": "github",
     "subfolder": "packages/mcp"
   },
@@ -20,7 +20,7 @@
     {
       "registryType": "npm",
       "identifier": "@casama/mcp",
-      "version": "0.2.1",
+      "version": "0.2.2",
       "transport": {
         "type": "stdio"
       }

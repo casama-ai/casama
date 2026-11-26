@@ -12,7 +12,7 @@ void main() {
   });
 
   test('updates come from the public releases repo, one feed per platform', () {
-    expect(kUpdateFeedBase, 'https://raw.githubusercontent.com/stackwares/casama-releases/main');
+    expect(kUpdateFeedBase, 'https://raw.githubusercontent.com/casama-ai/casama-releases/main');
   });
 
   test('the Linux notice skips CLI releases, drafts and prereleases', () {

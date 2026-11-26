@@ -41,7 +41,7 @@ tap **Allow** in Casama, as in [Hosted with OAuth](#hosted-with-oauth-recommende
 | Claude (claude.ai and the desktop app) | **Settings → Connectors → Add custom connector**. Give it a name (Casama) and the address, then **Connect**. |
 | ChatGPT | Turn on developer mode under **Settings → Apps → Advanced settings**, then create an app with the address and OAuth sign-in. |
 | Gemini (the Gemini app) | Turn on **Developer Mode** in the Gemini app's settings, then add a remote MCP server with the address. See [Use Casama in Gemini](#use-casama-in-gemini). |
-| Gemini CLI | `gemini extensions install https://github.com/stackwares/casama-gemini`, or `gemini mcp add --transport http casama https://api.casama.ai/mcp`. Then `/mcp auth casama`. |
+| Gemini CLI | `gemini extensions install https://github.com/casama-ai/casama-gemini`, or `gemini mcp add --transport http casama https://api.casama.ai/mcp`. Then `/mcp auth casama`. |
 | Claude Code | `claude mcp add --transport http casama https://api.casama.ai/mcp`, then `/mcp` to sign in. |
 | VS Code (Copilot) | `code --add-mcp '{"name":"casama","type":"http","url":"https://api.casama.ai/mcp"}'` |
 | Cursor | Add the address under `mcpServers` in `~/.cursor/mcp.json` as `"url"`. |

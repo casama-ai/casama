@@ -15,7 +15,7 @@ import 'telemetry.dart';
 
 /// Where releases live: a public repo with only installers and update feeds (the source repo is
 /// private, so its release files aren't downloadable without signing in). Overridable per build.
-const kReleasesRepo = String.fromEnvironment('CASAMA_RELEASES_REPO', defaultValue: 'stackwares/casama-releases');
+const kReleasesRepo = String.fromEnvironment('CASAMA_RELEASES_REPO', defaultValue: 'casama-ai/casama-releases');
 
 /// The update feeds (appcasts), one per platform, kept as files on the releases repo's main branch
 /// (publish-desktop-release.sh updates them). Not `releases/latest`: CLI releases share the repo, and

@@ -42,7 +42,7 @@ accept or dismiss. See [Your first bot](/guide/bots#your-first-bot).
 There are apps for iPhone, iPad, Android, Mac, Windows and Linux, and a web app at
 [app.casama.ai](https://app.casama.ai). The `casama` CLI works in the terminal and in scripts:
 install it with `brew install stackwares/tap/casama` or download it from the
-[releases page](https://github.com/stackwares/casama-releases/releases).
+[releases page](https://github.com/casama-ai/casama-releases/releases).
 
 You can also reach your bots from chat apps such as Slack, Telegram and WhatsApp, and from AI
 coding tools over MCP. A few things need the desktop app: signing in with a ChatGPT plan, lending

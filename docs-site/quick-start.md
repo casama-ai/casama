@@ -23,7 +23,7 @@ The install commands are removed while self-hosting is paused. Use [Casama Cloud
   to use your Mac or to run a server on it; see
   [which Mac app to get](/faq#should-i-get-the-mac-app-from-the-website-or-the-mac-app-store).
 - **CLI**: `brew install stackwares/tap/casama`, or download a binary from the
-  [releases page](https://github.com/stackwares/casama-releases/releases). See [CLI](/develop/cli).
+  [releases page](https://github.com/casama-ai/casama-releases/releases). See [CLI](/develop/cli).
 
 ## 3. Sign in to your server
 
