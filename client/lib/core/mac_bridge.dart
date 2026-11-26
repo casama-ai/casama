@@ -8,6 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../features/bots/bots_screen.dart' show CreateBotSheet;
 import '../features/chat/chat_controller.dart';
+import '../features/companion/desktop_shell.dart';
 import '../features/groups/group_chats.dart' show groupChatsProvider;
 import '../features/home/home_shell.dart' show groupBotsByFolder;
 import '../features/search/search_view.dart';
@@ -81,6 +82,10 @@ Future<void> _menu(Ref ref, String action) async {
       if (context != null && context.mounted) await showAdaptiveSheet<void>(context: context, contentPadsBottom: true, builder: (_) => const CreateBotSheet());
     case 'search':
       if (context != null && context.mounted) await showWorkspaceSearch(context);
+    case 'quickAsk':
+      ref.read(desktopShellProvider).openQuickAsk();
+    case 'feedback':
+      router.go('/settings/support');
     case 'checkUpdates':
       await checkForUpdatesNow();
     case 'help':

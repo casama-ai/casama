@@ -21,6 +21,11 @@ struct CasamaWidgetsMac: WidgetBundle {
     GlanceBundle.refreshable(MacTasksWidget.self)
     GlanceBundle.refreshable(MacCreditsWidget.self)
     GlanceBundle.refreshable(MacCanvasWidget.self)
+    if #available(macOS 26.0, *) {
+      AskCasamaControl()
+      TalkToBotControl()
+      RunRoutineControl()
+    }
   }
 }
 

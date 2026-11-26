@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:casama_sdk/casama_link.dart';
 import 'package:casama_sdk/casama_sdk.dart';
+import 'package:casama_selfhost/casama_selfhost.dart' as sh;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -60,6 +61,9 @@ final linkSetupProvider = FutureProvider.autoDispose<RemoteAccessSetup?>((
         ? 'Casama server'
         : Platform.localHostname.trim(),
     platform: Platform.operatingSystem,
+    // The key connecting Casama Cloud models keeps in Vault: shown when linking, so the new key
+    // keeps Cloud models (SELFHOST-CLOUD-MODELS-PLAN §13.1).
+    heldKey: () => readHeldLinkKey(sh.selfhostComposeArgs(local.dir)),
   );
 });
 

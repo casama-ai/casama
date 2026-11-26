@@ -7,34 +7,52 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		51A11A0D2F00000000000002 /* SiriBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51A11A0D2F00000000000001 /* SiriBridge.swift */; };
-		51A11A0D2F00000000000004 /* SiriIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51A11A0D2F00000000000003 /* SiriIntents.swift */; };
-		51A11A0D2F00000000000006 /* SiriProbe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51A11A0D2F00000000000005 /* SiriProbe.swift */; };
-		51A11A0D2F00000000000008 /* SiriSchemas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51A11A0D2F00000000000007 /* SiriSchemas.swift */; };
 		006C4C84C94C846FADF8A364 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD3D9A9447A0EB3E60E2BC1E /* Foundation.framework */; };
+		06B2F9194DEB15B4AE122F68 /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = B30F549DD837AAD90314AC9B /* AppIcon.icon */; };
+		094CCB08D8EFFD2BE7AA4825 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD3D9A9447A0EB3E60E2BC1E /* Foundation.framework */; };
+		0A417F45C87E32A5EED30C40 /* OnDeviceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83D1B1D6170ED23783E301F3 /* OnDeviceModel.swift */; };
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
+		16347E08A542B5958D34CA95 /* FileProviderBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA541EDE7A48DB77F039B9AC /* FileProviderBridge.swift */; };
 		203EF57A99F0528804C6C850 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA739DDCE56B8D7CD594E1B3 /* Pods_Runner.framework */; };
+		2140DBB090325B934B438CB1 /* FileProviderKeyStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FDFEEBC4D75834961F95594 /* FileProviderKeyStore.swift */; };
 		2F6E926AB8CFE5909963ABF6 /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B370E26B455198A65289EFCC /* Pods_RunnerTests.framework */; };
 		331C808B294A63AB00263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C807B294A618700263BE5 /* RunnerTests.swift */; };
+		38409D763242E5E045C67C64 /* CasamaFileProviderExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A312838720468BFBAF85881A /* CasamaFileProviderExtension.swift */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
 		3EE93AAE3D4C5C30DFA08B1F /* CasamaWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 372577EE13E4ED7A2E3B937D /* CasamaWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		4046174357B6E68C2E9A8370 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = F51FF34728DA2C4A691C9171 /* PrivacyInfo.xcprivacy */; };
 		4B5A0F1C2D3E4F5061728397 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 4B5A0F1C2D3E4F5061728396 /* PrivacyInfo.xcprivacy */; };
 		4FACE636C169E033D2FA0F60 /* CasamaWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8C7AB9C129CBE2C18D243C8 /* CasamaWidgets.swift */; };
+		51A11A0D2F00000000000002 /* SiriBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51A11A0D2F00000000000001 /* SiriBridge.swift */; };
+		51A11A0D2F00000000000004 /* SiriIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51A11A0D2F00000000000003 /* SiriIntents.swift */; };
+		51A11A0D2F00000000000006 /* SiriProbe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51A11A0D2F00000000000005 /* SiriProbe.swift */; };
+		51A11A0D2F00000000000008 /* SiriSchemas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51A11A0D2F00000000000007 /* SiriSchemas.swift */; };
 		5DA1B7A03B2477B05D6E5D5F /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17BD90CC40136C36F43376C9 /* SafariServices.framework */; };
 		642D0BC0E5AB24182260B747 /* CasamaShare.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 76C7FC166B712008621DD4ED /* CasamaShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		64B495F2CDBD8ED0DA41DCFD /* CasamaNotify.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 9CC1DC9BE4B334AE268E7910 /* CasamaNotify.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		663D6EC7130BB248065B2BED /* FocusFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59E16A9B89B4BE3FBE0F2C4 /* FocusFilter.swift */; };
 		67549F5A9D64FF0C1D459F1F /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91D49E8E843199AFD43488EE /* SwiftUI.framework */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
 		7884E8682EC3CC0700C636F2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7884E8672EC3CC0400C636F2 /* SceneDelegate.swift */; };
 		78A318202AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 78A3181F2AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage */; };
+		7DB8047FE9B7234CE53D6A26 /* SpeechAnalyzerBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E4F30B73B089F6869EFDFD5 /* SpeechAnalyzerBridge.swift */; };
+		7E58658917C6912789CC0B1B /* Skills.skillsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 8C713ACF97BE5EBA52C26A86 /* Skills.skillsbundle */; };
+		82744522B69B6B4696633344 /* FileProviderKeyStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04AFC9999B282FB81EAED85C /* FileProviderKeyStore.swift */; };
 		88A9961159E704B6D440B8F7 /* SafariWebExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34779590C35DF1678A81B400 /* SafariWebExtensionHandler.swift */; };
+		91DFE22338FF399EC5B558D4 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = C09A9A2D202DC427236702D3 /* PrivacyInfo.xcprivacy */; };
+		92B4879D42B8FEE97A527261 /* AgeRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A089E8B3CE16ADC9C1A03A1 /* AgeRange.swift */; };
+		92C358CDA32C7A43C1A7D6CE /* AlarmKitBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA6BB103BA8E94C942A82C2 /* AlarmKitBridge.swift */; };
+		9492D47C43B20B788B729A32 /* DocumentScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F75516A8D22141DD4E40105 /* DocumentScanner.swift */; };
 		976AF40FA38C3EDC11B9F80D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD3D9A9447A0EB3E60E2BC1E /* Foundation.framework */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
+		AE47478AE6CE6CB91A85769C /* SiriToolsPhase4.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC8BF677A6A6F7BFEB20679E /* SiriToolsPhase4.swift */; };
 		B7712D2B6B12934FEF3152D7 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D968176B06B4195FE685FA1 /* ShareViewController.swift */; };
 		BA63C55AE026D5D4660D9D91 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD3D9A9447A0EB3E60E2BC1E /* Foundation.framework */; };
 		C62C998AE02ED2A6C5A2E652 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18D8EADAF95E91BC6578B716 /* UIKit.framework */; };
+		C7FD3CBA78934BCEC66A43F3 /* CasamaFileProvider.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = F95FAF1A7BA046638765ACD2 /* CasamaFileProvider.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		D1AC36B72EEDCE34196903E1 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05C017B805CA87EA445F4CFC /* NotificationService.swift */; };
 		D2A11A0D2F00000000000002 /* RunActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A11A0D2F00000000000001 /* RunActivityAttributes.swift */; };
 		D2A11A0D2F00000000000003 /* RunActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A11A0D2F00000000000001 /* RunActivityAttributes.swift */; };
 		D2A11A0D2F00000000000005 /* IslandActivities.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A11A0D2F00000000000004 /* IslandActivities.swift */; };
@@ -120,7 +138,10 @@
 		D5F11A0D2F00000000000002 /* WatchCrashReporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5F11A0D2F00000000000001 /* WatchCrashReporter.swift */; };
 		D5F11A0D2F00000000000005 /* Sentry-Static in Frameworks */ = {isa = PBXBuildFile; productRef = D5F11A0D2F00000000000004 /* Sentry-Static */; };
 		E0C01C22E7320C88F18D4DD0 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6ABE106B4A7061C9ABA5F792 /* WidgetKit.framework */; };
+		E547E6C59BE29AE0A0A06A55 /* HomeKitBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36FBB37BA5FEB8B64F2D8D8D /* HomeKitBridge.swift */; };
 		F0E6F1192A20FA79BD6D77FE /* CasamaSafariExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 4053F2B4F6E554F9E00A69CE /* CasamaSafariExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		F280E7EC59E3C9BBF7AD19FC /* VisualIntelligence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0694A601AA1D085258411A /* VisualIntelligence.swift */; };
+		FB1C61813114E72F32286EC1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD3D9A9447A0EB3E60E2BC1E /* Foundation.framework */; };
 		FED3E3B6DBEF6C9BF47F4C1B /* ActivityKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E9BBAF50CAEAFD15BC20E14 /* ActivityKit.framework */; };
 /* End PBXBuildFile section */
 
@@ -146,6 +167,13 @@
 			remoteGlobalIDString = A19907D561F17C05756EE680;
 			remoteInfo = CasamaSafariExtension;
 		};
+		C08CF8C5AC55BAC52DC55540 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 97C146E61CF9000F007C117D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DA7003AEC23C13C38430F03E;
+			remoteInfo = CasamaFileProvider;
+		};
 		D4C11A0D2F00000000000065 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 97C146E61CF9000F007C117D /* Project object */;
@@ -159,6 +187,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = D4C11A0D2F00000000000053;
 			remoteInfo = CasamaWatch;
+		};
+		ED128389AF013430E55A149D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 97C146E61CF9000F007C117D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 524C7E99EF1820F03DB6FC6B;
+			remoteInfo = CasamaNotify;
 		};
 		F251D70F4DC087BF8FCCEC92 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -179,6 +214,8 @@
 				3EE93AAE3D4C5C30DFA08B1F /* CasamaWidgets.appex in Embed Foundation Extensions */,
 				642D0BC0E5AB24182260B747 /* CasamaShare.appex in Embed Foundation Extensions */,
 				F0E6F1192A20FA79BD6D77FE /* CasamaSafariExtension.appex in Embed Foundation Extensions */,
+				64B495F2CDBD8ED0DA41DCFD /* CasamaNotify.appex in Embed Foundation Extensions */,
+				C7FD3CBA78934BCEC66A43F3 /* CasamaFileProvider.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -218,25 +255,29 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		51A11A0D2F00000000000001 /* SiriBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SiriBridge.swift; path = Siri/SiriBridge.swift; sourceTree = SOURCE_ROOT; };
-		51A11A0D2F00000000000003 /* SiriIntents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SiriIntents.swift; path = Siri/SiriIntents.swift; sourceTree = SOURCE_ROOT; };
-		51A11A0D2F00000000000005 /* SiriProbe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SiriProbe.swift; path = Siri/SiriProbe.swift; sourceTree = SOURCE_ROOT; };
-		51A11A0D2F00000000000007 /* SiriSchemas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SiriSchemas.swift; path = Siri/SiriSchemas.swift; sourceTree = SOURCE_ROOT; };
+		04AFC9999B282FB81EAED85C /* FileProviderKeyStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FileProviderKeyStore.swift; path = FileProviderKeyStore.swift; sourceTree = "<group>"; };
+		05C017B805CA87EA445F4CFC /* NotificationService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NotificationService.swift; path = CasamaNotify/NotificationService.swift; sourceTree = "<group>"; };
 		0DFECE249481560D952E7018 /* CasamaShare.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = CasamaShare.entitlements; sourceTree = "<group>"; };
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
 		17BD90CC40136C36F43376C9 /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = System/Library/Frameworks/SafariServices.framework; sourceTree = SDKROOT; };
 		18D8EADAF95E91BC6578B716 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		1DCA788D2EED9B38E4AE72B4 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
+		2E4F30B73B089F6869EFDFD5 /* SpeechAnalyzerBridge.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SpeechAnalyzerBridge.swift; path = SpeechAnalyzerBridge.swift; sourceTree = "<group>"; };
 		331C807B294A618700263BE5 /* RunnerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunnerTests.swift; sourceTree = "<group>"; };
 		331C8081294A63A400263BE5 /* RunnerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RunnerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		34779590C35DF1678A81B400 /* SafariWebExtensionHandler.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SafariWebExtensionHandler.swift; sourceTree = "<group>"; };
+		36FBB37BA5FEB8B64F2D8D8D /* HomeKitBridge.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HomeKitBridge.swift; path = HomeKitBridge.swift; sourceTree = "<group>"; };
 		372577EE13E4ED7A2E3B937D /* CasamaWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CasamaWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
 		3E9BBAF50CAEAFD15BC20E14 /* ActivityKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ActivityKit.framework; path = System/Library/Frameworks/ActivityKit.framework; sourceTree = SDKROOT; };
 		4053F2B4F6E554F9E00A69CE /* CasamaSafariExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CasamaSafariExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		42F50E178207BA7223AB4D08 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4B5A0F1C2D3E4F5061728396 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		51A11A0D2F00000000000001 /* SiriBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SiriBridge.swift; path = Siri/SiriBridge.swift; sourceTree = SOURCE_ROOT; };
+		51A11A0D2F00000000000003 /* SiriIntents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SiriIntents.swift; path = Siri/SiriIntents.swift; sourceTree = SOURCE_ROOT; };
+		51A11A0D2F00000000000005 /* SiriProbe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SiriProbe.swift; path = Siri/SiriProbe.swift; sourceTree = SOURCE_ROOT; };
+		51A11A0D2F00000000000007 /* SiriSchemas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SiriSchemas.swift; path = Siri/SiriSchemas.swift; sourceTree = SOURCE_ROOT; };
 		6A32EF7F739D89EC1E06789B /* CasamaSafariExtension.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = CasamaSafariExtension.entitlements; sourceTree = "<group>"; };
 		6ABE106B4A7061C9ABA5F792 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		6ECCE6E669A4EFA857CB2FF7 /* CasamaWidgets.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = CasamaWidgets.entitlements; sourceTree = "<group>"; };
@@ -246,8 +287,13 @@
 		7884E8672EC3CC0400C636F2 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		78E0A7A72DC9AD7400C4905E /* FlutterGeneratedPluginSwiftPackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = FlutterGeneratedPluginSwiftPackage; path = Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage; sourceTree = "<group>"; };
 		795EBC5CAF99A95484C5D890 /* Pods-RunnerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.release.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.release.xcconfig"; sourceTree = "<group>"; };
+		7AA6BB103BA8E94C942A82C2 /* AlarmKitBridge.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AlarmKitBridge.swift; path = AlarmKitBridge.swift; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
+		7D0694A601AA1D085258411A /* VisualIntelligence.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = VisualIntelligence.swift; path = Siri/VisualIntelligence.swift; sourceTree = "<group>"; };
 		7D968176B06B4195FE685FA1 /* ShareViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
+		7FDFEEBC4D75834961F95594 /* FileProviderKeyStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FileProviderKeyStore.swift; path = Shared/FileProviderKeyStore.swift; sourceTree = "<group>"; };
+		83D1B1D6170ED23783E301F3 /* OnDeviceModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OnDeviceModel.swift; path = OnDeviceModel.swift; sourceTree = "<group>"; };
+		8C713ACF97BE5EBA52C26A86 /* Skills.skillsbundle */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder; name = Skills.skillsbundle; path = Siri/Skills.skillsbundle; sourceTree = "<group>"; };
 		8DE35B78AB9AD8A0AEB27C06 /* Pods-RunnerTests.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.profile.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.profile.xcconfig"; sourceTree = "<group>"; };
 		91D49E8E843199AFD43488EE /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = "<group>"; };
@@ -257,8 +303,15 @@
 		97C146FD1CF9000F007C117D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9A089E8B3CE16ADC9C1A03A1 /* AgeRange.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AgeRange.swift; path = AgeRange.swift; sourceTree = "<group>"; };
+		9CC1DC9BE4B334AE268E7910 /* CasamaNotify.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CasamaNotify.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		9F75516A8D22141DD4E40105 /* DocumentScanner.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DocumentScanner.swift; path = DocumentScanner.swift; sourceTree = "<group>"; };
+		A312838720468BFBAF85881A /* CasamaFileProviderExtension.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CasamaFileProviderExtension.swift; path = Shared/CasamaFileProviderExtension.swift; sourceTree = "<group>"; };
 		B28329C64B6F9CCC1440CE45 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B30F549DD837AAD90314AC9B /* AppIcon.icon */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.iconcomposer.icon; name = AppIcon.icon; path = AppIcon.icon; sourceTree = "<group>"; };
 		B370E26B455198A65289EFCC /* Pods_RunnerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RunnerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C09A9A2D202DC427236702D3 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = CasamaNotify/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		C59E16A9B89B4BE3FBE0F2C4 /* FocusFilter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FocusFilter.swift; path = Siri/FocusFilter.swift; sourceTree = "<group>"; };
 		C8C7AB9C129CBE2C18D243C8 /* CasamaWidgets.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CasamaWidgets.swift; sourceTree = "<group>"; };
 		CCF78A1DE05A9813A6255500 /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
 		D2A11A0D2F00000000000001 /* RunActivityAttributes.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RunActivityAttributes.swift; sourceTree = "<group>"; };
@@ -327,11 +380,14 @@
 		D5E11A0D2F00000000000001 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		D5E11A0D2F00000000000003 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		D5F11A0D2F00000000000001 /* WatchCrashReporter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WatchCrashReporter.swift; sourceTree = "<group>"; };
+		DA541EDE7A48DB77F039B9AC /* FileProviderBridge.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FileProviderBridge.swift; path = FileProviderBridge.swift; sourceTree = "<group>"; };
 		DA739DDCE56B8D7CD594E1B3 /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		DC8BF677A6A6F7BFEB20679E /* SiriToolsPhase4.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SiriToolsPhase4.swift; path = Siri/SiriToolsPhase4.swift; sourceTree = "<group>"; };
 		DD3D9A9447A0EB3E60E2BC1E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		E78A7E61B67619C3B5B9EE10 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EE968A3A92DD423E10EE6E0B /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
 		F51FF34728DA2C4A691C9171 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		F95FAF1A7BA046638765ACD2 /* CasamaFileProvider.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CasamaFileProvider.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		FAD7F69A47C113EA4A9C3207 /* Pods-RunnerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.debug.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -344,6 +400,14 @@
 				E0C01C22E7320C88F18D4DD0 /* WidgetKit.framework in Frameworks */,
 				67549F5A9D64FF0C1D459F1F /* SwiftUI.framework in Frameworks */,
 				FED3E3B6DBEF6C9BF47F4C1B /* ActivityKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3E7B3753511BEA47CB934B4F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FB1C61813114E72F32286EC1 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -386,6 +450,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DDD1C3AB97B17162468C751B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				094CCB08D8EFFD2BE7AA4825 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -449,6 +521,15 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		5DC091A26EFA22C18F60015B /* CasamaFileProvider */ = {
+			isa = PBXGroup;
+			children = (
+				A312838720468BFBAF85881A /* CasamaFileProviderExtension.swift */,
+				7FDFEEBC4D75834961F95594 /* FileProviderKeyStore.swift */,
+			);
+			name = CasamaFileProvider;
+			sourceTree = "<group>";
+		};
 		685500DAE0C5AC429AE4ADED /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -491,6 +572,9 @@
 				D4C11A0D2F00000000000069 /* Shared */,
 				4174F3E3AFAD86110A47821E /* Pods */,
 				BC0462D1FF7EDB314BFD40B1 /* CasamaSafariExtension */,
+				F1F09480E81D659383B95FE1 /* Siri */,
+				CC68E41D6D62915FC4DED4CD /* CasamaNotify */,
+				5DC091A26EFA22C18F60015B /* CasamaFileProvider */,
 			);
 			sourceTree = "<group>";
 		};
@@ -504,6 +588,8 @@
 				D4C11A0D2F00000000000024 /* CasamaWatch.app */,
 				D4C11A0D2F00000000000025 /* CasamaWatchWidgets.appex */,
 				4053F2B4F6E554F9E00A69CE /* CasamaSafariExtension.appex */,
+				9CC1DC9BE4B334AE268E7910 /* CasamaNotify.appex */,
+				F95FAF1A7BA046638765ACD2 /* CasamaFileProvider.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -528,6 +614,11 @@
 				51A11A0D2F00000000000005 /* SiriProbe.swift */,
 				51A11A0D2F00000000000007 /* SiriSchemas.swift */,
 				74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */,
+				9A089E8B3CE16ADC9C1A03A1 /* AgeRange.swift */,
+				7AA6BB103BA8E94C942A82C2 /* AlarmKitBridge.swift */,
+				9F75516A8D22141DD4E40105 /* DocumentScanner.swift */,
+				36FBB37BA5FEB8B64F2D8D8D /* HomeKitBridge.swift */,
+				B30F549DD837AAD90314AC9B /* AppIcon.icon */,
 			);
 			path = Runner;
 			sourceTree = "<group>";
@@ -542,6 +633,15 @@
 			);
 			name = CasamaSafariExtension;
 			path = CasamaSafariExtension;
+			sourceTree = "<group>";
+		};
+		CC68E41D6D62915FC4DED4CD /* CasamaNotify */ = {
+			isa = PBXGroup;
+			children = (
+				05C017B805CA87EA445F4CFC /* NotificationService.swift */,
+				C09A9A2D202DC427236702D3 /* PrivacyInfo.xcprivacy */,
+			);
+			name = CasamaNotify;
 			sourceTree = "<group>";
 		};
 		D3B11A0D2F00000000000023 /* WidgetViews */ = {
@@ -573,6 +673,10 @@
 				D4C11A0D2F0000000000000B /* WatchSync.swift */,
 				D4C11A0D2F0000000000000C /* WatchTheme.swift */,
 				D4C11A0D2F0000000000000D /* WatchAssets.xcassets */,
+				2E4F30B73B089F6869EFDFD5 /* SpeechAnalyzerBridge.swift */,
+				83D1B1D6170ED23783E301F3 /* OnDeviceModel.swift */,
+				04AFC9999B282FB81EAED85C /* FileProviderKeyStore.swift */,
+				DA541EDE7A48DB77F039B9AC /* FileProviderBridge.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -626,6 +730,17 @@
 			path = CasamaShare;
 			sourceTree = "<group>";
 		};
+		F1F09480E81D659383B95FE1 /* Siri */ = {
+			isa = PBXGroup;
+			children = (
+				C59E16A9B89B4BE3FBE0F2C4 /* FocusFilter.swift */,
+				7D0694A601AA1D085258411A /* VisualIntelligence.swift */,
+				DC8BF677A6A6F7BFEB20679E /* SiriToolsPhase4.swift */,
+				8C713ACF97BE5EBA52C26A86 /* Skills.skillsbundle */,
+			);
+			name = Siri;
+			sourceTree = "<group>";
+		};
 		FAFC1F460D084820A41A60B0 /* iOS */ = {
 			isa = PBXGroup;
 			children = (
@@ -655,6 +770,23 @@
 			productName = RunnerTests;
 			productReference = 331C8081294A63A400263BE5 /* RunnerTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		524C7E99EF1820F03DB6FC6B /* CasamaNotify */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A8AC14E32AA5F3E8FF7CCCAA /* Build configuration list for PBXNativeTarget "CasamaNotify" */;
+			buildPhases = (
+				C4BDFC51B7AACF8F3EF96691 /* Sources */,
+				3E7B3753511BEA47CB934B4F /* Frameworks */,
+				FECE18EDE53DC7619137AB2F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CasamaNotify;
+			productName = CasamaNotify;
+			productReference = 9CC1DC9BE4B334AE268E7910 /* CasamaNotify.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 		943080D35502074956D9E38E /* CasamaShare */ = {
 			isa = PBXNativeTarget;
@@ -695,6 +827,8 @@
 				A1A3AAE59BC2A06E71DD0C1E /* PBXTargetDependency */,
 				D4C11A0D2F00000000000068 /* PBXTargetDependency */,
 				21484AD481F1D33EABFB634C /* PBXTargetDependency */,
+				9C9433A97CAEFDBC1221A690 /* PBXTargetDependency */,
+				9EDE03B566F5CBD5E8D703CD /* PBXTargetDependency */,
 			);
 			name = Runner;
 			packageProductDependencies = (
@@ -778,6 +912,23 @@
 			productReference = D4C11A0D2F00000000000025 /* CasamaWatchWidgets.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
+		DA7003AEC23C13C38430F03E /* CasamaFileProvider */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 966EF1CD6A1EE38BA0481622 /* Build configuration list for PBXNativeTarget "CasamaFileProvider" */;
+			buildPhases = (
+				B3824AFB56C433FC23F61D02 /* Sources */,
+				DDD1C3AB97B17162468C751B /* Frameworks */,
+				E78395FB6654683F9EB898CB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CasamaFileProvider;
+			productName = CasamaFileProvider;
+			productReference = F95FAF1A7BA046638765ACD2 /* CasamaFileProvider.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -822,6 +973,8 @@
 				D4C11A0D2F00000000000053 /* CasamaWatch */,
 				D4C11A0D2F00000000000054 /* CasamaWatchWidgets */,
 				A19907D561F17C05756EE680 /* CasamaSafariExtension */,
+				524C7E99EF1820F03DB6FC6B /* CasamaNotify */,
+				DA7003AEC23C13C38430F03E /* CasamaFileProvider */,
 			);
 		};
 /* End PBXProject section */
@@ -860,6 +1013,8 @@
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
 				4B5A0F1C2D3E4F5061728397 /* PrivacyInfo.xcprivacy in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
+				06B2F9194DEB15B4AE122F68 /* AppIcon.icon in Resources */,
+				7E58658917C6912789CC0B1B /* Skills.skillsbundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -882,11 +1037,26 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E78395FB6654683F9EB898CB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F5818799B7F7243B1C3D1E39 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				D2A11A0D2F00000000000034 /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FECE18EDE53DC7619137AB2F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				91DFE22338FF399EC5B558D4 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1065,6 +1235,34 @@
 				D3B11A0D2F00000000000009 /* GlanceIntents.swift in Sources */,
 				D3B11A0D2F0000000000000C /* ControlIntents.swift in Sources */,
 				D3B11A0D2F00000000000022 /* WidgetsBridge.swift in Sources */,
+				92B4879D42B8FEE97A527261 /* AgeRange.swift in Sources */,
+				92C358CDA32C7A43C1A7D6CE /* AlarmKitBridge.swift in Sources */,
+				9492D47C43B20B788B729A32 /* DocumentScanner.swift in Sources */,
+				E547E6C59BE29AE0A0A06A55 /* HomeKitBridge.swift in Sources */,
+				7DB8047FE9B7234CE53D6A26 /* SpeechAnalyzerBridge.swift in Sources */,
+				0A417F45C87E32A5EED30C40 /* OnDeviceModel.swift in Sources */,
+				82744522B69B6B4696633344 /* FileProviderKeyStore.swift in Sources */,
+				16347E08A542B5958D34CA95 /* FileProviderBridge.swift in Sources */,
+				663D6EC7130BB248065B2BED /* FocusFilter.swift in Sources */,
+				F280E7EC59E3C9BBF7AD19FC /* VisualIntelligence.swift in Sources */,
+				AE47478AE6CE6CB91A85769C /* SiriToolsPhase4.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B3824AFB56C433FC23F61D02 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				38409D763242E5E045C67C64 /* CasamaFileProviderExtension.swift in Sources */,
+				2140DBB090325B934B438CB1 /* FileProviderKeyStore.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C4BDFC51B7AACF8F3EF96691 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D1AC36B72EEDCE34196903E1 /* NotificationService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1153,6 +1351,18 @@
 			isa = PBXTargetDependency;
 			target = 97C146ED1CF9000F007C117D /* Runner */;
 			targetProxy = 331C8085294A63A400263BE5 /* PBXContainerItemProxy */;
+		};
+		9C9433A97CAEFDBC1221A690 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = CasamaNotify;
+			target = 524C7E99EF1820F03DB6FC6B /* CasamaNotify */;
+			targetProxy = ED128389AF013430E55A149D /* PBXContainerItemProxy */;
+		};
+		9EDE03B566F5CBD5E8D703CD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = CasamaFileProvider;
+			target = DA7003AEC23C13C38430F03E /* CasamaFileProvider */;
+			targetProxy = C08CF8C5AC55BAC52DC55540 /* PBXContainerItemProxy */;
 		};
 		A1A3AAE59BC2A06E71DD0C1E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1278,6 +1488,36 @@
 			};
 			name = Profile;
 		};
+		277BD55B6464587D45FE4D90 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = CasamaFileProvider/CasamaFileProvider.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
+				DEVELOPMENT_TEAM = V8V5US964Z;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = CasamaFileProvider/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = "$(FLUTTER_BUILD_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = ai.casama.app.CasamaFileProvider;
+				PRODUCT_MODULE_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		331C8088294A63A400263BE5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = FAD7F69A47C113EA4A9C3207 /* Pods-RunnerTests.debug.xcconfig */;
@@ -1355,6 +1595,35 @@
 			};
 			name = Release;
 		};
+		529054D8E423618AB2FAB2CE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = CasamaNotify/CasamaNotify.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
+				DEVELOPMENT_TEAM = V8V5US964Z;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = CasamaNotify/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = "$(FLUTTER_BUILD_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = ai.casama.app.CasamaNotify;
+				PRODUCT_MODULE_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
 		6595FF979D32EE01B3FF7543 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
@@ -1362,9 +1631,8 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_ENTITLEMENTS = CasamaSafariExtension/CasamaSafariExtension.entitlements;
-				CODE_SIGN_STYLE = Manual;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				PROVISIONING_PROFILE_SPECIFIER = "Casama Safari Extension iOS Development";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = V8V5US964Z;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -1381,6 +1649,7 @@
 				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = ai.casama.app.safari;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "Casama Safari Extension iOS Development";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
@@ -1407,6 +1676,65 @@
 				);
 				MARKETING_VERSION = "$(FLUTTER_BUILD_NAME)";
 				PRODUCT_BUNDLE_IDENTIFIER = ai.casama.app.CasamaShare;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		7F345CEAA9885E5487AF3CEA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = CasamaNotify/CasamaNotify.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
+				DEVELOPMENT_TEAM = V8V5US964Z;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = CasamaNotify/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = "$(FLUTTER_BUILD_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = ai.casama.app.CasamaNotify;
+				PRODUCT_MODULE_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		865DC74AD27768AEDA07F467 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = CasamaFileProvider/CasamaFileProvider.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
+				DEVELOPMENT_TEAM = V8V5US964Z;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = CasamaFileProvider/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = "$(FLUTTER_BUILD_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = ai.casama.app.CasamaFileProvider;
+				PRODUCT_MODULE_NAME = "$(TARGET_NAME)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -1596,6 +1924,36 @@
 				);
 				MARKETING_VERSION = "$(FLUTTER_BUILD_NAME)";
 				PRODUCT_BUNDLE_IDENTIFIER = ai.casama.app.CasamaWidgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Profile;
+		};
+		A0D2113941E6EA4D8B83CE2A /* Profile */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = CasamaFileProvider/CasamaFileProvider.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
+				DEVELOPMENT_TEAM = V8V5US964Z;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = CasamaFileProvider/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = "$(FLUTTER_BUILD_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = ai.casama.app.CasamaFileProvider;
+				PRODUCT_MODULE_NAME = "$(TARGET_NAME)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -1944,6 +2302,36 @@
 			};
 			name = Debug;
 		};
+		FCA0E49F2CC110B1DCD9C375 /* Profile */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = CasamaNotify/CasamaNotify.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
+				DEVELOPMENT_TEAM = V8V5US964Z;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = CasamaNotify/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = "$(FLUTTER_BUILD_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = ai.casama.app.CasamaNotify;
+				PRODUCT_MODULE_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Profile;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1977,6 +2365,16 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		966EF1CD6A1EE38BA0481622 /* Build configuration list for PBXNativeTarget "CasamaFileProvider" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				277BD55B6464587D45FE4D90 /* Release */,
+				865DC74AD27768AEDA07F467 /* Debug */,
+				A0D2113941E6EA4D8B83CE2A /* Profile */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		97C146E91CF9000F007C117D /* Build configuration list for PBXProject "Runner" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -2003,6 +2401,16 @@
 				3FE0993A03A1DD7602B116FE /* Release */,
 				B3CF90905832241F8EE4DEB2 /* Debug */,
 				9F8D774C0001041DE47A1DCC /* Profile */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A8AC14E32AA5F3E8FF7CCCAA /* Build configuration list for PBXNativeTarget "CasamaNotify" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7F345CEAA9885E5487AF3CEA /* Release */,
+				529054D8E423618AB2FAB2CE /* Debug */,
+				FCA0E49F2CC110B1DCD9C375 /* Profile */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

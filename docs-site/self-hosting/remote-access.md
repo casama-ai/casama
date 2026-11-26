@@ -1,9 +1,5 @@
 # Use your server on your phone (Casama Link)
 
-::: warning Self-hosting is paused
-Self-hosting is paused while the Casama Engine moves to a separate license. The install commands on this page are removed for now, and the rest is kept as a reference. Casama Cloud is the way to run Casama today.
-:::
-
 A Casama server on your own Mac or PC normally answers only on that computer. Casama Link gives it
 an `https://` address your phone can reach from anywhere, with no domain, no router settings and no
 open ports. You sign in on the phone by scanning a code, and notifications reach the Casama apps
@@ -18,17 +14,15 @@ server Casama Cloud's computers and model credits; that part is billed and has i
 
 You need:
 
-- **A server on this computer**, started by the desktop app's Run on This Mac setup or
-  installed with the installer's `--local` option. See [Self-hosting](/self-hosting/).
+- **A server on this computer**, started by the desktop app's **Run on This Mac** setup or
+  installed with `--local`. See [Install on your computer](/self-hosting/desktop) and
+  [Install on a server](/self-hosting/server).
 - **Your account on that server.** Remote access refuses to turn on while nobody has signed up,
   because it closes sign-ups and the first account would otherwise belong to whoever finds the
   address first.
 - **A free Casama Cloud account** where you are an owner or admin of a workspace. You can make one
-  while you approve the link. Casama Cloud is invite-only for now, and people who run their own
-  server can skip the line: claim the invite code `SELFHOST-2026` at
-  [casama.ai/invite/SELFHOST-2026](https://casama.ai/invite/SELFHOST-2026) with the email you'll
-  sign in with (a few each day). When it's used up, tick **I run Casama on my own server** at
-  casama.ai/waitlist and you're let in first. See [Getting an invite](/guide/getting-an-invite).
+  while you approve the link. Casama Cloud is invite-only for now: see
+  [Getting an invite](/guide/getting-an-invite).
 - **Outbound port 7844, TCP and UDP.** The `connector` container dials out to Cloudflare on it. Most
   home networks allow it. Some company networks and VPNs don't.
 - **A Casama Cloud that gives out addresses.** The CLI and the app use `https://api.casama.ai`. If
@@ -56,7 +50,7 @@ A server that already has its own `https://` domain doesn't need an address. It 
 The **Use on Your Phone** button appears only when the app is connected to the server it
 installed itself. For a server you installed another way, the screen shows the command below.
 
-**In a terminal**, from the server's checkout:
+**In a terminal**, from the server's install folder:
 
 ```sh
 casama selfhost remote on
@@ -285,7 +279,7 @@ works the same way. `remote link` takes `--name`, `--cloud`, `--relink`, `--no-b
 
 ## What gets set
 
-`casama selfhost remote on` and the desktop app write these to `infra/compose/.env`, then re-run
+`casama selfhost remote on` and the desktop app write these to `.env`, then re-run
 the installer, which starts the `connector` container (Compose profile `link`). You shouldn't need
 to edit them by hand.
 

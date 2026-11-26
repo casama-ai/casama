@@ -6,7 +6,7 @@ import 'package:dio/dio.dart';
 import 'dart:async';
 
 // The generated client's gallery models share names with core/gallery_models.dart (D-315).
-import 'package:casama_sdk/casama_sdk.dart' hide AuthException, GalleryItem, GalleryRef, GalleryAccess, GalleryNeeds, GalleryInput, GalleryChange, GalleryStats, GalleryAccessDiff, GalleryInstalledItem, GalleryMissing, GalleryInstallResult, GalleryRequest, GallerySubmission;
+import 'package:casama_sdk/casama_sdk.dart' hide AuthException, GalleryItem, GalleryRef, GalleryAccess, GalleryNeeds, GalleryInput, GalleryChange, GalleryStats, GalleryAccessDiff, GalleryInstalledItem, GalleryMissing, GalleryInstallResult, GalleryRequest, GallerySubmission, SelfhostApi;
 import 'package:supabase_flutter/supabase_flutter.dart' as sb;
 
 import 'package:flutter/services.dart';
@@ -15,6 +15,7 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'admin_security.dart';
+import 'selfhost_api.dart';
 import 'ads_attribution.dart';
 import 'apple_sign_in.dart';
 import 'apple_token_handoff.dart';
@@ -1915,6 +1916,12 @@ class SupabaseBackend implements Backend {
   @override
   bool get newsletterAvailable => config?.newsletter ?? false;
 
+  @override
+  ({bool available, bool connected})? get cloudModelsConfig => switch (config?.cloudModels) {
+    final c? => (available: c.available, connected: c.connected),
+    null => null,
+  };
+
   // Casama's monthly email (D-408). A server that doesn't send it answers available: false.
   @override
   Future<NewsletterChoice?> newsletter() async {
@@ -2434,6 +2441,7 @@ class SupabaseBackend implements Backend {
           call: MessageCall.fromContent(r['content']),
           callId: _callIdOf(r['content']),
           keepGoing: _keepGoing(r['content']),
+          movedAuthorName: r['moved_author_name'] as String?,
         ),
     ];
   }
@@ -3711,7 +3719,12 @@ class SupabaseBackend implements Backend {
     ];
     for (final (i, r) in rows.indexed) {
       try {
-        await supabase.from('devices').upsert(r, onConflict: 'fcm_token');
+        final saved = await supabase
+            .from('devices')
+            .upsert(r, onConflict: 'fcm_token')
+            .select('id')
+            .maybeSingle();
+        if (saved?['id'] is String) _deviceId = saved!['id'] as String;
         break;
       } catch (_) {
         if (i == rows.length - 1) rethrow;
@@ -7482,6 +7495,9 @@ class SupabaseBackend implements Backend {
   }
 
   @override
+  late final SelfhostApi selfhost = HttpSelfhostApi(dio: api.api.dio, headers: () => authHeaders);
+
+  @override
   Map<String, String> get authHeaders {
     final token = supabase.auth.currentSession?.accessToken;
     return {if (token != null) 'Authorization': 'Bearer $token'};
@@ -7658,6 +7674,74 @@ class SupabaseBackend implements Backend {
       ),
       headers,
     );
+  }
+
+  String? _deviceId;
+
+  @override
+  Future<Me?> getMe() async => (await api.workspaces.getMe()).data;
+
+  @override
+  Future<AgeBandResult> setMyAgeBand(AccountAgeBand? ageBand) async =>
+      (await api.privacy.setMyAgeBand(
+        setAgeBandRequest: SetAgeBandRequest(ageBand: ageBand),
+      )).data!;
+
+  @override
+  Future<void> updateCurrentDeviceQuiet(DateTime? quietUntil) async {
+    final uid = supabase.auth.currentUser?.id;
+    if (uid == null) return;
+    var id = _deviceId;
+    if (id == null && _deviceToken != null) {
+      try {
+        final row = await supabase
+            .from('devices')
+            .select('id')
+            .eq('user_id', uid)
+            .eq('fcm_token', _deviceToken!)
+            .maybeSingle();
+        if (row?['id'] is String) id = row!['id'] as String;
+      } catch (_) {}
+    }
+    if (id == null) {
+      try {
+        final platform = _focusPlatform;
+        var q = supabase.from('devices').select('id').eq('user_id', uid);
+        if (platform != null) q = q.eq('platform', platform);
+        final rows = await q.order('last_seen_at', ascending: false).limit(1);
+        if (rows.isNotEmpty && rows.first['id'] is String) {
+          id = rows.first['id'] as String;
+        }
+      } catch (_) {}
+    }
+    if (id == null) return;
+    _deviceId = id;
+    await api.devices.updateDeviceQuiet(
+      id: id,
+      updateDeviceQuietRequest: UpdateDeviceQuietRequest(quietUntil: quietUntil),
+    );
+  }
+
+  @override
+  Future<FileKeyCreated> createFileKey({
+    required String orgId,
+    required FileKeyCreatePlatformEnum platform,
+    String? label,
+  }) async => (await api.files.createFileKey(
+    fileKeyCreate: FileKeyCreate(
+      orgId: orgId,
+      platform: platform,
+      label: label,
+    ),
+  )).data!;
+
+  @override
+  Future<List<FileKey>> listFileKeys() async =>
+      (await api.files.listFileKeys()).data?.items.toList() ?? const [];
+
+  @override
+  Future<void> deleteFileKey(String id) async {
+    await api.files.deleteFileKey(id: id);
   }
 }
 

@@ -30,6 +30,7 @@ describe("run events", () => {
       "approval.resolved",
       "device.access_requested",
       "device.browser_access_requested",
+      "device.action_access_requested",
       "local_mcp.sign_in_needed",
       "mcp.question",
       "mcp.question_resolved",
@@ -130,6 +131,13 @@ describe("openapi", () => {
             "/v1/waitlist/redeem",
             "/v1/waitlist/leave",
             "/v1/invites/preview",
+            // Self-hosted licenses (docs/SELF-HOSTING-PLAN.md §11.5, §11.6): a server renews its
+            // key and reports its state with no account, and a trial goes to an email address.
+            "/v1/selfhost/status",
+            "/v1/selfhost/licenses/renew",
+            "/v1/selfhost/licenses/trial",
+            // Letting an address past the waitlist comes before its first sign-in (the personal license).
+            "/v1/selfhost/licenses/admit",
           ].includes(path)
         )
           expect(Object.keys(op.responses)).toContain("401");

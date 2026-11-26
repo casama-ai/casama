@@ -49,3 +49,6 @@ app.*.map.json
 
 # Generated sharded test entrypoints (client/tool/test_shards.dart)
 test/.generated/
+
+# Casama Cloud models build switch marker (scripts/cloud-models-switch.sh)
+cloud-models.on

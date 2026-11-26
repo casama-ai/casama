@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
@@ -143,8 +144,110 @@ class SpeechToTextDictation implements DeviceDictation {
   }
 }
 
+/// On-device SpeechAnalyzer dictation on iOS 26+ and macOS 26+ (docs/APPLE-INTEGRATIONS-PLAN.md §7.2),
+/// falling back to [SpeechToTextDictation] on older OS versions and other platforms.
+class SpeechAnalyzerDictation implements DeviceDictation {
+  SpeechAnalyzerDictation({
+    MethodChannel? channel,
+    DeviceDictation? fallback,
+  })  : _channel = channel ?? const MethodChannel('casama/speech_analyzer'),
+        _fallback = fallback ?? SpeechToTextDictation();
+
+  final MethodChannel _channel;
+  final DeviceDictation _fallback;
+  bool _usingNative = false;
+  void Function(String words)? _onWords;
+  void Function(DeviceDictationEnd end)? _onEnd;
+
+  bool get _isApple =>
+      !kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.iOS ||
+          defaultTargetPlatform == TargetPlatform.macOS);
+
+  @override
+  bool get supported => _isApple || _fallback.supported;
+
+  Future<bool> _nativeSupported() async {
+    if (!_isApple) return false;
+    try {
+      return await _channel.invokeMethod<bool>('isSupported') ?? false;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> start({
+    required void Function(String words) onWords,
+    required void Function(DeviceDictationEnd end) onEnd,
+  }) async {
+    if (await _nativeSupported()) {
+      _onWords = onWords;
+      _onEnd = onEnd;
+      _channel.setMethodCallHandler(_handleNative);
+      try {
+        final started = await _channel.invokeMethod<bool>('start') ?? false;
+        if (started) {
+          _usingNative = true;
+          return true;
+        }
+      } catch (e) {
+        debugPrint('SpeechAnalyzer unavailable, falling back: $e');
+      }
+      _channel.setMethodCallHandler(null);
+      _onWords = null;
+      _onEnd = null;
+    }
+    _usingNative = false;
+    return _fallback.start(onWords: onWords, onEnd: onEnd);
+  }
+
+  Future<void> _handleNative(MethodCall call) async {
+    final args = call.arguments is Map ? call.arguments as Map : const {};
+    switch (call.method) {
+      case 'onWords':
+        final words = (args['words'] as String?)?.trim() ?? '';
+        if (words.isNotEmpty) _onWords?.call(words);
+      case 'onEnd':
+        final reason = args['reason'] as String?;
+        final end = switch (reason) {
+          'done' => DeviceDictationEnd.done,
+          'nothingHeard' => DeviceDictationEnd.nothingHeard,
+          _ => DeviceDictationEnd.failed,
+        };
+        final cb = _onEnd;
+        _onEnd = null;
+        _onWords = null;
+        _usingNative = false;
+        cb?.call(end);
+    }
+  }
+
+  @override
+  Future<void> stop() async {
+    if (_usingNative) {
+      await _channel.invokeMethod<void>('stop').catchError((_) {});
+      _usingNative = false;
+    } else {
+      await _fallback.stop();
+    }
+  }
+
+  @override
+  Future<void> cancel() async {
+    if (_usingNative) {
+      _onWords = null;
+      _onEnd = null;
+      _usingNative = false;
+      await _channel.invokeMethod<void>('cancel').catchError((_) {});
+    } else {
+      await _fallback.cancel();
+    }
+  }
+}
+
 final deviceDictationProvider = Provider<DeviceDictation>(
-  (ref) => SpeechToTextDictation(),
+  (ref) => SpeechAnalyzerDictation(),
 );
 
 /// Which dictation the mic uses next. The server first; after it fails, the device's own for a

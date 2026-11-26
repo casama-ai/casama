@@ -37,6 +37,7 @@ import 'call_live_tile.dart';
 import 'call_mascot.dart';
 import 'call_motion.dart';
 import '../../core/remote_content.dart';
+import '../privacy/ai_consent_step.dart' show aiConsentAskedHereProvider;
 
 /// A live voice call with a bot (/bots/:id/call?c=conversation). The call itself belongs to the
 /// app (D-327, [ActiveCall]): this screen is one view of it, next to the bubble and the sidebar
@@ -90,7 +91,15 @@ class _CallScreenState extends ConsumerState<CallScreen>
     _active.addView();
     WidgetsBinding.instance.addObserver(this);
     unawaited(ScreenAwake.set(true));
-    _attach();
+    if (ref.read(aiConsentAskedHereProvider)) {
+      // App Store 5.1.2(i): ask before the first call sends a voice to Google.
+      _asking = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) unawaited(_askVoiceConsent());
+      });
+    } else {
+      _attach();
+    }
     unawaited(
       SharedPreferences.getInstance()
           .then((p) {
@@ -100,6 +109,40 @@ class _CallScreenState extends ConsumerState<CallScreen>
           })
           .catchError((_) {}),
     );
+  }
+
+  /// Where this device remembers that the person agreed to send their voice to Google.
+  static const voiceConsentKey = 'voice.aiConsent.v1';
+
+  /// Asks once, before the first call: what is sent (the voice, the call's words), and to whom
+  /// (Google Gemini, OpenRouter and the bot's model). Not now goes back without calling.
+  Future<void> _askVoiceConsent() async {
+    final prefs = await SharedPreferences.getInstance().then<SharedPreferences?>((p) => p).catchError((_) => null);
+    if (!mounted) return;
+    if (prefs?.getBool(voiceConsentKey) == true) {
+      setState(() => _asking = false);
+      _attach();
+      return;
+    }
+    final l10n = context.l10n;
+    final ok = await showConfirm(
+      context: context,
+      icon: LucideIcons.audioLines,
+      title: l10n.callVoiceConsentTitle,
+      message: l10n.callVoiceConsentBody,
+      confirmLabel: l10n.callVoiceConsentAgree,
+      cancelLabel: l10n.callVoiceConsentNotNow,
+      confirmKey: const Key('callVoiceConsentAgree'),
+    );
+    if (!mounted) return;
+    if (!ok) {
+      _leave();
+      return;
+    }
+    await prefs?.setBool(voiceConsentKey, true);
+    if (!mounted) return;
+    setState(() => _asking = false);
+    _attach();
   }
 
   /// Starts the call, or shows the one going on with this bot; another bot's call asks first.

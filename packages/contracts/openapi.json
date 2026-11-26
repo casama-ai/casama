@@ -62,6 +62,9 @@
             "$ref": "#/components/schemas/DeviceBrowserAccessRequestedEvent"
           },
           {
+            "$ref": "#/components/schemas/DeviceActionAccessRequestedEvent"
+          },
+          {
             "$ref": "#/components/schemas/LocalMcpSignInNeededEvent"
           },
           {
@@ -161,6 +164,7 @@
             "approval.resolved": "#/components/schemas/ApprovalResolvedEvent",
             "device.access_requested": "#/components/schemas/DeviceAccessRequestedEvent",
             "device.browser_access_requested": "#/components/schemas/DeviceBrowserAccessRequestedEvent",
+            "device.action_access_requested": "#/components/schemas/DeviceActionAccessRequestedEvent",
             "local_mcp.sign_in_needed": "#/components/schemas/LocalMcpSignInNeededEvent",
             "mcp.question": "#/components/schemas/McpQuestionEvent",
             "mcp.question_resolved": "#/components/schemas/McpQuestionResolvedEvent",
@@ -1015,6 +1019,71 @@
                 "enum": [
                   "browser_tab",
                   "browser_history"
+                ]
+              },
+              "reason": {
+                "type": "string"
+              },
+              "bot_id": {
+                "type": "string",
+                "format": "uuid"
+              }
+            },
+            "required": [
+              "kind",
+              "reason",
+              "bot_id"
+            ]
+          }
+        },
+        "required": [
+          "v",
+          "run_id",
+          "seq",
+          "ts",
+          "bot_id",
+          "type",
+          "payload"
+        ]
+      },
+      "DeviceActionAccessRequestedEvent": {
+        "type": "object",
+        "properties": {
+          "v": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Protocol version, currently 1"
+          },
+          "run_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "seq": {
+            "type": "integer",
+            "exclusiveMinimum": 0
+          },
+          "ts": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "bot_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "device.action_access_requested"
+            ]
+          },
+          "payload": {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "alarm",
+                  "home"
                 ]
               },
               "reason": {
@@ -3423,6 +3492,21 @@
           "sites": {
             "$ref": "#/components/schemas/SitesConfig"
           },
+          "cloud_models": {
+            "type": "object",
+            "properties": {
+              "available": {
+                "type": "boolean"
+              },
+              "connected": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "available",
+              "connected"
+            ]
+          },
           "key_providers": {
             "type": "object",
             "properties": {
@@ -3463,6 +3547,9 @@
               "cloud",
               "runs_chat"
             ]
+          },
+          "moved_to": {
+            "$ref": "#/components/schemas/MovedTo"
           }
         },
         "required": [
@@ -3502,6 +3589,39 @@
           "custom_domains",
           "buy_domains",
           "tlds"
+        ]
+      },
+      "MovedTo": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "move_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "target": {
+            "type": "string",
+            "enum": [
+              "cloud",
+              "server"
+            ]
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "url",
+          "at",
+          "move_id",
+          "target",
+          "message"
         ]
       },
       "SignupChallenge": {
@@ -5144,6 +5264,16 @@
           "is_internal": {
             "type": "boolean"
           },
+          "account_age_band": {
+            "$ref": "#/components/schemas/AccountAgeBand"
+          },
+          "account_age_band_updated_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
           "organizations": {
             "type": "array",
             "items": {
@@ -5158,6 +5288,20 @@
           "locale",
           "timezone",
           "organizations"
+        ]
+      },
+      "AccountAgeBand": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "enum": [
+          "under13",
+          "13to15",
+          "16to17",
+          "18plus",
+          "declined",
+          null
         ]
       },
       "JoinResult": {
@@ -18379,6 +18523,33 @@
           }
         }
       },
+      "AgeBandResult": {
+        "type": "object",
+        "properties": {
+          "account_age_band": {
+            "$ref": "#/components/schemas/AccountAgeBand"
+          },
+          "account_age_band_updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "account_age_band",
+          "account_age_band_updated_at"
+        ]
+      },
+      "SetAgeBandRequest": {
+        "type": "object",
+        "properties": {
+          "age_band": {
+            "$ref": "#/components/schemas/AccountAgeBand"
+          }
+        },
+        "required": [
+          "age_band"
+        ]
+      },
       "UpdateOrgSettingsRequest": {
         "type": "object",
         "properties": {
@@ -18525,6 +18696,158 @@
         },
         "required": [
           "download_location"
+        ]
+      },
+      "FileKeyCreated": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/FileKey"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "key": {
+                "type": "string",
+                "description": "Read-only File Provider key (cfk_…), shown once. Send as Authorization: FileKey <key>"
+              }
+            },
+            "required": [
+              "key"
+            ]
+          }
+        ]
+      },
+      "FileKey": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "org_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "platform": {
+            "type": "string",
+            "enum": [
+              "ios",
+              "macos"
+            ]
+          },
+          "label": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 80
+          },
+          "last_used_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "org_id",
+          "platform",
+          "label",
+          "last_used_at",
+          "created_at"
+        ]
+      },
+      "FileKeyCreate": {
+        "type": "object",
+        "properties": {
+          "org_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "platform": {
+            "type": "string",
+            "enum": [
+              "ios",
+              "macos"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          }
+        },
+        "required": [
+          "org_id",
+          "platform"
+        ]
+      },
+      "DeletedFileKey": {
+        "type": "object",
+        "properties": {
+          "deleted": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "deleted"
+        ]
+      },
+      "FileKeyList": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FileKey"
+            }
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "DeviceQuietResult": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "quiet_until": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "quiet_until"
+        ]
+      },
+      "UpdateDeviceQuietRequest": {
+        "type": "object",
+        "properties": {
+          "quiet_until": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "Hold proactive check-in pushes to this device until this time; null clears the hold"
+          }
+        },
+        "required": [
+          "quiet_until"
         ]
       },
       "ConnectAppResponse": {
@@ -24501,9 +24824,11 @@
           "notifications",
           "activity",
           "browser_tab",
-          "browser_history"
+          "browser_history",
+          "alarm",
+          "home"
         ],
-        "description": "browser_tab and browser_history come from Casama for Chrome (platform web, D-323) and are live only: never stored"
+        "description": "browser_tab and browser_history come from Casama for Chrome (platform web, D-323) and are live only: never stored. alarm (AlarmKit) and home (HomeKit) are live actions on Apple devices (docs/APPLE-INTEGRATIONS-PLAN.md)."
       },
       "DevicePlace": {
         "type": "object",
@@ -24603,7 +24928,13 @@
               "read",
               "calendar.create",
               "reminders.create",
-              "locate"
+              "locate",
+              "alarm.set",
+              "alarm.list",
+              "alarm.cancel",
+              "home.list",
+              "home.read",
+              "home.set"
             ]
           },
           "params": {
@@ -24874,6 +25205,12 @@
                 "$ref": "#/components/schemas/DeviceKindSettings"
               },
               "browser_history": {
+                "$ref": "#/components/schemas/DeviceKindSettings"
+              },
+              "alarm": {
+                "$ref": "#/components/schemas/DeviceKindSettings"
+              },
+              "home": {
                 "$ref": "#/components/schemas/DeviceKindSettings"
               }
             },
@@ -32128,6 +32465,1656 @@
         "required": [
           "code",
           "proof"
+        ]
+      },
+      "TrialLicenseAccepted": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          }
+        },
+        "required": [
+          "ok"
+        ]
+      },
+      "TrialLicenseRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 254
+          }
+        },
+        "required": [
+          "email"
+        ]
+      },
+      "BusinessLicenseCreated": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "license": {
+            "type": "string"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "license",
+          "expires_at"
+        ]
+      },
+      "CreateBusinessLicenseRequest": {
+        "type": "object",
+        "properties": {
+          "customer": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "email": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 254
+          },
+          "seats": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100000
+          },
+          "features": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LicenseFeature"
+            },
+            "maxItems": 10
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "offline": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "customer",
+          "email",
+          "seats",
+          "expires_at"
+        ]
+      },
+      "LicenseFeature": {
+        "type": "string",
+        "enum": [
+          "audit_export",
+          "sso",
+          "advanced_roles",
+          "audit_forwarding"
+        ]
+      },
+      "SelfhostStatus": {
+        "type": "object",
+        "properties": {
+          "licensing": {
+            "type": "boolean"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "setup",
+              "active",
+              "grace",
+              "expired"
+            ]
+          },
+          "edition": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "personal",
+              "trial",
+              "business",
+              null
+            ]
+          },
+          "instance_id": {
+            "type": "string"
+          },
+          "expires_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "grace_until": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "members": {
+            "type": "integer"
+          },
+          "seats": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "engine_version": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "licensing"
+        ]
+      },
+      "LicenseIssued": {
+        "type": "object",
+        "properties": {
+          "license": {
+            "type": "string"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "license",
+          "expires_at"
+        ]
+      },
+      "PersonalLicenseRequest": {
+        "type": "object",
+        "properties": {
+          "instance_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "engine_version": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          }
+        },
+        "required": [
+          "instance_id",
+          "engine_version"
+        ]
+      },
+      "SelfhostLicenseList": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SelfhostLicenseRow"
+            }
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
+      "SelfhostLicenseRow": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "edition": {
+            "$ref": "#/components/schemas/LicenseEdition"
+          },
+          "account_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "customer": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "email": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "instance_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "seats": {
+            "type": "integer"
+          },
+          "features": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "offline": {
+            "type": "boolean"
+          },
+          "issued_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "valid_until": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "last_renewed_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "engine_version": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "last_checkin_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "members": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "bots": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "revoked": {
+            "type": "boolean"
+          },
+          "revoked_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "edition",
+          "account_id",
+          "customer",
+          "email",
+          "instance_id",
+          "seats",
+          "features",
+          "offline",
+          "issued_at",
+          "expires_at",
+          "valid_until",
+          "last_renewed_at",
+          "engine_version",
+          "last_checkin_at",
+          "members",
+          "bots",
+          "revoked",
+          "revoked_at"
+        ]
+      },
+      "LicenseEdition": {
+        "type": "string",
+        "enum": [
+          "personal",
+          "trial",
+          "business"
+        ]
+      },
+      "RenewLicenseRequest": {
+        "type": "object",
+        "properties": {
+          "license": {
+            "type": "string",
+            "minLength": 20,
+            "maxLength": 8000
+          },
+          "instance_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "engine_version": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "members": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10000000
+          },
+          "bots": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10000000
+          }
+        },
+        "required": [
+          "license",
+          "instance_id",
+          "engine_version"
+        ]
+      },
+      "SelfhostStats": {
+        "type": "object",
+        "properties": {
+          "daily_active": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "day": {
+                  "type": "string"
+                },
+                "count": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "day",
+                "count"
+              ]
+            }
+          },
+          "new_installs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "day": {
+                  "type": "string"
+                },
+                "count": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "day",
+                "count"
+              ]
+            }
+          },
+          "active_24h": {
+            "type": "integer"
+          },
+          "by_edition": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "edition": {
+                  "type": "string",
+                  "enum": [
+                    "personal",
+                    "trial",
+                    "business"
+                  ]
+                },
+                "active": {
+                  "type": "integer"
+                },
+                "total": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "edition",
+                "active",
+                "total"
+              ]
+            }
+          },
+          "by_engine_version": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "engine_version": {
+                  "type": "string"
+                },
+                "servers": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "engine_version",
+                "servers"
+              ]
+            }
+          },
+          "lapsed": {
+            "type": "integer"
+          },
+          "members": {
+            "type": "integer"
+          },
+          "bots": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "daily_active",
+          "new_installs",
+          "active_24h",
+          "by_edition",
+          "by_engine_version",
+          "lapsed",
+          "members",
+          "bots"
+        ]
+      },
+      "SetSelfhostLicenseRequest": {
+        "type": "object",
+        "properties": {
+          "license": {
+            "type": "string",
+            "minLength": 20,
+            "maxLength": 8000
+          }
+        },
+        "required": [
+          "license"
+        ]
+      },
+      "CloudConnectCode": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "code",
+          "expires_at"
+        ]
+      },
+      "CloudConnectCodeRequest": {
+        "type": "object",
+        "properties": {
+          "org_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "instance_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9-]{8,64}$"
+          },
+          "instance_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          }
+        },
+        "required": [
+          "org_id",
+          "instance_id"
+        ]
+      },
+      "CloudModelsState": {
+        "type": "object",
+        "properties": {
+          "available": {
+            "type": "boolean",
+            "description": "False on Casama Cloud itself and on a server without a license in force"
+          },
+          "connected": {
+            "type": "boolean"
+          },
+          "can_manage": {
+            "type": "boolean"
+          },
+          "payer": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "org_id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "org_id",
+              "name"
+            ]
+          },
+          "status": {
+            "$ref": "#/components/schemas/CloudLinkStatus"
+          },
+          "policy": {
+            "$ref": "#/components/schemas/CloudModelsPolicy"
+          },
+          "fallback": {
+            "$ref": "#/components/schemas/CloudModelsFallback"
+          },
+          "embedding": {
+            "type": "boolean"
+          },
+          "me": {
+            "type": "object",
+            "properties": {
+              "allowed": {
+                "type": "boolean"
+              },
+              "today_usd": {
+                "type": "number"
+              },
+              "limit_usd": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "allowed",
+              "today_usd",
+              "limit_usd"
+            ]
+          },
+          "memory_reindex": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "done": {
+                "type": "integer"
+              },
+              "total": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "done",
+              "total"
+            ]
+          },
+          "status_error": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ],
+            "description": "Why Casama Cloud isn't answering: the last refusal from Cloud's status call, or a run's when Cloud itself couldn't be reached. Null when fine"
+          },
+          "has_own_key": {
+            "type": "boolean",
+            "description": "A working own chat key exists on this server"
+          }
+        },
+        "required": [
+          "available",
+          "connected",
+          "can_manage",
+          "payer",
+          "status",
+          "policy",
+          "fallback",
+          "embedding",
+          "me",
+          "memory_reindex",
+          "status_error",
+          "has_own_key"
+        ]
+      },
+      "CloudLinkStatus": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "properties": {
+          "scopes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "payer": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "org_id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "org_id",
+              "name"
+            ]
+          },
+          "plan": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "paid": {
+                "type": "boolean"
+              },
+              "ended": {
+                "type": "boolean",
+                "description": "The payer had a paid plan and it ended (not just never paid)"
+              }
+            },
+            "required": [
+              "code",
+              "name",
+              "paid"
+            ]
+          },
+          "models_allowed": {
+            "type": "boolean"
+          },
+          "credits_usd": {
+            "type": "number"
+          },
+          "included": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "used_usd": {
+                "type": "number"
+              },
+              "limit_usd": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "used_usd",
+              "limit_usd"
+            ]
+          },
+          "today": {
+            "type": "object",
+            "properties": {
+              "spend_usd": {
+                "type": "number"
+              },
+              "cap_usd": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "resets_at": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "spend_usd",
+              "cap_usd",
+              "resets_at"
+            ]
+          },
+          "seats": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "plan": {
+                "type": "number"
+              },
+              "used": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "plan",
+              "used"
+            ]
+          },
+          "trial": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "remaining_usd": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "remaining_usd"
+            ]
+          },
+          "jobs": {
+            "type": "object",
+            "properties": {
+              "chat": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "background": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "embedding": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "image": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "tts": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "stt": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "CloudModelsPolicy": {
+        "type": "object",
+        "properties": {
+          "allowed": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "all"
+                ]
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "maxItems": 10000
+              }
+            ],
+            "description": "\"all\", or the user ids who may use Casama Cloud"
+          },
+          "daily_usd_per_member": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 100000
+          }
+        },
+        "required": [
+          "allowed",
+          "daily_usd_per_member"
+        ]
+      },
+      "CloudModelsFallback": {
+        "type": "object",
+        "properties": {
+          "to_own": {
+            "type": "boolean",
+            "description": "Casama Cloud refused or can't be reached: use an own key"
+          },
+          "from_own": {
+            "type": "boolean",
+            "description": "An own key failed: use Casama Cloud"
+          }
+        },
+        "required": [
+          "to_own",
+          "from_own"
+        ]
+      },
+      "ApplyCloudModelsRequest": {
+        "type": "object",
+        "properties": {
+          "bots": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "maxItems": 10000
+          },
+          "workspace_default": {
+            "type": "boolean"
+          },
+          "embedding": {
+            "type": "boolean"
+          },
+          "fallback": {
+            "$ref": "#/components/schemas/CloudModelsFallback"
+          },
+          "policy": {
+            "$ref": "#/components/schemas/CloudModelsPolicy"
+          }
+        },
+        "required": [
+          "bots"
+        ]
+      },
+      "ConnectCloudModelsRequest": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "minLength": 4,
+            "maxLength": 200
+          }
+        },
+        "required": [
+          "code"
+        ]
+      },
+      "CloudModelsPreview": {
+        "type": "object",
+        "properties": {
+          "bots": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "from": {
+                  "type": "object",
+                  "properties": {
+                    "credential_id": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "provider": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "model": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "label": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "working": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "credential_id",
+                    "provider",
+                    "model",
+                    "label",
+                    "working"
+                  ]
+                },
+                "suggested": {
+                  "type": "boolean"
+                },
+                "step_down": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "from",
+                "suggested",
+                "step_down"
+              ]
+            }
+          },
+          "jobs": {
+            "type": "object",
+            "properties": {
+              "embedding": {
+                "type": "object",
+                "properties": {
+                  "has_own": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "has_own"
+                ]
+              },
+              "image": {
+                "type": "object",
+                "properties": {
+                  "has_own": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "has_own"
+                ]
+              },
+              "tts": {
+                "type": "object",
+                "properties": {
+                  "has_own": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "has_own"
+                ]
+              },
+              "stt": {
+                "type": "object",
+                "properties": {
+                  "has_own": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "has_own"
+                ]
+              }
+            },
+            "required": [
+              "embedding",
+              "image",
+              "tts",
+              "stt"
+            ]
+          }
+        },
+        "required": [
+          "bots",
+          "jobs"
+        ]
+      },
+      "CloudModelsOff": {
+        "type": "object",
+        "properties": {
+          "bots": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "to": {
+                  "type": [
+                    "object",
+                    "null"
+                  ],
+                  "properties": {
+                    "label": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "label"
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "to"
+              ]
+            }
+          }
+        },
+        "required": [
+          "bots"
+        ]
+      },
+      "UpdateCloudModelsRequest": {
+        "type": "object",
+        "properties": {
+          "policy": {
+            "$ref": "#/components/schemas/CloudModelsPolicy"
+          },
+          "fallback": {
+            "$ref": "#/components/schemas/CloudModelsFallback"
+          }
+        }
+      },
+      "MoveProgress": {
+        "type": "object",
+        "properties": {
+          "move_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "source",
+              "target"
+            ]
+          },
+          "state": {
+            "$ref": "#/components/schemas/MoveState"
+          },
+          "step": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "org_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "remote_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "bring_keys": {
+            "type": "boolean"
+          },
+          "counts": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "progress": {
+            "type": "object",
+            "properties": {
+              "done_bytes": {
+                "type": "number"
+              },
+              "total_bytes": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "done_bytes",
+              "total_bytes"
+            ]
+          },
+          "parts": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "report": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "error": {
+            "$ref": "#/components/schemas/MoveError"
+          },
+          "moved_to": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MovedTo"
+              },
+              {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "finished_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "move_id",
+          "role",
+          "state",
+          "step",
+          "org_id",
+          "remote_url",
+          "bring_keys",
+          "counts",
+          "progress",
+          "report",
+          "error",
+          "created_at",
+          "updated_at",
+          "finished_at"
+        ]
+      },
+      "MoveState": {
+        "type": "string",
+        "enum": [
+          "created",
+          "copying",
+          "pausing",
+          "finishing",
+          "importing",
+          "done",
+          "failed",
+          "cancelled"
+        ]
+      },
+      "MoveError": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "step": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "MoveCheck": {
+        "type": "object",
+        "properties": {
+          "size_bytes": {
+            "type": "number"
+          },
+          "estimate_seconds": {
+            "type": "number"
+          },
+          "pause_seconds": {
+            "type": "number"
+          },
+          "long_pause": {
+            "type": "boolean"
+          },
+          "counts": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number"
+            }
+          },
+          "fit": {
+            "$ref": "#/components/schemas/MoveFit"
+          },
+          "update_first": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "source",
+              "target",
+              null
+            ]
+          },
+          "comes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "after": {
+            "type": "object",
+            "properties": {
+              "reconnect": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "kind": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "kind"
+                  ]
+                }
+              },
+              "invites": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "email"
+                  ]
+                }
+              },
+              "keys": {
+                "type": "object",
+                "properties": {
+                  "models": {
+                    "type": "number"
+                  },
+                  "chat_apps": {
+                    "type": "number"
+                  },
+                  "secrets": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "models",
+                  "chat_apps",
+                  "secrets"
+                ]
+              },
+              "computers": {
+                "type": "number"
+              },
+              "chatgpt_plans": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "reconnect",
+              "invites",
+              "keys",
+              "computers",
+              "chatgpt_plans"
+            ]
+          },
+          "target": {
+            "type": "string",
+            "enum": [
+              "cloud",
+              "server"
+            ]
+          },
+          "already_moved": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MovedTo"
+              },
+              {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            ]
+          }
+        },
+        "required": [
+          "size_bytes",
+          "estimate_seconds",
+          "pause_seconds",
+          "long_pause",
+          "counts",
+          "fit",
+          "update_first",
+          "comes",
+          "after",
+          "target",
+          "already_moved"
+        ]
+      },
+      "MoveFit": {
+        "type": "object",
+        "properties": {
+          "fits": {
+            "type": "boolean"
+          },
+          "plan": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "name"
+            ]
+          },
+          "over": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MoveOver"
+            }
+          },
+          "needs_plan": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "name"
+            ]
+          },
+          "accepts": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "engine_version": {
+            "type": "string"
+          },
+          "move_key": {
+            "type": "string"
+          },
+          "target": {
+            "type": "object",
+            "properties": {
+              "org_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "name": {
+                "type": "string"
+              },
+              "empty": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "org_id",
+              "name",
+              "empty"
+            ]
+          }
+        },
+        "required": [
+          "fits",
+          "plan",
+          "over",
+          "needs_plan",
+          "accepts",
+          "engine_version",
+          "move_key",
+          "target"
+        ]
+      },
+      "MoveOver": {
+        "type": "object",
+        "properties": {
+          "what": {
+            "type": "string",
+            "enum": [
+              "people",
+              "bots",
+              "computers",
+              "storage"
+            ]
+          },
+          "have": {
+            "type": "number"
+          },
+          "limit": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "what",
+          "have",
+          "limit"
+        ]
+      },
+      "MoveCheckRequest": {
+        "type": "object",
+        "properties": {
+          "target_url": {
+            "type": "string",
+            "maxLength": 500,
+            "format": "uri"
+          },
+          "token": {
+            "type": "string",
+            "minLength": 20,
+            "maxLength": 500
+          }
+        },
+        "required": [
+          "target_url",
+          "token"
+        ]
+      },
+      "MoveToken": {
+        "type": "object",
+        "properties": {
+          "move_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "token": {
+            "type": "string"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "move_id",
+          "token",
+          "expires_at"
+        ]
+      },
+      "CreateMoveRequest": {
+        "type": "object",
+        "properties": {
+          "org_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "org_id"
+        ]
+      },
+      "MoveFinishRequest": {
+        "type": "object",
+        "properties": {
+          "manifest": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "signature": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "manifest",
+          "signature"
+        ]
+      },
+      "MovePartReceived": {
+        "type": "object",
+        "properties": {
+          "n": {
+            "type": "integer"
+          },
+          "size": {
+            "type": "integer"
+          },
+          "sha256": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "n",
+          "size",
+          "sha256"
+        ]
+      },
+      "MoveStartRequest": {
+        "type": "object",
+        "properties": {
+          "target_url": {
+            "type": "string",
+            "maxLength": 500,
+            "format": "uri"
+          },
+          "token": {
+            "type": "string",
+            "minLength": 20,
+            "maxLength": 500
+          },
+          "bring_keys": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "required": [
+          "target_url",
+          "token"
         ]
       },
       "OwnerActivity": {
@@ -60604,6 +62591,62 @@
         }
       }
     },
+    "/v1/me/age-band": {
+      "put": {
+        "operationId": "setMyAgeBand",
+        "tags": [
+          "privacy"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Save the account's declared age band (no birth date; docs/APPLE-INTEGRATIONS-PLAN.md §5.2)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetAgeBandRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Saved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgeBandResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/wallpapers": {
       "get": {
         "operationId": "searchWallpapers",
@@ -60696,6 +62739,250 @@
         "responses": {
           "204": {
             "description": "Recorded"
+          },
+          "400": {
+            "description": "Validation failed",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/file-keys": {
+      "post": {
+        "operationId": "createFileKey",
+        "tags": [
+          "files"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Create a read-only File Provider key (cfk_…) shown once, for browsing and downloading computer files in Files and Finder",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FileKeyCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileKeyCreated"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "listFileKeys",
+        "tags": [
+          "files"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "List your read-only File Provider keys",
+        "responses": {
+          "200": {
+            "description": "File keys",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileKeyList"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/file-keys/{id}": {
+      "delete": {
+        "operationId": "deleteFileKey",
+        "tags": [
+          "files"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Revoke a read-only File Provider key (sign-out)",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeletedFileKey"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/devices/{id}": {
+      "patch": {
+        "operationId": "updateDeviceQuiet",
+        "tags": [
+          "devices"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Hold proactive check-ins for a device while a Focus filter is active",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateDeviceQuietRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceQuietResult"
+                }
+              }
+            }
           },
           "400": {
             "description": "Validation failed",
@@ -68982,7 +71269,7 @@
               "$ref": "#/components/schemas/DeviceKind"
             },
             "required": false,
-            "description": "browser_tab and browser_history come from Casama for Chrome (platform web, D-323) and are live only: never stored",
+            "description": "browser_tab and browser_history come from Casama for Chrome (platform web, D-323) and are live only: never stored. alarm (AlarmKit) and home (HomeKit) are live actions on Apple devices (docs/APPLE-INTEGRATIONS-PLAN.md).",
             "name": "kind",
             "in": "query"
           },
@@ -78916,6 +81203,1926 @@
           },
           "429": {
             "description": "Rate limited",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/selfhost/licenses/admit": {
+      "post": {
+        "operationId": "admitForSelfhost",
+        "tags": [
+          "selfhost"
+        ],
+        "summary": "Let an email address past the sign-up waitlist to get a personal license",
+        "description": "Called by the desktop app and the CLI before the Casama sign-in that gets a free personal license, so a new person isn't stopped by the invite-only gate. Marks the address as let in (admitted_via 'selfhost'); answers the same whether or not it was on the list. Errors: 400 bad_email, 400 disposable_email, 404 licensing_off, 429 too_many_attempts.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TrialLicenseRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Let in, or already could sign up",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrialLicenseAccepted"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/selfhost/licenses": {
+      "post": {
+        "operationId": "createBusinessLicense",
+        "tags": [
+          "admin"
+        ],
+        "summary": "Make a business license key (instance owner); the key is shown once and emailed",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBusinessLicenseRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessLicenseCreated"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "listSelfhostLicenses",
+        "tags": [
+          "admin"
+        ],
+        "summary": "Self-hosted licenses Casama Cloud has issued (instance owner); keys aren't shown",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "$ref": "#/components/schemas/LicenseEdition"
+            },
+            "required": false,
+            "name": "edition",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "required": false,
+            "name": "q",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500
+            },
+            "required": false,
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "required": false,
+            "name": "offset",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Licenses",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SelfhostLicenseList"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/selfhost/status": {
+      "get": {
+        "operationId": "getSelfhostStatus",
+        "tags": [
+          "selfhost"
+        ],
+        "summary": "This server's license state (no sign-in)",
+        "description": "On Casama Cloud, and wherever licensing is off, the answer is `{ \"licensing\": false }`.",
+        "responses": {
+          "200": {
+            "description": "State",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SelfhostStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/selfhost/licenses/personal": {
+      "post": {
+        "operationId": "issuePersonalLicense",
+        "tags": [
+          "selfhost"
+        ],
+        "summary": "Get the free personal license for a self-hosted server (signed in)",
+        "description": "One active personal license per account: a new instance id moves it, and the old server's renewals answer 409 license_moved. Errors: 404 licensing_off.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PersonalLicenseRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LicenseIssued"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/selfhost/licenses/renew": {
+      "post": {
+        "operationId": "renewLicense",
+        "tags": [
+          "selfhost"
+        ],
+        "summary": "Renew a self-hosted server's license key (no sign-in)",
+        "description": "Accepts keys up to the end of their 14-day grace. The first renewal of a trial or business key binds it to the server. Errors: 400 invalid_license, 403 license_revoked, 403 license_expired, 404 licensing_off, 409 license_moved, 429 too_many_attempts.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RenewLicenseRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A new key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LicenseIssued"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/selfhost/licenses/trial": {
+      "post": {
+        "operationId": "requestTrialLicense",
+        "tags": [
+          "selfhost"
+        ],
+        "summary": "Email a 30-day business trial key (no sign-in, rate limited)",
+        "description": "Answers the same whether or not the address already had a trial. Errors: 400 bad_email, 404 licensing_off, 429 too_many_attempts, 503 email_unavailable.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TrialLicenseRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "On its way",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrialLicenseAccepted"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Email is not set up on this server",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/selfhost/licenses/{id}/revoke": {
+      "post": {
+        "operationId": "revokeSelfhostLicense",
+        "tags": [
+          "admin"
+        ],
+        "summary": "Revoke a license (instance owner): its next renewal answers 403 license_revoked",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Revoked",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SelfhostLicenseRow"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/selfhost/stats": {
+      "get": {
+        "operationId": "selfhostLicenseStats",
+        "tags": [
+          "admin"
+        ],
+        "summary": "Self-hosted servers at a glance for Admin Growth (instance owner)",
+        "description": "From the daily license check-ins: daily active servers, new installs, editions, engine versions, lapsed licenses, members and bots. Counts only.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Stats",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SelfhostStats"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/selfhost/license": {
+      "put": {
+        "operationId": "setSelfhostLicense",
+        "tags": [
+          "selfhost"
+        ],
+        "summary": "Set this server's license key",
+        "description": "Accepted when the key verifies and is for this server (or not yet bound to one, or offline). Before the server has a key anyone may set it (setup); after that only the instance owner. Errors: 400 invalid_license, 401 unauthorized, 403 not_instance_owner, 404 licensing_off, 409 license_other_instance.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetSelfhostLicenseRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The new state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SelfhostStatus"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/selfhost/cloud/connect-codes": {
+      "post": {
+        "operationId": "createCloudConnectCode",
+        "tags": [
+          "selfhost"
+        ],
+        "summary": "A one-time code that connects a self-hosted server to Casama Cloud models (admins)",
+        "description": "Casama Cloud only. The caller is an owner or admin of org_id, the workspace that will pay. The app hands the code to its own server, which redeems it at Casama Cloud within 10 minutes (POST /link/v1/cloud-models/redeem). Errors: 403 forbidden, 404 not_found where Casama Cloud models aren't offered.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CloudConnectCodeRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The code",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CloudConnectCode"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/selfhost/cloud-models/apply": {
+      "post": {
+        "operationId": "applySelfhostCloudModels",
+        "tags": [
+          "selfhost"
+        ],
+        "summary": "Move the chosen bots onto Casama Cloud models and save the settings (server admin)",
+        "description": "Each chosen bot points at the Casama Cloud credential with its previous choice kept, so turning off puts it back.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApplyCloudModelsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "State",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CloudModelsState"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/selfhost/cloud-models/connect": {
+      "post": {
+        "operationId": "connectSelfhostCloudModels",
+        "tags": [
+          "selfhost"
+        ],
+        "summary": "Connect this server to Casama Cloud with a one-time code (server admin)",
+        "description": "The code comes from Casama Cloud (`POST /v1/selfhost/cloud/connect-codes`, signed in there). The server redeems it, keeps the link key in Vault and needs no restart. Errors: the refusal codes of Casama Cloud, 403 not_instance_owner, 404 not_available.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConnectCloudModelsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "State",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CloudModelsState"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Casama Cloud refused (plan, credits, seats)",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/selfhost/cloud-models": {
+      "get": {
+        "operationId": "getSelfhostCloudModels",
+        "tags": [
+          "selfhost"
+        ],
+        "summary": "Casama Cloud models on this server: state, who pays, limits and your own use",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "State",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CloudModelsState"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateSelfhostCloudModels",
+        "tags": [
+          "selfhost"
+        ],
+        "summary": "Change who may use Casama Cloud, the daily limit per person and the fallbacks (server admin)",
+        "description": "Only the fields sent change. Bots stay where they are. Errors: 403 not_instance_owner, 404 not_available, 409 not_connected.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCloudModelsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "State",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CloudModelsState"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/selfhost/cloud-models/preview": {
+      "get": {
+        "operationId": "previewSelfhostCloudModels",
+        "tags": [
+          "selfhost"
+        ],
+        "summary": "What turning Casama Cloud models on would change, bot by bot (server admin)",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Preview",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CloudModelsPreview"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/selfhost/cloud-models/off": {
+      "post": {
+        "operationId": "turnOffSelfhostCloudModels",
+        "tags": [
+          "selfhost"
+        ],
+        "summary": "Turn Casama Cloud models off; each bot goes back to its previous key (server admin)",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Where each bot went",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CloudModelsOff"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/moves/{id}/abort": {
+      "post": {
+        "operationId": "abortMove",
+        "tags": [
+          "moves"
+        ],
+        "summary": "Give up a move: the parts and anything half brought in are removed (move token)",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Removed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MoveProgress"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/orgs/{id}/move/check": {
+      "post": {
+        "operationId": "checkOrgMove",
+        "tags": [
+          "moves"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Check a move before it starts: size, time, what fits, what needs you after (owner)",
+        "description": "Changes nothing. Errors: 409 already_moved.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MoveCheckRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The check",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MoveCheck"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/moves": {
+      "post": {
+        "operationId": "createMove",
+        "tags": [
+          "moves"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Get a one-time move token for receiving a workspace into this one (admin)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMoveRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MoveToken"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/moves/{id}/finish": {
+      "post": {
+        "operationId": "finishMove",
+        "tags": [
+          "moves"
+        ],
+        "summary": "Check the bundle and bring it in; progress at GET /v1/moves/{id} (move token)",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MoveFinishRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Bringing it in",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MoveProgress"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/moves/{id}": {
+      "get": {
+        "operationId": "getMove",
+        "tags": [
+          "moves"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "A move's progress (move token, or an admin of the receiving workspace)",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Progress",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MoveProgress"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/moves/{id}/fit": {
+      "get": {
+        "operationId": "getMoveFit",
+        "tags": [
+          "moves"
+        ],
+        "summary": "Whether a workspace of this size fits the receiving workspace's plan (move token)",
+        "description": "Errors: 409 already_moved when that source workspace moved here before.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "source_org_id",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 1000000,
+              "default": 0
+            },
+            "required": false,
+            "name": "members",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 1000000,
+              "default": 0
+            },
+            "required": false,
+            "name": "bots",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 1000000,
+              "default": 0
+            },
+            "required": false,
+            "name": "computers",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0,
+              "default": 0
+            },
+            "required": false,
+            "name": "storage_bytes",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1
+            },
+            "required": false,
+            "name": "bundle_version",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 64
+            },
+            "required": false,
+            "name": "engine_version",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fit",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MoveFit"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/orgs/{id}/move": {
+      "get": {
+        "operationId": "getOrgMove",
+        "tags": [
+          "moves"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "The workspace's latest move: progress, step and error, or where it moved (member)",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Progress",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MoveProgress"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/moves/{id}/parts/{n}": {
+      "put": {
+        "operationId": "putMovePart",
+        "tags": [
+          "moves"
+        ],
+        "summary": "One part of the move bundle, with its sha256 in X-Move-Sha256 (move token)",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{1,8}$",
+              "description": "Part number, from 0"
+            },
+            "required": true,
+            "description": "Part number, from 0",
+            "name": "n",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/octet-stream": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Received",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MovePartReceived"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/orgs/{id}/move/start": {
+      "post": {
+        "operationId": "startOrgMove",
+        "tags": [
+          "moves"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Start (or resume) moving this workspace to the server that gave the token (owner)",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MoveStartRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Started",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MoveProgress"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
             "content": {
               "application/problem+json": {
                 "schema": {

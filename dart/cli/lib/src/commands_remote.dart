@@ -83,6 +83,9 @@ RemoteAccessSetup _setup(Directory d, {String? cloud, String? name}) =>
       version: cliVersion,
       client: remoteDeps.client,
       sleep: remoteDeps.sleep,
+      // The key connecting Casama Cloud models keeps in Vault: shown when linking, so the new
+      // key keeps Cloud models (SELFHOST-CLOUD-MODELS-PLAN §13.1).
+      heldKey: () => readHeldLinkKey(composeArgs(d), run: remoteDeps.run),
     );
 
 /// How many accounts the server has, or null when its database doesn't answer.

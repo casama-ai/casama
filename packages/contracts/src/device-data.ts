@@ -14,10 +14,12 @@ export const DeviceKind = z
     "activity",
     "browser_tab",
     "browser_history",
+    "alarm",
+    "home",
   ])
   .openapi("DeviceKind", {
     description:
-      "browser_tab and browser_history come from Casama for Chrome (platform web, D-323) and are live only: never stored",
+      "browser_tab and browser_history come from Casama for Chrome (platform web, D-323) and are live only: never stored. alarm (AlarmKit) and home (HomeKit) are live actions on Apple devices (docs/APPLE-INTEGRATIONS-PLAN.md).",
   });
 
 /** Kinds from the browser extension (D-323 E2, E6): live reads only, on web device sources. */
@@ -103,7 +105,18 @@ export const DeviceRequest = z
     id: Uuid,
     source_id: Uuid,
     kind: z.string(),
-    action: z.enum(["read", "calendar.create", "reminders.create", "locate"]),
+    action: z.enum([
+      "read",
+      "calendar.create",
+      "reminders.create",
+      "locate",
+      "alarm.set",
+      "alarm.list",
+      "alarm.cancel",
+      "home.list",
+      "home.read",
+      "home.set",
+    ]),
     params: z.record(z.string(), z.unknown()),
     created_at: z.iso.datetime({ offset: true }),
   })

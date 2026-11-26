@@ -1,0 +1,8 @@
+AI teammates with their own sandboxed computers: a browser, files and apps
+Watch a bot work live, or take over the controls at any time
+Sending, booking, paying and deleting wait for your OK, and Deny undoes the work
+Bots start on a schedule, when an email arrives or when a web page changes
+Memory and skills that carry across every chat
+More than 40 ready-made bots, and group chats with people and bots together
+Bots answer in WhatsApp, Telegram, Slack, Discord and email
+Open source apps, SDKs, CLI and safety rules

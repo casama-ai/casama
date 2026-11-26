@@ -65,6 +65,12 @@ After that:
   workspace moves it.
 - People who haven't connected get a short note on how to connect or sign up, and nothing else.
 
+Self-hosted servers can run their own shared bot, with the same sign-up flow under that server's
+own rules (`SIGNUP_ALLOWED_EMAILS`, `SIGNUP_INVITED_ONLY`; `DISABLE_SIGNUP` turns it off). Create
+a bot with @BotFather and set
+`TELEGRAM_HOSTED_BOT_TOKEN` and `TELEGRAM_HOSTED_WEBHOOK_SECRET` (any random string of 16 or more
+characters). Without them, connect your own bot per bot as below.
+
 ## Email Casama: get@casama.app
 
 On Casama Cloud you can also start by email. Write to **get@casama.app** about anything, from any
@@ -91,6 +97,9 @@ button instead; tap it once, and that address is connected.
   mail to skip the line.
 - **Stop:** reply `stop` to any of Casama's emails, or write to support to disconnect the address.
 
+Self-hosted servers with hosted mail can offer the same: set `EMAIL_SIGNUP_NAME` (for example
+`get`) and optionally `EMAIL_SIGNUP_DAILY_MAX` (setup emails a day, 300 by default).
+
 ## Casama in Messenger
 
 On Casama Cloud you can also message Casama's Facebook Page in Messenger
@@ -110,6 +119,12 @@ for your email address.
 - Messenger only lets a Page answer within 24 hours of your last message, so check-ins and alerts
   don't go to Messenger.
 - One Messenger account belongs to one Casama account. Connecting it from another account moves it.
+
+Self-hosted servers can run their own Page bot: make a Meta app with the Messenger product, connect
+a Page, and set `MESSENGER_HOSTED_PAGE_TOKEN`, `MESSENGER_HOSTED_APP_SECRET` and
+`MESSENGER_HOSTED_VERIFY_TOKEN` (any random string of 16 or more characters). Point the app's
+webhook at `https://<your server>/hooks/messenger/hosted` with that verify token, subscribed to
+`messages` and `messaging_postbacks`.
 
 ## How it works
 
@@ -317,7 +332,13 @@ before the bot reads the message. An eyes reaction on the message shows it arriv
 When a run started from a Slack thread needs your approval, the request is also posted in that
 thread with **Approve** and **Deny** buttons. Only people on the chat app's allowed list can press
 them; the decision counts as made by the person who connected the chat app, and the message then
-says who approved or denied it. The usual notification and the card in the app still work.
+says who approved or denied it. The usual notification and the card in the app still work. When
+you decide in the Casama app instead (or the request runs out of time), the thread gets a line
+saying so, such as "Approved in Casama by Oliver." High-risk steps never have buttons in a chat
+app: they're decided in Casama.
+
+Chat apps can't show the cards a bot draws in the Casama app. When a bot's reply has one there, the
+chat app gets its words instead: the question, lettered options, and what to reply.
 
 To use the buttons with your own Slack app, turn on **Interactivity** in the Slack app's settings
 and set its request URL to the **Webhook address** followed by `/interact`. Give the bot token the
@@ -340,7 +361,9 @@ public API address:
 
 `GET /v1/channels/slack/install?bot_id=…` returns Slack's sign-in address. After you approve it in
 Slack, the chat app is made for that bot, with you on its allowed list. Each Slack workspace talks
-to one Casama bot through the server's app; installing again for another bot moves it. Without
+to one Casama bot through the server's app; installing again for another of your own bots moves
+it. If the workspace already talks to someone else's bot (another account, or a teammate's), the
+install is refused and nothing changes: they remove Slack from their bot's chat apps first. Without
 those settings the request answers that the server has no Slack app, and you connect your own
 Slack app with a bot token as above. In the app, it's **Add to Slack** at the top of a bot's
 **Chat apps**. A ready-made Slack app manifest is in `infra/slack/` in the repository.
@@ -399,6 +422,11 @@ up in the DM. Runs started from Discord always ask, even when the workspace has 
 One Discord account belongs to one Casama account; connecting it again from another account moves
 it. If Discord won't let the bot message you first (it sometimes needs a shared server), `/ask`
 still works, and adding Casama to your account with the install link lets the bot reach you.
+
+To offer the same on your own server, register a Discord application (steps in `infra/discord/`
+in the repository) and set `DISCORD_CLIENT_ID`, `DISCORD_CLIENT_SECRET`, `DISCORD_PUBLIC_KEY` and
+`DISCORD_BOT_TOKEN` on the API and the worker. The worker keeps one Gateway connection open for
+direct messages; with several workers, only one holds it.
 
 ### Your own Discord application
 
@@ -488,6 +516,8 @@ On the **Chat apps** screen:
 - iMessage needs your Mac to be on, with the desktop app running.
 - The adapters follow each provider's public docs and have been tested against stand-ins, not yet
   against every live provider. Teams and Discord have been tested with signed test requests only.
+- If your server sits behind a proxy, set `PUBLIC_API_URL` so signatures and webhook addresses use
+  your public address. See [Configuration](/self-hosting/configuration).
 
 ## Related
 

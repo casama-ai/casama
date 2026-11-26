@@ -103,7 +103,9 @@ usual". Bots never give medical advice.
 
 ::: warning Health data and encryption
 On Casama Cloud, health data is stored only when encryption at rest is on for a workspace you own.
-Otherwise the upload is refused with "Health data needs encryption at rest". See [Privacy and data](/guide/privacy).
+Otherwise the upload is refused with "Health data needs encryption at rest". Self-hosted servers
+decide with `HEALTH_REQUIRES_ENCRYPTION` (`auto`, `on` or `off`; `auto` requires it when billing
+is on). See [Privacy and data](/guide/privacy).
 :::
 
 ## Privacy settings per kind
@@ -111,7 +113,7 @@ Otherwise the upload is refused with "Health data needs encryption at rest". See
 | Setting                  | What it does                                                                                |
 | ------------------------ | ------------------------------------------------------------------------------------------- |
 | **Keep for**             | How long readings are kept: **Live only**, 7, 30 or 90 days, or a year where that's the default |
-| **Private Models Only**  | Only bots whose models all run on this machine or a private network can read it (not available on Casama Cloud)         |
+| **Private Models Only**  | Only bots whose models all run on this machine or a private network can read it            |
 
 Defaults are a year for calendar, contacts and health, and 90 days for places and notifications.
 With **Live only**, a fresh read goes to the bot without being stored.

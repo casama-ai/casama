@@ -21,6 +21,7 @@ import '../../ui/app_card.dart';
 import '../../ui/bot_avatar.dart';
 import '../../ui/form_sheet.dart';
 import '../../ui/progressive_fade.dart';
+import '../../ui/signed_in_as.dart';
 import 'spaces.dart';
 import '../../core/analytics.dart';
 
@@ -264,6 +265,9 @@ class _JoinScreenState extends ConsumerState<JoinScreen> {
               if (member) l10n.alreadyMember,
               if (p.requiresApproval && !member) l10n.joinNeedsApproval,
               if (p.emailHint.isUsable) l10n.inviteSentTo(p.emailHint!),
+              // Which account joins, and on which server, when someone with several could mix them up.
+              if (signedIn && ref.read(backendProvider).userEmail.isUsable && !member)
+                l10n.joinAsAccount(ref.read(backendProvider).userEmail!, SignedInAs.serverName(context, ref.read(backendProvider).apiUrl)),
             ],
             actions: [
               FilledButton(

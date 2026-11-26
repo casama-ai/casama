@@ -6,9 +6,7 @@ description: "How Casama is built: a map of the repository, one chat message's p
 
 This page is for people who want to read or change Casama's code. It maps the repository, follows
 one chat message from the app to a computer and back, and shows where the security boundaries
-are. The engine (`apps/server`, `apps/supervisor` and the packages it uses) is not open source, so
-this map also names folders that aren't in the public repository. To set up a development
-machine, see [Contribute to Casama](/develop/contributing).
+are. To set up a development machine, see [Contribute to Casama](/develop/contributing).
 
 ## The pieces
 
@@ -26,10 +24,12 @@ A Casama server is a small set of services around one Postgres database:
 | **Pages server**          | Serves pages bots make, from their own origin                                                   |
 
 The API and the worker are one TypeScript codebase. `MODE=api` serves HTTP and `MODE=worker` runs
-workflows. Node.js runs the TypeScript sources directly, so there's no build step.
+workflows. Casama Cloud runs the TypeScript sources directly with Node.js. The self-host images
+hold the same code bundled and minified.
 
-Casama Cloud runs these services on the Casama Engine, which is not open source. Self-hosting is
-paused while the engine moves to a separate license.
+The self-host release's compose file adds a few optional services: `connector` for
+[remote access](/self-hosting/remote-access), `backup`, SearXNG for web search, a PDF renderer,
+Caddy for HTTPS, and Prometheus and Grafana for monitoring.
 
 ## Repository map
 
@@ -148,7 +148,7 @@ Model keys and named secrets live in Supabase Vault. Tables hold only a referenc
   batch, an invite code or by hand), or with a standing workspace invite and a free seat. Campaign
   codes are in `invite_campaigns`, the on/off switch is the `signup_gate` setting, and a worker
   loop sends the "You're in" emails and ties sign-ups to their entries. It exists only where
-  billing is on.
+  billing is on, so a self-hosted server never meets it.
 - **Risky actions need a person.** The approval rules in `packages/safety` combine the bot's
   autonomy level, each tool's risk and standing "always allow" grants.
 - **A person's own computer is lent, never assigned.** A bot's computer is always one of the

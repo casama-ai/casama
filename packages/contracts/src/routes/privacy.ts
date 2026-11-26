@@ -2,11 +2,13 @@ import { createRoute, z } from "@hono/zod-openapi";
 import { jsonBody, jsonResponse, problemResponses, Uuid } from "../common.ts";
 import {
   AccountDeletion,
+  AgeBandResult,
   AppleSignInTokenRequest,
   AppleSignInTokenResult,
   DeleteAccountRequest,
   OrgSettings,
   RelayAnalyticsRequest,
+  SetAgeBandRequest,
   SetAttributionRequest,
   UpdateOrgSettingsRequest,
 } from "../privacy.ts";
@@ -132,4 +134,16 @@ export const setAttribution = createRoute({
     "Written once per account (COALESCE when null) right after sign-in, respecting analytics_opt_out (D-533). Never stores personal details or query strings beyond utm_source, utm_medium, utm_campaign and path.",
   request: { body: jsonBody(SetAttributionRequest) },
   responses: { 204: { description: "Recorded or already set" }, 400: e400, 401: e401 },
+});
+
+export const setMyAgeBand = createRoute({
+  operationId: "setMyAgeBand",
+  method: "put",
+  path: "/v1/me/age-band",
+  tags,
+  security,
+  summary:
+    "Save the account's declared age band (no birth date; docs/APPLE-INTEGRATIONS-PLAN.md §5.2)",
+  request: { body: jsonBody(SetAgeBandRequest) },
+  responses: { 200: jsonResponse("Saved", AgeBandResult), 400: e400, 401: e401 },
 });

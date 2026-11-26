@@ -1,0 +1,15 @@
+name: casama_selfhost
+description: "Installs, updates and checks a self-hosted Casama server from its public release, on macOS, Linux and Windows (pure Dart)."
+version: 0.1.0
+publish_to: none
+resolution: workspace
+environment:
+  sdk: ^3.13.0
+dependencies:
+  archive: ^4.0.0
+  crypto: ^3.0.8
+  http: ^1.6.0
+  path: ^1.9.1
+  pointycastle: ^4.0.0
+dev_dependencies:
+  test: ^1.33.0

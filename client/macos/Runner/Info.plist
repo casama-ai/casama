@@ -29,6 +29,30 @@
 	<string>Casama uses the microphone for dictation and voice calls with your bots.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>When Casama's dictation service can't be reached, your device's own speech recognition turns what you say into text.</string>
+	<key>NSUserActivityTypes</key>
+	<array>
+		<string>ai.casama.app.viewing</string>
+		<string>INSendMessageIntent</string>
+	</array>
+	<key>NSServices</key>
+	<array>
+		<dict>
+			<key>NSMenuItem</key>
+			<dict>
+				<key>default</key>
+				<string>Ask Casama</string>
+			</dict>
+			<key>NSMessage</key>
+			<string>askCasama</string>
+			<key>NSPortName</key>
+			<string>Casama</string>
+			<key>NSSendTypes</key>
+			<array>
+				<string>NSStringPboardType</string>
+				<string>public.utf8-plain-text</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>

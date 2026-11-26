@@ -12,7 +12,7 @@ enum WidgetOpen {
   @MainActor static var open: ((String) -> Void)?
 }
 
-@available(iOS 17.0, *)
+@available(iOS 17.0, macOS 14.0, *)
 struct OpenCasamaIntent: AppIntent {
   static var title: LocalizedStringResource = "Open Casama"
   static var isDiscoverable: Bool = false
@@ -33,7 +33,7 @@ struct OpenCasamaIntent: AppIntent {
 }
 
 /// Talk to a bot: which bot. Left empty, quick ask opens instead.
-@available(iOS 18.0, *)
+@available(iOS 18.0, macOS 26.0, *)
 struct TalkToBotControlIntent: ControlConfigurationIntent {
   static var title: LocalizedStringResource = "Talk to a bot"
   static var description = IntentDescription("Starts a voice call with the bot you pick.")
@@ -45,7 +45,7 @@ struct TalkToBotControlIntent: ControlConfigurationIntent {
 }
 
 /// Run a routine: which routine.
-@available(iOS 18.0, *)
+@available(iOS 18.0, macOS 26.0, *)
 struct RunRoutineControlIntent: ControlConfigurationIntent {
   static var title: LocalizedStringResource = "Run a routine"
   static var description = IntentDescription("Runs the routine you pick, without opening Casama.")

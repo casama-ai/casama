@@ -12,6 +12,7 @@ import '../../theme/app_colors.dart';
 import '../../theme/app_tokens.dart';
 import '../../ui/adaptive_modal.dart';
 import '../../ui/otp_code_field.dart';
+import '../../ui/signed_in_as.dart';
 import 'app_lock.dart';
 import 'confirm_identity.dart';
 
@@ -284,7 +285,6 @@ class _LockScreenState extends ConsumerState<LockScreen> {
     final pinStopped = method == LockMethod.pin && failures >= maxPinFailures;
     final ringing =
         (ref.watch(ringingCallsProvider).value ?? const []).isNotEmpty;
-    final email = ref.read(backendProvider).userEmail;
     final note = _unavailable
         ? l10n.appLockUnavailable
         : pinStopped
@@ -325,16 +325,10 @@ class _LockScreenState extends ConsumerState<LockScreen> {
                       fontWeight: FontWeight.w700,
                     ),
                   ),
-                  if (email != null) ...[
-                    const SizedBox(height: AppSpace.xxs),
-                    Text(
-                      email,
-                      textAlign: TextAlign.center,
-                      style: context.textTheme.bodyMedium?.copyWith(
-                        color: scheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
+                  // Whose app this is, and on which server (several accounts, or a
+                  // self-hosted server and Cloud, look alike locked).
+                  const SizedBox(height: AppSpace.sm),
+                  const SignedInAs(),
                   if (ringing) ...[
                     const SizedBox(height: AppSpace.md),
                     Row(

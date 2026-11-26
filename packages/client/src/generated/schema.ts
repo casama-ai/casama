@@ -4752,6 +4752,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/me/age-band": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Save the account's declared age band (no birth date; docs/APPLE-INTEGRATIONS-PLAN.md §5.2) */
+        put: operations["setMyAgeBand"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/wallpapers": {
         parameters: {
             query?: never;
@@ -4784,6 +4801,58 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
+        trace?: never;
+    };
+    "/v1/file-keys": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List your read-only File Provider keys */
+        get: operations["listFileKeys"];
+        put?: never;
+        /** Create a read-only File Provider key (cfk_…) shown once, for browsing and downloading computer files in Files and Finder */
+        post: operations["createFileKey"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/file-keys/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Revoke a read-only File Provider key (sign-out) */
+        delete: operations["deleteFileKey"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/devices/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Hold proactive check-ins for a device while a Focus filter is active */
+        patch: operations["updateDeviceQuiet"];
         trace?: never;
     };
     "/v1/apps/connect": {
@@ -8341,6 +8410,455 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/selfhost/licenses/admit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Let an email address past the sign-up waitlist to get a personal license
+         * @description Called by the desktop app and the CLI before the Casama sign-in that gets a free personal license, so a new person isn't stopped by the invite-only gate. Marks the address as let in (admitted_via 'selfhost'); answers the same whether or not it was on the list. Errors: 400 bad_email, 400 disposable_email, 404 licensing_off, 429 too_many_attempts.
+         */
+        post: operations["admitForSelfhost"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/selfhost/licenses": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Self-hosted licenses Casama Cloud has issued (instance owner); keys aren't shown */
+        get: operations["listSelfhostLicenses"];
+        put?: never;
+        /** Make a business license key (instance owner); the key is shown once and emailed */
+        post: operations["createBusinessLicense"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/selfhost/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * This server's license state (no sign-in)
+         * @description On Casama Cloud, and wherever licensing is off, the answer is `{ "licensing": false }`.
+         */
+        get: operations["getSelfhostStatus"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/selfhost/licenses/personal": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Get the free personal license for a self-hosted server (signed in)
+         * @description One active personal license per account: a new instance id moves it, and the old server's renewals answer 409 license_moved. Errors: 404 licensing_off.
+         */
+        post: operations["issuePersonalLicense"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/selfhost/licenses/renew": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Renew a self-hosted server's license key (no sign-in)
+         * @description Accepts keys up to the end of their 14-day grace. The first renewal of a trial or business key binds it to the server. Errors: 400 invalid_license, 403 license_revoked, 403 license_expired, 404 licensing_off, 409 license_moved, 429 too_many_attempts.
+         */
+        post: operations["renewLicense"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/selfhost/licenses/trial": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Email a 30-day business trial key (no sign-in, rate limited)
+         * @description Answers the same whether or not the address already had a trial. Errors: 400 bad_email, 404 licensing_off, 429 too_many_attempts, 503 email_unavailable.
+         */
+        post: operations["requestTrialLicense"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/selfhost/licenses/{id}/revoke": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Revoke a license (instance owner): its next renewal answers 403 license_revoked */
+        post: operations["revokeSelfhostLicense"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/selfhost/stats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Self-hosted servers at a glance for Admin Growth (instance owner)
+         * @description From the daily license check-ins: daily active servers, new installs, editions, engine versions, lapsed licenses, members and bots. Counts only.
+         */
+        get: operations["selfhostLicenseStats"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/selfhost/license": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Set this server's license key
+         * @description Accepted when the key verifies and is for this server (or not yet bound to one, or offline). Before the server has a key anyone may set it (setup); after that only the instance owner. Errors: 400 invalid_license, 401 unauthorized, 403 not_instance_owner, 404 licensing_off, 409 license_other_instance.
+         */
+        put: operations["setSelfhostLicense"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/selfhost/cloud/connect-codes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * A one-time code that connects a self-hosted server to Casama Cloud models (admins)
+         * @description Casama Cloud only. The caller is an owner or admin of org_id, the workspace that will pay. The app hands the code to its own server, which redeems it at Casama Cloud within 10 minutes (POST /link/v1/cloud-models/redeem). Errors: 403 forbidden, 404 not_found where Casama Cloud models aren't offered.
+         */
+        post: operations["createCloudConnectCode"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/selfhost/cloud-models/apply": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Move the chosen bots onto Casama Cloud models and save the settings (server admin)
+         * @description Each chosen bot points at the Casama Cloud credential with its previous choice kept, so turning off puts it back.
+         */
+        post: operations["applySelfhostCloudModels"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/selfhost/cloud-models/connect": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Connect this server to Casama Cloud with a one-time code (server admin)
+         * @description The code comes from Casama Cloud (`POST /v1/selfhost/cloud/connect-codes`, signed in there). The server redeems it, keeps the link key in Vault and needs no restart. Errors: the refusal codes of Casama Cloud, 403 not_instance_owner, 404 not_available.
+         */
+        post: operations["connectSelfhostCloudModels"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/selfhost/cloud-models": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Casama Cloud models on this server: state, who pays, limits and your own use */
+        get: operations["getSelfhostCloudModels"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Change who may use Casama Cloud, the daily limit per person and the fallbacks (server admin)
+         * @description Only the fields sent change. Bots stay where they are. Errors: 403 not_instance_owner, 404 not_available, 409 not_connected.
+         */
+        patch: operations["updateSelfhostCloudModels"];
+        trace?: never;
+    };
+    "/v1/selfhost/cloud-models/preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** What turning Casama Cloud models on would change, bot by bot (server admin) */
+        get: operations["previewSelfhostCloudModels"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/selfhost/cloud-models/off": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Turn Casama Cloud models off; each bot goes back to its previous key (server admin) */
+        post: operations["turnOffSelfhostCloudModels"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/moves/{id}/abort": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Give up a move: the parts and anything half brought in are removed (move token) */
+        post: operations["abortMove"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/orgs/{id}/move/check": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Check a move before it starts: size, time, what fits, what needs you after (owner)
+         * @description Changes nothing. Errors: 409 already_moved.
+         */
+        post: operations["checkOrgMove"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/moves": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Get a one-time move token for receiving a workspace into this one (admin) */
+        post: operations["createMove"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/moves/{id}/finish": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Check the bundle and bring it in; progress at GET /v1/moves/{id} (move token) */
+        post: operations["finishMove"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/moves/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** A move's progress (move token, or an admin of the receiving workspace) */
+        get: operations["getMove"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/moves/{id}/fit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Whether a workspace of this size fits the receiving workspace's plan (move token)
+         * @description Errors: 409 already_moved when that source workspace moved here before.
+         */
+        get: operations["getMoveFit"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/orgs/{id}/move": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** The workspace's latest move: progress, step and error, or where it moved (member) */
+        get: operations["getOrgMove"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/moves/{id}/parts/{n}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** One part of the move bundle, with its sha256 in X-Move-Sha256 (move token) */
+        put: operations["putMovePart"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/orgs/{id}/move/start": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Start (or resume) moving this workspace to the server that gave the token (owner) */
+        post: operations["startOrgMove"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/owner/activity": {
         parameters: {
             query?: never;
@@ -9463,7 +9981,7 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        RunEvent: components["schemas"]["RunStartedEvent"] | components["schemas"]["MessageDeltaEvent"] | components["schemas"]["MessageCompletedEvent"] | components["schemas"]["ToolStartedEvent"] | components["schemas"]["ToolOutputEvent"] | components["schemas"]["ToolCompletedEvent"] | components["schemas"]["ToolFailedEvent"] | components["schemas"]["ScreenPointerEvent"] | components["schemas"]["ApprovalRequestedEvent"] | components["schemas"]["ApprovalResolvedEvent"] | components["schemas"]["DeviceAccessRequestedEvent"] | components["schemas"]["DeviceBrowserAccessRequestedEvent"] | components["schemas"]["LocalMcpSignInNeededEvent"] | components["schemas"]["McpQuestionEvent"] | components["schemas"]["McpQuestionResolvedEvent"] | components["schemas"]["DevicePermissionNeededEvent"] | components["schemas"]["DeviceDataUsedEvent"] | components["schemas"]["SecretRequestedEvent"] | components["schemas"]["SecretResolvedEvent"] | components["schemas"]["TakeoverRequestedEvent"] | components["schemas"]["TakeoverResolvedEvent"] | components["schemas"]["BrowserChoiceRequestedEvent"] | components["schemas"]["BrowserChoiceResolvedEvent"] | components["schemas"]["BrowserWaitingEvent"] | components["schemas"]["BrowserWaitingResolvedEvent"] | components["schemas"]["LeaseChangedEvent"] | components["schemas"]["ComputerStateEvent"] | components["schemas"]["CheckpointCreatedEvent"] | components["schemas"]["SubrunStartedEvent"] | components["schemas"]["SubrunCompletedEvent"] | components["schemas"]["MemoryWrittenEvent"] | components["schemas"]["SkillLoadedEvent"] | components["schemas"]["UsageEvent"] | components["schemas"]["ModelFallbackEvent"] | components["schemas"]["NoticeEvent"] | components["schemas"]["RunCompletedEvent"] | components["schemas"]["RunFailedEvent"] | components["schemas"]["RunCancelledEvent"] | components["schemas"]["UiShownEvent"] | components["schemas"]["CanvasPreviewEvent"];
+        RunEvent: components["schemas"]["RunStartedEvent"] | components["schemas"]["MessageDeltaEvent"] | components["schemas"]["MessageCompletedEvent"] | components["schemas"]["ToolStartedEvent"] | components["schemas"]["ToolOutputEvent"] | components["schemas"]["ToolCompletedEvent"] | components["schemas"]["ToolFailedEvent"] | components["schemas"]["ScreenPointerEvent"] | components["schemas"]["ApprovalRequestedEvent"] | components["schemas"]["ApprovalResolvedEvent"] | components["schemas"]["DeviceAccessRequestedEvent"] | components["schemas"]["DeviceBrowserAccessRequestedEvent"] | components["schemas"]["DeviceActionAccessRequestedEvent"] | components["schemas"]["LocalMcpSignInNeededEvent"] | components["schemas"]["McpQuestionEvent"] | components["schemas"]["McpQuestionResolvedEvent"] | components["schemas"]["DevicePermissionNeededEvent"] | components["schemas"]["DeviceDataUsedEvent"] | components["schemas"]["SecretRequestedEvent"] | components["schemas"]["SecretResolvedEvent"] | components["schemas"]["TakeoverRequestedEvent"] | components["schemas"]["TakeoverResolvedEvent"] | components["schemas"]["BrowserChoiceRequestedEvent"] | components["schemas"]["BrowserChoiceResolvedEvent"] | components["schemas"]["BrowserWaitingEvent"] | components["schemas"]["BrowserWaitingResolvedEvent"] | components["schemas"]["LeaseChangedEvent"] | components["schemas"]["ComputerStateEvent"] | components["schemas"]["CheckpointCreatedEvent"] | components["schemas"]["SubrunStartedEvent"] | components["schemas"]["SubrunCompletedEvent"] | components["schemas"]["MemoryWrittenEvent"] | components["schemas"]["SkillLoadedEvent"] | components["schemas"]["UsageEvent"] | components["schemas"]["ModelFallbackEvent"] | components["schemas"]["NoticeEvent"] | components["schemas"]["RunCompletedEvent"] | components["schemas"]["RunFailedEvent"] | components["schemas"]["RunCancelledEvent"] | components["schemas"]["UiShownEvent"] | components["schemas"]["CanvasPreviewEvent"];
         RunStartedEvent: {
             /** @description Protocol version, currently 1 */
             v: number;
@@ -9755,6 +10273,29 @@ export interface components {
             payload: {
                 /** @enum {string} */
                 kind: "browser_tab" | "browser_history";
+                reason: string;
+                /** Format: uuid */
+                bot_id: string;
+            };
+        };
+        DeviceActionAccessRequestedEvent: {
+            /** @description Protocol version, currently 1 */
+            v: number;
+            /** Format: uuid */
+            run_id: string;
+            seq: number;
+            /** Format: date-time */
+            ts: string;
+            /** Format: uuid */
+            bot_id: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "device.action_access_requested";
+            payload: {
+                /** @enum {string} */
+                kind: "alarm" | "home";
                 reason: string;
                 /** Format: uuid */
                 bot_id: string;
@@ -10521,6 +11062,10 @@ export interface components {
             };
             push_sender_id?: string;
             sites?: components["schemas"]["SitesConfig"];
+            cloud_models?: {
+                available: boolean;
+                connected: boolean;
+            };
             key_providers?: {
                 chat: string[];
                 more: string[];
@@ -10530,12 +11075,23 @@ export interface components {
                     [key: string]: string;
                 };
             };
+            moved_to?: components["schemas"]["MovedTo"];
         };
         SitesConfig: {
             zone: string | null;
             custom_domains: boolean;
             buy_domains: boolean;
             tlds: string[];
+        };
+        MovedTo: {
+            url: string;
+            /** Format: date-time */
+            at: string;
+            /** Format: uuid */
+            move_id: string;
+            /** @enum {string} */
+            target: "cloud" | "server";
+            message: string;
         };
         SignupChallenge: {
             challenge: string;
@@ -10966,8 +11522,13 @@ export interface components {
             locale: string;
             timezone: string;
             is_internal?: boolean;
+            account_age_band?: components["schemas"]["AccountAgeBand"];
+            /** Format: date-time */
+            account_age_band_updated_at?: string | null;
             organizations: components["schemas"]["OrganizationWithRole"][];
         };
+        /** @enum {string|null} */
+        AccountAgeBand: "under13" | "13to15" | "16to17" | "18plus" | "declined" | null;
         JoinResult: {
             /** @enum {string} */
             status: "joined" | "member" | "requested";
@@ -14754,6 +15315,14 @@ export interface components {
             landing?: string;
             install_id?: string;
         };
+        AgeBandResult: {
+            account_age_band: components["schemas"]["AccountAgeBand"];
+            /** Format: date-time */
+            account_age_band_updated_at: string;
+        };
+        SetAgeBandRequest: {
+            age_band: components["schemas"]["AccountAgeBand"];
+        };
         UpdateOrgSettingsRequest: {
             run_event_retention_days?: number;
             /** @description Owners and admins must use two-step sign-in (turning it on needs an aal2 session) */
@@ -14801,6 +15370,50 @@ export interface components {
         WallpaperDownloadRequest: {
             /** Format: uri */
             download_location: string;
+        };
+        FileKeyCreated: components["schemas"]["FileKey"] & {
+            /** @description Read-only File Provider key (cfk_…), shown once. Send as Authorization: FileKey <key> */
+            key: string;
+        };
+        FileKey: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            org_id: string;
+            /** @enum {string} */
+            platform: "ios" | "macos";
+            label: string | null;
+            /** Format: date-time */
+            last_used_at: string | null;
+            /** Format: date-time */
+            created_at: string;
+        };
+        FileKeyCreate: {
+            /** Format: uuid */
+            org_id: string;
+            /** @enum {string} */
+            platform: "ios" | "macos";
+            label?: string;
+        };
+        DeletedFileKey: {
+            /** Format: uuid */
+            deleted: string;
+        };
+        FileKeyList: {
+            items: components["schemas"]["FileKey"][];
+        };
+        DeviceQuietResult: {
+            /** Format: uuid */
+            id: string;
+            /** Format: date-time */
+            quiet_until: string | null;
+        };
+        UpdateDeviceQuietRequest: {
+            /**
+             * Format: date-time
+             * @description Hold proactive check-in pushes to this device until this time; null clears the hold
+             */
+            quiet_until: string | null;
         };
         ConnectAppResponse: {
             /** @enum {string} */
@@ -16411,10 +17024,10 @@ export interface components {
             created_at: string;
         };
         /**
-         * @description browser_tab and browser_history come from Casama for Chrome (platform web, D-323) and are live only: never stored
+         * @description browser_tab and browser_history come from Casama for Chrome (platform web, D-323) and are live only: never stored. alarm (AlarmKit) and home (HomeKit) are live actions on Apple devices (docs/APPLE-INTEGRATIONS-PLAN.md).
          * @enum {string}
          */
-        DeviceKind: "calendar" | "reminders" | "contacts" | "places" | "photos" | "health" | "notifications" | "activity" | "browser_tab" | "browser_history";
+        DeviceKind: "calendar" | "reminders" | "contacts" | "places" | "photos" | "health" | "notifications" | "activity" | "browser_tab" | "browser_history" | "alarm" | "home";
         DevicePlace: {
             /** Format: uuid */
             id: string;
@@ -16449,7 +17062,7 @@ export interface components {
             source_id: string;
             kind: string;
             /** @enum {string} */
-            action: "read" | "calendar.create" | "reminders.create" | "locate";
+            action: "read" | "calendar.create" | "reminders.create" | "locate" | "alarm.set" | "alarm.list" | "alarm.cancel" | "home.list" | "home.read" | "home.set";
             params: {
                 [key: string]: unknown;
             };
@@ -16524,6 +17137,8 @@ export interface components {
                 activity?: components["schemas"]["DeviceKindSettings"];
                 browser_tab?: components["schemas"]["DeviceKindSettings"];
                 browser_history?: components["schemas"]["DeviceKindSettings"];
+                alarm?: components["schemas"]["DeviceKindSettings"];
+                home?: components["schemas"]["DeviceKindSettings"];
             };
         };
         SetDeviceGrantRequest: {
@@ -18309,6 +18924,406 @@ export interface components {
             token_nonce?: string;
             source?: string;
             newsletter?: boolean;
+        };
+        TrialLicenseAccepted: {
+            /** @enum {boolean} */
+            ok: true;
+        };
+        TrialLicenseRequest: {
+            email: string;
+        };
+        BusinessLicenseCreated: {
+            /** Format: uuid */
+            id: string;
+            license: string;
+            /** Format: date-time */
+            expires_at: string;
+        };
+        CreateBusinessLicenseRequest: {
+            customer: string;
+            email: string;
+            seats: number;
+            features?: components["schemas"]["LicenseFeature"][];
+            /** Format: date-time */
+            expires_at: string;
+            offline?: boolean;
+        };
+        /** @enum {string} */
+        LicenseFeature: "audit_export" | "sso" | "advanced_roles" | "audit_forwarding";
+        SelfhostStatus: {
+            licensing: boolean;
+            /** @enum {string} */
+            state?: "setup" | "active" | "grace" | "expired";
+            /** @enum {string|null} */
+            edition?: "personal" | "trial" | "business" | null;
+            instance_id?: string;
+            /** Format: date-time */
+            expires_at?: string | null;
+            /** Format: date-time */
+            grace_until?: string | null;
+            members?: number;
+            seats?: number | null;
+            engine_version?: string;
+        };
+        LicenseIssued: {
+            license: string;
+            /** Format: date-time */
+            expires_at: string;
+        };
+        PersonalLicenseRequest: {
+            /** Format: uuid */
+            instance_id: string;
+            engine_version: string;
+        };
+        SelfhostLicenseList: {
+            items: components["schemas"]["SelfhostLicenseRow"][];
+        };
+        SelfhostLicenseRow: {
+            /** Format: uuid */
+            id: string;
+            edition: components["schemas"]["LicenseEdition"];
+            /** Format: uuid */
+            account_id: string | null;
+            customer: string | null;
+            email: string | null;
+            /** Format: uuid */
+            instance_id: string | null;
+            seats: number;
+            features: string[];
+            offline: boolean;
+            /** Format: date-time */
+            issued_at: string;
+            /** Format: date-time */
+            expires_at: string;
+            /** Format: date-time */
+            valid_until: string | null;
+            /** Format: date-time */
+            last_renewed_at: string | null;
+            engine_version: string | null;
+            /** Format: date-time */
+            last_checkin_at: string | null;
+            members: number | null;
+            bots: number | null;
+            revoked: boolean;
+            /** Format: date-time */
+            revoked_at: string | null;
+        };
+        /** @enum {string} */
+        LicenseEdition: "personal" | "trial" | "business";
+        RenewLicenseRequest: {
+            license: string;
+            /** Format: uuid */
+            instance_id: string;
+            engine_version: string;
+            members?: number;
+            bots?: number;
+        };
+        SelfhostStats: {
+            daily_active: {
+                day: string;
+                count: number;
+            }[];
+            new_installs: {
+                day: string;
+                count: number;
+            }[];
+            active_24h: number;
+            by_edition: {
+                /** @enum {string} */
+                edition: "personal" | "trial" | "business";
+                active: number;
+                total: number;
+            }[];
+            by_engine_version: {
+                engine_version: string;
+                servers: number;
+            }[];
+            lapsed: number;
+            members: number;
+            bots: number;
+        };
+        SetSelfhostLicenseRequest: {
+            license: string;
+        };
+        CloudConnectCode: {
+            code: string;
+            /** Format: date-time */
+            expires_at: string;
+        };
+        CloudConnectCodeRequest: {
+            /** Format: uuid */
+            org_id: string;
+            instance_id: string;
+            instance_name?: string;
+        };
+        CloudModelsState: {
+            /** @description False on Casama Cloud itself and on a server without a license in force */
+            available: boolean;
+            connected: boolean;
+            can_manage: boolean;
+            payer: {
+                org_id: string;
+                name: string;
+            } | null;
+            status: components["schemas"]["CloudLinkStatus"];
+            policy: components["schemas"]["CloudModelsPolicy"];
+            fallback: components["schemas"]["CloudModelsFallback"];
+            embedding: boolean;
+            me: {
+                allowed: boolean;
+                today_usd: number;
+                limit_usd: number | null;
+            };
+            memory_reindex: {
+                done: number;
+                total: number;
+            } | null;
+            /** @description Why Casama Cloud isn't answering: the last refusal from Cloud's status call, or a run's when Cloud itself couldn't be reached. Null when fine */
+            status_error: {
+                code: string;
+                message: string;
+            } | null;
+            /** @description A working own chat key exists on this server */
+            has_own_key: boolean;
+        };
+        CloudLinkStatus: {
+            scopes?: string[];
+            payer?: {
+                org_id: string;
+                name: string;
+            } | null;
+            plan?: {
+                code: string;
+                name: string;
+                paid: boolean;
+                /** @description The payer had a paid plan and it ended (not just never paid) */
+                ended?: boolean;
+            } | null;
+            models_allowed?: boolean;
+            credits_usd?: number;
+            included?: {
+                used_usd: number;
+                limit_usd: number;
+            } | null;
+            today?: {
+                spend_usd: number;
+                cap_usd: number | null;
+                resets_at: string | null;
+            };
+            seats?: {
+                plan: number;
+                used: number;
+            } | null;
+            trial?: {
+                remaining_usd: number;
+            } | null;
+            jobs?: {
+                chat?: string | null;
+                background?: string | null;
+                embedding?: string | null;
+                image?: string | null;
+                tts?: string | null;
+                stt?: string | null;
+            };
+        } | null;
+        CloudModelsPolicy: {
+            /** @description "all", or the user ids who may use Casama Cloud */
+            allowed: "all" | string[];
+            daily_usd_per_member: number | null;
+        };
+        CloudModelsFallback: {
+            /** @description Casama Cloud refused or can't be reached: use an own key */
+            to_own: boolean;
+            /** @description An own key failed: use Casama Cloud */
+            from_own: boolean;
+        };
+        ApplyCloudModelsRequest: {
+            bots: string[];
+            workspace_default?: boolean;
+            embedding?: boolean;
+            fallback?: components["schemas"]["CloudModelsFallback"];
+            policy?: components["schemas"]["CloudModelsPolicy"];
+        };
+        ConnectCloudModelsRequest: {
+            code: string;
+        };
+        CloudModelsPreview: {
+            bots: {
+                /** Format: uuid */
+                id: string;
+                name: string;
+                from: {
+                    credential_id: string | null;
+                    provider: string | null;
+                    model: string | null;
+                    label: string | null;
+                    working: boolean;
+                };
+                suggested: boolean;
+                step_down: boolean;
+            }[];
+            jobs: {
+                embedding: {
+                    has_own: boolean;
+                };
+                image: {
+                    has_own: boolean;
+                };
+                tts: {
+                    has_own: boolean;
+                };
+                stt: {
+                    has_own: boolean;
+                };
+            };
+        };
+        CloudModelsOff: {
+            bots: {
+                /** Format: uuid */
+                id: string;
+                name: string;
+                to: {
+                    label: string;
+                } | null;
+            }[];
+        };
+        UpdateCloudModelsRequest: {
+            policy?: components["schemas"]["CloudModelsPolicy"];
+            fallback?: components["schemas"]["CloudModelsFallback"];
+        };
+        MoveProgress: {
+            /** Format: uuid */
+            move_id: string;
+            /** @enum {string} */
+            role: "source" | "target";
+            state: components["schemas"]["MoveState"];
+            step: string | null;
+            /** Format: uuid */
+            org_id: string | null;
+            remote_url: string | null;
+            bring_keys: boolean;
+            counts: {
+                [key: string]: unknown;
+            };
+            progress: {
+                done_bytes: number;
+                total_bytes: number;
+            };
+            parts?: number[];
+            report: {
+                [key: string]: unknown;
+            };
+            error: components["schemas"]["MoveError"];
+            moved_to?: components["schemas"]["MovedTo"] & (Record<string, never> | null);
+            /** Format: date-time */
+            created_at: string;
+            /** Format: date-time */
+            updated_at: string;
+            /** Format: date-time */
+            finished_at: string | null;
+        };
+        /** @enum {string} */
+        MoveState: "created" | "copying" | "pausing" | "finishing" | "importing" | "done" | "failed" | "cancelled";
+        MoveError: {
+            code: string;
+            message: string;
+            step?: string | null;
+        } | null;
+        MoveCheck: {
+            size_bytes: number;
+            estimate_seconds: number;
+            pause_seconds: number;
+            long_pause: boolean;
+            counts: {
+                [key: string]: number;
+            };
+            fit: components["schemas"]["MoveFit"];
+            /** @enum {string|null} */
+            update_first: "source" | "target" | null;
+            comes: string[];
+            after: {
+                reconnect: {
+                    /** Format: uuid */
+                    id: string;
+                    name: string;
+                    kind: string;
+                }[];
+                invites: {
+                    name: string;
+                    email: string;
+                }[];
+                keys: {
+                    models: number;
+                    chat_apps: number;
+                    secrets: number;
+                };
+                computers: number;
+                chatgpt_plans: number;
+            };
+            /** @enum {string} */
+            target: "cloud" | "server";
+            already_moved: components["schemas"]["MovedTo"] & (Record<string, never> | null);
+        };
+        MoveFit: {
+            fits: boolean;
+            plan: {
+                code: string;
+                name: string;
+            } | null;
+            over: components["schemas"]["MoveOver"][];
+            needs_plan: {
+                code: string;
+                name: string;
+            } | null;
+            accepts: number[];
+            engine_version: string;
+            move_key: string;
+            target: {
+                /** Format: uuid */
+                org_id: string;
+                name: string;
+                empty: boolean;
+            };
+        };
+        MoveOver: {
+            /** @enum {string} */
+            what: "people" | "bots" | "computers" | "storage";
+            have: number;
+            limit: number;
+        };
+        MoveCheckRequest: {
+            /** Format: uri */
+            target_url: string;
+            token: string;
+        };
+        MoveToken: {
+            /** Format: uuid */
+            move_id: string;
+            token: string;
+            /** Format: date-time */
+            expires_at: string;
+        };
+        CreateMoveRequest: {
+            /** Format: uuid */
+            org_id: string;
+        };
+        MoveFinishRequest: {
+            manifest: {
+                [key: string]: unknown;
+            };
+            signature: string;
+        };
+        MovePartReceived: {
+            n: number;
+            size: number;
+            sha256: string;
+        };
+        MoveStartRequest: {
+            /** Format: uri */
+            target_url: string;
+            token: string;
+            /** @default true */
+            bring_keys: boolean;
         };
         OwnerActivity: {
             items: components["schemas"]["OwnerEvent"][];
@@ -36493,6 +37508,48 @@ export interface operations {
             };
         };
     };
+    setMyAgeBand: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SetAgeBandRequest"];
+            };
+        };
+        responses: {
+            /** @description Saved */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AgeBandResult"];
+                };
+            };
+            /** @description Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not authenticated */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
     searchWallpapers: {
         parameters: {
             query?: {
@@ -36553,6 +37610,188 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            /** @description Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not authenticated */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    listFileKeys: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description File keys */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FileKeyList"];
+                };
+            };
+            /** @description Not authenticated */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    createFileKey: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FileKeyCreate"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FileKeyCreated"];
+                };
+            };
+            /** @description Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not authenticated */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    deleteFileKey: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Deleted */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DeletedFileKey"];
+                };
+            };
+            /** @description Not authenticated */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    updateDeviceQuiet: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateDeviceQuietRequest"];
+            };
+        };
+        responses: {
+            /** @description Updated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DeviceQuietResult"];
+                };
             };
             /** @description Validation failed */
             400: {
@@ -42541,7 +43780,7 @@ export interface operations {
     listDeviceReadings: {
         parameters: {
             query?: {
-                /** @description browser_tab and browser_history come from Casama for Chrome (platform web, D-323) and are live only: never stored */
+                /** @description browser_tab and browser_history come from Casama for Chrome (platform web, D-323) and are live only: never stored. alarm (AlarmKit) and home (HomeKit) are live actions on Apple devices (docs/APPLE-INTEGRATIONS-PLAN.md). */
                 kind?: components["schemas"]["DeviceKind"];
                 limit?: number;
             };
@@ -49741,6 +50980,1420 @@ export interface operations {
             };
             /** @description Rate limited */
             429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    admitForSelfhost: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TrialLicenseRequest"];
+            };
+        };
+        responses: {
+            /** @description Let in, or already could sign up */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TrialLicenseAccepted"];
+                };
+            };
+            /** @description Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Rate limited */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    listSelfhostLicenses: {
+        parameters: {
+            query?: {
+                edition?: components["schemas"]["LicenseEdition"];
+                q?: string;
+                limit?: number;
+                offset?: number | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Licenses */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SelfhostLicenseList"];
+                };
+            };
+            /** @description Not authenticated */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    createBusinessLicense: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateBusinessLicenseRequest"];
+            };
+        };
+        responses: {
+            /** @description The key */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BusinessLicenseCreated"];
+                };
+            };
+            /** @description Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not authenticated */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    getSelfhostStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description State */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SelfhostStatus"];
+                };
+            };
+        };
+    };
+    issuePersonalLicense: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PersonalLicenseRequest"];
+            };
+        };
+        responses: {
+            /** @description The key */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LicenseIssued"];
+                };
+            };
+            /** @description Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not authenticated */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    renewLicense: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RenewLicenseRequest"];
+            };
+        };
+        responses: {
+            /** @description A new key */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LicenseIssued"];
+                };
+            };
+            /** @description Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Rate limited */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    requestTrialLicense: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TrialLicenseRequest"];
+            };
+        };
+        responses: {
+            /** @description On its way */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TrialLicenseAccepted"];
+                };
+            };
+            /** @description Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Rate limited */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Email is not set up on this server */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    revokeSelfhostLicense: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Revoked */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SelfhostLicenseRow"];
+                };
+            };
+            /** @description Not authenticated */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    selfhostLicenseStats: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Stats */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SelfhostStats"];
+                };
+            };
+            /** @description Not authenticated */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    setSelfhostLicense: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SetSelfhostLicenseRequest"];
+            };
+        };
+        responses: {
+            /** @description The new state */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SelfhostStatus"];
+                };
+            };
+            /** @description Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not authenticated */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    createCloudConnectCode: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CloudConnectCodeRequest"];
+            };
+        };
+        responses: {
+            /** @description The code */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CloudConnectCode"];
+                };
+            };
+            /** @description Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not authenticated */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    applySelfhostCloudModels: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ApplyCloudModelsRequest"];
+            };
+        };
+        responses: {
+            /** @description State */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CloudModelsState"];
+                };
+            };
+            /** @description Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not authenticated */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    connectSelfhostCloudModels: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ConnectCloudModelsRequest"];
+            };
+        };
+        responses: {
+            /** @description State */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CloudModelsState"];
+                };
+            };
+            /** @description Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not authenticated */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Casama Cloud refused (plan, credits, seats) */
+            402: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    getSelfhostCloudModels: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description State */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CloudModelsState"];
+                };
+            };
+            /** @description Not authenticated */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    updateSelfhostCloudModels: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateCloudModelsRequest"];
+            };
+        };
+        responses: {
+            /** @description State */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CloudModelsState"];
+                };
+            };
+            /** @description Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not authenticated */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    previewSelfhostCloudModels: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Preview */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CloudModelsPreview"];
+                };
+            };
+            /** @description Not authenticated */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    turnOffSelfhostCloudModels: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Where each bot went */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CloudModelsOff"];
+                };
+            };
+            /** @description Not authenticated */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    abortMove: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Removed */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MoveProgress"];
+                };
+            };
+            /** @description Not authenticated */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    checkOrgMove: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MoveCheckRequest"];
+            };
+        };
+        responses: {
+            /** @description The check */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MoveCheck"];
+                };
+            };
+            /** @description Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not authenticated */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    createMove: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateMoveRequest"];
+            };
+        };
+        responses: {
+            /** @description The token */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MoveToken"];
+                };
+            };
+            /** @description Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not authenticated */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    finishMove: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MoveFinishRequest"];
+            };
+        };
+        responses: {
+            /** @description Bringing it in */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MoveProgress"];
+                };
+            };
+            /** @description Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not authenticated */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    getMove: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Progress */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MoveProgress"];
+                };
+            };
+            /** @description Not authenticated */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    getMoveFit: {
+        parameters: {
+            query: {
+                source_org_id: string;
+                members?: number | null;
+                bots?: number | null;
+                computers?: number | null;
+                storage_bytes?: number | null;
+                bundle_version?: number;
+                engine_version?: string;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Fit */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MoveFit"];
+                };
+            };
+            /** @description Not authenticated */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    getOrgMove: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Progress */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MoveProgress"];
+                };
+            };
+            /** @description Not authenticated */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    putMovePart: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                /** @description Part number, from 0 */
+                n: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/octet-stream": string;
+            };
+        };
+        responses: {
+            /** @description Received */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MovePartReceived"];
+                };
+            };
+            /** @description Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not authenticated */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    startOrgMove: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MoveStartRequest"];
+            };
+        };
+        responses: {
+            /** @description Started */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MoveProgress"];
+                };
+            };
+            /** @description Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not authenticated */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Conflict */
+            409: {
                 headers: {
                     [name: string]: unknown;
                 };

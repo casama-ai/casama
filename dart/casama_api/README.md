@@ -150,16 +150,19 @@ Class | Method | HTTP request | Description
 [*AdminApi*](doc/AdminApi.md) | [**approveHeldCreation**](doc/AdminApi.md#approveheldcreation) | **POST** /v1/admin/creations/{id}/approve | Approve a public page the phishing and malware check held: visitors see it again (owner only; D-550)
 [*AdminApi*](doc/AdminApi.md) | [**checkAdminVendor**](doc/AdminApi.md#checkadminvendor) | **POST** /v1/admin/vendors/{vendor}/check | 
 [*AdminApi*](doc/AdminApi.md) | [**checkRemoteAccess**](doc/AdminApi.md#checkremoteaccess) | **POST** /v1/admin/remote-access/check | Check the address now: Casama Cloud, the connector, and the address from outside
+[*AdminApi*](doc/AdminApi.md) | [**createBusinessLicense**](doc/AdminApi.md#createbusinesslicense) | **POST** /v1/admin/selfhost/licenses | Make a business license key (instance owner); the key is shown once and emailed
 [*AdminApi*](doc/AdminApi.md) | [**getSupportWebStats**](doc/AdminApi.md#getsupportwebstats) | **GET** /v1/admin/support-web | Today&#39;s use of the website assistant and the questions it couldn&#39;t answer (instance owners)
 [*AdminApi*](doc/AdminApi.md) | [**listContentReports**](doc/AdminApi.md#listcontentreports) | **GET** /v1/admin/content-reports | Reports from inside the app, open first (instance owners)
 [*AdminApi*](doc/AdminApi.md) | [**listFeedback**](doc/AdminApi.md#listfeedback) | **GET** /v1/admin/feedback | Feedback sent from the app, newest first (instance owners)
 [*AdminApi*](doc/AdminApi.md) | [**listReportedCreations**](doc/AdminApi.md#listreportedcreations) | **GET** /v1/admin/reports | Public links people reported, most reported first (owner only; D-281)
+[*AdminApi*](doc/AdminApi.md) | [**listSelfhostLicenses**](doc/AdminApi.md#listselfhostlicenses) | **GET** /v1/admin/selfhost/licenses | Self-hosted licenses Casama Cloud has issued (instance owner); keys aren&#39;t shown
 [*AdminApi*](doc/AdminApi.md) | [**listSupportTickets**](doc/AdminApi.md#listsupporttickets) | **GET** /v1/admin/support-tickets | Messages sent to support from the app, newest first (instance owners)
 [*AdminApi*](doc/AdminApi.md) | [**publishFeedback**](doc/AdminApi.md#publishfeedback) | **POST** /v1/admin/feedback/{id}/publish | Post feedback to the public ideas board and mark it done (instance owners)
 [*AdminApi*](doc/AdminApi.md) | [**removeAdminDeviceKey**](doc/AdminApi.md#removeadmindevicekey) | **DELETE** /v1/admin/devices/{id} | Remove a device&#39;s key (owner only)
 [*AdminApi*](doc/AdminApi.md) | [**removeAdminPin**](doc/AdminApi.md#removeadminpin) | **DELETE** /v1/admin/pin | Remove the admin PIN (owner only; a fresh passkey or sign-in, not the PIN)
 [*AdminApi*](doc/AdminApi.md) | [**resumeWorkspaceMail**](doc/AdminApi.md#resumeworkspacemail) | **POST** /v1/admin/mail/workspaces/{org_id}/resume | Resume a workspace&#39;s bot email after an automatic pause for bounces or spam reports, lifting its automatically paused addresses (owner only)
 [*AdminApi*](doc/AdminApi.md) | [**reviewContentReport**](doc/AdminApi.md#reviewcontentreport) | **POST** /v1/admin/content-reports/{id} | Close a report: acted on (optionally suspending the workspace) or dismissed
+[*AdminApi*](doc/AdminApi.md) | [**revokeSelfhostLicense**](doc/AdminApi.md#revokeselfhostlicense) | **POST** /v1/admin/selfhost/licenses/{id}/revoke | Revoke a license (instance owner): its next renewal answers 403 license_revoked
 [*AdminApi*](doc/AdminApi.md) | [**saveAppBrowser**](doc/AdminApi.md#saveappbrowser) | **PUT** /v1/admin/app-browser | Change who has the phone browser and for which reasons (owner only)
 [*AdminApi*](doc/AdminApi.md) | [**saveBrowserGuard**](doc/AdminApi.md#savebrowserguard) | **PUT** /v1/admin/browser-guard | Replace the added sites; the built-in lists can&#39;t be shortened (owner only)
 [*AdminApi*](doc/AdminApi.md) | [**saveCallLimits**](doc/AdminApi.md#savecalllimits) | **PUT** /v1/admin/call-limits | Replace the saved call limits; refused when a value is unknown or out of range
@@ -167,6 +170,7 @@ Class | Method | HTTP request | Description
 [*AdminApi*](doc/AdminApi.md) | [**saveModelCatalog**](doc/AdminApi.md#savemodelcatalog) | **PUT** /v1/admin/model-catalog | Replace the model catalog; refused when any part fails its check (owner only)
 [*AdminApi*](doc/AdminApi.md) | [**savePlan**](doc/AdminApi.md#saveplan) | **PUT** /v1/admin/plans/{code} | Create or change a plan; workspaces on it get the new limits right away
 [*AdminApi*](doc/AdminApi.md) | [**savePriceTables**](doc/AdminApi.md#savepricetables) | **PUT** /v1/admin/price-tables | Change cost tables or domain sale settings; fields left out keep their value
+[*AdminApi*](doc/AdminApi.md) | [**selfhostLicenseStats**](doc/AdminApi.md#selfhostlicensestats) | **GET** /v1/admin/selfhost/stats | Self-hosted servers at a glance for Admin Growth (instance owner)
 [*AdminApi*](doc/AdminApi.md) | [**setAdminBot**](doc/AdminApi.md#setadminbot) | **PUT** /v1/admin/admin-bot | Turn the admin bot on or off, or choose its bot (owner only)
 [*AdminApi*](doc/AdminApi.md) | [**setAdminCloudModels**](doc/AdminApi.md#setadmincloudmodels) | **PUT** /v1/admin/models | Change the models Casama Cloud runs (owner only)
 [*AdminApi*](doc/AdminApi.md) | [**setAdminConnectionSettings**](doc/AdminApi.md#setadminconnectionsettings) | **PUT** /v1/admin/connections | Choose how apps without their own sign-in connect (owner only)
@@ -377,6 +381,7 @@ Class | Method | HTTP request | Description
 [*DevicesApi*](doc/DevicesApi.md) | [**saveDeviceSource**](doc/DevicesApi.md#savedevicesource) | **PUT** /v1/device-sources/{key} | Register this device and the kinds it shares; kinds turned off lose their data
 [*DevicesApi*](doc/DevicesApi.md) | [**setDeviceGrant**](doc/DevicesApi.md#setdevicegrant) | **PUT** /v1/device-grants | Allow or stop a bot reading one kind of your device data
 [*DevicesApi*](doc/DevicesApi.md) | [**snoozeDevicePermissions**](doc/DevicesApi.md#snoozedevicepermissions) | **POST** /v1/device-permissions/{type}/{id}/snooze | Not now: this bot doesn&#39;t ask for these permissions on this device for 24 hours
+[*DevicesApi*](doc/DevicesApi.md) | [**updateDeviceQuiet**](doc/DevicesApi.md#updatedevicequiet) | **PATCH** /v1/devices/{id} | Hold proactive check-ins for a device while a Focus filter is active
 [*DevicesApi*](doc/DevicesApi.md) | [**uploadDeviceReadings**](doc/DevicesApi.md#uploaddevicereadings) | **POST** /v1/device-sources/{key}/readings | Upload summaries (re-uploading the same external_id replaces it)
 [*DomainsApi*](doc/DomainsApi.md) | [**addDomainRecord**](doc/DomainsApi.md#adddomainrecord) | **POST** /v1/domains/{id}/records | Add a DNS record to a bought domain (admins)
 [*DomainsApi*](doc/DomainsApi.md) | [**checkDomain**](doc/DomainsApi.md#checkdomain) | **POST** /v1/domains/{id}/check | Check a domain&#39;s DNS now (admins; at most once every 10 seconds)
@@ -401,10 +406,13 @@ Class | Method | HTTP request | Description
 [*EncryptionApi*](doc/EncryptionApi.md) | [**replaceEncryptionKey**](doc/EncryptionApi.md#replaceencryptionkey) | **POST** /v1/orgs/{id}/encryption/replace-key | Replace the workspace&#39;s data key (owners); rows are resealed onto the new key in the background
 [*EncryptionApi*](doc/EncryptionApi.md) | [**rotateEncryptionKey**](doc/EncryptionApi.md#rotateencryptionkey) | **POST** /v1/orgs/{id}/encryption/rotate | Rewrap the workspace&#39;s data key with the server&#39;s current key (rows are not rewritten)
 [*EncryptionApi*](doc/EncryptionApi.md) | [**setEncryption**](doc/EncryptionApi.md#setencryption) | **PUT** /v1/orgs/{id}/encryption | Turn encryption at rest on or off (owners); existing rows are sealed or opened in the background
+[*FilesApi*](doc/FilesApi.md) | [**createFileKey**](doc/FilesApi.md#createfilekey) | **POST** /v1/file-keys | Create a read-only File Provider key (cfk_…) shown once, for browsing and downloading computer files in Files and Finder
+[*FilesApi*](doc/FilesApi.md) | [**deleteFileKey**](doc/FilesApi.md#deletefilekey) | **DELETE** /v1/file-keys/{id} | Revoke a read-only File Provider key (sign-out)
 [*FilesApi*](doc/FilesApi.md) | [**deleteGitSync**](doc/FilesApi.md#deletegitsync) | **DELETE** /v1/orgs/{id}/git-sync | 
 [*FilesApi*](doc/FilesApi.md) | [**exportWorkspaceFiles**](doc/FilesApi.md#exportworkspacefiles) | **POST** /v1/orgs/{id}/files/export | Routines and skills as Markdown files, zipped
 [*FilesApi*](doc/FilesApi.md) | [**getGitSync**](doc/FilesApi.md#getgitsync) | **GET** /v1/orgs/{id}/git-sync | 
 [*FilesApi*](doc/FilesApi.md) | [**importWorkspaceFiles**](doc/FilesApi.md#importworkspacefiles) | **POST** /v1/orgs/{id}/files/import | Create and update routines and skills from files (dry_run shows what would change)
+[*FilesApi*](doc/FilesApi.md) | [**listFileKeys**](doc/FilesApi.md#listfilekeys) | **GET** /v1/file-keys | List your read-only File Provider keys
 [*FilesApi*](doc/FilesApi.md) | [**runGitSync**](doc/FilesApi.md#rungitsync) | **POST** /v1/orgs/{id}/git-sync/run | Sync on the worker&#39;s next minute
 [*FilesApi*](doc/FilesApi.md) | [**setGitSync**](doc/FilesApi.md#setgitsync) | **PUT** /v1/orgs/{id}/git-sync | 
 [*GalleryApi*](doc/GalleryApi.md) | [**createGalleryRequest**](doc/GalleryApi.md#creategalleryrequest) | **POST** /v1/gallery/requests | Ask for something the gallery doesn&#39;t have (a similar request is returned instead)
@@ -518,6 +526,15 @@ Class | Method | HTTP request | Description
 [*ModerationApi*](doc/ModerationApi.md) | [**createReport**](doc/ModerationApi.md#createreport) | **POST** /v1/reports | Report something or someone to the people who run this server
 [*ModerationApi*](doc/ModerationApi.md) | [**listBlocks**](doc/ModerationApi.md#listblocks) | **GET** /v1/me/blocks | People you blocked
 [*ModerationApi*](doc/ModerationApi.md) | [**unblockPerson**](doc/ModerationApi.md#unblockperson) | **DELETE** /v1/me/blocks/{user_id} | 
+[*MovesApi*](doc/MovesApi.md) | [**abortMove**](doc/MovesApi.md#abortmove) | **POST** /v1/moves/{id}/abort | Give up a move: the parts and anything half brought in are removed (move token)
+[*MovesApi*](doc/MovesApi.md) | [**checkOrgMove**](doc/MovesApi.md#checkorgmove) | **POST** /v1/orgs/{id}/move/check | Check a move before it starts: size, time, what fits, what needs you after (owner)
+[*MovesApi*](doc/MovesApi.md) | [**createMove**](doc/MovesApi.md#createmove) | **POST** /v1/moves | Get a one-time move token for receiving a workspace into this one (admin)
+[*MovesApi*](doc/MovesApi.md) | [**finishMove**](doc/MovesApi.md#finishmove) | **POST** /v1/moves/{id}/finish | Check the bundle and bring it in; progress at GET /v1/moves/{id} (move token)
+[*MovesApi*](doc/MovesApi.md) | [**getMove**](doc/MovesApi.md#getmove) | **GET** /v1/moves/{id} | A move&#39;s progress (move token, or an admin of the receiving workspace)
+[*MovesApi*](doc/MovesApi.md) | [**getMoveFit**](doc/MovesApi.md#getmovefit) | **GET** /v1/moves/{id}/fit | Whether a workspace of this size fits the receiving workspace&#39;s plan (move token)
+[*MovesApi*](doc/MovesApi.md) | [**getOrgMove**](doc/MovesApi.md#getorgmove) | **GET** /v1/orgs/{id}/move | The workspace&#39;s latest move: progress, step and error, or where it moved (member)
+[*MovesApi*](doc/MovesApi.md) | [**putMovePart**](doc/MovesApi.md#putmovepart) | **PUT** /v1/moves/{id}/parts/{n} | One part of the move bundle, with its sha256 in X-Move-Sha256 (move token)
+[*MovesApi*](doc/MovesApi.md) | [**startOrgMove**](doc/MovesApi.md#startorgmove) | **POST** /v1/orgs/{id}/move/start | Start (or resume) moving this workspace to the server that gave the token (owner)
 [*NotificationsApi*](doc/NotificationsApi.md) | [**lessLikeThis**](doc/NotificationsApi.md#lesslikethis) | **POST** /v1/notifications/{id}/less-like-this | Tell the bot to send fewer messages like this one
 [*OwnerApi*](doc/OwnerApi.md) | [**ownerActivity**](doc/OwnerApi.md#owneractivity) | **GET** /v1/owner/activity | What&#39;s happening on this server, newest first (owner only)
 [*OwnerApi*](doc/OwnerApi.md) | [**ownerAlertSettings**](doc/OwnerApi.md#owneralertsettings) | **GET** /v1/owner/alerts | Which kinds of activity push to this owner&#39;s devices (owner only)
@@ -580,6 +597,7 @@ Class | Method | HTTP request | Description
 [*PrivacyApi*](doc/PrivacyApi.md) | [**saveAppleSignInToken**](doc/PrivacyApi.md#saveapplesignintoken) | **POST** /v1/me/apple-sign-in | Hand over what Sign in with Apple returned, so deleting the account can revoke it
 [*PrivacyApi*](doc/PrivacyApi.md) | [**setAnalyticsOptOut**](doc/PrivacyApi.md#setanalyticsoptout) | **POST** /v1/me/analytics-opt-out | Update the user&#39;s analytics opt-out preference
 [*PrivacyApi*](doc/PrivacyApi.md) | [**setAttribution**](doc/PrivacyApi.md#setattribution) | **POST** /v1/me/attribution | Record first-touch signup platform and acquisition source once per account
+[*PrivacyApi*](doc/PrivacyApi.md) | [**setMyAgeBand**](doc/PrivacyApi.md#setmyageband) | **PUT** /v1/me/age-band | Save the account&#39;s declared age band (no birth date; docs/APPLE-INTEGRATIONS-PLAN.md §5.2)
 [*PrivacyApi*](doc/PrivacyApi.md) | [**updateOrgSettings**](doc/PrivacyApi.md#updateorgsettings) | **PATCH** /v1/orgs/{id}/settings | Change workspace settings such as run event retention (admins)
 [*ProjectsApi*](doc/ProjectsApi.md) | [**approveProjectPlan**](doc/ProjectsApi.md#approveprojectplan) | **POST** /v1/projects/{id}/plan/approve | Approve the proposed plan; sessions start
 [*ProjectsApi*](doc/ProjectsApi.md) | [**createProject**](doc/ProjectsApi.md#createproject) | **POST** /v1/projects | Start a project: one you work on together in its chat, or one its lead bot plans for your approval and then works on by itself
@@ -616,6 +634,19 @@ Class | Method | HTTP request | Description
 [*SecretsApi*](doc/SecretsApi.md) | [**setSecretStore**](doc/SecretsApi.md#setsecretstore) | **PUT** /v1/orgs/{id}/secret-store | Keep bots&#39; named secrets in the workspace&#39;s Infisical project (admins)
 [*SecretsApi*](doc/SecretsApi.md) | [**shareSecretRequestLogin**](doc/SecretsApi.md#sharesecretrequestlogin) | **POST** /v1/secrets/requests/{id}/login | Answer a sign-in card with a login: saved to Vault for that bot and site only, then the bot signs in itself (D-511)
 [*SecretsApi*](doc/SecretsApi.md) | [**signInOnPage**](doc/SecretsApi.md#signinonpage) | **POST** /v1/secrets/requests/{id}/on-page | Answer a sign-in card by signing in on the page yourself, in the browser inside the app; the bot waits for Hand Back (D-511)
+[*SelfhostApi*](doc/SelfhostApi.md) | [**admitForSelfhost**](doc/SelfhostApi.md#admitforselfhost) | **POST** /v1/selfhost/licenses/admit | Let an email address past the sign-up waitlist to get a personal license
+[*SelfhostApi*](doc/SelfhostApi.md) | [**applySelfhostCloudModels**](doc/SelfhostApi.md#applyselfhostcloudmodels) | **POST** /v1/selfhost/cloud-models/apply | Move the chosen bots onto Casama Cloud models and save the settings (server admin)
+[*SelfhostApi*](doc/SelfhostApi.md) | [**connectSelfhostCloudModels**](doc/SelfhostApi.md#connectselfhostcloudmodels) | **POST** /v1/selfhost/cloud-models/connect | Connect this server to Casama Cloud with a one-time code (server admin)
+[*SelfhostApi*](doc/SelfhostApi.md) | [**createCloudConnectCode**](doc/SelfhostApi.md#createcloudconnectcode) | **POST** /v1/selfhost/cloud/connect-codes | A one-time code that connects a self-hosted server to Casama Cloud models (admins)
+[*SelfhostApi*](doc/SelfhostApi.md) | [**getSelfhostCloudModels**](doc/SelfhostApi.md#getselfhostcloudmodels) | **GET** /v1/selfhost/cloud-models | Casama Cloud models on this server: state, who pays, limits and your own use
+[*SelfhostApi*](doc/SelfhostApi.md) | [**getSelfhostStatus**](doc/SelfhostApi.md#getselfhoststatus) | **GET** /v1/selfhost/status | This server&#39;s license state (no sign-in)
+[*SelfhostApi*](doc/SelfhostApi.md) | [**issuePersonalLicense**](doc/SelfhostApi.md#issuepersonallicense) | **POST** /v1/selfhost/licenses/personal | Get the free personal license for a self-hosted server (signed in)
+[*SelfhostApi*](doc/SelfhostApi.md) | [**previewSelfhostCloudModels**](doc/SelfhostApi.md#previewselfhostcloudmodels) | **GET** /v1/selfhost/cloud-models/preview | What turning Casama Cloud models on would change, bot by bot (server admin)
+[*SelfhostApi*](doc/SelfhostApi.md) | [**renewLicense**](doc/SelfhostApi.md#renewlicense) | **POST** /v1/selfhost/licenses/renew | Renew a self-hosted server&#39;s license key (no sign-in)
+[*SelfhostApi*](doc/SelfhostApi.md) | [**requestTrialLicense**](doc/SelfhostApi.md#requesttriallicense) | **POST** /v1/selfhost/licenses/trial | Email a 30-day business trial key (no sign-in, rate limited)
+[*SelfhostApi*](doc/SelfhostApi.md) | [**setSelfhostLicense**](doc/SelfhostApi.md#setselfhostlicense) | **PUT** /v1/selfhost/license | Set this server&#39;s license key
+[*SelfhostApi*](doc/SelfhostApi.md) | [**turnOffSelfhostCloudModels**](doc/SelfhostApi.md#turnoffselfhostcloudmodels) | **POST** /v1/selfhost/cloud-models/off | Turn Casama Cloud models off; each bot goes back to its previous key (server admin)
+[*SelfhostApi*](doc/SelfhostApi.md) | [**updateSelfhostCloudModels**](doc/SelfhostApi.md#updateselfhostcloudmodels) | **PATCH** /v1/selfhost/cloud-models | Change who may use Casama Cloud, the daily limit per person and the fallbacks (server admin)
 [*SitesApi*](doc/SitesApi.md) | [**checkSiteAddress**](doc/SitesApi.md#checksiteaddress) | **GET** /v1/sites/address | Whether an address name is free, and why not when it isn&#39;t
 [*SitesApi*](doc/SitesApi.md) | [**createSiteReport**](doc/SitesApi.md#createsitereport) | **POST** /v1/site-reports | Report a site by its address (no sign-in; from the sites zone&#39;s own page)
 [*SitesApi*](doc/SitesApi.md) | [**listSites**](doc/SitesApi.md#listsites) | **GET** /v1/orgs/{id}/sites | The workspace&#39;s published sites with their hosts and states
@@ -768,6 +799,7 @@ Class | Method | HTTP request | Description
  - [AcceptSkillProposalRequest](doc/AcceptSkillProposalRequest.md)
  - [Accepted](doc/Accepted.md)
  - [AcceptedSuggestion](doc/AcceptedSuggestion.md)
+ - [AccountAgeBand](doc/AccountAgeBand.md)
  - [AccountDeletion](doc/AccountDeletion.md)
  - [Acquisition](doc/Acquisition.md)
  - [ActionAdminLimitResetCampaign200Response](doc/ActionAdminLimitResetCampaign200Response.md)
@@ -860,6 +892,7 @@ Class | Method | HTTP request | Description
  - [AdminVendor](doc/AdminVendor.md)
  - [AdminVendorList](doc/AdminVendorList.md)
  - [AdmitWaitlistRequest](doc/AdmitWaitlistRequest.md)
+ - [AgeBandResult](doc/AgeBandResult.md)
  - [AgentImportPlan](doc/AgentImportPlan.md)
  - [AgentImportPlanLeftoversInner](doc/AgentImportPlanLeftoversInner.md)
  - [AgentImportPlanSkippedInner](doc/AgentImportPlanSkippedInner.md)
@@ -878,6 +911,7 @@ Class | Method | HTTP request | Description
  - [AppMentionRef](doc/AppMentionRef.md)
  - [AppleSignInTokenRequest](doc/AppleSignInTokenRequest.md)
  - [AppleSignInTokenResult](doc/AppleSignInTokenResult.md)
+ - [ApplyCloudModelsRequest](doc/ApplyCloudModelsRequest.md)
  - [ApplyComputerUpdateRequest](doc/ApplyComputerUpdateRequest.md)
  - [ApplySkillUpdateRequest](doc/ApplySkillUpdateRequest.md)
  - [Approval](doc/Approval.md)
@@ -948,6 +982,7 @@ Class | Method | HTTP request | Description
  - [BrowserWaitingEventPayload](doc/BrowserWaitingEventPayload.md)
  - [BrowserWaitingResolvedEvent](doc/BrowserWaitingResolvedEvent.md)
  - [BrowserWaitingResolvedEventPayload](doc/BrowserWaitingResolvedEventPayload.md)
+ - [BusinessLicenseCreated](doc/BusinessLicenseCreated.md)
  - [CalendarTriggerConfig](doc/CalendarTriggerConfig.md)
  - [CallStepRequest](doc/CallStepRequest.md)
  - [CallStepResult](doc/CallStepResult.md)
@@ -997,7 +1032,31 @@ Class | Method | HTTP request | Description
  - [ClaimMailAddressRequest](doc/ClaimMailAddressRequest.md)
  - [ClaimPartnerRequest](doc/ClaimPartnerRequest.md)
  - [CleanStorageResult](doc/CleanStorageResult.md)
+ - [CloudConnectCode](doc/CloudConnectCode.md)
+ - [CloudConnectCodeRequest](doc/CloudConnectCodeRequest.md)
+ - [CloudLinkStatus](doc/CloudLinkStatus.md)
+ - [CloudLinkStatusIncluded](doc/CloudLinkStatusIncluded.md)
+ - [CloudLinkStatusJobs](doc/CloudLinkStatusJobs.md)
+ - [CloudLinkStatusPlan](doc/CloudLinkStatusPlan.md)
+ - [CloudLinkStatusSeats](doc/CloudLinkStatusSeats.md)
+ - [CloudLinkStatusToday](doc/CloudLinkStatusToday.md)
+ - [CloudLinkStatusTrial](doc/CloudLinkStatusTrial.md)
  - [CloudModels](doc/CloudModels.md)
+ - [CloudModelsFallback](doc/CloudModelsFallback.md)
+ - [CloudModelsOff](doc/CloudModelsOff.md)
+ - [CloudModelsOffBotsInner](doc/CloudModelsOffBotsInner.md)
+ - [CloudModelsOffBotsInnerTo](doc/CloudModelsOffBotsInnerTo.md)
+ - [CloudModelsPolicy](doc/CloudModelsPolicy.md)
+ - [CloudModelsPreview](doc/CloudModelsPreview.md)
+ - [CloudModelsPreviewBotsInner](doc/CloudModelsPreviewBotsInner.md)
+ - [CloudModelsPreviewBotsInnerFrom](doc/CloudModelsPreviewBotsInnerFrom.md)
+ - [CloudModelsPreviewJobs](doc/CloudModelsPreviewJobs.md)
+ - [CloudModelsPreviewJobsEmbedding](doc/CloudModelsPreviewJobsEmbedding.md)
+ - [CloudModelsState](doc/CloudModelsState.md)
+ - [CloudModelsStateMe](doc/CloudModelsStateMe.md)
+ - [CloudModelsStateMemoryReindex](doc/CloudModelsStateMemoryReindex.md)
+ - [CloudModelsStatePayer](doc/CloudModelsStatePayer.md)
+ - [CloudModelsStateStatusError](doc/CloudModelsStateStatusError.md)
  - [CodingAgentInfo](doc/CodingAgentInfo.md)
  - [CodingAgentList](doc/CodingAgentList.md)
  - [CodingAgentTestResult](doc/CodingAgentTestResult.md)
@@ -1027,6 +1086,7 @@ Class | Method | HTTP request | Description
  - [ComputerVitals](doc/ComputerVitals.md)
  - [ConnectAppRequest](doc/ConnectAppRequest.md)
  - [ConnectAppResponse](doc/ConnectAppResponse.md)
+ - [ConnectCloudModelsRequest](doc/ConnectCloudModelsRequest.md)
  - [ConnectDomainRequest](doc/ConnectDomainRequest.md)
  - [ConnectDomainResult](doc/ConnectDomainResult.md)
  - [ConnectDomainResultClaim](doc/ConnectDomainResultClaim.md)
@@ -1048,6 +1108,7 @@ Class | Method | HTTP request | Description
  - [CreateBotLinkRequest](doc/CreateBotLinkRequest.md)
  - [CreateBotRequest](doc/CreateBotRequest.md)
  - [CreateBotShareRequest](doc/CreateBotShareRequest.md)
+ - [CreateBusinessLicenseRequest](doc/CreateBusinessLicenseRequest.md)
  - [CreateChannelRequest](doc/CreateChannelRequest.md)
  - [CreateCheckpointRequest](doc/CreateCheckpointRequest.md)
  - [CreateCompCodeRequest](doc/CreateCompCodeRequest.md)
@@ -1070,6 +1131,7 @@ Class | Method | HTTP request | Description
  - [CreateLinkKeyRequest](doc/CreateLinkKeyRequest.md)
  - [CreateLocalDeviceRequest](doc/CreateLocalDeviceRequest.md)
  - [CreateMcpKeyRequest](doc/CreateMcpKeyRequest.md)
+ - [CreateMoveRequest](doc/CreateMoveRequest.md)
  - [CreateOrganizationRequest](doc/CreateOrganizationRequest.md)
  - [CreatePageCommandRequest](doc/CreatePageCommandRequest.md)
  - [CreatePageWatcherRequest](doc/CreatePageWatcherRequest.md)
@@ -1122,6 +1184,7 @@ Class | Method | HTTP request | Description
  - [DeletedConversation](doc/DeletedConversation.md)
  - [DeletedConversations](doc/DeletedConversations.md)
  - [DeletedDevice](doc/DeletedDevice.md)
+ - [DeletedFileKey](doc/DeletedFileKey.md)
  - [DeletedHighlight](doc/DeletedHighlight.md)
  - [DeletedId](doc/DeletedId.md)
  - [DeletedKnowledgeSource](doc/DeletedKnowledgeSource.md)
@@ -1142,6 +1205,8 @@ Class | Method | HTTP request | Description
  - [DeletedWidgetKey](doc/DeletedWidgetKey.md)
  - [DeviceAccessRequestedEvent](doc/DeviceAccessRequestedEvent.md)
  - [DeviceAccessRequestedEventPayload](doc/DeviceAccessRequestedEventPayload.md)
+ - [DeviceActionAccessRequestedEvent](doc/DeviceActionAccessRequestedEvent.md)
+ - [DeviceActionAccessRequestedEventPayload](doc/DeviceActionAccessRequestedEventPayload.md)
  - [DeviceBrowserAccessRequestedEvent](doc/DeviceBrowserAccessRequestedEvent.md)
  - [DeviceBrowserAccessRequestedEventPayload](doc/DeviceBrowserAccessRequestedEventPayload.md)
  - [DeviceDataUsedEvent](doc/DeviceDataUsedEvent.md)
@@ -1155,6 +1220,7 @@ Class | Method | HTTP request | Description
  - [DevicePermissionType](doc/DevicePermissionType.md)
  - [DevicePermissions](doc/DevicePermissions.md)
  - [DevicePlace](doc/DevicePlace.md)
+ - [DeviceQuietResult](doc/DeviceQuietResult.md)
  - [DeviceReading](doc/DeviceReading.md)
  - [DeviceReadingInput](doc/DeviceReadingInput.md)
  - [DeviceRequest](doc/DeviceRequest.md)
@@ -1193,6 +1259,10 @@ Class | Method | HTTP request | Description
  - [FeedbackRow](doc/FeedbackRow.md)
  - [FeedbackSent](doc/FeedbackSent.md)
  - [FeedbackStatus](doc/FeedbackStatus.md)
+ - [FileKey](doc/FileKey.md)
+ - [FileKeyCreate](doc/FileKeyCreate.md)
+ - [FileKeyCreated](doc/FileKeyCreated.md)
+ - [FileKeyList](doc/FileKeyList.md)
  - [FileSearchResult](doc/FileSearchResult.md)
  - [ForYou](doc/ForYou.md)
  - [ForYouApproval](doc/ForYouApproval.md)
@@ -1327,6 +1397,9 @@ Class | Method | HTTP request | Description
  - [LeaseChangedEventPayload](doc/LeaseChangedEventPayload.md)
  - [LeaveWaitlistRequest](doc/LeaveWaitlistRequest.md)
  - [LibraryStarter](doc/LibraryStarter.md)
+ - [LicenseEdition](doc/LicenseEdition.md)
+ - [LicenseFeature](doc/LicenseFeature.md)
+ - [LicenseIssued](doc/LicenseIssued.md)
  - [LimitResetAudience](doc/LimitResetAudience.md)
  - [LimitResetCampaign](doc/LimitResetCampaign.md)
  - [LimitResetCampaignInput](doc/LimitResetCampaignInput.md)
@@ -1397,7 +1470,26 @@ Class | Method | HTTP request | Description
  - [ModelOption](doc/ModelOption.md)
  - [ModelOptionList](doc/ModelOptionList.md)
  - [ModelPolicy](doc/ModelPolicy.md)
+ - [MoveCheck](doc/MoveCheck.md)
+ - [MoveCheckAfter](doc/MoveCheckAfter.md)
+ - [MoveCheckAfterInvitesInner](doc/MoveCheckAfterInvitesInner.md)
+ - [MoveCheckAfterKeys](doc/MoveCheckAfterKeys.md)
+ - [MoveCheckAfterReconnectInner](doc/MoveCheckAfterReconnectInner.md)
+ - [MoveCheckRequest](doc/MoveCheckRequest.md)
+ - [MoveError](doc/MoveError.md)
+ - [MoveFinishRequest](doc/MoveFinishRequest.md)
+ - [MoveFit](doc/MoveFit.md)
+ - [MoveFitPlan](doc/MoveFitPlan.md)
+ - [MoveFitTarget](doc/MoveFitTarget.md)
  - [MoveMailAddressRequest](doc/MoveMailAddressRequest.md)
+ - [MoveOver](doc/MoveOver.md)
+ - [MovePartReceived](doc/MovePartReceived.md)
+ - [MoveProgress](doc/MoveProgress.md)
+ - [MoveProgressProgress](doc/MoveProgressProgress.md)
+ - [MoveStartRequest](doc/MoveStartRequest.md)
+ - [MoveState](doc/MoveState.md)
+ - [MoveToken](doc/MoveToken.md)
+ - [MovedTo](doc/MovedTo.md)
  - [NewsletterStatus](doc/NewsletterStatus.md)
  - [NoticeEvent](doc/NoticeEvent.md)
  - [NoticeEventPayload](doc/NoticeEventPayload.md)
@@ -1478,6 +1570,7 @@ Class | Method | HTTP request | Description
  - [PaymentSettings](doc/PaymentSettings.md)
  - [PendingInvite](doc/PendingInvite.md)
  - [PendingInviteList](doc/PendingInviteList.md)
+ - [PersonalLicenseRequest](doc/PersonalLicenseRequest.md)
  - [PhoneCall](doc/PhoneCall.md)
  - [PhoneCallList](doc/PhoneCallList.md)
  - [PinLiveCard](doc/PinLiveCard.md)
@@ -1528,6 +1621,7 @@ Class | Method | HTTP request | Description
  - [ProviderConnectResponse](doc/ProviderConnectResponse.md)
  - [ProviderId](doc/ProviderId.md)
  - [PublicConfig](doc/PublicConfig.md)
+ - [PublicConfigCloudModels](doc/PublicConfigCloudModels.md)
  - [PublicConfigKeyProviders](doc/PublicConfigKeyProviders.md)
  - [PublicConfigSignupGate](doc/PublicConfigSignupGate.md)
  - [PublicTestimonial](doc/PublicTestimonial.md)
@@ -1562,6 +1656,7 @@ Class | Method | HTTP request | Description
  - [RemovePack200Response](doc/RemovePack200Response.md)
  - [RemovedLinkServer](doc/RemovedLinkServer.md)
  - [RenameTwoStepFactorRequest](doc/RenameTwoStepFactorRequest.md)
+ - [RenewLicenseRequest](doc/RenewLicenseRequest.md)
  - [ReorderAdminTestimonialsRequest](doc/ReorderAdminTestimonialsRequest.md)
  - [ReplacedDataKeys](doc/ReplacedDataKeys.md)
  - [Replay](doc/Replay.md)
@@ -1640,6 +1735,13 @@ Class | Method | HTTP request | Description
  - [SecretResolvedEvent](doc/SecretResolvedEvent.md)
  - [SecretResolvedEventPayload](doc/SecretResolvedEventPayload.md)
  - [SecretStoreSettings](doc/SecretStoreSettings.md)
+ - [SelfhostLicenseList](doc/SelfhostLicenseList.md)
+ - [SelfhostLicenseRow](doc/SelfhostLicenseRow.md)
+ - [SelfhostStats](doc/SelfhostStats.md)
+ - [SelfhostStatsByEditionInner](doc/SelfhostStatsByEditionInner.md)
+ - [SelfhostStatsByEngineVersionInner](doc/SelfhostStatsByEngineVersionInner.md)
+ - [SelfhostStatsDailyActiveInner](doc/SelfhostStatsDailyActiveInner.md)
+ - [SelfhostStatus](doc/SelfhostStatus.md)
  - [SendMessageRequest](doc/SendMessageRequest.md)
  - [SendMessageResponse](doc/SendMessageResponse.md)
  - [ServerCapacity](doc/ServerCapacity.md)
@@ -1649,6 +1751,7 @@ Class | Method | HTTP request | Description
  - [SetAdminBotRequest](doc/SetAdminBotRequest.md)
  - [SetAdminPinRequest](doc/SetAdminPinRequest.md)
  - [SetAdsMeasurementRequest](doc/SetAdsMeasurementRequest.md)
+ - [SetAgeBandRequest](doc/SetAgeBandRequest.md)
  - [SetAnalyticsOptOutRequest](doc/SetAnalyticsOptOutRequest.md)
  - [SetAttributionRequest](doc/SetAttributionRequest.md)
  - [SetBotA2aRequest](doc/SetBotA2aRequest.md)
@@ -1677,6 +1780,7 @@ Class | Method | HTTP request | Description
  - [SetReactionRequest](doc/SetReactionRequest.md)
  - [SetRemoteAccessSettingsRequest](doc/SetRemoteAccessSettingsRequest.md)
  - [SetSecretStoreRequest](doc/SetSecretStoreRequest.md)
+ - [SetSelfhostLicenseRequest](doc/SetSelfhostLicenseRequest.md)
  - [SetSignupGateRequest](doc/SetSignupGateRequest.md)
  - [SetSupportTicketStatus](doc/SetSupportTicketStatus.md)
  - [SetTelephonyRequest](doc/SetTelephonyRequest.md)
@@ -1801,6 +1905,8 @@ Class | Method | HTTP request | Description
  - [Transcription](doc/Transcription.md)
  - [TransferOutRequest](doc/TransferOutRequest.md)
  - [TransferOutResult](doc/TransferOutResult.md)
+ - [TrialLicenseAccepted](doc/TrialLicenseAccepted.md)
+ - [TrialLicenseRequest](doc/TrialLicenseRequest.md)
  - [UiActionPart](doc/UiActionPart.md)
  - [UiShownEvent](doc/UiShownEvent.md)
  - [UiShownEventPayload](doc/UiShownEventPayload.md)
@@ -1812,6 +1918,7 @@ Class | Method | HTTP request | Description
  - [UpdateCardPrefs](doc/UpdateCardPrefs.md)
  - [UpdateChannelRequest](doc/UpdateChannelRequest.md)
  - [UpdateChatLinkRequest](doc/UpdateChatLinkRequest.md)
+ - [UpdateCloudModelsRequest](doc/UpdateCloudModelsRequest.md)
  - [UpdateCompCodeRequest](doc/UpdateCompCodeRequest.md)
  - [UpdateCompRequest](doc/UpdateCompRequest.md)
  - [UpdateComputerRequest](doc/UpdateComputerRequest.md)
@@ -1819,6 +1926,7 @@ Class | Method | HTTP request | Description
  - [UpdateCreationRequest](doc/UpdateCreationRequest.md)
  - [UpdateCredentialRequest](doc/UpdateCredentialRequest.md)
  - [UpdateDefaultInviteRequest](doc/UpdateDefaultInviteRequest.md)
+ - [UpdateDeviceQuietRequest](doc/UpdateDeviceQuietRequest.md)
  - [UpdateDomainRequest](doc/UpdateDomainRequest.md)
  - [UpdateGalleryRequest](doc/UpdateGalleryRequest.md)
  - [UpdateIntegrationRequest](doc/UpdateIntegrationRequest.md)

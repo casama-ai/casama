@@ -2,18 +2,27 @@ import 'dart:io';
 
 import 'package:args/command_runner.dart';
 import 'package:casama_api/casama_api.dart';
+import 'package:casama_selfhost/casama_selfhost.dart' as sh;
 import 'package:path/path.dart' as p;
 
 import 'backups.dart';
 import 'commands_remote.dart';
+import 'commands_selfhost_cloud_models.dart';
+import 'commands_selfhost_release.dart';
 import 'runner.dart';
 
-/// `casama selfhost …`: install and operate a self-hosted stack (Phase 8, D-076). Wraps
-/// install.sh and `docker compose` for the repository checkout given by --dir (or
-/// CASAMA_SELFHOST_DIR, or the current directory).
+/// `casama selfhost …`: install and operate a self-hosted stack (Phase 8, D-076;
+/// docs/SELF-HOSTING-PLAN.md §6.4). `install`, `update` and `license` work from the public
+/// release with no checkout (default folder ~/.casama/selfhost). The other commands run
+/// `docker compose` on the install given by --dir (or CASAMA_SELFHOST_DIR, the current
+/// directory, or the default folder): a release install or a source checkout with install.sh.
 class SelfhostCommand extends KCommand {
   SelfhostCommand(super.ctx) {
-    argParser.addOption('dir', help: 'Casama checkout with install.sh (or CASAMA_SELFHOST_DIR).');
+    argParser.addOption('dir', help: 'Install folder or Casama checkout (or CASAMA_SELFHOST_DIR).');
+    addSubcommand(SelfhostInstallCommand(ctx));
+    addSubcommand(SelfhostUpdateCommand(ctx));
+    addSubcommand(SelfhostLicenseCommand(ctx));
+    addSubcommand(SelfhostCloudModelsCommand(ctx));
     addSubcommand(_Init(ctx));
     for (final c in [
       ('up', 'Start the stack.', ['up', '-d', '--remove-orphans']),
@@ -63,6 +72,8 @@ List<String> libraryArchiveArgs(Directory d, String folder, {bool restore = fals
       : 'if [ -n "\$(ls -A /data/library 2>/dev/null)" ]; then tar czf /backup/library.tar.gz -C /data/library .; fi',
 ];
 
+bool _usable(Directory d) => isReleaseInstall(d) || File(p.join(d.path, 'install.sh')).existsSync();
+
 Directory _dir(Command<int> c) {
   // --dir belongs to `selfhost`; a command may sit one or two levels below it.
   String? given;
@@ -70,15 +81,25 @@ Directory _dir(Command<int> c) {
     final r = x.argResults;
     if (r != null && r.options.contains('dir')) given = r['dir'] as String?;
   }
-  final path = given ?? Platform.environment['CASAMA_SELFHOST_DIR'] ?? Directory.current.path;
-  final d = Directory(path);
-  if (!File(p.join(d.path, 'install.sh')).existsSync()) {
-    throw CliError('not_a_checkout', 'No install.sh in ${d.path}. Pass --dir with a Casama Engine checkout.');
+  given ??= Platform.environment['CASAMA_SELFHOST_DIR'];
+  if (given == null || given.isEmpty) {
+    // The current directory when it holds an install, else the default release install.
+    final here = Directory.current;
+    final fallback = sh.defaultInstallDir();
+    given = !_usable(here) && isReleaseInstall(fallback) ? fallback.path : here.path;
+  }
+  final d = Directory(given);
+  if (!_usable(d)) {
+    throw CliError('not_a_checkout', 'No install.sh or release install in ${d.path}. Install with `casama selfhost install`, or pass --dir with an install folder or a Casama Engine checkout.');
   }
   return d;
 }
 
+/// The stack's `.env`: beside images.env in a release install, under infra/compose in a checkout.
+String selfhostEnvPath(Directory d) => isReleaseInstall(d) ? p.join(d.path, '.env') : p.join(d.path, 'infra', 'compose', '.env');
+
 List<String> _composeArgs(Directory d) {
+  if (isReleaseInstall(d)) return sh.selfhostComposeArgs(d);
   final env = p.join(d.path, 'infra', 'compose', '.env');
   return [
     'compose',
@@ -174,6 +195,7 @@ class _Upgrade extends KCommand {
   @override
   Future<int> run() async {
     final d = _dir(this);
+    if (isReleaseInstall(d)) throw CliError('use_update', '${d.path} is installed from a release; update it with `casama selfhost update --dir ${d.path}`.');
     final pull = await _run('git', ['-C', d.path, 'pull', '--ff-only']);
     if (pull != 0) return pull;
     return _run('bash', [p.join(d.path, 'install.sh')], cwd: d.path);
@@ -222,7 +244,7 @@ class _Backup extends KCommand {
     if (objects != 0) throw CliError('backup_failed', 'could not archive computer snapshots');
     // The Library's kept files (D-276) are what people made: always in the backup.
     if (await _run('docker', libraryArchiveArgs(d, out.path)) != 0) throw CliError('backup_failed', 'could not archive the Library\'s files');
-    File(p.join(d.path, 'infra', 'compose', '.env')).copySync(p.join(out.path, 'env'));
+    File(selfhostEnvPath(d)).copySync(p.join(out.path, 'env'));
     // The database's Vault root key: the dump's secrets can't be read on another machine without it.
     final key = await Process.run('docker', [..._composeArgs(d), 'exec', '-T', 'db', 'cat', _vaultKeyPath]);
     if (key.exitCode != 0 || (key.stdout as String).trim().isEmpty) throw CliError('backup_failed', 'could not read the Vault key from the database container');

@@ -111,6 +111,7 @@ import '../features/app_browser/app_browser_flag.dart';
 import '../features/app_browser/app_browser_screen.dart';
 import '../features/app_browser/app_browser_settings.dart';
 import '../features/permissions/permissions_screen.dart';
+import '../features/move/move_screen.dart';
 
 /// The page's screen name for analytics (PostHog's `$screen`): its route as a template, such as
 /// /bots/:botId/chat, never the ids in its address. A nested route's own path is relative ("keys" for
@@ -1184,6 +1185,11 @@ final routerProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: 'workspace',
                 pageBuilder: _page((_, _) => const WorkspaceSettingsScreen()),
+              ),
+              // Moving a workspace between servers (SELFHOST-CLOUD-MODELS-PLAN §4.4), behind its switch.
+              GoRoute(
+                path: 'move',
+                pageBuilder: _page((_, _) => const MoveScreen()),
               ),
               GoRoute(
                 path: 'share-pack',

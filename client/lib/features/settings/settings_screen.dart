@@ -47,6 +47,9 @@ import '../voice/full_screen_calls.dart';
 import '../companion/companion.dart';
 import '../referrals/invite_friends.dart';
 import '../sites/domains_providers.dart';
+import '../cloud_models/cloud_account_section.dart';
+import '../move/move_switch.dart';
+import '../../core/selfhost_api.dart' show isCasamaCloud;
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key, this.pane = false, this.current = ''});
@@ -211,6 +214,16 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     showChevron: true,
                     onTap: () => open('/settings/workspace'), selected: sel('/settings/workspace'),
                   ),
+                  // Move this workspace to Casama Cloud or to the person's own server.
+                  if (moveOn && isAdmin)
+                    GroupedTile(
+                      key: const Key('settingsMove'),
+                      icon: LucideIcons.truck,
+                      title: isCasamaCloud(ref.watch(backendProvider).apiUrl) ? l10n.wsMoveSettingsToServer : l10n.wsMoveSettingsToCloud,
+                      subtitle: l10n.wsMoveSettingsHelp,
+                      showChevron: true,
+                      onTap: () => open('/settings/move'), selected: sel('/settings/move'),
+                    ),
                   // Domains (SITES-AND-DOMAINS-PLAN §7.16): admins, when the server connects domains.
                   if (isAdmin && ref.watch(customDomainsProvider))
                     GroupedTile(
@@ -587,6 +600,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   ),
                   GroupedTile(key: const Key('settingsPrivacy'), icon: LucideIcons.shieldCheck, title: l10n.privacy, subtitle: l10n.privacyRowHelp, onTap: () => open('/settings/privacy'), selected: sel('/settings/privacy')),
               ]),
+              // The Casama Cloud account this device keeps on a self-hosted server (license, Cloud
+              // models): who, sign out, delete (SELFHOST-CLOUD-MODELS-PLAN §7.4.1).
+              ...section(l10n.cloudAccountSection, cloudAccountRows(context, ref)),
               // Everything most people never need, in one fold that stays open once opened (D-182).
               // While searching, its matching rows show as an ordinary section instead.
               if (searching)

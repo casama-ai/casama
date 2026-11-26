@@ -214,7 +214,7 @@ void main() {
   testWidgets('self-hosted servers show no paywall', (tester) async {
     await tester.pumpWidget(app(FakeBackend()));
     await tester.pumpAndSettle();
-    expect(find.text('Billing is off on this server. Self-hosted Casama has no limits.'), findsOneWidget);
+    expect(find.text('Billing is off on this server. It runs on its own license: personal use is free for one person, and teams use a Business license.'), findsOneWidget);
     expect(find.byKey(const Key('plan-pro')), findsNothing);
   });
 

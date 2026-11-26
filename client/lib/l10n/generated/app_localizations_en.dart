@@ -2235,6 +2235,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get callSwitchConfirm => 'End and Call';
 
   @override
+  String get callVoiceConsentTitle => 'Your voice goes to Google';
+
+  @override
+  String get callVoiceConsentBody =>
+      'In a call, Casama sends your voice and what you say to Google Gemini, which hears you and speaks your bot\'s replies. The call\'s words also go to the AI model your bot uses, through OpenRouter. Nothing is sent until you agree. You can stop this any time in Settings › Privacy.';
+
+  @override
+  String get callVoiceConsentAgree => 'Agree and Call';
+
+  @override
+  String get callVoiceConsentNotNow => 'Not Now';
+
+  @override
   String get callEndedLost =>
       'The call ended because the connection was lost for too long.';
 
@@ -3861,7 +3874,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get billingOffSelfHosted =>
-      'Billing is off on this server. Self-hosted Casama has no limits.';
+      'Billing is off on this server. It runs on its own license: personal use is free for one person, and teams use a Business license.';
 
   @override
   String get restorePurchases => 'Restore Purchases';
@@ -4112,6 +4125,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get serverAddress => 'Server address';
+
+  @override
+  String get serverAddressInvalid =>
+      'Enter a server address like https://casama.example.com or http://192.168.1.20:8080.';
 
   @override
   String get connect => 'Connect';
@@ -5327,7 +5344,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'The bot\'s own computer: where it runs commands, browses and keeps its files.';
 
   @override
-  String get billingOffTitle => 'No limits here';
+  String get billingOffTitle => 'No billing here';
 
   @override
   String revokeKeyTitle(String name) {
@@ -6642,6 +6659,23 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get twoStepPromptBody =>
       'Open your authenticator app and enter the 6-digit code to finish signing in.';
+
+  @override
+  String get twoStepPromptAccount => 'Signing in as';
+
+  @override
+  String get casamaCloudName => 'Casama Cloud';
+
+  @override
+  String get newPasswordFor => 'New password for';
+
+  @override
+  String get connectAiAppAccount => 'It gets access to';
+
+  @override
+  String joinAsAccount(String email, String server) {
+    return 'You\'ll join as $email on $server.';
+  }
 
   @override
   String get requireTwoStep => 'Require two-step sign-in for owners and admins';
@@ -10637,7 +10671,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get setupEntryHelp =>
-      'Free and private: your own server, on this computer.';
+      'Your own private server on this computer. Free for personal use.';
 
   @override
   String get setupStepDocker => 'Docker';
@@ -10776,8 +10810,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get setupDockerGuide => 'Troubleshooting Guide';
 
   @override
-  String setupDiskLow(String gb) {
-    return 'Only $gb GB of disk space is free. The server needs about 10 GB.';
+  String setupDiskLow(String gb, String need) {
+    return 'Only $gb GB of disk space is free. The server needs about $need GB.';
   }
 
   @override
@@ -10785,7 +10819,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get setupServerBody =>
-      'About 10 GB and 5 to 10 minutes the first time. You can keep using your computer.';
+      'A download of about 2.5 GB that takes 5 to 10 minutes the first time, and about 10 GB of disk once it\'s set up. You can keep using your computer.';
+
+  @override
+  String setupServerBodySized(String download, String disk) {
+    return 'A $download GB download, then about $disk GB of disk once it\'s set up. The first time takes 5 to 10 minutes. You can keep using your computer.';
+  }
+
+  @override
+  String get setupServerBodyNothing =>
+      'Everything it needs is already on this computer, so it starts in a minute or two.';
 
   @override
   String get setupServerStart => 'Start';
@@ -11116,6 +11159,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get healthExtraBloodPressure => 'Blood pressure';
+
+  @override
+  String get appleHealth => 'Apple Health';
+
+  @override
+  String get appleHealthAbout =>
+      'Reads daily summaries of your sleep, activity, workouts and heart from Apple Health (HealthKit), only when this is on. Casama never writes to Apple Health.';
 
   @override
   String get healthNotMedical =>
@@ -24184,6 +24234,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get liveKindDisputeOpened => 'Dispute opened';
 
   @override
+  String get liveKindStoreReview => 'Store review';
+
+  @override
+  String get liveKindStoreCrashes => 'Store crash reports';
+
+  @override
   String get liveKindDay2Return => 'Back on day 2';
 
   @override
@@ -25521,4 +25577,1477 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get starAskNotNow => 'Not now';
+
+  @override
+  String get cloudSignInTitle => 'Sign in with your Casama account';
+
+  @override
+  String get cloudSignInBody =>
+      'The free personal license comes from your Casama account. Only the license goes to this server; your chats stay on it.';
+
+  @override
+  String get cloudSignInEmail => 'Email';
+
+  @override
+  String get cloudSignInSendCode => 'Send Code';
+
+  @override
+  String get cloudSignInCode => 'Code from the email';
+
+  @override
+  String get cloudSignInVerify => 'Sign In';
+
+  @override
+  String cloudSignInCodeSent(String email) {
+    return 'We sent a code to $email. Enter it here.';
+  }
+
+  @override
+  String get licenseSetupTitle => 'Get your free personal license';
+
+  @override
+  String get licenseSetupBody =>
+      'This server needs a license before bots can run. Personal use is free for one person: sign in with your Casama account and the license renews itself online every 30 days.';
+
+  @override
+  String get licensePersonalButton => 'Get Free Personal License';
+
+  @override
+  String get licensePersonalNote =>
+      'Personal: one person, for personal use, on your own computer or server.';
+
+  @override
+  String get licenseBusinessTitle => 'Or enter a business key';
+
+  @override
+  String get licenseBusinessHint => 'Paste your license key';
+
+  @override
+  String get licenseBusinessSave => 'Use This Key';
+
+  @override
+  String licenseBusinessContact(String email) {
+    return 'Using Casama at work or with a team? Business is \$29 per active user a month (\$24 billed yearly). Write to $email.';
+  }
+
+  @override
+  String get licenseActivated => 'License active. Your bots can run.';
+
+  @override
+  String get licenseOtherServer => 'Use Another Server';
+
+  @override
+  String get licenseRenew => 'Renew';
+
+  @override
+  String get licenseRenewTitle => 'Renew this server\'s license';
+
+  @override
+  String licenseGraceBanner(String date) {
+    return 'This server\'s license has run out. Bots keep running until $date; renew before then.';
+  }
+
+  @override
+  String get licenseGraceBannerSoon =>
+      'This server\'s license has run out. Renew it soon to keep bots running.';
+
+  @override
+  String get licenseExpiredBanner =>
+      'This server\'s license has expired, so new bot runs are paused. Your data is safe: you can still sign in, read and export. Renew to start bots again.';
+
+  @override
+  String get licenseErrorRequired =>
+      'This server needs a license first. Get the free personal license or enter a business key.';
+
+  @override
+  String licenseErrorSeats(String email) {
+    return 'Every seat on this server\'s license is taken. More people need a Business license: write to $email.';
+  }
+
+  @override
+  String get licenseErrorExpired =>
+      'This server\'s license has expired, so new bot runs are paused. Your data is safe. Renew the license to start bots again.';
+
+  @override
+  String get licenseEditionPersonal => 'Personal';
+
+  @override
+  String get licenseEditionTrial => 'Trial';
+
+  @override
+  String get licenseEditionBusiness => 'Business';
+
+  @override
+  String get licenseFeatureSso => 'SSO';
+
+  @override
+  String get licenseFeatureAuditExport => 'Audit export';
+
+  @override
+  String get licenseFeatureAuditForwarding => 'Audit forwarding';
+
+  @override
+  String get licenseFeatureRoles => 'Advanced roles';
+
+  @override
+  String get setupLicenseTitle => 'Free personal license';
+
+  @override
+  String get setupLicenseBody =>
+      'Sign in with your Casama account to get the free personal license for this server: one person, personal use. You can also do it later.';
+
+  @override
+  String get setupLicenseSignIn => 'Sign In with Casama';
+
+  @override
+  String get setupLicenseReady =>
+      'The free personal license comes with your server.';
+
+  @override
+  String setupLicenseReadyFor(String email) {
+    return 'Signed in as $email. The free personal license comes with your server.';
+  }
+
+  @override
+  String get setupLicenseSkipped =>
+      'No license yet. Your server asks for one when it starts.';
+
+  @override
+  String setupLicenseFailed(String error) {
+    return 'The personal license couldn\'t be made ($error). Your server asks for one when it starts.';
+  }
+
+  @override
+  String get setupDockerMissingBodyWindows =>
+      'Casama\'s server runs inside Docker Desktop, a free app that uses WSL 2 to keep it separate from the rest of your PC.';
+
+  @override
+  String get setupDockerStep1Windows =>
+      'Run the installer that downloads and keep \"Use WSL 2\" on.';
+
+  @override
+  String localUpdateAvailable(String version) {
+    return 'A server update is ready: $version';
+  }
+
+  @override
+  String get localUpdateButton => 'Update';
+
+  @override
+  String get localUpdateLater => 'Later';
+
+  @override
+  String localUpdateTitle(String version) {
+    return 'Update your server to $version';
+  }
+
+  @override
+  String get localUpdateBody =>
+      'The database is backed up first. If the new version doesn\'t start, your server goes back to the version it has now.';
+
+  @override
+  String localUpdateDone(String version) {
+    return 'Updated to $version.';
+  }
+
+  @override
+  String get localUpdateRolledBack =>
+      'The new version didn\'t start, so your server went back to the version it had. Nothing was lost, and a database backup was saved.';
+
+  @override
+  String localUpdateFailed(String detail) {
+    return 'The update failed: $detail';
+  }
+
+  @override
+  String get adminSelfhost => 'Self-host Licenses';
+
+  @override
+  String get adminAboutSelfhost =>
+      'Licenses for self-hosted servers, their daily check-ins, and business keys.';
+
+  @override
+  String get adminSelfhostSearch => 'Search by email or customer';
+
+  @override
+  String get adminSelfhostNone => 'No licenses yet.';
+
+  @override
+  String get adminSelfhostCreate => 'New Business Key';
+
+  @override
+  String get adminSelfhostCreateHelp =>
+      'The key is shown once here and emailed to the address below.';
+
+  @override
+  String get adminSelfhostCustomer => 'Customer';
+
+  @override
+  String get adminSelfhostEmail => 'Email';
+
+  @override
+  String get adminSelfhostSeats => 'Seats';
+
+  @override
+  String get adminSelfhostExpires => 'Expires';
+
+  @override
+  String get adminSelfhostFeatures => 'Features';
+
+  @override
+  String get adminSelfhostOfflineKey => 'Offline key';
+
+  @override
+  String get adminSelfhostOfflineHelp =>
+      'Never renews and isn\'t tied to one server. For annual contracts.';
+
+  @override
+  String get adminSelfhostCreated => 'Business key created';
+
+  @override
+  String get adminSelfhostCreatedOnce =>
+      'Copy it now: it isn\'t shown again (it was also emailed).';
+
+  @override
+  String get adminSelfhostRevoke => 'Revoke';
+
+  @override
+  String adminSelfhostRevokeQuestion(String who) {
+    return 'Revoke the license for $who?';
+  }
+
+  @override
+  String get adminSelfhostRevokeHelp =>
+      'Its server stops at its next daily check-in: new bot runs pause, and its data stays.';
+
+  @override
+  String get adminSelfhostRevokedDone => 'License revoked.';
+
+  @override
+  String get adminSelfhostRevoked => 'Revoked';
+
+  @override
+  String get adminSelfhostOffline => 'Offline';
+
+  @override
+  String get adminSelfhostNever => 'Never';
+
+  @override
+  String get adminSelfhostNeverCheckedIn => 'never checked in';
+
+  @override
+  String adminSelfhostCheckedIn(String when) {
+    return 'checked in $when';
+  }
+
+  @override
+  String adminSelfhostInstance(String id) {
+    return 'server $id';
+  }
+
+  @override
+  String adminSelfhostCounts(int members, int bots) {
+    final intl.NumberFormat membersNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String membersString = membersNumberFormat.format(members);
+    final intl.NumberFormat botsNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String botsString = botsNumberFormat.format(bots);
+
+    return '$membersString members, $botsString bots';
+  }
+
+  @override
+  String get adminSelfhostAccount => 'Account or customer';
+
+  @override
+  String get adminSelfhostEditionColumn => 'Edition';
+
+  @override
+  String get adminSelfhostVersion => 'Engine version';
+
+  @override
+  String get adminSelfhostCheckin => 'Last check-in';
+
+  @override
+  String get adminSelfhostMembers => 'Members';
+
+  @override
+  String get adminSelfhostBots => 'Bots';
+
+  @override
+  String get adminGrowthSelfhost => 'Self-host';
+
+  @override
+  String get adminGrowthSelfhostActive => 'Active servers (24 h)';
+
+  @override
+  String get adminGrowthSelfhostNew => 'New installs (30 days)';
+
+  @override
+  String get adminGrowthSelfhostLapsed => 'Lapsed';
+
+  @override
+  String get adminGrowthSelfhostDaily => 'Active servers per day';
+
+  @override
+  String get adminGrowthSelfhostDailyHelp =>
+      'Servers that made their daily license check-in each day (UTC), and new licenses.';
+
+  @override
+  String get adminGrowthSelfhostServers => 'Active servers';
+
+  @override
+  String get adminGrowthSelfhostNewInstalls => 'New installs';
+
+  @override
+  String get adminGrowthSelfhostByEdition => 'By edition';
+
+  @override
+  String adminGrowthSelfhostActiveOf(int active, int total) {
+    final intl.NumberFormat activeNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String activeString = activeNumberFormat.format(active);
+    final intl.NumberFormat totalNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String totalString = totalNumberFormat.format(total);
+
+    return '$activeString active of $totalString';
+  }
+
+  @override
+  String get adminGrowthSelfhostByVersion =>
+      'By engine version (active servers)';
+
+  @override
+  String adminGrowthSelfhostServersCount(int n) {
+    final intl.NumberFormat nNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String nString = nNumberFormat.format(n);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$nString servers',
+      one: '1 server',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get shCloudTitle => 'Casama Cloud';
+
+  @override
+  String get shCloudScreenTitle => 'Casama Cloud models';
+
+  @override
+  String get shCloudPitch =>
+      'Casama\'s models, no keys to manage. Paid by a Casama Cloud plan.';
+
+  @override
+  String get shCloudTurnOn => 'Turn On';
+
+  @override
+  String shCloudOnPaidBy(String workspace) {
+    return 'On · paid by $workspace';
+  }
+
+  @override
+  String shCloudMemberState(String workspace) {
+    return 'Casama Cloud, paid by $workspace';
+  }
+
+  @override
+  String get shCloudMemberOff =>
+      'Not on. Only an admin of this server can turn it on.';
+
+  @override
+  String get shCloudManage => 'Manage';
+
+  @override
+  String get shCloudSignInBody =>
+      'Sign in with your Casama account to choose who pays for Casama Cloud models. Your bots, chats and memory stay on this server.';
+
+  @override
+  String shCloudSignedInAs(String email) {
+    return 'Signed in to Casama Cloud as $email';
+  }
+
+  @override
+  String get shCloudOtherAccount => 'Use Another Account';
+
+  @override
+  String get shCloudContinue => 'Continue';
+
+  @override
+  String get shCloudPayerTitle => 'Who pays?';
+
+  @override
+  String get shCloudPayerBody =>
+      'Casama Cloud models are paid by a Casama Cloud workspace you own or run. Its plan, included usage and daily limit are shared with everything else it uses.';
+
+  @override
+  String get shCloudPayerNone =>
+      'You don\'t run a Casama Cloud workspace yet. Make one to pay from; it starts empty.';
+
+  @override
+  String get shCloudCreateWorkspace => 'Create One';
+
+  @override
+  String shCloudWorkspaceNamed(String name) {
+    return '$name\'s workspace';
+  }
+
+  @override
+  String get shCloudNoPlan => 'No plan yet';
+
+  @override
+  String shCloudCovered(String plan) {
+    return 'Your $plan plan covers this.';
+  }
+
+  @override
+  String get shCloudPlanTitle => 'Choose a plan';
+
+  @override
+  String get shCloudPlanBody =>
+      'Casama Cloud models come with any Casama Cloud plan: the same included usage, daily limit and top-ups as on Cloud. No separate price for self-hosting.';
+
+  @override
+  String get shCloudTryFirst => 'Try It First';
+
+  @override
+  String shCloudTryFirstBody(String amount) {
+    return 'Free usage to try: about $amount of messages, once per Casama account. Nothing to buy.';
+  }
+
+  @override
+  String get shCloudTrialUsed =>
+      'The free usage to try is used up on this Casama account. Choose a plan to carry on.';
+
+  @override
+  String get shCloudIntervalWeek => 'Weekly';
+
+  @override
+  String get shCloudIntervalMonth => 'Monthly';
+
+  @override
+  String get shCloudIntervalYear => 'Yearly';
+
+  @override
+  String get shCloudWaitingForPlan =>
+      'Finish paying in your browser. This screen carries on by itself when the plan arrives.';
+
+  @override
+  String get shCloudWaitingTimedOut =>
+      'The plan hasn\'t arrived yet. A payment can take a few minutes to show.';
+
+  @override
+  String get shCloudCheckAgain => 'Check Again';
+
+  @override
+  String get shCloudGiftCode => 'Have a gift code?';
+
+  @override
+  String get shCloudGiftCodeLabel => 'Gift code';
+
+  @override
+  String get shCloudRedeem => 'Redeem';
+
+  @override
+  String get shCloudNoWayToBuy =>
+      'Plans can\'t be bought in this app. Buy one on casama.ai with the same account, then check again here.';
+
+  @override
+  String get shCloudPurchasePending =>
+      'Your purchase is waiting for approval. This carries on when it goes through.';
+
+  @override
+  String get shCloudPurchaseFailed =>
+      'The purchase didn\'t go through. Nothing was charged.';
+
+  @override
+  String get shCloudConnecting => 'Connecting this server to Casama Cloud…';
+
+  @override
+  String get shCloudLoading => 'Loading…';
+
+  @override
+  String get shCloudReviewTitle => 'Check before turning on';
+
+  @override
+  String get shCloudReviewPays => 'Who pays';
+
+  @override
+  String shCloudReviewPaysLine(String plan, String workspace, String email) {
+    return '$plan on $workspace ($email)';
+  }
+
+  @override
+  String shCloudReviewTrialLine(String workspace, String email) {
+    return 'Free usage to try on $workspace ($email)';
+  }
+
+  @override
+  String get shCloudReviewBots => 'Which bots switch';
+
+  @override
+  String get shCloudReviewAll => 'All bots';
+
+  @override
+  String get shCloudReviewNoKey => 'Only bots without a working key';
+
+  @override
+  String get shCloudReviewPick => 'Pick bots';
+
+  @override
+  String get shCloudReviewNoBots =>
+      'This server has no bots yet. New bots can use Casama Cloud.';
+
+  @override
+  String get shCloudReviewDefault => 'New bots use Casama Cloud too';
+
+  @override
+  String shCloudFromTo(String from, String to) {
+    return '$from → $to';
+  }
+
+  @override
+  String shCloudToCloud(String model) {
+    return '$model (Casama Cloud)';
+  }
+
+  @override
+  String get shCloudCloudModel => 'Casama Cloud\'s model';
+
+  @override
+  String get shCloudNoKeyYet => 'No working key';
+
+  @override
+  String shCloudStepDown(String from) {
+    return 'Replies may be shorter or less careful than with $from. Try one bot first.';
+  }
+
+  @override
+  String get shCloudReviewJobs => 'Memory, images and voice';
+
+  @override
+  String get shCloudJobMemory => 'Memory search';
+
+  @override
+  String get shCloudJobImages => 'Images';
+
+  @override
+  String get shCloudJobTts => 'Read aloud';
+
+  @override
+  String get shCloudJobStt => 'Dictation';
+
+  @override
+  String get shCloudJobOwnKey => 'Your own key';
+
+  @override
+  String get shCloudJobMemoryOptIn => 'Use Casama Cloud for memory too';
+
+  @override
+  String get shCloudJobMemoryOptInHelp =>
+      'Memory is re-indexed in the background; search keeps working meanwhile.';
+
+  @override
+  String get shCloudJobLiveNote =>
+      'Live voice, phone calls and video keep using your own keys.';
+
+  @override
+  String get shCloudWhatGoes => 'What goes to Casama Cloud';
+
+  @override
+  String get shCloudReviewPrivacy =>
+      'Messages to the model pass through Casama Cloud and aren\'t stored. Usage (model, tokens, cost) shows on your Cloud bill. Bots, chats, memory, files and computers stay on this server.';
+
+  @override
+  String get shCloudWhatGoesLink => 'What this server sends';
+
+  @override
+  String get shCloudFallback =>
+      'If Casama Cloud runs out or can\'t be reached, use my own key';
+
+  @override
+  String get shCloudFallbackHelp => 'Every answer from your own key says so.';
+
+  @override
+  String shCloudSeatsNote(int used, String plan, int seats) {
+    final intl.NumberFormat usedNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String usedString = usedNumberFormat.format(used);
+    final intl.NumberFormat seatsNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String seatsString = seatsNumberFormat.format(seats);
+
+    return '$usedString people use this server and the $plan plan covers $seatsString. Each extra person is billed at Casama Cloud\'s extra-person price.';
+  }
+
+  @override
+  String get shCloudApply => 'Turn On Casama Cloud';
+
+  @override
+  String get shCloudPickOne => 'Pick at least one bot, or let new bots use it.';
+
+  @override
+  String get shCloudPolicyTitle => 'Who may use it';
+
+  @override
+  String get shCloudPolicyEveryone => 'Everyone on this server';
+
+  @override
+  String get shCloudPolicyChosen => 'Only chosen people';
+
+  @override
+  String shCloudPolicyChosenCount(int count) {
+    final intl.NumberFormat countNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countString people chosen',
+      one: '1 person chosen',
+      zero: 'Nobody chosen yet',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get shCloudDailyLimit => 'Daily limit per person';
+
+  @override
+  String get shCloudNoLimit => 'No limit';
+
+  @override
+  String shCloudDailyLimitValue(String amount) {
+    return '$amount a day';
+  }
+
+  @override
+  String get shCloudPolicySaved => 'Saved';
+
+  @override
+  String get shCloudDoneTitle => 'Casama Cloud is on';
+
+  @override
+  String shCloudDoneBody(int count) {
+    final intl.NumberFormat countNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String countString = countNumberFormat.format(count);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countString bots now use Casama Cloud.',
+      one: '1 bot now uses Casama Cloud.',
+      zero: 'New bots use Casama Cloud.',
+    );
+    return '$_temp0 Usage shows on this server\'s Usage screen and on your Cloud bill.';
+  }
+
+  @override
+  String shCloudSayHi(String bot) {
+    return 'Say Hi to $bot';
+  }
+
+  @override
+  String get shCloudDone => 'Done';
+
+  @override
+  String get shCloudUsageTitle => 'Usage';
+
+  @override
+  String shCloudIncludedLeft(String amount) {
+    return '$amount of included usage left this month';
+  }
+
+  @override
+  String shCloudToday(String spend, String cap) {
+    return 'Today: $spend of $cap';
+  }
+
+  @override
+  String shCloudTodayNoCap(String spend) {
+    return 'Today: $spend';
+  }
+
+  @override
+  String shCloudCredits(String amount) {
+    return '$amount in credits';
+  }
+
+  @override
+  String shCloudTrialLeft(String amount) {
+    return '$amount of free usage to try left';
+  }
+
+  @override
+  String get shCloudPriceNote =>
+      'At the price Casama Cloud charges. The same calls show on your Cloud bill under this server\'s name.';
+
+  @override
+  String shCloudYourToday(String spend, String limit) {
+    return 'You today: $spend of $limit';
+  }
+
+  @override
+  String get shCloudWarnIncluded =>
+      'Casama Cloud has used 80% of this month\'s included usage.';
+
+  @override
+  String get shCloudWarnDaily => 'Casama Cloud has used 80% of today\'s limit.';
+
+  @override
+  String get shCloudTopUp => 'Top Up';
+
+  @override
+  String get shCloudUseOwnKey => 'Use My Own Key';
+
+  @override
+  String get shCloudStopOutOfCredits =>
+      'Casama Cloud is out of usage for this month.';
+
+  @override
+  String shCloudStopDailyCap(String time) {
+    return 'Today\'s Casama Cloud limit is used up. It resets at $time.';
+  }
+
+  @override
+  String get shCloudStopDailyCapSoon =>
+      'Today\'s Casama Cloud limit is used up. It resets tomorrow.';
+
+  @override
+  String shCloudStopPlanRequired(String workspace) {
+    return 'Casama Cloud needs a plan on $workspace.';
+  }
+
+  @override
+  String shCloudStopPlanEnded(String workspace) {
+    return 'The Casama Cloud plan on $workspace ended.';
+  }
+
+  @override
+  String shCloudStopSeats(String workspace) {
+    return 'The plan on $workspace doesn\'t cover everyone using Casama Cloud here.';
+  }
+
+  @override
+  String get shCloudStopMemberLimit =>
+      'You\'ve reached today\'s Casama Cloud limit on this server.';
+
+  @override
+  String get shCloudStopMemberNotAllowed =>
+      'Your admin hasn\'t turned on Casama Cloud for you.';
+
+  @override
+  String get shCloudStopDisconnected =>
+      'Casama Cloud was disconnected from this server.';
+
+  @override
+  String get shCloudStopUnreachable =>
+      'Casama Cloud can\'t be reached right now. Trying again.';
+
+  @override
+  String get shCloudSeePlans => 'See Plans';
+
+  @override
+  String get shCloudRenew => 'Renew';
+
+  @override
+  String get shCloudAskAdmin => 'Ask an Admin';
+
+  @override
+  String get shCloudAskAdminBody =>
+      'Only an admin of this server can change Casama Cloud. Ask one of them; bots and routines carry on by themselves once it\'s fixed.';
+
+  @override
+  String get shCloudReconnect => 'Reconnect';
+
+  @override
+  String get shCloudFallbackActive =>
+      'Your own key is answering meanwhile, and each answer says so.';
+
+  @override
+  String get shCloudUseOwnKeyTitle => 'Use your own key meanwhile?';
+
+  @override
+  String get shCloudUseOwnKeyBody =>
+      'While Casama Cloud can\'t answer, bots answer with your own key, and each such answer says so. Turn it off any time on this screen.';
+
+  @override
+  String get shCloudAddKeyFirst =>
+      'Add a key of your own on the Models screen first.';
+
+  @override
+  String get shCloudRoutinesWait =>
+      'Routines wait and carry on by themselves when it\'s fixed.';
+
+  @override
+  String shCloudMemoryCatchingUp(int done, int total) {
+    final intl.NumberFormat doneNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String doneString = doneNumberFormat.format(done);
+    final intl.NumberFormat totalNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String totalString = totalNumberFormat.format(total);
+
+    return 'Memory is catching up: $doneString of $totalString';
+  }
+
+  @override
+  String get shCloudMemoryCatchingUpHelp =>
+      'Search uses words for memories not re-indexed yet.';
+
+  @override
+  String shCloudMemberNotice(String workspace) {
+    return 'Messages to the model now pass through Casama Cloud, paid by $workspace.';
+  }
+
+  @override
+  String get shCloudGotIt => 'Got It';
+
+  @override
+  String shCloudChipPaidBy(String workspace) {
+    return 'Paid by $workspace';
+  }
+
+  @override
+  String get shCloudPaidBy => 'Paid by';
+
+  @override
+  String get shCloudChangePayer => 'Change';
+
+  @override
+  String get shCloudChangeBots => 'Change Bots';
+
+  @override
+  String get shCloudFallbackSection => 'When Casama Cloud can\'t answer';
+
+  @override
+  String get shCloudTurnOff => 'Turn Off';
+
+  @override
+  String get shCloudOffTitle => 'Turn off Casama Cloud?';
+
+  @override
+  String get shCloudOffBody =>
+      'These bots go back to their previous key when it still works, else the workspace\'s default key. Nothing else changes, and you can turn it on again any time.';
+
+  @override
+  String get shCloudOffBotsNone => 'No bots use Casama Cloud right now.';
+
+  @override
+  String get shCloudOffDoneTitle => 'Casama Cloud is off';
+
+  @override
+  String shCloudOffBackTo(String key) {
+    return 'Back to $key';
+  }
+
+  @override
+  String get shCloudOffNeedsKey => 'Needs a key';
+
+  @override
+  String get shCloudAddKey => 'Add a Key';
+
+  @override
+  String get shCloudSignInAgain =>
+      'Your Casama Cloud sign-in ended. Sign in again to carry on.';
+
+  @override
+  String get cloudAccountSection => 'Casama Cloud account';
+
+  @override
+  String cloudAccountRow(String email) {
+    return 'Signed in as $email';
+  }
+
+  @override
+  String get cloudAccountRowHelp =>
+      'Used for this server\'s license and Casama Cloud models';
+
+  @override
+  String get cloudAccountSignOut => 'Sign Out of Casama Cloud';
+
+  @override
+  String get cloudAccountSignOutBody =>
+      'This device forgets your Casama Cloud sign-in. This server, its license and Casama Cloud models keep working.';
+
+  @override
+  String get cloudAccountDelete => 'Delete Casama Cloud Account';
+
+  @override
+  String get cloudAccountDeleteHelp =>
+      'Deletes your account on Casama Cloud. This server and its data stay.';
+
+  @override
+  String cloudAccountDeleteConfirm(String email) {
+    return 'Type $email to delete your Casama Cloud account. Cloud workspaces only you own go with it, and Casama Cloud models stop on servers they pay for. Plans bought in a store are cancelled in that store.';
+  }
+
+  @override
+  String cloudAccountDeleted(String date) {
+    return 'Your Casama Cloud account is deleted. Its data is removed for good on $date.';
+  }
+
+  @override
+  String get wsMoveSettingsToCloud => 'Move to Casama Cloud';
+
+  @override
+  String get wsMoveSettingsToServer => 'Move to My Own Server';
+
+  @override
+  String get wsMoveSettingsHelp =>
+      'Take this workspace\'s bots, chats, memory and files to another server';
+
+  @override
+  String get wsMoveTitle => 'Move This Workspace';
+
+  @override
+  String get wsMoveIntro =>
+      'Everything comes along: bots, chats, memory, routines, files and computers. Once it\'s there, this copy stays readable but stops working.';
+
+  @override
+  String get wsMoveCloudOption => 'Move to Casama Cloud';
+
+  @override
+  String get wsMoveCloudOptionHelp =>
+      'Sign in with your Casama account and pick where it goes.';
+
+  @override
+  String get wsMoveServerOption => 'Move to my own server';
+
+  @override
+  String get wsMoveServerOptionHelp =>
+      'On that server, open Settings › Bring a Workspace Here and copy its move code.';
+
+  @override
+  String get wsMoveInstallServer => 'Install Casama Server';
+
+  @override
+  String get wsMoveInstallServerHelp =>
+      'No server yet? Run one on this computer first.';
+
+  @override
+  String get wsMoveReceiveOption => 'Bring a workspace here';
+
+  @override
+  String get wsMoveReceiveOptionHelp =>
+      'Get a move code for this workspace, to use on the server the other workspace is on now.';
+
+  @override
+  String get wsMoveOwnerOnly => 'Only the workspace\'s owner can move it.';
+
+  @override
+  String get wsMoveCloudPickTitle => 'Where should it go?';
+
+  @override
+  String get wsMoveCloudNew => 'A new workspace';
+
+  @override
+  String wsMoveCloudNewHelp(String name) {
+    return 'Starts empty on Casama Cloud, named $name.';
+  }
+
+  @override
+  String get wsMoveCloudExistingHelp =>
+      'Moved items go next to what\'s there. Names that clash get “(moved)”.';
+
+  @override
+  String get wsMoveServerTitle => 'Move to Your Own Server';
+
+  @override
+  String get wsMoveServerAddress => 'Server address';
+
+  @override
+  String get wsMoveServerCode => 'Move code';
+
+  @override
+  String get wsMoveCheckButton => 'Check';
+
+  @override
+  String get wsMoveReceiveTitle => 'Bring a Workspace Here';
+
+  @override
+  String wsMoveReceiveBody(String time, String name) {
+    return 'On the server the workspace is on now, open Settings › Move to My Own Server and enter this address and code. The code works once, until $time, and brings everything into $name.';
+  }
+
+  @override
+  String get wsMoveReceiveAddress => 'This server\'s address';
+
+  @override
+  String get wsMoveReceiveCode => 'Move code';
+
+  @override
+  String get wsMoveCopy => 'Copy';
+
+  @override
+  String get wsMoveCopied => 'Copied';
+
+  @override
+  String get wsMoveCheckTitle => 'Ready to Move';
+
+  @override
+  String wsMoveCheckTo(String name) {
+    return 'To $name';
+  }
+
+  @override
+  String wsMoveCheckSize(String size, int minutes) {
+    final intl.NumberFormat minutesNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String minutesString = minutesNumberFormat.format(minutes);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      minutes,
+      locale: localeName,
+      other: '$minutesString minutes',
+      one: '1 minute',
+    );
+    return '$size to copy, about $_temp0';
+  }
+
+  @override
+  String wsMoveCheckPause(int minutes) {
+    final intl.NumberFormat minutesNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String minutesString = minutesNumberFormat.format(minutes);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      minutes,
+      locale: localeName,
+      other: '$minutesString minutes',
+      one: '1 minute',
+    );
+    return 'Near the end, bots pause for about $_temp0, then carry on there.';
+  }
+
+  @override
+  String get wsMoveCheckLongPause => 'That\'s a long pause. Pick a quiet time.';
+
+  @override
+  String get wsMoveCheckComes => 'What comes along';
+
+  @override
+  String wsMoveCountBots(int n) {
+    final intl.NumberFormat nNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String nString = nNumberFormat.format(n);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$nString bots',
+      one: '1 bot',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String wsMoveCountChats(int n) {
+    final intl.NumberFormat nNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String nString = nNumberFormat.format(n);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$nString chats',
+      one: '1 chat',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String wsMoveCountMemories(int n) {
+    final intl.NumberFormat nNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String nString = nNumberFormat.format(n);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$nString memories',
+      one: '1 memory',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String wsMoveCountRoutines(int n) {
+    final intl.NumberFormat nNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String nString = nNumberFormat.format(n);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$nString routines',
+      one: '1 routine',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String wsMoveCountFiles(int n) {
+    final intl.NumberFormat nNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String nString = nNumberFormat.format(n);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$nString files',
+      one: '1 file',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String wsMoveCountComputers(int n) {
+    final intl.NumberFormat nNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String nString = nNumberFormat.format(n);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$nString computers',
+      one: '1 computer',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String wsMoveCountPeople(int n) {
+    final intl.NumberFormat nNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String nString = nNumberFormat.format(n);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$nString people',
+      one: '1 person',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get wsMoveCheckAfter => 'What needs you afterwards';
+
+  @override
+  String wsMoveReconnect(String names) {
+    return 'Sign in to these apps again there: $names';
+  }
+
+  @override
+  String wsMoveInvites(int n) {
+    final intl.NumberFormat nNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String nString = nNumberFormat.format(n);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$nString people get',
+      one: '1 person gets',
+    );
+    return '$_temp0 an email invite';
+  }
+
+  @override
+  String chatMovedAuthorInvited(String name) {
+    return '$name (invited)';
+  }
+
+  @override
+  String get wsMoveChatgptPlans =>
+      'ChatGPT plans stay behind. Sign in to ChatGPT again there.';
+
+  @override
+  String wsMoveComputersNote(int n) {
+    final intl.NumberFormat nNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String nString = nNumberFormat.format(n);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$nString computers start',
+      one: '1 computer starts',
+    );
+    return '$_temp0 fresh there, with its home folder restored.';
+  }
+
+  @override
+  String get wsMoveResetNote =>
+      'Approvals, full access and device access start from the new server\'s defaults.';
+
+  @override
+  String get wsMoveBringKeys => 'Bring my keys';
+
+  @override
+  String wsMoveBringKeysHelp(int n) {
+    final intl.NumberFormat nNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String nString = nNumberFormat.format(n);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$nString keys go',
+      one: '1 key goes',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'them',
+      one: 'it',
+    );
+    return '$_temp0 along, sealed so only the new server can read $_temp1.';
+  }
+
+  @override
+  String get wsMoveNoKeysHelp =>
+      'You\'ll add model and chat app keys again there.';
+
+  @override
+  String get wsMoveDoesntFit => 'This workspace doesn\'t fit the plan there';
+
+  @override
+  String wsMoveNeedsPlan(String plan) {
+    return '$plan fits it. Choose it on Casama Cloud, then check again.';
+  }
+
+  @override
+  String wsMoveOverLine(String what, String have, String limit) {
+    return '$what: $have of $limit';
+  }
+
+  @override
+  String get wsMoveOverPeople => 'People';
+
+  @override
+  String get wsMoveOverBots => 'Bots';
+
+  @override
+  String get wsMoveOverComputers => 'Computers';
+
+  @override
+  String get wsMoveOverStorage => 'Storage';
+
+  @override
+  String get wsMoveUpdateSource =>
+      'Update this server first. It\'s older than the one you\'re moving to.';
+
+  @override
+  String get wsMoveUpdateTarget =>
+      'The server you\'re moving to needs an update first.';
+
+  @override
+  String get wsMoveStart => 'Start Move';
+
+  @override
+  String get wsMoveCheckAgain => 'Check Again';
+
+  @override
+  String get wsMoveProgressTitle => 'Moving';
+
+  @override
+  String get wsMoveStepStarting => 'Getting ready';
+
+  @override
+  String get wsMoveStepCopying =>
+      'Copying files while everything keeps working';
+
+  @override
+  String get wsMoveStepPausing => 'Pausing bots to copy the last changes';
+
+  @override
+  String get wsMoveStepFinishing => 'Sending chats, memory and settings';
+
+  @override
+  String get wsMoveStepImporting => 'The new server is bringing it in';
+
+  @override
+  String wsMoveProgressBytes(String done, String total) {
+    return '$done of $total';
+  }
+
+  @override
+  String get wsMoveProgressLeave =>
+      'You can close the app. The move carries on, and you get a notification when it\'s done.';
+
+  @override
+  String get wsMoveFailedTitle => 'The move stopped';
+
+  @override
+  String get wsMoveFailedBody =>
+      'Nothing changed here: this workspace keeps working.';
+
+  @override
+  String get wsMoveTryAgain => 'Try Again';
+
+  @override
+  String get wsMoveNewCodeNeeded => 'To try again, get a new move code.';
+
+  @override
+  String get wsMoveDoneTitle => 'Moved';
+
+  @override
+  String wsMoveDoneBody(String server) {
+    return 'Everything arrived at $server.';
+  }
+
+  @override
+  String get wsMoveDoneNeeds => 'A few things need you there:';
+
+  @override
+  String get wsMoveOpenThere => 'Open It There';
+
+  @override
+  String wsMoveAfterReconnect(String name) {
+    return 'Sign in to $name again';
+  }
+
+  @override
+  String wsMoveAfterInvited(int n) {
+    final intl.NumberFormat nNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String nString = nNumberFormat.format(n);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$nString people were',
+      one: '1 person was',
+    );
+    return '$_temp0 invited by email';
+  }
+
+  @override
+  String wsMoveAfterChatApp(String name) {
+    return 'Reconnect $name';
+  }
+
+  @override
+  String wsMoveAfterWebhook(String name) {
+    return 'Give $name\'s sender the new webhook address';
+  }
+
+  @override
+  String wsMoveAfterForward(int n) {
+    final intl.NumberFormat nNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String nString = nNumberFormat.format(n);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$nString days',
+      one: '1 day',
+    );
+    return 'Webhooks still sent here are passed on for $_temp0.';
+  }
+
+  @override
+  String wsMoveAfterReset(int n) {
+    final intl.NumberFormat nNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String nString = nNumberFormat.format(n);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$nString bots',
+      one: '1 bot',
+    );
+    return 'Check approvals for $_temp0';
+  }
+
+  @override
+  String get wsMoveAfterKeys => 'Add your model keys there';
+
+  @override
+  String wsMoveAfterRenamed(int n) {
+    final intl.NumberFormat nNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String nString = nNumberFormat.format(n);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$nString items were',
+      one: '1 item was',
+    );
+    return '$_temp0 renamed “(moved)”';
+  }
+
+  @override
+  String get wsMoveAfterReindex => 'Memory search catches up in a few minutes.';
+
+  @override
+  String get wsMoveAfterNothing => 'Nothing else to do.';
+
+  @override
+  String get wsMoveSubTitle => 'Your subscriptions';
+
+  @override
+  String get wsMoveSubToCloud =>
+      'Bots on Casama Cloud run on your Cloud plan. If you paid for a business license for this server, cancel it once you don\'t need it.';
+
+  @override
+  String get wsMoveSubFromCloud =>
+      'Your Casama Cloud plan keeps renewing. Cancel it once you\'re settled on your own server.';
+
+  @override
+  String get wsMoveSubManage => 'Manage Plan';
+
+  @override
+  String get wsMovedTitle => 'This workspace moved';
+
+  @override
+  String get wsMovedBodyCloud =>
+      'It\'s on Casama Cloud now. Sign in there to keep going. This copy is read-only.';
+
+  @override
+  String wsMovedBodyServer(String host) {
+    return 'It\'s on $host now. Sign in there to keep going. This copy is read-only.';
+  }
+
+  @override
+  String get wsMovedSignInCloud => 'Sign In to Casama Cloud';
+
+  @override
+  String wsMovedOpenServer(String host) {
+    return 'Open $host';
+  }
+
+  @override
+  String get wsMovedViewOld => 'View the Old Copy';
 }

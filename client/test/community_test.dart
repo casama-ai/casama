@@ -1,4 +1,5 @@
 import 'package:casama/core/providers.dart';
+import 'package:casama/core/review_prompt.dart';
 import 'package:casama/features/community/community.dart';
 import 'package:casama/features/testimonials/testimonials.dart';
 import 'package:casama/l10n/generated/app_localizations.dart';
@@ -26,7 +27,11 @@ List<String> _days(int n) => [
 ];
 
 void main() {
-  setUp(() => SharedPreferences.setMockInitialValues({}));
+  setUp(() {
+    SharedPreferences.setMockInitialValues({});
+    // An error snackbar in an earlier test of the same shard sets this for the whole program.
+    ReviewPrompt.errorThisSession = false;
+  });
 
   group('the Cloud ask: when it may show', () {
     final now = DateTime(2026, 12, 1, 12);

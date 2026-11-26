@@ -2956,6 +2956,73 @@
         "outcome": { "type": "string", "values": ["ok", "error", "redirected"] }
       },
       "funnels": []
+    },
+    {
+      "name": "cloud_models_row_seen",
+      "by": ["client"],
+      "description": "The Casama Cloud models row was shown on a self-hosted server's Models screen (SELFHOST-CLOUD-MODELS-PLAN §8). connected: Cloud models are on; admin: the viewer can manage them.",
+      "properties": {
+        "connected": { "type": "boolean" },
+        "admin": { "type": "boolean" }
+      },
+      "funnels": []
+    },
+    {
+      "name": "cloud_models_signin",
+      "by": ["client"],
+      "description": "Signed in to Casama Cloud from a self-hosted server, to turn on Cloud models.",
+      "properties": {},
+      "funnels": []
+    },
+    {
+      "name": "cloud_models_trial_started",
+      "by": ["client"],
+      "description": "A self-hosted server started on Casama Cloud models' free usage to try.",
+      "properties": {},
+      "funnels": []
+    },
+    {
+      "name": "cloud_models_purchased",
+      "by": ["client"],
+      "description": "A plan for Casama Cloud models was bought from a self-hosted server: in the store, or by web checkout the app saw land.",
+      "properties": {
+        "store": { "type": "string", "values": ["dodo", "app_store", "google_play"] },
+        "product_id": { "type": "string" }
+      },
+      "funnels": []
+    },
+    {
+      "name": "cloud_models_enabled",
+      "by": ["client"],
+      "description": "An admin applied the review screen: bots moved to Casama Cloud models. bots: how many; trial: on the free usage to try.",
+      "properties": {
+        "bots": { "type": "number" },
+        "trial": { "type": "boolean" }
+      },
+      "funnels": []
+    },
+    {
+      "name": "cloud_models_fallback_used",
+      "by": ["client"],
+      "description": "An admin chose to answer with their own key when Casama Cloud stops.",
+      "properties": {},
+      "funnels": []
+    },
+    {
+      "name": "cloud_models_fallback_off",
+      "by": ["client"],
+      "description": "An admin turned off answering with their own key when Casama Cloud stops.",
+      "properties": {},
+      "funnels": []
+    },
+    {
+      "name": "cloud_models_disabled",
+      "by": ["client"],
+      "description": "Casama Cloud models were turned off on a self-hosted server.",
+      "properties": {
+        "reason": { "type": "string", "values": ["admin"] }
+      },
+      "funnels": []
     }
   ]
 }

@@ -5,6 +5,8 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show ProviderListenable;
 
+import 'core/age_range.dart';
+import 'core/file_provider.dart';
 import 'core/fold/fold.dart';
 import 'core/local_cache.dart';
 import 'core/ads_attribution.dart';
@@ -48,6 +50,7 @@ import 'l10n/generated/app_localizations.dart';
 import 'features/devices/device_sync.dart';
 import 'features/voice/call_bubble.dart';
 import 'features/selfhost/guided_setup.dart';
+import 'features/selfhost/server_license.dart';
 import 'ui/effects.dart';
 import 'ui/outside_shell.dart';
 import 'features/island/island_bridge.dart';
@@ -58,8 +61,10 @@ import 'features/app_lock/lock_screen.dart';
 import 'features/permissions/permissions_reporter.dart';
 import 'features/app_browser/app_browser_flag.dart';
 import 'features/app_browser/app_browser_service.dart';
+import 'features/siri/focus_filter.dart';
 import 'features/siri/siri_bridge.dart';
 import 'features/app_functions/app_functions.dart';
+import 'features/move/moved_screen.dart';
 
 class CasamaApp extends ConsumerWidget {
   const CasamaApp({super.key});
@@ -106,6 +111,10 @@ class CasamaApp extends ConsumerWidget {
     keep(shortcutsProvider);
     // Siri acting through the app, Spotlight and what is on screen (docs/SIRI-AI-PLAN.md).
     keep(siriBridgeProvider);
+    // Focus Filters, Declared Age Range, and read-only File Provider (docs/APPLE-INTEGRATIONS-PLAN.md).
+    keep(focusFilterSyncProvider);
+    keep(ageBandSyncProvider);
+    keep(fileProviderSyncProvider);
     // Gemini on Android through Casama's AppFunctions (docs/ANDROID-APPFUNCTIONS-PLAN.md); null
     // unless the build switch is on.
     keep(appFunctionsBridgeProvider);
@@ -185,14 +194,24 @@ class CasamaApp extends ConsumerWidget {
           child: _DismissKeyboard(
             // A bar while the server doesn't answer, once the app is open (D-296).
             child: ServerReachabilityBar(
+            // A self-hosted server's license (setup page, grace or expired banner) and updates for
+            // the server this app installed (docs/SELF-HOSTING-PLAN.md §6.4).
+            child: SelfhostLicenseGate(
+            navigatorContext: () => router.routerDelegate.navigatorKey.currentContext,
+            // A workspace that moved to another server says where it went (SELFHOST-CLOUD-MODELS-PLAN §7.4.1).
+            child: MovedWorkspaceGate(
             child: CompanionOverlay(
               // The server owner's remote settings sit over everything (D-241).
               child: RemoteConfigGate(
                 // A minimised call floats over every screen (D-327).
                 child: CallBubbleOverlay(
-                  child: _FirstRunSteps(child: child ?? const SizedBox.shrink()),
+                  child: Under13BlockedGate(
+                    child: _FirstRunSteps(child: child ?? const SizedBox.shrink()),
+                  ),
                 ),
               ),
+            ),
+            ),
             ),
             ),
           ),

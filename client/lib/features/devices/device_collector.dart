@@ -4,6 +4,7 @@ import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:health/health.dart' as hc;
 import 'package:casama_sdk/casama_sdk.dart';
 
+import '../../core/apple_device_actions.dart';
 import 'android_health_flag.dart';
 import 'health_summary.dart';
 
@@ -80,9 +81,16 @@ List<DeviceReadingInput> contactChunks(List<({String name, List<String> phones, 
 
 /// The phone's own calendar and contacts through their plugins (iOS and Android; contacts on macOS too).
 class PluginDeviceCollector implements DeviceCollector {
+  PluginDeviceCollector({AlarmKitClient? alarms, HomeKitClient? home})
+    : _alarms = alarms ?? AlarmKitClient(),
+      _home = home ?? HomeKitClient();
+
+  final AlarmKitClient _alarms;
+  final HomeKitClient _home;
   final _calendar = dc.DeviceCalendarPlugin();
 
   bool get _mobile => !kIsWeb && (defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.android);
+  bool get _ios => !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS;
 
   final _health = hc.Health();
   var _healthReady = false;
@@ -141,6 +149,8 @@ class PluginDeviceCollector implements DeviceCollector {
     if (_mobile) DeviceKind.calendar,
     if (_mobile && (defaultTargetPlatform == TargetPlatform.iOS || kAndroidHealth)) DeviceKind.health,
     if (_mobile || (!kIsWeb && defaultTargetPlatform == TargetPlatform.macOS)) DeviceKind.contacts,
+    if (_ios) DeviceKind.alarm,
+    if (_ios) DeviceKind.home,
   };
 
   @override
@@ -157,6 +167,10 @@ class PluginDeviceCollector implements DeviceCollector {
       case DeviceKind.contacts:
         final s = await FlutterContacts.permissions.request(PermissionType.read);
         return s == PermissionStatus.granted || s == PermissionStatus.limited;
+      case DeviceKind.alarm:
+        return _alarms.requestPermission();
+      case DeviceKind.home:
+        return _home.requestPermission();
       default:
         return false;
     }
@@ -206,6 +220,12 @@ class PluginDeviceCollector implements DeviceCollector {
 
   @override
   Future<Map<String, Object?>> write(String action, Map<String, Object?> params) async {
+    if (action == 'alarm.set' || action == 'alarm.list' || action == 'alarm.cancel') {
+      return _alarms.execute(action, params);
+    }
+    if (action == 'home.list' || action == 'home.read' || action == 'home.set') {
+      return _home.execute(action, params);
+    }
     if (action != 'calendar.create') throw UnsupportedError('This device can\'t do $action yet.');
     final cals = ((await _calendar.retrieveCalendars()).data ?? const <dc.Calendar>[]).where((c) => c.isReadOnly != true).toList();
     if (cals.isEmpty) throw StateError('No calendar on this device can be written to.');

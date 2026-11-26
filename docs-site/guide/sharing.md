@@ -52,6 +52,9 @@ accepts. See [Bot templates](/develop/bot-templates) for the file format.
 2. Review **What Comes with It**: the instructions, skills, routines, the apps to
    **Connect after importing**, and how many memories it has.
 3. Choose whether to **Schedule Its Routines** and **Keep its memories**.
+4. On a self-hosted server, under **Model**, pick a **Model key** from your workspace and a
+   **Model**. The key's default model is filled in. Casama Cloud picks the model for you and skips
+   this step.
 5. Select **Import a bot**.
 
 The new bot belongs to you, and its routines run in your timezone. Casama can't sign in to apps for
@@ -89,7 +92,7 @@ person may use:
 
 - Local tools (MCP servers) on someone's own computer are offered only in their runs.
 - A bot whose computer is someone's personal computer won't use it in other people's runs.
-- Personal password managers work the same way.
+- Personal password managers and ChatGPT plans work the same way.
 
 Knowledge belongs to the bot or the workspace, so everyone who can chat with the bot shares it.
 
@@ -105,7 +108,7 @@ files are never read.
    both work).
 3. Review what was found. Edit the **Name**, read the persona, and untick any skill, routine or
    memory you don't want. Files that weren't imported are listed with the reason.
-4. Select **Import an Agent**.
+4. On a self-hosted server, pick a **Model key** and **Model**. Then select **Import an Agent**.
 
 What becomes what:
 

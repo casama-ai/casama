@@ -4,6 +4,7 @@
 
 // ignore_for_file: unused_element
 import 'package:casama_api/src/model/organization_with_role.dart';
+import 'package:casama_api/src/model/account_age_band.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -32,6 +33,10 @@ class Me {
     required  this.timezone,
 
      this.isInternal,
+
+     this.accountAgeBand,
+
+     this.accountAgeBandUpdatedAt,
 
     required  this.organizations,
   });
@@ -110,6 +115,30 @@ class Me {
 
   @JsonKey(
     
+    name: r'account_age_band',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final AccountAgeBand? accountAgeBand;
+
+
+
+  @JsonKey(
+    
+    name: r'account_age_band_updated_at',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final DateTime? accountAgeBandUpdatedAt;
+
+
+
+  @JsonKey(
+    
     name: r'organizations',
     required: true,
     includeIfNull: false,
@@ -130,6 +159,8 @@ class Me {
       other.locale == locale &&
       other.timezone == timezone &&
       other.isInternal == isInternal &&
+      other.accountAgeBand == accountAgeBand &&
+      other.accountAgeBandUpdatedAt == accountAgeBandUpdatedAt &&
       other.organizations == organizations;
 
     @override
@@ -140,6 +171,8 @@ class Me {
         locale.hashCode +
         timezone.hashCode +
         isInternal.hashCode +
+        (accountAgeBand == null ? 0 : accountAgeBand.hashCode) +
+        (accountAgeBandUpdatedAt == null ? 0 : accountAgeBandUpdatedAt.hashCode) +
         organizations.hashCode;
 
   factory Me.fromJson(Map<String, dynamic> json) => _$MeFromJson(json);

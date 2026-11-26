@@ -1,5 +1,7 @@
 import { z } from "@hono/zod-openapi";
 import { Uuid } from "./common.ts";
+import { MovedTo } from "./moves.ts";
+import { AccountAgeBand } from "./privacy.ts";
 import { SitesConfig } from "./sites.ts";
 
 export const OrgRole = z.enum(["owner", "admin", "member"]).openapi("OrgRole");
@@ -264,6 +266,8 @@ export const Me = z
     locale: z.string(),
     timezone: z.string(),
     is_internal: z.boolean().optional(),
+    account_age_band: AccountAgeBand.nullable().optional(),
+    account_age_band_updated_at: z.iso.datetime({ offset: true }).nullable().optional(),
     organizations: z.array(OrganizationWithRole),
   })
   .openapi("Me");
@@ -340,6 +344,11 @@ export const PublicConfig = z
     /** Sites and domains on this server (docs/SITES-AND-DOMAINS-PLAN.md). Old apps ignore it. */
     sites: SitesConfig.optional(),
     /**
+     * Casama Cloud models on a self-hosted server (docs/SELFHOST-CLOUD-MODELS-PLAN.md §13.3):
+     * whether this server can use them and whether they're on. Old apps ignore it.
+     */
+    cloud_models: z.object({ available: z.boolean(), connected: z.boolean() }).optional(),
+    /**
      * The add-key form's providers (D-374): `chat` first, then `more`; `cloud` is all a workspace
      * can add on Casama Cloud; `runs_chat` are the keys that can drive a bot. Plain ids, so an app
      * skips ones it doesn't know. Apps without it use their own copy.
@@ -353,6 +362,11 @@ export const PublicConfig = z
         hints: z.record(z.string(), z.string()).optional(),
       })
       .optional(),
+    /**
+     * Where this server's workspace moved (docs/SELFHOST-CLOUD-MODELS-PLAN.md §13.4), when every
+     * workspace on it moved. Old apps ignore it; they see the refusals' words instead.
+     */
+    moved_to: MovedTo.optional(),
   })
   .openapi("PublicConfig");
 

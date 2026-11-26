@@ -189,15 +189,22 @@ class CasamaLinkClient {
   }
 
   /// Asks to link a server. Show [LinkCode.userCode] and open [LinkCode.verificationUrl].
+  ///
+  /// [heldKey]: the key the server holds now, if any. Shown to Casama Cloud, it proves the server
+  /// is the one that key belongs to, so the new key keeps what the old one could do (Casama Cloud
+  /// models and who pays for them) even when the link is approved in another workspace. A key
+  /// that's no longer valid is ignored by Casama Cloud, never refused.
   Future<LinkCode> startLink({
     required String instanceId,
     required String instanceName,
     String? platform,
     String? version,
+    String? heldKey,
   }) async {
     final (status, j) = await _call(
       'POST',
       '/sign-in/start',
+      key: (heldKey ?? '').trim().isEmpty ? null : heldKey!.trim(),
       body: {
         'instance_id': instanceId,
         'instance_name': instanceName,
@@ -339,6 +346,40 @@ class CasamaLinkClient {
 // ---------------------------------------------------------------------------
 // The self-host stack's settings
 // ---------------------------------------------------------------------------
+
+/// The SQL that reads the link key a server keeps in Vault (`casama_cloud_link_key`): the key
+/// connecting Casama Cloud models made or took over (SELFHOST-CLOUD-MODELS-PLAN §13.3). Newer than
+/// the `.env` one whenever both exist.
+const heldLinkKeySql =
+    "select decrypted_secret from vault.decrypted_secrets where name = 'casama_cloud_link_key' "
+    'order by updated_at desc limit 1';
+
+/// Reads the server's Vault link key through `docker [composeArgs] exec db psql`, for
+/// [RemoteAccessSetup.heldKey]. Null when there is none or the database doesn't answer. The key
+/// stays in memory: never printed or logged.
+Future<String?> readHeldLinkKey(
+  List<String> composeArgs, {
+  Future<ProcessResult> Function(String exe, List<String> args) run = Process.run,
+}) async {
+  try {
+    final r = await run('docker', [
+      ...composeArgs,
+      'exec',
+      '-T',
+      'db',
+      'psql',
+      '-U',
+      'postgres',
+      '-tAc',
+      heldLinkKeySql,
+    ]);
+    if (r.exitCode != 0) return null;
+    final key = '${r.stdout}'.trim();
+    return key.isEmpty || key.contains(RegExp(r'\s')) ? null : key;
+  } on ProcessException {
+    return null;
+  }
+}
 
 /// Reads `KEY=VALUE` lines (the stack's `.env`); the last value of a key wins.
 Map<String, String> parseStackEnv(String text) {
@@ -530,6 +571,7 @@ class RemoteAccessSetup {
     http.Client? client,
     this.sleep = Future<void>.delayed,
     this.connectTimeout = const Duration(minutes: 3),
+    this.heldKey,
   }) : _client = client ?? http.Client();
 
   final Directory stackDir;
@@ -545,7 +587,26 @@ class RemoteAccessSetup {
   final Future<void> Function(Duration) sleep;
   final Duration connectTimeout;
 
-  File get envFile => File('${stackDir.path}/infra/compose/.env');
+  /// The link key the running server keeps in Vault ([readHeldLinkKey]), when the caller can
+  /// reach its database. Connecting Casama Cloud models keeps its key there, not in `.env`.
+  final Future<String?> Function()? heldKey;
+
+  /// The key to show Casama Cloud when linking: the server's Vault key, else the `.env` one.
+  Future<String?> _proofKey(Map<String, String> env) async {
+    String? vault;
+    try {
+      vault = await heldKey?.call();
+    } catch (_) {
+      vault = null;
+    }
+    if (vault != null && vault.trim().isNotEmpty) return vault.trim();
+    final fromEnv = (env['CASAMA_CLOUD_KEY'] ?? '').trim();
+    return fromEnv.isEmpty ? null : fromEnv;
+  }
+
+  /// The stack's settings: `.env` beside `images.env` in an install from the self-host release
+  /// (`casama selfhost install`, the desktop app), else `infra/compose/.env` in a checkout.
+  File get envFile => File('${stackDir.path}/images.env').existsSync() ? File('${stackDir.path}/.env') : File('${stackDir.path}/infra/compose/.env');
 
   Future<Map<String, String>> readEnv() async {
     if (!envFile.existsSync()) {
@@ -627,6 +688,7 @@ class RemoteAccessSetup {
       instanceName: instanceName,
       platform: platform,
       version: version,
+      heldKey: await _proofKey(env),
     );
     yield RemoteSetupProgress(RemoteSetupStep.linking, code: code);
     await _finishLink(cloud, code, instanceId, cancelled);
@@ -692,6 +754,7 @@ class RemoteAccessSetup {
         instanceName: instanceName,
         platform: platform,
         version: version,
+        heldKey: await _proofKey(env),
       );
       yield RemoteSetupProgress(RemoteSetupStep.linking, code: code);
       key = await _finishLink(cloud, code, instanceId, cancelled);

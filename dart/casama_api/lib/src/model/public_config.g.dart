@@ -53,7 +53,11 @@ abstract class _$PublicConfigCWProxy {
 
   PublicConfig sites(SitesConfig? sites);
 
+  PublicConfig cloudModels(PublicConfigCloudModels? cloudModels);
+
   PublicConfig keyProviders(PublicConfigKeyProviders? keyProviders);
+
+  PublicConfig movedTo(MovedTo? movedTo);
 
   /// Creates a new instance with the provided field values.
   /// Omitted fields keep their values; explicit `null` clears nullable fields.
@@ -86,7 +90,9 @@ abstract class _$PublicConfigCWProxy {
     PublicConfigSignupGate? signupGate,
     String? pushSenderId,
     SitesConfig? sites,
+    PublicConfigCloudModels? cloudModels,
     PublicConfigKeyProviders? keyProviders,
+    MovedTo? movedTo,
   });
 }
 
@@ -181,8 +187,15 @@ class _$PublicConfigCWProxyImpl implements _$PublicConfigCWProxy {
   PublicConfig sites(SitesConfig? sites) => call(sites: sites);
 
   @override
+  PublicConfig cloudModels(PublicConfigCloudModels? cloudModels) =>
+      call(cloudModels: cloudModels);
+
+  @override
   PublicConfig keyProviders(PublicConfigKeyProviders? keyProviders) =>
       call(keyProviders: keyProviders);
+
+  @override
+  PublicConfig movedTo(MovedTo? movedTo) => call(movedTo: movedTo);
 
   /// Creates a new instance with the provided field values.
   /// Omitted fields keep their values; explicit `null` clears nullable fields.
@@ -216,7 +229,9 @@ class _$PublicConfigCWProxyImpl implements _$PublicConfigCWProxy {
     Object? signupGate = const $CopyWithPlaceholder(),
     Object? pushSenderId = const $CopyWithPlaceholder(),
     Object? sites = const $CopyWithPlaceholder(),
+    Object? cloudModels = const $CopyWithPlaceholder(),
     Object? keyProviders = const $CopyWithPlaceholder(),
+    Object? movedTo = const $CopyWithPlaceholder(),
   }) {
     return PublicConfig(
       productName:
@@ -317,10 +332,18 @@ class _$PublicConfigCWProxyImpl implements _$PublicConfigCWProxy {
           ? _value.sites
           // ignore: cast_nullable_to_non_nullable
           : sites as SitesConfig?,
+      cloudModels: cloudModels == const $CopyWithPlaceholder()
+          ? _value.cloudModels
+          // ignore: cast_nullable_to_non_nullable
+          : cloudModels as PublicConfigCloudModels?,
       keyProviders: keyProviders == const $CopyWithPlaceholder()
           ? _value.keyProviders
           // ignore: cast_nullable_to_non_nullable
           : keyProviders as PublicConfigKeyProviders?,
+      movedTo: movedTo == const $CopyWithPlaceholder()
+          ? _value.movedTo
+          // ignore: cast_nullable_to_non_nullable
+          : movedTo as MovedTo?,
     );
   }
 }
@@ -414,11 +437,21 @@ PublicConfig _$PublicConfigFromJson(
         (v) =>
             v == null ? null : SitesConfig.fromJson(v as Map<String, dynamic>),
       ),
+      cloudModels: $checkedConvert(
+        'cloud_models',
+        (v) => v == null
+            ? null
+            : PublicConfigCloudModels.fromJson(v as Map<String, dynamic>),
+      ),
       keyProviders: $checkedConvert(
         'key_providers',
         (v) => v == null
             ? null
             : PublicConfigKeyProviders.fromJson(v as Map<String, dynamic>),
+      ),
+      movedTo: $checkedConvert(
+        'moved_to',
+        (v) => v == null ? null : MovedTo.fromJson(v as Map<String, dynamic>),
       ),
     );
     return val;
@@ -443,7 +476,9 @@ PublicConfig _$PublicConfigFromJson(
     'signupsByInvitation': 'signups_by_invitation',
     'signupGate': 'signup_gate',
     'pushSenderId': 'push_sender_id',
+    'cloudModels': 'cloud_models',
     'keyProviders': 'key_providers',
+    'movedTo': 'moved_to',
   },
 );
 
@@ -477,7 +512,9 @@ Map<String, dynamic> _$PublicConfigToJson(PublicConfig instance) =>
       'signup_gate': ?instance.signupGate?.toJson(),
       'push_sender_id': ?instance.pushSenderId,
       'sites': ?instance.sites?.toJson(),
+      'cloud_models': ?instance.cloudModels?.toJson(),
       'key_providers': ?instance.keyProviders?.toJson(),
+      'moved_to': ?instance.movedTo?.toJson(),
     };
 
 const _$PublicConfigDefaultReasoningEffortEnumEnumMap = {

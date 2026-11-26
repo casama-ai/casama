@@ -104,6 +104,16 @@ registerComponents(app);
 for (const route of Object.values(routes)) app.openAPIRegistry.registerPath(route);
 const doc = app.getOpenAPIDocument({ ...openApiConfig, openapi: "3.0.3" });
 if (doc.components?.schemas) delete doc.components.schemas.RunEvent;
+// A field that is one of several plain values (`"all"` or a list of ids) is a plain JSON value in
+// Dart: dart-dio can't model a union without a discriminator and writes a class that won't compile.
+for (const schema of Object.values(doc.components?.schemas ?? {})) {
+  const props = (schema as { properties?: Record<string, Record<string, unknown>> }).properties;
+  for (const [name, prop] of Object.entries(props ?? {})) {
+    const members = (prop.anyOf ?? prop.oneOf) as Array<Record<string, unknown>> | undefined;
+    if (members?.length && members.every((m) => !("$ref" in m) && m.type !== "object"))
+      (props as Record<string, unknown>)[name] = { description: prop.description };
+  }
+}
 const tmp = mkdtempSync(join(tmpdir(), "casama-gen-"));
 const specPath = join(tmp, "openapi.json");
 writeFileSync(specPath, JSON.stringify(doc));

@@ -142,8 +142,18 @@ same page serves the app, public links and PDF export.
 - **Storage.** Pages count toward the workspace's Library storage on Casama Cloud. See
   [Storage](/guide/library#storage).
 
+## For self-hosters
+
+Pages are served from their own address, separate from the app, so a page can never touch your
+Casama session. Set `PAGES_URL` to its public address and `PAGES_PORT` to serve it from the API
+process. A site or game's files are kept in the Library's object store; see
+[The Library for self-hosters](/guide/library#for-self-hosters). PDF export runs in a separate
+container: turn on the `pdf` Compose profile and set `PDF_RENDERER_URL=http://pdf:3000`. See
+[Page PDFs](/self-hosting/configuration#page-pdfs).
+
 ## Limits
 
+- On a self-hosted server, **Export PDF** fails until the server admin turns on the `pdf` profile.
 - The app doesn't set an expiry on public links, restore old versions or list a page's answers.
   Expiry and old versions are available through the API (`PATCH /v1/pages/{id}` with
   `expires_in_days`, and `POST /v1/pages/{id}/revert`); ask the bot for the answers.

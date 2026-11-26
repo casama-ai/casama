@@ -144,7 +144,9 @@ A workspace can make up to 20 public links a day from the Library.
 ### Reports
 
 Every public link has a way for viewers to report it. When three different people report the same
-link, it's hidden until Casama looks at it.
+link, it's hidden until the server's owner looks at it. On a self-hosted server, the owner reviews
+reports through the API (`GET /v1/admin/reports`, and
+`POST /v1/admin/creations/{id}/takedown` to take one down).
 
 ## Delete something
 
@@ -185,6 +187,35 @@ Library is full, new pages and kept files are refused and the bot tells you so. 
 videos and sounds stay on the bot's computer but aren't added to the chat or the Library. Nothing
 is ever deleted to make room. Delete things you don't need, or move to a bigger plan. See
 [Usage and budgets](/guide/usage).
+
+Self-hosted servers have no storage cap.
+
+## For self-hosters
+
+The API and worker store the Library's files, and new generated pictures, videos and sounds, in
+an object store. Older media is moved out of the database a little at a time, so database backups
+stop growing with media.
+
+By default the store is the `library` Docker volume at `/data/library`, and
+[backups](/self-hosting/operations#back-up-your-server) include it as `library.tar.gz`.
+
+To use S3-compatible storage instead, set these in your `.env`:
+
+| Name | Default | What it does |
+| --- | --- | --- |
+| `LIBRARY_OBJECT_STORE` | (filesystem) | `s3` to use S3-compatible storage. |
+| `LIBRARY_OBJECT_DIR` | `/data/library` | Folder for the filesystem store. |
+| `LIBRARY_S3_BUCKET` | (empty) | Bucket name. |
+| `LIBRARY_S3_ENDPOINT` | (AWS) | Endpoint, for example `https://<account>.r2.cloudflarestorage.com`. |
+| `LIBRARY_S3_REGION` | `auto` | Region. |
+| `LIBRARY_S3_ACCESS_KEY_ID` | (empty) | Access key. |
+| `LIBRARY_S3_SECRET_ACCESS_KEY` | (empty) | Secret key. |
+| `LIBRARY_S3_PREFIX` | `library/` | Key prefix inside the bucket. |
+
+With S3, `library.tar.gz` isn't made; back up the bucket with your storage provider's tools.
+
+Public links and pages are served from the pages address (`PAGES_URL`), never from the app's own
+address. See [Pages for self-hosters](/guide/pages#for-self-hosters).
 
 ## For developers
 

@@ -97,6 +97,7 @@ import 'package:casama_api/src/model/admin_user_list.dart';
 import 'package:casama_api/src/model/admin_vendor.dart';
 import 'package:casama_api/src/model/admin_vendor_list.dart';
 import 'package:casama_api/src/model/admit_waitlist_request.dart';
+import 'package:casama_api/src/model/age_band_result.dart';
 import 'package:casama_api/src/model/agent_import_plan.dart';
 import 'package:casama_api/src/model/agent_import_plan_leftovers_inner.dart';
 import 'package:casama_api/src/model/agent_import_plan_skipped_inner.dart';
@@ -115,6 +116,7 @@ import 'package:casama_api/src/model/app_catalog.dart';
 import 'package:casama_api/src/model/app_mention_ref.dart';
 import 'package:casama_api/src/model/apple_sign_in_token_request.dart';
 import 'package:casama_api/src/model/apple_sign_in_token_result.dart';
+import 'package:casama_api/src/model/apply_cloud_models_request.dart';
 import 'package:casama_api/src/model/apply_computer_update_request.dart';
 import 'package:casama_api/src/model/apply_skill_update_request.dart';
 import 'package:casama_api/src/model/approval.dart';
@@ -181,6 +183,7 @@ import 'package:casama_api/src/model/browser_waiting_event.dart';
 import 'package:casama_api/src/model/browser_waiting_event_payload.dart';
 import 'package:casama_api/src/model/browser_waiting_resolved_event.dart';
 import 'package:casama_api/src/model/browser_waiting_resolved_event_payload.dart';
+import 'package:casama_api/src/model/business_license_created.dart';
 import 'package:casama_api/src/model/calendar_trigger_config.dart';
 import 'package:casama_api/src/model/call_step_request.dart';
 import 'package:casama_api/src/model/call_step_result.dart';
@@ -228,7 +231,31 @@ import 'package:casama_api/src/model/checkpoint_list.dart';
 import 'package:casama_api/src/model/claim_mail_address_request.dart';
 import 'package:casama_api/src/model/claim_partner_request.dart';
 import 'package:casama_api/src/model/clean_storage_result.dart';
+import 'package:casama_api/src/model/cloud_connect_code.dart';
+import 'package:casama_api/src/model/cloud_connect_code_request.dart';
+import 'package:casama_api/src/model/cloud_link_status.dart';
+import 'package:casama_api/src/model/cloud_link_status_included.dart';
+import 'package:casama_api/src/model/cloud_link_status_jobs.dart';
+import 'package:casama_api/src/model/cloud_link_status_plan.dart';
+import 'package:casama_api/src/model/cloud_link_status_seats.dart';
+import 'package:casama_api/src/model/cloud_link_status_today.dart';
+import 'package:casama_api/src/model/cloud_link_status_trial.dart';
 import 'package:casama_api/src/model/cloud_models.dart';
+import 'package:casama_api/src/model/cloud_models_fallback.dart';
+import 'package:casama_api/src/model/cloud_models_off.dart';
+import 'package:casama_api/src/model/cloud_models_off_bots_inner.dart';
+import 'package:casama_api/src/model/cloud_models_off_bots_inner_to.dart';
+import 'package:casama_api/src/model/cloud_models_policy.dart';
+import 'package:casama_api/src/model/cloud_models_preview.dart';
+import 'package:casama_api/src/model/cloud_models_preview_bots_inner.dart';
+import 'package:casama_api/src/model/cloud_models_preview_bots_inner_from.dart';
+import 'package:casama_api/src/model/cloud_models_preview_jobs.dart';
+import 'package:casama_api/src/model/cloud_models_preview_jobs_embedding.dart';
+import 'package:casama_api/src/model/cloud_models_state.dart';
+import 'package:casama_api/src/model/cloud_models_state_me.dart';
+import 'package:casama_api/src/model/cloud_models_state_memory_reindex.dart';
+import 'package:casama_api/src/model/cloud_models_state_payer.dart';
+import 'package:casama_api/src/model/cloud_models_state_status_error.dart';
 import 'package:casama_api/src/model/coding_agent_info.dart';
 import 'package:casama_api/src/model/coding_agent_list.dart';
 import 'package:casama_api/src/model/coding_agent_test_result.dart';
@@ -257,6 +284,7 @@ import 'package:casama_api/src/model/computer_usage_day.dart';
 import 'package:casama_api/src/model/computer_vitals.dart';
 import 'package:casama_api/src/model/connect_app_request.dart';
 import 'package:casama_api/src/model/connect_app_response.dart';
+import 'package:casama_api/src/model/connect_cloud_models_request.dart';
 import 'package:casama_api/src/model/connect_domain_request.dart';
 import 'package:casama_api/src/model/connect_domain_result.dart';
 import 'package:casama_api/src/model/connect_domain_result_claim.dart';
@@ -276,6 +304,7 @@ import 'package:casama_api/src/model/create_admin_testimonial_request.dart';
 import 'package:casama_api/src/model/create_bot_link_request.dart';
 import 'package:casama_api/src/model/create_bot_request.dart';
 import 'package:casama_api/src/model/create_bot_share_request.dart';
+import 'package:casama_api/src/model/create_business_license_request.dart';
 import 'package:casama_api/src/model/create_channel_request.dart';
 import 'package:casama_api/src/model/create_checkpoint_request.dart';
 import 'package:casama_api/src/model/create_comp_code_request.dart';
@@ -298,6 +327,7 @@ import 'package:casama_api/src/model/create_knowledge_source_request_files_inner
 import 'package:casama_api/src/model/create_link_key_request.dart';
 import 'package:casama_api/src/model/create_local_device_request.dart';
 import 'package:casama_api/src/model/create_mcp_key_request.dart';
+import 'package:casama_api/src/model/create_move_request.dart';
 import 'package:casama_api/src/model/create_organization_request.dart';
 import 'package:casama_api/src/model/create_page_command_request.dart';
 import 'package:casama_api/src/model/create_page_watcher_request.dart';
@@ -348,6 +378,7 @@ import 'package:casama_api/src/model/deleted_computer.dart';
 import 'package:casama_api/src/model/deleted_conversation.dart';
 import 'package:casama_api/src/model/deleted_conversations.dart';
 import 'package:casama_api/src/model/deleted_device.dart';
+import 'package:casama_api/src/model/deleted_file_key.dart';
 import 'package:casama_api/src/model/deleted_highlight.dart';
 import 'package:casama_api/src/model/deleted_id.dart';
 import 'package:casama_api/src/model/deleted_knowledge_source.dart';
@@ -368,6 +399,8 @@ import 'package:casama_api/src/model/deleted_watcher.dart';
 import 'package:casama_api/src/model/deleted_widget_key.dart';
 import 'package:casama_api/src/model/device_access_requested_event.dart';
 import 'package:casama_api/src/model/device_access_requested_event_payload.dart';
+import 'package:casama_api/src/model/device_action_access_requested_event.dart';
+import 'package:casama_api/src/model/device_action_access_requested_event_payload.dart';
 import 'package:casama_api/src/model/device_browser_access_requested_event.dart';
 import 'package:casama_api/src/model/device_browser_access_requested_event_payload.dart';
 import 'package:casama_api/src/model/device_data_used_event.dart';
@@ -379,6 +412,7 @@ import 'package:casama_api/src/model/device_permission_needed_event.dart';
 import 'package:casama_api/src/model/device_permission_needed_event_payload.dart';
 import 'package:casama_api/src/model/device_permissions.dart';
 import 'package:casama_api/src/model/device_place.dart';
+import 'package:casama_api/src/model/device_quiet_result.dart';
 import 'package:casama_api/src/model/device_reading.dart';
 import 'package:casama_api/src/model/device_reading_input.dart';
 import 'package:casama_api/src/model/device_request.dart';
@@ -415,6 +449,10 @@ import 'package:casama_api/src/model/feedback_list.dart';
 import 'package:casama_api/src/model/feedback_request.dart';
 import 'package:casama_api/src/model/feedback_row.dart';
 import 'package:casama_api/src/model/feedback_sent.dart';
+import 'package:casama_api/src/model/file_key.dart';
+import 'package:casama_api/src/model/file_key_create.dart';
+import 'package:casama_api/src/model/file_key_created.dart';
+import 'package:casama_api/src/model/file_key_list.dart';
 import 'package:casama_api/src/model/file_search_result.dart';
 import 'package:casama_api/src/model/for_you.dart';
 import 'package:casama_api/src/model/for_you_approval.dart';
@@ -541,6 +579,7 @@ import 'package:casama_api/src/model/lease_changed_event.dart';
 import 'package:casama_api/src/model/lease_changed_event_payload.dart';
 import 'package:casama_api/src/model/leave_waitlist_request.dart';
 import 'package:casama_api/src/model/library_starter.dart';
+import 'package:casama_api/src/model/license_issued.dart';
 import 'package:casama_api/src/model/limit_reset_audience.dart';
 import 'package:casama_api/src/model/limit_reset_campaign.dart';
 import 'package:casama_api/src/model/limit_reset_campaign_input.dart';
@@ -611,7 +650,25 @@ import 'package:casama_api/src/model/model_fallback_event_payload.dart';
 import 'package:casama_api/src/model/model_option.dart';
 import 'package:casama_api/src/model/model_option_list.dart';
 import 'package:casama_api/src/model/model_policy.dart';
+import 'package:casama_api/src/model/move_check.dart';
+import 'package:casama_api/src/model/move_check_after.dart';
+import 'package:casama_api/src/model/move_check_after_invites_inner.dart';
+import 'package:casama_api/src/model/move_check_after_keys.dart';
+import 'package:casama_api/src/model/move_check_after_reconnect_inner.dart';
+import 'package:casama_api/src/model/move_check_request.dart';
+import 'package:casama_api/src/model/move_error.dart';
+import 'package:casama_api/src/model/move_finish_request.dart';
+import 'package:casama_api/src/model/move_fit.dart';
+import 'package:casama_api/src/model/move_fit_plan.dart';
+import 'package:casama_api/src/model/move_fit_target.dart';
 import 'package:casama_api/src/model/move_mail_address_request.dart';
+import 'package:casama_api/src/model/move_over.dart';
+import 'package:casama_api/src/model/move_part_received.dart';
+import 'package:casama_api/src/model/move_progress.dart';
+import 'package:casama_api/src/model/move_progress_progress.dart';
+import 'package:casama_api/src/model/move_start_request.dart';
+import 'package:casama_api/src/model/move_token.dart';
+import 'package:casama_api/src/model/moved_to.dart';
 import 'package:casama_api/src/model/newsletter_status.dart';
 import 'package:casama_api/src/model/notice_event.dart';
 import 'package:casama_api/src/model/notice_event_payload.dart';
@@ -688,6 +745,7 @@ import 'package:casama_api/src/model/payment_request_list.dart';
 import 'package:casama_api/src/model/payment_settings.dart';
 import 'package:casama_api/src/model/pending_invite.dart';
 import 'package:casama_api/src/model/pending_invite_list.dart';
+import 'package:casama_api/src/model/personal_license_request.dart';
 import 'package:casama_api/src/model/phone_call.dart';
 import 'package:casama_api/src/model/phone_call_list.dart';
 import 'package:casama_api/src/model/pin_live_card.dart';
@@ -734,6 +792,7 @@ import 'package:casama_api/src/model/provider_app_list.dart';
 import 'package:casama_api/src/model/provider_connect_request.dart';
 import 'package:casama_api/src/model/provider_connect_response.dart';
 import 'package:casama_api/src/model/public_config.dart';
+import 'package:casama_api/src/model/public_config_cloud_models.dart';
 import 'package:casama_api/src/model/public_config_key_providers.dart';
 import 'package:casama_api/src/model/public_config_signup_gate.dart';
 import 'package:casama_api/src/model/public_testimonial.dart';
@@ -767,6 +826,7 @@ import 'package:casama_api/src/model/remote_app_config_update_urls.dart';
 import 'package:casama_api/src/model/remove_pack200_response.dart';
 import 'package:casama_api/src/model/removed_link_server.dart';
 import 'package:casama_api/src/model/rename_two_step_factor_request.dart';
+import 'package:casama_api/src/model/renew_license_request.dart';
 import 'package:casama_api/src/model/reorder_admin_testimonials_request.dart';
 import 'package:casama_api/src/model/replaced_data_keys.dart';
 import 'package:casama_api/src/model/replay.dart';
@@ -837,6 +897,13 @@ import 'package:casama_api/src/model/secret_requested_event_payload.dart';
 import 'package:casama_api/src/model/secret_resolved_event.dart';
 import 'package:casama_api/src/model/secret_resolved_event_payload.dart';
 import 'package:casama_api/src/model/secret_store_settings.dart';
+import 'package:casama_api/src/model/selfhost_license_list.dart';
+import 'package:casama_api/src/model/selfhost_license_row.dart';
+import 'package:casama_api/src/model/selfhost_stats.dart';
+import 'package:casama_api/src/model/selfhost_stats_by_edition_inner.dart';
+import 'package:casama_api/src/model/selfhost_stats_by_engine_version_inner.dart';
+import 'package:casama_api/src/model/selfhost_stats_daily_active_inner.dart';
+import 'package:casama_api/src/model/selfhost_status.dart';
 import 'package:casama_api/src/model/send_message_request.dart';
 import 'package:casama_api/src/model/send_message_response.dart';
 import 'package:casama_api/src/model/server_capacity.dart';
@@ -846,6 +913,7 @@ import 'package:casama_api/src/model/server_capacity_latest.dart';
 import 'package:casama_api/src/model/set_admin_bot_request.dart';
 import 'package:casama_api/src/model/set_admin_pin_request.dart';
 import 'package:casama_api/src/model/set_ads_measurement_request.dart';
+import 'package:casama_api/src/model/set_age_band_request.dart';
 import 'package:casama_api/src/model/set_analytics_opt_out_request.dart';
 import 'package:casama_api/src/model/set_attribution_request.dart';
 import 'package:casama_api/src/model/set_bot_a2a_request.dart';
@@ -874,6 +942,7 @@ import 'package:casama_api/src/model/set_profile_space_request.dart';
 import 'package:casama_api/src/model/set_reaction_request.dart';
 import 'package:casama_api/src/model/set_remote_access_settings_request.dart';
 import 'package:casama_api/src/model/set_secret_store_request.dart';
+import 'package:casama_api/src/model/set_selfhost_license_request.dart';
 import 'package:casama_api/src/model/set_signup_gate_request.dart';
 import 'package:casama_api/src/model/set_support_ticket_status.dart';
 import 'package:casama_api/src/model/set_telephony_request.dart';
@@ -990,6 +1059,8 @@ import 'package:casama_api/src/model/tool_started_event_payload_place.dart';
 import 'package:casama_api/src/model/transcription.dart';
 import 'package:casama_api/src/model/transfer_out_request.dart';
 import 'package:casama_api/src/model/transfer_out_result.dart';
+import 'package:casama_api/src/model/trial_license_accepted.dart';
+import 'package:casama_api/src/model/trial_license_request.dart';
 import 'package:casama_api/src/model/ui_action_part.dart';
 import 'package:casama_api/src/model/ui_shown_event.dart';
 import 'package:casama_api/src/model/ui_shown_event_payload.dart';
@@ -1001,6 +1072,7 @@ import 'package:casama_api/src/model/update_admin_testimonial_request.dart';
 import 'package:casama_api/src/model/update_card_prefs.dart';
 import 'package:casama_api/src/model/update_channel_request.dart';
 import 'package:casama_api/src/model/update_chat_link_request.dart';
+import 'package:casama_api/src/model/update_cloud_models_request.dart';
 import 'package:casama_api/src/model/update_comp_code_request.dart';
 import 'package:casama_api/src/model/update_comp_request.dart';
 import 'package:casama_api/src/model/update_computer_request.dart';
@@ -1008,6 +1080,7 @@ import 'package:casama_api/src/model/update_conversation_request.dart';
 import 'package:casama_api/src/model/update_creation_request.dart';
 import 'package:casama_api/src/model/update_credential_request.dart';
 import 'package:casama_api/src/model/update_default_invite_request.dart';
+import 'package:casama_api/src/model/update_device_quiet_request.dart';
 import 'package:casama_api/src/model/update_domain_request.dart';
 import 'package:casama_api/src/model/update_gallery_request.dart';
 import 'package:casama_api/src/model/update_integration_request.dart';
@@ -1153,6 +1226,9 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return Accepted.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'AcceptedSuggestion':
           return AcceptedSuggestion.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'AccountAgeBand':
+          
+          
         case 'AccountDeletion':
           return AccountDeletion.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'Acquisition':
@@ -1337,6 +1413,8 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return AdminVendorList.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'AdmitWaitlistRequest':
           return AdmitWaitlistRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'AgeBandResult':
+          return AgeBandResult.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'AgentImportPlan':
           return AgentImportPlan.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'AgentImportPlanLeftoversInner':
@@ -1373,6 +1451,8 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return AppleSignInTokenRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'AppleSignInTokenResult':
           return AppleSignInTokenResult.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'ApplyCloudModelsRequest':
+          return ApplyCloudModelsRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'ApplyComputerUpdateRequest':
           return ApplyComputerUpdateRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'ApplySkillUpdateRequest':
@@ -1517,6 +1597,8 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return BrowserWaitingResolvedEvent.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'BrowserWaitingResolvedEventPayload':
           return BrowserWaitingResolvedEventPayload.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'BusinessLicenseCreated':
+          return BusinessLicenseCreated.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'CalendarTriggerConfig':
           return CalendarTriggerConfig.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'CallStepRequest':
@@ -1617,8 +1699,56 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return ClaimPartnerRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'CleanStorageResult':
           return CleanStorageResult.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'CloudConnectCode':
+          return CloudConnectCode.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'CloudConnectCodeRequest':
+          return CloudConnectCodeRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'CloudLinkStatus':
+          return CloudLinkStatus.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'CloudLinkStatusIncluded':
+          return CloudLinkStatusIncluded.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'CloudLinkStatusJobs':
+          return CloudLinkStatusJobs.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'CloudLinkStatusPlan':
+          return CloudLinkStatusPlan.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'CloudLinkStatusSeats':
+          return CloudLinkStatusSeats.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'CloudLinkStatusToday':
+          return CloudLinkStatusToday.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'CloudLinkStatusTrial':
+          return CloudLinkStatusTrial.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'CloudModels':
           return CloudModels.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'CloudModelsFallback':
+          return CloudModelsFallback.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'CloudModelsOff':
+          return CloudModelsOff.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'CloudModelsOffBotsInner':
+          return CloudModelsOffBotsInner.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'CloudModelsOffBotsInnerTo':
+          return CloudModelsOffBotsInnerTo.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'CloudModelsPolicy':
+          return CloudModelsPolicy.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'CloudModelsPreview':
+          return CloudModelsPreview.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'CloudModelsPreviewBotsInner':
+          return CloudModelsPreviewBotsInner.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'CloudModelsPreviewBotsInnerFrom':
+          return CloudModelsPreviewBotsInnerFrom.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'CloudModelsPreviewJobs':
+          return CloudModelsPreviewJobs.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'CloudModelsPreviewJobsEmbedding':
+          return CloudModelsPreviewJobsEmbedding.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'CloudModelsState':
+          return CloudModelsState.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'CloudModelsStateMe':
+          return CloudModelsStateMe.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'CloudModelsStateMemoryReindex':
+          return CloudModelsStateMemoryReindex.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'CloudModelsStatePayer':
+          return CloudModelsStatePayer.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'CloudModelsStateStatusError':
+          return CloudModelsStateStatusError.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'CodingAgentInfo':
           return CodingAgentInfo.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'CodingAgentList':
@@ -1678,6 +1808,8 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return ConnectAppRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'ConnectAppResponse':
           return ConnectAppResponse.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'ConnectCloudModelsRequest':
+          return ConnectCloudModelsRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'ConnectDomainRequest':
           return ConnectDomainRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'ConnectDomainResult':
@@ -1722,6 +1854,8 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return CreateBotRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'CreateBotShareRequest':
           return CreateBotShareRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'CreateBusinessLicenseRequest':
+          return CreateBusinessLicenseRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'CreateChannelRequest':
           return CreateChannelRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'CreateCheckpointRequest':
@@ -1766,6 +1900,8 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return CreateLocalDeviceRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'CreateMcpKeyRequest':
           return CreateMcpKeyRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'CreateMoveRequest':
+          return CreateMoveRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'CreateOrganizationRequest':
           return CreateOrganizationRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'CreatePageCommandRequest':
@@ -1872,6 +2008,8 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return DeletedConversations.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'DeletedDevice':
           return DeletedDevice.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'DeletedFileKey':
+          return DeletedFileKey.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'DeletedHighlight':
           return DeletedHighlight.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'DeletedId':
@@ -1912,6 +2050,10 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return DeviceAccessRequestedEvent.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'DeviceAccessRequestedEventPayload':
           return DeviceAccessRequestedEventPayload.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'DeviceActionAccessRequestedEvent':
+          return DeviceActionAccessRequestedEvent.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'DeviceActionAccessRequestedEventPayload':
+          return DeviceActionAccessRequestedEventPayload.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'DeviceBrowserAccessRequestedEvent':
           return DeviceBrowserAccessRequestedEvent.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'DeviceBrowserAccessRequestedEventPayload':
@@ -1940,6 +2082,8 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return DevicePermissions.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'DevicePlace':
           return DevicePlace.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'DeviceQuietResult':
+          return DeviceQuietResult.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'DeviceReading':
           return DeviceReading.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'DeviceReadingInput':
@@ -2018,6 +2162,14 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
         case 'FeedbackStatus':
           
           
+        case 'FileKey':
+          return FileKey.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'FileKeyCreate':
+          return FileKeyCreate.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'FileKeyCreated':
+          return FileKeyCreated.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'FileKeyList':
+          return FileKeyList.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'FileSearchResult':
           return FileSearchResult.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'ForYou':
@@ -2294,6 +2446,14 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return LeaveWaitlistRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'LibraryStarter':
           return LibraryStarter.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'LicenseEdition':
+          
+          
+        case 'LicenseFeature':
+          
+          
+        case 'LicenseIssued':
+          return LicenseIssued.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'LimitResetAudience':
           return LimitResetAudience.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'LimitResetCampaign':
@@ -2434,8 +2594,47 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return ModelOptionList.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'ModelPolicy':
           return ModelPolicy.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'MoveCheck':
+          return MoveCheck.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'MoveCheckAfter':
+          return MoveCheckAfter.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'MoveCheckAfterInvitesInner':
+          return MoveCheckAfterInvitesInner.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'MoveCheckAfterKeys':
+          return MoveCheckAfterKeys.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'MoveCheckAfterReconnectInner':
+          return MoveCheckAfterReconnectInner.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'MoveCheckRequest':
+          return MoveCheckRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'MoveError':
+          return MoveError.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'MoveFinishRequest':
+          return MoveFinishRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'MoveFit':
+          return MoveFit.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'MoveFitPlan':
+          return MoveFitPlan.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'MoveFitTarget':
+          return MoveFitTarget.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'MoveMailAddressRequest':
           return MoveMailAddressRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'MoveOver':
+          return MoveOver.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'MovePartReceived':
+          return MovePartReceived.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'MoveProgress':
+          return MoveProgress.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'MoveProgressProgress':
+          return MoveProgressProgress.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'MoveStartRequest':
+          return MoveStartRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'MoveState':
+          
+          
+        case 'MoveToken':
+          return MoveToken.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'MovedTo':
+          return MovedTo.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'NewsletterStatus':
           return NewsletterStatus.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'NoticeEvent':
@@ -2600,6 +2799,8 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return PendingInvite.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'PendingInviteList':
           return PendingInviteList.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'PersonalLicenseRequest':
+          return PersonalLicenseRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'PhoneCall':
           return PhoneCall.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'PhoneCallList':
@@ -2704,6 +2905,8 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           
         case 'PublicConfig':
           return PublicConfig.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'PublicConfigCloudModels':
+          return PublicConfigCloudModels.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'PublicConfigKeyProviders':
           return PublicConfigKeyProviders.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'PublicConfigSignupGate':
@@ -2773,6 +2976,8 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return RemovedLinkServer.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'RenameTwoStepFactorRequest':
           return RenameTwoStepFactorRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'RenewLicenseRequest':
+          return RenewLicenseRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'ReorderAdminTestimonialsRequest':
           return ReorderAdminTestimonialsRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'ReplacedDataKeys':
@@ -2937,6 +3142,20 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return SecretResolvedEventPayload.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'SecretStoreSettings':
           return SecretStoreSettings.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'SelfhostLicenseList':
+          return SelfhostLicenseList.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'SelfhostLicenseRow':
+          return SelfhostLicenseRow.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'SelfhostStats':
+          return SelfhostStats.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'SelfhostStatsByEditionInner':
+          return SelfhostStatsByEditionInner.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'SelfhostStatsByEngineVersionInner':
+          return SelfhostStatsByEngineVersionInner.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'SelfhostStatsDailyActiveInner':
+          return SelfhostStatsDailyActiveInner.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'SelfhostStatus':
+          return SelfhostStatus.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'SendMessageRequest':
           return SendMessageRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'SendMessageResponse':
@@ -2955,6 +3174,8 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return SetAdminPinRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'SetAdsMeasurementRequest':
           return SetAdsMeasurementRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'SetAgeBandRequest':
+          return SetAgeBandRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'SetAnalyticsOptOutRequest':
           return SetAnalyticsOptOutRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'SetAttributionRequest':
@@ -3011,6 +3232,8 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return SetRemoteAccessSettingsRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'SetSecretStoreRequest':
           return SetSecretStoreRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'SetSelfhostLicenseRequest':
+          return SetSelfhostLicenseRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'SetSignupGateRequest':
           return SetSignupGateRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'SetSupportTicketStatus':
@@ -3267,6 +3490,10 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return TransferOutRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'TransferOutResult':
           return TransferOutResult.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'TrialLicenseAccepted':
+          return TrialLicenseAccepted.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'TrialLicenseRequest':
+          return TrialLicenseRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'UiActionPart':
           return UiActionPart.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'UiShownEvent':
@@ -3289,6 +3516,8 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return UpdateChannelRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'UpdateChatLinkRequest':
           return UpdateChatLinkRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'UpdateCloudModelsRequest':
+          return UpdateCloudModelsRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'UpdateCompCodeRequest':
           return UpdateCompCodeRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'UpdateCompRequest':
@@ -3303,6 +3532,8 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return UpdateCredentialRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'UpdateDefaultInviteRequest':
           return UpdateDefaultInviteRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'UpdateDeviceQuietRequest':
+          return UpdateDeviceQuietRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'UpdateDomainRequest':
           return UpdateDomainRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'UpdateGalleryRequest':

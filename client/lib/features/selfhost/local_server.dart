@@ -1,61 +1,59 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
-import 'dart:isolate';
+import 'dart:math';
 
-import 'package:archive/archive.dart';
+import 'package:casama_selfhost/casama_selfhost.dart' as sh;
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
+
 import '../../core/distribution.dart';
 
-/// One-click local server (SPEC: Ops extras; D-147, D-216): on a Mac or Linux desktop, the app
-/// checks for Docker, downloads the self-host bundle pinned to the published images, runs its
-/// installer for this machine only (`install.sh --local --pull <images>`), waits until the API
-/// answers, and connects to it. Windows has no bash or OpenSSL out of the box, so it isn't offered
-/// there yet.
-// Off in every build while Casama is Cloud-only (docs/ENGINE-SPLIT-PLAN.md §7.3); the code stays for when self-hosting returns.
-bool get localServerSupported => debugLocalServerOn && localServerPlatform;
+/// One-click local server (D-147, D-216, docs/SELF-HOSTING-PLAN.md §6.4): on a Mac (direct
+/// download, not the Mac App Store build), Linux or Windows desktop, the app checks for Docker,
+/// reads the newest self-host release (`selfhost-latest/manifest.json`), and installs it with the
+/// shared Dart installer (`casama_selfhost`: no bash, no OpenSSL, so Windows works through Docker
+/// Desktop and WSL2), then connects to it. The free personal license from the person's Casama
+/// Cloud account goes into the install as `CASAMA_LICENSE_KEY`; without one the server starts in
+/// its setup state and asks for a license itself.
+bool get localServerSupported => debugLocalServerOn ?? localServerPlatform;
 
-/// Lets tests run the hidden local server code (so it still works when it comes back). Always
-/// false in the app.
+/// Lets tests force the local server on or off; null (the app) leaves it to [localServerPlatform].
 @visibleForTesting
-bool debugLocalServerOn = false;
+bool? debugLocalServerOn;
 
-/// The desktops a local server runs on: a Mac or Linux, not the web or the Mac App Store build.
-bool get localServerPlatform => !kIsWeb && !isMacAppStoreBuild && (defaultTargetPlatform == TargetPlatform.macOS || defaultTargetPlatform == TargetPlatform.linux);
+/// The desktops a local server runs on: a Mac, Linux or Windows, not the web, phones or the Mac
+/// App Store build (its sandbox can't run Docker).
+bool get localServerPlatform =>
+    !kIsWeb &&
+    !isMacAppStoreBuild &&
+    (defaultTargetPlatform == TargetPlatform.macOS || defaultTargetPlatform == TargetPlatform.linux || defaultTargetPlatform == TargetPlatform.windows);
 
-/// The repository the bundle and images come from, and the tag that marks the commit whose images
-/// are published (moved by scripts/publish-images.sh).
-const selfhostRepo = 'stackwares/casama';
-const selfhostTag = 'selfhost';
-
-/// The Compose project and container prefix of a server this app installs.
+/// The Compose project and container prefix of a server this app installs (D-309), so it never
+/// collides with another Casama stack on the same computer.
 const appStackName = 'casama-app';
 
-/// A build-time override for the bundle (a tar.gz holding install.sh); its images are `latest`.
-const selfhostBundleOverride = String.fromEnvironment('CASAMA_SELFHOST_BUNDLE');
+/// A build-time override for the release manifest (a test release); empty means `selfhost-latest`.
+const selfhostManifestOverride = String.fromEnvironment('CASAMA_SELFHOST_MANIFEST');
 
 enum LocalServerStep { checking, downloading, installing, starting, ready, failed }
 
 class LocalServerProgress {
-  const LocalServerProgress(this.step, {this.detail, this.fraction, this.bytes});
+  const LocalServerProgress(this.step, {this.detail, this.fraction, this.bytes, this.code});
   final LocalServerStep step;
   final String? detail;
 
-  /// How much of the download is done, when the server says how big it is (GitHub doesn't for a
-  /// repository archive).
+  /// How much of the download is done.
   final double? fraction;
 
-  /// Bytes downloaded so far.
+  /// Bytes downloaded so far, when known.
   final int? bytes;
-}
 
-/// Which source to download and which image tag goes with it.
-class SelfhostRelease {
-  const SelfhostRelease(this.bundleUrl, this.images);
-  final String bundleUrl;
-  final String images;
+  /// A failure's stable code from the installer (`update_rolled_back`, `pull_failed`, …).
+  final String? code;
+
+  /// An update that didn't come up healthy and went back to the release before it.
+  bool get rolledBack => code == 'update_rolled_back';
 }
 
 /// The host ports the stack publishes (all on loopback).
@@ -65,10 +63,6 @@ class LocalServerPorts {
   final int https;
   final int pages;
   final int turn;
-
-  Map<String, Object> toJson() => {'http': http, 'https': https, 'pages': pages, 'turn': turn};
-  static LocalServerPorts fromJson(Map<String, dynamic> j) =>
-      LocalServerPorts(http: j['http'] as int, https: j['https'] as int, pages: j['pages'] as int, turn: j['turn'] as int);
 }
 
 /// Runs processes (a seam for tests).
@@ -78,10 +72,22 @@ abstract class ProcessRunner {
 }
 
 class SystemProcessRunner implements ProcessRunner {
+  static String get _sep => Platform.isWindows ? ';' : ':';
+
   /// Apps opened from Finder or a desktop launcher get a bare PATH (/usr/bin:/bin:…), which misses
   /// `docker` and Docker Desktop's credential helper, so add the places they're installed.
   static Map<String, String> get environment {
     final env = Map<String, String>.of(Platform.environment);
+    if (Platform.isWindows) {
+      final key = env.keys.firstWhere((k) => k.toUpperCase() == 'PATH', orElse: () => 'Path');
+      final path = (env[key] ?? '').split(';');
+      final extra = [
+        r'C:\Program Files\Docker\Docker\resources\bin',
+        if ((env['ProgramFiles'] ?? '').isNotEmpty) '${env['ProgramFiles']}\\Docker\\Docker\\resources\\bin',
+      ];
+      env[key] = [...path, ...extra.where((p) => !path.contains(p))].join(';');
+      return env;
+    }
     final home = env['HOME'] ?? '';
     final extra = [
       '/usr/local/bin',
@@ -99,11 +105,21 @@ class SystemProcessRunner implements ProcessRunner {
   /// The full path of [exe] on [environment]'s PATH. Dart looks a bare name up on this app's own
   /// PATH, not on the one passed in `environment`, so an app opened from Finder never found
   /// `docker` and the guided setup said "Starting Docker…" forever while Docker ran.
-  static String resolve(String exe, {Map<String, String>? env, bool Function(String path)? isFile}) {
-    if (exe.contains('/')) return exe;
+  static String resolve(String exe, {Map<String, String>? env, bool Function(String path)? isFile, bool? windows}) {
+    final win = windows ?? Platform.isWindows;
+    if (exe.contains('/') || (win && exe.contains(r'\'))) return exe;
     final found = isFile ?? (p) => File(p).existsSync();
-    for (final dir in ((env ?? environment)['PATH'] ?? '').split(':')) {
-      if (dir.isNotEmpty && found('$dir/$exe')) return '$dir/$exe';
+    final e = env ?? environment;
+    final path = win ? (e.entries.firstWhere((x) => x.key.toUpperCase() == 'PATH', orElse: () => const MapEntry('PATH', '')).value) : (e['PATH'] ?? '');
+    for (final dir in path.split(win ? ';' : _sep)) {
+      if (dir.isEmpty) continue;
+      if (win) {
+        for (final ext in const ['.exe', '.cmd', '']) {
+          if (found('$dir\\$exe$ext')) return '$dir\\$exe$ext';
+        }
+      } else if (found('$dir/$exe')) {
+        return '$dir/$exe';
+      }
     }
     return exe;
   }
@@ -111,13 +127,54 @@ class SystemProcessRunner implements ProcessRunner {
   @override
   Future<ProcessResult> run(String exe, List<String> args, {String? cwd}) {
     final env = environment;
-    return Process.run(resolve(exe, env: env), args, workingDirectory: cwd, environment: env);
+    return Process.run(
+      resolve(exe, env: env),
+      args,
+      workingDirectory: cwd,
+      environment: env,
+    );
   }
 
   @override
   Future<Process> start(String exe, List<String> args, {String? cwd}) {
     final env = environment;
-    return Process.start(resolve(exe, env: env), args, workingDirectory: cwd, environment: env);
+    return Process.start(
+      resolve(exe, env: env),
+      args,
+      workingDirectory: cwd,
+      environment: env,
+    );
+  }
+}
+
+/// The installer's process runner with the app's PATH (see [SystemProcessRunner.environment]):
+/// the package's own runner uses this app's bare PATH, which misses `docker` when opened from Finder.
+class AppInstallerRunner implements sh.ProcessRunner {
+  const AppInstallerRunner();
+
+  @override
+  Future<ProcessResult> run(String executable, List<String> arguments, {String? workingDirectory, Map<String, String>? environment}) {
+    final env = {...SystemProcessRunner.environment, ...?environment};
+    return Process.run(
+      SystemProcessRunner.resolve(executable, env: env),
+      arguments,
+      workingDirectory: workingDirectory,
+      environment: env,
+    );
+  }
+
+  @override
+  Future<int> runToFile(String executable, List<String> arguments, File out, {String? workingDirectory}) async {
+    final env = SystemProcessRunner.environment;
+    final proc = await Process.start(
+      SystemProcessRunner.resolve(executable, env: env),
+      arguments,
+      workingDirectory: workingDirectory,
+      environment: env,
+    );
+    final sink = out.openWrite();
+    await Future.wait([proc.stdout.pipe(sink), proc.stderr.drain<void>()]);
+    return proc.exitCode;
   }
 }
 
@@ -134,34 +191,73 @@ Future<bool> systemPortFree(int port) async {
   return true;
 }
 
+/// A random UUID v4 (the server's `CASAMA_INSTANCE_ID`).
+String newInstanceId([Random? random]) {
+  final r = random ?? Random.secure();
+  final b = List<int>.generate(16, (_) => r.nextInt(256));
+  b[6] = (b[6] & 0x0f) | 0x40;
+  b[8] = (b[8] & 0x3f) | 0x80;
+  final h = b.map((x) => x.toRadixString(16).padLeft(2, '0')).join();
+  return '${h.substring(0, 8)}-${h.substring(8, 12)}-${h.substring(12, 16)}-${h.substring(16, 20)}-${h.substring(20)}';
+}
+
+/// Gets the license key for a new install's [instanceId] and release [engineVersion], or null.
+typedef LicenseFetcher = Future<String?> Function(String instanceId, String engineVersion);
+
+/// Installs, starts and updates the server on this computer with `casama_selfhost`.
 class LocalServerManager {
   LocalServerManager({
     ProcessRunner? runner,
-    http.Client? client,
+    sh.SelfhostInstaller? installer,
+    this.manifestSource,
     Future<Directory> Function()? home,
     Future<bool> Function(int port)? portFree,
-    this.bundleUrl = selfhostBundleOverride,
-    this.healthTimeout = const Duration(minutes: 15),
+    http.Client? client,
+    Future<File?> Function()? legacyEnv,
   }) : runner = runner ?? SystemProcessRunner(),
-       _ownClient = client == null,
        client = client ?? http.Client(),
+       installer = installer ?? sh.SelfhostInstaller(runner: const AppInstallerRunner(), client: client),
        portFree = portFree ?? systemPortFree,
-       home = home ?? (() async => Directory('${(await getApplicationSupportDirectory()).path}/local-server'));
+       home = home ?? (() async => sh.defaultInstallDir()),
+       legacyEnv = legacyEnv ?? findLegacyEnv;
 
   final ProcessRunner runner;
   final http.Client client;
+  final sh.SelfhostInstaller installer;
 
-  /// Whether [client] is this manager's own (the app), not one a test handed in.
-  final bool _ownClient;
+  /// Where the newest release comes from (tests); null reads `selfhost-latest`.
+  final Future<sh.SelfhostManifest> Function()? manifestSource;
+
+  /// The install folder (`~/.casama/selfhost`, shared with `casama selfhost`).
   final Future<Directory> Function() home;
   final Future<bool> Function(int port) portFree;
 
-  /// A fixed bundle (tests, CASAMA_SELFHOST_BUNDLE); empty means the published release.
-  final String bundleUrl;
-  final Duration healthTimeout;
+  /// The `.env` of this app's local server from before the release bundle, if there is one.
+  final Future<File?> Function() legacyEnv;
 
-  LocalServerPorts _ports = const LocalServerPorts();
-  String get url => 'http://localhost:${_ports.http}';
+  /// Before 2026-11-26 the app installed its server (also the `casama-app` stack) from a source
+  /// checkout under `<app support>/local-server/casama-<commit>/`, keys in `infra/compose/.env`.
+  /// Its Docker volumes still hold that server's data, made with those passwords.
+  static Future<File?> findLegacyEnv() async {
+    try {
+      final root = Directory('${(await getApplicationSupportDirectory()).path}${Platform.pathSeparator}local-server');
+      if (!root.existsSync()) return null;
+      final envs = [
+        for (final d in root.listSync().whereType<Directory>())
+          if (d.uri.pathSegments.where((s) => s.isNotEmpty).last.startsWith('casama-'))
+            File([d.path, 'infra', 'compose', '.env'].join(Platform.pathSeparator)),
+      ].where((f) => f.existsSync()).toList()
+        ..sort((a, b) => b.lastModifiedSync().compareTo(a.lastModifiedSync()));
+      return envs.isEmpty ? null : envs.first;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  String? _url;
+
+  /// The address of the server this app installed, once known.
+  String get url => _url ?? 'http://localhost:8080';
 
   /// Why Docker can't be used, or null when it's ready.
   Future<String?> dockerProblem() async {
@@ -176,68 +272,80 @@ class LocalServerManager {
     }
   }
 
-  /// The commit whose images are published, so the bundle's compose file matches them exactly.
-  Future<SelfhostRelease> release() async {
-    if (bundleUrl.isNotEmpty) return SelfhostRelease(bundleUrl, 'latest');
-    try {
-      final r = await client
-          .get(Uri.parse('https://api.github.com/repos/$selfhostRepo/commits/$selfhostTag'), headers: {'Accept': 'application/vnd.github.sha'})
-          .timeout(const Duration(seconds: 15));
-      final sha = r.body.trim();
-      if (r.statusCode == 200 && RegExp(r'^[0-9a-f]{40}$').hasMatch(sha)) {
-        return SelfhostRelease('https://github.com/$selfhostRepo/archive/$sha.tar.gz', sha.substring(0, 12));
-      }
-    } catch (_) {}
-    // GitHub's API limits anonymous calls per address; the tag's archive pairs with `latest`.
-    return const SelfhostRelease('https://github.com/$selfhostRepo/archive/refs/tags/$selfhostTag.tar.gz', 'latest');
+  /// The newest release (or the build's override).
+  Future<sh.SelfhostManifest> latest() {
+    final f = manifestSource;
+    if (f != null) return f();
+    return sh.fetchManifest(url: selfhostManifestOverride.isEmpty ? null : Uri.parse(selfhostManifestOverride), client: client);
   }
 
-  /// Downloads and unpacks [url] into [root]; returns the folder holding install.sh. The archive is
-  /// the whole repository (about 190 MB), so it goes to a file, and both the download and the
-  /// unpacking run on other isolates: held in memory and handled here, it took close to a gigabyte,
-  /// froze the window while it unpacked, and came in at about 1 MB a second however fast the
-  /// connection, because this isolate reads one piece between two frames of the setup screen's
-  /// animation. [onProgress] gets the bytes so far and the total when the server gives one.
-  Future<Directory> download(Directory root, String url, {void Function(int received, int? total)? onProgress}) async {
-    final archive = File('${root.path}/.bundle.tar.gz');
+  /// What starting the server still downloads, and the disk its images need, for the setup page:
+  /// the images this install pulls on this computer's CPU type, minus what Docker already has.
+  /// Null when the release has no sizes (releases before they were measured) or Docker can't say.
+  Future<sh.DownloadEstimate?> estimate() async {
     try {
-      if (_ownClient) {
-        await fetchBundle(url, archive.path, onProgress: onProgress);
-      } else {
-        final res = await client.send(http.Request('GET', Uri.parse(url)));
-        if (res.statusCode != 200) throw StateError('The server bundle could not be downloaded (${res.statusCode})');
-        final length = res.contentLength ?? 0;
-        await _save(res.stream, archive, length > 0 ? length : null, (received, total) => onProgress?.call(received, total));
-      }
-      final scripts = await _unpackInBackground(archive.path, root.path);
-      for (final path in scripts) {
-        await runner.run('chmod', ['+x', path]);
-      }
-    } finally {
-      if (archive.existsSync()) archive.deleteSync();
-    }
-    final dir = _findInstaller(root);
-    if (dir == null) throw StateError('The bundle has no install.sh');
-    return dir;
-  }
-
-  /// Whether a server already answers on [url] (a second start just reconnects).
-  Future<bool> _ready() async {
-    try {
-      final r = await client.get(Uri.parse('$url/readyz')).timeout(const Duration(seconds: 5));
-      return r.statusCode == 200;
+      final dir = await home();
+      final existing = _isInstall(dir);
+      final manifest = existing ? (sh.installedManifest(dir) ?? await latest()) : await latest();
+      if (!existing) return await installer.estimateDownload(manifest);
+      final env = sh.EnvFile.read(File('${dir.path}${Platform.pathSeparator}.env'));
+      return await installer.estimateDownload(manifest, profiles: sh.profilesFor(env).toSet(), withDesktop: env['CASAMA_WITH_DESKTOP'] == 'on');
     } catch (_) {
-      return false;
+      return null;
     }
   }
 
-  Directory? _findInstaller(Directory root) {
-    if (!root.existsSync()) return null;
-    if (File('${root.path}/install.sh').existsSync()) return root;
-    for (final d in root.listSync().whereType<Directory>()) {
-      if (File('${d.path}/install.sh').existsSync()) return d;
+  static bool _isInstall(Directory dir) =>
+      File('${dir.path}${Platform.pathSeparator}.env').existsSync() && File('${dir.path}${Platform.pathSeparator}images.env').existsSync();
+
+  /// The address a person (and this app) uses for the install in [dir]: its public URL, which is
+  /// `http://localhost:<port>` for a server on this computer.
+  static String addressOf(Directory dir) {
+    final env = sh.EnvFile.read(File('${dir.path}${Platform.pathSeparator}.env'));
+    return env['CASAMA_PUBLIC_URL'] ?? sh.readyUrl(dir);
+  }
+
+  /// The folder of the server this app installed, and the address it answers on. Null when there
+  /// is none. Casama Link (D-296) switches that server's settings and runs the installer again.
+  Future<({Directory dir, String url})?> installed() async {
+    final dir = await home();
+    if (!_isInstall(dir)) return null;
+    return (dir: dir, url: _url = addressOf(dir));
+  }
+
+  /// The release the install in [dir] runs (`CASAMA_ENGINE_VERSION`), or null.
+  String? installedVersion(Directory dir) => sh.installedVersion(dir);
+
+  /// The instance id the next install uses: the existing one when there's an install, else a new
+  /// one (asked for before installing, so the personal license can be made for it).
+  Future<String> instanceId() async {
+    final dir = await home();
+    final existing = sh.EnvFile.read(File('${dir.path}${Platform.pathSeparator}.env')).value('CASAMA_INSTANCE_ID');
+    return existing ?? (_pendingId ??= newInstanceId());
+  }
+
+  String? _pendingId;
+
+  /// Runs the installer again on the install in [dir] (it keeps `.env` and restarts what
+  /// changed). Each progress line goes to [onLine]; returns 0 when it worked.
+  Future<int> rerunInstaller(Directory dir, void Function(String line) onLine) async {
+    final manifest = sh.installedManifest(dir);
+    if (manifest == null) {
+      onLine('No release recorded in ${dir.path}; install it again from the app.');
+      return 1;
     }
-    return null;
+    try {
+      await for (final s in installer.install(manifest: manifest, dir: dir, options: sh.InstallOptions())) {
+        if (s.step != sh.InstallStep.download || s.fraction == 0) onLine(s.message);
+      }
+      return 0;
+    } on sh.SelfhostException catch (e) {
+      onLine(e.message);
+      return 1;
+    } catch (e) {
+      onLine('$e');
+      return 1;
+    }
   }
 
   /// The first free port from [from], skipping [taken].
@@ -259,272 +367,126 @@ class LocalServerManager {
     return LocalServerPorts(http: await pick(8080), https: await pick(8443), pages: await pick(8790), turn: await pick(3478));
   }
 
-  File _state(Directory root) => File('${root.path}/local-server.json');
-
-  /// What the first install chose (ports and image tag), so later starts keep the same server.
-  Future<({LocalServerPorts ports, String images, String? names})?> _saved(Directory root) async {
+  /// Whether a server already answers on [address] (a second start just reconnects).
+  Future<bool> _ready(String address) async {
     try {
-      final j = jsonDecode(await _state(root).readAsString()) as Map<String, dynamic>;
-      return (ports: LocalServerPorts.fromJson(j['ports'] as Map<String, dynamic>), images: j['images'] as String, names: j['names'] as String?);
+      final r = await client.get(Uri.parse('$address/readyz')).timeout(const Duration(seconds: 5));
+      return r.statusCode == 200;
     } catch (_) {
-      return null;
+      return false;
     }
   }
 
-  /// The folder of the server this app installed (where install.sh is), and the address it answers
-  /// on. Null when this app never installed one. Casama Link (D-296) switches that server's
-  /// settings and runs its installer again.
-  Future<({Directory dir, String url})?> installed() async {
-    final root = await home();
-    final dir = _findInstaller(root);
-    final saved = await _saved(root);
-    if (dir == null || saved == null) return null;
-    return (dir: dir, url: 'http://localhost:${saved.ports.http}');
-  }
-
-  /// Runs the installer again as it is: it keeps the `.env` and restarts what changed. Each line
-  /// it prints goes to [onLine]; returns its exit code.
-  Future<int> rerunInstaller(Directory dir, void Function(String line) onLine) async {
-    final proc = await runner.start('bash', ['install.sh'], cwd: dir.path);
-    final done = <Future<void>>[];
-    for (final s in [proc.stdout, proc.stderr]) {
-      done.add(
-        s.transform(utf8.decoder).transform(const LineSplitter()).forEach((l) {
-          final text = l.replaceAll(RegExp(r'\x1B\[[0-9;]*m'), '').trim();
-          if (text.isNotEmpty) onLine(text);
-        }),
-      );
-    }
-    final code = await proc.exitCode;
-    await Future.wait(done);
-    return code;
-  }
-
-  /// Stops the installer and the docker commands it started.
-  Future<void> _stop(Process proc) async {
-    try {
-      await runner.run('pkill', ['-TERM', '-P', '${proc.pid}']);
-    } catch (_) {}
-    proc.kill();
-  }
-
-  /// The installer while it runs.
-  Process? _proc;
-
-  /// Runs the whole thing, reporting progress; ends with [LocalServerStep.ready] and the server's
-  /// address. Cancelling the subscription stops the installer straight away (a generator would
-  /// only stop at its next line of output, and an image pull can be quiet for minutes).
-  Stream<LocalServerProgress> start() {
-    StreamSubscription<LocalServerProgress>? sub;
-    late final StreamController<LocalServerProgress> out;
-    out = StreamController<LocalServerProgress>(
-      onListen: () => sub = _run().listen(out.add, onError: out.addError, onDone: out.close),
-      onCancel: () async {
-        final p = _proc;
-        _proc = null;
-        if (p != null) await _stop(p);
-        unawaited(sub?.cancel());
-      },
-    );
-    return out.stream;
-  }
-
-  Stream<LocalServerProgress> _run() async* {
+  /// Installs (or starts again) and connects; ends with [LocalServerStep.ready] and the server's
+  /// address, or [LocalServerStep.failed]. On a new install [license] is asked for the key for its
+  /// instance id and release (the free personal license from Casama Cloud); without one (null, or
+  /// no [license]) the server starts in its setup state and asks for a license itself.
+  Stream<LocalServerProgress> start({LicenseFetcher? license}) async* {
     yield const LocalServerProgress(LocalServerStep.checking);
-    final root = await home();
-    final saved = await _saved(root);
-    if (saved != null) _ports = saved.ports;
-    if (await _ready()) {
-      yield LocalServerProgress(LocalServerStep.ready, detail: url);
-      return;
+    final dir = await home();
+    final existing = _isInstall(dir);
+    if (existing) {
+      final address = addressOf(dir);
+      _url = address;
+      if (await _ready(address)) {
+        yield LocalServerProgress(LocalServerStep.ready, detail: address);
+        return;
+      }
     }
     final problem = await dockerProblem();
     if (problem != null) {
       yield LocalServerProgress(LocalServerStep.failed, detail: problem);
       return;
     }
-
-    // The bundle holds the .env with every key and the data's passwords, so once it's there it's
-    // reused as it is, with the images it was installed with.
-    var dir = _findInstaller(root);
-    var images = saved?.images ?? 'latest';
-    if (dir == null) {
-      yield const LocalServerProgress(LocalServerStep.downloading, fraction: 0);
-      try {
-        final rel = await release();
-        images = rel.images;
-        await root.create(recursive: true);
-        final progress = StreamController<({int received, int? total})>();
-        final future = download(
-          root,
-          rel.bundleUrl,
-          onProgress: (received, total) => progress.add((received: received, total: total)),
-        ).whenComplete(progress.close);
-        await for (final p in progress.stream) {
-          final total = p.total;
-          yield LocalServerProgress(LocalServerStep.downloading, fraction: total == null ? null : p.received / total, bytes: p.received);
-        }
-        dir = await future;
-      } catch (e) {
-        yield LocalServerProgress(LocalServerStep.failed, detail: '$e');
-        return;
-      }
-    }
-    if (saved == null) {
-      try {
-        _ports = await _pickPorts();
-      } catch (e) {
-        yield LocalServerProgress(LocalServerStep.failed, detail: '$e');
-        return;
-      }
-    }
-    // A server this app installs has its own Compose project and container names (D-309), so it
-    // never takes over, or collides with, another Casama stack on the same computer (one installed
-    // by hand, or a development stack). Servers installed before this keep the names they have.
-    final names = saved == null ? appStackName : saved.names;
-    await _state(root).writeAsString(jsonEncode({'ports': _ports.toJson(), 'images': images, 'names': ?names}));
-    final settings = File('${root.path}/local-settings.env');
-    await settings.writeAsString(
-      [
-        'HTTPS_PORT=${_ports.https}',
-        'PAGES_PORT=${_ports.pages}',
-        'CASAMA_PAGES_URL=http://localhost:${_ports.pages}',
-        'TURN_HOST_PORT=${_ports.turn}',
-        if (names != null) ...['COMPOSE_PROJECT_NAME=$names', 'CASAMA_CONTAINER_PREFIX=$names'],
-        '',
-      ].join('\n'),
-    );
-
-    yield const LocalServerProgress(LocalServerStep.installing);
-    final proc = await runner.start('bash', [
-      'install.sh',
-      '--local',
-      '--http-port',
-      '${_ports.http}',
-      '--pull',
-      images,
-      '--settings',
-      settings.path,
-    ], cwd: dir.path);
-    _proc = proc;
-    final lines = StreamController<String>();
-    for (final s in [proc.stdout, proc.stderr]) {
-      s.transform(utf8.decoder).transform(const LineSplitter()).listen(lines.add, onError: (_) {});
-    }
-    final exit = proc.exitCode.whenComplete(() => Future<void>.delayed(const Duration(milliseconds: 50), lines.close));
-    await for (final l in lines.stream) {
-      // The installer's headings are bold (ANSI); the sheet shows plain text.
-      final text = l.replaceAll(RegExp(r'\x1B\[[0-9;]*m'), '').trim();
-      if (text.isNotEmpty) yield LocalServerProgress(LocalServerStep.installing, detail: text);
-    }
-    final code = await exit;
-    if (_proc == proc) _proc = null;
-    if (code != 0) {
-      yield LocalServerProgress(LocalServerStep.failed, detail: 'The installer stopped (exit $code). See its last lines above.');
+    final sh.SelfhostManifest manifest;
+    try {
+      manifest = existing ? (sh.installedManifest(dir) ?? await latest()) : await latest();
+    } on sh.SelfhostException catch (e) {
+      yield LocalServerProgress(LocalServerStep.failed, detail: e.message, code: e.code);
+      return;
+    } catch (e) {
+      yield LocalServerProgress(LocalServerStep.failed, detail: 'The release list could not be read: $e');
       return;
     }
-    yield const LocalServerProgress(LocalServerStep.starting);
-    final until = DateTime.now().add(healthTimeout);
-    while (DateTime.now().isBefore(until)) {
-      if (await _ready()) {
-        yield LocalServerProgress(LocalServerStep.ready, detail: url);
+    sh.InstallOptions options;
+    if (existing) {
+      options = sh.InstallOptions();
+    } else {
+      final LocalServerPorts ports;
+      try {
+        ports = await _pickPorts();
+      } catch (e) {
+        yield LocalServerProgress(LocalServerStep.failed, detail: '$e');
         return;
       }
-      await Future<void>.delayed(const Duration(seconds: 2));
+      final id = await instanceId();
+      String? key;
+      if (license != null) key = await license(id, manifest.version);
+      options = sh.InstallOptions(
+        httpPort: ports.http,
+        httpsPort: ports.https,
+        instanceId: id,
+        licenseKey: key,
+        adoptEnv: await legacyEnv(),
+        settings: {
+          'PAGES_PORT': '${ports.pages}',
+          'CASAMA_PAGES_URL': 'http://localhost:${ports.pages}',
+          'TURN_HOST_PORT': '${ports.turn}',
+          'COMPOSE_PROJECT_NAME': appStackName,
+          'CASAMA_CONTAINER_PREFIX': appStackName,
+        },
+      );
     }
-    yield LocalServerProgress(LocalServerStep.failed, detail: 'The server didn\'t answer in time. Run `docker compose ps` in ${dir.path}/infra/compose to see why.');
+    yield* _follow(installer.install(manifest: manifest, dir: dir, options: options), dir);
   }
-}
 
-/// Unpacks the gzipped tar at [archivePath] into [rootPath], reading and writing files rather than
-/// holding the archive in memory, and returns the shell scripts in it (to be made runnable). Runs
-/// on its own isolate (see [LocalServerManager.download]).
-List<String> unpackBundle(String archivePath, String rootPath) {
-  final tarPath = '$archivePath.tar';
-  final scripts = <String>[];
-  try {
-    final packed = InputFileStream(archivePath);
-    final unpacked = OutputFileStream(tarPath);
+  /// Moves the install to [manifest]: backup, pull, start, health check, and back to the release
+  /// before it when the new one isn't healthy (then the last progress is failed with
+  /// [LocalServerProgress.rolledBack]).
+  Stream<LocalServerProgress> update(sh.SelfhostManifest manifest) async* {
+    yield const LocalServerProgress(LocalServerStep.checking);
+    final dir = await home();
+    yield* _follow(installer.update(dir: dir, manifest: manifest), dir);
+  }
+
+  /// The installer's steps as the setup page shows them.
+  Stream<LocalServerProgress> _follow(Stream<sh.InstallProgress> steps, Directory dir) async* {
     try {
-      GZipDecoder().decodeStream(packed, unpacked);
-    } finally {
-      unpacked.closeSync();
-      packed.closeSync();
-    }
-    final tar = InputFileStream(tarPath);
-    try {
-      for (final f in TarDecoder().decodeStream(tar).files) {
-        if (!f.isFile || f.name.contains('..') || f.name.startsWith('/')) continue;
-        final path = '$rootPath/${f.name}';
-        File(path).parent.createSync(recursive: true);
-        final out = OutputFileStream(path);
-        try {
-          f.writeContent(out);
-        } finally {
-          out.closeSync();
+      await for (final s in steps) {
+        switch (s.step) {
+          case sh.InstallStep.checkDocker:
+            yield LocalServerProgress(LocalServerStep.checking, detail: s.message);
+          case sh.InstallStep.download:
+            yield LocalServerProgress(LocalServerStep.downloading, fraction: s.fraction, detail: s.message);
+          case sh.InstallStep.extract ||
+              sh.InstallStep.configure ||
+              sh.InstallStep.backup ||
+              sh.InstallStep.pull ||
+              sh.InstallStep.start ||
+              sh.InstallStep.rollback:
+            yield LocalServerProgress(LocalServerStep.installing, detail: '==> ${_heading(s)}');
+          case sh.InstallStep.waitReady:
+            yield LocalServerProgress(LocalServerStep.starting, detail: s.message);
+          case sh.InstallStep.done:
+            final address = addressOf(dir);
+            _url = address;
+            yield LocalServerProgress(LocalServerStep.ready, detail: address);
+            return;
         }
-        if (f.name.endsWith('.sh')) scripts.add(path);
       }
-    } finally {
-      tar.closeSync();
+      // The stream ended without `done` (nothing more to do): the server is there.
+      yield LocalServerProgress(LocalServerStep.ready, detail: _url = addressOf(dir));
+    } on sh.SelfhostException catch (e) {
+      yield LocalServerProgress(LocalServerStep.failed, detail: e.message, code: e.code);
+    } catch (e) {
+      yield LocalServerProgress(LocalServerStep.failed, detail: '$e');
     }
-  } finally {
-    final tarFile = File(tarPath);
-    if (tarFile.existsSync()) tarFile.deleteSync();
   }
-  return scripts;
-}
 
-/// Writes [body] to [file], reporting the bytes so far every half megabyte and at the end: there
-/// are thousands of pieces, and each report redraws the screen.
-Future<void> _save(Stream<List<int>> body, File file, int? total, void Function(int received, int? total) report) async {
-  final sink = file.openWrite();
-  var received = 0, reported = 0;
-  try {
-    await for (final piece in body) {
-      sink.add(piece);
-      received += piece.length;
-      if (received - reported >= 512 * 1024) {
-        reported = received;
-        report(received, total);
-      }
-    }
-  } finally {
-    await sink.close();
-  }
-  report(received, total);
-}
-
-/// Downloads [url] into the file at [path] on its own isolate (see [LocalServerManager.download]).
-Future<void> fetchBundle(String url, String path, {void Function(int received, int? total)? onProgress}) async {
-  final progress = ReceivePort();
-  final sub = progress.listen((message) {
-    final (received, total) = message as (int, int?);
-    onProgress?.call(received, total);
-  });
-  try {
-    await _fetchInBackground(url, path, progress.sendPort);
-    // Let the last reports through before the port closes.
-    await Future<void>.delayed(Duration.zero);
-  } finally {
-    await sub.cancel();
-    progress.close();
-  }
-}
-
-// Each of these is a function of its own on purpose: what runs on another isolate is sent there
-// with everything in scope where it was written, and a callback or a port's listener can't be sent.
-Future<List<String>> _unpackInBackground(String archivePath, String rootPath) => Isolate.run(() => unpackBundle(archivePath, rootPath));
-
-Future<void> _fetchInBackground(String url, String path, SendPort progress) => Isolate.run(() => _fetch(url, path, progress));
-
-Future<void> _fetch(String url, String path, SendPort progress) async {
-  final client = HttpClient();
-  try {
-    final res = await (await client.getUrl(Uri.parse(url))).close();
-    if (res.statusCode != 200) throw StateError('The server bundle could not be downloaded (${res.statusCode})');
-    await _save(res, File(path), res.contentLength > 0 ? res.contentLength : null, (received, total) => progress.send((received, total)));
-  } finally {
-    client.close(force: true);
-  }
+  /// The installer's message with the words the setup page reads its parts from.
+  static String _heading(sh.InstallProgress s) => switch (s.step) {
+    sh.InstallStep.pull => 'Pulling: ${s.message}',
+    sh.InstallStep.start => 'Starting the stack: ${s.message}',
+    _ => s.message,
+  };
 }

@@ -1,5 +1,6 @@
 import 'dart:ui' as ui;
 
+import 'package:flutter/foundation.dart' show defaultTargetPlatform, kIsWeb;
 import 'package:material_ui/material_ui.dart';
 
 import '../theme/app_colors.dart';
@@ -37,13 +38,20 @@ class Glass extends StatelessWidget {
       ),
       child: child,
     );
-    if (blur <= 0) return box;
+    if (blur <= 0 || !liveBlur) return box;
     return ClipRRect(
       borderRadius: borderRadius,
       child: BackdropFilter(filter: ui.ImageFilter.blur(sigmaX: blur, sigmaY: blur), child: box),
     );
   }
 }
+
+/// Whether [Glass] blurs live. Not on Windows: there Impeller draws through OpenGL ES (ANGLE), and
+/// each blur copies and re-blurs the whole window on every frame. Profiled 2026-11-26 while
+/// resizing the window: the sidebar, computer panel and composer blurs took about 35 ms of a
+/// 42 ms raster frame, and a resize step took 95 ms. The frosted tint alone looks nearly the same
+/// over the wallpaper, whose photo is already blurred.
+bool get liveBlur => kIsWeb || defaultTargetPlatform != TargetPlatform.windows;
 
 /// The frosted surface without a live blur: a translucent surface tint, lighter at the top, with
 /// an optional border. Over the wallpaper (whose photo is already blurred once and cached) it reads

@@ -73,10 +73,15 @@ class UserBubble extends StatelessWidget {
     this.onReact,
     this.myReaction,
     this.sentAt,
+    this.invitedAuthor,
   });
   final String text;
   final List<AttachmentRef> attachments;
   final List<MessageAppMention> apps;
+
+  /// Moved from another server, written by someone who hasn't accepted their invite yet: shown
+  /// as "name (invited)" over the message (SELFHOST-CLOUD-MODELS-PLAN §7.5).
+  final String? invitedAuthor;
 
   /// When it was sent (D-387), shown in its menu.
   final DateTime? sentAt;
@@ -187,10 +192,21 @@ class UserBubble extends StatelessWidget {
             ),
           )
         : null;
-    if (attachments.isEmpty && branches == null && note == null) return _bubble(context);
+    final author = invitedAuthor == null
+        ? null
+        : Padding(
+            key: const Key('movedAuthor'),
+            padding: const EdgeInsets.only(bottom: 2, right: 4),
+            child: Text(
+              context.l10n.chatMovedAuthorInvited(invitedAuthor!),
+              style: context.textTheme.labelSmall?.copyWith(color: scheme.onSurfaceVariant),
+            ),
+          );
+    if (attachments.isEmpty && branches == null && note == null && author == null) return _bubble(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
+        ?author,
         if (attachments.isNotEmpty)
           MediaGroup(files: attachments, alignment: WrapAlignment.end),
         if (text.isNotEmpty) ...[

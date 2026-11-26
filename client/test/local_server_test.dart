@@ -1,54 +1,19 @@
+// One-click local server (D-147, docs/SELF-HOSTING-PLAN.md §6.4): the app installs and updates
+// the server on this computer with the shared Dart installer (casama_selfhost), faked here.
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:archive/archive.dart';
+import 'package:casama/features/selfhost/local_server.dart';
+import 'package:casama_selfhost/casama_selfhost.dart' as sh;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
-import 'package:casama/features/selfhost/local_server.dart';
-
-class FakeProcess implements Process {
-  FakeProcess(this.lines, this.code, {this.hang = false});
-  final List<String> lines;
-  final int code;
-  final bool hang;
-  final _exit = Completer<int>();
-  final _out = StreamController<List<int>>();
-  var killed = false;
-  @override
-  Stream<List<int>> get stdout {
-    for (final l in lines) {
-      _out.add(utf8.encode('$l\n'));
-    }
-    if (!hang) unawaited(_out.close());
-    return _out.stream;
-  }
-
-  @override
-  Stream<List<int>> get stderr => const Stream.empty();
-  @override
-  Future<int> get exitCode => hang ? _exit.future : Future.value(code);
-  @override
-  IOSink get stdin => throw UnimplementedError();
-  @override
-  int get pid => 1;
-  @override
-  bool kill([ProcessSignal signal = ProcessSignal.sigterm]) {
-    killed = true;
-    if (!_exit.isCompleted) _exit.complete(-15);
-    unawaited(_out.close());
-    return true;
-  }
-}
 
 class FakeRunner implements ProcessRunner {
-  FakeRunner({this.docker = true, this.installCode = 0, this.hang = false});
+  FakeRunner({this.docker = true});
   final bool docker;
-  final int installCode;
-  final bool hang;
   final calls = <String>[];
-  FakeProcess? last;
   @override
   Future<ProcessResult> run(String exe, List<String> args, {String? cwd}) async {
     calls.add('$exe ${args.join(' ')}');
@@ -57,181 +22,214 @@ class FakeRunner implements ProcessRunner {
   }
 
   @override
-  Future<Process> start(String exe, List<String> args, {String? cwd}) async {
-    calls.add('$exe ${args.join(' ')} @${_base(cwd!)}'.replaceAll(RegExp(r'\S*local-settings\.env'), 'SETTINGS'));
-    return last = FakeProcess(['\x1B[1m==> Starting the stack\x1B[0m', 'Casama is running'], installCode, hang: hang);
+  Future<Process> start(String exe, List<String> args, {String? cwd}) => throw UnimplementedError();
+}
+
+sh.SelfhostManifest manifestFor(String version, {int minAppBuild = 0}) => sh.SelfhostManifest(
+  version: version,
+  released: DateTime.utc(2026, 11, 26),
+  bundleUrl: Uri.parse('https://example.test/casama-selfhost-$version.tar.gz'),
+  bundleSha256: 'a' * 64,
+  minAppBuild: minAppBuild,
+  images: {for (final k in sh.imageVariables.keys) k: 'ghcr.io/casama-ai/$k@sha256:${'b' * 64}'},
+);
+
+/// The installer as the app drives it: records what it was asked and writes the files a real
+/// install leaves (.env, images.env, manifest.json).
+class FakeInstaller extends sh.SelfhostInstaller {
+  final installs = <({String version, sh.InstallOptions options})>[];
+  final updates = <String>[];
+
+  /// The code the next update fails with (`update_rolled_back`, …), if any.
+  String? updateFails;
+
+  /// The code the next install fails with, if any.
+  String? installFails;
+
+  void _write(Directory dir, sh.SelfhostManifest m, {sh.InstallOptions? o}) {
+    dir.createSync(recursive: true);
+    final env = File('${dir.path}/.env');
+    if (!env.existsSync()) {
+      env.writeAsStringSync(
+        'CASAMA_PUBLIC_URL=http://localhost:${o?.httpPort ?? 80}\nHTTP_PORT=${o?.httpPort ?? 80}\nCASAMA_INSTANCE_ID=${o?.instanceId}\nCASAMA_LICENSE_KEY=${o?.licenseKey ?? ''}\n',
+      );
+    }
+    File('${dir.path}/images.env').writeAsStringSync(m.imagesEnv());
+    File('${dir.path}/manifest.json').writeAsStringSync(jsonEncode(m.toJson()));
+  }
+
+  @override
+  Stream<sh.InstallProgress> install({required sh.SelfhostManifest manifest, required Directory dir, required sh.InstallOptions options}) async* {
+    installs.add((version: manifest.version, options: options));
+    yield const sh.InstallProgress(sh.InstallStep.checkDocker, 'Checking Docker');
+    yield sh.InstallProgress(sh.InstallStep.download, 'Downloading', fraction: 0.5);
+    yield const sh.InstallProgress(sh.InstallStep.configure, 'Generating secrets');
+    yield const sh.InstallProgress(sh.InstallStep.pull, 'Pulling images');
+    if (installFails != null) throw sh.SelfhostException(installFails!, 'Couldn\'t pull the images.');
+    _write(dir, manifest, o: options);
+    yield const sh.InstallProgress(sh.InstallStep.start, 'Starting the stack');
+    yield const sh.InstallProgress(sh.InstallStep.waitReady, 'Waiting for /readyz');
+    yield sh.InstallProgress(sh.InstallStep.done, 'Casama ${manifest.version} is running');
+  }
+
+  @override
+  Stream<sh.InstallProgress> update({required Directory dir, required sh.SelfhostManifest manifest, bool force = false}) async* {
+    updates.add(manifest.version);
+    yield const sh.InstallProgress(sh.InstallStep.backup, 'Backing up the database');
+    yield const sh.InstallProgress(sh.InstallStep.pull, 'Pulling images');
+    if (updateFails != null) {
+      yield const sh.InstallProgress(sh.InstallStep.rollback, 'Going back');
+      throw sh.SelfhostException(updateFails!, 'Casama ${manifest.version} did not start, so the server went back. The database backup is in backups/.');
+    }
+    _write(dir, manifest);
+    yield sh.InstallProgress(sh.InstallStep.done, 'Updated to ${manifest.version}');
   }
 }
 
-/// The last part of [path] whichever separator it uses: the code under test joins with `/`, while
-/// `Directory.listSync` on Windows hands back `\`.
-String _base(String path) => path.split(RegExp(r'[/\\]')).last;
-
-List<int> bundle() {
-  final a = Archive()..addFile(ArchiveFile('casama-main/install.sh', 9, utf8.encode('#!/bin/sh')));
-  return GZipEncoder().encode(TarEncoder().encode(a));
-}
-
-/// One-click local server (D-147).
 void main() {
   test('a bare program name is found on the added PATH, not this app\'s own', () {
     final env = {'PATH': '/usr/bin:/bin:/usr/local/bin:/opt/homebrew/bin'};
     bool isFile(String p) => p == '/usr/local/bin/docker' || p == '/opt/homebrew/bin/docker';
-    expect(SystemProcessRunner.resolve('docker', env: env, isFile: isFile), '/usr/local/bin/docker');
-    expect(SystemProcessRunner.resolve('/bin/sh', env: env, isFile: isFile), '/bin/sh');
-    expect(SystemProcessRunner.resolve('nope', env: env, isFile: isFile), 'nope');
-    expect(SystemProcessRunner.environment['PATH'], contains('/usr/local/bin'));
+    expect(SystemProcessRunner.resolve('docker', env: env, isFile: isFile, windows: false), '/usr/local/bin/docker');
+    expect(SystemProcessRunner.resolve('/bin/sh', env: env, isFile: isFile, windows: false), '/bin/sh');
+    expect(SystemProcessRunner.resolve('nope', env: env, isFile: isFile, windows: false), 'nope');
+    if (!Platform.isWindows) expect(SystemProcessRunner.environment['PATH'], contains('/usr/local/bin'));
+  });
+
+  test('on Windows a program is found with its .exe on the semicolon PATH', () {
+    final env = {'Path': r'C:\Windows;C:\Program Files\Docker\Docker\resources\bin'};
+    bool isFile(String p) => p == r'C:\Program Files\Docker\Docker\resources\bin\docker.exe';
+    expect(SystemProcessRunner.resolve('docker', env: env, isFile: isFile, windows: true), r'C:\Program Files\Docker\Docker\resources\bin\docker.exe');
+  });
+
+  test('instance ids are random UUID v4s', () {
+    final id = newInstanceId();
+    expect(id, matches(RegExp(r'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$')));
+    expect(newInstanceId(), isNot(id));
   });
 
   late Directory tmp;
-  setUp(() => tmp = Directory.systemTemp.createTempSync('kls'));
+  late FakeInstaller installer;
+  setUp(() {
+    tmp = Directory.systemTemp.createTempSync('kls');
+    installer = FakeInstaller();
+  });
   tearDown(() => tmp.deleteSync(recursive: true));
 
-  final requests = <Uri>[];
-  setUp(requests.clear);
+  LocalServerManager manager({FakeRunner? runner, bool up = false, Set<int> busy = const {}, String version = '2026.11.26-c20edba', File? legacy}) => LocalServerManager(
+    legacyEnv: () async => legacy,
+    runner: runner ?? FakeRunner(),
+    installer: installer,
+    manifestSource: () async => manifestFor(version),
+    client: MockClient((r) async => http.Response('', up ? 200 : 503)),
+    home: () async => tmp,
+    portFree: (p) async => !busy.contains(p),
+  );
 
-  LocalServerManager manager(FakeRunner r, {bool up = false, Set<int> busy = const {}, String bundleUrl = 'https://example.test/casama.tar.gz', String? sha}) {
-    var installed = false;
-    final client = MockClient((req) async {
-      requests.add(req.url);
-      if (req.url.host == 'api.github.com') return sha == null ? http.Response('rate limited', 403) : http.Response(sha, 200);
-      if (req.url.path.endsWith('.tar.gz')) return http.Response.bytes(bundle(), 200);
-      if (req.url.path == '/readyz') return http.Response('', (up || installed) ? 200 : 503);
-      return http.Response('', 404);
-    });
-    return LocalServerManager(
-      runner: _Hook(r, () => installed = true),
-      client: client,
-      home: () async => tmp,
-      portFree: (p) async => !busy.contains(p),
-      bundleUrl: bundleUrl,
-      healthTimeout: const Duration(seconds: 5),
+  test('installs the newest release on free ports with its own stack name, and connects', () async {
+    final steps = await manager(busy: {8080, 8443, 3478}).start().toList();
+    expect(steps.first.step, LocalServerStep.checking);
+    expect(
+      steps.map((s) => s.step),
+      containsAllInOrder([LocalServerStep.downloading, LocalServerStep.installing, LocalServerStep.starting, LocalServerStep.ready]),
     );
-  }
-
-  test('checks Docker, unpacks the bundle, runs the installer for this machine and waits for it', () async {
-    final r = FakeRunner();
-    final steps = await manager(r).start().toList();
-    expect(steps.map((s) => s.step).toSet(), containsAll([LocalServerStep.checking, LocalServerStep.downloading, LocalServerStep.installing, LocalServerStep.ready]));
-    expect(steps.last.detail, 'http://localhost:8080');
-    expect(r.calls, contains('bash install.sh --local --http-port 8080 --pull latest --settings SETTINGS @casama-main'));
-    final lines = steps.where((s) => s.step == LocalServerStep.installing).map((s) => s.detail);
-    expect(lines, containsAll(['==> Starting the stack', 'Casama is running']));
-    expect(File('${tmp.path}/casama-main/install.sh').existsSync(), isTrue);
-    expect(File('${tmp.path}/local-settings.env').readAsStringSync(), 'HTTPS_PORT=8443\nPAGES_PORT=8790\nCASAMA_PAGES_URL=http://localhost:8790\nTURN_HOST_PORT=3478\nCOMPOSE_PROJECT_NAME=casama-app\nCASAMA_CONTAINER_PREFIX=casama-app\n');
+    expect(steps.where((s) => s.step == LocalServerStep.downloading).first.fraction, 0.5);
+    // The setup page reads its parts from these headings.
+    expect(steps.map((s) => s.detail), containsAll(['==> Pulling: Pulling images', '==> Starting the stack: Starting the stack']));
+    expect(steps.last.detail, 'http://localhost:8081');
+    final o = installer.installs.single.options;
+    expect(o.local, isTrue);
+    expect((o.httpPort, o.httpsPort), (8081, 8444));
+    expect(o.settings, containsPair('COMPOSE_PROJECT_NAME', appStackName));
+    expect(o.settings, containsPair('TURN_HOST_PORT', '3479'));
+    expect(o.licenseKey, isNull, reason: 'no license asked for: the server starts in its setup state');
+    expect((await manager().installed())!.url, 'http://localhost:8081');
   });
 
-  test('the bundle goes to a file and is unpacked from it, saying how much has come', () async {
-    // GitHub sends a repository archive without a length: bytes are all there is to show.
-    // One bundle for both ends: the archive carries the current time, so two can differ in size.
-    final bytes = bundle();
-    final client = MockClient.streaming((req, _) async => http.StreamedResponse(Stream.value(bytes), 200));
-    final m = LocalServerManager(runner: FakeRunner(), client: client, home: () async => tmp);
-    final seen = <(int, int?)>[];
-    final dir = await m.download(tmp, 'https://example.test/casama.tar.gz', onProgress: (received, total) => seen.add((received, total)));
-    expect(_base(dir.path), 'casama-main');
-    expect(dir.parent.path, tmp.path);
-    expect(File('${dir.path}/install.sh').readAsStringSync(), '#!/bin/sh');
-    expect(seen.last, (bytes.length, null));
-    // Nothing of the download is left behind.
-    expect(tmp.listSync().map((e) => _base(e.path)), ['casama-main']);
-  });
-
-  test('the app\'s own download runs off this isolate, follows the redirect and reports as it goes', () async {
-    final server = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
-    addTearDown(() => server.close(force: true));
-    final bytes = bundle();
-    server.listen((req) async {
-      if (req.uri.path == '/archive') {
-        // GitHub answers the archive address with a redirect to the file.
-        await req.response.redirect(Uri.parse('http://127.0.0.1:${server.port}/file'));
-      } else if (req.uri.path == '/file') {
-        req.response.add(bytes);
-        await req.response.close();
-      } else {
-        req.response.statusCode = 404;
-        await req.response.close();
-      }
-    });
-    final seen = <(int, int?)>[];
-    final file = File('${tmp.path}/b.tar.gz');
-    await fetchBundle('http://127.0.0.1:${server.port}/archive', file.path, onProgress: (received, total) => seen.add((received, total)));
-    expect(file.readAsBytesSync(), bytes);
-    expect(seen.last.$1, bytes.length);
-    await expectLater(fetchBundle('http://127.0.0.1:${server.port}/nope', file.path), throwsA(isA<StateError>()));
-  });
-
-  test('downloads the commit the published images were built from, and pulls those images', () async {
-    final sha = 'a' * 12 + 'b' * 28;
-    final r = FakeRunner();
-    final steps = await manager(r, bundleUrl: '', sha: sha).start().toList();
+  test('the personal license is asked for with the instance id and release, and goes into the install', () async {
+    final m = manager();
+    final id = await m.instanceId();
+    String? askedId, askedVersion;
+    final steps = await m
+        .start(
+          license: (i, v) async {
+            askedId = i;
+            askedVersion = v;
+            return 'personal-key';
+          },
+        )
+        .toList();
     expect(steps.last.step, LocalServerStep.ready);
-    expect(requests.map((u) => '$u'), contains('https://github.com/stackwares/casama/archive/$sha.tar.gz'));
-    expect(r.calls, contains('bash install.sh --local --http-port 8080 --pull aaaaaaaaaaaa --settings SETTINGS @casama-main'));
-    expect(jsonDecode(File('${tmp.path}/local-server.json').readAsStringSync())['images'], 'aaaaaaaaaaaa');
+    expect((askedId, askedVersion), (id, '2026.11.26-c20edba'));
+    final o = installer.installs.single.options;
+    expect(o.instanceId, id);
+    expect(o.licenseKey, 'personal-key');
+    // The id stays the install's own afterwards.
+    expect(await m.instanceId(), id);
   });
 
-  test('without the GitHub API it falls back to the tag\'s archive and the latest images', () async {
-    final r = FakeRunner();
-    await manager(r, bundleUrl: '').start().toList();
-    expect(requests.map((u) => '$u'), contains('https://github.com/stackwares/casama/archive/refs/tags/selfhost.tar.gz'));
-    expect(r.calls, contains('bash install.sh --local --http-port 8080 --pull latest --settings SETTINGS @casama-main'));
+  test("a new install keeps the keys of the app's earlier local server, whose data is still in Docker", () async {
+    final legacy = File('${tmp.path}/old/infra/compose/.env')
+      ..parent.createSync(recursive: true)
+      ..writeAsStringSync('POSTGRES_PASSWORD=old\n');
+    await manager(legacy: legacy).start().drain<void>();
+    expect(installer.installs.single.options.adoptEnv?.path, legacy.path);
+    // Without one there is nothing to adopt.
+    installer.installs.clear();
+    tmp.listSync().where((e) => e.path.endsWith('.env')).forEach((e) => e.deleteSync());
+    await manager().start().drain<void>();
+    expect(installer.installs.single.options.adoptEnv, isNull);
   });
 
-  test('moves off ports that are taken, and keeps the same ports and bundle on later starts', () async {
-    final steps = await manager(FakeRunner(), busy: {8080, 8081, 443, 8443, 3478}).start().toList();
-    expect(steps.last.detail, 'http://localhost:8082');
-    expect(File('${tmp.path}/local-settings.env').readAsStringSync(), contains('HTTPS_PORT=8444\n'));
-    expect(File('${tmp.path}/local-settings.env').readAsStringSync(), contains('TURN_HOST_PORT=3479\n'));
-    // Later the stack itself holds those ports; the saved ones are reused and nothing is downloaded.
-    requests.clear();
-    final r = FakeRunner();
-    final again = await manager(r, busy: {8082, 8444, 8790, 3479}).start().toList();
-    expect(again.last.detail, 'http://localhost:8082');
-    expect(r.calls, contains('bash install.sh --local --http-port 8082 --pull latest --settings SETTINGS @casama-main'));
-    expect(requests.where((u) => u.path.endsWith('.tar.gz')), isEmpty);
-  });
-
-  test('cancelling stops the installer', () async {
-    final r = FakeRunner(hang: true);
-    final seen = Completer<void>();
-    final sub = manager(r).start().listen((p) {
-      if (p.detail == 'Casama is running' && !seen.isCompleted) seen.complete();
-    });
-    await seen.future;
-    await sub.cancel();
-    expect(r.last!.killed, isTrue);
-    expect(r.calls, contains('pkill -TERM -P 1'));
-  });
-
-  test('says what to do when Docker is missing, and reconnects when a server already runs', () async {
-    final missing = await manager(FakeRunner(docker: false)).start().toList();
-    expect(missing.first.step, LocalServerStep.checking);
+  test('says what to do when Docker is missing, and reconnects when the server already runs', () async {
+    final missing = await manager(runner: FakeRunner(docker: false)).start().toList();
     expect(missing.last.step, LocalServerStep.failed);
     expect(missing.last.detail, contains('Install Docker Desktop'));
-    final r = FakeRunner();
-    final again = await manager(r, up: true).start().toList();
+    expect(installer.installs, isEmpty);
+    await manager().start().toList();
+    installer.installs.clear();
+    final again = await manager(up: true).start().toList();
     expect(again.last.step, LocalServerStep.ready);
-    expect(r.calls, isEmpty);
+    expect(installer.installs, isEmpty, reason: 'a running server is only reconnected');
   });
 
-  test('a failed installer is reported', () async {
-    final steps = await manager(FakeRunner(installCode: 3)).start().toList();
+  test('a stopped install starts again as it is, with no new license or ports', () async {
+    await manager().start().toList();
+    final steps = await manager(busy: {8080}).start(license: (_, _) async => fail('not asked again')).toList();
+    expect(steps.last.detail, 'http://localhost:8080');
+    expect(installer.installs.last.options.settings, isEmpty);
+    expect(installer.installs.last.options.licenseKey, isNull);
+  });
+
+  test('a failed install says why, with its code', () async {
+    installer.installFails = 'pull_failed';
+    final steps = await manager().start().toList();
     expect(steps.last.step, LocalServerStep.failed);
-    expect(steps.last.detail, contains('exit 3'));
+    expect(steps.last.code, 'pull_failed');
+    expect(steps.last.detail, contains('pull the images'));
   });
-}
 
-class _Hook implements ProcessRunner {
-  _Hook(this.inner, this.onInstall);
-  final FakeRunner inner;
-  final void Function() onInstall;
-  @override
-  Future<ProcessResult> run(String exe, List<String> args, {String? cwd}) => inner.run(exe, args, cwd: cwd);
-  @override
-  Future<Process> start(String exe, List<String> args, {String? cwd}) async {
-    final p = await inner.start(exe, args, cwd: cwd);
-    if (p is FakeProcess && p.code == 0) onInstall();
-    return p;
-  }
+  test('an update runs the installer\'s update and reports a rollback clearly', () async {
+    await manager().start().toList();
+    final ok = await manager().update(manifestFor('2026.12.1-abcdef0')).toList();
+    expect(ok.last.step, LocalServerStep.ready);
+    expect(installer.updates, ['2026.12.1-abcdef0']);
+    expect(manager().installedVersion(tmp), '2026.12.1-abcdef0');
+
+    installer.updateFails = 'update_rolled_back';
+    final back = await manager().update(manifestFor('2026.12.2-1234567')).toList();
+    expect(back.last.step, LocalServerStep.failed);
+    expect(back.last.rolledBack, isTrue);
+    expect(manager().installedVersion(tmp), '2026.12.1-abcdef0');
+  });
+
+  test('Casama Link runs the installer again on the recorded release', () async {
+    await manager().start().toList();
+    final lines = <String>[];
+    final code = await manager().rerunInstaller(tmp, lines.add);
+    expect(code, 0);
+    expect(installer.installs.last.version, '2026.11.26-c20edba');
+    expect(installer.installs.last.options.settings, isEmpty, reason: '.env is kept as it is');
+    expect(lines, contains('Starting the stack'));
+  });
 }

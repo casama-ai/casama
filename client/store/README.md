@@ -12,7 +12,7 @@ nothing has been sent for review.
 | Description | `app_store/en-US/description.txt` (iPhone and iPad), `app_store/en-US/mac/description.txt` | `google_play/en-US/full_description.txt` |
 | Keywords | `app_store/en-US/keywords.txt` (100, both platforms) | none |
 | Promotional text | `app_store/en-US/promotional_text.txt`, `app_store/en-US/mac/promotional_text.txt` (170) | none |
-| Review notes | `app_store/review_notes.txt` | Sign-in details in Play Console → App content |
+| Review notes | `app_store/review_notes.txt` | `google_play/sign_in_details.txt` ("Any other information" under Play Console → App content → Sign in details, 500; the email and password go in their own fields, from the vault) |
 
 ## What is set in the stores
 

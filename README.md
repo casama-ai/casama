@@ -67,7 +67,9 @@ on it.
 ## Casama Cloud
 
 The apps connect to Casama Cloud at `https://api.casama.ai`. Sign up in the apps or at
-[app.casama.ai](https://app.casama.ai). Self-hosting the engine is not offered for now.
+[app.casama.ai](https://app.casama.ai). Casama can also run on your own computer or
+server. The engine installs as signed images under a license, free for personal use and paid for
+business use: see [self-hosting](https://docs.casama.ai/self-hosting/).
 
 ## Build from this repo
 

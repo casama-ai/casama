@@ -50,9 +50,21 @@ import WebKit
         ],
         intentIdentifiers: [],
         options: []),
-      // Replies (D-410): no buttons on the phone; the category lets a paired Apple Watch show its
-      // own reply notification with quick replies.
-      UNNotificationCategory(identifier: "REPLY", actions: [], intentIdentifiers: [], options: []),
+      // Replies (D-410, APPLE-INTEGRATIONS-PLAN §5.3): text reply action lets Siri, AirPods,
+      // CarPlay and Watch answer reply notifications directly.
+      UNNotificationCategory(
+        identifier: "REPLY",
+        actions: [
+          UNTextInputNotificationAction(
+            identifier: "reply",
+            title: "Reply",
+            options: [],
+            textInputButtonTitle: "Send",
+            textInputPlaceholder: "Reply…"
+          ),
+        ],
+        intentIdentifiers: [],
+        options: []),
     ])
     // The Apple Watch asks this phone to sign it in (D-410). Active before Flutter, so requests
     // that wake the app in the background are held for Dart.
@@ -69,6 +81,54 @@ import WebKit
       GeneratedPluginRegistrant.register(with: registry)
     }
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+  }
+
+  /// Handoff from Mac / iPad (docs/APPLE-INTEGRATIONS-PLAN.md §6.10).
+  override func application(
+    _ application: UIApplication,
+    continue userActivity: NSUserActivity,
+    restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void
+  ) -> Bool {
+    if userActivity.activityType == "ai.casama.app.viewing",
+       let info = userActivity.userInfo,
+       let kind = info["kind"] as? String,
+       let id = info["id"] as? String
+    {
+      let botId = (info["bot_id"] as? String) ?? (kind == "bot" ? id : "")
+      let path = kind == "chat" && !botId.isEmpty
+        ? "/bots/\(botId)/chat?c=\(id)"
+        : (!botId.isEmpty ? "/bots/\(botId)/chat" : "/bots")
+      ShortcutBridge.shared.open(path)
+      return true
+    }
+    return super.application(application, continue: userActivity, restorationHandler: restorationHandler)
+  }
+
+  /// Inline text replies on REPLY notifications (Siri, AirPods, CarPlay, Lock Screen; §5.3).
+  override func userNotificationCenter(
+    _ center: UNUserNotificationCenter,
+    didReceive response: UNNotificationResponse,
+    withCompletionHandler completionHandler: @escaping () -> Void
+  ) {
+    if response.actionIdentifier == "reply",
+       let textResponse = response as? UNTextInputNotificationResponse
+    {
+      let userInfo = response.notification.request.content.userInfo
+      let botId = (userInfo["bot_id"] as? String)
+        ?? ((userInfo["casama_sender"] as? [String: Any])?["bot_id"] as? String)
+        ?? ""
+      let convId = (userInfo["conversation_id"] as? String)
+        ?? ((userInfo["casama_sender"] as? [String: Any])?["conversation_id"] as? String)
+        ?? ""
+      NotificationsBridge.shared.deliverReply(
+        botId: botId,
+        conversationId: convId,
+        text: textResponse.userText
+      )
+      completionHandler()
+      return
+    }
+    super.userNotificationCenter(center, didReceive: response, withCompletionHandler: completionHandler)
   }
 
   func pushRegistry(_ registry: PKPushRegistry, didUpdate credentials: PKPushCredentials, for type: PKPushType) {
@@ -192,6 +252,29 @@ import WebKit
     // Meta's SDK (docs/ADS-ATTRIBUTION-PLAN.md §6.5): configured only when Dart starts it.
     if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "CasamaMeta") {
       MetaBridge.attach(registrar.messenger())
+    }
+    // Apple integrations (docs/APPLE-INTEGRATIONS-PLAN.md): Declared Age Range, Document Scanner,
+    // AlarmKit, HomeKit, SpeechAnalyzer, Foundation Models and File Provider.
+    if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "CasamaAgeRange") {
+      AgeRangeBridge.shared.attach(messenger: registrar.messenger())
+    }
+    if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "CasamaDocumentScanner") {
+      DocumentScannerBridge.shared.attach(messenger: registrar.messenger())
+    }
+    if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "CasamaAlarmKit") {
+      AlarmKitBridge.shared.attach(messenger: registrar.messenger())
+    }
+    if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "CasamaHomeKit") {
+      HomeKitBridge.shared.attach(messenger: registrar.messenger())
+    }
+    if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "CasamaSpeechAnalyzer") {
+      SpeechAnalyzerBridge.shared.attach(messenger: registrar.messenger())
+    }
+    if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "CasamaOnDeviceModel") {
+      OnDeviceModelBridge.shared.attach(messenger: registrar.messenger())
+    }
+    if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "CasamaFileProvider") {
+      FileProviderBridge.shared.attach(messenger: registrar.messenger())
     }
   }
 }
@@ -349,10 +432,11 @@ final class SignInSheet: NSObject, ASWebAuthenticationPresentationContextProvidi
 final class NotificationsBridge {
   static let shared = NotificationsBridge()
   private var channel: FlutterMethodChannel?
+  private var pendingReplies: [[String: String]] = []
 
   func attach(_ messenger: FlutterBinaryMessenger) {
     let channel = FlutterMethodChannel(name: "casama/notifications", binaryMessenger: messenger)
-    channel.setMethodCallHandler { call, result in
+    channel.setMethodCallHandler { [weak self] call, result in
       let args = call.arguments as? [String: Any] ?? [:]
       switch call.method {
       case "badge":
@@ -377,11 +461,34 @@ final class NotificationsBridge {
       case "takeAction":
         // iOS buttons arrive through Firebase Messaging's tap handler.
         result(nil)
+      case "takeInlineReplies":
+        let replies = self?.pendingReplies ?? []
+        self?.pendingReplies.removeAll()
+        result(replies)
       default:
         result(FlutterMethodNotImplemented)
       }
     }
     self.channel = channel
+  }
+
+  /// Forwards an inline notification text reply to Dart (docs/APPLE-INTEGRATIONS-PLAN.md §5.3).
+  /// Queues the reply if the Flutter channel isn't attached yet (e.g. cold launch from Lock Screen).
+  func deliverReply(botId: String, conversationId: String, text: String) {
+    let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+    guard !trimmed.isEmpty, !botId.isEmpty else { return }
+    let payload: [String: String] = [
+      "bot_id": botId,
+      "conversation_id": conversationId,
+      "text": trimmed,
+    ]
+    if let channel = channel {
+      DispatchQueue.main.async {
+        channel.invokeMethod("inlineReply", arguments: payload)
+      }
+    } else {
+      pendingReplies.append(payload)
+    }
   }
 }
 

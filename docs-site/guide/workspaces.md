@@ -45,6 +45,9 @@ below it can.
 | **Admin** | Invite people (by link, code or email) as members or admins; approve requests to join; open the workspace to their email domain; rename the workspace and change its look; manage every team bot; add workspace action rules; set run history retention; require two-step sign-in; manage workspace settings such as bots talking to each other, phone calls, where secrets and memory are kept, AI app connections and workspace files; buy plans and credits and create Casama Link keys on Casama Cloud |
 | **Owner** | Everything above, plus turn on encryption and set up payments |
 
+On a [self-hosted](/self-hosting/) server, a personal license has one member. Inviting a second
+person, and sharing a workspace, need a [business license](/self-hosting/licenses).
+
 A workspace always has at least one owner. Only an owner can make someone else an owner, and
 there's no screen for that yet (see [Limits](#limits)). Private bots are visible only to the person who created
 them and the people they share them with. See [Sharing](/guide/sharing).
@@ -131,8 +134,10 @@ After joining, you land on a welcome page with the workspace's bots.
 
 The person who made the invite gets a notification when you join.
 
-**Opening links in the app.** When the app is installed, an invite link opens it directly.
-Otherwise the link opens a page in the browser with **Open in Casama**.
+**Opening links in the app.** When the app is installed, an invite link opens it directly once the
+server publishes the app's link files (see [Configuration](/self-hosting/configuration)).
+Otherwise the link opens a page in the browser with **Open in Casama**. On a self-hosted server
+without the web app, that page comes from the API.
 
 ## Require two-step sign-in for admins
 
@@ -167,8 +172,9 @@ someone who uses the API or an older app.
 
 ## Enterprise single sign-on (SAML)
 
-SAML single sign-on is an enterprise feature. It needs a Casama Enterprise license key
-(`CASAMA_LICENSE_KEY`). Without a valid key, the enterprise endpoints answer `402 license_required`; the
+SAML single sign-on is a business feature. It needs a license that includes it (an annual
+business license; self-hosted, the key goes in `CASAMA_LICENSE_KEY` or the app) and, when self-hosting, `SUPABASE_SERVICE_ROLE_KEY` with SAML enabled in
+the auth service. Without a valid key, the enterprise endpoints answer `402 license_required`; the
 rest of Casama works as usual.
 
 Owners and admins set it up through the API:
@@ -197,8 +203,9 @@ days by default).
 
 ## The admin console
 
-The instance owner has an admin console for the whole server. On Casama Cloud, that's the Casama
-team, so this section is a reference.
+On a self-hosted server, the instance owner has an admin console for the whole server. The
+instance owner is anyone listed in `INSTANCE_ADMIN_EMAILS`, or the first person to sign up when
+it's unset.
 
 Open **Settings → Admin console**. The console locks itself after a short idle period (shown in the
 countdown chip) and unlocks with one method at a time — your device's screen lock (including Face
@@ -258,6 +265,17 @@ For free plans (Casama Cloud) the bot can, without asking, list the switch, runn
 gift codes. Giving a plan, making one longer, ending one, making a gift code and disabling or
 re-enabling one each show an approval card first. A new gift code appears once, in the result inside the owner's own chat.
 
+## Limit who can sign up
+
+On a self-hosted server you can close sign-ups or allow only certain people:
+
+- `DISABLE_SIGNUP=true` makes the server invite-only once the first accounts exist.
+- `SIGNUP_ALLOWED_EMAILS` allows only listed emails or domains (for example
+  `ana@example.com,@example.com`). It applies to every sign-in method, including Google. It needs
+  the sign-up hook to be set up; without it, sign-ups are refused rather than open to everyone.
+
+See [Configuration](/self-hosting/configuration).
+
 ## Limits
 
 - **People** lists members, but changing someone's role, removing a member or leaving a
@@ -275,4 +293,5 @@ re-enabling one each show an approval card first. A new gift code appears once, 
 - [Privacy and security](/guide/privacy)
 - [Sharing](/guide/sharing)
 - [Usage, budgets and plans](/guide/usage)
+- [Self-hosting configuration](/self-hosting/configuration)
 - [API](/develop/api)

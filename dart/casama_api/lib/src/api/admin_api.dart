@@ -57,11 +57,13 @@ import 'package:casama_api/src/model/admit_waitlist_request.dart';
 import 'package:casama_api/src/model/announce_inactivity_result.dart';
 import 'package:casama_api/src/model/billing_settings.dart';
 import 'package:casama_api/src/model/browser_guard_sites.dart';
+import 'package:casama_api/src/model/business_license_created.dart';
 import 'package:casama_api/src/model/cloud_models.dart';
 import 'package:casama_api/src/model/connection_settings.dart';
 import 'package:casama_api/src/model/content_report.dart';
 import 'package:casama_api/src/model/content_report_list.dart';
 import 'package:casama_api/src/model/cost_group.dart';
+import 'package:casama_api/src/model/create_business_license_request.dart';
 import 'package:casama_api/src/model/create_invite_campaign_request.dart';
 import 'package:casama_api/src/model/decision_results.dart';
 import 'package:casama_api/src/model/decision_settings.dart';
@@ -71,6 +73,7 @@ import 'package:casama_api/src/model/feedback_list.dart';
 import 'package:casama_api/src/model/feedback_row.dart';
 import 'package:casama_api/src/model/invite_campaign.dart';
 import 'package:casama_api/src/model/invite_campaign_list.dart';
+import 'package:casama_api/src/model/license_edition.dart';
 import 'package:casama_api/src/model/publish_feedback_request.dart';
 import 'package:casama_api/src/model/remote_access_status.dart';
 import 'package:casama_api/src/model/remote_app_config.dart';
@@ -85,6 +88,9 @@ import 'package:casama_api/src/model/save_credit_pack_request.dart';
 import 'package:casama_api/src/model/save_model_catalog_request.dart';
 import 'package:casama_api/src/model/save_plan_request.dart';
 import 'package:casama_api/src/model/save_price_tables_request.dart';
+import 'package:casama_api/src/model/selfhost_license_list.dart';
+import 'package:casama_api/src/model/selfhost_license_row.dart';
+import 'package:casama_api/src/model/selfhost_stats.dart';
 import 'package:casama_api/src/model/server_capacity.dart';
 import 'package:casama_api/src/model/set_admin_bot_request.dart';
 import 'package:casama_api/src/model/set_admin_pin_request.dart';
@@ -5236,6 +5242,102 @@ _responseData = rawData == null ? null : deserialize<RemoteAccessStatus, RemoteA
     );
   }
 
+  /// Make a business license key (instance owner); the key is shown once and emailed
+  /// 
+  ///
+  /// Parameters:
+  /// * [createBusinessLicenseRequest] 
+  /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
+  /// * [headers] - Can be used to add additional headers to the request
+  /// * [extras] - Can be used to add flags to the request
+  /// * [validateStatus] - A [ValidateStatus] callback that can be used to determine request success based on the HTTP status of the response
+  /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
+  /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
+  ///
+  /// Returns a [Future] containing a [Response] with a [BusinessLicenseCreated] as data
+  /// Throws [DioException] if API call or serialization fails
+  Future<Response<BusinessLicenseCreated>> createBusinessLicense({ 
+    required CreateBusinessLicenseRequest createBusinessLicenseRequest,
+    CancelToken? cancelToken,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? extra,
+    ValidateStatus? validateStatus,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    final _path = r'/v1/admin/selfhost/licenses';
+    final _options = Options(
+      method: r'POST',
+      headers: <String, dynamic>{
+        ...?headers,
+      },
+      extra: <String, dynamic>{
+        'secure': <Map<String, String>>[
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearerAuth',
+          },
+        ],
+        ...?extra,
+      },
+      contentType: 'application/json',
+      validateStatus: validateStatus,
+    );
+
+    dynamic _bodyData;
+
+    try {
+_bodyData=jsonEncode(createBusinessLicenseRequest);
+    } catch(error, stackTrace) {
+      throw DioException(
+         requestOptions: _options.compose(
+          _dio.options,
+          _path,
+        ),
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    final _response = await _dio.request<Object>(
+      _path,
+      data: _bodyData,
+      options: _options,
+      cancelToken: cancelToken,
+      onSendProgress: onSendProgress,
+      onReceiveProgress: onReceiveProgress,
+    );
+
+    BusinessLicenseCreated? _responseData;
+
+    try {
+final rawData = _response.data;
+_responseData = rawData == null ? null : deserialize<BusinessLicenseCreated, BusinessLicenseCreated>(rawData, 'BusinessLicenseCreated', growable: true);
+
+    } catch (error, stackTrace) {
+      throw DioException(
+        requestOptions: _response.requestOptions,
+        response: _response,
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    return Response<BusinessLicenseCreated>(
+      data: _responseData,
+      headers: _response.headers,
+      isRedirect: _response.isRedirect,
+      requestOptions: _response.requestOptions,
+      redirects: _response.redirects,
+      statusCode: _response.statusCode,
+      statusMessage: _response.statusMessage,
+      extra: _response.extra,
+    );
+  }
+
   /// Today&#39;s use of the website assistant and the questions it couldn&#39;t answer (instance owners)
   /// 
   ///
@@ -5546,6 +5648,98 @@ _responseData = rawData == null ? null : deserialize<ReportedCreationList, Repor
     }
 
     return Response<ReportedCreationList>(
+      data: _responseData,
+      headers: _response.headers,
+      isRedirect: _response.isRedirect,
+      requestOptions: _response.requestOptions,
+      redirects: _response.redirects,
+      statusCode: _response.statusCode,
+      statusMessage: _response.statusMessage,
+      extra: _response.extra,
+    );
+  }
+
+  /// Self-hosted licenses Casama Cloud has issued (instance owner); keys aren&#39;t shown
+  /// 
+  ///
+  /// Parameters:
+  /// * [edition] 
+  /// * [q] 
+  /// * [limit] 
+  /// * [offset] 
+  /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
+  /// * [headers] - Can be used to add additional headers to the request
+  /// * [extras] - Can be used to add flags to the request
+  /// * [validateStatus] - A [ValidateStatus] callback that can be used to determine request success based on the HTTP status of the response
+  /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
+  /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
+  ///
+  /// Returns a [Future] containing a [Response] with a [SelfhostLicenseList] as data
+  /// Throws [DioException] if API call or serialization fails
+  Future<Response<SelfhostLicenseList>> listSelfhostLicenses({ 
+    LicenseEdition? edition,
+    String? q,
+    int? limit,
+    int? offset,
+    CancelToken? cancelToken,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? extra,
+    ValidateStatus? validateStatus,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    final _path = r'/v1/admin/selfhost/licenses';
+    final _options = Options(
+      method: r'GET',
+      headers: <String, dynamic>{
+        ...?headers,
+      },
+      extra: <String, dynamic>{
+        'secure': <Map<String, String>>[
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearerAuth',
+          },
+        ],
+        ...?extra,
+      },
+      validateStatus: validateStatus,
+    );
+
+    final _queryParameters = <String, dynamic>{
+      if (edition != null) r'edition': edition,
+      if (q != null) r'q': q,
+      if (limit != null) r'limit': limit,
+      r'offset': offset,
+    };
+
+    final _response = await _dio.request<Object>(
+      _path,
+      options: _options,
+      queryParameters: _queryParameters,
+      cancelToken: cancelToken,
+      onSendProgress: onSendProgress,
+      onReceiveProgress: onReceiveProgress,
+    );
+
+    SelfhostLicenseList? _responseData;
+
+    try {
+final rawData = _response.data;
+_responseData = rawData == null ? null : deserialize<SelfhostLicenseList, SelfhostLicenseList>(rawData, 'SelfhostLicenseList', growable: true);
+
+    } catch (error, stackTrace) {
+      throw DioException(
+        requestOptions: _response.requestOptions,
+        response: _response,
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    return Response<SelfhostLicenseList>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,
@@ -6057,6 +6251,84 @@ _responseData = rawData == null ? null : deserialize<ContentReport, ContentRepor
     }
 
     return Response<ContentReport>(
+      data: _responseData,
+      headers: _response.headers,
+      isRedirect: _response.isRedirect,
+      requestOptions: _response.requestOptions,
+      redirects: _response.redirects,
+      statusCode: _response.statusCode,
+      statusMessage: _response.statusMessage,
+      extra: _response.extra,
+    );
+  }
+
+  /// Revoke a license (instance owner): its next renewal answers 403 license_revoked
+  /// 
+  ///
+  /// Parameters:
+  /// * [id] 
+  /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
+  /// * [headers] - Can be used to add additional headers to the request
+  /// * [extras] - Can be used to add flags to the request
+  /// * [validateStatus] - A [ValidateStatus] callback that can be used to determine request success based on the HTTP status of the response
+  /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
+  /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
+  ///
+  /// Returns a [Future] containing a [Response] with a [SelfhostLicenseRow] as data
+  /// Throws [DioException] if API call or serialization fails
+  Future<Response<SelfhostLicenseRow>> revokeSelfhostLicense({ 
+    required String id,
+    CancelToken? cancelToken,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? extra,
+    ValidateStatus? validateStatus,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    final _path = r'/v1/admin/selfhost/licenses/{id}/revoke'.replaceAll('{' r'id' '}', id.toString());
+    final _options = Options(
+      method: r'POST',
+      headers: <String, dynamic>{
+        ...?headers,
+      },
+      extra: <String, dynamic>{
+        'secure': <Map<String, String>>[
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearerAuth',
+          },
+        ],
+        ...?extra,
+      },
+      validateStatus: validateStatus,
+    );
+
+    final _response = await _dio.request<Object>(
+      _path,
+      options: _options,
+      cancelToken: cancelToken,
+      onSendProgress: onSendProgress,
+      onReceiveProgress: onReceiveProgress,
+    );
+
+    SelfhostLicenseRow? _responseData;
+
+    try {
+final rawData = _response.data;
+_responseData = rawData == null ? null : deserialize<SelfhostLicenseRow, SelfhostLicenseRow>(rawData, 'SelfhostLicenseRow', growable: true);
+
+    } catch (error, stackTrace) {
+      throw DioException(
+        requestOptions: _response.requestOptions,
+        response: _response,
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    return Response<SelfhostLicenseRow>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,
@@ -6733,6 +7005,82 @@ _responseData = rawData == null ? null : deserialize<AdminPriceTables, AdminPric
     }
 
     return Response<AdminPriceTables>(
+      data: _responseData,
+      headers: _response.headers,
+      isRedirect: _response.isRedirect,
+      requestOptions: _response.requestOptions,
+      redirects: _response.redirects,
+      statusCode: _response.statusCode,
+      statusMessage: _response.statusMessage,
+      extra: _response.extra,
+    );
+  }
+
+  /// Self-hosted servers at a glance for Admin Growth (instance owner)
+  /// From the daily license check-ins: daily active servers, new installs, editions, engine versions, lapsed licenses, members and bots. Counts only.
+  ///
+  /// Parameters:
+  /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
+  /// * [headers] - Can be used to add additional headers to the request
+  /// * [extras] - Can be used to add flags to the request
+  /// * [validateStatus] - A [ValidateStatus] callback that can be used to determine request success based on the HTTP status of the response
+  /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
+  /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
+  ///
+  /// Returns a [Future] containing a [Response] with a [SelfhostStats] as data
+  /// Throws [DioException] if API call or serialization fails
+  Future<Response<SelfhostStats>> selfhostLicenseStats({ 
+    CancelToken? cancelToken,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? extra,
+    ValidateStatus? validateStatus,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    final _path = r'/v1/admin/selfhost/stats';
+    final _options = Options(
+      method: r'GET',
+      headers: <String, dynamic>{
+        ...?headers,
+      },
+      extra: <String, dynamic>{
+        'secure': <Map<String, String>>[
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearerAuth',
+          },
+        ],
+        ...?extra,
+      },
+      validateStatus: validateStatus,
+    );
+
+    final _response = await _dio.request<Object>(
+      _path,
+      options: _options,
+      cancelToken: cancelToken,
+      onSendProgress: onSendProgress,
+      onReceiveProgress: onReceiveProgress,
+    );
+
+    SelfhostStats? _responseData;
+
+    try {
+final rawData = _response.data;
+_responseData = rawData == null ? null : deserialize<SelfhostStats, SelfhostStats>(rawData, 'SelfhostStats', growable: true);
+
+    } catch (error, stackTrace) {
+      throw DioException(
+        requestOptions: _response.requestOptions,
+        response: _response,
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    return Response<SelfhostStats>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,

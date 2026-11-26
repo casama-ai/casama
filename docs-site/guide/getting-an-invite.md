@@ -4,6 +4,9 @@ Casama Cloud, the hosted service at casama.ai, is invite-only for now. That mean
 can be made only for an email address that has been let in. Everyone who already has an account
 keeps signing in as before.
 
+A [self-hosted](/self-hosting/) server's free personal license comes from signing in with a Casama
+account.
+
 ## Join the waitlist
 
 1. Get the app at **[casama.ai/download](https://casama.ai/download)** (or open

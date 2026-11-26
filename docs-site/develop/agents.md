@@ -74,6 +74,8 @@ The local server, `npx -y @casama/mcp`, has the same tools plus `check_plugin` a
 `gallery_search`, and the tools that work with your bots once you sign in. With `--docs-only` it runs without a sign-in. See
 [Connect AI apps](/guide/mcp#docs-tools-for-building-on-casama).
 
+A self-hosted server answers at `/mcp/docs` too, from the docs that shipped with it.
+
 ## Docs as markdown
 
 | Address | What's there |
@@ -81,7 +83,7 @@ The local server, `npx -y @casama/mcp`, has the same tools plus `check_plugin` a
 | [`docs.casama.ai/llms.txt`](https://docs.casama.ai/llms.txt) | An index of every page, with a one-line summary and a link to its markdown ([llmstxt.org](https://llmstxt.org)) |
 | `docs.casama.ai/<page>.md` | Any page as markdown: add `.md` to its address, for example [`/develop/plugins.md`](https://docs.casama.ai/develop/plugins.md) |
 | [`docs.casama.ai/llms-full.txt`](https://docs.casama.ai/llms-full.txt) | Every page in one file, about 600 KB |
-| [`docs.casama.ai/api/openapi.json`](https://docs.casama.ai/api/openapi.json) | The HTTP API as OpenAPI 3.1. |
+| [`docs.casama.ai/api/openapi.json`](https://docs.casama.ai/api/openapi.json) | The HTTP API as OpenAPI 3.1. Your own server serves its version at `/openapi.json`. |
 
 The buttons at the top of every page do the same by hand: **Copy page** copies its markdown, and
 **Open in Claude** and **Open in ChatGPT** start a chat that reads it.
@@ -154,7 +156,8 @@ fix what it reports. In CI, use the GitHub Action, as described in
 - Have it search the gallery before it builds a skill, bot, routine or plugin.
 - For API work, have it look up each operation with `get_api_operation` rather than writing request
   bodies from memory. The API changes between versions; the OpenAPI document doesn't lie.
-- Have it read the OpenAPI document: it describes exactly what Casama Cloud runs.
+- Point it at your own server: the local MCP server reads `CASAMA_API_URL`, and `/openapi.json`
+  on your server describes exactly what it runs.
 - For plugins, put the plugin check in the loop: write, check, fix, then commit.
 
 ## Related

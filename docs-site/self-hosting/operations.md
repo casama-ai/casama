@@ -1,16 +1,12 @@
 # Operating your server
 
-::: warning Self-hosting is paused
-Self-hosting is paused while the Casama Engine moves to a separate license. The install commands on this page are removed for now, and the rest is kept as a reference. Casama Cloud is the way to run Casama today.
-:::
-
-This page covers day-to-day work on a running Casama server: upgrades, backups, monitoring, logs,
-audit-log forwarding and scaling, plus the Kubernetes Helm chart. The commands use the
-[Casama CLI](/develop/cli), which wraps the installer and `docker compose` for your checkout.
+This page covers day-to-day work on a running Casama server: updates, backups, monitoring, logs,
+audit-log forwarding and scaling. The commands use the [Casama CLI](/develop/cli), which wraps
+`docker compose` for your install.
 
 ## Everyday commands
 
-Run these from the checkout, or pass `--dir ~/casama` (or set `CASAMA_SELFHOST_DIR`).
+Run these from your install folder, or pass `--dir ~/casama` (or set `CASAMA_SELFHOST_DIR`).
 
 | Task          | Command                                                                       |
 | ------------- | ----------------------------------------------------------------------------- |
@@ -18,15 +14,16 @@ Run these from the checkout, or pass `--dir ~/casama` (or set `CASAMA_SELFHOST_D
 | Logs          | `casama selfhost logs -f` (api and worker), or name services: `logs migrate supervisor` |
 | Start         | `casama selfhost up`                                                          |
 | Stop          | `casama selfhost down` (data is kept)                                         |
-| Upgrade       | `casama selfhost upgrade`                                                     |
+| Update        | `casama selfhost update`                                                      |
+| License       | `casama selfhost license` (see [Licenses](/self-hosting/licenses))            |
 | Back up       | `casama selfhost backup --out /backups`                                       |
 | Restore       | `casama selfhost restore /backups/<timestamp>`                                |
 | Phone access  | `casama selfhost remote status` (see [Use your server on your phone](/self-hosting/remote-access)) |
 
-Each one maps to plain Compose, if you prefer:
+Most map to plain Compose, if you prefer. Run it from your install folder:
 
 ```sh
-docker compose -f infra/compose/docker-compose.yml --env-file infra/compose/.env ps
+docker compose --env-file .env --env-file images.env ps
 ```
 
 `casama selfhost down` stops the stack but leaves running bot computers alone, because the
@@ -78,30 +75,17 @@ Set `VENDOR_ALERT_EMAILS` to comma-separated alert recipients. Without it, alert
 uses the configured transactional sender and backup. Counts cover calls made through this server;
 ZeptoMail sends made directly by Supabase Auth are excluded.
 
-## Upgrade
+## Update
 
-1. Back up first:
+```sh
+casama selfhost update
+```
 
-   ```sh
-   casama selfhost backup --out /backups
-   ```
+It backs up, pulls the new release's images, applies database migrations, starts the new version
+and checks its health. If the check fails, it goes back to the images you ran before. See
+[Updates and rollback](/self-hosting/updates).
 
-2. Upgrade:
-
-   ```sh
-   casama selfhost upgrade
-   ```
-
-   This runs `git pull --ff-only` in the checkout, then the installer. The installer keeps
-   `infra/compose/.env`, adds any settings the new release introduced, rebuilds the images (or, if
-   you installed with `--pull`, pulls the published ones for `CASAMA_VERSION`), applies new database
-   migrations and restarts the services that changed. A server pinned to one image tag stays on it:
-   run the installer's `--pull` option (or `--pull <tag>`) to move it. If you set `CASAMA_SERVER_IMAGE`, the API
-   and worker stay on that image until you change or empty it.
-
-3. Check the result with `casama selfhost status` and the admin console.
-
-**What people notice during an upgrade.** Very little. While the API restarts, Caddy holds new
+**What people notice during an update.** Very little. While the API restarts, Caddy holds new
 requests (up to 30 seconds) and passes them on once it answers, so the app waits a moment instead of
 showing an error; only an upload over 4 MiB sent in those seconds fails. The stopping API lets the
 requests it's answering finish (`API_DRAIN_SECONDS`) and tells live views, terminals, desktop apps and
@@ -109,11 +93,6 @@ voice calls it's restarting, so they reconnect by themselves. The worker finishe
 is on (`WORKER_DRAIN_SECONDS`) and the new worker carries every run on from there. A run that was
 waiting on someone when the code changed under it is picked up by a new run in the same chat. Phone
 calls through Twilio end when the API restarts.
-
-`casama selfhost upgrade` runs the installer with no options. If you installed with
-`--with-desktop`, `--monitoring`, `--web` or `--search`, upgrade by hand instead so those parts are
-updated too: pull the checkout, then run the installer again with the same options. The installer
-doesn't rebuild an existing web image, so after an upgrade with `--web`, rebuild the `web` service.
 
 Notes:
 
@@ -127,36 +106,32 @@ Notes:
   updates inside running computers. A computer that never sits idle for 5 minutes keeps the old
   image until it restarts. Warm pool computers on an old image are replaced within a minute.
 - Runs survive restarts. Runs waiting for an approval, a key or a takeover pick up again after the
-  upgrade, and time spent waiting doesn't count toward a run's 30-minute limit. A run whose
+  update, and time spent waiting doesn't count toward a run's 30-minute limit. A run whose
   recorded steps no longer match the new code ends with "Casama was updated while this was
   waiting". An action that was in the middle of running when the worker stopped isn't repeated
   blindly: lookups and low-risk tools run again, and anything else tells the bot that Casama
   restarted while it ran, so it checks first. A run still marked as working two minutes after its
   workflow ended is marked failed.
-- If `git pull --ff-only` fails, you have local changes to tracked files (for example an edited
-  `docker-compose.yml`). Commit them on a local branch or stash them, then try again.
-- With remote access on, the upgrade keeps the `connector` running: the installer reads
+- With remote access on, the update keeps the `connector` running: it reads
   `CASAMA_REMOTE_ACCESS` from `.env`.
 
-### Published images
+### Images
 
-the installer's `--pull [tag]` option and the desktop app's Run on This Mac setup use published
-images instead of building them. They're at `ghcr.io/stackwares/casama/<name>`, for `linux/amd64`
-and `linux/arm64`:
+Each release pins its images by digest in `images.env`. They're public, signed with cosign, built
+for `linux/amd64` and `linux/arm64`, and need no registry login:
 
 | Image | What it is |
 | --- | --- |
-| `server` | The API and the worker |
-| `supervisor` | The sandbox supervisor |
-| `egress-proxy` | The computers' only way to the internet |
-| `turn` | The live view relay |
-| `connector` | Casama Link's connector (remote access) |
-| `backup` | The scheduled backup container |
-| `computer-headless`, `computer-desktop` | Bot computers |
+| `ghcr.io/casama-ai/engine-server` | The API and the worker (Casama Engine) |
+| `ghcr.io/casama-ai/engine-supervisor` | The sandbox supervisor (Casama Engine) |
+| `ghcr.io/casama-ai/engine-migrate` | Database migrations (Casama Engine) |
+| `ghcr.io/casama-ai/egress-proxy` | The computers' only way to the internet |
+| `ghcr.io/casama-ai/turn` | The live view relay |
+| `ghcr.io/casama-ai/connector` | Casama Link's connector (remote access) |
+| `ghcr.io/casama-ai/backup` | The scheduled backup container |
+| `ghcr.io/casama-ai/computer-headless`, `computer-desktop` | Bot computers |
 
-Each release is tagged with its short commit id, plus `edge` and `latest`. The web app isn't
-published: `--web` builds it on your machine. The git tag `selfhost` marks the commit whose images
-are `latest`, which is what the desktop app downloads.
+Each is tagged with the release's version (such as `2026.11.26-c20edba`) and `latest`.
 
 ## Back up your server
 
@@ -171,7 +146,7 @@ Each run writes a timestamped folder, for example `/backups/2026-11-11T09-30-00`
 | `postgres.dump`   | The whole database (`pg_dump` custom format)                    |
 | `objects.tar.gz`  | Computer archives and checkpoints from the `objects` volume     |
 | `library.tar.gz`  | The Library's kept files and the pictures, videos and sounds in chats, from the `library` volume (left out when it's empty) |
-| `env`             | A copy of `infra/compose/.env`, with every key                  |
+| `env`             | A copy of `.env`, with every key                               |
 | `vault-key`       | The database's Vault root key. The saved secrets in the dump (model keys, app sign-ins) can't be read on another machine without it |
 
 `--out` defaults to `casama-backups` in the current directory. With S3 object storage, the archives
@@ -225,7 +200,7 @@ Then sync `/backups` to other storage with your usual tool.
 
 ### Off-site backups
 
-the installer's `--backups` option starts a `backup` container that does this every day, without cron. It
+The installer option `--backups` starts a `backup` container that does this every day, without cron. It
 dumps the database, the Library's files, optionally the computer archives, encrypts each file with
 age, and uploads the
 folder to any S3-compatible bucket (Cloudflare R2, AWS S3, Backblaze B2, MinIO). The `.env` and
@@ -247,9 +222,9 @@ nothing is uploaded.
 | `BACKUP_PING_URL` | Called after each success. `/fail` is appended after a failure. |
 
 ```sh
-docker compose -f infra/compose/docker-compose.yml --env-file infra/compose/.env \
+docker compose --env-file .env --env-file images.env \
   --profile backup run --rm backup now
-docker compose -f infra/compose/docker-compose.yml --env-file infra/compose/.env \
+docker compose --env-file .env --env-file images.env \
   --profile backup run --rm backup list
 ```
 
@@ -264,15 +239,14 @@ To read one back, `fetch` downloads a night into a folder that [Restore](#restor
 your age key it decrypts every file and packs the computer archives into `objects.tar.gz`:
 
 ```sh
-docker compose -f infra/compose/docker-compose.yml --env-file infra/compose/.env \
+docker compose --env-file .env --env-file images.env \
   --profile backup run --rm -v "$PWD:/out" -v "$PWD/backup.key:/key:ro" backup \
   fetch 2026-11-24T03-30-00Z /out/restore --identity /key
 casama selfhost restore ./restore
 ```
 
 To check a dump by hand: `age -d -i backup.key -o postgres.dump postgres.dump.age`, then
-`pg_restore --list postgres.dump`. Casama Cloud's settings are in
-`deploy/casama-cloud/settings.env`.
+`pg_restore --list postgres.dump`.
 
 ### Restore
 
@@ -297,12 +271,14 @@ backup, put the backup's `CONTENT_ENCRYPTION_KEY` back (or keep it in
 A backup made before `vault-key` was added has no key. It restores fine on the machine it came
 from; on a new machine, saved secrets (model keys, app sign-ins) have to be entered again.
 
-`restore` doesn't touch `infra/compose/.env`. To restore onto a new machine:
+`restore` doesn't touch `.env`. To restore onto a new machine:
 
-1. Clone the same release of the repository.
-2. Copy the backup's `env` file to `infra/compose/.env` (decrypt it first with
-   `age -d -i backup.key -o infra/compose/.env env.age` if it's encrypted).
-3. Run the installer. It keeps that `.env`, so the new stack uses the same keys.
+1. Install the same release on the new machine (see [Install on a server](/self-hosting/server)).
+2. Copy the backup's `env` file to `.env` (decrypt it first with
+   `age -d -i backup.key -o .env env.age` if it's encrypted).
+3. Run `./install.sh` in the install folder. It keeps that `.env`, so the new stack uses the same keys.
+   Your license moves with the new machine: see
+   [Moving to a new computer](/self-hosting/licenses#moving-to-a-new-computer).
 4. Run `casama selfhost restore <backup-folder>`.
 
 ::: warning Test your restores
@@ -316,8 +292,17 @@ answer with their saved model keys, and that a computer wakes with its files.
 
 The `monitoring` profile adds Prometheus, node-exporter and a Grafana dashboard.
 
-1. Turn it on with the installer's `--monitoring` option, or add the `monitoring` profile to the
-   running stack.
+1. Turn it on:
+
+   ```sh
+   ./install.sh --monitoring
+   ```
+
+   Or add the profile to a running stack:
+
+   ```sh
+   docker compose --env-file .env --env-file images.env --profile monitoring up -d
+   ```
 
 2. Grafana listens on `127.0.0.1:3001` on the server. From your computer, open an SSH tunnel:
 
@@ -326,11 +311,10 @@ The `monitoring` profile adds Prometheus, node-exporter and a Grafana dashboard.
    ```
 
 3. Open `http://localhost:3001` and sign in as `admin` with `GRAFANA_ADMIN_PASSWORD` from
-   `infra/compose/.env`. The **Casama overview** dashboard is already provisioned.
+   `.env`. The **Casama overview** dashboard is already provisioned.
 
 Prometheus keeps 30 days of data and isn't published on the host. It scrapes the API's `/metrics`
-inside the stack with `METRICS_TOKEN`, and node-exporter for host metrics. The config is in
-`infra/monitoring/prometheus.yml`.
+inside the stack with `METRICS_TOKEN`, and node-exporter for host metrics.
 
 ### Metrics
 
@@ -352,7 +336,7 @@ each scrape.
 
 ### Alerts
 
-`infra/monitoring/alerts.yml` defines these rules:
+The profile's alert rules:
 
 | Alert                          | Fires when                                                         | Severity |
 | ------------------------------ | ------------------------------------------------------------------ | -------- |
@@ -363,7 +347,7 @@ each scrape.
 | `CasamaApiDown`                | Prometheus can't scrape the API for 2 minutes                      | page     |
 | `CasamaDiskFilling`            | A disk is over 85% full for 15 minutes                             | page     |
 
-The profile includes Alertmanager. Set `ALERT_EMAIL` in `infra/compose/.env` and alerts are emailed
+The profile includes Alertmanager. Set `ALERT_EMAIL` in `.env` and alerts are emailed
 there through the same SMTP server as sign-in emails (`SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`,
 `SMTP_PASS`, sent from `SMTP_ADMIN_EMAIL`). Without `ALERT_EMAIL`, alerts show only in Prometheus.
 
@@ -371,7 +355,7 @@ there through the same SMTP server as sign-in emails (`SMTP_HOST`, `SMTP_PORT`, 
 
 - **Bot computers' memory:** the installer sets `COMPUTER_HOST_MEMORY_GB` to the machine's memory
   less 4 GB (at least 2 GB), when it isn't set yet. Past it, a computer waits to start with
-  `capacity_full` instead of starving the database. Change the number in `infra/compose/.env`; a
+  `capacity_full` instead of starving the database. Change the number in `.env`; a
   computer without a recorded size counts as `COMPUTER_MEMORY_MB` (2,048 by default). See
   [Server capacity](#server-capacity).
 - **Logs:** every Casama container keeps at most 5 log files of 20 MB, and each bot computer 3 of
@@ -411,7 +395,7 @@ and email only.
 
 Instance owners see a health summary under **Settings → Admin console**: the database, the worker,
 the sandbox supervisor, the live view relay, personal computers, email, error reporting, the
-enterprise license and telemetry, each with whether it's configured and healthy, plus the
+license and telemetry, each with whether it's configured and healthy, plus the
 [Server capacity](#server-capacity) card.
 
 <figure class="casama-shot"><img class="shot-light" src="/screens/admin-health-v2-light.webp" alt="The Services health list: database, worker, sandbox supervisor, live view relay, email and error reporting, each marked OK"><img class="shot-dark" src="/screens/admin-health-v2-dark.webp" alt=""><figcaption>Services, Health: each part of the server and whether it is running.</figcaption></figure>
@@ -570,8 +554,8 @@ Langfuse or an OpenTelemetry collector (see
 
 ## Audit-log forwarding
 
-Audit-log forwarding streams each workspace's audit log to your own systems. It's an enterprise
-feature: it needs a `CASAMA_LICENSE_KEY` that includes `audit_forwarding`. Without one, the
+Audit-log forwarding streams each workspace's audit log to your own systems. It's a business
+feature: it needs a license key that includes `audit_forwarding`. Without one, the
 endpoints answer `402`.
 
 Workspace owners and admins manage forwarders through the API at
@@ -637,8 +621,9 @@ On a public server, keep untrusted code and the Docker socket off the machine wi
 supervisor, egress proxy and TURN relay must run together on the computer host: the supervisor
 attaches the proxy and the relay to each computer's network by container name.
 
-1. On the computer host, clone the same release and copy `infra/compose/.env` from the app host.
-2. In `infra/compose/docker-compose.yml` on the computer host, publish the supervisor's port on the
+1. On the computer host, unpack the same release and copy `.env` and `images.env` from the app
+   host.
+2. In the compose file on the computer host, publish the supervisor's port on the
    private interface only, for example under `services.supervisor`:
 
    ```yaml
@@ -646,12 +631,16 @@ attaches the proxy and the relay to each computer's network by container name.
      - "10.0.0.2:8788:8788"
    ```
 
-3. Build and start only the `supervisor`, `egress` and `turn` services, and build the
-   `computer-headless` image on that host.
+3. Pull and start only those services:
+
+   ```sh
+   docker compose --env-file .env --env-file images.env pull supervisor egress turn
+   docker compose --env-file .env --env-file images.env up -d supervisor egress turn
+   ```
 
 4. On both hosts, set `TURN_PUBLIC_HOST` to a name that points at the computer host, and open 3478
    (UDP and TCP) there.
-5. On the app host, the compose file sets `SUPERVISOR_URL: http://casama-supervisor:8788` in the
+5. On the app host, the compose file sets `SUPERVISOR_URL: http://casama-selfhost-supervisor:8788` in the
    shared `x-casama` block. Change it to the computer host's private address
    (`http://10.0.0.2:8788`), then stop and remove the local `supervisor`, `egress` and `turn`
    services.
@@ -660,99 +649,12 @@ attaches the proxy and the relay to each computer's network by container name.
 
 With computers on another host, their archives live in that host's `objects` volume. Back it up
 there, or switch to [S3 object storage](/self-hosting/configuration#object-storage) so both hosts
-see the same store. Add the computer host's node-exporter to `infra/monitoring/prometheus.yml` to
-get its memory alerts.
+see the same store. Add the computer host's node-exporter to your Prometheus settings to get its
+memory alerts.
 
-## Kubernetes with Helm
+## Kubernetes
 
-`infra/helm/casama` runs the API, worker, supervisor and, optionally, the web app on Kubernetes.
-Computers run as pods in their own namespace through the supervisor's Kubernetes provider. The
-chart doesn't run Postgres or Supabase: point it at Supabase Cloud or your own Supabase (for
-example the Supabase Helm chart).
-
-1. Install:
-
-   ```sh
-   helm install casama infra/helm/casama -n casama --create-namespace \
-     --set publicUrl=https://casama.example.com \
-     --set pagesUrl=https://pages.casama.example.com \
-     --set supabase.url=https://xyz.supabase.co \
-     --set supabase.anonKey=... --set supabase.serviceRoleKey=... --set supabase.jwtSecret=... \
-     --set database.url=postgres://postgres:...@db.xyz.supabase.co:5432/postgres \
-     --set ingress.apiHost=casama.example.com --set ingress.pagesHost=pages.casama.example.com
-   ```
-
-2. Point Supabase Auth's "before user created" hook at
-   `https://casama.example.com/hooks/auth/before-user-created` if you want the sign-up allowlist.
-3. Upgrade later with `helm upgrade` and the same values. Migrations run first.
-
-What the chart does:
-
-- **Migrations** run as a pre-install and pre-upgrade Job. The migration files are copied out of the
-  server image, so the chart and image never drift apart. The Job uses `database.adminUrl`
-  (defaults to `database.url`).
-- **Secrets**: `INTERNAL_TOKEN`, `SUPERVISOR_TOKEN`, `COMPUTER_TOKEN_SECRET` and `METRICS_TOKEN` are
-  generated once and kept across upgrades. A value you set wins, then the existing Secret, then a
-  new random one. The Secret is kept on uninstall. Bring your own with `existingSecret`.
-- **Computers** run as pods in `computers.namespace`. The supervisor's Role there allows only
-  pods and pod proxying. Set `computers.runtimeClass` to a gVisor or Kata runtime class if your
-  cluster has one.
-- **Ingress** routes the API host's API paths to the API (and `/` to the web app when it's on), and
-  the Pages host to the API's Pages port.
-- The supervisor keeps computer archives on a 20 Gi `ReadWriteOnce` volume, with one replica.
-
-### Values
-
-| Value                      | Default                               | What it does                                                         |
-| -------------------------- | ------------------------------------- | -------------------------------------------------------------------- |
-| `image.registry`           | `ghcr.io/stackwares/casama`                  | Where the `server`, `supervisor`, `computer-headless`, `computer-desktop` and `web` images come from. The `web` image isn't published: build and push your own and set `web.image`. |
-| `image.tag`                | `latest`                              | Image tag for all of them.                                           |
-| `image.pullSecrets`        | `[]`                                  | Pull secrets for a private registry.                                 |
-| `publicUrl`                | `https://casama.example.com`          | The API's public address.                                            |
-| `pagesUrl`                 | `https://pages.casama.example.com`    | Pages' public address.                                               |
-| `supabase.url`             | `https://your-project.supabase.co`    | Supabase address.                                                    |
-| `supabase.anonKey`         | Required                              | Supabase anon key.                                                   |
-| `supabase.serviceRoleKey`  | Required                              | Supabase service role key.                                           |
-| `supabase.jwtSecret`       | Required                              | Supabase JWT secret.                                                 |
-| `database.url`             | Required                              | Full-access Postgres URL for the API.                                |
-| `database.workerUrl`       | `database.url`                        | Least-privilege URL for the worker.                                  |
-| `database.adminUrl`        | `database.url`                        | URL migrations run with (`supabase_admin` on self-hosted Supabase).  |
-| `existingSecret`           | (empty)                               | Use your own Secret with the generated keys and `CONTENT_ENCRYPTION_KEY`. |
-| `secrets.*`                | (empty: generated)                    | `internalToken`, `supervisorToken`, `computerTokenSecret`, `metricsToken`, `contentEncryptionKey`. |
-| `extraEnv`                 | `{}`                                  | More environment for the API and worker, for example `RESEND_API_KEY`. |
-| `api.replicas`             | `2`                                   | API replicas.                                                        |
-| `worker.replicas`          | `1`                                   | Worker replicas.                                                     |
-| `worker.runConcurrency`    | `20`                                  | `RUN_CONCURRENCY` for the worker.                                    |
-| `supervisor.enabled`       | `true`                                | Run the supervisor and computers.                                    |
-| `computers.namespace`      | `casama-computers`                    | Namespace for computer pods.                                         |
-| `computers.create`         | `true`                                | Create that namespace.                                               |
-| `computers.runtimeClass`   | (empty)                               | Runtime class for computer pods (gVisor, Kata).                      |
-| `computers.memoryMb`       | `2048`                                | Passed to the supervisor as `COMPUTER_MEMORY_MB`, which only the Docker provider reads. Computer pods get no limits from it. |
-| `web.enabled`              | `false`                               | Run the web app. Needs `web.image`.                                  |
-| `web.image`                | `""`                                  | The web app image you built from `client/Dockerfile.web` and pushed (it isn't published). |
-| `migrations.enabled`       | `true`                                | Run the migration Job.                                               |
-| `ingress.enabled`          | `true`                                | Create an Ingress.                                                   |
-| `ingress.className`        | (empty)                               | Ingress class.                                                       |
-| `ingress.apiHost`          | `casama.example.com`                  | Host for the API (and the web app).                                  |
-| `ingress.pagesHost`        | `pages.casama.example.com`            | Host for Pages.                                                      |
-| `ingress.sitesZone`        | (empty)                               | Sites domain (D-329): adds `*.<zone>` and `<zone>` to the ingress, sent to the Pages port, and sets `CASAMA_SITES_ZONE`. See [Sites and domains](/self-hosting/configuration#sites-and-domains). |
-| `ingress.tls`              | `[]`                                  | Ingress TLS blocks.                                                  |
-
-Each component also has a `resources` value.
-
-### What the chart leaves out
-
-- **Live view.** The chart doesn't run a TURN relay, so desktop computers have no live view.
-- **The egress proxy.** Computer pods use the cluster's network. Add a NetworkPolicy to the
-  computers namespace that blocks private ranges and cloud metadata addresses.
-- **The warm pool**, which needs the Docker provider.
-- **Computer resource limits.** The Kubernetes provider sets pod limits only for a computer with its
-  own size, so add a LimitRange to the computers namespace for default limits.
-- **Supervisor settings beyond the defaults.** `extraEnv` reaches the API and worker only. Hosted
-  providers or S3 object storage on the supervisor need a change to its Deployment.
-
-Check the chart without installing anything locally: `scripts/check-helm.sh` runs `helm lint` and
-`helm template` in the official Helm Docker image.
+A Helm chart is planned for a later release. Today a self-hosted server runs on Docker Compose.
 
 ## Inactive accounts
 

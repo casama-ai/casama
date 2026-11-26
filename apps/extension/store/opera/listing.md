@@ -42,6 +42,8 @@ PRIVATE BY DESIGN
 Casama reads a page only when you explicitly ask, never in the background. It never reads Casama's own pages or pages with password or payment fields, and you can add your own sites to a never-list.
 
 Requires a Casama account (free to start at https://casama.ai).
+
+The Casama desktop apps for Mac (downloaded from casama.ai), Windows and Linux can also run Casama on your own computer. That's free for personal use; business use needs a license.
 ```
 
 ## Notes for reviewers

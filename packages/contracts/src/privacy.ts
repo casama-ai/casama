@@ -133,3 +133,22 @@ export const SetAttributionRequest = z
       .optional(),
   })
   .openapi("SetAttributionRequest");
+
+/** Declared Age Range band (docs/APPLE-INTEGRATIONS-PLAN.md §5.2): never stores a birth date. */
+export const AccountAgeBand = z
+  .enum(["under13", "13to15", "16to17", "18plus", "declined"])
+  .openapi("AccountAgeBand");
+export type AccountAgeBand = z.infer<typeof AccountAgeBand>;
+
+export const SetAgeBandRequest = z
+  .object({
+    age_band: AccountAgeBand,
+  })
+  .openapi("SetAgeBandRequest");
+
+export const AgeBandResult = z
+  .object({
+    account_age_band: AccountAgeBand,
+    account_age_band_updated_at: z.iso.datetime({ offset: true }),
+  })
+  .openapi("AgeBandResult");

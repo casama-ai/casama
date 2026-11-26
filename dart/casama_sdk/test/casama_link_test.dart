@@ -26,7 +26,11 @@ CASAMA_CLOUD_URL=
 CASAMA_CLOUD_KEY=
 ''';
 
-  RemoteAccessSetup setup({int exitCode = 0}) => RemoteAccessSetup(
+  RemoteAccessSetup setup({
+    int exitCode = 0,
+    Future<String?> Function()? heldKey,
+  }) => RemoteAccessSetup(
+    heldKey: heldKey,
     stackDir: dir,
     defaultCloudUrl: cloud.url,
     instanceName: 'Home Mac',
@@ -600,6 +604,70 @@ CASAMA_CLOUD_KEY=
         );
       },
     );
+
+    test(
+      'a server on Casama Cloud models shows its Vault key when linking for the phone',
+      () async {
+        // Connecting Cloud models made a key and kept it in Vault, not in .env.
+        cloud.modelKeys.add('kcc_vault-models');
+        await setup(heldKey: () async => 'kcc_vault-models').turnOn().drain<void>();
+        expect(cloud.shownKey, 'kcc_vault-models');
+        expect(installs.single['CASAMA_CLOUD_KEY'], 'kcc_linked-key');
+        final linked = await CasamaLinkClient(
+          cloudUrl: cloud.url,
+          client: cloud.client,
+        ).startLink(instanceId: 'x' * 36, instanceName: 'Home Mac', heldKey: 'kcc_vault-models');
+        expect(linked.userCode, 'K7QM-2XFD');
+        expect(cloud.shownKey, 'kcc_vault-models');
+      },
+    );
+
+    test(
+      'relinking shows the .env key when Vault has none, and nothing when there is none',
+      () async {
+        cloud.key = 'kcc_old-push-key';
+        env.writeAsStringSync(
+          '${localEnv}CASAMA_CLOUD_KEY=kcc_old-push-key\nCASAMA_CLOUD_URL=${cloud.url}\n',
+        );
+        await setup(heldKey: () async => null).link(relink: true).drain<void>();
+        expect(cloud.shownKey, 'kcc_old-push-key');
+
+        env.writeAsStringSync(localEnv);
+        // A database that doesn't answer is the same as no key.
+        await setup(heldKey: () async => throw const ProcessException('docker', []))
+            .link(relink: true)
+            .drain<void>();
+        expect(cloud.shownKey, isNull);
+      },
+    );
+
+    test('readHeldLinkKey reads Vault through docker, and never fails', () async {
+      final asked = <List<String>>[];
+      expect(
+        await readHeldLinkKey(
+          ['compose', '-f', 'x.yml'],
+          run: (exe, args) async {
+            asked.add([exe, ...args]);
+            return ProcessResult(0, 0, 'kcc_vault-models\n', '');
+          },
+        ),
+        'kcc_vault-models',
+      );
+      expect(asked.single.take(7), ['docker', 'compose', '-f', 'x.yml', 'exec', '-T', 'db']);
+      expect(asked.single.last, heldLinkKeySql);
+      expect(
+        await readHeldLinkKey([], run: (_, _) async => ProcessResult(0, 1, '', 'down')),
+        isNull,
+      );
+      expect(
+        await readHeldLinkKey([], run: (_, _) async => ProcessResult(0, 0, '\n', '')),
+        isNull,
+      );
+      expect(
+        await readHeldLinkKey([], run: (_, _) async => throw const ProcessException('docker', [])),
+        isNull,
+      );
+    });
 
     test('a server that was never installed says so', () async {
       env.deleteSync();

@@ -86,7 +86,7 @@ const searchTitles: Record<string, string> = {
   "develop/webhooks.md": "Webhooks: send Casama events to your own URL",
   "develop/api.md": "Casama HTTP API reference (OpenAPI 3.1)",
   "develop/sdk.md": "Dart SDK for the Casama API",
-  "faq.md": "Casama FAQ: pricing, privacy and models",
+  "faq.md": "Casama FAQ: pricing, privacy and self-hosting",
   "guide/skills.md": "Skills: a repeatable way of working for a bot",
   "guide/routines.md": "Routines: scheduled and triggered bot work",
   "guide/computers.md": "Computers: a Linux machine for every Casama bot",
@@ -97,10 +97,18 @@ const searchTitles: Record<string, string> = {
   "guide/library.md": "The Library: files and pages your bots keep for you",
   "guide/chat.md": "Chatting with a bot: messages, files and voice",
   "guide/bots.md": "Bots and models: pick the AI model for each bot",
-  "self-hosting/index.md": "Self-hosting Casama (paused): reference",
-  "self-hosting/configuration.md": "Self-hosting configuration (paused): all settings",
-  "self-hosting/operations.md": "Operating a Casama server (paused): updates and backups",
-  "self-hosting/troubleshooting.md": "Self-hosting troubleshooting (paused): common fixes",
+  "self-hosting/index.md": "Self-hosting Casama: your computer or server",
+  "self-hosting/desktop.md": "Run Casama on your own computer in one click",
+  "self-hosting/server.md": "Install a self-hosted Casama server with Docker",
+  "self-hosting/licenses.md": "Self-hosting licenses: personal, trial, business",
+  "self-hosting/updates.md": "Update a Casama server, with rollback",
+  "self-hosting/casama-link-cloud.md":
+    "Casama Cloud models, computers and credits for self-hosters",
+  "self-hosting/move-to-cloud.md": "Move a self-hosted workspace to Casama Cloud, and back",
+  "self-hosting/what-goes-home.md": "What a self-hosted Casama server sends home",
+  "self-hosting/configuration.md": "Self-hosting configuration: all settings",
+  "self-hosting/operations.md": "Operating a Casama server: updates and backups",
+  "self-hosting/troubleshooting.md": "Self-hosting troubleshooting: common fixes",
 };
 
 export default defineConfig({
@@ -108,7 +116,7 @@ export default defineConfig({
   // Every page's <title> reads "<what it covers> | Casama docs": the docs' own name in the search result.
   titleTemplate: ":title | Casama docs",
   description:
-    "Casama docs: guides, the HTTP API and SDKs for AI teammates that have their own computers.",
+    "Casama docs: guides, the HTTP API, SDKs and self-hosting for open-source AI teammates that have their own computers.",
   sitemap: {
     hostname: "https://docs.casama.ai",
   },
@@ -178,7 +186,7 @@ export default defineConfig({
     const home = pageData.relativePath === "index.md";
     const title = home ? "Casama docs" : `${pageData.title} | Casama docs`;
     const description =
-      pageData.description || "AI teammates with their own computers.";
+      pageData.description || "Self-hostable AI teammates with their own computers.";
     const crumbs = cleanPath(pageData.relativePath).split("/").filter(Boolean);
     const data: Record<string, unknown>[] = [
       {
@@ -246,7 +254,7 @@ export default defineConfig({
     nav: [
       { text: "Get started", link: "/quick-start" },
       { text: "Guides", link: "/guide/bots" },
-      { text: "Self-hosting (paused)", link: "/self-hosting/" },
+      { text: "Self-hosting", link: "/self-hosting/" },
       { text: "Build on Casama", link: "/develop/api" },
       { text: "API", link: "/api/", target: "_self" },
       // D-577: the repo, asked for plainly; the count lives on GitHub.
@@ -337,14 +345,20 @@ export default defineConfig({
         ],
       },
       {
-        text: "Self-hosting (paused)",
+        text: "Self-hosting",
         collapsed: false,
         items: [
           { text: "Overview", link: "/self-hosting/" },
+          { text: "Install on your computer", link: "/self-hosting/desktop" },
+          { text: "Install on a server", link: "/self-hosting/server" },
+          { text: "Licenses", link: "/self-hosting/licenses" },
+          { text: "Updates and rollback", link: "/self-hosting/updates" },
+          { text: "What goes home", link: "/self-hosting/what-goes-home" },
           { text: "Configuration", link: "/self-hosting/configuration" },
           { text: "Casama Link", link: "/guide/casama-link" },
           { text: "Use it on your phone", link: "/self-hosting/remote-access" },
-          { text: "Cloud computers and credits", link: "/self-hosting/casama-link-cloud" },
+          { text: "Cloud models, computers and credits", link: "/self-hosting/casama-link-cloud" },
+          { text: "Move to Casama Cloud", link: "/self-hosting/move-to-cloud" },
           { text: "Computer providers", link: "/self-hosting/computers" },
           { text: "Operations", link: "/self-hosting/operations" },
           { text: "Troubleshooting", link: "/self-hosting/troubleshooting" },

@@ -10,6 +10,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../core/date_format.dart';
 import '../../core/number_format.dart';
 import '../../core/providers.dart';
+import '../../core/selfhost_api.dart';
 import '../../core/widgets.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_tokens.dart';
@@ -17,6 +18,7 @@ import '../../ui/app_card.dart';
 import 'admin_nav.dart';
 import 'costs/cost_format.dart' show costDay;
 import 'live_users_card.dart';
+import 'selfhost_licenses_tab.dart' show editionLabel;
 import 'ui/admin_ui.dart';
 
 /// Growth over the last [days] (D-530, docs/ADMIN-GROWTH-PLAN.md). Team accounts are left out.
@@ -43,6 +45,7 @@ class _GrowthTabState extends ConsumerState<GrowthTab> {
     ref.invalidate(adminLiveOnlineProvider);
     ref.invalidate(adminLiveGa4Provider);
     ref.invalidate(adminGrowthProvider(_days));
+    ref.invalidate(adminSelfhostStatsProvider);
     await ref.read(adminGrowthProvider(_days).future).catchError((_) => _empty);
   }
 
@@ -97,6 +100,7 @@ class _GrowthTabState extends ConsumerState<GrowthTab> {
           _RevenueCard(revenue: g.money.revenue),
           _FailuresCard(failures: g.failures),
           _SpeedCard(growth: g),
+          const SelfhostGrowthSection(),
         ],
       ),
     );
@@ -1137,6 +1141,109 @@ class _SpeedCard extends StatelessWidget {
                 ),
               ],
             ),
+    );
+  }
+}
+
+/// Self-hosted servers from their daily license check-ins (docs/SELF-HOSTING-PLAN.md §6.5).
+final adminSelfhostStatsProvider = FutureProvider.autoDispose<SelfhostServerStats>((ref) => ref.watch(backendProvider).selfhost.adminStats());
+
+/// Growth's "Self-host" section: servers active each day for 30 days, how many are active now,
+/// new installs, lapsed licenses, members and bots, and the split by edition and engine version.
+/// Hidden where Casama Cloud doesn't issue licenses (the stats call fails there).
+class SelfhostGrowthSection extends ConsumerWidget {
+  const SelfhostGrowthSection({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final stats = ref.watch(adminSelfhostStatsProvider).value;
+    if (stats == null) return const SizedBox.shrink();
+    final l10n = context.l10n;
+    final locale = l10n.localeName;
+    String n(int v) => v.humanizedCount(locale);
+    final muted = context.textTheme.bodySmall?.copyWith(color: context.colorScheme.onSurfaceVariant);
+    Widget row(String label, String value, {Key? key}) => Padding(
+      key: key,
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      child: Row(
+        children: [
+          Expanded(child: Text(label)),
+          Text(value, style: muted?.copyWith(fontFeatures: AppText.tabular)),
+        ],
+      ),
+    );
+    return Column(
+      key: const Key('growthSelfhost'),
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      spacing: AppSpace.sm,
+      children: [
+        SectionHeader(title: l10n.adminGrowthSelfhost),
+        AdminStatStrip(
+          key: const Key('growthSelfhostTiles'),
+          stats: [
+            AdminStat(icon: LucideIcons.server, label: l10n.adminGrowthSelfhostActive, value: n(stats.active24h), onTap: () => AdminNav.open(context, AdminSection.selfhost)),
+            AdminStat(icon: LucideIcons.download, label: l10n.adminGrowthSelfhostNew, value: n(stats.newInstallsTotal), tone: AdminTone.info),
+            AdminStat(
+              icon: LucideIcons.clockAlert,
+              label: l10n.adminGrowthSelfhostLapsed,
+              value: n(stats.lapsed),
+              tone: stats.lapsed > 0 ? AdminTone.warning : null,
+            ),
+            AdminStat(icon: LucideIcons.users, label: l10n.adminSelfhostMembers, value: n(stats.members)),
+            AdminStat(icon: LucideIcons.bot, label: l10n.adminSelfhostBots, value: n(stats.bots)),
+          ],
+        ),
+        _Card(
+          key: const Key('growthSelfhostDaily'),
+          title: l10n.adminGrowthSelfhostDaily,
+          help: l10n.adminGrowthSelfhostDailyHelp,
+          child: stats.dailyActive.isEmpty
+              ? Text(l10n.adminGrowthNoData)
+              : _DailyChart(
+                  lines: true,
+                  dates: [for (final d in stats.dailyActive) d.day],
+                  series: [
+                    (
+                      label: l10n.adminGrowthSelfhostServers,
+                      color: adminToneColor(context, AdminTone.info),
+                      values: [for (final d in stats.dailyActive) d.count.toDouble()],
+                    ),
+                    (
+                      label: l10n.adminGrowthSelfhostNewInstalls,
+                      color: adminToneColor(context, AdminTone.positive),
+                      values: [
+                        for (final d in stats.dailyActive)
+                          (stats.newInstalls.where((x) => x.day == d.day).firstOrNull?.count ?? 0).toDouble(),
+                      ],
+                    ),
+                  ],
+                ),
+        ),
+        _Card(
+          key: const Key('growthSelfhostEditions'),
+          title: l10n.adminGrowthSelfhostByEdition,
+          child: stats.byEdition.isEmpty
+              ? Text(l10n.adminGrowthNoData)
+              : Column(
+                  children: [
+                    for (final e in stats.byEdition)
+                      row(editionLabel(context, e.edition), l10n.adminGrowthSelfhostActiveOf(e.active, e.total), key: Key('growthSelfhostEdition-${e.edition}')),
+                  ],
+                ),
+        ),
+        _Card(
+          key: const Key('growthSelfhostVersions'),
+          title: l10n.adminGrowthSelfhostByVersion,
+          child: stats.byEngineVersion.isEmpty
+              ? Text(l10n.adminGrowthNoData)
+              : Column(
+                  children: [
+                    for (final v in stats.byEngineVersion)
+                      row(v.version, l10n.adminGrowthSelfhostServersCount(v.servers), key: Key('growthSelfhostVersion-${v.version}')),
+                  ],
+                ),
+        ),
+      ],
     );
   }
 }

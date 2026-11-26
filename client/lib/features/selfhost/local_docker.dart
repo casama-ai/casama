@@ -32,4 +32,4 @@ Future<bool> localDockerDown(
 /// Tests replace these.
 Future<bool> Function(String apiUrl) checkLocalDocker = localDockerDown;
 Future<bool> Function() openDocker = () => DockerCheck().open();
-bool Function() canOpenDocker = () => DockerCheck().isMac;
+bool Function() canOpenDocker = () => DockerCheck().desktopApp;

@@ -18,7 +18,9 @@ coder, and give each the model and limits that fit the work.
 
 ## Create a bot
 
-On Casama Cloud, bots run on Casama's own models, so there's nothing to set up first.
+On Casama Cloud, bots run on Casama's own models, so there's nothing to set up first. On a
+self-hosted server you need a model key; if your workspace has none, the **New bot** sheet shows
+the add-key form in place.
 
 1. In the sidebar, select **Add** (the **+** button), then **New bot**.
 2. Under **Persona**, tap one of the quick picks, or **Browse all** to see every persona (see
@@ -27,7 +29,9 @@ On Casama Cloud, bots run on Casama's own models, so there's nothing to set up f
    as you like.
 3. Under **Name and icon**, enter a **Bot name** and pick **Picture** (one of your own), a cloud
    mascot or **Initials**. If you leave the name empty, the bot is named Chief.
-4. Select **Create**. The bot's chat opens, ready for your first message.
+4. Self-hosted only: the model key and model Casama picked for you are under **Advanced**. Change
+   them there if you like.
+5. Select **Create**. The bot's chat opens, ready for your first message.
 
 New bots start with **Ask for risky actions** autonomy (unless a persona sets another level), are
 visible to everyone in the workspace, and get a budget of $1 per run and $10 per day.
@@ -47,8 +51,8 @@ Leave out `--model` to use the server's default model for the key's provider. Se
 
 ## Add a model key
 
-Keys belong to one workspace, are stored encrypted, and are never shown again after you save
-them.
+On a self-hosted server, bots think with your own model provider keys. Keys belong to one
+workspace, are stored encrypted, and are never shown again after you save them.
 
 On Casama Cloud this screen is called **Models** (or **Service keys** when own model providers are
 off). Under **Who runs your bots**, workspace admins can keep **Casama** (included with your plan,
@@ -58,7 +62,7 @@ workspace default, stay on Casama, or use a specific key.
 
 1. Go to **Settings** → **Model keys** (**Models** on Casama Cloud).
 2. Under **Add Key**, pick a **Provider**, give the key a **Label** and paste the **API key**.
-   An OpenAI-compatible provider also needs its **Base URL**.
+   For your own server, also enter its **Base URL**, for example `http://localhost:11434/v1`.
 3. Select **Add Key**.
 4. To check it, open the key's **More** menu and choose **Test Key**. Casama makes a one-token
    call and shows **Key works** with the model and the time it took.
@@ -75,7 +79,8 @@ These providers can run a bot:
 | Anthropic | |
 | Google Gemini | |
 | xAI | |
-| OpenAI-compatible provider | Any hosted provider with an OpenAI-style API. Needs a **Base URL**. |
+| OpenAI-compatible server | Ollama, LM Studio, vLLM or any server with an OpenAI-style API. Needs a **Base URL**. Its calls are recorded in Usage at $0. See [Local models](#local-models). |
+| ChatGPT | Your ChatGPT plan, connected by signing in instead of a key. See below. |
 
 The same screen also takes keys that give bots other abilities but can't run a bot: Brave Search,
 Tavily, Parallel and Serper (web search; your own key is tried first, then the server's search),
@@ -85,14 +90,67 @@ calls.
 
 From the CLI: `casama credential add --provider openrouter --label Default`.
 
+## Local models
+
+A model on your own computer or network (Ollama, LM Studio, vLLM) runs your bots for free, on a
+self-hosted server. Add it as an **OpenAI-compatible server** with its base URL, for example
+`http://127.0.0.1:11434/v1` for Ollama on the same machine.
+
+- **Pictures:** open models that read images are recognized by name (Gemma 3 and 4, LLaVA,
+  Qwen-VL, Llama 3.2 Vision, Llama 4, MiniCPM-V, Moondream, Pixtral and others), so the pictures
+  you send reach them. Mark any other one on its key:
+  `casama credential set <id> --vision-model my-model`.
+- **Memory search:** pull an embedding model and name it on the key, and memory and knowledge
+  search match by meaning on your own machine:
+  `ollama pull embeddinggemma`, then `casama credential set <id> --embedding-model embeddinggemma`.
+  Without one, search matches words.
+- **What still needs the internet or another key:** web pages and search, cloud apps, chat apps,
+  pushes to your phone, making pictures and video, read aloud and dictation (an OpenRouter key),
+  and live calls (a Google AI key).
+- **Speed:** every reply sends the bot's instructions and tools, a few thousand tokens. On a
+  laptop a 12B model takes a minute or more per reply.
+
+## Connect a ChatGPT plan
+
+With an eligible ChatGPT plan you can run your bots on the plan instead of an API key. Their model
+calls count toward your plan's limits, and only you can use it.
+
+1. Open the desktop app (macOS, Windows or Linux).
+2. Go to **Settings** → **Model keys** and select **Continue with ChatGPT**.
+3. Sign in to ChatGPT in your browser and allow plan usage. The key appears as **ChatGPT plan**.
+
+From the CLI, run `casama credential chatgpt` instead. Phones and the web app can't start the
+sign-in, because OpenAI only returns to an address on the same computer; they point you to the
+desktop app or the CLI.
+
+How a ChatGPT plan works in Casama:
+
+- **Only you can use it.** A run uses your plan only when it acts for you: a message you sent, a
+  routine you created, or work started from one of those. In anyone else's runs the bot moves on to
+  its next model, or the run fails with a message saying the plan isn't theirs.
+- **Plan limits.** When you reach your plan's limit, the run stops. To continue on the bot's next
+  model instead (which may cost money), turn on **Use the bot's next model at my plan limit** in
+  the key's menu. The chat shows "Switched to the next model" when that happens.
+- **Cost.** Plan usage is recorded in Usage at $0.
+- **Status.** The key shows **Connected**, **Plan usage off** (you signed in but didn't allow plan
+  usage) or **Sign in again** (the sign-in stopped working; use **Reconnect** from the desktop app).
+- **Manage usage** opens your ChatGPT settings. **Remove** revokes the sign-in too.
+- The plan doesn't provide embeddings. Without an OpenAI API key (or an OpenAI-compatible key with
+  an embedding model set through the API), memory and knowledge search use full-text matching only,
+  unless the server has a shared OpenRouter key.
+
+Self-hosted servers offer ChatGPT sign-in by default; servers with billing turned on don't. The
+server's admin controls this with `CHATGPT_SIGN_IN` (see
+[Configuration](/self-hosting/configuration)).
+
 ## Choose a model
 
-When a bot uses your own key, the **Model** field opens **Choose a model**, a searchable list of
-the models the selected key can use. On Casama's models there are no model fields.
+On a self-hosted server, the **Model** field opens **Choose a model**, a searchable list of the
+models the selected key can use. Casama Cloud shows no model fields.
 
 - **Recommended** models come first, then **All models**.
 - The list comes live from the provider: OpenRouter's catalog; the OpenAI, xAI, Anthropic and
-  Google model lists; or `<base URL>/models` on an OpenAI-compatible provider. Embedding, image,
+  Google model lists; or `<base URL>/models` on an OpenAI-compatible server. Embedding, image,
   audio and batch models are left out. Lists are cached for 10 minutes.
 - If the provider can't be reached, you see "Showing suggested models" with the reason.
 - You can always type any model id and pick **Use "…"**.
@@ -176,7 +234,9 @@ The chat opens empty, the same way a new bot's does: "Say hello to Casama.", til
 **Connect your apps**, and a few starter requests you can tap. This chat is your bot's
 [General](/guide/chat) conversation, where its briefs and suggestions land too.
 
-- On Casama Cloud the bot already has a model.
+- On Casama Cloud the bot already has a model. On a self-hosted server it uses the first key that
+  has a default model. With no key yet, add one in **Settings** → **Model keys** first; otherwise
+  your first message fails with an **Add a model key** button.
 - The first bot starts with [check-ins](/guide/routines#check-ins) turned on, so it can reach out
   when something needs you.
 - Run the [setup interview](#the-setup-interview) whenever you like to have the bot propose its own
@@ -205,7 +265,7 @@ actions**. A bot set to **Act on its own** applies it without asking.
 ## Bot profile
 
 Open a bot's chat and tap its name, or select **More** (the **…** button), then **Bot profile**.
-Change the name, icon, instructions, model (when it uses your own key) or autonomy, then select **Save
+Change the name, icon, instructions, model (self-hosted only) or autonomy, then select **Save
 Changes**.
 
 ### Give your bot a picture
@@ -292,7 +352,7 @@ that hits a limit stops, fails with a clear message, and keeps everything it did
 | Cost of one run | $1 | `budget_exceeded` |
 | A bot's cost per day (UTC) | $10 | `daily_budget_exceeded` |
 | Workspace monthly cost quota | None | `quota_exceeded` |
-| Model steps in one run | By plan (Free 40, Plus 60, Pro 100, Max 150) | `max_steps_exceeded` |
+| Model steps in one run | By plan (Free 40, Plus 60, Pro 100, Max 150; 100 when self-hosted) | `max_steps_exceeded` |
 | Time for one run | 30 minutes | `wall_time_exceeded` |
 | No model set | | `no_model_configured` |
 
@@ -350,6 +410,8 @@ budget.
 - The app has no fields for budgets, fallback models, the cheap model or reasoning effort. Set them
   with `casama bot create` when you create the bot, or through the API. A bot can also change
   another bot's budget with its `bots.update` tool, but never above its own.
+- ChatGPT sign-in works only from the desktop app or the CLI. Hosted Casama needs OpenAI's approval
+  before it can offer it.
 
 ## Related
 

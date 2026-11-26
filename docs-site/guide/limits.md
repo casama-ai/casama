@@ -9,7 +9,7 @@ and whether you can change it. For what happens when a background or chat run en
 
 | Limit | Default | When hit | Can you change it? | Details |
 | --- | --- | --- | --- | --- |
-| Steps per run | By plan: Free 40, Plus 60, Pro 100, Max 150 | The bot says where it got to, and the run ends with `max_steps_exceeded`; tap **Keep Going** to carry on | With your plan | [Usage](/guide/usage#other-limits-on-every-run) |
+| Steps per run | By plan: Free 40, Plus 60, Pro 100, Max 150; 100 when self-hosted | The bot says where it got to, and the run ends with `max_steps_exceeded`; tap **Keep Going** to carry on | With your plan | [Usage](/guide/usage#other-limits-on-every-run) |
 | Steps per check-in (briefs and looks) | 8 (plus 8,000 chars per app read) | Check-in ends with `max_steps_exceeded`; long app results are trimmed | No (fixed) | [Routines](/guide/routines#check-ins) |
 | Time per run | 30 minutes | Run ends with `wall_time_exceeded` | No (fixed) | [Usage](/guide/usage#other-limits-on-every-run) |
 | Bot per-run budget | $1 | Run ends with `budget_exceeded` | Yes (CLI, API, or a bot managing bots) | [Usage](/guide/usage#bot-budgets) |
@@ -21,7 +21,7 @@ and whether you can change it. For what happens when a background or chat run en
 | Loop guard | 3rd identical mutating step blocked; 5 failed steps in a row ends run | Run stops with `stuck_looping` | No (fixed) | [Autonomy](/guide/autonomy#the-loop-guard) |
 | Waiting approval or screen takeover | 24 hours | Request expires and counts as denied or dismissed | No (fixed) | [Autonomy](/guide/autonomy#approvals) |
 | Connected AI app (`ask_bot`) and external A2A agent wait | 10 minutes | Caller gets `waiting_approval` or a timeout status | No (fixed) | [MCP](/guide/mcp), [Bots together](/guide/bots-together) |
-| Simultaneous runs per workspace | 5 active runs (20 per worker) | Extra runs wait in queue until a slot frees | No (fixed) | |
+| Simultaneous runs per workspace | 5 active runs (20 per worker) | Extra runs wait in queue until a slot frees | Self-hosted: `RUN_WORKSPACE_CONCURRENCY`, `RUN_CONCURRENCY` | [Configuration](/self-hosting/configuration#models-and-ai-gateway) |
 
 ## Tools, coding agents and computers
 
@@ -43,19 +43,22 @@ and whether you can change it. For what happens when a background or chat run en
 
 ## Voice, live calls and bot rings
 
+Self-hosted server owners can change the call and ring limits in **Admin console → Services → Call
+limits** (or `GET`/`PUT /v1/admin/call-limits`).
+
 | Limit | Default | When hit | Can you change it? | Details |
 | --- | --- | --- | --- | --- |
 | Quiet call hangup | 60 seconds with no speech | App hangs up (paused while a task runs or call is held) | Admin console: `silence_seconds` (20–900 s) | [Voice](/guide/voice#the-call-screen) |
 | Longest live call | 60 minutes | Bot warns before end, says goodbye, and call closes | Admin console: `max_call_minutes` (5–240 min) | [Voice](/guide/voice#the-call-screen) |
 | Pre-limit warning | ~60 seconds before length or spend limit | Bot warns in one short sentence before wrapping up | Admin console: `warning_seconds` (15–300 s, max half call length) | [Voice](/guide/voice#the-call-screen) |
-| Abandoned call sweep | 60 seconds without an app heartbeat | Server ends the call and settles billing (`heartbeat_seconds` 15 s, 5–60 s) | No (fixed) | [Voice](/guide/voice#the-call-screen) |
+| Abandoned call sweep | 60 seconds without an app heartbeat | Server ends the call and settles billing (`heartbeat_seconds` 15 s, 5–60 s) | Admin console: `abandoned_seconds` (60–900 s) | [Voice](/guide/voice#the-call-screen) |
 | Simultaneous billable live calls per workspace | 3 open calls | New call is refused with `429 too_many_calls` | No (fixed) | [Voice](/guide/voice) |
 | Live call start reserve (Casama Cloud) | At least 2 minutes of credits | Call is refused (`out_of_credits`) before connecting | Add credits or upgrade plan | [Voice](/guide/voice) |
 | Bot ring timeout | 45 seconds | Stops ringing and sends a missed-call notification | No (fixed) | [Voice](/guide/voice#when-a-bot-calls-you) |
 | Bot daily ring cap | 3 rings a day across all bots | Stops ringing, sends a notification, and tells the bot why. Rings that reached no device don't count | Admin console: `ring_daily_cap` (0–20; `0` disables rings) | [Voice](/guide/voice#when-a-bot-calls-you) |
 | Per-bot ring cooldown | 30 minutes between rings | Same bot waits before ringing again; sends a notification instead. Rings that reached no device don't count | Admin console: `ring_cooldown_minutes` (0–1440 min) | [Voice](/guide/voice#when-a-bot-calls-you) |
 | Voice tool handoff | ~12 seconds | Longer tools move to chat and the bot tells you when ready | No (fixed) | [Voice](/guide/voice#the-call-screen) |
-| Call context and persona | First 1,500 chars of instructions; up to 20 prior turns (~600 tokens); ~5 min live rolling window | Oldest live turns trim (8,000 → 3,000 tokens); everything stays saved in chat | No (fixed) | [Voice](/guide/voice#the-call-screen) |
+| Call context and persona | First 1,500 chars of instructions; up to 20 prior turns (~600 tokens); ~5 min live rolling window | Oldest live turns trim (8,000 → 3,000 tokens); everything stays saved in chat | Self-hosted: `VOICE_CONTEXT_TRIGGER_TOKENS`, `VOICE_CONTEXT_TARGET_TOKENS` | [Voice](/guide/voice#the-call-screen), [Configuration](/self-hosting/configuration#advanced-settings) |
 | Read-aloud clip | 4,000 characters | Longer replies are read up to the cap | No (fixed) | [Voice](/guide/voice) |
 
 ## When a live call ends for a limit
@@ -66,20 +69,22 @@ cleanly so you aren't cut off mid-sentence.
 
 ### Before a call starts
 
-On Casama Cloud, starting a call checks headroom before
+On Casama Cloud (or any server enforcing billing/quotas), starting a call checks headroom before
 opening the session. If a limit is already hit, the call doesn't start:
 
 - **Out of credits** (`out_of_credits`): workspace has less than 2 minutes of call reserve left;
   the app opens the credits or paywall sheet.
 - **Plan daily limit** (`cloud_daily_cap`): Casama Cloud workspace reached its daily model/voice
   spend cap (resets at midnight UTC).
+- **Workspace monthly quota** (`quota_exceeded`): self-hosted workspace reached its monthly spend
+  limit.
 - **Bot daily budget** (`daily_budget_exceeded`): the bot reached its daily budget for the UTC day.
 - **Too many open calls** (`too_many_calls`): 3 billable calls are already active in the
   workspace.
 
 ### Mid-call
 
-On relayed calls (Casama Cloud), the server checks
+On relayed calls (Casama Cloud, or self-hosted with `LIVE_CALL_RELAY=on`), the server checks
 remaining time and headroom every 20 seconds:
 
 1. **Warning (~60 seconds left):** The bot gets a prompt to let you know in one short sentence that
@@ -114,6 +119,7 @@ itself, and the server's abandoned-call sweep handles dropped apps.
 | Workspace invite codes and links | Code: 48 hours; email invite: 7 days; custom link: 1, 7, 30 days or never (1, 5, 25 or unlimited uses) | Expired invites are rejected; wrong invite attempts lock for 10 tries in 10 minutes | Admins pick expiry/uses on custom links | [Workspaces](/guide/workspaces#invite-people) |
 | Casama Cloud workspaces per person | Up to 5 owned workspaces | Creating another workspace is blocked | No (fixed) | [Usage](/guide/usage#plans) |
 | Invite-a-friend rewards | Up to 20 rewarded friends ($2 credits each); code entry within 7 days of signup | Extra invites don't pay credit rewards | No (fixed) | [Usage](/guide/usage#invite-friends) |
+| Self-hosted workspace quotas | Unlimited unless set | Blocks new bots or runs past monthly spend (`quota_exceeded`) | Admin console → **Workspaces** → **Edit quotas** | [Usage](/guide/usage#workspace-quotas) |
 | Bot email addresses | Free 1, Plus 2, Pro 5, Max 15 per workspace; claims a year: that number plus 3 | Claiming another is blocked | Upgrade, or release one | [A bot's email address](/guide/bot-email) |
 | Bot mail sent | Free 20, Plus 50, Pro 150, Max 300 a day; to new people none on Free, then 10, 30, 100 | Sending stops for the day. Deleting sent mail doesn't reset it | No (fixed) | [A bot's email address](/guide/bot-email#writing-to-new-people) |
 | Bot mailbox size | Free 100 MB, Plus 500 MB, Pro 1 GB, Max 2 GB per address, counting each mail's original and its files | A notice at 90%; when full, new mail is refused with "mailbox full" | Delete old mail, or upgrade | [A bot's email address](/guide/bot-email#limits) |
@@ -122,12 +128,12 @@ itself, and the server's abandoned-call sweep handles dropped apps.
 
 ### Casama Cloud plan caps
 
-| Plan | Bots | Computers (running at once) | Computer hours / month | Daily model & voice limit | People | Library storage |
-| --- | --- | --- | --- | --- | --- | --- |
-| **Free** | 3 | 1 (1) | 5 | $0.25 | 1 | 1 GB |
-| **Plus** | 10 | 2 (1) | 30 | $5 | 1 | 10 GB |
-| **Pro** | Unlimited | 5 (2) | 100 | $10 | 3 (+paid extras) | 50 GB |
-| **Max** | Unlimited | 10 (2) | 300 | $25 | 10 (+paid extras) | 200 GB |
+| Plan | Bots | Computers (running at once) | Computer hours / month | Daily model & voice limit | People | Library storage | Casama Link servers |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| **Free** | 3 | 1 (1) | 5 | $0.25 | 1 | 1 GB | 1 |
+| **Plus** | 10 | 2 (1) | 30 | $5 | 1 | 10 GB | 1 |
+| **Pro** | Unlimited | 5 (2) | 100 | $10 | 3 (+paid extras) | 50 GB | 3 |
+| **Max** | Unlimited | 10 (2) | 300 | $25 | 10 (+paid extras) | 200 GB | 10 |
 
 See [Casama Cloud plans and credits](/guide/usage#casama-cloud-plans-and-credits) for full plan
 rules, trial allowances and check-in frequency caps.
@@ -140,3 +146,4 @@ rules, trial allowances and check-in frequency caps.
 - [Coding agents](/guide/coding-agents)
 - [Routines and triggers](/guide/routines)
 - [Autonomy and approvals](/guide/autonomy)
+- [Self-hosting configuration](/self-hosting/configuration)

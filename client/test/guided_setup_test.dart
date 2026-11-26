@@ -18,6 +18,7 @@ import 'package:casama/features/selfhost/setup_screen.dart';
 import 'package:casama/l10n/generated/app_localizations.dart';
 import 'package:casama_sdk/casama_link.dart';
 import 'package:casama_sdk/casama_sdk.dart' show WelcomeChat;
+import 'package:casama_selfhost/casama_selfhost.dart' show DownloadEstimate;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -81,12 +82,23 @@ class _Docker extends DockerCheck {
 
 /// The installer as the page sees it: the test sends its progress.
 class _Manager extends LocalServerManager {
+  _Manager() : super(home: () async => Directory.systemTemp.createTempSync('casama-setup'));
   StreamController<LocalServerProgress>? run;
   var starts = 0;
 
+  /// The license callback the last start was given.
+  LicenseFetcher? license;
+
+  /// What the release's measured sizes say this install downloads (null: a release without them).
+  DownloadEstimate? sized;
+
   @override
-  Stream<LocalServerProgress> start() {
+  Future<DownloadEstimate?> estimate() async => sized;
+
+  @override
+  Stream<LocalServerProgress> start({LicenseFetcher? license}) {
     starts++;
+    this.license = license;
     return (run = StreamController<LocalServerProgress>()).stream;
   }
 }
@@ -120,13 +132,12 @@ void main() {
     opened = [];
     went = [];
     setupOpenUrl = (u) async => opened.add(u);
-    // Hidden in the app while Cloud-only (ENGINE-SPLIT-PLAN §7.3); these tests keep its code working.
     debugLocalServerOn = true;
   });
   tearDown(() {
     onChangeServer = null;
     GuidedSetup.reset();
-    debugLocalServerOn = false;
+    debugLocalServerOn = null;
   });
 
   /// The setup page in a router, on a Mac. [local] says whether the app is on this computer's
@@ -136,10 +147,12 @@ void main() {
     FakeBackend backend, {
     DockerState docker = DockerState.ready,
     bool local = false,
+    DownloadEstimate? sized,
+    double? free,
   }) async {
     await setSize(tester, const Size(900, 1000));
-    final check = _Docker(docker);
-    final manager = _Manager();
+    final check = _Docker(docker)..free = free;
+    final manager = _Manager()..sized = sized;
     final setup = FakeSetup();
     var onLocal = local;
     onChangeServer = (_) async => onLocal = true;
@@ -325,6 +338,35 @@ void main() {
     expect(find.bySemanticsLabel('Thinker'), findsNothing, reason: "it would stack on the step's own icon");
     expect(find.text('Docker needs to be running'), findsOneWidget);
     await leave(tester);
+  });
+
+  group('the download size', () {
+    onMac('says the release\'s measured download and disk size', (tester) async {
+      await open(tester, FakeBackend()..signedIn = false, sized: const DownloadEstimate(downloadBytes: 2600000000, diskBytes: 13000000000), free: 10);
+      expect(find.textContaining('A 2.6 GB download, then about 13 GB of disk'), findsOneWidget);
+      // The warning goes by the measured need (13 GB plus room to start), not the fixed 10 GB.
+      expect(find.textContaining('Only 10 GB of disk space is free. The server needs about 14 GB.'), findsOneWidget);
+      await leave(tester);
+    });
+
+    onMac('falls back to the fixed estimate for a release without sizes', (tester) async {
+      await open(tester, FakeBackend()..signedIn = false, free: 9);
+      expect(find.textContaining('A download of about 2.5 GB'), findsOneWidget);
+      expect(find.textContaining('needs about 10 GB'), findsOneWidget);
+      await leave(tester);
+    });
+
+    onMac('says so when everything is already on this computer', (tester) async {
+      await open(tester, FakeBackend()..signedIn = false, sized: const DownloadEstimate(downloadBytes: 0, diskBytes: 0), free: 50);
+      expect(find.textContaining('already on this computer'), findsOneWidget);
+      expect(find.byKey(const Key('setupDiskLow')), findsNothing);
+      await leave(tester);
+    });
+
+    test('sizes read as people say them', () {
+      expect(gbText(2.5612), '2.6');
+      expect(gbText(12.2), '13');
+    });
   });
 
   onMac('with Docker ready: one click downloads, starts and connects to the server', (tester) async {
@@ -529,6 +571,8 @@ void main() {
     expect(GuidedSetup.active.value, isTrue);
 
     GuidedSetup.reset();
+    // The platform decides (the test hook would force it on).
+    debugLocalServerOn = null;
     debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
     router.go('/');
     await tester.pumpWidget(const SizedBox());
@@ -538,9 +582,21 @@ void main() {
     await tester.pumpWidget(const SizedBox());
   });
 
-  onMac('while Casama is Cloud-only, the app offers no server on this Mac (ENGINE-SPLIT-PLAN §7.3)', (tester) async {
-    debugLocalServerOn = false;
+  onMac('without the test hook, a Mac (direct download) offers the server on this computer again', (tester) async {
+    debugLocalServerOn = null;
     expect(localServerPlatform, isTrue);
+    expect(localServerSupported, isTrue);
+    for (final p in [TargetPlatform.linux, TargetPlatform.windows]) {
+      debugDefaultTargetPlatformOverride = p;
+      expect(localServerSupported, isTrue, reason: '$p');
+    }
+    for (final p in [TargetPlatform.iOS, TargetPlatform.android]) {
+      debugDefaultTargetPlatformOverride = p;
+      expect(localServerSupported, isFalse, reason: '$p');
+    }
+    debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+    // The test hook still turns it off.
+    debugLocalServerOn = false;
     expect(localServerSupported, isFalse);
     await setSize(tester, const Size(500, 900));
     final router = GoRouter(routes: [GoRoute(path: '/', builder: (_, _) => const SignInScreen())]);

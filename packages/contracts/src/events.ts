@@ -93,6 +93,13 @@ export const runEventPayloads = {
     reason: z.string(),
     bot_id: id,
   }),
+  // Apple live device actions (AlarmKit & HomeKit, docs/APPLE-INTEGRATIONS-PLAN.md §7.1, §7.4):
+  // their own event, so older app builds skip it instead of failing to parse the timeline.
+  "device.action_access_requested": z.object({
+    kind: z.enum(["alarm", "home"]),
+    reason: z.string(),
+    bot_id: id,
+  }),
   /** A local MCP server needs its owner to sign in again on that computer (D-363). */
   "local_mcp.sign_in_needed": z.object({
     integration_id: id,

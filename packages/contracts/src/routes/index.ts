@@ -3,6 +3,7 @@ import * as actionRules from "./action-rules.ts";
 import * as admin from "./admin.ts";
 import * as agentImport from "./agent-import.ts";
 import * as appearance from "./appearance.ts";
+import * as appleIntegrations from "./apple-integrations.ts";
 import * as apps from "./apps.ts";
 import * as attention from "./attention.ts";
 import * as attribution from "./attribution.ts";
@@ -18,6 +19,7 @@ import * as channels from "./channels.ts";
 import * as chatExport from "./chat-export.ts";
 import * as chatMedia from "./chat-media.ts";
 import * as checkins from "./checkins.ts";
+import * as cloudConnect from "./cloud-connect.ts";
 import * as community from "./community.ts";
 import * as comps from "./comps.ts";
 import * as computers from "./computers.ts";
@@ -38,6 +40,7 @@ import * as local from "./local.ts";
 import * as mail from "./mail.ts";
 import * as mcp from "./mcp.ts";
 import * as moderation from "./moderation.ts";
+import * as moves from "./moves.ts";
 import * as owner from "./owner.ts";
 import * as packs from "./packs.ts";
 import * as pages from "./pages.ts";
@@ -54,6 +57,8 @@ import * as remoteSettings from "./remote-settings.ts";
 import * as replays from "./replays.ts";
 import * as search from "./search.ts";
 import * as secretStore from "./secret-store.ts";
+import * as selfhost from "./selfhost.ts";
+import * as selfhostCloudModels from "./selfhost-cloud-models.ts";
 import * as sites from "./sites.ts";
 import * as skillLearning from "./skill-learning.ts";
 import * as skills from "./skills.ts";
@@ -95,6 +100,7 @@ export const routes = {
   ...connect,
   ...privacy,
   ...appearance,
+  ...appleIntegrations,
   ...apps,
   ...search,
   ...skills,
@@ -135,6 +141,10 @@ export const routes = {
   ...attribution,
   ...referrals,
   ...waitlist,
+  ...selfhost,
+  ...cloudConnect,
+  ...selfhostCloudModels,
+  ...moves,
   ...owner,
   ...remoteSettings,
   ...sites,
@@ -151,6 +161,7 @@ export {
   admin,
   agentImport,
   appearance,
+  appleIntegrations,
   attention,
   attribution,
   autonomy,
@@ -163,6 +174,7 @@ export {
   channels,
   chatMedia,
   checkins,
+  cloudConnect,
   community,
   computers,
   connect,
@@ -178,6 +190,7 @@ export {
   local,
   mail,
   mcp,
+  moves,
   owner,
   packs,
   pages,
@@ -192,6 +205,8 @@ export {
   replays,
   search,
   secretStore,
+  selfhost,
+  selfhostCloudModels,
   sites,
   skillLearning,
   skills,

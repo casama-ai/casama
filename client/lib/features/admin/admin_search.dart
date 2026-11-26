@@ -368,6 +368,7 @@ List<AdminPlace> adminPlaces(BuildContext context, List<AdminSection> sections) 
     AdminSection.vendors: 'balance alerts limits openrouter providers keys',
     AdminSection.resets: 'saved resets limits campaign grant gift',
     AdminSection.partners: 'affiliates referrals commissions payouts codes tolt',
+    AdminSection.selfhost: 'self-hosted licenses keys business personal trial servers revoke',
     AdminSection.users: 'accounts people email suspend ban search',
     AdminSection.workspaces: 'organizations orgs teams quotas limits suspend',
     AdminSection.waitlist: 'invites signups',

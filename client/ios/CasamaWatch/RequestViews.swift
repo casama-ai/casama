@@ -81,6 +81,7 @@ struct ApprovalView: View {
       case .tap:
         Button(WatchL10n.allow) { act { await model.allow(approval) } success: { .allowed } }
           .buttonStyle(PillStyle(tone: .allow))
+          .handGestureShortcut(.primaryAction)
       case .hold:
         HoldToAllowButton(confirmTitle: approval.title) {
           act { await model.allow(approval) } success: { .allowed }

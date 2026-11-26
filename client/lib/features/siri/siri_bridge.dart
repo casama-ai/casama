@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/age_range.dart';
 import '../../core/analytics.dart';
 import '../../core/plain_text.dart';
 import '../../core/providers.dart';
@@ -18,6 +19,7 @@ import '../skills/skill_proposals.dart' show skillProposalsProvider;
 import '../island/island_feed.dart';
 import '../island/island_settings.dart' show islandAskBotProvider;
 import '../island/run_tracker.dart';
+import 'focus_filter.dart';
 import 'siri_index.dart';
 
 /// Siri and Shortcuts acting through the app (docs/SIRI-AI-PLAN.md, D-564, §6.1): the App Intents in
@@ -143,8 +145,83 @@ class SiriBridge {
         return _remembered(args, () => _run(args));
       case 'needs':
         return _needs();
+      case 'focusFilter':
+        _ref.read(focusFilterProvider.notifier).applyNativePayload(args);
+        return {'ok': true};
+      case 'last_reply':
+        return _lastReply(args);
+      case 'start_computer':
+        return _startComputer(args);
+      case 'stop_bot':
+        return _stopBot(args);
     }
     return null;
+  }
+
+  Future<Map<String, Object?>> _lastReply(Map<String, Object?> args) async {
+    final l10n = _l10n;
+    if (!_signedIn) return {'status': SiriStatus.signedOut, 'text': '', 'say': l10n.siriSignedOut};
+    await _botsLoaded();
+    if (_locked || await _hideReplies()) {
+      return {'status': SiriStatus.hidden, 'text': '', 'say': l10n.siriOpenToFinish};
+    }
+    final botId = args['bot_id'];
+    if (botId is! String || botId.isEmpty) return {'status': SiriStatus.failed, 'text': ''};
+    final bots = _bots;
+    for (final b in bots) {
+      if (b.id == botId) {
+        final raw = b.lastMessage?.text ?? '';
+        final clean = raw.trim().isEmpty ? '' : siriSpeakable(raw, max: replyMax);
+        return {'status': SiriStatus.replied, 'text': clean};
+      }
+    }
+    return {'status': SiriStatus.failed, 'text': ''};
+  }
+
+  Future<Map<String, Object?>> _startComputer(Map<String, Object?> args) async {
+    final l10n = _l10n;
+    if (!_signedIn) return {'status': SiriStatus.signedOut, 'say': l10n.siriSignedOut};
+    if (_locked) return {'status': SiriStatus.openApp, 'say': l10n.siriOpenToFinish};
+    if (_ref.read(isTeenModeProvider) || _ref.read(isUnder13BlockedProvider)) {
+      return {'status': SiriStatus.failed, 'say': 'Computers are not available for this account.'};
+    }
+    final orgId = _ref.read(currentOrgIdProvider);
+    if (orgId == null) return {'status': SiriStatus.signedOut, 'say': l10n.siriSignedOut};
+    final name = (args['name'] as String?)?.trim().toLowerCase() ?? '';
+    try {
+      final backend = _ref.read(backendProvider);
+      final computers = await backend.computers(orgId);
+      if (computers.isEmpty) return {'status': SiriStatus.failed, 'say': 'You have no computers in this workspace.'};
+      final target = name.isEmpty
+          ? computers.first
+          : computers.firstWhere(
+              (c) => c.name.toLowerCase().contains(name),
+              orElse: () => computers.first,
+            );
+      await backend.startComputer(target.id);
+      return {'status': SiriStatus.working, 'say': 'Starting ${target.name}.'};
+    } catch (_) {
+      return {'status': SiriStatus.failed, 'say': 'Could not start the computer right now.'};
+    }
+  }
+
+  Future<Map<String, Object?>> _stopBot(Map<String, Object?> args) async {
+    final l10n = _l10n;
+    if (!_signedIn) return {'status': SiriStatus.signedOut, 'say': l10n.siriSignedOut};
+    if (_locked) return {'status': SiriStatus.openApp, 'say': l10n.siriOpenToFinish};
+    final botId = args['bot_id'] is String ? args['bot_id'] as String : '';
+    if (botId.isEmpty) return {'status': SiriStatus.failed, 'say': 'Which bot should I stop?'};
+    final active = _ref.read(runTrackerProvider).where((r) => r.botId == botId && r.ending == null).toList();
+    if (active.isEmpty) return {'status': SiriStatus.replied, 'say': 'That bot is not running right now.'};
+    try {
+      final backend = _ref.read(backendProvider);
+      for (final r in active) {
+        await backend.cancelRun(r.runId);
+      }
+      return {'status': SiriStatus.replied, 'say': 'Stopped.'};
+    } catch (_) {
+      return {'status': SiriStatus.failed, 'say': 'Could not stop the bot right now.'};
+    }
   }
 
   Future<Map<String, Object?>> _remembered(Map<String, Object?> args, Future<Map<String, Object?>> Function() act) {

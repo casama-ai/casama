@@ -1,5 +1,6 @@
 <script setup lang="ts">
 // The docs' 404: the painted lost scene with the real mascot on it, as on casama.ai, casama.link and the gallery.
+// biome-ignore lint/correctness/noUnusedImports: used in the template below
 import { withBase } from "vitepress";
 import { onMounted } from "vue";
 import { countDocsEvent } from "./index";
@@ -17,7 +18,7 @@ onMounted(() => countDocsEvent("page_not_found"));
     <ul>
       <li><a :href="withBase('/')">Docs home</a></li>
       <li><a :href="withBase('/quick-start')">Quick start</a></li>
-      <li><a :href="withBase('/self-hosting/')">Self-hosting (paused)</a></li>
+      <li><a :href="withBase('/self-hosting/')">Self-hosting</a></li>
       <li><a href="https://casama.ai">casama.ai</a></li>
     </ul>
   </div>

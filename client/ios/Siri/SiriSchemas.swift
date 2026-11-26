@@ -31,14 +31,23 @@ struct BotPersonEntity: IndexedEntity {
 
   var person: IntentPerson
 
+  /// The bot's own name, which matching uses. Siri gets "Milo (Casama)" as the person's name
+  /// (`person`), so a card that offers to send to a bot always says which app the bot is in.
+  var name: String
+
   var displayRepresentation: DisplayRepresentation {
-    DisplayRepresentation(title: "\(person.displayName)", subtitle: "A bot in Casama")
+    DisplayRepresentation(title: "\(name)", subtitle: "A bot in \(BotPersonEntity.appName)")
   }
 
   init(id: String, name: String, isMe: Bool = false) {
     self.id = id
-    self.person = IntentPerson(identifier: .applicationDefined(id), name: .displayName(name), handle: nil, isMe: isMe)
+    self.name = name
+    let shown = isMe ? name : "\(name) (\(BotPersonEntity.appName))"
+    self.person = IntentPerson(identifier: .applicationDefined(id), name: .displayName(shown), handle: nil, isMe: isMe)
   }
+
+  /// "Casama" (a test build's own name, such as "Casama Dev", so Siri can tell them apart).
+  static let appName: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? "Casama"
 
   static let me = BotPersonEntity(id: "me", name: "Me", isMe: true)
 
@@ -56,7 +65,11 @@ struct BotPersonQuery: EntityStringQuery {
   }
 
   func entities(matching string: String) async throws -> [BotPersonEntity] {
-    let r = BotPersonEntity.bots().filter { $0.person.displayName.localizedCaseInsensitiveContains(string) }
+    let bots = BotPersonEntity.bots()
+    var r = bots.filter { string.localizedCaseInsensitiveContains($0.person.displayName) || $0.name.localizedCaseInsensitiveContains(string) }
+    // Siri on the Mac hands over the whole phrase it heard ("Milo in Casama"): then the one bot
+    // whose name is in it counts, the same rule as a contact's name below.
+    if r.isEmpty { r = BotPersonQuery.closest(to: string, in: bots) }
     SiriProbeLog.add("person match '\(string)' -> \(r.count)")
     return r
   }
@@ -82,11 +95,14 @@ extension BotPersonQuery: IntentValueQuery {
   /// contact instead (a contact named like "Nilo" for "Milo"), so when no name is equal, a bot
   /// whose name is one letter off from a word Siri heard counts, but only when exactly one does.
   static func closest(to name: String, in bots: [BotPersonEntity]) -> [BotPersonEntity] {
-    let exact = bots.filter { $0.person.displayName.localizedCaseInsensitiveCompare(name) == .orderedSame }
+    let exact = bots.filter {
+      $0.name.localizedCaseInsensitiveCompare(name) == .orderedSame
+        || $0.person.displayName.localizedCaseInsensitiveCompare(name) == .orderedSame
+    }
     if !exact.isEmpty { return exact }
     let heard = words(name)
     let near = bots.filter { bot in
-      let mine = words(bot.person.displayName)
+      let mine = words(bot.name)
       return !mine.isEmpty && mine.allSatisfy { w in heard.contains { h in w == h || (w.count >= 4 && oneOff(w, h)) } }
     }
     return near.count == 1 ? near : []
@@ -112,12 +128,9 @@ extension BotPersonQuery: IntentValueQuery {
   }
 }
 
-@available(iOS 27.0, macOS 27.0, *)
-extension BotPersonEntity: Transferable {
-  static var transferRepresentation: some TransferRepresentation {
-    IntentValueRepresentation(exporting: \.person)
-  }
-}
+// No `Transferable` export to `IntentPerson`, and bots aren't put in Spotlight as people
+// (SiriIndex): with either, Siri handed a bot to Apple's Messages as a plain person and Messages
+// sent real iMessages (2026-11-26, plan §17). A bot stays an entity only Casama's intents take.
 
 /// A chat with a bot: its title and the bot, never what was said in it (§4.4).
 @available(iOS 27.0, macOS 27.0, *)
@@ -136,7 +149,7 @@ struct BotConversationEntity: IndexedEntity {
   var dateLastActive: Date?
 
   var displayRepresentation: DisplayRepresentation {
-    DisplayRepresentation(title: "\(displayName)", subtitle: "A chat with \(recipients.first?.person.displayName ?? "a bot") in Casama")
+    DisplayRepresentation(title: "\(displayName)", subtitle: "A chat with \(recipients.first?.name ?? "a bot") in Casama")
   }
 
   init(item: ShortcutItem) {
@@ -165,7 +178,7 @@ struct BotConversationQuery: EntityStringQuery {
   func entities(matching string: String) async throws -> [BotConversationEntity] {
     BotConversationEntity.chats().filter {
       $0.displayName.localizedCaseInsensitiveContains(string)
-        || ($0.recipients.first?.person.displayName.localizedCaseInsensitiveContains(string) ?? false)
+        || ($0.recipients.first?.name.localizedCaseInsensitiveContains(string) ?? false)
     }
   }
 
@@ -205,7 +218,7 @@ struct BotMessageEntity: AppEntity {
   var notificationIdentifier: String?
 
   var displayRepresentation: DisplayRepresentation {
-    DisplayRepresentation(title: "Sent to \(conversation.recipients.first?.person.displayName ?? "a bot")", subtitle: "\(conversation.displayName)")
+    DisplayRepresentation(title: "Sent to \(conversation.recipients.first?.name ?? "a bot")", subtitle: "\(conversation.displayName)")
   }
 
   init(id: String, conversation: BotConversationEntity) {
@@ -351,7 +364,7 @@ struct SendMessageIntent: AppIntent {
       throw SiriMessageError.notSent(answer["say"] as? String ?? "Opening Casama to finish.")
     }
     let conversationId = answer["conversation_id"] as? String ?? ""
-    let chat = BotConversationEntity(item: ShortcutItem(id: conversationId, name: answer["title"] as? String ?? bot.person.displayName, detail: bot.person.displayName, bot_id: bot.id))
+    let chat = BotConversationEntity(item: ShortcutItem(id: conversationId, name: answer["title"] as? String ?? bot.name, detail: bot.name, bot_id: bot.id))
     chat.dateLastActive = Date()
     return .result(value: [BotMessageEntity(id: answer["message_id"] as? String ?? UUID().uuidString, conversation: chat)])
   }

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:casama_sdk/casama_link.dart';
 import 'package:casama_sdk/casama_sdk.dart';
+import 'package:casama_selfhost/casama_selfhost.dart' as sh;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,6 +18,7 @@ import '../../core/haptics.dart';
 import '../../core/providers.dart';
 import '../../core/server_address.dart';
 import '../../core/widgets.dart';
+import '../../l10n/generated/app_localizations.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_tokens.dart';
 import '../../ui/motion.dart';
@@ -32,6 +34,7 @@ import '../settings/model_keys_screen.dart';
 import 'docker_check.dart';
 import 'guided_setup.dart';
 import 'local_server.dart';
+import 'server_license.dart';
 import 'setup_art.dart';
 
 /// The steps of the guided setup, in the order the page shows them.
@@ -498,7 +501,7 @@ class _DockerStepState extends State<DockerStep> {
   Future<void> _recheck() async {
     setState(() => _rechecking = true);
     // Try opening it again too: a Docker that was quit from its menu doesn't come back by itself.
-    if (widget.state == DockerState.notRunning && widget.check.isMac) await widget.check.open();
+    if (widget.state == DockerState.notRunning && widget.check.desktopApp) await widget.check.open();
     await widget.onCheck();
     if (mounted) setState(() => _rechecking = false);
   }
@@ -508,7 +511,7 @@ class _DockerStepState extends State<DockerStep> {
     super.initState();
     _startSlowTimer();
     // Installed but closed: open it for them, once. Docker shows its own window if it needs a yes.
-    if (widget.state == DockerState.notRunning && widget.check.isMac) unawaited(_open());
+    if (widget.state == DockerState.notRunning && widget.check.desktopApp) unawaited(_open());
     unawaited(widget.check.freeDiskGb().then((gb) {
       if (mounted) setState(() => _freeGb = gb);
     }));
@@ -519,7 +522,7 @@ class _DockerStepState extends State<DockerStep> {
     super.didUpdateWidget(old);
     if (old.state != widget.state) _startSlowTimer();
     // Just installed: open it without another click.
-    if (old.state == DockerState.notInstalled && widget.state == DockerState.notRunning && widget.check.isMac && !_opening) {
+    if (old.state == DockerState.notInstalled && widget.state == DockerState.notRunning && widget.check.desktopApp && !_opening) {
       unawaited(_open());
     }
   }
@@ -539,11 +542,17 @@ class _DockerStepState extends State<DockerStep> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final mac = widget.check.isMac;
-    final low = _freeGb != null && _freeGb! < 12;
+    // Mac and Windows get Docker Desktop, an app this page can download and open.
+    final mac = widget.check.desktopApp;
+    final windows = widget.check.isWindows;
+    final low = _freeGb != null && _freeGb! < fallbackDiskGb;
     final children = switch (widget.state) {
       DockerState.notInstalled => [
-        _Heading(l10n.setupDockerMissingTitle, mac ? l10n.setupDockerMissingBodyMac : l10n.setupDockerMissingBodyLinux, icon: LucideIcons.container),
+        _Heading(
+          l10n.setupDockerMissingTitle,
+          windows ? l10n.setupDockerMissingBodyWindows : (mac ? l10n.setupDockerMissingBodyMac : l10n.setupDockerMissingBodyLinux),
+          icon: LucideIcons.container,
+        ),
         _primary(
           key: const Key('setupGetDocker'),
           onPressed: _download,
@@ -553,7 +562,7 @@ class _DockerStepState extends State<DockerStep> {
         if (mac)
           GroupedCard(
             children: [
-              for (final (i, text) in [l10n.setupDockerStep1, l10n.setupDockerStep2, l10n.setupDockerStep3].indexed)
+              for (final (i, text) in [windows ? l10n.setupDockerStep1Windows : l10n.setupDockerStep1, l10n.setupDockerStep2, l10n.setupDockerStep3].indexed)
                 GroupedTile(
                   icon: [LucideIcons.folderDown, LucideIcons.squareCheckBig, LucideIcons.undo2][i],
                   title: text,
@@ -589,7 +598,7 @@ class _DockerStepState extends State<DockerStep> {
         ...children,
         if (low)
           FormNote(
-            l10n.setupDiskLow(_freeGb!.toStringAsFixed(0)),
+            l10n.setupDiskLow(_freeGb!.toStringAsFixed(0), '$fallbackDiskGb'),
             key: const Key('setupDiskLow'),
             icon: LucideIcons.hardDrive,
             color: context.colorScheme.error,
@@ -690,7 +699,55 @@ class _ServerStepState extends ConsumerState<ServerStep> {
   final _pulled = <String>{};
   static final _imageLine = RegExp(r'^Image (\S+) (Pulling|Pulled)\b');
   double? _freeGb;
+
+  /// What this install still downloads and the disk it needs, from the release's measured image
+  /// sizes; null until known, or for a release without sizes.
+  sh.DownloadEstimate? _estimate;
+
+  /// The disk the server needs, in GB: its images plus a little room to start, or the fixed
+  /// estimate when the release has no sizes.
+  int get _needGb => _estimate == null ? fallbackDiskGb : (_estimate!.diskGb + 1).ceil();
+
+  String _body(AppLocalizations l10n) {
+    final e = _estimate;
+    if (e == null) return l10n.setupServerBody;
+    if (e.downloadBytes < 50 * 1000 * 1000) return l10n.setupServerBodyNothing;
+    return l10n.setupServerBodySized(gbText(e.downloadGb), gbText(e.diskGb));
+  }
   StreamSubscription<LocalServerProgress>? _sub;
+
+  /// The person's Casama Cloud session for the free personal license, or null.
+  CloudSession? _cloud;
+
+  /// They chose to license the server later (it then starts in its setup state).
+  var _skipLicense = false;
+
+  /// Why the personal license couldn't be made, shown while the install carries on without it.
+  String? _licenseNote;
+
+  Future<void> _signInToCloud() async {
+    final s = await cloudSession(context, ref);
+    if (s != null && mounted) {
+      setState(() {
+        _cloud = s;
+        _skipLicense = false;
+      });
+    }
+  }
+
+  /// The free personal license for the new install, made on Casama Cloud for its instance id.
+  Future<String?> _license(String instanceId, String engineVersion) async {
+    final s = _cloud;
+    if (s == null) return null;
+    try {
+      final issued = await ref.read(backendProvider).selfhost.personalLicense(cloudToken: s.accessToken, instanceId: instanceId, engineVersion: engineVersion);
+      Analytics.log('guided_setup_step', const {'step': 'license', 'action': 'done'});
+      return issued.license;
+    } catch (e) {
+      if (mounted) setState(() => _licenseNote = context.l10n.setupLicenseFailed(errorText(context, e)));
+      return null;
+    }
+  }
 
   bool get _busy => _p != null && _p!.step != LocalServerStep.failed;
 
@@ -699,6 +756,9 @@ class _ServerStepState extends ConsumerState<ServerStep> {
     super.initState();
     unawaited(ref.read(dockerCheckProvider).freeDiskGb().then((gb) {
       if (mounted) setState(() => _freeGb = gb);
+    }));
+    unawaited(ref.read(localServerManagerProvider).estimate().then((e) {
+      if (mounted) setState(() => _estimate = e);
     }));
     if (widget.autoStart) WidgetsBinding.instance.addPostFrameCallback((_) => _start());
   }
@@ -738,7 +798,8 @@ class _ServerStepState extends ConsumerState<ServerStep> {
       _part = 0;
       _p = const LocalServerProgress(LocalServerStep.checking);
     });
-    _sub = ref.read(localServerManagerProvider).start().listen(
+    _licenseNote = null;
+    _sub = ref.read(localServerManagerProvider).start(license: _cloud == null ? null : _license).listen(
       (p) async {
         if (!mounted) return;
         setState(() {
@@ -776,6 +837,50 @@ class _ServerStepState extends ConsumerState<ServerStep> {
     );
   }
 
+  /// Before the install: the free personal license from the person's Casama account, or later.
+  Widget _licenseCard(BuildContext context) {
+    final l10n = context.l10n;
+    final scheme = context.colorScheme;
+    final cloud = _cloud;
+    if (cloud != null) {
+      return FormNote(
+        cloud.email == null ? l10n.setupLicenseReady : l10n.setupLicenseReadyFor(cloud.email!),
+        key: const Key('setupLicenseReady'),
+        icon: LucideIcons.circleCheck,
+        color: context.appColors.positive,
+      );
+    }
+    if (_skipLicense) {
+      return FormNote(l10n.setupLicenseSkipped, key: const Key('setupLicenseSkipped'), icon: LucideIcons.keyRound);
+    }
+    return Column(
+      key: const Key('setupLicense'),
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      spacing: AppSpace.sm,
+      children: [
+        Text(l10n.setupLicenseTitle, style: context.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700)),
+        Text(l10n.setupLicenseBody, style: context.textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant)),
+        Wrap(
+          spacing: AppSpace.sm,
+          runSpacing: AppSpace.xs,
+          children: [
+            OutlinedButton.icon(
+              key: const Key('setupLicenseSignIn'),
+              onPressed: _signInToCloud,
+              icon: const Icon(LucideIcons.cloud, size: 18),
+              label: Text(l10n.setupLicenseSignIn),
+            ),
+            TextButton(
+              key: const Key('setupLicenseSkip'),
+              onPressed: () => setState(() => _skipLicense = true),
+              child: Text(l10n.setupSkip),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
@@ -795,17 +900,19 @@ class _ServerStepState extends ConsumerState<ServerStep> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: AppSpace.lg,
       children: [
-        _Heading(l10n.setupServerTitle, l10n.setupServerBody, icon: LucideIcons.serverCog),
+        _Heading(l10n.setupServerTitle, _body(l10n), icon: LucideIcons.serverCog),
         if (p == null) ...[
-          if (_freeGb != null && _freeGb! < 12)
+          if (_freeGb != null && _freeGb! < _needGb)
             FormNote(
-              l10n.setupDiskLow(_freeGb!.toStringAsFixed(0)),
+              l10n.setupDiskLow(_freeGb!.toStringAsFixed(0), '$_needGb'),
               key: const Key('setupDiskLow'),
               icon: LucideIcons.hardDrive,
               color: scheme.error,
             ),
+          _licenseCard(context),
           _primary(key: const Key('setupStartServer'), onPressed: _start, icon: LucideIcons.play, label: l10n.setupServerStart),
         ] else ...[
+          if (_licenseNote != null) FormNote(_licenseNote!, key: const Key('setupLicenseFailed'), icon: LucideIcons.keyRound, color: scheme.error),
           GroupedCard(
             children: [
               for (final (i, label) in parts.indexed)
@@ -869,6 +976,14 @@ class _ServerStepState extends ConsumerState<ServerStep> {
     );
   }
 }
+
+/// The disk a server needs when its release doesn't say (measured 2026-11-26: a 2.4 GB download
+/// that unpacks to 7 GB; Docker Desktop keeps both, about 9.4 GB).
+const fallbackDiskGb = 10;
+
+/// A size in GB as the setup page says it: one decimal under 10 GB ("2.6"), whole above ("13").
+@visibleForTesting
+String gbText(double gb) => gb < 10 ? gb.toStringAsFixed(1) : gb.ceil().toString();
 
 /// Step 3: the owner's account, made right here (the server confirms it at once, so no email goes
 /// out), then the first space and bot, as the welcome page would make them.

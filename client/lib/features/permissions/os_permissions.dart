@@ -121,7 +121,8 @@ String osPermissionLabel(AppLocalizations l10n, String id) => switch (id) {
   'photos' => l10n.permPhotos,
   'contacts' => l10n.permContacts,
   'calendar' => l10n.permCalendar,
-  'health' => l10n.permHealth,
+  // HealthKit on iPhone is named Apple Health (App Store guideline 2.5.1).
+  'health' => defaultTargetPlatform == TargetPlatform.iOS ? l10n.appleHealth : l10n.permHealth,
   'notifications' => l10n.permNotifications,
   'notification_access' => l10n.permNotificationAccess,
   'accessibility' => l10n.permAccessibility,

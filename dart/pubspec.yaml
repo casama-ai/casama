@@ -7,5 +7,6 @@ workspace:
   - casama_sdk
   - cli
   - computerd
+  - selfhost
 dev_dependencies:
   lints: ^6.1.0

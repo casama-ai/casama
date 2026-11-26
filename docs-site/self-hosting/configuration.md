@@ -1,32 +1,37 @@
 # Configuration
 
-::: warning Self-hosting is paused
-Self-hosting is paused while the Casama Engine moves to a separate license. The install commands on this page are removed for now, and the rest is kept as a reference. Casama Cloud is the way to run Casama today.
-:::
-
-Every setting for a Compose install lives in one file: `infra/compose/.env`. The installer writes it
+Every setting for a Compose install lives in one file: `.env`. The installer writes it
 on the first run with generated secrets and a few defaults. This page lists every setting you can
 put there, grouped by topic, with its default and what it does.
 
-If you run Casama with Helm or on a platform like Render or Railway, the same names apply as
-environment variables on the API, worker and supervisor. See
-[Database and auth](#database-and-auth) for the ones Compose sets for you.
+`images.env`, next to it, pins the images of the release you run; the installer and updates write
+it. See [Database and auth](#database-and-auth) for the settings Compose sets for you.
 
 ## Change a setting
 
-1. Edit `infra/compose/.env`. Use one `NAME=value` per line. An empty value counts as unset.
-2. Apply it with `casama selfhost up`.
+1. Edit `.env`. Use one `NAME=value` per line. An empty value counts as unset.
+2. Apply it:
+
+   ```sh
+   casama selfhost up
+   ```
+
+   Or, without the CLI:
+
+   ```sh
+   docker compose --env-file .env --env-file images.env up -d
+   ```
 
 Compose recreates every service whose settings changed. All Casama services read their settings
-only at start, so every change needs this step. A plain restart is not enough: it restarts
+only at start, so every change needs this step. `docker compose restart` is not enough: it restarts
 containers with their old settings.
 
 ::: tip Optional profiles
 `casama selfhost up` names no Compose profile except `link`, which it adds while remote access is
-on. If you changed a setting for the web app, monitoring, search, page PDFs or backups, add the
-profile.
+on. If you changed a setting for monitoring, search, page PDFs or backups, add the
+profile: `docker compose ... --profile monitoring up -d`.
 Docker Compose also reads `COMPOSE_PROFILES` from the env file, so `COMPOSE_PROFILES=monitoring,web`
-in `.env` keeps them on for every command. The installer adds the `backup` profile by
+in `.env` keeps them on for every command. Re-running `./install.sh` adds the `backup` profile by
 itself once you installed with `--backups`.
 :::
 
@@ -51,13 +56,12 @@ listed under [Advanced settings](#advanced-settings), with how to add them.
 | `FIREFOX_EXTENSIONS`     | `true`                          | Lets Casama for Firefox call the API. Firefox gives every install its own address, so it can't be listed by id; `false` keeps it out. |
 | `RATE_LIMIT_PER_MINUTE`  | `120`                           | Requests per minute on the API and webhooks, per signed-in user or else per IP address. Casama Link endpoints get ten times as much. |
 | `UPDATE_CHECK_URL`       | (empty: no update checks)       | Where the admin console checks for new releases, in the shape of GitHub's latest-release API.                                         |
-| `CASAMA_REGISTRY`        | `casama` (build locally)        | Where the Casama images come from. the installer's `--pull` option sets `ghcr.io/stackwares/casama`, and re-runs then pull instead of build.     |
-| `CASAMA_VERSION`         | `local`                         | The tag of the Casama images Compose builds or pulls. `--pull [tag]` sets it (default `latest`).                                      |
-| `CASAMA_SERVER_IMAGE`    | (empty: registry and tag above) | Runs the API and worker on one exact image, such as your own build of `apps/server/Dockerfile`. Upgrades leave it alone; empty it to go back. |
+| `CASAMA_IMAGE_SERVER` and the other `CASAMA_IMAGE_*` | From the release, in `images.env` | The exact image each service runs, pinned by digest. Updates rewrite them. |
+| `CASAMA_ENGINE_VERSION`  | From the release, in `images.env` | The engine version you run.                                                                          |
 | `API_DRAIN_SECONDS`      | `30`                            | How long a stopping API lets the requests it's answering finish before it exits.                                                       |
 | `CALL_HANDOVER_SECONDS`  | `600`                           | When a deploy starts the new API first and hands over (SIGUSR2), how long the old one keeps carrying voice and phone calls.              |
 | `WORKER_DRAIN_SECONDS`   | `45`                            | How long a stopping worker lets the step each bot is on finish; runs continue on the next worker.                                      |
-| `HTTP_BIND`              | `0.0.0.0`                       | The address Caddy's HTTP, HTTPS and Pages ports listen on. `--behind-proxy` and `--local` set `127.0.0.1`.                              |
+| `HTTP_BIND`              | `0.0.0.0`                       | The address Caddy's HTTP, HTTPS and Pages ports listen on. `--behind-proxy` and `--local` set `127.0.0.1`; `--lan` sets `0.0.0.0`.                              |
 | `TRUSTED_CLIENT_IP_HEADER` | (empty: `X-Forwarded-For`)    | A header your edge sets with the caller's address, for rate limits on signed-out requests. Behind Cloudflare, `cf-connecting-ip`.      |
 | `AUTH_RATE_LIMIT_HEADER` | (empty: Auth's default)         | The same for Supabase Auth's per-caller sign-in limits. Behind Cloudflare, `cf-connecting-ip`.                                         |
 | `CASAMA_CONTAINER_PREFIX` | `casama`                       | Prefix of the fixed container names and of bot computers' containers, networks and volumes. Change it to run two stacks on one machine. |
@@ -80,19 +84,31 @@ these together, then run `casama selfhost up`:
 CASAMA_SITE=casama.example.com
 CASAMA_PUBLIC_URL=https://casama.example.com
 TURN_PUBLIC_HOST=casama.example.com
-SIGNUP_HOOK_URI=https://casama.example.com/hooks/auth/before-user-created
+SIGNUP_HOOK_URI=http://host.docker.internal:8787/hooks/auth/before-user-created
+SIGNUP_HOOK_ENABLED=true
 ```
 
 ### Behind another proxy
 
 If a load balancer or another reverse proxy terminates TLS:
 
-1. Set `CASAMA_SITE=:80` so Caddy serves plain HTTP. the installer's `--behind-proxy --domain <name>` option does this.
+1. Set `CASAMA_SITE=:80` so Caddy serves plain HTTP. `./install.sh --behind-proxy --domain <name>` does this.
 2. Keep `CASAMA_PUBLIC_URL` on the public `https://` address.
 3. Route your proxy to Caddy's HTTP port (`HTTP_PORT`), including WebSocket upgrades.
 4. Set `HTTP_BIND=127.0.0.1` (the installer does this with `--behind-proxy`). Docker-published ports skip the host firewall, so `0.0.0.0` would serve plain HTTP to anyone who can reach the server's IP.
 5. Keep port 3478 (UDP and TCP) reachable directly for live view, and set `TURN_PUBLIC_HOST` (`--turn-host`) to a name that points at the server with DNS only, not through the HTTP proxy. Media stays inside coturn, so the relay range 49160–49260 does not need to be open.
 6. If the proxy is a tunnel on the same machine (Cloudflare Tunnel, for example), every request reaches Caddy from the tunnel's own address. Set `TRUSTED_CLIENT_IP_HEADER` to the header that carries the real address (`cf-connecting-ip` for Cloudflare), or all signed-out callers share one rate limit.
+
+## License
+
+| Name | Default | What it does |
+| --- | --- | --- |
+| `CASAMA_SELFHOST_LICENSING` | `on` in the self-host compose file | Turns license checks on. |
+| `CASAMA_INSTANCE_ID` | Generated | A random id for this server. The installer writes it once; keep it. Your license is tied to it. |
+| `CASAMA_LICENSE_KEY` | (empty) | A license key. The desktop app writes your personal key here. A key set later in the app or with `casama selfhost license` is stored in the database and wins when it is newer. |
+| `CASAMA_LICENSE_SERVER` | `https://api.casama.ai` | Where the server renews its license. |
+
+See [Licenses](/self-hosting/licenses).
 
 ## Generated secrets
 
@@ -125,7 +141,7 @@ The installer also generates `CONTENT_ENCRYPTION_KEY` unless you use AWS KMS. Se
 ## Database and auth
 
 Compose wires these for the API and worker from the generated secrets. Set them yourself only on
-Helm, a platform like Render, or a custom setup.
+a custom setup.
 
 | Name                        | Default                       | What it does                                                                                                   |
 | --------------------------- | ----------------------------- | -------------------------------------------------------------------------------------------------------------- |
@@ -147,7 +163,7 @@ Helm, a platform like Render, or a custom setup.
 | `API_INTERNAL_URL`          | `http://127.0.0.1:$PORT`      | How the worker reaches the API's internal endpoints.                                                           |
 | `INTERNAL_TOKEN`            | Derived from `DATABASE_URL`   | Shared secret for internal endpoints. Always set a random value; the server warns in production without one.  |
 | `SERVER_ALARM_TOKEN`        | (unset: route off)            | Bearer token for `POST /hooks/server-alarm`: a host's own monitoring script raises an owner alert with it.      |
-| `SUPERVISOR_URL`            | (unset: no computers)         | The sandbox supervisor's address. Compose uses `http://casama-supervisor:8788`.                               |
+| `SUPERVISOR_URL`            | (unset: no computers)         | The sandbox supervisor's address. Compose uses `http://casama-selfhost-supervisor:8788`.                               |
 | `SUPERVISOR_TOKEN`          | (unset)                       | Token for the supervisor.                                                                                      |
 
 ## Page PDFs
@@ -157,16 +173,13 @@ a normal container, so it runs in a container of its own (Gotenberg, about 500 M
 secrets and sits on a private network with only the API on it: no internet, no database. Pages are
 printed from what the API sends; outside URLs and other files are blocked.
 
-1. Add `pdf` to `COMPOSE_PROFILES` in `infra/compose/.env` (or pass `--profile pdf`).
+1. Add `pdf` to `COMPOSE_PROFILES` in `.env` (or pass `--profile pdf`).
 2. Set `PDF_RENDERER_URL=http://pdf:3000` in the same file.
-3. Apply it with `casama selfhost up`.
+3. Run `docker compose --env-file .env --env-file images.env up -d`.
 
 | Name               | Default                 | What it does                                          |
 | ------------------ | ----------------------- | ----------------------------------------------------- |
 | `PDF_RENDERER_URL` | (empty: PDF export off) | The PDF sidecar's address. Compose: `http://pdf:3000`. |
-
-On Helm, run `gotenberg/gotenberg:8.39.0-chromium` as its own Deployment with a NetworkPolicy that only
-lets the API in and nothing out, and set `PDF_RENDERER_URL` with `extraEnv`.
 
 ### PDFs and Word files bots make
 
@@ -238,19 +251,18 @@ EMAIL_AUTOCONFIRM=false
 | `INSTANCE_ADMIN_EMAILS`  | (empty: the first account)       | Comma-separated emails of instance owners, who get the admin console.                                                                    |
 | `DISABLE_SIGNUP`         | `false`                          | `true` turns off new sign-ups in Supabase Auth.                                                                                          |
 | `SIGNUP_ALLOWED_EMAILS`  | (empty: anyone)                  | Only these emails or domains can sign up, comma-separated: `ana@example.com,@example.org` (`example.org` also works for a domain).       |
-| `SIGNUP_HOOK_ENABLED`    | `false`                          | `true` makes Supabase Auth call Casama's sign-up hook. Needed for the allowlist.                                                         |
+| `SIGNUP_HOOK_ENABLED`    | `false` (the installer sets `true`) | `true` makes Supabase Auth call Casama's sign-up hook. Needed for the allowlist, and holds the license's seats at sign-up. |
 | `SIGNUP_WAITLIST`        | `auto`                           | Casama Cloud's waitlist and invite gate. `auto` means only where billing is on, which is Casama Cloud. A self-hosted server leaves it alone and nothing changes. Your own switches are `SIGNUP_ALLOWED_EMAILS`, `SIGNUP_INVITED_ONLY` and `DISABLE_SIGNUP`. |
 | `WAITLIST_URL`           | `https://casama.ai/waitlist`     | Where the apps and sign-up refusals send people to join the waitlist or enter a code. Used only where the waitlist exists.               |
 | `OPENROUTER_DAILY_CAP_USD` | `50`                           | The daily spending cap set on Casama Cloud's OpenRouter key, mirrored here. The waitlist's daily batch skips a day after one that passed 60% of it. Used only where the waitlist exists. |
 | `AUTH_HOOK_SECRET`       | (empty)                          | The hook's signing secret, `v1,whsec_<base64>`. Shared by Auth and the API.                                                              |
-| `SIGNUP_HOOK_URI`        | Set by the installer             | Where Auth calls the hook: `https://<domain>/hooks/auth/before-user-created`. Empty for `--local`.                                       |
+| `SIGNUP_HOOK_URI`        | Set by the installer             | Where Auth calls the hook: `http://host.docker.internal:8787/hooks/auth/before-user-created`, the API on Docker's private `signup-hook` network, for every install (servers from before that network used `https://<domain>/hooks/auth/before-user-created`; `selfhost update` moves them). |
 | `ADDITIONAL_REDIRECT_URLS` | `casama://app/login-callback,http://127.0.0.1:*/auth/callback` | Redirect URLs Supabase Auth accepts after sign-in, comma-separated. Keep the default for the apps: iPhone, Mac and Android come back on `casama://`, Windows and Linux on a listener on `127.0.0.1`. |
-| `SAML_ENABLED`           | `true`                           | SAML SSO in Supabase Auth. Workspaces register their identity provider through the API (needs an enterprise license).                    |
+| `SAML_ENABLED`           | `true`                           | SAML SSO in Supabase Auth. Workspaces register their identity provider through the API (needs a business license that includes it).                    |
 | `ABUSE_CONTROLS`         | `auto` (off when self-hosted)    | `auto`, `on` or `off`. Sign-up proofs, verified email before computers start, and suspension on egress abuse. Meant for Casama Cloud.    |
 | `EGRESS_ABUSE`           | `off`                            | `on` makes the egress proxy refuse mail and crypto-mining traffic from computers and report it.                                          |
 
-To limit sign-ups to your team (needs a `--domain` install, because Supabase Auth only calls https
-hooks):
+To limit sign-ups to your team:
 
 1. Generate a secret:
 
@@ -258,7 +270,7 @@ hooks):
    echo "v1,whsec_$(openssl rand -base64 32)"
    ```
 
-2. Add to `infra/compose/.env`:
+2. Add to `.env`:
 
    ```sh
    SIGNUP_ALLOWED_EMAILS=@example.com,ana@example.org
@@ -273,8 +285,9 @@ approved email addresses". An allowlist without a hook secret refuses every sign
 allowing everyone.
 
 ::: warning
-`SIGNUP_HOOK_URI` must be empty or an `https://` address. A plain `http://` address stops Supabase
-Auth from starting, even with the hook turned off.
+`SIGNUP_HOOK_URI` must be empty, an `https://` address or the installer's
+`http://host.docker.internal:8787/…` address. Any other plain `http://` address stops Supabase Auth
+from starting, even with the hook turned off.
 :::
 
 ## Apple and Google sign-in
@@ -303,7 +316,7 @@ redirect URI of the web client. If Apple and Google reach Auth under another nam
    `ai.casama.app`.
 2. In Google Cloud, create a web OAuth client (not an iOS or Android client) and copy its id and
    secret.
-3. Add the values to `infra/compose/.env` and run `casama selfhost up`.
+3. Add the values to `.env` and run `casama selfhost up`.
 
 Apple asks apps with Sign in with Apple to revoke a person's Apple tokens when they delete their
 account. Give the server the same Sign in with Apple key and it does so: the app hands over what
@@ -373,7 +386,7 @@ On Linux, use the host's LAN address instead (for example `http://192.168.1.20:1
 
 Add `--embedding-model embeddinggemma` (after `ollama pull embeddinggemma`) so memory search runs
 locally too, and `--vision-model <name>` for a model that reads images but isn't recognized by
-name.
+name. [Local models](/guide/bots#local-models) has the details.
 
 ## Object storage
 
@@ -399,7 +412,7 @@ supervisor reads these settings:
 ::: warning The bundled compose file doesn't pass these to the supervisor
 Only `S3_ACCESS_KEY_ID` and `S3_SECRET_ACCESS_KEY` reach the `s3` service. To switch the supervisor
 to S3, add the settings to the `supervisor` service's `environment:` in
-`infra/compose/docker-compose.yml`, as shown in [Advanced settings](#advanced-settings). Switching
+the compose file, as shown in [Advanced settings](#advanced-settings). Switching
 stores doesn't move existing archives, so do it before computers have slept, or copy the
 `objects` volume's contents to the bucket yourself.
 :::
@@ -407,13 +420,13 @@ stores doesn't move existing archives, so do it before computers have slept, or 
 With SeaweedFS on the same host:
 
 ```sh
-# infra/compose/.env
+# .env
 S3_ACCESS_KEY_ID=casama
 S3_SECRET_ACCESS_KEY=a-long-random-secret
 ```
 
 ```yaml
-# infra/compose/docker-compose.yml, under services.supervisor.environment
+# the compose file, under services.supervisor.environment
 OBJECT_STORE: s3
 S3_ENDPOINT: http://casama-s3:8333
 S3_BUCKET: casama
@@ -422,7 +435,11 @@ S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID:-}
 S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:-}
 ```
 
-Then start the stack with the `s3` profile on.
+Then start it with the profile:
+
+```sh
+docker compose --env-file .env --env-file images.env --profile s3 up -d
+```
 
 `casama selfhost backup` archives the `objects` volume only. With S3, back up the bucket with your
 storage provider's tools.
@@ -432,7 +449,7 @@ storage provider's tools.
 The API and worker keep a second store: files bots hand over in replies, which the Library keeps
 with their versions, and the pictures, videos and sounds in chats. By default it's the `library`
 Docker volume, mounted at `/data/library`. To keep it in S3-compatible storage instead, set these
-in `infra/compose/.env`; Compose passes them to the API and worker:
+in `.env`; Compose passes them to the API and worker:
 
 | Name                            | Default         | What it does                                       |
 | ------------------------------- | --------------- | -------------------------------------------------- |
@@ -465,9 +482,9 @@ These go to the supervisor. Hosted providers and their settings are on
 | Name                    | Default           | What it does                                                                                                                                   |
 | ----------------------- | ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
 | `OUTBOUND_ALLOW_CIDRS`  | (empty)           | Private networks the API and worker may call, comma-separated CIDRs, for example `192.168.1.0/24`. Everything private is blocked otherwise.     |
-| `TURN_PUBLIC_HOST`      | Set by the installer | The host name viewers use to reach the TURN relay. The domain, or `localhost` for `--local`.                                                 |
+| `TURN_PUBLIC_HOST`      | Set by the installer | The host name viewers use to reach the TURN relay. The domain, `localhost` for `--local`, or the LAN address for `--lan`.                                                 |
 | `TURN_HOST_PORT`        | `3478`            | Host port the TURN relay is published on, and the port viewers are given. "Run Casama on this computer" moves it when 3478 is taken.              |
-| `TURN_BIND`             | `0.0.0.0`         | The address the TURN port listens on. `--local` sets `127.0.0.1`.                                                                              |
+| `TURN_BIND`             | `0.0.0.0`         | The address the TURN port listens on. `--local` sets `127.0.0.1`; `--lan` sets `0.0.0.0`.                                                                            |
 
 `OUTBOUND_ALLOW_CIDRS` covers calls the server makes for bots and people: model endpoints such as
 Ollama, password managers such as Vaultwarden, connections, MCP servers and memory backends. It
@@ -530,7 +547,7 @@ one with its own domain. With **Private Notifications** on, they carry no text. 
 | `MCP_OAUTH_CLIENTS`           | (empty)   | OAuth clients for apps that don't support automatic registration, as JSON by app id: `{"slack":{"client_id":"...","client_secret":"..."}}`.                     |
 | `COMPOSIO_API_KEY`            | (empty)   | A server-wide Composio key. Apps whose own sign-in needs a client the server doesn't have (GitHub, Slack, Asana, Google's apps without a Google client, and others) then offer **Sign in through Composio**. The admin console's Services tab can switch back to people's own accounts. |
 | `OAUTH_REDIRECT_URL`          | `<PUBLIC_API_URL>/oauth/callback` | Where vendors send people back after an app sign-in. Change it only if vendors must use another address.                                 |
-| `SEARXNG_URL`                 | (empty)   | A SearXNG instance for web search in workspaces without their own search key (Brave Search, Tavily, Parallel or Serper). Free: the installer's `--search` option runs one (`http://searxng:8080`). Its settings must allow JSON results. It is always tried last. |
+| `SEARXNG_URL`                 | (empty)   | A SearXNG instance for web search in workspaces without their own search key (Brave Search, Tavily, Parallel or Serper). Free: `./install.sh --search` runs one (`http://searxng:8080`). Its settings must allow JSON results. It is always tried last. |
 | `SEARCH_PROVIDER_ORDER`       | `parallel,serper,searxng` | The server's own web search for workspaces without a key, in the order tried; the next one answers when one fails or finds nothing. Names: `parallel`, `serper`, `deepseek`, `searxng`. A provider without its key is skipped. Answers are kept for 6 hours per workspace. |
 | `PARALLEL_API_KEY`            | (empty)   | The server's [Parallel](https://parallel.ai) Search key ($1 per 1,000 searches). The server pays; usage shows each search's cost. |
 | `SERPER_API_KEY`              | (empty)   | The server's [Serper](https://serper.dev) key, Google results ($1 per 1,000 searches). |
@@ -574,7 +591,8 @@ An offline server can read a local copy: point `GALLERY_URL` at a folder you ser
 ## Billing
 
 Billing is for Casama Cloud. The bundled compose file sets `BILLING_ENABLED=false` for the API and
-worker, so there's no paywall and no usage limit, and none of the payment settings apply. Settings
+worker, so there are no Cloud plans, paywall or credit limits, and none of the payment settings
+apply. What your server allows comes from its [license](/self-hosting/licenses). Settings
 whose `auto` follows billing keep their self-hosted behaviour: `ABUSE_CONTROLS`,
 `HEALTH_REQUIRES_ENCRYPTION` and `REFERRALS` stay off, and `CHATGPT_SIGN_IN` stays on.
 
@@ -650,7 +668,12 @@ Casama Link connects your server to a Casama Cloud workspace. See the
 | Name                | Default   | What it does                                                                 |
 | ------------------- | --------- | ---------------------------------------------------------------------------- |
 | `CASAMA_CLOUD_URL`  | (empty)   | Casama Cloud's address: `https://api.casama.ai`.                             |
-| `CASAMA_CLOUD_KEY`  | (empty)   | The server's Casama Link key (`kcc_...`). Empty: Casama Link is off.         |
+| `CASAMA_CLOUD_KEY`  | (empty)   | The server's Casama Link key (`kcc_...`). Empty: Casama Link is off. The server saves it in its Vault once, then reads it from there. |
+
+Casama Cloud models don't need these two. **Settings → Models → Casama Cloud** (or
+`casama selfhost cloud-models on`) stores the key in the Vault itself and never restarts the server.
+Without `CASAMA_CLOUD_URL`, the server uses `CASAMA_LICENSE_SERVER` (`https://api.casama.ai` by
+default) as Casama Cloud's address.
 
 With both set:
 
@@ -712,7 +735,7 @@ Choose one:
 - **Your own edge** (`CASAMA_SITES_OWN_EDGE=true`): the stack's Caddy makes a certificate the
   first time a name is opened, after asking the API (`http://api:8787/internal/tls-ask`), which
   says yes only for a live site address or a domain host it has proof for. The same switch turns
-  on Caddy's catch-all site (`infra/compose/selfhost/sites-edge-true.caddy`), so this also serves
+  on Caddy's catch-all site (`sites-edge-true.caddy`), so this also serves
   your sites domain's addresses. Ports 80 and 443 must reach Caddy directly, not through a tunnel.
   People add an `A`/`AAAA` record to `CASAMA_SITES_SERVER_IPV4`/`IPV6` (or a CNAME to your pages
   host) and a `TXT` record that proves the domain is theirs.
@@ -729,10 +752,6 @@ Choose one:
 With neither, **Use Your Own Domain** isn't offered. Buying domains through Casama is for Casama
 Cloud only and stays off on self-hosted servers unless you set up a registrar account
 (see `docs/DOMAINS-RUNBOOK.md` in the repository).
-
-On Helm, set these with `extraEnv`, add the wildcard host to your Ingress, and for connected domains
-use cert-manager with Cloudflare for SaaS, or an ingress controller that supports on-demand TLS with
-an ask URL.
 
 ## Telemetry and observability
 
@@ -835,7 +854,7 @@ server has a key.
 
 | Name                               | Default         | What it does                                                                                                    |
 | ---------------------------------- | --------------- | --------------------------------------------------------------------------------------------------------------- |
-| `CONTENT_ENCRYPTION_KEY`           | (generated)     | The server key that wraps workspace keys: 32 bytes, base64. the installer makes one unless KMS is set; back it up. |
+| `CONTENT_ENCRYPTION_KEY`           | (generated)     | The server key that wraps workspace keys: 32 bytes, base64. `install.sh` makes one unless KMS is set; back it up. |
 | `CONTENT_ENCRYPTION_KEY_PREVIOUS`  | (empty)         | Older keys during a rotation, comma-separated.                                                                  |
 | `CONTENT_KMS_KEY_ID`               | (empty)         | Use AWS KMS instead: the key's id or ARN.                                                                       |
 | `CONTENT_KMS_REGION`               | (empty)         | The KMS key's region.                                                                                           |
@@ -880,11 +899,9 @@ from then on.
 
 ## Audit forwarding and enterprise features
 
-| Name                 | Default   | What it does                                                                                     |
-| -------------------- | --------- | ------------------------------------------------------------------------------------------------ |
-| `CASAMA_LICENSE_KEY` | (empty)   | A Casama Enterprise license key. Unlocks SAML SSO, audit log export and audit-log forwarding.    |
-
-Everything outside the `ee/` folder works without a license. See
+SAML single sign-on, audit log export and audit-log forwarding need a business license that
+includes them (annual licenses add single sign-on and audit forwarding). The key goes in
+`CASAMA_LICENSE_KEY` or is entered in the app; see [Licenses](/self-hosting/licenses). See
 [Audit-log forwarding](/self-hosting/operations#audit-log-forwarding).
 
 ## Privacy and retention
@@ -899,9 +916,9 @@ events are kept for each workspace's retention setting (default 180 days). See
 
 ## Advanced settings
 
-The server and supervisor read these, but the bundled compose file doesn't pass them through. On
-Helm, set them with `extraEnv`; on a platform, as environment variables. With Compose, add them to
-the service's `environment:` in `infra/compose/docker-compose.yml`. The API and worker share the
+The server and supervisor read these, but the bundled compose file doesn't pass them through. Add
+them to the service's `environment:` in the compose file in your install folder. An update replaces
+that file, so keep a note of your changes. The API and worker share the
 `x-casama` block at the top:
 
 ```yaml
@@ -912,8 +929,8 @@ x-casama: &casama
     EMBEDDINGS: ${EMBEDDINGS:-auto}
 ```
 
-Then set the value in `.env` and run `casama selfhost up`. Keep your edit when you upgrade: `git
-pull` refuses to overwrite a changed file, so commit it on a local branch or re-apply it.
+Then set the value in `.env` and run `casama selfhost up`. An update replaces
+the compose file, so re-apply your edit afterwards.
 
 **API and worker:**
 

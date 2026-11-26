@@ -17,6 +17,7 @@ export '../ui/skeleton.dart';
 export 'nav.dart';
 import 'date_format.dart';
 import 'haptics.dart';
+import 'license_errors.dart';
 import 'analytics.dart';
 import 'telemetry.dart';
 import '../ui/effects.dart';
@@ -57,7 +58,7 @@ String errorText(BuildContext context, Object error) {
   final wait = retryAfterOf(error);
   if (wait != null) return context.l10n.tooManyRequestsWait(wait.inSeconds < 1 ? 1 : wait.inSeconds);
   final problem = problemOf(error);
-  if (problem != null) return problem.detail ?? problem.title;
+  if (problem != null) return licenseErrorMessage(context, problem.code) ?? problem.detail ?? problem.title;
   if (error is DioException) {
     // No answer at all (offline, server restarting, blocked): the library's text is for developers
     // (a browser even reports it as a CORS problem), so say it plainly.
@@ -490,8 +491,9 @@ Future<T?> runGuarded<T>(
     final paywall = onPaymentRequired;
     // A 402 from the server, or a plan limit the database enforces (SQLSTATE PT402, such as
     // unarchiving a bot past the plan's bot limit).
+    // A self-hosted server's license errors are 402 too, but no plan fixes them (no paywall).
     final paymentRequired =
-        (e is DioException && e.response?.statusCode == 402) ||
+        (e is DioException && e.response?.statusCode == 402 && !licenseErrorCodes.contains(problemOf(e)?.code)) ||
         (e is sb.PostgrestException && e.code == 'PT402');
     final outOfCredits = onOutOfCredits;
     final code = e is DioException ? e.response?.data : null;

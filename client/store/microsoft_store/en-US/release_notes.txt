@@ -1,0 +1,1 @@
+Move a workspace between Casama Cloud and your own server, see which account and server you are signing in to, and smoother window resizing on Windows.

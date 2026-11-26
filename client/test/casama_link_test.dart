@@ -869,7 +869,7 @@ void main() {
       (tester) async {
         // A server on this Mac is hidden while Cloud-only (ENGINE-SPLIT-PLAN §7.3); its code stays.
         debugLocalServerOn = true;
-        addTearDown(() => debugLocalServerOn = false);
+        addTearDown(() => debugLocalServerOn = null);
         debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
         await setSize(tester, const Size(500, 1400));
         var started = 0;

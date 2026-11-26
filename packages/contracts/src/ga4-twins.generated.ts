@@ -306,6 +306,25 @@ export const ANALYTICS_CLIENT_EVENTS: Record<string, string[]> = {
   ],
   "keep_going_tapped": [
     "reason"
+  ],
+  "cloud_models_row_seen": [
+    "connected",
+    "admin"
+  ],
+  "cloud_models_signin": [],
+  "cloud_models_trial_started": [],
+  "cloud_models_purchased": [
+    "store",
+    "product_id"
+  ],
+  "cloud_models_enabled": [
+    "bots",
+    "trial"
+  ],
+  "cloud_models_fallback_used": [],
+  "cloud_models_fallback_off": [],
+  "cloud_models_disabled": [
+    "reason"
   ]
 };
 

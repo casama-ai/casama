@@ -3502,6 +3502,30 @@ abstract class AppLocalizations {
   /// **'End and Call'**
   String get callSwitchConfirm;
 
+  /// No description provided for @callVoiceConsentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your voice goes to Google'**
+  String get callVoiceConsentTitle;
+
+  /// No description provided for @callVoiceConsentBody.
+  ///
+  /// In en, this message translates to:
+  /// **'In a call, Casama sends your voice and what you say to Google Gemini, which hears you and speaks your bot\'s replies. The call\'s words also go to the AI model your bot uses, through OpenRouter. Nothing is sent until you agree. You can stop this any time in Settings › Privacy.'**
+  String get callVoiceConsentBody;
+
+  /// No description provided for @callVoiceConsentAgree.
+  ///
+  /// In en, this message translates to:
+  /// **'Agree and Call'**
+  String get callVoiceConsentAgree;
+
+  /// No description provided for @callVoiceConsentNotNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Not Now'**
+  String get callVoiceConsentNotNow;
+
   /// No description provided for @callEndedLost.
   ///
   /// In en, this message translates to:
@@ -6013,7 +6037,7 @@ abstract class AppLocalizations {
   /// No description provided for @billingOffSelfHosted.
   ///
   /// In en, this message translates to:
-  /// **'Billing is off on this server. Self-hosted Casama has no limits.'**
+  /// **'Billing is off on this server. It runs on its own license: personal use is free for one person, and teams use a Business license.'**
   String get billingOffSelfHosted;
 
   /// No description provided for @restorePurchases.
@@ -6393,6 +6417,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Server address'**
   String get serverAddress;
+
+  /// No description provided for @serverAddressInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a server address like https://casama.example.com or http://192.168.1.20:8080.'**
+  String get serverAddressInvalid;
 
   /// No description provided for @connect.
   ///
@@ -8245,7 +8275,7 @@ abstract class AppLocalizations {
   /// No description provided for @billingOffTitle.
   ///
   /// In en, this message translates to:
-  /// **'No limits here'**
+  /// **'No billing here'**
   String get billingOffTitle;
 
   /// No description provided for @revokeKeyTitle.
@@ -10479,6 +10509,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Open your authenticator app and enter the 6-digit code to finish signing in.'**
   String get twoStepPromptBody;
+
+  /// Label over the account (email) and server the two-step code is for.
+  ///
+  /// In en, this message translates to:
+  /// **'Signing in as'**
+  String get twoStepPromptAccount;
+
+  /// The name of Casama's own hosted server, shown where a self-hosted server would show its address.
+  ///
+  /// In en, this message translates to:
+  /// **'Casama Cloud'**
+  String get casamaCloudName;
+
+  /// No description provided for @newPasswordFor.
+  ///
+  /// In en, this message translates to:
+  /// **'New password for'**
+  String get newPasswordFor;
+
+  /// No description provided for @connectAiAppAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'It gets access to'**
+  String get connectAiAppAccount;
+
+  /// No description provided for @joinAsAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll join as {email} on {server}.'**
+  String joinAsAccount(String email, String server);
 
   /// No description provided for @requireTwoStep.
   ///
@@ -16675,7 +16735,7 @@ abstract class AppLocalizations {
   /// No description provided for @setupEntryHelp.
   ///
   /// In en, this message translates to:
-  /// **'Free and private: your own server, on this computer.'**
+  /// **'Your own private server on this computer. Free for personal use.'**
   String get setupEntryHelp;
 
   /// No description provided for @setupStepDocker.
@@ -16921,8 +16981,8 @@ abstract class AppLocalizations {
   /// No description provided for @setupDiskLow.
   ///
   /// In en, this message translates to:
-  /// **'Only {gb} GB of disk space is free. The server needs about 10 GB.'**
-  String setupDiskLow(String gb);
+  /// **'Only {gb} GB of disk space is free. The server needs about {need} GB.'**
+  String setupDiskLow(String gb, String need);
 
   /// No description provided for @setupServerTitle.
   ///
@@ -16933,8 +16993,20 @@ abstract class AppLocalizations {
   /// No description provided for @setupServerBody.
   ///
   /// In en, this message translates to:
-  /// **'About 10 GB and 5 to 10 minutes the first time. You can keep using your computer.'**
+  /// **'A download of about 2.5 GB that takes 5 to 10 minutes the first time, and about 10 GB of disk once it\'s set up. You can keep using your computer.'**
   String get setupServerBody;
+
+  /// No description provided for @setupServerBodySized.
+  ///
+  /// In en, this message translates to:
+  /// **'A {download} GB download, then about {disk} GB of disk once it\'s set up. The first time takes 5 to 10 minutes. You can keep using your computer.'**
+  String setupServerBodySized(String download, String disk);
+
+  /// No description provided for @setupServerBodyNothing.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything it needs is already on this computer, so it starts in a minute or two.'**
+  String get setupServerBodyNothing;
 
   /// No description provided for @setupServerStart.
   ///
@@ -17469,6 +17541,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Blood pressure'**
   String get healthExtraBloodPressure;
+
+  /// No description provided for @appleHealth.
+  ///
+  /// In en, this message translates to:
+  /// **'Apple Health'**
+  String get appleHealth;
+
+  /// No description provided for @appleHealthAbout.
+  ///
+  /// In en, this message translates to:
+  /// **'Reads daily summaries of your sleep, activity, workouts and heart from Apple Health (HealthKit), only when this is on. Casama never writes to Apple Health.'**
+  String get appleHealthAbout;
 
   /// No description provided for @healthNotMedical.
   ///
@@ -38996,6 +39080,18 @@ abstract class AppLocalizations {
   /// **'Dispute opened'**
   String get liveKindDisputeOpened;
 
+  /// No description provided for @liveKindStoreReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Store review'**
+  String get liveKindStoreReview;
+
+  /// No description provided for @liveKindStoreCrashes.
+  ///
+  /// In en, this message translates to:
+  /// **'Store crash reports'**
+  String get liveKindStoreCrashes;
+
   /// No description provided for @liveKindDay2Return.
   ///
   /// In en, this message translates to:
@@ -41131,6 +41227,1998 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Not now'**
   String get starAskNotNow;
+
+  /// No description provided for @cloudSignInTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in with your Casama account'**
+  String get cloudSignInTitle;
+
+  /// No description provided for @cloudSignInBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The free personal license comes from your Casama account. Only the license goes to this server; your chats stay on it.'**
+  String get cloudSignInBody;
+
+  /// No description provided for @cloudSignInEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get cloudSignInEmail;
+
+  /// No description provided for @cloudSignInSendCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Code'**
+  String get cloudSignInSendCode;
+
+  /// No description provided for @cloudSignInCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Code from the email'**
+  String get cloudSignInCode;
+
+  /// No description provided for @cloudSignInVerify.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign In'**
+  String get cloudSignInVerify;
+
+  /// No description provided for @cloudSignInCodeSent.
+  ///
+  /// In en, this message translates to:
+  /// **'We sent a code to {email}. Enter it here.'**
+  String cloudSignInCodeSent(String email);
+
+  /// No description provided for @licenseSetupTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Get your free personal license'**
+  String get licenseSetupTitle;
+
+  /// No description provided for @licenseSetupBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This server needs a license before bots can run. Personal use is free for one person: sign in with your Casama account and the license renews itself online every 30 days.'**
+  String get licenseSetupBody;
+
+  /// No description provided for @licensePersonalButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Get Free Personal License'**
+  String get licensePersonalButton;
+
+  /// No description provided for @licensePersonalNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal: one person, for personal use, on your own computer or server.'**
+  String get licensePersonalNote;
+
+  /// No description provided for @licenseBusinessTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Or enter a business key'**
+  String get licenseBusinessTitle;
+
+  /// No description provided for @licenseBusinessHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste your license key'**
+  String get licenseBusinessHint;
+
+  /// No description provided for @licenseBusinessSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Use This Key'**
+  String get licenseBusinessSave;
+
+  /// No description provided for @licenseBusinessContact.
+  ///
+  /// In en, this message translates to:
+  /// **'Using Casama at work or with a team? Business is \$29 per active user a month (\$24 billed yearly). Write to {email}.'**
+  String licenseBusinessContact(String email);
+
+  /// No description provided for @licenseActivated.
+  ///
+  /// In en, this message translates to:
+  /// **'License active. Your bots can run.'**
+  String get licenseActivated;
+
+  /// No description provided for @licenseOtherServer.
+  ///
+  /// In en, this message translates to:
+  /// **'Use Another Server'**
+  String get licenseOtherServer;
+
+  /// No description provided for @licenseRenew.
+  ///
+  /// In en, this message translates to:
+  /// **'Renew'**
+  String get licenseRenew;
+
+  /// No description provided for @licenseRenewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Renew this server\'s license'**
+  String get licenseRenewTitle;
+
+  /// No description provided for @licenseGraceBanner.
+  ///
+  /// In en, this message translates to:
+  /// **'This server\'s license has run out. Bots keep running until {date}; renew before then.'**
+  String licenseGraceBanner(String date);
+
+  /// No description provided for @licenseGraceBannerSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'This server\'s license has run out. Renew it soon to keep bots running.'**
+  String get licenseGraceBannerSoon;
+
+  /// No description provided for @licenseExpiredBanner.
+  ///
+  /// In en, this message translates to:
+  /// **'This server\'s license has expired, so new bot runs are paused. Your data is safe: you can still sign in, read and export. Renew to start bots again.'**
+  String get licenseExpiredBanner;
+
+  /// No description provided for @licenseErrorRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'This server needs a license first. Get the free personal license or enter a business key.'**
+  String get licenseErrorRequired;
+
+  /// No description provided for @licenseErrorSeats.
+  ///
+  /// In en, this message translates to:
+  /// **'Every seat on this server\'s license is taken. More people need a Business license: write to {email}.'**
+  String licenseErrorSeats(String email);
+
+  /// No description provided for @licenseErrorExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'This server\'s license has expired, so new bot runs are paused. Your data is safe. Renew the license to start bots again.'**
+  String get licenseErrorExpired;
+
+  /// No description provided for @licenseEditionPersonal.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal'**
+  String get licenseEditionPersonal;
+
+  /// No description provided for @licenseEditionTrial.
+  ///
+  /// In en, this message translates to:
+  /// **'Trial'**
+  String get licenseEditionTrial;
+
+  /// No description provided for @licenseEditionBusiness.
+  ///
+  /// In en, this message translates to:
+  /// **'Business'**
+  String get licenseEditionBusiness;
+
+  /// No description provided for @licenseFeatureSso.
+  ///
+  /// In en, this message translates to:
+  /// **'SSO'**
+  String get licenseFeatureSso;
+
+  /// No description provided for @licenseFeatureAuditExport.
+  ///
+  /// In en, this message translates to:
+  /// **'Audit export'**
+  String get licenseFeatureAuditExport;
+
+  /// No description provided for @licenseFeatureAuditForwarding.
+  ///
+  /// In en, this message translates to:
+  /// **'Audit forwarding'**
+  String get licenseFeatureAuditForwarding;
+
+  /// No description provided for @licenseFeatureRoles.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced roles'**
+  String get licenseFeatureRoles;
+
+  /// No description provided for @setupLicenseTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Free personal license'**
+  String get setupLicenseTitle;
+
+  /// No description provided for @setupLicenseBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in with your Casama account to get the free personal license for this server: one person, personal use. You can also do it later.'**
+  String get setupLicenseBody;
+
+  /// No description provided for @setupLicenseSignIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign In with Casama'**
+  String get setupLicenseSignIn;
+
+  /// No description provided for @setupLicenseReady.
+  ///
+  /// In en, this message translates to:
+  /// **'The free personal license comes with your server.'**
+  String get setupLicenseReady;
+
+  /// No description provided for @setupLicenseReadyFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Signed in as {email}. The free personal license comes with your server.'**
+  String setupLicenseReadyFor(String email);
+
+  /// No description provided for @setupLicenseSkipped.
+  ///
+  /// In en, this message translates to:
+  /// **'No license yet. Your server asks for one when it starts.'**
+  String get setupLicenseSkipped;
+
+  /// No description provided for @setupLicenseFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The personal license couldn\'t be made ({error}). Your server asks for one when it starts.'**
+  String setupLicenseFailed(String error);
+
+  /// No description provided for @setupDockerMissingBodyWindows.
+  ///
+  /// In en, this message translates to:
+  /// **'Casama\'s server runs inside Docker Desktop, a free app that uses WSL 2 to keep it separate from the rest of your PC.'**
+  String get setupDockerMissingBodyWindows;
+
+  /// No description provided for @setupDockerStep1Windows.
+  ///
+  /// In en, this message translates to:
+  /// **'Run the installer that downloads and keep \"Use WSL 2\" on.'**
+  String get setupDockerStep1Windows;
+
+  /// No description provided for @localUpdateAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'A server update is ready: {version}'**
+  String localUpdateAvailable(String version);
+
+  /// No description provided for @localUpdateButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get localUpdateButton;
+
+  /// No description provided for @localUpdateLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get localUpdateLater;
+
+  /// No description provided for @localUpdateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Update your server to {version}'**
+  String localUpdateTitle(String version);
+
+  /// No description provided for @localUpdateBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The database is backed up first. If the new version doesn\'t start, your server goes back to the version it has now.'**
+  String get localUpdateBody;
+
+  /// No description provided for @localUpdateDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated to {version}.'**
+  String localUpdateDone(String version);
+
+  /// No description provided for @localUpdateRolledBack.
+  ///
+  /// In en, this message translates to:
+  /// **'The new version didn\'t start, so your server went back to the version it had. Nothing was lost, and a database backup was saved.'**
+  String get localUpdateRolledBack;
+
+  /// No description provided for @localUpdateFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The update failed: {detail}'**
+  String localUpdateFailed(String detail);
+
+  /// No description provided for @adminSelfhost.
+  ///
+  /// In en, this message translates to:
+  /// **'Self-host Licenses'**
+  String get adminSelfhost;
+
+  /// No description provided for @adminAboutSelfhost.
+  ///
+  /// In en, this message translates to:
+  /// **'Licenses for self-hosted servers, their daily check-ins, and business keys.'**
+  String get adminAboutSelfhost;
+
+  /// No description provided for @adminSelfhostSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by email or customer'**
+  String get adminSelfhostSearch;
+
+  /// No description provided for @adminSelfhostNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No licenses yet.'**
+  String get adminSelfhostNone;
+
+  /// No description provided for @adminSelfhostCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'New Business Key'**
+  String get adminSelfhostCreate;
+
+  /// No description provided for @adminSelfhostCreateHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The key is shown once here and emailed to the address below.'**
+  String get adminSelfhostCreateHelp;
+
+  /// No description provided for @adminSelfhostCustomer.
+  ///
+  /// In en, this message translates to:
+  /// **'Customer'**
+  String get adminSelfhostCustomer;
+
+  /// No description provided for @adminSelfhostEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get adminSelfhostEmail;
+
+  /// No description provided for @adminSelfhostSeats.
+  ///
+  /// In en, this message translates to:
+  /// **'Seats'**
+  String get adminSelfhostSeats;
+
+  /// No description provided for @adminSelfhostExpires.
+  ///
+  /// In en, this message translates to:
+  /// **'Expires'**
+  String get adminSelfhostExpires;
+
+  /// No description provided for @adminSelfhostFeatures.
+  ///
+  /// In en, this message translates to:
+  /// **'Features'**
+  String get adminSelfhostFeatures;
+
+  /// No description provided for @adminSelfhostOfflineKey.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline key'**
+  String get adminSelfhostOfflineKey;
+
+  /// No description provided for @adminSelfhostOfflineHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Never renews and isn\'t tied to one server. For annual contracts.'**
+  String get adminSelfhostOfflineHelp;
+
+  /// No description provided for @adminSelfhostCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Business key created'**
+  String get adminSelfhostCreated;
+
+  /// No description provided for @adminSelfhostCreatedOnce.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy it now: it isn\'t shown again (it was also emailed).'**
+  String get adminSelfhostCreatedOnce;
+
+  /// No description provided for @adminSelfhostRevoke.
+  ///
+  /// In en, this message translates to:
+  /// **'Revoke'**
+  String get adminSelfhostRevoke;
+
+  /// No description provided for @adminSelfhostRevokeQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Revoke the license for {who}?'**
+  String adminSelfhostRevokeQuestion(String who);
+
+  /// No description provided for @adminSelfhostRevokeHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Its server stops at its next daily check-in: new bot runs pause, and its data stays.'**
+  String get adminSelfhostRevokeHelp;
+
+  /// No description provided for @adminSelfhostRevokedDone.
+  ///
+  /// In en, this message translates to:
+  /// **'License revoked.'**
+  String get adminSelfhostRevokedDone;
+
+  /// No description provided for @adminSelfhostRevoked.
+  ///
+  /// In en, this message translates to:
+  /// **'Revoked'**
+  String get adminSelfhostRevoked;
+
+  /// No description provided for @adminSelfhostOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline'**
+  String get adminSelfhostOffline;
+
+  /// No description provided for @adminSelfhostNever.
+  ///
+  /// In en, this message translates to:
+  /// **'Never'**
+  String get adminSelfhostNever;
+
+  /// No description provided for @adminSelfhostNeverCheckedIn.
+  ///
+  /// In en, this message translates to:
+  /// **'never checked in'**
+  String get adminSelfhostNeverCheckedIn;
+
+  /// No description provided for @adminSelfhostCheckedIn.
+  ///
+  /// In en, this message translates to:
+  /// **'checked in {when}'**
+  String adminSelfhostCheckedIn(String when);
+
+  /// No description provided for @adminSelfhostInstance.
+  ///
+  /// In en, this message translates to:
+  /// **'server {id}'**
+  String adminSelfhostInstance(String id);
+
+  /// No description provided for @adminSelfhostCounts.
+  ///
+  /// In en, this message translates to:
+  /// **'{members} members, {bots} bots'**
+  String adminSelfhostCounts(int members, int bots);
+
+  /// No description provided for @adminSelfhostAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Account or customer'**
+  String get adminSelfhostAccount;
+
+  /// No description provided for @adminSelfhostEditionColumn.
+  ///
+  /// In en, this message translates to:
+  /// **'Edition'**
+  String get adminSelfhostEditionColumn;
+
+  /// No description provided for @adminSelfhostVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Engine version'**
+  String get adminSelfhostVersion;
+
+  /// No description provided for @adminSelfhostCheckin.
+  ///
+  /// In en, this message translates to:
+  /// **'Last check-in'**
+  String get adminSelfhostCheckin;
+
+  /// No description provided for @adminSelfhostMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'Members'**
+  String get adminSelfhostMembers;
+
+  /// No description provided for @adminSelfhostBots.
+  ///
+  /// In en, this message translates to:
+  /// **'Bots'**
+  String get adminSelfhostBots;
+
+  /// No description provided for @adminGrowthSelfhost.
+  ///
+  /// In en, this message translates to:
+  /// **'Self-host'**
+  String get adminGrowthSelfhost;
+
+  /// No description provided for @adminGrowthSelfhostActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Active servers (24 h)'**
+  String get adminGrowthSelfhostActive;
+
+  /// No description provided for @adminGrowthSelfhostNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New installs (30 days)'**
+  String get adminGrowthSelfhostNew;
+
+  /// No description provided for @adminGrowthSelfhostLapsed.
+  ///
+  /// In en, this message translates to:
+  /// **'Lapsed'**
+  String get adminGrowthSelfhostLapsed;
+
+  /// No description provided for @adminGrowthSelfhostDaily.
+  ///
+  /// In en, this message translates to:
+  /// **'Active servers per day'**
+  String get adminGrowthSelfhostDaily;
+
+  /// No description provided for @adminGrowthSelfhostDailyHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Servers that made their daily license check-in each day (UTC), and new licenses.'**
+  String get adminGrowthSelfhostDailyHelp;
+
+  /// No description provided for @adminGrowthSelfhostServers.
+  ///
+  /// In en, this message translates to:
+  /// **'Active servers'**
+  String get adminGrowthSelfhostServers;
+
+  /// No description provided for @adminGrowthSelfhostNewInstalls.
+  ///
+  /// In en, this message translates to:
+  /// **'New installs'**
+  String get adminGrowthSelfhostNewInstalls;
+
+  /// No description provided for @adminGrowthSelfhostByEdition.
+  ///
+  /// In en, this message translates to:
+  /// **'By edition'**
+  String get adminGrowthSelfhostByEdition;
+
+  /// No description provided for @adminGrowthSelfhostActiveOf.
+  ///
+  /// In en, this message translates to:
+  /// **'{active} active of {total}'**
+  String adminGrowthSelfhostActiveOf(int active, int total);
+
+  /// No description provided for @adminGrowthSelfhostByVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'By engine version (active servers)'**
+  String get adminGrowthSelfhostByVersion;
+
+  /// No description provided for @adminGrowthSelfhostServersCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{n, plural, =1{1 server} other{{n} servers}}'**
+  String adminGrowthSelfhostServersCount(int n);
+
+  /// No description provided for @shCloudTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Casama Cloud'**
+  String get shCloudTitle;
+
+  /// No description provided for @shCloudScreenTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Casama Cloud models'**
+  String get shCloudScreenTitle;
+
+  /// No description provided for @shCloudPitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Casama\'s models, no keys to manage. Paid by a Casama Cloud plan.'**
+  String get shCloudPitch;
+
+  /// No description provided for @shCloudTurnOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn On'**
+  String get shCloudTurnOn;
+
+  /// No description provided for @shCloudOnPaidBy.
+  ///
+  /// In en, this message translates to:
+  /// **'On · paid by {workspace}'**
+  String shCloudOnPaidBy(String workspace);
+
+  /// No description provided for @shCloudMemberState.
+  ///
+  /// In en, this message translates to:
+  /// **'Casama Cloud, paid by {workspace}'**
+  String shCloudMemberState(String workspace);
+
+  /// No description provided for @shCloudMemberOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Not on. Only an admin of this server can turn it on.'**
+  String get shCloudMemberOff;
+
+  /// No description provided for @shCloudManage.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage'**
+  String get shCloudManage;
+
+  /// No description provided for @shCloudSignInBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in with your Casama account to choose who pays for Casama Cloud models. Your bots, chats and memory stay on this server.'**
+  String get shCloudSignInBody;
+
+  /// No description provided for @shCloudSignedInAs.
+  ///
+  /// In en, this message translates to:
+  /// **'Signed in to Casama Cloud as {email}'**
+  String shCloudSignedInAs(String email);
+
+  /// No description provided for @shCloudOtherAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Use Another Account'**
+  String get shCloudOtherAccount;
+
+  /// No description provided for @shCloudContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get shCloudContinue;
+
+  /// No description provided for @shCloudPayerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Who pays?'**
+  String get shCloudPayerTitle;
+
+  /// No description provided for @shCloudPayerBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Casama Cloud models are paid by a Casama Cloud workspace you own or run. Its plan, included usage and daily limit are shared with everything else it uses.'**
+  String get shCloudPayerBody;
+
+  /// No description provided for @shCloudPayerNone.
+  ///
+  /// In en, this message translates to:
+  /// **'You don\'t run a Casama Cloud workspace yet. Make one to pay from; it starts empty.'**
+  String get shCloudPayerNone;
+
+  /// No description provided for @shCloudCreateWorkspace.
+  ///
+  /// In en, this message translates to:
+  /// **'Create One'**
+  String get shCloudCreateWorkspace;
+
+  /// No description provided for @shCloudWorkspaceNamed.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}\'s workspace'**
+  String shCloudWorkspaceNamed(String name);
+
+  /// No description provided for @shCloudNoPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'No plan yet'**
+  String get shCloudNoPlan;
+
+  /// No description provided for @shCloudCovered.
+  ///
+  /// In en, this message translates to:
+  /// **'Your {plan} plan covers this.'**
+  String shCloudCovered(String plan);
+
+  /// No description provided for @shCloudPlanTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a plan'**
+  String get shCloudPlanTitle;
+
+  /// No description provided for @shCloudPlanBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Casama Cloud models come with any Casama Cloud plan: the same included usage, daily limit and top-ups as on Cloud. No separate price for self-hosting.'**
+  String get shCloudPlanBody;
+
+  /// No description provided for @shCloudTryFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Try It First'**
+  String get shCloudTryFirst;
+
+  /// No description provided for @shCloudTryFirstBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Free usage to try: about {amount} of messages, once per Casama account. Nothing to buy.'**
+  String shCloudTryFirstBody(String amount);
+
+  /// No description provided for @shCloudTrialUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'The free usage to try is used up on this Casama account. Choose a plan to carry on.'**
+  String get shCloudTrialUsed;
+
+  /// No description provided for @shCloudIntervalWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly'**
+  String get shCloudIntervalWeek;
+
+  /// No description provided for @shCloudIntervalMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly'**
+  String get shCloudIntervalMonth;
+
+  /// No description provided for @shCloudIntervalYear.
+  ///
+  /// In en, this message translates to:
+  /// **'Yearly'**
+  String get shCloudIntervalYear;
+
+  /// No description provided for @shCloudWaitingForPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish paying in your browser. This screen carries on by itself when the plan arrives.'**
+  String get shCloudWaitingForPlan;
+
+  /// No description provided for @shCloudWaitingTimedOut.
+  ///
+  /// In en, this message translates to:
+  /// **'The plan hasn\'t arrived yet. A payment can take a few minutes to show.'**
+  String get shCloudWaitingTimedOut;
+
+  /// No description provided for @shCloudCheckAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Check Again'**
+  String get shCloudCheckAgain;
+
+  /// No description provided for @shCloudGiftCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Have a gift code?'**
+  String get shCloudGiftCode;
+
+  /// No description provided for @shCloudGiftCodeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Gift code'**
+  String get shCloudGiftCodeLabel;
+
+  /// No description provided for @shCloudRedeem.
+  ///
+  /// In en, this message translates to:
+  /// **'Redeem'**
+  String get shCloudRedeem;
+
+  /// No description provided for @shCloudNoWayToBuy.
+  ///
+  /// In en, this message translates to:
+  /// **'Plans can\'t be bought in this app. Buy one on casama.ai with the same account, then check again here.'**
+  String get shCloudNoWayToBuy;
+
+  /// No description provided for @shCloudPurchasePending.
+  ///
+  /// In en, this message translates to:
+  /// **'Your purchase is waiting for approval. This carries on when it goes through.'**
+  String get shCloudPurchasePending;
+
+  /// No description provided for @shCloudPurchaseFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The purchase didn\'t go through. Nothing was charged.'**
+  String get shCloudPurchaseFailed;
+
+  /// No description provided for @shCloudConnecting.
+  ///
+  /// In en, this message translates to:
+  /// **'Connecting this server to Casama Cloud…'**
+  String get shCloudConnecting;
+
+  /// No description provided for @shCloudLoading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading…'**
+  String get shCloudLoading;
+
+  /// No description provided for @shCloudReviewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Check before turning on'**
+  String get shCloudReviewTitle;
+
+  /// No description provided for @shCloudReviewPays.
+  ///
+  /// In en, this message translates to:
+  /// **'Who pays'**
+  String get shCloudReviewPays;
+
+  /// No description provided for @shCloudReviewPaysLine.
+  ///
+  /// In en, this message translates to:
+  /// **'{plan} on {workspace} ({email})'**
+  String shCloudReviewPaysLine(String plan, String workspace, String email);
+
+  /// No description provided for @shCloudReviewTrialLine.
+  ///
+  /// In en, this message translates to:
+  /// **'Free usage to try on {workspace} ({email})'**
+  String shCloudReviewTrialLine(String workspace, String email);
+
+  /// No description provided for @shCloudReviewBots.
+  ///
+  /// In en, this message translates to:
+  /// **'Which bots switch'**
+  String get shCloudReviewBots;
+
+  /// No description provided for @shCloudReviewAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All bots'**
+  String get shCloudReviewAll;
+
+  /// No description provided for @shCloudReviewNoKey.
+  ///
+  /// In en, this message translates to:
+  /// **'Only bots without a working key'**
+  String get shCloudReviewNoKey;
+
+  /// No description provided for @shCloudReviewPick.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick bots'**
+  String get shCloudReviewPick;
+
+  /// No description provided for @shCloudReviewNoBots.
+  ///
+  /// In en, this message translates to:
+  /// **'This server has no bots yet. New bots can use Casama Cloud.'**
+  String get shCloudReviewNoBots;
+
+  /// No description provided for @shCloudReviewDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'New bots use Casama Cloud too'**
+  String get shCloudReviewDefault;
+
+  /// No description provided for @shCloudFromTo.
+  ///
+  /// In en, this message translates to:
+  /// **'{from} → {to}'**
+  String shCloudFromTo(String from, String to);
+
+  /// No description provided for @shCloudToCloud.
+  ///
+  /// In en, this message translates to:
+  /// **'{model} (Casama Cloud)'**
+  String shCloudToCloud(String model);
+
+  /// No description provided for @shCloudCloudModel.
+  ///
+  /// In en, this message translates to:
+  /// **'Casama Cloud\'s model'**
+  String get shCloudCloudModel;
+
+  /// No description provided for @shCloudNoKeyYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No working key'**
+  String get shCloudNoKeyYet;
+
+  /// No description provided for @shCloudStepDown.
+  ///
+  /// In en, this message translates to:
+  /// **'Replies may be shorter or less careful than with {from}. Try one bot first.'**
+  String shCloudStepDown(String from);
+
+  /// No description provided for @shCloudReviewJobs.
+  ///
+  /// In en, this message translates to:
+  /// **'Memory, images and voice'**
+  String get shCloudReviewJobs;
+
+  /// No description provided for @shCloudJobMemory.
+  ///
+  /// In en, this message translates to:
+  /// **'Memory search'**
+  String get shCloudJobMemory;
+
+  /// No description provided for @shCloudJobImages.
+  ///
+  /// In en, this message translates to:
+  /// **'Images'**
+  String get shCloudJobImages;
+
+  /// No description provided for @shCloudJobTts.
+  ///
+  /// In en, this message translates to:
+  /// **'Read aloud'**
+  String get shCloudJobTts;
+
+  /// No description provided for @shCloudJobStt.
+  ///
+  /// In en, this message translates to:
+  /// **'Dictation'**
+  String get shCloudJobStt;
+
+  /// No description provided for @shCloudJobOwnKey.
+  ///
+  /// In en, this message translates to:
+  /// **'Your own key'**
+  String get shCloudJobOwnKey;
+
+  /// No description provided for @shCloudJobMemoryOptIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Use Casama Cloud for memory too'**
+  String get shCloudJobMemoryOptIn;
+
+  /// No description provided for @shCloudJobMemoryOptInHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Memory is re-indexed in the background; search keeps working meanwhile.'**
+  String get shCloudJobMemoryOptInHelp;
+
+  /// No description provided for @shCloudJobLiveNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Live voice, phone calls and video keep using your own keys.'**
+  String get shCloudJobLiveNote;
+
+  /// No description provided for @shCloudWhatGoes.
+  ///
+  /// In en, this message translates to:
+  /// **'What goes to Casama Cloud'**
+  String get shCloudWhatGoes;
+
+  /// No description provided for @shCloudReviewPrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Messages to the model pass through Casama Cloud and aren\'t stored. Usage (model, tokens, cost) shows on your Cloud bill. Bots, chats, memory, files and computers stay on this server.'**
+  String get shCloudReviewPrivacy;
+
+  /// No description provided for @shCloudWhatGoesLink.
+  ///
+  /// In en, this message translates to:
+  /// **'What this server sends'**
+  String get shCloudWhatGoesLink;
+
+  /// No description provided for @shCloudFallback.
+  ///
+  /// In en, this message translates to:
+  /// **'If Casama Cloud runs out or can\'t be reached, use my own key'**
+  String get shCloudFallback;
+
+  /// No description provided for @shCloudFallbackHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Every answer from your own key says so.'**
+  String get shCloudFallbackHelp;
+
+  /// No description provided for @shCloudSeatsNote.
+  ///
+  /// In en, this message translates to:
+  /// **'{used} people use this server and the {plan} plan covers {seats}. Each extra person is billed at Casama Cloud\'s extra-person price.'**
+  String shCloudSeatsNote(int used, String plan, int seats);
+
+  /// No description provided for @shCloudApply.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn On Casama Cloud'**
+  String get shCloudApply;
+
+  /// No description provided for @shCloudPickOne.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick at least one bot, or let new bots use it.'**
+  String get shCloudPickOne;
+
+  /// No description provided for @shCloudPolicyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Who may use it'**
+  String get shCloudPolicyTitle;
+
+  /// No description provided for @shCloudPolicyEveryone.
+  ///
+  /// In en, this message translates to:
+  /// **'Everyone on this server'**
+  String get shCloudPolicyEveryone;
+
+  /// No description provided for @shCloudPolicyChosen.
+  ///
+  /// In en, this message translates to:
+  /// **'Only chosen people'**
+  String get shCloudPolicyChosen;
+
+  /// No description provided for @shCloudPolicyChosenCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Nobody chosen yet} =1{1 person chosen} other{{count} people chosen}}'**
+  String shCloudPolicyChosenCount(int count);
+
+  /// No description provided for @shCloudDailyLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily limit per person'**
+  String get shCloudDailyLimit;
+
+  /// No description provided for @shCloudNoLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'No limit'**
+  String get shCloudNoLimit;
+
+  /// No description provided for @shCloudDailyLimitValue.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} a day'**
+  String shCloudDailyLimitValue(String amount);
+
+  /// No description provided for @shCloudPolicySaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved'**
+  String get shCloudPolicySaved;
+
+  /// No description provided for @shCloudDoneTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Casama Cloud is on'**
+  String get shCloudDoneTitle;
+
+  /// No description provided for @shCloudDoneBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{New bots use Casama Cloud.} =1{1 bot now uses Casama Cloud.} other{{count} bots now use Casama Cloud.}} Usage shows on this server\'s Usage screen and on your Cloud bill.'**
+  String shCloudDoneBody(int count);
+
+  /// No description provided for @shCloudSayHi.
+  ///
+  /// In en, this message translates to:
+  /// **'Say Hi to {bot}'**
+  String shCloudSayHi(String bot);
+
+  /// No description provided for @shCloudDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get shCloudDone;
+
+  /// No description provided for @shCloudUsageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Usage'**
+  String get shCloudUsageTitle;
+
+  /// No description provided for @shCloudIncludedLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} of included usage left this month'**
+  String shCloudIncludedLeft(String amount);
+
+  /// No description provided for @shCloudToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Today: {spend} of {cap}'**
+  String shCloudToday(String spend, String cap);
+
+  /// No description provided for @shCloudTodayNoCap.
+  ///
+  /// In en, this message translates to:
+  /// **'Today: {spend}'**
+  String shCloudTodayNoCap(String spend);
+
+  /// No description provided for @shCloudCredits.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} in credits'**
+  String shCloudCredits(String amount);
+
+  /// No description provided for @shCloudTrialLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} of free usage to try left'**
+  String shCloudTrialLeft(String amount);
+
+  /// No description provided for @shCloudPriceNote.
+  ///
+  /// In en, this message translates to:
+  /// **'At the price Casama Cloud charges. The same calls show on your Cloud bill under this server\'s name.'**
+  String get shCloudPriceNote;
+
+  /// No description provided for @shCloudYourToday.
+  ///
+  /// In en, this message translates to:
+  /// **'You today: {spend} of {limit}'**
+  String shCloudYourToday(String spend, String limit);
+
+  /// No description provided for @shCloudWarnIncluded.
+  ///
+  /// In en, this message translates to:
+  /// **'Casama Cloud has used 80% of this month\'s included usage.'**
+  String get shCloudWarnIncluded;
+
+  /// No description provided for @shCloudWarnDaily.
+  ///
+  /// In en, this message translates to:
+  /// **'Casama Cloud has used 80% of today\'s limit.'**
+  String get shCloudWarnDaily;
+
+  /// No description provided for @shCloudTopUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Top Up'**
+  String get shCloudTopUp;
+
+  /// No description provided for @shCloudUseOwnKey.
+  ///
+  /// In en, this message translates to:
+  /// **'Use My Own Key'**
+  String get shCloudUseOwnKey;
+
+  /// No description provided for @shCloudStopOutOfCredits.
+  ///
+  /// In en, this message translates to:
+  /// **'Casama Cloud is out of usage for this month.'**
+  String get shCloudStopOutOfCredits;
+
+  /// No description provided for @shCloudStopDailyCap.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s Casama Cloud limit is used up. It resets at {time}.'**
+  String shCloudStopDailyCap(String time);
+
+  /// No description provided for @shCloudStopDailyCapSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s Casama Cloud limit is used up. It resets tomorrow.'**
+  String get shCloudStopDailyCapSoon;
+
+  /// No description provided for @shCloudStopPlanRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Casama Cloud needs a plan on {workspace}.'**
+  String shCloudStopPlanRequired(String workspace);
+
+  /// No description provided for @shCloudStopPlanEnded.
+  ///
+  /// In en, this message translates to:
+  /// **'The Casama Cloud plan on {workspace} ended.'**
+  String shCloudStopPlanEnded(String workspace);
+
+  /// No description provided for @shCloudStopSeats.
+  ///
+  /// In en, this message translates to:
+  /// **'The plan on {workspace} doesn\'t cover everyone using Casama Cloud here.'**
+  String shCloudStopSeats(String workspace);
+
+  /// No description provided for @shCloudStopMemberLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve reached today\'s Casama Cloud limit on this server.'**
+  String get shCloudStopMemberLimit;
+
+  /// No description provided for @shCloudStopMemberNotAllowed.
+  ///
+  /// In en, this message translates to:
+  /// **'Your admin hasn\'t turned on Casama Cloud for you.'**
+  String get shCloudStopMemberNotAllowed;
+
+  /// No description provided for @shCloudStopDisconnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Casama Cloud was disconnected from this server.'**
+  String get shCloudStopDisconnected;
+
+  /// No description provided for @shCloudStopUnreachable.
+  ///
+  /// In en, this message translates to:
+  /// **'Casama Cloud can\'t be reached right now. Trying again.'**
+  String get shCloudStopUnreachable;
+
+  /// No description provided for @shCloudSeePlans.
+  ///
+  /// In en, this message translates to:
+  /// **'See Plans'**
+  String get shCloudSeePlans;
+
+  /// No description provided for @shCloudRenew.
+  ///
+  /// In en, this message translates to:
+  /// **'Renew'**
+  String get shCloudRenew;
+
+  /// No description provided for @shCloudAskAdmin.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask an Admin'**
+  String get shCloudAskAdmin;
+
+  /// No description provided for @shCloudAskAdminBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Only an admin of this server can change Casama Cloud. Ask one of them; bots and routines carry on by themselves once it\'s fixed.'**
+  String get shCloudAskAdminBody;
+
+  /// No description provided for @shCloudReconnect.
+  ///
+  /// In en, this message translates to:
+  /// **'Reconnect'**
+  String get shCloudReconnect;
+
+  /// No description provided for @shCloudFallbackActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Your own key is answering meanwhile, and each answer says so.'**
+  String get shCloudFallbackActive;
+
+  /// No description provided for @shCloudUseOwnKeyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Use your own key meanwhile?'**
+  String get shCloudUseOwnKeyTitle;
+
+  /// No description provided for @shCloudUseOwnKeyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'While Casama Cloud can\'t answer, bots answer with your own key, and each such answer says so. Turn it off any time on this screen.'**
+  String get shCloudUseOwnKeyBody;
+
+  /// No description provided for @shCloudAddKeyFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a key of your own on the Models screen first.'**
+  String get shCloudAddKeyFirst;
+
+  /// No description provided for @shCloudRoutinesWait.
+  ///
+  /// In en, this message translates to:
+  /// **'Routines wait and carry on by themselves when it\'s fixed.'**
+  String get shCloudRoutinesWait;
+
+  /// No description provided for @shCloudMemoryCatchingUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Memory is catching up: {done} of {total}'**
+  String shCloudMemoryCatchingUp(int done, int total);
+
+  /// No description provided for @shCloudMemoryCatchingUpHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Search uses words for memories not re-indexed yet.'**
+  String get shCloudMemoryCatchingUpHelp;
+
+  /// No description provided for @shCloudMemberNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Messages to the model now pass through Casama Cloud, paid by {workspace}.'**
+  String shCloudMemberNotice(String workspace);
+
+  /// No description provided for @shCloudGotIt.
+  ///
+  /// In en, this message translates to:
+  /// **'Got It'**
+  String get shCloudGotIt;
+
+  /// No description provided for @shCloudChipPaidBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid by {workspace}'**
+  String shCloudChipPaidBy(String workspace);
+
+  /// No description provided for @shCloudPaidBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid by'**
+  String get shCloudPaidBy;
+
+  /// No description provided for @shCloudChangePayer.
+  ///
+  /// In en, this message translates to:
+  /// **'Change'**
+  String get shCloudChangePayer;
+
+  /// No description provided for @shCloudChangeBots.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Bots'**
+  String get shCloudChangeBots;
+
+  /// No description provided for @shCloudFallbackSection.
+  ///
+  /// In en, this message translates to:
+  /// **'When Casama Cloud can\'t answer'**
+  String get shCloudFallbackSection;
+
+  /// No description provided for @shCloudTurnOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn Off'**
+  String get shCloudTurnOff;
+
+  /// No description provided for @shCloudOffTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn off Casama Cloud?'**
+  String get shCloudOffTitle;
+
+  /// No description provided for @shCloudOffBody.
+  ///
+  /// In en, this message translates to:
+  /// **'These bots go back to their previous key when it still works, else the workspace\'s default key. Nothing else changes, and you can turn it on again any time.'**
+  String get shCloudOffBody;
+
+  /// No description provided for @shCloudOffBotsNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No bots use Casama Cloud right now.'**
+  String get shCloudOffBotsNone;
+
+  /// No description provided for @shCloudOffDoneTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Casama Cloud is off'**
+  String get shCloudOffDoneTitle;
+
+  /// No description provided for @shCloudOffBackTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to {key}'**
+  String shCloudOffBackTo(String key);
+
+  /// No description provided for @shCloudOffNeedsKey.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs a key'**
+  String get shCloudOffNeedsKey;
+
+  /// No description provided for @shCloudAddKey.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a Key'**
+  String get shCloudAddKey;
+
+  /// No description provided for @shCloudSignInAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Casama Cloud sign-in ended. Sign in again to carry on.'**
+  String get shCloudSignInAgain;
+
+  /// No description provided for @cloudAccountSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Casama Cloud account'**
+  String get cloudAccountSection;
+
+  /// No description provided for @cloudAccountRow.
+  ///
+  /// In en, this message translates to:
+  /// **'Signed in as {email}'**
+  String cloudAccountRow(String email);
+
+  /// No description provided for @cloudAccountRowHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Used for this server\'s license and Casama Cloud models'**
+  String get cloudAccountRowHelp;
+
+  /// No description provided for @cloudAccountSignOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign Out of Casama Cloud'**
+  String get cloudAccountSignOut;
+
+  /// No description provided for @cloudAccountSignOutBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This device forgets your Casama Cloud sign-in. This server, its license and Casama Cloud models keep working.'**
+  String get cloudAccountSignOutBody;
+
+  /// No description provided for @cloudAccountDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Casama Cloud Account'**
+  String get cloudAccountDelete;
+
+  /// No description provided for @cloudAccountDeleteHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Deletes your account on Casama Cloud. This server and its data stay.'**
+  String get cloudAccountDeleteHelp;
+
+  /// No description provided for @cloudAccountDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Type {email} to delete your Casama Cloud account. Cloud workspaces only you own go with it, and Casama Cloud models stop on servers they pay for. Plans bought in a store are cancelled in that store.'**
+  String cloudAccountDeleteConfirm(String email);
+
+  /// No description provided for @cloudAccountDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Casama Cloud account is deleted. Its data is removed for good on {date}.'**
+  String cloudAccountDeleted(String date);
+
+  /// No description provided for @wsMoveSettingsToCloud.
+  ///
+  /// In en, this message translates to:
+  /// **'Move to Casama Cloud'**
+  String get wsMoveSettingsToCloud;
+
+  /// No description provided for @wsMoveSettingsToServer.
+  ///
+  /// In en, this message translates to:
+  /// **'Move to My Own Server'**
+  String get wsMoveSettingsToServer;
+
+  /// No description provided for @wsMoveSettingsHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Take this workspace\'s bots, chats, memory and files to another server'**
+  String get wsMoveSettingsHelp;
+
+  /// No description provided for @wsMoveTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Move This Workspace'**
+  String get wsMoveTitle;
+
+  /// No description provided for @wsMoveIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything comes along: bots, chats, memory, routines, files and computers. Once it\'s there, this copy stays readable but stops working.'**
+  String get wsMoveIntro;
+
+  /// No description provided for @wsMoveCloudOption.
+  ///
+  /// In en, this message translates to:
+  /// **'Move to Casama Cloud'**
+  String get wsMoveCloudOption;
+
+  /// No description provided for @wsMoveCloudOptionHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in with your Casama account and pick where it goes.'**
+  String get wsMoveCloudOptionHelp;
+
+  /// No description provided for @wsMoveServerOption.
+  ///
+  /// In en, this message translates to:
+  /// **'Move to my own server'**
+  String get wsMoveServerOption;
+
+  /// No description provided for @wsMoveServerOptionHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'On that server, open Settings › Bring a Workspace Here and copy its move code.'**
+  String get wsMoveServerOptionHelp;
+
+  /// No description provided for @wsMoveInstallServer.
+  ///
+  /// In en, this message translates to:
+  /// **'Install Casama Server'**
+  String get wsMoveInstallServer;
+
+  /// No description provided for @wsMoveInstallServerHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'No server yet? Run one on this computer first.'**
+  String get wsMoveInstallServerHelp;
+
+  /// No description provided for @wsMoveReceiveOption.
+  ///
+  /// In en, this message translates to:
+  /// **'Bring a workspace here'**
+  String get wsMoveReceiveOption;
+
+  /// No description provided for @wsMoveReceiveOptionHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Get a move code for this workspace, to use on the server the other workspace is on now.'**
+  String get wsMoveReceiveOptionHelp;
+
+  /// No description provided for @wsMoveOwnerOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Only the workspace\'s owner can move it.'**
+  String get wsMoveOwnerOnly;
+
+  /// No description provided for @wsMoveCloudPickTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Where should it go?'**
+  String get wsMoveCloudPickTitle;
+
+  /// No description provided for @wsMoveCloudNew.
+  ///
+  /// In en, this message translates to:
+  /// **'A new workspace'**
+  String get wsMoveCloudNew;
+
+  /// No description provided for @wsMoveCloudNewHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Starts empty on Casama Cloud, named {name}.'**
+  String wsMoveCloudNewHelp(String name);
+
+  /// No description provided for @wsMoveCloudExistingHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Moved items go next to what\'s there. Names that clash get “(moved)”.'**
+  String get wsMoveCloudExistingHelp;
+
+  /// No description provided for @wsMoveServerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Move to Your Own Server'**
+  String get wsMoveServerTitle;
+
+  /// No description provided for @wsMoveServerAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Server address'**
+  String get wsMoveServerAddress;
+
+  /// No description provided for @wsMoveServerCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Move code'**
+  String get wsMoveServerCode;
+
+  /// No description provided for @wsMoveCheckButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Check'**
+  String get wsMoveCheckButton;
+
+  /// No description provided for @wsMoveReceiveTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Bring a Workspace Here'**
+  String get wsMoveReceiveTitle;
+
+  /// No description provided for @wsMoveReceiveBody.
+  ///
+  /// In en, this message translates to:
+  /// **'On the server the workspace is on now, open Settings › Move to My Own Server and enter this address and code. The code works once, until {time}, and brings everything into {name}.'**
+  String wsMoveReceiveBody(String time, String name);
+
+  /// No description provided for @wsMoveReceiveAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'This server\'s address'**
+  String get wsMoveReceiveAddress;
+
+  /// No description provided for @wsMoveReceiveCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Move code'**
+  String get wsMoveReceiveCode;
+
+  /// No description provided for @wsMoveCopy.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy'**
+  String get wsMoveCopy;
+
+  /// No description provided for @wsMoveCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied'**
+  String get wsMoveCopied;
+
+  /// No description provided for @wsMoveCheckTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to Move'**
+  String get wsMoveCheckTitle;
+
+  /// No description provided for @wsMoveCheckTo.
+  ///
+  /// In en, this message translates to:
+  /// **'To {name}'**
+  String wsMoveCheckTo(String name);
+
+  /// No description provided for @wsMoveCheckSize.
+  ///
+  /// In en, this message translates to:
+  /// **'{size} to copy, about {minutes, plural, =1{1 minute} other{{minutes} minutes}}'**
+  String wsMoveCheckSize(String size, int minutes);
+
+  /// No description provided for @wsMoveCheckPause.
+  ///
+  /// In en, this message translates to:
+  /// **'Near the end, bots pause for about {minutes, plural, =1{1 minute} other{{minutes} minutes}}, then carry on there.'**
+  String wsMoveCheckPause(int minutes);
+
+  /// No description provided for @wsMoveCheckLongPause.
+  ///
+  /// In en, this message translates to:
+  /// **'That\'s a long pause. Pick a quiet time.'**
+  String get wsMoveCheckLongPause;
+
+  /// No description provided for @wsMoveCheckComes.
+  ///
+  /// In en, this message translates to:
+  /// **'What comes along'**
+  String get wsMoveCheckComes;
+
+  /// No description provided for @wsMoveCountBots.
+  ///
+  /// In en, this message translates to:
+  /// **'{n, plural, =1{1 bot} other{{n} bots}}'**
+  String wsMoveCountBots(int n);
+
+  /// No description provided for @wsMoveCountChats.
+  ///
+  /// In en, this message translates to:
+  /// **'{n, plural, =1{1 chat} other{{n} chats}}'**
+  String wsMoveCountChats(int n);
+
+  /// No description provided for @wsMoveCountMemories.
+  ///
+  /// In en, this message translates to:
+  /// **'{n, plural, =1{1 memory} other{{n} memories}}'**
+  String wsMoveCountMemories(int n);
+
+  /// No description provided for @wsMoveCountRoutines.
+  ///
+  /// In en, this message translates to:
+  /// **'{n, plural, =1{1 routine} other{{n} routines}}'**
+  String wsMoveCountRoutines(int n);
+
+  /// No description provided for @wsMoveCountFiles.
+  ///
+  /// In en, this message translates to:
+  /// **'{n, plural, =1{1 file} other{{n} files}}'**
+  String wsMoveCountFiles(int n);
+
+  /// No description provided for @wsMoveCountComputers.
+  ///
+  /// In en, this message translates to:
+  /// **'{n, plural, =1{1 computer} other{{n} computers}}'**
+  String wsMoveCountComputers(int n);
+
+  /// No description provided for @wsMoveCountPeople.
+  ///
+  /// In en, this message translates to:
+  /// **'{n, plural, =1{1 person} other{{n} people}}'**
+  String wsMoveCountPeople(int n);
+
+  /// No description provided for @wsMoveCheckAfter.
+  ///
+  /// In en, this message translates to:
+  /// **'What needs you afterwards'**
+  String get wsMoveCheckAfter;
+
+  /// No description provided for @wsMoveReconnect.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to these apps again there: {names}'**
+  String wsMoveReconnect(String names);
+
+  /// No description provided for @wsMoveInvites.
+  ///
+  /// In en, this message translates to:
+  /// **'{n, plural, =1{1 person gets} other{{n} people get}} an email invite'**
+  String wsMoveInvites(int n);
+
+  /// Over a message moved from another server whose author hasn't accepted their invite yet.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} (invited)'**
+  String chatMovedAuthorInvited(String name);
+
+  /// No description provided for @wsMoveChatgptPlans.
+  ///
+  /// In en, this message translates to:
+  /// **'ChatGPT plans stay behind. Sign in to ChatGPT again there.'**
+  String get wsMoveChatgptPlans;
+
+  /// No description provided for @wsMoveComputersNote.
+  ///
+  /// In en, this message translates to:
+  /// **'{n, plural, =1{1 computer starts} other{{n} computers start}} fresh there, with its home folder restored.'**
+  String wsMoveComputersNote(int n);
+
+  /// No description provided for @wsMoveResetNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Approvals, full access and device access start from the new server\'s defaults.'**
+  String get wsMoveResetNote;
+
+  /// No description provided for @wsMoveBringKeys.
+  ///
+  /// In en, this message translates to:
+  /// **'Bring my keys'**
+  String get wsMoveBringKeys;
+
+  /// No description provided for @wsMoveBringKeysHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'{n, plural, =1{1 key goes} other{{n} keys go}} along, sealed so only the new server can read {n, plural, =1{it} other{them}}.'**
+  String wsMoveBringKeysHelp(int n);
+
+  /// No description provided for @wsMoveNoKeysHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll add model and chat app keys again there.'**
+  String get wsMoveNoKeysHelp;
+
+  /// No description provided for @wsMoveDoesntFit.
+  ///
+  /// In en, this message translates to:
+  /// **'This workspace doesn\'t fit the plan there'**
+  String get wsMoveDoesntFit;
+
+  /// No description provided for @wsMoveNeedsPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'{plan} fits it. Choose it on Casama Cloud, then check again.'**
+  String wsMoveNeedsPlan(String plan);
+
+  /// No description provided for @wsMoveOverLine.
+  ///
+  /// In en, this message translates to:
+  /// **'{what}: {have} of {limit}'**
+  String wsMoveOverLine(String what, String have, String limit);
+
+  /// No description provided for @wsMoveOverPeople.
+  ///
+  /// In en, this message translates to:
+  /// **'People'**
+  String get wsMoveOverPeople;
+
+  /// No description provided for @wsMoveOverBots.
+  ///
+  /// In en, this message translates to:
+  /// **'Bots'**
+  String get wsMoveOverBots;
+
+  /// No description provided for @wsMoveOverComputers.
+  ///
+  /// In en, this message translates to:
+  /// **'Computers'**
+  String get wsMoveOverComputers;
+
+  /// No description provided for @wsMoveOverStorage.
+  ///
+  /// In en, this message translates to:
+  /// **'Storage'**
+  String get wsMoveOverStorage;
+
+  /// No description provided for @wsMoveUpdateSource.
+  ///
+  /// In en, this message translates to:
+  /// **'Update this server first. It\'s older than the one you\'re moving to.'**
+  String get wsMoveUpdateSource;
+
+  /// No description provided for @wsMoveUpdateTarget.
+  ///
+  /// In en, this message translates to:
+  /// **'The server you\'re moving to needs an update first.'**
+  String get wsMoveUpdateTarget;
+
+  /// No description provided for @wsMoveStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Move'**
+  String get wsMoveStart;
+
+  /// No description provided for @wsMoveCheckAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Check Again'**
+  String get wsMoveCheckAgain;
+
+  /// No description provided for @wsMoveProgressTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Moving'**
+  String get wsMoveProgressTitle;
+
+  /// No description provided for @wsMoveStepStarting.
+  ///
+  /// In en, this message translates to:
+  /// **'Getting ready'**
+  String get wsMoveStepStarting;
+
+  /// No description provided for @wsMoveStepCopying.
+  ///
+  /// In en, this message translates to:
+  /// **'Copying files while everything keeps working'**
+  String get wsMoveStepCopying;
+
+  /// No description provided for @wsMoveStepPausing.
+  ///
+  /// In en, this message translates to:
+  /// **'Pausing bots to copy the last changes'**
+  String get wsMoveStepPausing;
+
+  /// No description provided for @wsMoveStepFinishing.
+  ///
+  /// In en, this message translates to:
+  /// **'Sending chats, memory and settings'**
+  String get wsMoveStepFinishing;
+
+  /// No description provided for @wsMoveStepImporting.
+  ///
+  /// In en, this message translates to:
+  /// **'The new server is bringing it in'**
+  String get wsMoveStepImporting;
+
+  /// No description provided for @wsMoveProgressBytes.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {total}'**
+  String wsMoveProgressBytes(String done, String total);
+
+  /// No description provided for @wsMoveProgressLeave.
+  ///
+  /// In en, this message translates to:
+  /// **'You can close the app. The move carries on, and you get a notification when it\'s done.'**
+  String get wsMoveProgressLeave;
+
+  /// No description provided for @wsMoveFailedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'The move stopped'**
+  String get wsMoveFailedTitle;
+
+  /// No description provided for @wsMoveFailedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing changed here: this workspace keeps working.'**
+  String get wsMoveFailedBody;
+
+  /// No description provided for @wsMoveTryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Try Again'**
+  String get wsMoveTryAgain;
+
+  /// No description provided for @wsMoveNewCodeNeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'To try again, get a new move code.'**
+  String get wsMoveNewCodeNeeded;
+
+  /// No description provided for @wsMoveDoneTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Moved'**
+  String get wsMoveDoneTitle;
+
+  /// No description provided for @wsMoveDoneBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything arrived at {server}.'**
+  String wsMoveDoneBody(String server);
+
+  /// No description provided for @wsMoveDoneNeeds.
+  ///
+  /// In en, this message translates to:
+  /// **'A few things need you there:'**
+  String get wsMoveDoneNeeds;
+
+  /// No description provided for @wsMoveOpenThere.
+  ///
+  /// In en, this message translates to:
+  /// **'Open It There'**
+  String get wsMoveOpenThere;
+
+  /// No description provided for @wsMoveAfterReconnect.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to {name} again'**
+  String wsMoveAfterReconnect(String name);
+
+  /// No description provided for @wsMoveAfterInvited.
+  ///
+  /// In en, this message translates to:
+  /// **'{n, plural, =1{1 person was} other{{n} people were}} invited by email'**
+  String wsMoveAfterInvited(int n);
+
+  /// No description provided for @wsMoveAfterChatApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Reconnect {name}'**
+  String wsMoveAfterChatApp(String name);
+
+  /// No description provided for @wsMoveAfterWebhook.
+  ///
+  /// In en, this message translates to:
+  /// **'Give {name}\'s sender the new webhook address'**
+  String wsMoveAfterWebhook(String name);
+
+  /// No description provided for @wsMoveAfterForward.
+  ///
+  /// In en, this message translates to:
+  /// **'Webhooks still sent here are passed on for {n, plural, =1{1 day} other{{n} days}}.'**
+  String wsMoveAfterForward(int n);
+
+  /// No description provided for @wsMoveAfterReset.
+  ///
+  /// In en, this message translates to:
+  /// **'Check approvals for {n, plural, =1{1 bot} other{{n} bots}}'**
+  String wsMoveAfterReset(int n);
+
+  /// No description provided for @wsMoveAfterKeys.
+  ///
+  /// In en, this message translates to:
+  /// **'Add your model keys there'**
+  String get wsMoveAfterKeys;
+
+  /// No description provided for @wsMoveAfterRenamed.
+  ///
+  /// In en, this message translates to:
+  /// **'{n, plural, =1{1 item was} other{{n} items were}} renamed “(moved)”'**
+  String wsMoveAfterRenamed(int n);
+
+  /// No description provided for @wsMoveAfterReindex.
+  ///
+  /// In en, this message translates to:
+  /// **'Memory search catches up in a few minutes.'**
+  String get wsMoveAfterReindex;
+
+  /// No description provided for @wsMoveAfterNothing.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing else to do.'**
+  String get wsMoveAfterNothing;
+
+  /// No description provided for @wsMoveSubTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your subscriptions'**
+  String get wsMoveSubTitle;
+
+  /// No description provided for @wsMoveSubToCloud.
+  ///
+  /// In en, this message translates to:
+  /// **'Bots on Casama Cloud run on your Cloud plan. If you paid for a business license for this server, cancel it once you don\'t need it.'**
+  String get wsMoveSubToCloud;
+
+  /// No description provided for @wsMoveSubFromCloud.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Casama Cloud plan keeps renewing. Cancel it once you\'re settled on your own server.'**
+  String get wsMoveSubFromCloud;
+
+  /// No description provided for @wsMoveSubManage.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage Plan'**
+  String get wsMoveSubManage;
+
+  /// No description provided for @wsMovedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'This workspace moved'**
+  String get wsMovedTitle;
+
+  /// No description provided for @wsMovedBodyCloud.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s on Casama Cloud now. Sign in there to keep going. This copy is read-only.'**
+  String get wsMovedBodyCloud;
+
+  /// No description provided for @wsMovedBodyServer.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s on {host} now. Sign in there to keep going. This copy is read-only.'**
+  String wsMovedBodyServer(String host);
+
+  /// No description provided for @wsMovedSignInCloud.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign In to Casama Cloud'**
+  String get wsMovedSignInCloud;
+
+  /// No description provided for @wsMovedOpenServer.
+  ///
+  /// In en, this message translates to:
+  /// **'Open {host}'**
+  String wsMovedOpenServer(String host);
+
+  /// No description provided for @wsMovedViewOld.
+  ///
+  /// In en, this message translates to:
+  /// **'View the Old Copy'**
+  String get wsMovedViewOld;
 }
 
 class _AppLocalizationsDelegate

@@ -399,10 +399,17 @@ struct ReplyNotificationView: View {
           .frame(maxWidth: .infinity)
           .accessibilityLabel(WatchL10n.done)
       } else if state.info?.botId != nil {
-        ForEach(state.quickReplies, id: \.self) { reply in
-          Button(reply) { send(reply) }
-            .buttonStyle(.bordered)
-            .tint(.white)
+        ForEach(Array(state.quickReplies.enumerated()), id: \.element) { idx, reply in
+          if idx == 0 {
+            Button(reply) { send(reply) }
+              .buttonStyle(.bordered)
+              .tint(.white)
+              .handGestureShortcut(.primaryAction)
+          } else {
+            Button(reply) { send(reply) }
+              .buttonStyle(.bordered)
+              .tint(.white)
+          }
         }
       }
     }

@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/analytics.dart';
 import '../../core/providers.dart';
@@ -30,6 +31,12 @@ class AiConsent extends Notifier<DateTime?> {
 
   Future<void> set(bool allowed) async {
     await ref.read(backendProvider).setAiConsent(allowed);
+    // Stopping also takes back the call screen's own yes for voice (it asks again).
+    if (!allowed) {
+      try {
+        (await SharedPreferences.getInstance()).remove('voice.aiConsent.v1');
+      } catch (_) {}
+    }
     state = allowed ? DateTime.now() : null;
   }
 }

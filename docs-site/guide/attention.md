@@ -73,7 +73,7 @@ that's off still lands in the app; it just doesn't buzz.
 | **Needs you** | Approvals, passwords and take-overs your bots wait for, and missed calls. With this off, bots wait until you open the app. |
 | **Routines and briefs** | Routine results, your morning brief and messages a bot sends you |
 | **Suggestions and check-ins** | What your bots offer to do |
-| **Account** | Credits running low, projects, Casama Link |
+| **Account** | Credits running low, projects, Casama Link and your server |
 
 On Android each kind is also its own notification channel, so you can change its sound or
 importance in the system settings.
@@ -86,6 +86,12 @@ approvals only have **Review**, which opens them so you can read everything firs
 
 On a watch, the buttons are **Allow** and **Deny** and work without the phone: see
 [Casama on Apple Watch](./apple-watch) and [Casama on Wear OS](./wear-os).
+
+::: tip Self-hosting
+Push needs a Firebase project: the server needs its service account and the apps must be built
+with the same project. Without it, the in-app inbox still works. See
+[Configuration](/self-hosting/configuration).
+:::
 
 ## Set quiet hours
 
@@ -192,7 +198,8 @@ Casama. It's off unless you turn it on.
 
 You can also tick the box when you create an account, or answer the small card above your
 chats. Every email has a link to unsubscribe, and unsubscribing there turns the switch off in
-the app too. Deleting your account takes you off the list.
+the app too. Deleting your account takes you off the list. Self-hosted servers don't show the
+option.
 
 ## Limits
 

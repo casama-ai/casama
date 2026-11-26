@@ -11,12 +11,14 @@ import 'package:dio/dio.dart';
 
 import 'dart:typed_data';
 import 'package:casama_api/src/model/account_deletion.dart';
+import 'package:casama_api/src/model/age_band_result.dart';
 import 'package:casama_api/src/model/apple_sign_in_token_request.dart';
 import 'package:casama_api/src/model/apple_sign_in_token_result.dart';
 import 'package:casama_api/src/model/delete_account_request.dart';
 import 'package:casama_api/src/model/org_settings.dart';
 import 'package:casama_api/src/model/relay_analytics_request.dart';
 import 'package:casama_api/src/model/rename_two_step_factor_request.dart';
+import 'package:casama_api/src/model/set_age_band_request.dart';
 import 'package:casama_api/src/model/set_analytics_opt_out_request.dart';
 import 'package:casama_api/src/model/set_attribution_request.dart';
 import 'package:casama_api/src/model/update_org_settings_request.dart';
@@ -658,6 +660,102 @@ _bodyData=jsonEncode(setAttributionRequest);
     );
 
     return _response;
+  }
+
+  /// Save the account&#39;s declared age band (no birth date; docs/APPLE-INTEGRATIONS-PLAN.md §5.2)
+  /// 
+  ///
+  /// Parameters:
+  /// * [setAgeBandRequest] 
+  /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
+  /// * [headers] - Can be used to add additional headers to the request
+  /// * [extras] - Can be used to add flags to the request
+  /// * [validateStatus] - A [ValidateStatus] callback that can be used to determine request success based on the HTTP status of the response
+  /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
+  /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
+  ///
+  /// Returns a [Future] containing a [Response] with a [AgeBandResult] as data
+  /// Throws [DioException] if API call or serialization fails
+  Future<Response<AgeBandResult>> setMyAgeBand({ 
+    required SetAgeBandRequest setAgeBandRequest,
+    CancelToken? cancelToken,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? extra,
+    ValidateStatus? validateStatus,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    final _path = r'/v1/me/age-band';
+    final _options = Options(
+      method: r'PUT',
+      headers: <String, dynamic>{
+        ...?headers,
+      },
+      extra: <String, dynamic>{
+        'secure': <Map<String, String>>[
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearerAuth',
+          },
+        ],
+        ...?extra,
+      },
+      contentType: 'application/json',
+      validateStatus: validateStatus,
+    );
+
+    dynamic _bodyData;
+
+    try {
+_bodyData=jsonEncode(setAgeBandRequest);
+    } catch(error, stackTrace) {
+      throw DioException(
+         requestOptions: _options.compose(
+          _dio.options,
+          _path,
+        ),
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    final _response = await _dio.request<Object>(
+      _path,
+      data: _bodyData,
+      options: _options,
+      cancelToken: cancelToken,
+      onSendProgress: onSendProgress,
+      onReceiveProgress: onReceiveProgress,
+    );
+
+    AgeBandResult? _responseData;
+
+    try {
+final rawData = _response.data;
+_responseData = rawData == null ? null : deserialize<AgeBandResult, AgeBandResult>(rawData, 'AgeBandResult', growable: true);
+
+    } catch (error, stackTrace) {
+      throw DioException(
+        requestOptions: _response.requestOptions,
+        response: _response,
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    return Response<AgeBandResult>(
+      data: _responseData,
+      headers: _response.headers,
+      isRedirect: _response.isRedirect,
+      requestOptions: _response.requestOptions,
+      redirects: _response.redirects,
+      statusCode: _response.statusCode,
+      statusMessage: _response.statusMessage,
+      extra: _response.extra,
+    );
   }
 
   /// Change workspace settings such as run event retention (admins)

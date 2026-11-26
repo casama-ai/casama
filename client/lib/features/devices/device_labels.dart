@@ -16,6 +16,8 @@ String deviceKindLabel(AppLocalizations l10n, DeviceKind kind) => switch (kind) 
   DeviceKind.activity => l10n.deviceKindActivity,
   DeviceKind.browserTab => l10n.deviceKindBrowserTab,
   DeviceKind.browserHistory => l10n.deviceKindBrowserHistory,
+  DeviceKind.alarm => 'alarms',
+  DeviceKind.home => 'Home accessories',
 };
 
 /// Casama for Chrome's kinds (D-323 E2, E6): read live from the browser, never kept.
@@ -32,11 +34,13 @@ IconData deviceKindIcon(DeviceKind kind) => switch (kind) {
   DeviceKind.activity => LucideIcons.activity,
   DeviceKind.browserTab => LucideIcons.appWindow,
   DeviceKind.browserHistory => LucideIcons.history,
+  DeviceKind.alarm => LucideIcons.alarmClock,
+  DeviceKind.home => LucideIcons.house,
 };
 
 /// Default retention (days), matching the server.
 int defaultRetentionDays(DeviceKind kind) => switch (kind) {
-  DeviceKind.browserTab || DeviceKind.browserHistory => 0,
+  DeviceKind.browserTab || DeviceKind.browserHistory || DeviceKind.alarm || DeviceKind.home => 0,
   DeviceKind.places || DeviceKind.photos || DeviceKind.notifications => 90,
   _ => 365,
 };

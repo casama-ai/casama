@@ -8,6 +8,7 @@ import 'package:casama_sdk/casama_sdk.dart';
 
 import '../../core/backend.dart';
 import '../../core/local_cache.dart';
+import '../../core/on_device_model.dart';
 import '../../core/providers.dart';
 import '../../core/review_prompt.dart';
 import '../../core/server_reachability.dart';
@@ -40,8 +41,13 @@ class MessageEntry extends ChatEntry {
     this.failed = false,
     this.runId,
     this.at,
+    this.movedAuthor,
   });
   final String id;
+
+  /// Moved from another server, written by someone who hasn't accepted their invite yet: their
+  /// name, shown as "name (invited)" over the message (SELFHOST-CLOUD-MODELS-PLAN §7.5).
+  final String? movedAuthor;
 
   /// When it was sent, in local time (D-387): the chat's day and pause labels and the message
   /// menu read it. Set to now for a message still sending or a reply still streaming.
@@ -83,6 +89,7 @@ class MessageEntry extends ChatEntry {
         failed: failed ?? this.failed,
         runId: runId,
         at: at,
+        movedAuthor: movedAuthor,
       );
 }
 
@@ -584,6 +591,8 @@ class ChatController extends Notifier<ChatState> {
       DeviceAccessRequestedItem(:final event) => (event.runId, event.payload.kind.value, event.payload.reason, event.payload.botId),
       // Casama for Chrome's kinds come as their own event (D-323): the same one-tap card.
       DeviceBrowserAccessRequestedItem(:final event) => (event.runId, event.payload.kind.value, event.payload.reason, event.payload.botId),
+      // AlarmKit / HomeKit live action access requests (docs/APPLE-INTEGRATIONS-PLAN.md).
+      DeviceActionAccessRequestedItem(:final event) => (event.runId, event.payload.kind.value, event.payload.reason, event.payload.botId),
       _ => ('', '', '', ''),
     };
     final kind = DeviceKind.values.where((k) => k.value == kindValue).firstOrNull;
@@ -1076,6 +1085,7 @@ class ChatController extends Notifier<ChatState> {
                       prev.siblingCount == m.siblingCount &&
                       prev.runId == m.runId &&
                       prev.at == m.createdAt.toLocal() &&
+                      prev.movedAuthor == m.movedAuthorName &&
                       _sameAttachments(prev.attachments, m.attachments) &&
                       _sameApps(prev.apps, m.apps) =>
                 prev,
@@ -1090,6 +1100,7 @@ class ChatController extends Notifier<ChatState> {
                 botId: m.botId,
                 runId: m.runId,
                 at: m.createdAt.toLocal(),
+                movedAuthor: m.movedAuthorName,
               ),
             },
           if (m.suggestion case final s?) SuggestionEntry(messageId: m.id, suggestion: s),
@@ -1501,15 +1512,33 @@ class ChatController extends Notifier<ChatState> {
         } catch (_) {}
       }
       var conversationId = state.conversationId;
+      var createdNewConversation = false;
       if (conversationId == null) {
         final gen = _openGen;
         await before;
-        conversationId = state.conversationId ?? (await _backend.createConversation(botId)).id;
+        final existing = state.conversationId;
+        if (existing == null) {
+          conversationId = (await _backend.createConversation(botId)).id;
+          createdNewConversation = true;
+        } else {
+          conversationId = existing;
+        }
         if (gen == _openGen && state.conversationId == null) {
           state = state.copyWith(conversationId: conversationId);
           _follow(conversationId);
         }
         ref.invalidate(conversationsProvider(botId));
+      }
+      if (createdNewConversation && trimmed.isNotEmpty) {
+        final targetConv = conversationId;
+        unawaited(() async {
+          final title = await ref.read(onDeviceModelProvider).generateTitle(trimmed);
+          if (title == null || !ref.mounted) return;
+          try {
+            await _backend.updateConversation(targetConv, title: title);
+            if (ref.mounted) ref.invalidate(conversationsProvider(botId));
+          } catch (_) {}
+        }());
       }
       to = conversationId;
       final local = MessageEntry(id: 'local-${DateTime.now().microsecondsSinceEpoch}', role: 'user', text: trimmed, attachments: attachments, apps: apps, uploading: uploads != null, at: DateTime.now());
@@ -2024,7 +2053,7 @@ class ChatController extends Notifier<ChatState> {
       case SecretRequestedItem(:final event):
         final p = event.payload;
         entries.add(SecretEntry(requestId: p.requestId, name: p.name, service: p.service, hosts: p.allowedHosts.toList(), reason: p.reason, totp: p.kind.value == 'totp', loginHost: p.loginHost));
-      case DeviceAccessRequestedItem() || DeviceBrowserAccessRequestedItem() || DevicePermissionNeededItem() || CanvasPreviewItem():
+      case DeviceAccessRequestedItem() || DeviceBrowserAccessRequestedItem() || DeviceActionAccessRequestedItem() || DevicePermissionNeededItem() || CanvasPreviewItem():
         // Kept by run so a reload puts it back; a replayed event (following the run again) adds nothing.
         final card = _deviceCardOf(e);
         if (card != null && _keepDeviceCard(card)) entries.add(card);

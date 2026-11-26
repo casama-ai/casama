@@ -44,6 +44,7 @@ import 'package:casama_api/src/api/mail_api.dart';
 import 'package:casama_api/src/api/mcp_api.dart';
 import 'package:casama_api/src/api/memory_api.dart';
 import 'package:casama_api/src/api/moderation_api.dart';
+import 'package:casama_api/src/api/moves_api.dart';
 import 'package:casama_api/src/api/notifications_api.dart';
 import 'package:casama_api/src/api/owner_api.dart';
 import 'package:casama_api/src/api/packs_api.dart';
@@ -60,6 +61,7 @@ import 'package:casama_api/src/api/routines_api.dart';
 import 'package:casama_api/src/api/runs_api.dart';
 import 'package:casama_api/src/api/search_api.dart';
 import 'package:casama_api/src/api/secrets_api.dart';
+import 'package:casama_api/src/api/selfhost_api.dart';
 import 'package:casama_api/src/api/sites_api.dart';
 import 'package:casama_api/src/api/skills_api.dart';
 import 'package:casama_api/src/api/support_api.dart';
@@ -350,6 +352,12 @@ class CasamaApi {
     return ModerationApi(dio);
   }
 
+  /// Get MovesApi instance, base route and serializer can be overridden by a given but be careful,
+  /// by doing that all interceptors will not be executed
+  MovesApi getMovesApi() {
+    return MovesApi(dio);
+  }
+
   /// Get NotificationsApi instance, base route and serializer can be overridden by a given but be careful,
   /// by doing that all interceptors will not be executed
   NotificationsApi getNotificationsApi() {
@@ -444,6 +452,12 @@ class CasamaApi {
   /// by doing that all interceptors will not be executed
   SecretsApi getSecretsApi() {
     return SecretsApi(dio);
+  }
+
+  /// Get SelfhostApi instance, base route and serializer can be overridden by a given but be careful,
+  /// by doing that all interceptors will not be executed
+  SelfhostApi getSelfhostApi() {
+    return SelfhostApi(dio);
   }
 
   /// Get SitesApi instance, base route and serializer can be overridden by a given but be careful,

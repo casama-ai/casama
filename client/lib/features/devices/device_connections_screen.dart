@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show defaultTargetPlatform, TargetPlatform;
 import 'package:file_picker/file_picker.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -231,7 +232,12 @@ class _DeviceConnectionsSkeleton extends StatelessWidget {
   }
 }
 
+/// Health reads HealthKit on iPhone, and App Review asks for it to be named as Apple Health
+/// (guideline 2.5.1).
+bool get _appleHealth => defaultTargetPlatform == TargetPlatform.iOS;
+
 String _kindTitle(AppLocalizations l10n, DeviceKind kind) {
+  if (kind == DeviceKind.health && _appleHealth) return l10n.appleHealth;
   final label = deviceKindLabel(l10n, kind);
   return label[0].toUpperCase() + label.substring(1);
 }
@@ -270,13 +276,21 @@ class _KindCard extends StatelessWidget {
               onChanged: hapticOnChanged(busy ? null : onToggle),
             ),
           ),
+          if (kind == DeviceKind.health && _appleHealth && !on)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(AppSpace.md, 0, AppSpace.md, AppSpace.sm),
+              child: Text(l10n.appleHealthAbout, key: const Key('appleHealthAbout'), style: context.textTheme.bodySmall),
+            ),
           if (on && (kind == DeviceKind.health || extra != null))
             Padding(
               padding: const EdgeInsets.fromLTRB(AppSpace.md, 0, AppSpace.md, AppSpace.sm),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  if (kind == DeviceKind.health) Text(l10n.healthNotMedical, style: context.textTheme.bodySmall),
+                  if (kind == DeviceKind.health) ...[
+                    if (_appleHealth) Text(l10n.appleHealthAbout, key: const Key('appleHealthAbout'), style: context.textTheme.bodySmall),
+                    Text(l10n.healthNotMedical, style: context.textTheme.bodySmall),
+                  ],
                   ?extra,
                 ],
               ),

@@ -1,0 +1,48 @@
+{
+  "fill": {
+    "linear-gradient": [
+      "display-p3:0.13000,0.09000,0.24000,1.00000",
+      "display-p3:0.24000,0.16000,0.44000,1.00000"
+    ]
+  },
+  "fill-specializations": [
+    {
+      "appearance": "dark",
+      "value": {
+        "linear-gradient": [
+          "display-p3:0.07000,0.05000,0.14000,1.00000",
+          "display-p3:0.15000,0.10000,0.28000,1.00000"
+        ]
+      }
+    }
+  ],
+  "groups": [
+    {
+      "layers": [
+        {
+          "glass": true,
+          "image-name": "casama-mark.png",
+          "name": "Casama Mark",
+          "position": {
+            "scale": 0.78,
+            "translation-in-points": [0, 0]
+          }
+        }
+      ],
+      "lighting": "combined",
+      "shadow": {
+        "kind": "neutral",
+        "opacity": 0.4
+      },
+      "specular": true,
+      "translucency": {
+        "enabled": true,
+        "value": 0.45
+      }
+    }
+  ],
+  "supported-platforms": {
+    "circles": ["watchOS"],
+    "squares": "shared"
+  }
+}

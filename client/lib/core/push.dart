@@ -132,7 +132,9 @@ class PushRegistrar {
   static const _snoozedKey = 'push.snoozedUntil';
 
   Future<void> start() async {
-    if (_started || !PushConfig.enabled) return;
+    if (_started) return;
+    _listenForAppleInlineReplies();
+    if (!PushConfig.enabled) return;
     if (!kIsWeb && defaultTargetPlatform != TargetPlatform.iOS && defaultTargetPlatform != TargetPlatform.android && defaultTargetPlatform != TargetPlatform.macOS) {
       return;
     }
@@ -333,6 +335,50 @@ class PushRegistrar {
     if (decision != null) unawaited(_decide(decision.$1, decision.$2));
     final target = openTarget(message.data, message.actionIdentifier);
     if (target != null) _openLink(target);
+  }
+
+  var _appleRepliesListening = false;
+
+  /// iOS & macOS inline notification replies (`REPLY_MESSAGE` category, docs/APPLE-INTEGRATIONS-PLAN.md §5.1).
+  void _listenForAppleInlineReplies() {
+    if (_appleRepliesListening || kIsWeb) return;
+    if (defaultTargetPlatform != TargetPlatform.iOS && defaultTargetPlatform != TargetPlatform.macOS) return;
+    _appleRepliesListening = true;
+    notificationsChannel.setMethodCallHandler((call) async {
+      if (call.method == 'inlineReply' && call.arguments is Map) {
+        await handleInlineReply(Map<String, dynamic>.from(call.arguments as Map));
+      }
+      return null;
+    });
+    unawaited(() async {
+      try {
+        final pending = await notificationsChannel.invokeMethod<List<Object?>>('takeInlineReplies');
+        if (pending == null) return;
+        for (final item in pending) {
+          if (item is Map) {
+            await handleInlineReply(Map<String, dynamic>.from(item));
+          }
+        }
+      } catch (_) {}
+    }());
+  }
+
+  /// Sends an inline reply typed directly in an iOS or macOS notification banner.
+  @visibleForTesting
+  Future<void> handleInlineReply(Map<String, dynamic> data) async {
+    final text = data['text'] is String ? (data['text'] as String).trim() : '';
+    if (text.isEmpty || _backend.userId == null) return;
+    var conversationId = data['conversation_id'] is String ? (data['conversation_id'] as String).trim() : '';
+    final botId = data['bot_id'] is String ? (data['bot_id'] as String).trim() : '';
+    try {
+      if (conversationId.isEmpty) {
+        if (botId.isEmpty) return;
+        conversationId = (await _backend.createConversation(botId)).id;
+      }
+      await _backend.send(conversationId, text);
+    } catch (e) {
+      debugPrint('inline notification reply failed: $e');
+    }
   }
 
   /// Approve or Deny tapped on an Android approval notification the app drew itself.

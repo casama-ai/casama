@@ -29,6 +29,10 @@ abstract class _$SaveDeviceSourceRequestKindsCWProxy {
     DeviceKindSettings? browserHistory,
   );
 
+  SaveDeviceSourceRequestKinds alarm(DeviceKindSettings? alarm);
+
+  SaveDeviceSourceRequestKinds home(DeviceKindSettings? home);
+
   /// Creates a new instance with the provided field values.
   /// Omitted fields keep their values; explicit `null` clears nullable fields.
   /// The public API rejects `null` for non-nullable fields. To update a single field use `SaveDeviceSourceRequestKinds(...).copyWith.fieldName(value)`.
@@ -48,6 +52,8 @@ abstract class _$SaveDeviceSourceRequestKindsCWProxy {
     DeviceKindSettings? activity,
     DeviceKindSettings? browserTab,
     DeviceKindSettings? browserHistory,
+    DeviceKindSettings? alarm,
+    DeviceKindSettings? home,
   });
 }
 
@@ -101,6 +107,14 @@ class _$SaveDeviceSourceRequestKindsCWProxyImpl
     DeviceKindSettings? browserHistory,
   ) => call(browserHistory: browserHistory);
 
+  @override
+  SaveDeviceSourceRequestKinds alarm(DeviceKindSettings? alarm) =>
+      call(alarm: alarm);
+
+  @override
+  SaveDeviceSourceRequestKinds home(DeviceKindSettings? home) =>
+      call(home: home);
+
   /// Creates a new instance with the provided field values.
   /// Omitted fields keep their values; explicit `null` clears nullable fields.
   /// The public API rejects `null` for non-nullable fields. To update a single field use `SaveDeviceSourceRequestKinds(...).copyWith.fieldName(value)`.
@@ -121,6 +135,8 @@ class _$SaveDeviceSourceRequestKindsCWProxyImpl
     Object? activity = const $CopyWithPlaceholder(),
     Object? browserTab = const $CopyWithPlaceholder(),
     Object? browserHistory = const $CopyWithPlaceholder(),
+    Object? alarm = const $CopyWithPlaceholder(),
+    Object? home = const $CopyWithPlaceholder(),
   }) {
     return SaveDeviceSourceRequestKinds(
       calendar: calendar == const $CopyWithPlaceholder()
@@ -163,6 +179,14 @@ class _$SaveDeviceSourceRequestKindsCWProxyImpl
           ? _value.browserHistory
           // ignore: cast_nullable_to_non_nullable
           : browserHistory as DeviceKindSettings?,
+      alarm: alarm == const $CopyWithPlaceholder()
+          ? _value.alarm
+          // ignore: cast_nullable_to_non_nullable
+          : alarm as DeviceKindSettings?,
+      home: home == const $CopyWithPlaceholder()
+          ? _value.home
+          // ignore: cast_nullable_to_non_nullable
+          : home as DeviceKindSettings?,
     );
   }
 }
@@ -247,6 +271,18 @@ SaveDeviceSourceRequestKinds _$SaveDeviceSourceRequestKindsFromJson(
             ? null
             : DeviceKindSettings.fromJson(v as Map<String, dynamic>),
       ),
+      alarm: $checkedConvert(
+        'alarm',
+        (v) => v == null
+            ? null
+            : DeviceKindSettings.fromJson(v as Map<String, dynamic>),
+      ),
+      home: $checkedConvert(
+        'home',
+        (v) => v == null
+            ? null
+            : DeviceKindSettings.fromJson(v as Map<String, dynamic>),
+      ),
     );
     return val;
   },
@@ -269,4 +305,6 @@ Map<String, dynamic> _$SaveDeviceSourceRequestKindsToJson(
   'activity': ?instance.activity?.toJson(),
   'browser_tab': ?instance.browserTab?.toJson(),
   'browser_history': ?instance.browserHistory?.toJson(),
+  'alarm': ?instance.alarm?.toJson(),
+  'home': ?instance.home?.toJson(),
 };

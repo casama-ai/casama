@@ -6,12 +6,13 @@ description: "What Casama is: open-source AI teammates (bots) with their own san
 
 Casama gives you AI teammates, called bots, that keep working after you close the chat. Each bot has
 its own instructions, memory, skills and a sandboxed Linux computer. It can research, write, code,
-browse and run tasks on a schedule, and it asks before doing anything risky. Casama runs on Casama Cloud, and you reach your bots from apps on every platform, the
-terminal, chat apps or your AI coding tools.
+browse and run tasks on a schedule, and it asks before doing anything risky. Use it on Casama
+Cloud, or run it on your own computer or server with your own model keys, and reach your bots from
+apps on every platform, the terminal, chat apps or your AI coding tools.
 
 This page explains the main ideas. To try it, go to the [Quick start](/quick-start).
 
-<figure class="casama-video"><div class="casama-video-frame"><iframe src="https://www.youtube-nocookie.com/embed/2-6dP3YVn98?rel=0" title="Casama walkthrough" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div></figure>
+<figure class="casama-video"><div class="casama-video-frame"><iframe src="https://www.youtube-nocookie.com/embed/QCdp2VIByDs?rel=0" title="Casama walkthrough" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div></figure>
 
 ## The main ideas
 
@@ -27,8 +28,8 @@ A **bot** is a teammate with:
 
 - **Instructions**: who it is and how it works, written by you, started from a persona, or
   proposed by the bot itself in a short setup interview.
-- **A model**: on Casama Cloud, Casama picks the model, or you connect your own provider keys, with
-  fallbacks if one is unavailable.
+- **A model**: any model you have a key for (including a local model or a ChatGPT plan), with
+  fallbacks if one is unavailable. On Casama Cloud, Casama picks the model.
 - **Memory**: facts and preferences it saves as it works and recalls in later chats.
 - **Skills**: reusable instructions for tasks it does often, loaded when they're relevant.
 - **A computer**: its own sandboxed machine for files, code and the web.
@@ -105,9 +106,9 @@ in a vault and are never shown to the model. See [Apps and connections](/guide/c
 
 | Option | What it is |
 | --- | --- |
-| **Self-hosted** | Paused while the Casama Engine moves to a separate license. See [Self-hosting](/self-hosting/). |
-| **Casama Cloud** | The hosted service at [casama.ai](https://casama.ai). A free plan, then Plus ($15 a month), Pro ($49) and Max ($99), paid from credits. See [Usage, budgets and plans](/guide/usage). |
-| **Casama Link** | Paused with self-hosting. See [Casama Link](/guide/casama-link). |
+| **Self-hosted** | The whole stack on your own computer or server. Free for one person's personal use; a paid license for business use. The engine is closed and installs as signed container images. See [Self-hosting](/self-hosting/). |
+| **Casama Cloud** | The hosted service at [casama.ai](https://casama.ai). A free plan, then Plus ($15 a month), Pro ($49) and Max ($99), paid from credits. Optional. See [Usage, budgets and plans](/guide/usage). |
+| **Casama Link** | Links a self-hosted server to a Casama Cloud account. Free: an address like `https://k7qm2xfd9abc.casama.link` that your phone can reach with no domain or open ports, sign-in by scanning a QR code, and notifications in the store apps. Billed: Casama Cloud's computers and model credits for your server. See [Use your server on your phone](/self-hosting/remote-access) and [Casama Link](/guide/casama-link). |
 
 ## Where you use it
 
@@ -138,8 +139,9 @@ in a vault and are never shown to the model. See [Apps and connections](/guide/c
   a crash resumes at the last finished step.
 - **Postgres** stores everything, with row-level security on every table, so one workspace can never
   read another's data. Live updates reach the apps through Realtime.
-- The **sandbox supervisor** starts and stops computers. It's the only part that can start computers. Computers reach the internet only through
-  an egress proxy that blocks private and cloud-metadata addresses.
+- The **sandbox supervisor** starts and stops computers. It's the only part with access to Docker
+  (or another computer provider). Computers reach the internet only through an egress proxy that
+  blocks private and cloud-metadata addresses.
 
 For the full picture, see [How Casama is built](/develop/architecture).
 

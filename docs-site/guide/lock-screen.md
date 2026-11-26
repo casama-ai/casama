@@ -83,4 +83,6 @@ whoever signed in on it last, and it stops when you sign out.
 ## What shows on the Lock Screen
 
 On both phones: the bot's name, its step in general words and the times. Never what it's searching for, file names,
-sites, messages or what a request is about: those stay in the app.
+sites, messages or what a request is about: those stay in the app. On a self-hosted server with
+**Private Notifications** on, not even the bot's name or step leave your server (see
+[Use your server on your phone](/self-hosting/remote-access#notifications)).

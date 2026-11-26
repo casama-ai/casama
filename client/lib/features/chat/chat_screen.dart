@@ -20,9 +20,11 @@ import 'package:dio/dio.dart' show DioException, DioExceptionType;
 
 import '../../core/backend.dart';
 import '../../core/billing.dart';
+import '../../core/license_errors.dart';
 import '../../core/chat_focus.dart';
 import '../settings/model_keys_screen.dart' show casamaCloudCredentialId;
 import '../../core/device_dictation.dart';
+import '../../core/document_scanner.dart';
 import '../../core/display_text.dart';
 import '../../core/haptics.dart';
 import '../../core/local_cache.dart';
@@ -988,6 +990,18 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     await _addFiles([(jpeg ? 'pasted-$stamp.jpg' : 'pasted-$stamp.png', bytes, jpeg ? 'image/jpeg' : 'image/png')]);
   }
 
+  /// Native iOS/iPadOS document scanner (docs/APPLE-INTEGRATIONS-PLAN.md §6.4).
+  Future<void> _scanDocument() async {
+    if (!mounted) return;
+    try {
+      final doc = await ref.read(documentScannerProvider).scan();
+      if (doc == null || !mounted) return;
+      await _addFiles([(doc.name, doc.bytes, 'application/pdf')]);
+    } catch (e) {
+      if (mounted) showError(context, '$e');
+    }
+  }
+
   /// Edit and resend (D-108): the conversation forks at this message and reruns from it.
   Future<void> _editMessage(MessageEntry e) async {
     final text = await showAdaptiveSheet<String>(context: context, builder: (_) => _EditSheet(initial: e.text));
@@ -1133,7 +1147,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       if (!mounted) return;
       final status = e is DioException ? e.response?.statusCode : null;
       final paywall = onPaymentRequired;
-      if (status == 402 && paywall != null) {
+      if (status == 402 && paywall != null && !licenseErrorCodes.contains(problemOf(e)?.code)) {
         await paywall(context, errorText(context, e));
         return;
       }
@@ -1730,7 +1744,12 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                           transcribing: _transcribing,
                           onDevice: _listening != null || ref.read(dictationRouteProvider).preferDevice,
                           onDictate: _toggleDictation,
-                          attachButton: _AttachButton(onFiles: _pickFiles, onPhotos: _pickPhotos, onCamera: _takePhoto),
+                          attachButton: _AttachButton(
+                            onFiles: _pickFiles,
+                            onPhotos: _pickPhotos,
+                            onCamera: _takePhoto,
+                            onScan: _scanDocument,
+                          ),
                           onPasteImage: _pasteImage,
                           hasAttachments: _pending.any((p) => !p.failed),
                           attachments: _pending.isEmpty
@@ -1986,6 +2005,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
               () => UserBubble(
                 text: e.text,
                 sentAt: e.at,
+                invitedAuthor: e.movedAuthor,
                 attachments: e.attachments,
                 apps: e.apps,
                 uploading: e.uploading,
@@ -2662,14 +2682,21 @@ class _PendingChip extends StatelessWidget {
 
 /// "+" in the composer: files everywhere, the photo library and camera where the device has them.
 class _AttachButton extends StatelessWidget {
-  const _AttachButton({required this.onFiles, required this.onPhotos, required this.onCamera});
+  const _AttachButton({
+    required this.onFiles,
+    required this.onPhotos,
+    required this.onCamera,
+    this.onScan,
+  });
   final VoidCallback onFiles;
   final VoidCallback onPhotos;
   final VoidCallback onCamera;
+  final VoidCallback? onScan;
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final isIos = !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS;
     final mobile = !kIsWeb && (defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.android);
     final photos = mobile || (!kIsWeb && defaultTargetPlatform == TargetPlatform.macOS);
     MenuItemButton item(Key key, IconData icon, String label, VoidCallback onPressed) => MenuItemButton(
@@ -2683,6 +2710,8 @@ class _AttachButton extends StatelessWidget {
       menuChildren: [
         if (photos) item(const Key('attachPhotos'), LucideIcons.images, l10n.attachPhotos, onPhotos),
         if (mobile) item(const Key('attachCamera'), LucideIcons.camera, l10n.attachCamera, onCamera),
+        if (isIos && onScan != null)
+          item(const Key('attachScan'), LucideIcons.scanLine, 'Scan document', onScan!),
         item(const Key('attachFiles'), LucideIcons.paperclip, l10n.attachFiles, onFiles),
       ],
       builder: (context, controller, _) => IconButton(

@@ -7,6 +7,9 @@ import '../../core/billing.dart';
 import '../../core/display_text.dart';
 import '../../core/providers.dart';
 import '../settings/model_keys_screen.dart';
+import '../cloud_models/cloud_models_api.dart' show casamaCloudModelsCredentialId;
+import '../cloud_models/cloud_models_flag.dart';
+import '../cloud_models/cloud_models_screen.dart' show CloudModelChip;
 import '../../core/widgets.dart';
 import '../../ui/adaptive_modal.dart';
 import '../../ui/bottom_padding.dart';
@@ -83,6 +86,10 @@ class ModelPickerField extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // A bot on Casama Cloud from a self-hosted server: "Casama Cloud", nothing to pick (§4.2).
+    if (kCloudModelsCode && credentialId == casamaCloudModelsCredentialId && ref.watch(cloudModelsBuildProvider)) {
+      return const CloudModelChip();
+    }
     final l10n = context.l10n;
     final locked = casamaLockedModel(ref, credentialId);
     final shown = locked ?? value;

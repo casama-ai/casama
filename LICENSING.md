@@ -16,11 +16,14 @@ computer and what its network allows.
 | `client/` (apps for iOS, Android, macOS, Windows, Linux and the web; `client/ios/CasamaWatch`; `client/wear`) | [AGPL-3.0-only](LICENSES/AGPL-3.0.txt) |
 | `apps/extension` (browser extension) | AGPL-3.0-only |
 | `dart/computerd` (the agent inside each computer) | AGPL-3.0-only |
+| `dart/selfhost` (the installer the apps and CLI use to run Casama on your own machine) | Apache-2.0 |
 | `packages/safety` (when a bot must ask first, what it may never do on websites, roles, quiet hours, hiding secrets) | AGPL-3.0-only |
 | `infra/images/computer` (what is installed on a bot's computer) | AGPL-3.0-only |
 | `infra/egress-proxy` (the network guard every computer goes through) | AGPL-3.0-only |
+| `infra/turn`, `infra/connector`, `infra/backup` (live view relay, Casama Link connector and backups for self-hosted servers) | AGPL-3.0-only |
 | `packages/client`, `dart/casama_api`, `dart/casama_sdk` (SDKs) | [Apache-2.0](LICENSES/Apache-2.0.txt) |
 | `dart/cli` (the `casama` command) | Apache-2.0 |
+| `selfhost` (the self-host bundle: compose file, `install.sh`, settings) | Apache-2.0 |
 | `packages/mcp`, `packages/plugin-check` | Apache-2.0 |
 | `packages/contracts` (API schemas and the OpenAPI document) | Apache-2.0 |
 | `packages/formats` (skill, pack, template and plugin file formats) | Apache-2.0 |
@@ -50,9 +53,25 @@ agent, the supervisor, the database and the rest of what runs on Casama's server
 on it. The open apps call the engine's API, and the schemas for that API are in
 `packages/contracts`, so you can see what it accepts and returns.
 
-Self-hosting the engine is not offered for now. Stackwares may later offer a free license for one
-person or household for non-commercial use, and paid licenses for businesses. Write to
-hello@casama.ai.
+## Running the engine yourself
+
+DRAFT for legal review: this section is not final until a lawyer has reviewed it.
+
+You can run the Casama Engine on your own computer or server. It installs as signed container
+images and stays closed. You need a license key from Stackwares.
+
+- **Personal use is free.** One person, for their own personal use, not for work or a business, on
+  their own computer or server. You get the key by signing in with a Casama account. It lasts 30
+  days and renews itself online.
+- **Business use needs a paid license** for each active user, at the same price as Casama Cloud.
+  A 30-day trial key is available. Write to hello@casama.ai.
+- You may not remove or get around the license check, share a key, or offer the engine to others as
+  a hosted service.
+- When a license runs out, your data is never locked: you can still sign in, read, export and back
+  up. New bot runs stop after a 14-day grace period.
+
+The license covers the engine only. The open parts keep their own licenses, and using them needs no
+key. [Self-hosting guide](https://docs.casama.ai/self-hosting/).
 
 ## Name and logo
 

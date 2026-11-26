@@ -48,6 +48,7 @@ import '../../ui/celebration.dart';
 import '../../core/analytics.dart';
 import '../../core/billing.dart';
 import '../billing/paywall.dart';
+import '../siri/focus_filter.dart';
 
 String botStatusLabel(BuildContext context, BotStatusEnum s) => switch (s) {
   BotStatusEnum.working => context.l10n.botStatusWorking,
@@ -132,10 +133,15 @@ class BotsList extends ConsumerWidget {
       onRetry: () => ref.invalidate(botsProvider),
       loading: const _BotsListSkeleton(),
       data: (all) {
-        final items = byRecentChat(all);
+        final focusFilter = ref.watch(focusFilterProvider);
+        final items = byRecentChat(focusFilter.filterBots(all, (b) => b.id));
         final previewLines = chatPreviewLines(items.length + groups.length);
         return items.isEmpty
-          ? EmptyState(
+          ? Column(
+              children: [
+                const FocusFilterChip(),
+                Expanded(
+                  child: EmptyState(
               illustration: const BlankBotImage(size: 132),
               title: l10n.noBots,
               message: l10n.noBotsHelp,
@@ -187,6 +193,9 @@ class BotsList extends ConsumerWidget {
                   ),
                 ],
               ),
+                  ),
+                ),
+              ],
             )
           : RefreshIndicator(
               onRefresh: () async {
@@ -211,7 +220,13 @@ class BotsList extends ConsumerWidget {
                         const SizedBox(height: AppSpace.xs),
                     itemBuilder: (context, i) {
                       // What the Inbox held comes first (D-253): Needs you, and the Updates row.
-                      if (i == 0) return const _InboxRows();
+                      if (i == 0) {
+                        return const Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [FocusFilterChip(), _InboxRows()],
+                        );
+                      }
                       i -= 1;
                       if (i == items.length) {
                         return _GroupChatsSection(bots: items);

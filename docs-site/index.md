@@ -5,7 +5,7 @@ titleTemplate: AI teammates with their own computers
 hero:
   name: Casama
   text: AI teammates with their own computers
-  tagline: Bots that remember, work on real computers, ask before risky steps, and run on Casama Cloud.
+  tagline: Bots that remember, work on real computers, ask before risky steps, and run on Casama Cloud or your own computer or server.
   actions:
     - theme: brand
       text: Quick start
@@ -14,8 +14,8 @@ hero:
       text: What is Casama?
       link: /introduction
     - theme: alt
-      text: Plans and usage
-      link: /guide/usage
+      text: Self-host
+      link: /self-hosting/
 features:
   - title: Bots that reach out first
     details: Each bot has instructions, memory, skills and a budget. It sends a morning brief, spots things it could do for you, and keeps working on schedules and triggers while you're away.
@@ -53,22 +53,22 @@ features:
     details: One-click app connections, MCP servers, plugins and password managers, with secrets kept out of the model's sight. Plus an API, CLI and SDK to build on.
     link: /guide/connections
     linkText: Apps and connections
-  - title: Your choice of model
-    details: On Casama Cloud, Casama picks the models, or you connect your own provider keys (OpenAI, Anthropic, Google, OpenRouter and other OpenAI-compatible providers).
+  - title: Any model
+    details: Bring your own key for OpenAI, Anthropic, Google, xAI, OpenRouter or any OpenAI-compatible endpoint, run local models for free, or sign in with a ChatGPT plan on your own server.
     link: /guide/bots
     linkText: Choose a model
-  - title: Open source
-    details: The apps, SDKs and CLI are open source (AGPL-3.0 and Apache-2.0), and so are the safety rules you can read. Self-hosting is paused while the engine moves to a separate license.
+  - title: Yours to run
+    details: Open source apps, SDKs and CLI (AGPL-3.0 and Apache-2.0), and the safety rules you can read. You can run it yourself, free for personal use, with a business license for work.
     link: /self-hosting/
-    linkText: Self-hosting (paused)
-  - title: Runs on Casama Cloud
+    linkText: Self-hosting
+  - title: Or let us run it
     details: Casama Cloud is the hosted service, with a free plan and paid plans from $15 a month. Casama picks the models, so there are no keys to add, and models, computers and voice are paid from credits.
     link: /guide/usage
     linkText: Plans and usage
 ---
 
 <div class="home-shots">
-  <figure class="casama-video"><div class="casama-video-frame"><iframe src="https://www.youtube-nocookie.com/embed/2-6dP3YVn98?rel=0" title="Casama walkthrough" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div></figure>
+  <figure class="casama-video"><div class="casama-video-frame"><iframe src="https://www.youtube-nocookie.com/embed/QCdp2VIByDs?rel=0" title="Casama walkthrough" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div></figure>
   <div class="casama-shot-pair">
     <figure class="casama-shot"><img class="shot-light" src="/screens/casama-team-v2-light.webp" alt="A group chat: you ask everyone to plan Sam's 30th, and Oliver, Max and Kelly each take a part: a restaurant map, an RSVP page and a head count"><img class="shot-dark" src="/screens/casama-team-v2-dark.webp" alt=""><figcaption>Group chats: ask @everyone and the bots split the work.</figcaption></figure>
     <figure class="casama-shot"><img class="shot-light" src="/screens/casama-computer-v2-light.webp" alt="Anna compares flights and books a hotel on her own computer while you watch the live screen, with a Take Control button"><img class="shot-dark" src="/screens/casama-computer-v2-dark.webp" alt=""><figcaption>Every bot has its own computer. Watch it, or take over.</figcaption></figure>

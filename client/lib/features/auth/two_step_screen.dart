@@ -21,6 +21,7 @@ import '../../ui/glow_button.dart';
 import '../../ui/otp_code_field.dart';
 import '../../ui/page.dart';
 import '../../ui/progressive_fade.dart';
+import '../../ui/signed_in_as.dart';
 import '../../core/analytics.dart';
 
 /// The person's authenticator apps (refreshed after changes).
@@ -426,6 +427,10 @@ class _TwoStepPromptScreenState extends ConsumerState<TwoStepPromptScreen> {
                             height: 1.4,
                           ),
                         ),
+                        // Which account and server the code is for: with several accounts
+                        // (or a self-hosted server and Cloud) it's otherwise easy to pick the
+                        // wrong entry in the authenticator app.
+                        SignedInAs(label: l10n.twoStepPromptAccount),
                         OtpCodeField(
                           key: const Key('signInCode'),
                           controller: _code,

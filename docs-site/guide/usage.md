@@ -2,7 +2,8 @@
 
 Casama tracks what every bot spends on models, cloud computers and other metered services. Use
 this page to see where the money goes, cap what a bot can spend, and understand Casama Cloud plans
-and credits. Self-hosting is paused.
+and credits. If you self-host, there are no Cloud plans or paywalls: you pay your providers directly and
+set your own limits.
 
 ## See usage and cost
 
@@ -63,7 +64,7 @@ With it on, a small line sits under the last message of every reply, for example
 `$0.0420 · 18.2K tokens · 32s`. While the bot is working, the line counts up. It includes any
 helper runs the bot started for that reply. Tap the line to see:
 
-- what came out of your credits, and what your own keys spent;
+- what came out of your credits, and what your own keys or ChatGPT plan spent;
 - tokens, how long the reply took, and how many steps the bot took;
 - each metered item, such as model input and output for each model, cloud computer time and web
   searches.
@@ -106,7 +107,7 @@ has left (at least one cent).
 
 | Limit | Value |
 | --- | --- |
-| Steps per run | By plan: Free 40, Plus 60, Pro 100, Max 150; 8 for [check-ins](/guide/routines#check-ins) |
+| Steps per run | By plan: Free 40, Plus 60, Pro 100, Max 150; 100 when self-hosted (8 for [check-ins](/guide/routines#check-ins)) |
 | Time per run | 30 minutes |
 | Repeated actions | See [the loop guard](/guide/autonomy#the-loop-guard) |
 
@@ -115,6 +116,18 @@ When a chat run runs out of steps or time, the bot tells you what it got done an
 
 Projects have their own budget and deadline. See [Projects](/guide/projects). For every timeout,
 call guardrail and workspace cap in one place, see [Limits](/guide/limits).
+
+## Workspace quotas
+
+On a self-hosted server, the instance owner can cap each workspace in the admin console:
+
+1. Open **Settings → Admin console → Workspaces**.
+2. Find the workspace and tap **Edit quotas**.
+3. Set **Max bots** and **Monthly spend limit (USD)**. Leave a field empty for no limit.
+4. Tap **Save**.
+
+The monthly limit counts the workspace's spend since the start of the calendar month (UTC). See
+[Workspaces and teams](/guide/workspaces#the-admin-console).
 
 ## When a run hits a limit
 
@@ -126,6 +139,7 @@ failed with a clear message and a stable code (for live calls, see
 | --- | --- |
 | `budget_exceeded` | The run reached its per-run budget |
 | `daily_budget_exceeded` | The bot reached its daily budget |
+| `quota_exceeded` | The workspace reached its monthly spend limit |
 | `out_of_credits` | A Casama Cloud workspace has no credits left |
 | `cloud_daily_cap` | A Casama Cloud workspace reached its plan's [daily limit](#daily-limit). It resets at midnight UTC. |
 | `computer_hours_exceeded` | A Casama Cloud workspace used its computer hours for the month, so its computer can't start. Chat keeps working on credits. |
@@ -181,7 +195,9 @@ $5 on Plus, $10 on Pro and $25 on Max). Bigger plans also get bigger computers: 
 memory on Free and Plus, 2 on Pro and 4 on Max. Plans can change, so **Billing** always shows the
 current ones.
 
-Library storage counts what bots keep in the [Library](/guide/library). 
+Library storage counts what bots keep in the [Library](/guide/library). With
+[Casama Link](/guide/casama-link), Free and Plus connect one self-hosted server, Pro three and Max
+ten, and live view away from home comes with Plus and up.
 
 **Running at once:** starting another computer puts one nobody has used for 2 minutes to sleep. If
 they're all in use, the start is refused until one is free.
@@ -313,7 +329,7 @@ on the same screen, and as a line in **Credit History** on **Settings → Billin
 button at the top (or pull down) to see a new reward.
 
 A friend who signed up without your link can still enter your code under **Got a Friend's
-Code?**, within a week of signing up.
+Code?**, within a week of signing up. Self-hosted servers don't show invites.
 
 ### Free plans from Casama
 
@@ -332,6 +348,13 @@ oldest one; with a code, the one you pick.
 - **When it ends** the workspace goes back to Free. Credits already given stay. Buying any plan
   during a free one replaces it.
 
+## Self-hosting: no Cloud plans
+
+Billing is off on a self-hosted server unless you turn it on. **Settings → Billing** is hidden,
+and Cloud plan limits don't apply. What your server allows comes from its
+[license](/self-hosting/licenses): a personal license covers one member. Bot budgets and any quotas
+the instance owner sets still apply.
+
 ## Limits
 
 - The app doesn't edit bot budgets yet. Set them at creation with the CLI or API, or ask a bot that
@@ -348,6 +371,7 @@ oldest one; with a code, the one you pick.
 - [Autonomy, approvals and action rules](/guide/autonomy)
 - [Projects](/guide/projects)
 - [Workspaces and teams](/guide/workspaces)
+- [Self-hosting configuration](/self-hosting/configuration)
 
 ## Saved resets
 

@@ -1,0 +1,10 @@
+01-real-work.png	Real work, done for you
+02-customer-emails.png	Customer emails, answered for you
+03-trips-ok.png	Trips booked, only with your OK
+04-day-planned.png	Your day, planned before you wake
+05-window-seat.png	Window seat? It remembers
+06-flight-prices.png	Flight prices, watched for you
+07-sites-games.png	Sites and games, made for you
+08-inbox.png	Your inbox, handled
+09-birthday-dinner.png	Birthday dinner, planned by three
+10-make-it-yours.png	Make it yours

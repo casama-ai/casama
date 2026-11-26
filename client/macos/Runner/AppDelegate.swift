@@ -22,6 +22,45 @@ class AppDelegate: FlutterAppDelegate {
     return true
   }
 
+  // After Siri or Shortcuts runs one of our intents (docs/SIRI-AI-PLAN.md), the App Intents daemon
+  // (linkd) sends a Quit Apple Event once its idle grace period ends, as if it had launched us for
+  // that one intent. Casama lives in the menu bar and the notch, so it stays; every other quit
+  // (Cmd+Q, the Dock, logging out) goes through Flutter's own handler as before.
+  override func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
+    if Self.quitSentByAppIntents() { return .terminateCancel }
+    return super.applicationShouldTerminate(sender)
+  }
+
+  private static func quitSentByAppIntents() -> Bool {
+    guard let event = NSAppleEventManager.shared().currentAppleEvent,
+          event.eventClass == AEEventClass(kCoreEventClass), event.eventID == AEEventID(kAEQuitApplication),
+          let pid = event.attributeDescriptor(forKeyword: AEKeyword(keySenderPIDAttr))?.int32Value,
+          pid > 0 else { return false }
+    var name = [CChar](repeating: 0, count: 256)
+    guard proc_name(pid, &name, UInt32(name.count)) > 0 else { return false }
+    return String(cString: name) == "linkd"
+  }
+
+  // Mac Services menu (docs/APPLE-INTEGRATIONS-PLAN.md §6.6): select text anywhere → Ask Casama.
+  // FlutterAppDelegate on macOS does not implement applicationDidFinishLaunching(_:), so do not
+  // call super here (calling super throws an unrecognized selector exception at launch).
+  override func applicationDidFinishLaunching(_ notification: Notification) {
+    NSApp.servicesProvider = self
+  }
+
+  @objc func askCasama(
+    _ pboard: NSPasteboard,
+    userData: String,
+    error: AutoreleasingUnsafeMutablePointer<NSString>
+  ) {
+    guard let text = pboard.string(forType: .string)?.trimmingCharacters(in: .whitespacesAndNewlines),
+          !text.isEmpty
+    else { return }
+    let encoded = text.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+    IslandController.shared.showMainWindow()
+    ShortcutBridge.shared.open("/quick-ask?text=\(encoded)")
+  }
+
   // casama.ai links the App Store build opens (applinks:casama.ai, D-326). app_links catches
   // casama:// links itself but leaves universal links to the app delegate.
   override func application(
@@ -29,6 +68,20 @@ class AppDelegate: FlutterAppDelegate {
     continue userActivity: NSUserActivity,
     restorationHandler: @escaping ([any NSUserActivityRestoring]) -> Void
   ) -> Bool {
+    // Handoff from iPhone/iPad (docs/APPLE-INTEGRATIONS-PLAN.md §6.10).
+    if userActivity.activityType == "ai.casama.app.viewing",
+       let info = userActivity.userInfo,
+       let kind = info["kind"] as? String,
+       let id = info["id"] as? String
+    {
+      let botId = (info["bot_id"] as? String) ?? (kind == "bot" ? id : "")
+      let path = kind == "chat" && !botId.isEmpty
+        ? "/bots/\(botId)/chat?c=\(id)"
+        : (!botId.isEmpty ? "/bots/\(botId)/chat" : "/bots")
+      IslandController.shared.showMainWindow()
+      ShortcutBridge.shared.open(path)
+      return true
+    }
     guard let url = AppLinks.shared.getUniversalLink(userActivity) else { return false }
     AppLinks.shared.handleLink(link: url.absoluteString)
     return true
@@ -80,6 +133,9 @@ final class ShortcutBridge {
   }
 
   func open(_ path: String) {
+    // Siri, Spotlight and Shortcuts open a place in the app (docs/SIRI-AI-PLAN.md): with the window
+    // closed to the menu bar the route changed out of sight, so bring the window forward too.
+    DispatchQueue.main.async { IslandController.shared.showMainWindow() }
     if let channel = channel {
       channel.invokeMethod("open", arguments: path)
     } else {

@@ -1,10 +1,10 @@
 # CLI
 
-`casama` is the command-line client for Casama. It talks to Casama Cloud: sign in, manage
+`casama` is the command-line client for Casama. It talks to any Casama server: sign in, manage
 workspaces and their people, model keys and bots, chat with a bot and watch it work, read and
 manage conversations, approvals, routines, tasks, watchers, memory, skills, plugins, apps, secrets,
 knowledge, channels, projects, the Library and billing, reach into a bot's computer, move routines
-and skills as files. Every command can print JSON for scripts.
+and skills as files, and run your own server. Every command can print JSON for scripts.
 
 ## Install
 
@@ -28,7 +28,7 @@ has a native binary for each platform, with a SHA-256 checksum file next to it:
 | Windows, x64 | `casama-<version>-windows-x64.zip` |
 
 ```sh
-v=0.1.3
+v=0.1.5
 curl -LO "https://casama.ai/get/cli/$v/casama-$v-linux-x64.tar.gz"
 curl -LO "https://casama.ai/get/cli/$v/casama-$v-linux-x64.tar.gz.sha256"
 shasum -a 256 -c "casama-$v-linux-x64.tar.gz.sha256"
@@ -50,13 +50,13 @@ dart compile exe bin/casama.dart -o casama
 
 ## Connect and sign in
 
-The CLI talks to Casama Cloud (`https://api.casama.ai`). Log in:
+The CLI talks to Casama Cloud (`https://api.casama.ai`) until you point it somewhere else. For
+your own server, save its address once, then log in:
 
 ```sh
+casama config --api-url https://casama.example.com
 casama login --email ana@example.com
 ```
-
-(Self-hosted servers: paused. `casama config --api-url` can still point the CLI at another server.)
 
 `login` asks for your password (or reads `CASAMA_PASSWORD`). If your account has two-step sign-in,
 it asks for the code from your authenticator app (or takes `--code`, or `CASAMA_2FA_CODE`). With
@@ -120,7 +120,9 @@ Commands that delete, revoke, reset or spend money only say what they would do u
 
 `--email` can also come from `CASAMA_EMAIL`, and `--password` from `CASAMA_PASSWORD`.
 
-`pair` works with Casama Cloud.
+`pair` works with any server, Casama Cloud included. If the server only answers on your own computer
+or network, `pair` says so: a phone somewhere else needs
+[remote access](#self-hosting-selfhost) first (`casama selfhost remote on`).
 
 ### Workspaces: `org` and `invite`
 
@@ -166,7 +168,7 @@ Model keys are stored in the server's vault and never shown again. `key` is an a
 | `casama credential add --provider <id> [--label <name>] [--key <key>] [--base-url <url>]` | Add a key. Prompts for it (or reads `CASAMA_MODEL_KEY`) when `--key` is missing. `--label` defaults to `Default`. |
 | `casama credential list` | Keys in the workspace: id, provider, label, last 4 characters and test status. A ChatGPT plan shows its account and status instead. |
 | `casama credential test <id> [--model <model>]` | Check a key with a one-token call. Exits 1 if it fails. |
-| `casama credential chatgpt [--reconnect <id>] [--no-browser]` | Connect your ChatGPT plan in the browser so your bots can run on it instead of an API key. Not available on Casama Cloud, and self-hosted servers are paused. `--no-browser` only prints the link. |
+| `casama credential chatgpt [--reconnect <id>] [--no-browser]` | Connect your ChatGPT plan in the browser so your bots can run on it instead of an API key. Only you can use the plan. `--no-browser` only prints the link. |
 | `casama credential remove <id>` | Delete a key (a ChatGPT sign-in is revoked first) |
 
 `add`, `list` and `chatgpt` take `--org`. `--provider` is one of: `openai`, `anthropic`, `google`,
@@ -597,24 +599,24 @@ casama domains check bakery.com
 
 ### Self-hosting: `selfhost`
 
-::: warning Paused
-Self-hosting is paused while the Casama Engine moves to a separate license. These commands need a checkout that is no longer published, so they are kept as a reference only.
-:::
-
-`selfhost` wrapped the repository's `install.sh` and Docker Compose. Run it from a clone of the
-repository, or point at one with `--dir <path>` (or `CASAMA_SELFHOST_DIR`). `--dir` goes right after
-`selfhost`: `casama selfhost --dir /srv/casama status`. Without either, it uses the current folder. When remote
-access is on, `up`, `down`, `status` and `logs` include the Casama Link connector (its service is
-`connector`).
+`selfhost` installs and runs a [self-hosted](/self-hosting/) server with Docker Compose. It needs no
+source code: `install` downloads the release. Run the other commands from your install folder, or
+point at it with `--dir <path>` (or `CASAMA_SELFHOST_DIR`). `--dir` goes right after `selfhost`:
+`casama selfhost --dir /srv/casama status`. When remote access is on, `up`, `down`, `status` and
+`logs` include the Casama Link connector (its service is `connector`).
 
 | Command | What it does |
 | --- | --- |
-| `casama selfhost init [--domain <domain> \| --local] [--http-port <port>] [--with-desktop] [--monitoring]` | Generate secrets, build images and start the stack (runs `install.sh`) |
+| `casama selfhost install [--local \| --domain <domain>]` | Download the newest release, write its settings and secrets, pull the images and start the server |
+| `casama selfhost update` | Back up, install the newest release and check its health; goes back to the previous images if the check fails |
+| `casama selfhost license` | See the server's license, or give it one. See [Licenses](/self-hosting/licenses) |
+| `casama selfhost license personal` | Get the free personal license with your Casama account |
+| `casama selfhost cloud-models on [--workspace <name>]` | Run the server's bots on Casama Cloud's models, paid by one of your Casama workspaces. Needs the CLI signed in to the server as its admin |
+| `casama selfhost cloud-models status` / `off` | Whether the server uses Casama Cloud's models and who pays; `off` puts each bot back on the key it used before |
 | `casama selfhost up` | Start the stack |
 | `casama selfhost down` | Stop the stack; data is kept |
-| `casama selfhost status` | Services and their health (`docker compose ps`) |
+| `casama selfhost status` | Services and their health |
 | `casama selfhost logs [service...] [-f]` | The last 200 log lines (default services: `api` and `worker`); `-f` follows |
-| `casama selfhost upgrade` | `git pull --ff-only` in the checkout, then rebuild and restart; keeps `.env` and data |
 | `casama selfhost backup [options]` | Back up the database, its Vault key, computer archives, the Library's files and `.env` to a timestamped folder |
 | `casama selfhost restore <backup folder> [--identity <key file>]` | Restore a backup. This replaces the current data. |
 | `casama selfhost remote on [options]` | Give a server on your own computer an address your phone can reach, through Casama Link: no domain, no open ports. Approve a code in a browser; the stack restarts with the address. |
@@ -638,9 +640,8 @@ closes sign-ups, and until then the first account to sign up owns the server. Cr
 the app or with `casama signup`. See [Use your server on your phone](/self-hosting/remote-access)
 for more.
 
-`init` options: `--domain` (public domain with automatic HTTPS), `--local` (this machine only, plain
-HTTP), `--http-port` (default 80), `--with-desktop` (also build the desktop computer image),
-`--monitoring` (Prometheus and Grafana).
+`install` options: `--domain` (public domain with automatic HTTPS) or `--local` (this machine only,
+plain HTTP). See [Install on a server](/self-hosting/server).
 
 `backup` options:
 
@@ -734,7 +735,7 @@ against the hash in its catalog record, before it writes anything. With a public
 (`--public-key`, or `CASAMA_GALLERY_PUBLIC_KEY`) it also checks `manifest.sig`, the catalog's
 Ed25519 signature, and refuses a missing or wrong one. Without a key it says the copy isn't
 signature-checked. `--json-only` skips the item files. Serve the folder over HTTP and set the
-server's `GALLERY_URL` to its address (self-hosting is paused).
+server's `GALLERY_URL` to its address (see [Configuration](/self-hosting/configuration)).
 
 ```sh
 casama gallery search "summarize unread email" --type skill --type routine
@@ -804,8 +805,7 @@ casama --json bot list | jq -r '.items[] | select(.status == "idle") | .name'
 | 64 | Wrong usage: a missing argument or unknown option |
 | 130 | You pressed Ctrl+C twice during a run |
 
-Most `selfhost` commands exit with the code of the program they ran (`docker`, `git`,
-`install.sh`).
+Most `selfhost` commands exit with the code of the program they ran (`docker`).
 
 ## Related
 

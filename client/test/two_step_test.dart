@@ -71,6 +71,10 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(find.text('Enter your code'), findsOneWidget);
+    // Which account and server the code is for.
+    expect(find.text('Signing in as'), findsOneWidget);
+    expect(find.text('tester@example.com'), findsOneWidget);
+    expect(find.text('localhost'), findsOneWidget);
     await tester.enterText(find.byKey(const Key('signInCode')), '123456');
     await tester.pumpAndSettle();
     expect(backend.twoStepVerified, isTrue);

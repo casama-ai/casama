@@ -99,6 +99,15 @@
 	</dict>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSAlarmKitUsageDescription</key>
+	<string>Your bots can set alarms and timers that ring through silent mode, only when you allow Alarms in Device connections.</string>
+	<key>NSHomeKitUsageDescription</key>
+	<string>Your bots can check and control your HomeKit home when you allow Home in Device connections; changes always ask for approval first.</string>
+	<key>NSUserActivityTypes</key>
+	<array>
+		<string>ai.casama.app.viewing</string>
+		<string>INSendMessageIntent</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

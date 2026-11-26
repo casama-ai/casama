@@ -3,9 +3,11 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:casama_api/src/model/public_config_cloud_models.dart';
 import 'package:casama_api/src/model/public_config_signup_gate.dart';
 import 'package:casama_api/src/model/sites_config.dart';
 import 'package:casama_api/src/model/public_config_key_providers.dart';
+import 'package:casama_api/src/model/moved_to.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -67,7 +69,11 @@ class PublicConfig {
 
      this.sites,
 
+     this.cloudModels,
+
      this.keyProviders,
+
+     this.movedTo,
   });
 
   @JsonKey(
@@ -337,6 +343,18 @@ class PublicConfig {
 
   @JsonKey(
     
+    name: r'cloud_models',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final PublicConfigCloudModels? cloudModels;
+
+
+
+  @JsonKey(
+    
     name: r'key_providers',
     required: false,
     includeIfNull: false,
@@ -344,6 +362,18 @@ class PublicConfig {
 
 
   final PublicConfigKeyProviders? keyProviders;
+
+
+
+  @JsonKey(
+    
+    name: r'moved_to',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final MovedTo? movedTo;
 
 
 
@@ -373,7 +403,9 @@ class PublicConfig {
       other.signupGate == signupGate &&
       other.pushSenderId == pushSenderId &&
       other.sites == sites &&
-      other.keyProviders == keyProviders;
+      other.cloudModels == cloudModels &&
+      other.keyProviders == keyProviders &&
+      other.movedTo == movedTo;
 
     @override
     int get hashCode =>
@@ -399,7 +431,9 @@ class PublicConfig {
         signupGate.hashCode +
         pushSenderId.hashCode +
         sites.hashCode +
-        keyProviders.hashCode;
+        cloudModels.hashCode +
+        keyProviders.hashCode +
+        movedTo.hashCode;
 
   factory PublicConfig.fromJson(Map<String, dynamic> json) => _$PublicConfigFromJson(json);
 

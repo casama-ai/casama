@@ -4,7 +4,7 @@
 import 'package:casama_api/casama_api.dart';
 
 /// All run event types known to this client version.
-const knownRunEventTypes = <String>{'run.started', 'message.delta', 'message.completed', 'tool.started', 'tool.output', 'tool.completed', 'tool.failed', 'screen.pointer', 'approval.requested', 'approval.resolved', 'device.access_requested', 'device.browser_access_requested', 'local_mcp.sign_in_needed', 'mcp.question', 'mcp.question_resolved', 'device.permission_needed', 'device.data_used', 'secret.requested', 'secret.resolved', 'takeover.requested', 'takeover.resolved', 'browser.choice_requested', 'browser.choice_resolved', 'browser.waiting', 'browser.waiting_resolved', 'lease.changed', 'computer.state', 'checkpoint.created', 'subrun.started', 'subrun.completed', 'memory.written', 'skill.loaded', 'usage', 'model.fallback', 'notice', 'run.completed', 'run.failed', 'run.cancelled', 'ui.shown', 'canvas.preview'};
+const knownRunEventTypes = <String>{'run.started', 'message.delta', 'message.completed', 'tool.started', 'tool.output', 'tool.completed', 'tool.failed', 'screen.pointer', 'approval.requested', 'approval.resolved', 'device.access_requested', 'device.browser_access_requested', 'device.action_access_requested', 'local_mcp.sign_in_needed', 'mcp.question', 'mcp.question_resolved', 'device.permission_needed', 'device.data_used', 'secret.requested', 'secret.resolved', 'takeover.requested', 'takeover.resolved', 'browser.choice_requested', 'browser.choice_resolved', 'browser.waiting', 'browser.waiting_resolved', 'lease.changed', 'computer.state', 'checkpoint.created', 'subrun.started', 'subrun.completed', 'memory.written', 'skill.loaded', 'usage', 'model.fallback', 'notice', 'run.completed', 'run.failed', 'run.cancelled', 'ui.shown', 'canvas.preview'};
 
 /// A run event: the envelope plus, for known types, the typed event.
 /// Unknown types parse to [UnknownRunEventItem] so newer servers never break older clients.
@@ -42,6 +42,8 @@ sealed class RunEventItem {
         return DeviceAccessRequestedItem(envelope, DeviceAccessRequestedEvent.fromJson(json));
       case 'device.browser_access_requested':
         return DeviceBrowserAccessRequestedItem(envelope, DeviceBrowserAccessRequestedEvent.fromJson(json));
+      case 'device.action_access_requested':
+        return DeviceActionAccessRequestedItem(envelope, DeviceActionAccessRequestedEvent.fromJson(json));
       case 'local_mcp.sign_in_needed':
         return LocalMcpSignInNeededItem(envelope, LocalMcpSignInNeededEvent.fromJson(json));
       case 'mcp.question':
@@ -162,6 +164,11 @@ final class DeviceAccessRequestedItem extends RunEventItem {
 final class DeviceBrowserAccessRequestedItem extends RunEventItem {
   const DeviceBrowserAccessRequestedItem(super.envelope, this.event);
   final DeviceBrowserAccessRequestedEvent event;
+}
+
+final class DeviceActionAccessRequestedItem extends RunEventItem {
+  const DeviceActionAccessRequestedItem(super.envelope, this.event);
+  final DeviceActionAccessRequestedEvent event;
 }
 
 final class LocalMcpSignInNeededItem extends RunEventItem {

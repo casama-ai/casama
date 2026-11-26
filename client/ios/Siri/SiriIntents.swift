@@ -313,6 +313,93 @@ struct OpenRoutineIntent: OpenIntent {
   }
 }
 
+// MARK: Action button and additional Shortcuts actions (docs/APPLE-INTEGRATIONS-PLAN.md §6.3)
+
+@available(iOS 16.0, macOS 13.0, *)
+struct TalkToBotIntent: AppIntent {
+  static var title: LocalizedStringResource = "Talk to a bot"
+  static var description = IntentDescription("Opens voice mode with one of your Casama bots. Available on the Action button.")
+  static var openAppWhenRun = true
+  static var authenticationPolicy: IntentAuthenticationPolicy = .requiresAuthentication
+
+  @Parameter(title: "Bot") var bot: BotEntity?
+
+  @MainActor
+  func perform() async throws -> some IntentResult {
+    let path = bot.map { "/bots/\($0.id)/chat?call=1" } ?? "/quick-ask?voice=1"
+    ShortcutBridge.shared.open(path)
+    return .result()
+  }
+}
+
+@available(iOS 16.0, macOS 13.0, *)
+struct AskBotAndGetReplyIntent: AppIntent {
+  static var title: LocalizedStringResource = "Ask a bot and get the reply"
+  static var description = IntentDescription("Sends a question to a Casama bot and returns its reply text for chaining in Shortcuts.")
+  static var openAppWhenRun = false
+  static var authenticationPolicy: IntentAuthenticationPolicy = .requiresAuthentication
+
+  @Parameter(title: "Bot") var bot: BotEntity
+  @Parameter(title: "Question") var question: String
+
+  @MainActor
+  func perform() async throws -> some IntentResult & ReturnsValue<String> {
+    let args: [String: Any] = [
+      "bot_id": bot.id,
+      "text": question,
+      "wait_ms": 20_000,
+      "request_id": UUID().uuidString,
+    ]
+    guard let answer = await SiriBridge.shared.call("ask", args) else {
+      return .result(value: "")
+    }
+    let text = (answer["text"] as? String) ?? (answer["say"] as? String) ?? ""
+    return .result(value: text)
+  }
+}
+
+@available(iOS 16.0, macOS 13.0, *)
+struct GetLastReplyIntent: AppIntent {
+  static var title: LocalizedStringResource = "Get the last reply"
+  static var description = IntentDescription("Returns the latest reply text from a Casama bot chat.")
+  static var openAppWhenRun = false
+  static var authenticationPolicy: IntentAuthenticationPolicy = .requiresAuthentication
+
+  @Parameter(title: "Bot") var bot: BotEntity
+
+  @MainActor
+  func perform() async throws -> some IntentResult & ReturnsValue<String> {
+    guard let answer = await SiriBridge.shared.call("last_reply", ["bot_id": bot.id]),
+          let text = answer["text"] as? String
+    else {
+      return .result(value: "")
+    }
+    return .result(value: text)
+  }
+}
+
+@available(iOS 16.0, macOS 13.0, *)
+struct StartComputerIntent: AppIntent {
+  static var title: LocalizedStringResource = "Start a computer"
+  static var description = IntentDescription("Wakes up a Casama computer after confirmation.")
+  static var openAppWhenRun = false
+  static var authenticationPolicy: IntentAuthenticationPolicy = .requiresAuthentication
+
+  @Parameter(title: "Computer name") var computerName: String?
+
+  @MainActor
+  func perform() async throws -> some IntentResult & ProvidesDialog {
+    let label = (computerName?.isEmpty == false) ? computerName! : "your Casama computer"
+    try await requestConfirmation(result: .result(dialog: "Start \(label)?"))
+    guard let answer = await SiriBridge.shared.call("start_computer", ["name": computerName ?? ""]),
+          let say = answer["say"] as? String
+    else {
+      return .result(dialog: "Open Casama to start your computer.")
+    }
+    return .result(dialog: IntentDialog(stringLiteral: say))
+  }
+}
+
 // MARK: Phrases
 
 @available(iOS 16.0, macOS 13.0, *)
@@ -322,6 +409,10 @@ struct CasamaShortcuts: AppShortcutsProvider {
       intent: AskBotIntent(),
       phrases: ["Ask \(.applicationName)", "Ask a bot in \(.applicationName)", "Ask \(\.$bot) in \(.applicationName)"],
       shortTitle: "Ask a bot", systemImageName: "bubble.left")
+    AppShortcut(
+      intent: TalkToBotIntent(),
+      phrases: ["Talk to a bot in \(.applicationName)", "Talk to \(\.$bot) in \(.applicationName)"],
+      shortTitle: "Talk to a bot", systemImageName: "waveform")
     AppShortcut(
       intent: RunRoutineIntent(),
       phrases: ["Run a routine in \(.applicationName)", "Run \(\.$routine) in \(.applicationName)"],

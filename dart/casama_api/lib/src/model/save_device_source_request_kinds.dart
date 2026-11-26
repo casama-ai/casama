@@ -40,6 +40,10 @@ class SaveDeviceSourceRequestKinds {
      this.browserTab,
 
      this.browserHistory,
+
+     this.alarm,
+
+     this.home,
   });
 
   @JsonKey(
@@ -162,6 +166,30 @@ class SaveDeviceSourceRequestKinds {
 
 
 
+  @JsonKey(
+    
+    name: r'alarm',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final DeviceKindSettings? alarm;
+
+
+
+  @JsonKey(
+    
+    name: r'home',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final DeviceKindSettings? home;
+
+
+
 
 
     @override
@@ -175,7 +203,9 @@ class SaveDeviceSourceRequestKinds {
       other.notifications == notifications &&
       other.activity == activity &&
       other.browserTab == browserTab &&
-      other.browserHistory == browserHistory;
+      other.browserHistory == browserHistory &&
+      other.alarm == alarm &&
+      other.home == home;
 
     @override
     int get hashCode =>
@@ -188,7 +218,9 @@ class SaveDeviceSourceRequestKinds {
         notifications.hashCode +
         activity.hashCode +
         browserTab.hashCode +
-        browserHistory.hashCode;
+        browserHistory.hashCode +
+        alarm.hashCode +
+        home.hashCode;
 
   factory SaveDeviceSourceRequestKinds.fromJson(Map<String, dynamic> json) => _$SaveDeviceSourceRequestKindsFromJson(json);
 

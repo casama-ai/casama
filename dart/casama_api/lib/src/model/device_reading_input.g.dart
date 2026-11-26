@@ -175,4 +175,6 @@ const _$DeviceKindEnumMap = {
   DeviceKind.activity: 'activity',
   DeviceKind.browserTab: 'browser_tab',
   DeviceKind.browserHistory: 'browser_history',
+  DeviceKind.alarm: 'alarm',
+  DeviceKind.home: 'home',
 };

@@ -19,6 +19,10 @@ abstract class _$MeCWProxy {
 
   Me isInternal(bool? isInternal);
 
+  Me accountAgeBand(AccountAgeBand? accountAgeBand);
+
+  Me accountAgeBandUpdatedAt(DateTime? accountAgeBandUpdatedAt);
+
   Me organizations(List<OrganizationWithRole> organizations);
 
   /// Creates a new instance with the provided field values.
@@ -36,6 +40,8 @@ abstract class _$MeCWProxy {
     String locale,
     String timezone,
     bool? isInternal,
+    AccountAgeBand? accountAgeBand,
+    DateTime? accountAgeBandUpdatedAt,
     List<OrganizationWithRole> organizations,
   });
 }
@@ -66,6 +72,14 @@ class _$MeCWProxyImpl implements _$MeCWProxy {
   Me isInternal(bool? isInternal) => call(isInternal: isInternal);
 
   @override
+  Me accountAgeBand(AccountAgeBand? accountAgeBand) =>
+      call(accountAgeBand: accountAgeBand);
+
+  @override
+  Me accountAgeBandUpdatedAt(DateTime? accountAgeBandUpdatedAt) =>
+      call(accountAgeBandUpdatedAt: accountAgeBandUpdatedAt);
+
+  @override
   Me organizations(List<OrganizationWithRole> organizations) =>
       call(organizations: organizations);
 
@@ -85,6 +99,8 @@ class _$MeCWProxyImpl implements _$MeCWProxy {
     Object? locale = const $CopyWithPlaceholder(),
     Object? timezone = const $CopyWithPlaceholder(),
     Object? isInternal = const $CopyWithPlaceholder(),
+    Object? accountAgeBand = const $CopyWithPlaceholder(),
+    Object? accountAgeBandUpdatedAt = const $CopyWithPlaceholder(),
     Object? organizations = const $CopyWithPlaceholder(),
   }) {
     return Me(
@@ -112,6 +128,15 @@ class _$MeCWProxyImpl implements _$MeCWProxy {
           ? _value.isInternal
           // ignore: cast_nullable_to_non_nullable
           : isInternal as bool?,
+      accountAgeBand: accountAgeBand == const $CopyWithPlaceholder()
+          ? _value.accountAgeBand
+          // ignore: cast_nullable_to_non_nullable
+          : accountAgeBand as AccountAgeBand?,
+      accountAgeBandUpdatedAt:
+          accountAgeBandUpdatedAt == const $CopyWithPlaceholder()
+          ? _value.accountAgeBandUpdatedAt
+          // ignore: cast_nullable_to_non_nullable
+          : accountAgeBandUpdatedAt as DateTime?,
       organizations:
           organizations == const $CopyWithPlaceholder() || organizations == null
           ? _value.organizations
@@ -154,6 +179,14 @@ Me _$MeFromJson(Map<String, dynamic> json) => $checkedCreate(
       locale: $checkedConvert('locale', (v) => v as String),
       timezone: $checkedConvert('timezone', (v) => v as String),
       isInternal: $checkedConvert('is_internal', (v) => v as bool?),
+      accountAgeBand: $checkedConvert(
+        'account_age_band',
+        (v) => $enumDecodeNullable(_$AccountAgeBandEnumMap, v),
+      ),
+      accountAgeBandUpdatedAt: $checkedConvert(
+        'account_age_band_updated_at',
+        (v) => v == null ? null : DateTime.parse(v as String),
+      ),
       organizations: $checkedConvert(
         'organizations',
         (v) => (v as List<dynamic>)
@@ -169,6 +202,8 @@ Me _$MeFromJson(Map<String, dynamic> json) => $checkedCreate(
     'userId': 'user_id',
     'displayName': 'display_name',
     'isInternal': 'is_internal',
+    'accountAgeBand': 'account_age_band',
+    'accountAgeBandUpdatedAt': 'account_age_band_updated_at',
   },
 );
 
@@ -179,5 +214,16 @@ Map<String, dynamic> _$MeToJson(Me instance) => <String, dynamic>{
   'locale': instance.locale,
   'timezone': instance.timezone,
   'is_internal': ?instance.isInternal,
+  'account_age_band': ?_$AccountAgeBandEnumMap[instance.accountAgeBand],
+  'account_age_band_updated_at': ?instance.accountAgeBandUpdatedAt
+      ?.toIso8601String(),
   'organizations': instance.organizations.map((e) => e.toJson()).toList(),
+};
+
+const _$AccountAgeBandEnumMap = {
+  AccountAgeBand.under13: 'under13',
+  AccountAgeBand.n13to15: '13to15',
+  AccountAgeBand.n16to17: '16to17',
+  AccountAgeBand.n18plus: '18plus',
+  AccountAgeBand.declined: 'declined',
 };

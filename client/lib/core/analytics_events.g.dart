@@ -81,6 +81,14 @@ const analyticsClientEvents = <String>{
   'card_reported',
   'own_provider_required_shown',
   'keep_going_tapped',
+  'cloud_models_row_seen',
+  'cloud_models_signin',
+  'cloud_models_trial_started',
+  'cloud_models_purchased',
+  'cloud_models_enabled',
+  'cloud_models_fallback_used',
+  'cloud_models_fallback_off',
+  'cloud_models_disabled',
 };
 
 /// The closed list of `feature_used` features.

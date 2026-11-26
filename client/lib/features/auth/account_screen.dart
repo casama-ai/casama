@@ -22,6 +22,7 @@ import '../../ui/otp_code_field.dart';
 import '../../ui/page.dart';
 import '../../ui/progressive_fade.dart';
 import '../../ui/revealable.dart';
+import '../../ui/signed_in_as.dart';
 
 /// A new password twice, and the emailed code when the session is too old to change it without
 /// one (D-184). Shared by the reset screen and Settings → Account.
@@ -200,6 +201,9 @@ class NewPasswordScreen extends ConsumerWidget {
                     textAlign: TextAlign.center,
                     style: context.textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant, height: 1.4),
                   ),
+                  // A reset link opened on the wrong device or browser signs in whichever account
+                  // it was for: say which, before a password is set for it.
+                  SignedInAs(label: l10n.newPasswordFor),
                   _PasswordForm(submitLabel: l10n.savePassword, onDone: () => context.go(ref.read(pendingOpenLinkProvider.notifier).fresh ?? '/bots')),
                   TextButton(
                     key: const Key('skipNewPassword'),

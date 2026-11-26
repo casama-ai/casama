@@ -16,6 +16,7 @@ import '../../ui/app_card.dart';
 import '../../ui/form_sheet.dart';
 import '../../ui/glow_button.dart';
 import '../../ui/page.dart';
+import '../../ui/signed_in_as.dart';
 import '../../ui/same_tab.dart';
 import '../app_lock/confirm_identity.dart';
 
@@ -94,6 +95,11 @@ class _McpConsentScreenState extends ConsumerState<McpConsentScreen> {
                     style: context.textTheme.titleMedium,
                   ),
                   _ConsentDestination(info: snap.data!),
+                  // The account and server the app gets into, so it isn't allowed into the wrong one.
+                  Align(
+                    alignment: AlignmentDirectional.centerStart,
+                    child: SignedInAs(label: l10n.connectAiAppAccount),
+                  ),
                   Text(
                     l10n.connectAiAppHelpShort,
                     style: TextStyle(

@@ -19,8 +19,8 @@ void main() {
       await unlockAdmin(tester);
       expect(tester.takeException(), isNull);
       for (final s in AdminSection.values) {
-        // Resets and Partners show only where billing is on (Casama Cloud).
-        if (s == AdminSection.overview || s == AdminSection.resets || s == AdminSection.partners) continue;
+        // Resets, Partners and Self-host licenses show only where billing is on (Casama Cloud).
+        if (s == AdminSection.overview || s == AdminSection.resets || s == AdminSection.partners || s == AdminSection.selfhost) continue;
         await openAdminSection(tester, s.id);
         expect(tester.takeException(), isNull, reason: s.id);
         if (size.width < 840) {

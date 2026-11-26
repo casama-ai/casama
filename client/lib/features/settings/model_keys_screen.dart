@@ -19,6 +19,8 @@ import '../../ui/glow_button.dart';
 import '../../ui/revealable.dart';
 import '../../core/remote_content.dart';
 import '../bots/model_picker.dart';
+import '../cloud_models/cloud_models_flag.dart';
+import '../cloud_models/cloud_models_screen.dart' show CloudModelsRow;
 import 'provider_picker.dart';
 import 'who_runs_choice.dart';
 
@@ -345,6 +347,9 @@ class ModelKeysScreen extends ConsumerWidget {
         ],
         if (cloud && ownProviders && org != null)
           _WhoRunsYourBotsSection(org: org, billing: billing),
+        // Casama Cloud models on a self-hosted server (SELFHOST-CLOUD-MODELS-PLAN §4.1); the row
+        // shows itself only where the server offers it.
+        if (kCloudModelsCode && !cloud) const CloudModelsRow(),
         SectionHeader(title: l10n.yourKeys),
         AsyncView(
           value: keys,

@@ -45,6 +45,11 @@ final class SiriBridge {
         self.ready = true
         if self.readyAt == nil { self.readyAt = Date() }
         SiriProbeLog.add("dart ready after \(SiriProbeLog.processAge()) s of process time")
+        if let savedFilter = FocusFilterStore.load() {
+          DispatchQueue.main.async { [weak self] in
+            self?.channel?.invokeMethod("focusFilter", arguments: savedFilter)
+          }
+        }
         result(nil)
       case "index":
         if #available(iOS 18.0, macOS 15.0, *) {
@@ -69,6 +74,9 @@ final class SiriBridge {
   @MainActor
   func call(_ method: String, _ args: [String: Any] = [:]) async -> [String: Any]? {
     let start = Date()
+    #if os(macOS)
+    if !ready { Self.leaveBackgroundLaunch() }
+    #endif
     while !ready && Date().timeIntervalSince(start) < Self.readyTimeout {
       try? await Task.sleep(nanoseconds: 100_000_000)
     }
@@ -81,6 +89,32 @@ final class SiriBridge {
         c.resume(returning: value as? [String: Any])
       }
     }
+  }
+
+  #if os(macOS)
+  /// Siri and Shortcuts start the Mac app in the background with a prohibited activation policy:
+  /// its window never reaches the screen, Flutter draws no frame and Dart never finishes starting.
+  /// Ordering the window in isn't enough (macOS keeps it off screen until the app is activated),
+  /// so the app starts the way a normal launch does and then hands focus straight back to the app
+  /// that had it: the window stays behind it.
+  @MainActor
+  static func leaveBackgroundLaunch() {
+    guard NSApp.activationPolicy() == .prohibited else { return }
+    SiriProbeLog.add("background launch: starting the window")
+    let previous = NSWorkspace.shared.frontmostApplication
+    NSApp.setActivationPolicy(.regular)
+    NSApp.windows.first { $0 is MainFlutterWindow }?.orderFront(nil)
+    NSApp.activate(ignoringOtherApps: true)
+    if let previous = previous, previous.processIdentifier != ProcessInfo.processInfo.processIdentifier {
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { previous.activate() }
+    }
+  }
+  #endif
+
+  /// Forwards a Focus Filter change to Dart (docs/APPLE-INTEGRATIONS-PLAN.md §6.1).
+  @MainActor
+  func notifyFocusFilter(_ payload: [String: Any]) {
+    channel?.invokeMethod("focusFilter", arguments: payload)
   }
 }
 
@@ -121,27 +155,27 @@ enum SiriIndex {
     let bots = ShortcutStore.from(list["bots"]).map { BotEntity(id: $0.id, name: $0.name) }
     let routines = ShortcutStore.from(list["routines"]).map { RoutineEntity(id: $0.id, name: $0.name, bot: $0.detail ?? "") }
     let chats = ShortcutStore.from(list["chats"]).map { ChatEntity(id: $0.id, name: $0.name, bot: $0.detail ?? "", botId: $0.bot_id ?? "") }
-    // From iOS 27 bots and chats go in as Messages people and conversations (below) instead, so
-    // each shows once in Spotlight.
+    // From iOS 27 chats go in as Messages conversations (below) instead, so each shows once in
+    // Spotlight. Bots stay plain `BotEntity` everywhere: as Messages people Siri handed them to
+    // Apple's Messages (plan §17).
     var schemas = false
     if #available(iOS 27.0, macOS 27.0, *) { schemas = true }
     do {
       try await index.deleteAppEntities(ofType: BotEntity.self)
       try await index.deleteAppEntities(ofType: RoutineEntity.self)
       try await index.deleteAppEntities(ofType: ChatEntity.self)
-      if !bots.isEmpty && !schemas { try await index.indexAppEntities(bots) }
+      if !bots.isEmpty { try await index.indexAppEntities(bots) }
       if !routines.isEmpty { try await index.indexAppEntities(routines) }
       if !chats.isEmpty && !schemas { try await index.indexAppEntities(chats) }
       if #available(iOS 27.0, macOS 27.0, *) {
-        // Phase 3: bots and chats as Messages people and conversations, so Siri knows a bot's
-        // name as someone in Casama instead of reaching for the closest contact.
-        let people = ShortcutStore.from(list["bots"]).map { BotPersonEntity(id: $0.id, name: $0.name) }
+        // Phase 3: chats as Messages conversations. Bots are not indexed as Messages people:
+        // Siri then took a bot as someone to text in Apple's Messages and sent real iMessages
+        // (2026-11-26, plan §17). Siri still finds a bot through BotPersonQuery when asked.
         let conversations = ShortcutStore.from(list["chats"]).map(BotConversationEntity.init(item:))
         try await index.deleteAppEntities(ofType: BotPersonEntity.self)
         try await index.deleteAppEntities(ofType: BotConversationEntity.self)
-        if !people.isEmpty { try await index.indexAppEntities(people) }
         if !conversations.isEmpty { try await index.indexAppEntities(conversations) }
-        SiriProbeLog.add("indexed \(people.count) bot people, \(conversations.count) conversations")
+        SiriProbeLog.add("indexed \(conversations.count) conversations")
       }
     } catch {
       SiriProbeLog.add("index failed: \(error.localizedDescription)")
@@ -164,19 +198,26 @@ enum SiriScreen {
       return
     }
     let a = NSUserActivity(activityType: "ai.casama.app.viewing")
+    let botId = (screen["bot_id"] as? String) ?? (kind == "bot" ? id : "")
     switch kind {
     case "chat":
       let item = ShortcutStore.items("chats").first { $0.id == id }
       a.title = item?.name
       a.appEntityIdentifier = EntityIdentifier(for: ChatEntity.self, identifier: id)
+      if !botId.isEmpty {
+        a.webpageURL = URL(string: "https://app.casama.ai/bots/\(botId)/chat?c=\(id)")
+      }
     case "bot":
       let item = ShortcutStore.items("bots").first { $0.id == id }
       a.title = item?.name
       a.appEntityIdentifier = EntityIdentifier(for: BotEntity.self, identifier: id)
+      a.webpageURL = URL(string: "https://app.casama.ai/bots/\(id)/chat")
     default:
       attach(nil)
       return
     }
+    a.userInfo = ["kind": kind, "id": id, "bot_id": botId]
+    a.isEligibleForHandoff = true
     a.isEligibleForSearch = false
     #if os(iOS)
     a.isEligibleForPrediction = false
@@ -219,5 +260,11 @@ enum SiriDonations {
     default:
       return
     }
+  }
+}
+
+extension ShortcutStore {
+  static func loadBots() -> [ShortcutItem] {
+    items("bots")
   }
 }

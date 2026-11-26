@@ -19,6 +19,7 @@ import 'package:casama_api/src/model/device_kind.dart';
 import 'package:casama_api/src/model/device_permission_type.dart';
 import 'package:casama_api/src/model/device_permissions.dart';
 import 'package:casama_api/src/model/device_place.dart';
+import 'package:casama_api/src/model/device_quiet_result.dart';
 import 'package:casama_api/src/model/device_request_answer.dart';
 import 'package:casama_api/src/model/device_request_result.dart';
 import 'package:casama_api/src/model/device_source.dart';
@@ -36,6 +37,7 @@ import 'package:casama_api/src/model/save_device_source_request.dart';
 import 'package:casama_api/src/model/set_device_grant_request.dart';
 import 'package:casama_api/src/model/snooze_device_permissions200_response.dart';
 import 'package:casama_api/src/model/snooze_device_permissions_request.dart';
+import 'package:casama_api/src/model/update_device_quiet_request.dart';
 import 'package:casama_api/src/model/upload_device_readings200_response.dart';
 import 'package:casama_api/src/model/upload_device_readings_request.dart';
 
@@ -891,7 +893,7 @@ _responseData = rawData == null ? null : deserialize<ListDevicePlaces200Response
   /// 
   ///
   /// Parameters:
-  /// * [kind] - browser_tab and browser_history come from Casama for Chrome (platform web, D-323) and are live only: never stored
+  /// * [kind] - browser_tab and browser_history come from Casama for Chrome (platform web, D-323) and are live only: never stored. alarm (AlarmKit) and home (HomeKit) are live actions on Apple devices (docs/APPLE-INTEGRATIONS-PLAN.md).
   /// * [limit] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
@@ -1704,6 +1706,104 @@ _responseData = rawData == null ? null : deserialize<SnoozeDevicePermissions200R
     }
 
     return Response<SnoozeDevicePermissions200Response>(
+      data: _responseData,
+      headers: _response.headers,
+      isRedirect: _response.isRedirect,
+      requestOptions: _response.requestOptions,
+      redirects: _response.redirects,
+      statusCode: _response.statusCode,
+      statusMessage: _response.statusMessage,
+      extra: _response.extra,
+    );
+  }
+
+  /// Hold proactive check-ins for a device while a Focus filter is active
+  /// 
+  ///
+  /// Parameters:
+  /// * [id] 
+  /// * [updateDeviceQuietRequest] 
+  /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
+  /// * [headers] - Can be used to add additional headers to the request
+  /// * [extras] - Can be used to add flags to the request
+  /// * [validateStatus] - A [ValidateStatus] callback that can be used to determine request success based on the HTTP status of the response
+  /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
+  /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
+  ///
+  /// Returns a [Future] containing a [Response] with a [DeviceQuietResult] as data
+  /// Throws [DioException] if API call or serialization fails
+  Future<Response<DeviceQuietResult>> updateDeviceQuiet({ 
+    required String id,
+    required UpdateDeviceQuietRequest updateDeviceQuietRequest,
+    CancelToken? cancelToken,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? extra,
+    ValidateStatus? validateStatus,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    final _path = r'/v1/devices/{id}'.replaceAll('{' r'id' '}', id.toString());
+    final _options = Options(
+      method: r'PATCH',
+      headers: <String, dynamic>{
+        ...?headers,
+      },
+      extra: <String, dynamic>{
+        'secure': <Map<String, String>>[
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearerAuth',
+          },
+        ],
+        ...?extra,
+      },
+      contentType: 'application/json',
+      validateStatus: validateStatus,
+    );
+
+    dynamic _bodyData;
+
+    try {
+_bodyData=jsonEncode(updateDeviceQuietRequest);
+    } catch(error, stackTrace) {
+      throw DioException(
+         requestOptions: _options.compose(
+          _dio.options,
+          _path,
+        ),
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    final _response = await _dio.request<Object>(
+      _path,
+      data: _bodyData,
+      options: _options,
+      cancelToken: cancelToken,
+      onSendProgress: onSendProgress,
+      onReceiveProgress: onReceiveProgress,
+    );
+
+    DeviceQuietResult? _responseData;
+
+    try {
+final rawData = _response.data;
+_responseData = rawData == null ? null : deserialize<DeviceQuietResult, DeviceQuietResult>(rawData, 'DeviceQuietResult', growable: true);
+
+    } catch (error, stackTrace) {
+      throw DioException(
+        requestOptions: _response.requestOptions,
+        response: _response,
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    return Response<DeviceQuietResult>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,

@@ -12,6 +12,8 @@
     <key>ai.casama.app</key><string>Casama iOS App Store ai.casama.app</string>
     <key>ai.casama.app.CasamaShare</key><string>Casama iOS App Store ai.casama.app.CasamaShare</string>
     <key>ai.casama.app.CasamaWidgets</key><string>Casama iOS App Store ai.casama.app.CasamaWidgets</string>
+    <key>ai.casama.app.CasamaNotify</key><string>Casama iOS App Store ai.casama.app.CasamaNotify</string>
+    <key>ai.casama.app.CasamaFileProvider</key><string>Casama iOS App Store ai.casama.app.CasamaFileProvider</string>
     <key>ai.casama.app.watchkitapp</key><string>Casama iOS App Store ai.casama.app.watchkitapp</string>
     <key>ai.casama.app.watchkitapp.widgets</key><string>Casama iOS App Store ai.casama.app.watchkitapp.widgets</string>
     <key>ai.casama.app.safari</key><string>Casama Safari Extension App Store</string>

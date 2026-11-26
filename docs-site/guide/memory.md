@@ -45,8 +45,8 @@ copy. Without embeddings, only exact duplicates are caught.
 At the start of every run, the bot gets the 8 memories most relevant to your message, plus every
 pinned memory. Casama finds them by meaning and by matching words together.
 
-Matching by meaning needs embeddings. They use the workspace's OpenAI API key, or else Casama's
-shared OpenRouter key. Without either, recall matches words only. ChatGPT plan
+Matching by meaning needs embeddings. They use the workspace's OpenAI API key, or else the server's
+shared OpenRouter key (as on Casama Cloud). Without either, recall matches words only. ChatGPT plan
 sign-in doesn't provide embeddings.
 
 ## View and edit memory
@@ -137,7 +137,7 @@ own account. The memory screen, data export and account deletion work the same e
 1. Go to **Settings** → **Workspace settings** → **Where memory is kept**.
 2. Pick **Supermemory** or **Honcho** and paste the **API key**.
 3. Optional: for Honcho, a **Honcho workspace** (leave empty to use one made for this Casama
-   workspace).
+   workspace). For a self-hosted Honcho or Supermemory, its **Server address**.
 4. Turn on **Copy current memories over** to bring every bot's memories along, pinned ones
    included.
 5. Select **Save**. Casama checks the connection before saving.

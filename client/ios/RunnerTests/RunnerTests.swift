@@ -47,10 +47,19 @@ class RunnerTests: XCTestCase {
     XCTAssertEqual(BotPersonQuery.closest(to: "Nong Nilo Tricycle", in: bots).map(\.id), ["b1"])
     XCTAssertEqual(BotPersonQuery.closest(to: "Research Desks", in: bots).map(\.id), ["b2"])
     XCTAssertTrue(BotPersonQuery.closest(to: "Ana", in: bots).isEmpty)
+    // Siri on the Mac hands over the whole phrase it heard.
+    XCTAssertEqual(BotPersonQuery.closest(to: "Milo in Casama Dev", in: bots).map(\.id), ["b1"])
+    XCTAssertTrue(BotPersonQuery.closest(to: "Casama", in: bots).isEmpty)
     // Short names must match exactly: "Ada" is not "Ana".
     XCTAssertTrue(BotPersonQuery.closest(to: "Ana", in: [BotPersonEntity(id: "b3", name: "Ada")]).isEmpty)
     // Two bots both one letter off: neither is picked.
     let twins = [BotPersonEntity(id: "a", name: "Milo"), BotPersonEntity(id: "b", name: "Mila")]
     XCTAssertTrue(BotPersonQuery.closest(to: "Mili", in: twins).isEmpty)
+    // Siri sees a bot with its app's name, so a card never shows a bare "Milo" (plan §17); the
+    // name Siri hands back still finds it.
+    let milo = bots[0]
+    XCTAssertEqual(milo.name, "Milo")
+    XCTAssertEqual(milo.person.displayName, "Milo (\(BotPersonEntity.appName))")
+    XCTAssertEqual(BotPersonQuery.closest(to: milo.person.displayName, in: bots).map(\.id), ["b1"])
   }
 }

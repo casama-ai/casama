@@ -237,7 +237,7 @@ class _BillingScreenState extends ConsumerState<BillingScreen> {
         loading: const _BillingSkeleton(),
         data: (b) {
           if (b == null || !b.enabled) {
-            return EmptyState(icon: LucideIcons.infinity, title: l10n.billingOffTitle, message: l10n.billingOffSelfHosted);
+            return EmptyState(icon: LucideIcons.server, title: l10n.billingOffTitle, message: l10n.billingOffSelfHosted);
           }
           final org = ref.watch(currentOrgProvider);
           final isAdmin = org != null && org.role != OrgRole.member;

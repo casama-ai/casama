@@ -8,6 +8,7 @@ import WidgetKit
 // Run a routine runs it without opening Casama, after the phone is unlocked
 // (RunRoutineWidgetIntent asks for that, decision 6).
 
+@available(iOS 18.0, macOS 26.0, *)
 struct AskCasamaControl: ControlWidget {
   var body: some ControlWidgetConfiguration {
     StaticControlConfiguration(kind: "AskCasamaControl") {
@@ -20,6 +21,7 @@ struct AskCasamaControl: ControlWidget {
   }
 }
 
+@available(iOS 18.0, macOS 26.0, *)
 struct TalkToBotControl: ControlWidget {
   var body: some ControlWidgetConfiguration {
     AppIntentControlConfiguration(kind: "TalkToBotControl", intent: TalkToBotControlIntent.self) { config in
@@ -33,12 +35,20 @@ struct TalkToBotControl: ControlWidget {
   }
 }
 
+@available(iOS 18.0, macOS 26.0, *)
 struct RunRoutineControl: ControlWidget {
   var body: some ControlWidgetConfiguration {
     AppIntentControlConfiguration(kind: "RunRoutineControl", intent: RunRoutineControlIntent.self) { config in
+      #if os(macOS)
+      let path = config.routine.map { "/run-routine/\($0.id):\($0.botId)" } ?? "/bots"
+      ControlWidgetButton(action: OpenCasamaIntent(path: path)) {
+        Label(config.routine?.name ?? "Run a routine", systemImage: "play.fill")
+      }
+      #else
       ControlWidgetButton(action: RunRoutineWidgetIntent(routineId: config.routine?.id ?? "", botId: config.routine?.botId ?? "")) {
         Label(config.routine?.name ?? "Run a routine", systemImage: "play.fill")
       }
+      #endif
     }
     .displayName("Run a routine")
     .description("Run the routine you pick, without opening Casama.")

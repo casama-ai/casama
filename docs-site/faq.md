@@ -1,5 +1,5 @@
 ---
-description: "Answers to common Casama questions: what bots are, pricing and plans, privacy, which AI models it uses, apps and approvals."
+description: "Answers to common Casama questions: what bots are, pricing and plans, privacy, which AI models it uses, self-hosting, apps and approvals."
 ---
 
 # FAQ
@@ -12,7 +12,8 @@ Casama gives you AI teammates, called bots, that keep working after you close th
 has its own instructions, memory, skills and a sandboxed Linux computer. It can research, write,
 code, browse and run tasks on a schedule, and it asks before doing anything risky.
 
-It runs on Casama Cloud, the hosted service. See [What is Casama](/introduction).
+You can use it on Casama Cloud, the hosted service, or run the whole thing on your own server for
+free. See [What is Casama](/introduction).
 
 ### How is Casama different from a chat assistant?
 
@@ -22,7 +23,7 @@ builds the page, and comes back when it's done or needs you.
 
 It works on schedules and triggers when you're not there, reaches out first with a morning brief
 and suggestions, uses your tools through connections, and asks you before risky steps. What it
-makes is kept in the [Library](/guide/library).
+makes is kept in the [Library](/guide/library). You can run it yourself, on any model.
 
 ### What can my first bot do on day one?
 
@@ -44,7 +45,7 @@ install it with `brew install stackwares/tap/casama` or download it from the
 [releases page](https://github.com/casama-ai/casama-releases/releases).
 
 You can also reach your bots from chat apps such as Slack, Telegram and WhatsApp, and from AI
-coding tools over MCP. A few things need the desktop app: lending
+coding tools over MCP. A few things need the desktop app: signing in with a ChatGPT plan, lending
 your own computer to bots, and iMessage, which needs a Mac. See [Quick start](/quick-start).
 
 ### Should I get the Mac app from the website or the Mac App Store?
@@ -59,6 +60,7 @@ outside the app:
 | Chat, bots, voice, widgets, notifications | Yes | Yes |
 | Let bots use your Mac (terminal, files, browser, desktop apps) | Yes | No |
 | Coding agents and local MCP servers on your Mac | Yes | No |
+| Run your own Casama server on this Mac (**Run on This Mac**) | Yes | No |
 | Quick ask reads the front window and your selection | Yes | No |
 | Watch folders for new files | Yes | No |
 | Updates | The app updates itself | Through the App Store |
@@ -78,7 +80,8 @@ Not for Casama Cloud. Sign in with Google, Apple or your email and ask a bot for
 plain words. It sets up its own routines when you ask, and most apps connect with one sign-in.
 Connecting some chat apps means pasting keys from that app's developer settings.
 
-Self-hosting is paused while the engine moves to a separate license. See [Quick start](/quick-start).
+Running Casama yourself takes a little more: you need Docker, though the desktop apps set it up in
+one click. See [Self-hosting](/self-hosting/).
 
 ### Is Casama open source?
 
@@ -89,7 +92,8 @@ and [LICENSING.md](https://github.com/casama-ai/casama/blob/main/LICENSING.md).
 
 ### Why is Casama Cloud invite-only?
 
-We're letting people in as we add capacity, so Casama stays fast for everyone who is in. See
+We're letting people in as we add capacity, so Casama stays fast for everyone who is in. A
+self-hosted server's personal license also comes from a Casama account. See
 [Getting an invite](/guide/getting-an-invite).
 
 ### How do I get an invite?
@@ -113,7 +117,12 @@ of an email to **get@casama.app**.
 
 ### Is it free?
 
-Casama Cloud has a Free plan that doesn't end: $1 of credits every month, 3
+Self-hosting is free for one person's personal use; a business needs a paid
+[license](/self-hosting/licenses). You pay your model provider and your server. A local model has no
+model bill. [Casama Link](/self-hosting/remote-access), which puts a server
+on your own computer on your phone, is free too.
+
+Casama Cloud, the hosted service, has a Free plan that doesn't end: $1 of credits every month, 3
 bots and one cloud computer with 5 hours of computer time. Three paid plans add more. See
 [Usage, budgets and plans](/guide/usage).
 
@@ -144,7 +153,8 @@ read-aloud and dictation, apps connected through Casama's own connector account,
 lookups, which always ask first and show the price.
 
 A run that is waiting for your approval, or a computer that is asleep, costs nothing. A run that
-fails because of Casama or a model provider doesn't cost model credits. 
+fails because of Casama or a model provider doesn't cost model credits. A self-hosted server uses
+no credits: you pay your providers directly.
 
 Credits belong to the workspace. A month's included credits last until the end of the following
 month, and credit packs bought on the web and rewards last 12 months. Credit packs bought in the
@@ -231,7 +241,11 @@ workspace, members see content according to their roles. Your About you details,
 learn about you and your device data stay private to you. Every table uses row-level security, so
 one workspace can't read another's data, and workspace owners can encrypt content at rest.
 
-See [Privacy and security](/guide/privacy).
+On a self-hosted server, only people with access to your server can see your data, and Casama
+doesn't receive it. On its own, the server sends only its
+[license renewal](/self-hosting/what-goes-home); telemetry stays off unless its owner turns it on. The official apps
+connected to your server send only crash reports and one anonymous daily ping. See
+[Privacy and security](/guide/privacy).
 
 ### Is my data used to train AI models?
 
@@ -239,7 +253,8 @@ No. Your chats, memories and files are used to run Casama for you and for nothin
 sell data or show ads, and your keys never reach the model.
 
 To answer you, a bot sends the conversation and the context it needs to the model that runs it.
-Model providers have their own policies about the data they receive. See [Privacy Policy](https://casama.ai/privacy).
+Model providers have their own policies about the data they receive. A local model keeps it on
+your machine. See [Privacy Policy](https://casama.ai/privacy).
 
 ### Where is my data stored?
 
@@ -249,7 +264,8 @@ live calls and read-aloud through Google. Casama is based in the Philippines, an
 process data in other countries, including the United States. Encrypted backups are kept for 14
 days.
 
-See [Privacy Policy](https://casama.ai/privacy).
+On a self-hosted server, your data stays on your server. See
+[Privacy Policy](https://casama.ai/privacy).
 
 ### How do I export my data?
 
@@ -298,16 +314,26 @@ things like deleting your account or allowing a high-risk request. See
 ### Which models can I use?
 
 On Casama Cloud, Casama picks and runs the models for you, so you don't need a key. Models are
-paid from your credits. You can also connect your own provider keys: OpenAI, Anthropic, Google,
-OpenRouter or another OpenAI-compatible provider. Each bot picks its own model, with fallbacks. See [Bots and models](/guide/bots).
+paid from your credits.
+
+On your own server, use any model you have a key for: OpenAI, Anthropic, Google, xAI, OpenRouter, or
+any OpenAI-compatible endpoint (Ollama, vLLM, LM Studio and others). Each bot picks its own model,
+with fallbacks. See [Bots and models](/guide/bots).
 
 ### Can I use my ChatGPT plan?
 
-Not for now. Signing in with a ChatGPT plan was only available on self-hosted servers, and self-hosting is paused. On Casama Cloud, Casama picks the models, or you connect your own provider keys.
+Yes, on a self-hosted server. In the desktop app, open **Settings** → **Model keys** and choose
+**Continue with ChatGPT**, or run `casama credential chatgpt` in the CLI. Bots' model calls then
+count toward your plan's limits, and only you can use it. Casama Cloud doesn't offer it. See
+[Connect a ChatGPT plan](/guide/bots#connect-a-chatgpt-plan).
 
-### Can I run it with local models?
+### Can I run it fully offline or with local models?
 
-Not for now. Local models (Ollama, LM Studio, vLLM) needed a self-hosted server, and self-hosting is paused.
+You can run the server on your own network and use a local model through an OpenAI-compatible
+endpoint, and calls to it are free. A local model can read pictures, and a local embedding model
+keeps memory search on your machine too. Bots that browse the web or use cloud apps still need
+internet access for those tasks. The license renews online every 30 days; an annual business
+license can include an offline key. See [Local models](/guide/bots#local-models).
 
 ### How do bots use my other apps?
 
@@ -386,7 +412,7 @@ Mac every time, set the bot to **Only my computer**. See [Browsing](/guide/compa
 
 Yes. You can dictate messages, have replies read aloud, call a bot live, and let a bot ring your
 phone when something needs you. On Casama Cloud, voice is paid from your credits, with no keys to
-add. See
+add. On your own server, voice uses your workspace's provider keys. See
 [Voice and calls](/guide/voice).
 
 ## Safety
@@ -419,7 +445,7 @@ content, actions that send data out ask for approval, even ones that normally wo
 
 Computers reach the internet only through an egress proxy that blocks private and cloud-metadata
 addresses, so a bot's computer can't reach your home or office network. Computers can't reach each
-other or Casama's internal services.
+other or Casama's internal services. See [Computer providers](/self-hosting/computers).
 
 ### What stops people from misusing Casama?
 
@@ -436,19 +462,88 @@ public links a day. Casama Link addresses used for phishing or malware are taken
 
 ### Can I run it on my own server?
 
-Not for now. Self-hosting is paused while the Casama Engine moves to a separate license. Casama Cloud is the way to run Casama today. The pages in [Self-hosting](/self-hosting/) are kept as a reference.
+Yes. Casama runs on Casama Cloud, or on your own computer or server. One click in the Mac app from
+casama.ai, or in the Windows or Linux app, sets it up on your computer. On a server, use the
+self-host release. See [Self-hosting](/self-hosting/).
 
-### Can I take my work with me?
+### Is self-hosting free?
 
-Your workspace exports in full, and bots, skills and routines can be shared as files and
-packs. Self-hosting is paused, so there's no own server to move to for now. See [Templates, sharing and import](/guide/sharing).
+It's free for one person's personal use, with a license you get by signing in with your Casama
+account. Business use needs a paid license for each active user, the same price as on Casama Cloud:
+write to [hello@casama.ai](mailto:hello@casama.ai). A 30-day trial key is on
+[casama.ai/self-hosted](https://casama.ai/self-hosted). See [Licenses](/self-hosting/licenses).
+
+### Is the self-hosted engine open source?
+
+No. Casama's apps, `computerd`, SDKs, CLI and MCP server are open source (AGPL-3.0 and
+Apache-2.0), and so is everything that decides what a bot may do: the safety rules, the bot's
+computer and its network guard. Casama Cloud runs on the Casama Engine, which is not open source.
+Self-hosted, you install the engine as signed container images under a license.
+
+### What do I need to self-host?
+
+Docker, on your computer or on a Linux server (a Mac works for a trial), and a domain if other
+people will connect. For a server, plan on 4 vCPU, 8 GB of RAM and 40 GB of disk for a few
+computers at once; see [Install on a server](/self-hosting/server). To try it on your own computer
+without a terminal, use **Run on This Mac** (or **Run on This Computer**) on the desktop app's
+sign-in screen. See [Install on your computer](/self-hosting/desktop).
+
+### What happens when a license runs out?
+
+Your data is never locked: signing in, reading, exporting and backups keep working. After a 14-day
+grace period, new bot runs stop until you renew. See
+[Licenses](/self-hosting/licenses#when-a-license-runs-out).
+
+### What does a self-hosted server send to Casama?
+
+On its own, only its license renewal: the license key, the server's instance id and the engine
+version. See [What goes home](/self-hosting/what-goes-home).
+
+### How do I update?
+
+In the desktop app, choose **Update**. On a server, run `casama selfhost update`. Both back up
+first and go back to the old version if the new one doesn't start properly. See
+[Updates and rollback](/self-hosting/updates).
+
+### Can I use a server on my own computer from my phone?
+
+Yes. [Casama Link](/self-hosting/remote-access) gives a server installed with `--local` an address
+like `https://k7qm2xfd9abc.casama.link`, with no domain and no open ports. Your phone signs in by
+scanning a QR code, and notifications reach it like any other app's. Phone traffic goes through
+Cloudflare to your computer, never through Casama's servers. It's free on every plan, including
+Free. Watching a bot's computer live while you're away from home comes with Plus and up.
+
+### Can I use Casama Cloud computers from my own server?
+
+Yes, with [Casama Link](/guide/casama-link). Computer time and model calls are paid from the cloud
+workspace's credits, and your bots, chats and data stay on your server. See
+[Cloud computers and credits](/self-hosting/casama-link-cloud).
+
+### Can I move between Casama Cloud and my own server?
+
+Yes. Your workspace exports in full, and bots, skills and routines can be shared as files and
+packs. See [Templates, sharing and import](/guide/sharing).
 
 ## Casama Link & Pages
 
 ### What is Casama Link?
 
-Casama Link connected a Casama server you ran yourself to a Casama Cloud workspace. It's paused
-together with self-hosting. See [Casama Link](/guide/casama-link).
+Casama Link connects a Casama server you run yourself to a Casama Cloud workspace. It has two
+parts, and you can use either or both. Remote access gives your server an address your phone can
+reach, sign-in by scanning a code, and notifications in the store apps. Cloud computers and credits
+let your bots use Casama Cloud's computers and models.
+
+Your bots, chats, memory and files stay on your server either way. See
+[Casama Link](/guide/casama-link).
+
+### Is Casama Link free?
+
+Remote access is free on every plan: the address, sign-in by QR code and notifications. Live video
+of a bot's computer away from the computer that runs the server comes with Plus and up; on Free you
+see a screenshot about once a second. Free and Plus link one server, Pro three and Max ten.
+
+Cloud computers and model calls are billed to the cloud workspace's credits. See
+[Servers per plan](/self-hosting/remote-access#servers-per-plan).
 
 ### What is a page?
 
@@ -518,7 +613,8 @@ Store and Google Play, so share it if we ask about a purchase.
 [status.casama.ai](https://status.casama.ai) shows whether the API, web app, sign-in and docs are
 working right now, with 90 days of uptime and a note when we know about a problem. It runs outside
 our servers, so it stays up when they don't. If the app can't reach Casama Cloud, the bar at the
-top has a **Status** button that opens it. 
+top has a **Status** button that opens it. For a self-hosted server, see
+[Troubleshooting](/self-hosting/troubleshooting).
 
 ### Where do I share an idea or a feature request?
 
@@ -530,7 +626,7 @@ Two places, and we read both:
   comment on them, post your own, and see what's planned, in progress or shipped. You sign in with
   a link sent to your email. **Ideas board** in Help & support opens it too.
 
-Building on Casama (the API, plugins)? Use
+Building on Casama (the API, plugins, self-hosting)? Use
 [GitHub Discussions](https://github.com/casama-ai/casama/discussions) for questions and ideas,
 and [Issues](https://github.com/casama-ai/casama/issues) for bugs.
 

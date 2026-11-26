@@ -13,6 +13,7 @@ import 'package:casama_sdk/casama_sdk.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../core/age_range.dart';
 import '../../core/app_page.dart';
 import '../../core/chat_focus.dart';
 import '../../core/fold/fold.dart';
@@ -62,6 +63,7 @@ import '../settings/profile_photo.dart';
 import '../../ui/glow_button.dart';
 import '../workspaces/spaces.dart';
 import '../inbox/in_app_alert.dart';
+import '../siri/focus_filter.dart';
 import '../voice/phone_calls.dart';
 import '../voice/wake_word.dart';
 import '../../ui/mascot.dart';
@@ -549,7 +551,7 @@ class HomeShell extends ConsumerWidget {
       );
     }
 
-    final panelOpen = ref.watch(computerPanelProvider);
+    final panelOpen = ref.watch(computerPanelProvider) && !ref.watch(isTeenModeProvider);
     final Widget content;
     // Only the bare Bots page asks to pick a bot; group chats and Pages live under the same tab.
     if (_index == 0 &&
@@ -928,7 +930,7 @@ class _ListPaneState extends ConsumerState<_ListPane> {
       );
     }
     // The bot's computer in place of the list, with its chat still beside it.
-    if (shell._inChat && ref.watch(splitComputerProvider)) {
+    if (shell._inChat && ref.watch(splitComputerProvider) && !ref.watch(isTeenModeProvider)) {
       return SafeArea(
         right: false,
         child: AppBrowserSidePane(
@@ -1171,7 +1173,9 @@ class _Sidebar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final bots = ref.watch(botsProvider).value ?? const <Bot>[];
+    final allBots = ref.watch(botsProvider).value ?? const <Bot>[];
+    final focusFilter = ref.watch(focusFilterProvider);
+    final bots = focusFilter.filterBots(allBots, (b) => b.id);
     final folders = ref.watch(botFoldersProvider).value ?? const <BotFolder>[];
     final groups =
         ref.watch(groupChatsProvider).value ?? const <Conversation>[];
@@ -1230,6 +1234,7 @@ class _Sidebar extends ConsumerWidget {
                 ],
               ),
             ),
+            const FocusFilterChip(),
             Expanded(
               child: _BotList(
                 children: [
@@ -1572,9 +1577,17 @@ class _SelectBotPlaceholderState extends ConsumerState<_SelectBotPlaceholder> {
           groups = await ref.read(groupChatsProvider.future);
         } catch (_) {}
       }
+      // The fresh list, not the one shown while it reloads: right after a bot is archived the old
+      // list still has it, and the last chat (that bot's) would open again.
+      List<Bot> all;
+      try {
+        all = await ref.read(botsProvider.future);
+      } catch (_) {
+        all = ref.read(botsProvider).value ?? const <Bot>[];
+      }
       if (!mounted || ref.read(currentOrgIdProvider) != orgId) return;
       final bots = [
-        for (final b in ref.read(botsProvider).value ?? const <Bot>[])
+        for (final b in all)
           if (b.orgId == orgId) b,
       ];
       final target = chatToOpen(saved: saved, bots: bots, groups: groups);

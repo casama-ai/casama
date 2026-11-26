@@ -145,7 +145,19 @@ calendarPeriodCreate(r'calendar.create'),
 @JsonValue(r'reminders.create')
 remindersPeriodCreate(r'reminders.create'),
 @JsonValue(r'locate')
-locate(r'locate');
+locate(r'locate'),
+@JsonValue(r'alarm.set')
+alarmPeriodSet(r'alarm.set'),
+@JsonValue(r'alarm.list')
+alarmPeriodList(r'alarm.list'),
+@JsonValue(r'alarm.cancel')
+alarmPeriodCancel(r'alarm.cancel'),
+@JsonValue(r'home.list')
+homePeriodList(r'home.list'),
+@JsonValue(r'home.read')
+homePeriodRead(r'home.read'),
+@JsonValue(r'home.set')
+homePeriodSet(r'home.set');
 
 const DeviceRequestActionEnum(this.value);
 

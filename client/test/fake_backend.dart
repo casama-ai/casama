@@ -9,6 +9,7 @@ import 'package:casama/core/backend.dart';
 import 'package:casama/features/watch/watch_key_store.dart';
 // The generated client's gallery models share names with core/gallery_models.dart (D-315).
 import 'package:casama_sdk/casama_sdk.dart' hide GalleryItem, GalleryRef, GalleryAccess, GalleryNeeds, GalleryInput, GalleryChange, GalleryStats, GalleryAccessDiff, GalleryInstalledItem, GalleryMissing, GalleryInstallResult, GalleryRequest, GallerySubmission;
+import 'fake_selfhost_api.dart';
 
 const orgId = '11111111-1111-4111-8111-111111111111';
 const botId = '22222222-2222-4222-8222-222222222222';
@@ -1508,6 +1509,8 @@ class FakeBackend implements Backend {
   // Casama's monthly email (D-408)
   @override
   bool newsletterAvailable = false;
+  @override
+  ({bool available, bool connected})? cloudModelsConfig;
   NewsletterChoice newsletterChoice = const NewsletterChoice(subscribed: false, asked: false);
   final newsletterCalls = <({bool? subscribed, String from})>[];
   @override
@@ -8605,6 +8608,9 @@ class FakeBackend implements Backend {
   @override
   Map<String, String> get authHeaders => const {'Authorization': 'Bearer test'};
 
+  @override
+  FakeSelfhostApi selfhost = FakeSelfhostApi();
+
   // The Library (D-274).
   List<Creation> creationList = [];
   final creationBytes = <String, Uint8List>{};
@@ -8775,6 +8781,71 @@ class FakeBackend implements Backend {
     int cols = 100,
     int rows = 30,
   }) async => (Uri.parse('ws://localhost/terminal'), <String, String>{});
+
+  Me? fakeMe;
+  final ageBandCalls = <AccountAgeBand?>[];
+  final quietUntilCalls = <DateTime?>[];
+  final createdFileKeys = <FileKeyCreated>[];
+  final deletedFileKeyIds = <String>[];
+
+  @override
+  Future<Me?> getMe() async => fakeMe;
+
+  @override
+  Future<AgeBandResult> setMyAgeBand(AccountAgeBand? ageBand) async {
+    ageBandCalls.add(ageBand);
+    return AgeBandResult(
+      accountAgeBand: ageBand,
+      accountAgeBandUpdatedAt: DateTime.now().toUtc(),
+    );
+  }
+
+  @override
+  Future<void> updateCurrentDeviceQuiet(DateTime? quietUntil) async {
+    quietUntilCalls.add(quietUntil);
+  }
+
+  @override
+  Future<FileKeyCreated> createFileKey({
+    required String orgId,
+    required FileKeyCreatePlatformEnum platform,
+    String? label,
+  }) async {
+    final created = FileKeyCreated(
+      id: 'fk-${createdFileKeys.length + 1}',
+      orgId: orgId,
+      platform: platform == FileKeyCreatePlatformEnum.macos
+          ? FileKeyCreatedPlatformEnum.macos
+          : FileKeyCreatedPlatformEnum.ios,
+      label: label ?? 'Test',
+      key: 'cfk_test_${createdFileKeys.length + 1}',
+      lastUsedAt: null,
+      createdAt: DateTime.now().toUtc(),
+    );
+    createdFileKeys.add(created);
+    return created;
+  }
+
+  @override
+  Future<List<FileKey>> listFileKeys() async => [
+    for (final k in createdFileKeys)
+      FileKey(
+        id: k.id,
+        orgId: k.orgId,
+        platform: k.platform == FileKeyCreatedPlatformEnum.macos
+            ? FileKeyPlatformEnum.macos
+            : FileKeyPlatformEnum.ios,
+        label: k.label,
+        lastUsedAt: k.lastUsedAt,
+        createdAt: k.createdAt,
+      ),
+  ];
+
+  @override
+  Future<void> deleteFileKey(String id) async {
+    deletedFileKeyIds.add(id);
+    createdFileKeys.removeWhere((k) => k.id == id);
+  }
 }
 
 /// A connected ChatGPT plan owned by [owner] (the fake's user is 'me').

@@ -16,7 +16,8 @@
       "!client",
       "!**/*.md",
       "!docs-site/public/brand",
-      "!docs-site/public/errors.js"
+      "!docs-site/public/errors.js",
+      "!selfhost/kong.yml"
     ]
   },
   "formatter": {

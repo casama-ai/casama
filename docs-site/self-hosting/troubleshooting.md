@@ -1,9 +1,5 @@
 # Troubleshooting
 
-::: warning Self-hosting is paused
-Self-hosting is paused while the Casama Engine moves to a separate license. The install commands on this page are removed for now, and the rest is kept as a reference. Casama Cloud is the way to run Casama today.
-:::
-
 Problems you might hit running your own Casama server, each as symptom, cause and fix. Most start
 with the same two commands:
 
@@ -13,6 +9,38 @@ casama selfhost logs migrate api worker auth
 ```
 
 Instance owners can also check the health of each service under Settings → admin console.
+
+## License
+
+### "license_required"
+
+**Cause:** The server has no license yet, so it's in setup mode.
+
+**Fix:** Sign in with your Casama account in the app connected to the server to get a personal
+license, or enter a business key. On the server, run `casama selfhost license personal` for a personal one. See
+[Licenses](/self-hosting/licenses).
+
+### "license_expired"
+
+**Cause:** The license ran out more than 14 days ago, so new bot runs stop. Your data is still
+there to read, export and back up.
+
+**Fix:** Make sure the server can reach `api.casama.ai` so a personal or trial key can renew, or
+enter a new key.
+
+### "license_seats"
+
+**Cause:** Adding another member needs more seats. A personal license has one member.
+
+**Fix:** Get a [business license](/self-hosting/licenses#business) with enough seats, or remove a
+member.
+
+### The license stopped renewing
+
+**Cause:** The server can't reach `api.casama.ai`, or the license moved: you signed in for a
+personal license on another computer.
+
+**Fix:** Check outbound HTTPS. To use this server again, get a personal license on it; it moves back.
 
 ## Install
 
@@ -47,7 +75,7 @@ again.
 from `public.ecr.aws`, which allows only a few anonymous pulls at a time. The installer already
 pulls two at a time and retries five times.
 
-**Fix:** Wait a few minutes and run the installer again. Images that finished downloading are
+**Fix:** Wait a few minutes and run the install again. Images that finished downloading are
 kept.
 
 ### "Warning: less than 8 GB of memory"
@@ -66,7 +94,7 @@ kept.
 
 1. Check which services are down: `casama selfhost status`.
 2. Read their logs: `casama selfhost logs migrate api auth`.
-3. If `api` logs `Invalid environment: <NAME>: ...`, fix that setting in `infra/compose/.env` and run
+3. If `api` logs `Invalid environment: <NAME>: ...`, fix that setting in `.env` and run
    `casama selfhost up`.
 4. If `migrate` logs `Auth/Realtime schemas did not appear`, see the next entry.
 
@@ -87,17 +115,19 @@ migrations it hasn't applied yet (tracked in `public.casama_migrations`).
 **Cause:** Usually one of:
 
 - `SIGNUP_HOOK_URI` is a plain `http://` address. Supabase Auth only accepts `https://` hook URLs
-  (plain http only on localhost), and refuses to start otherwise, even with the hook off.
+  (plain http only on localhost and `host.docker.internal`), and refuses to start otherwise, even
+  with the hook off.
 - `SAML_PRIVATE_KEY` is in PKCS#8 format. Auth needs PKCS#1. Installers before November 2026 wrote
   PKCS#8.
 
-**Fix:** Run the installer again: it converts the SAML key and leaves the rest of `.env` alone. Set
-`SIGNUP_HOOK_URI` to empty or to `https://<your domain>/hooks/auth/before-user-created`. Then run
+**Fix:** Run `./install.sh` again: it converts the SAML key and leaves the rest of `.env` alone. Set
+`SIGNUP_HOOK_URI` to empty (the installer fills it in) or to
+`https://<your domain>/hooks/auth/before-user-created`. Then run
 `casama selfhost up`.
 
 ### I re-ran the installer with `--domain`, but the address didn't change
 
-**Cause:** When `infra/compose/.env` exists, the installer keeps it. `--domain`, `--local` and
+**Cause:** When `.env` exists, the installer keeps it. `--domain`, `--local` and
 `--http-port` only apply to the first run.
 
 **Fix:** Edit the address settings in `.env` yourself. See
@@ -111,7 +141,7 @@ migrations it hasn't applied yet (tracked in `public.casama_migrations`).
 internet.
 
 **Fix:** Check the DNS record (`dig +short casama.example.com`) and your firewall, then run
-`docker compose -f infra/compose/docker-compose.yml --env-file infra/compose/.env restart caddy`.
+`docker compose --env-file .env --env-file images.env restart caddy`.
 Behind another proxy that terminates TLS, set `CASAMA_SITE=:80` (see
 [Behind another proxy](/self-hosting/configuration#behind-another-proxy)).
 
@@ -149,7 +179,7 @@ codes and password resets don't.
 **Cause:** Older compose files built Auth's links as `<address>/verify`, but Auth is served under
 `/auth/v1`. Or the links land on the API's address when you expected your web app.
 
-**Fix:** Upgrade: the bundled compose file now sends links to `<address>/auth/v1/verify`. To land
+**Fix:** Update: the bundled compose file now sends links to `<address>/auth/v1/verify`. To land
 people on your web app after they open a link, set `AUTH_SITE_URL` to its address (see
 [Email](/self-hosting/configuration#email)), then `casama selfhost up`.
 
@@ -181,7 +211,8 @@ set, only those emails are owners.
 ### "Can't connect" in the app or CLI
 
 **Cause:** The app or CLI points at the wrong address, or the server isn't reachable from that
-device. `--local` servers answer only on the machine they run on.
+device. `--local` servers answer only on the machine they run on; install with `--lan` to reach one
+from other devices on your network (see [Reach it from your local network](/self-hosting/server#reach-it-from-your-local-network-lan)).
 
 **Fix:**
 
@@ -209,14 +240,14 @@ in `CORS_ORIGINS`.
 ### OAuth connections, hosted MCP or agent-to-agent calls return 502 or the web app
 
 **Cause:** Caddy forwards only the paths in the `@api` matcher of
-`infra/compose/selfhost/Caddyfile` to the API; everything else goes to the web app. Older
+the `Caddyfile` in your install folder to the API; everything else goes to the web app. Older
 Caddyfiles left out some of `/oauth/*` (the redirect target for app connections), `/mcp`,
 `/a2a/*`, `/links/*`, `/link/*` and `/telephony/*`.
 
-**Fix:** Upgrade (`casama selfhost upgrade`), or add the missing paths to the `@api` matcher
+**Fix:** Update (`casama selfhost update`), or add the missing paths to the `@api` matcher
 yourself, for example `/oauth/* /mcp /mcp/* /a2a/* /links/* /link/* /telephony/*`. Then restart
 Caddy:
-`docker compose -f infra/compose/docker-compose.yml --env-file infra/compose/.env restart caddy`.
+`docker compose --env-file .env --env-file images.env restart caddy`.
 
 ### Signed-out requests get "rate_limited" behind a tunnel
 
@@ -235,7 +266,7 @@ shows "Sandbox supervisor: Not configured" or unhealthy.
 
 **Fix:** Check `casama selfhost logs supervisor`. The supervisor refuses to start without
 `SUPERVISOR_TOKEN` (16+ characters), `COMPUTER_TOKEN_SECRET` and `EGRESS_CONTROL_TOKEN`; re-run
-the installer to add missing generated settings. If it logs
+`./install.sh` to add missing generated settings. If it logs
 `DEFAULT_PROVIDER=<name> isn't configured on this supervisor`, add that provider's settings or
 remove `DEFAULT_PROVIDER`.
 
@@ -243,15 +274,15 @@ remove `DEFAULT_PROVIDER`.
 
 **Cause:** Common ones:
 
-- The computer image is missing. The installer builds (or with `--pull`, downloads) the headless
-  image; the desktop image only with `--with-desktop`.
+- The computer image is missing. The install pulls the headless image; the desktop image only with
+  `--with-desktop`.
 - `SANDBOX_RUNTIME=runsc` is set but gVisor isn't installed or registered with Docker.
 - The host is out of memory or disk.
 
 **Fix:**
 
 1. Check the images: `docker images | grep computer-`. Get the desktop one with
-   the installer's `--with-desktop` option.
+   `./install.sh --with-desktop`.
 2. Check `docker info | grep -i runsc`. If it's missing, set `SANDBOX_RUNTIME=` (empty) and run
    `casama selfhost up`, or install gVisor.
 3. Check `free -h` and `df -h`, and the supervisor's logs.
@@ -287,11 +318,10 @@ worker.
 **Symptom:** Installing a plugin with local (stdio) servers fails, or its tools never appear.
 
 **Cause:** Plugin servers run inside the bot's computer, started by `computerd`. A computer still on
-an image built before your upgrade, or a desktop image that wasn't rebuilt, has an older `computerd`
+an image from before your update has an older `computerd`
 that can't run them. Hosted templates and snapshots built from older images have the same problem.
 
-**Fix:** Rebuild the images with the installer's `--with-desktop` option (or without `--with-desktop` if you
-don't use desktops), then let the computer sleep and wake, or restart it from the app. For hosted
+**Fix:** Run `casama selfhost update` so the computer images match your server, then let the computer sleep and wake, or restart it from the app. For hosted
 providers, rebuild your templates or snapshots from the new images.
 
 ### Many old computer containers are still running
@@ -385,7 +415,7 @@ Billing screen. It has no `remote_access` scope.
 
 **Fix:** Run `casama selfhost remote on --relink` to get a linked key. That replaces the old key, so
 to keep cloud computers and credits too, use one key with all four scopes. See
-[One key per server](/self-hosting/casama-link-cloud#2-configure-your-server).
+[One key per server](/self-hosting/casama-link-cloud#_2-configure-your-server).
 
 ### "That code ran out before it was approved"
 
@@ -424,7 +454,7 @@ a company network or a strict firewall often blocks it.
 the `link` profile.
 
 **Fix:** Start it with `casama selfhost up` (which adds the profile while remote access is on), or
-re-run the installer. With plain Compose, add `--profile link`.
+re-run `./install.sh`. With plain Compose, add `--profile link`.
 
 ### The connector is connected, but the address doesn't answer
 
@@ -496,10 +526,10 @@ the key doesn't match.
 
 ### After restoring on a new machine, sign-in or encrypted content fails
 
-**Cause:** `restore` doesn't restore `infra/compose/.env`. A new install generated new keys, so
+**Cause:** `restore` doesn't restore `.env`. A new install generated new keys, so
 tokens, the JWT secret or `CONTENT_ENCRYPTION_KEY` no longer match the data.
 
-**Fix:** Put the backup's `env` file at `infra/compose/.env`, run the installer (it keeps that
+**Fix:** Put the backup's `env` file at `.env`, run `./install.sh` (it keeps that
 file), then restore again. See [Restore](/self-hosting/operations#restore).
 
 ### The Library's files are missing after a restore
@@ -512,7 +542,7 @@ container that mounts it. See [Back up your server](/self-hosting/operations#bac
 
 ### "No install.sh in ..."
 
-**Cause:** `casama selfhost` commands need the checkout. They look at `--dir`, then
+**Cause:** `casama selfhost` commands need your install folder. They look at `--dir`, then
 `CASAMA_SELFHOST_DIR`, then the current directory.
 
 **Fix:** Pass `--dir /path/to/casama` or set `CASAMA_SELFHOST_DIR`.

@@ -131,7 +131,7 @@ console.log(`synced OpenAPI ${version}`);
   const llms = [
     "# Casama",
     "",
-    "> Casama gives people AI teammates (bots) with their own computers. Bots remember, work on a real Linux computer, ask before risky steps, run on schedules and triggers, and run on Casama Cloud. Apps, SDKs and CLI are open source (AGPL-3.0 and Apache-2.0); the engine is not.",
+    "> Casama gives people AI teammates (bots) with their own computers. Bots remember, work on a real Linux computer, ask before risky steps, run on schedules and triggers. Casama runs on Casama Cloud or on your own computer or server (free for personal use; a business license for work). Apps, SDKs and CLI are open source (AGPL-3.0 and Apache-2.0); the engine is not.",
     "",
     "Each link below goes to a page's markdown copy. Every page on docs.casama.ai has one: add `.md` to its address.",
     "",

@@ -155,6 +155,7 @@ String tabTitleFor(String? fullPath, AppLocalizations l10n, {String? botName}) {
     '/settings/appearance' => l10n.appearance,
     '/settings/appearance/customize' => l10n.customize,
     '/settings/usage' => l10n.usage,
+    '/settings/move' => l10n.wsMoveTitle,
     '/settings/chat-apps' => l10n.chatApps,
     '/settings/widgets' => l10n.widgetsTitle,
     '/settings/cards' => l10n.cardsSettingsTitle,

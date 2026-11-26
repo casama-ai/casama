@@ -49,6 +49,12 @@ class FakeLinkCloud {
   /// What the server sent with its request for an address.
   Map<String, dynamic>? lastServerInfo;
 
+  /// The key the server showed when it asked to be linked (`sign-in/start`), if any.
+  String? shownKey;
+
+  /// Keys with Casama Cloud models: a server showing one keeps `models` on its new key.
+  final Set<String> modelKeys = {};
+
   String get address => 'https://$label.$zone';
   String get pagesAddress => 'https://$label-p.$zone';
 
@@ -77,6 +83,10 @@ class FakeLinkCloud {
 
     if (path == '/sign-in/start') {
       // A new code: it can hand over a key of its own, once.
+      final auth = req.headers['authorization'];
+      shownKey = auth != null && auth.startsWith('Bearer ')
+          ? auth.substring(7)
+          : null;
       _polls = 0;
       keyHanded = false;
       _links++;
@@ -99,7 +109,11 @@ class FakeLinkCloud {
         'status': 'approved',
         'key': key,
         'workspace': 'Home',
-        'scopes': ['remote_access', 'push'],
+        'scopes': [
+          'remote_access',
+          'push',
+          if (modelKeys.contains(shownKey)) 'models',
+        ],
       });
     }
 

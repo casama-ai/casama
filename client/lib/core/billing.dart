@@ -8,6 +8,7 @@ import 'package:casama_sdk/casama_sdk.dart';
 
 import 'providers.dart';
 import 'ads_attribution.dart';
+import 'selfhost_api.dart' show isCasamaCloud;
 import 'distribution.dart';
 import 'haptics.dart';
 import 'telemetry.dart';
@@ -102,6 +103,7 @@ class StorePurchase {
     this.status = PurchaseStatus.purchased,
     this.error,
     this.raw,
+    this.orgId,
   });
   final String source; // app_store | google_play
   final String productId;
@@ -111,6 +113,19 @@ class StorePurchase {
   final PurchaseStatus status;
   final Object? error;
   final Object? raw;
+
+  /// The workspace the purchase was made for (the RevenueCat customer at the time). A Casama Cloud
+  /// models purchase on a self-hosted server carries the Cloud workspace's id, so the verifier for
+  /// the workspace open in the app leaves it to the Cloud models flow (SELFHOST-CLOUD-MODELS-PLAN
+  /// §7.4). Null from stores that don't say.
+  final String? orgId;
+}
+
+/// A store that can stop being a named customer: after a Casama Cloud models purchase or restore
+/// for a Cloud workspace, RevenueCat logs out to an anonymous customer, so nothing later is
+/// attributed to that workspace by accident (SELFHOST-CLOUD-MODELS-PLAN §7.4).
+abstract interface class StoreCustomerRelease {
+  Future<void> release();
 }
 
 /// App Store and Google Play through RevenueCat (D-297); a fake in tests.
@@ -169,7 +184,7 @@ class NoStore implements StorePurchases {
 /// The workspace is the RevenueCat customer (its id is the app user id), so a purchase belongs to
 /// the workspace it was made in and the server finds it there. RevenueCat finishes transactions
 /// and consumes credit packs; the server reads what was bought from RevenueCat.
-class RevenueCatStore implements StorePurchases {
+class RevenueCatStore implements StorePurchases, StoreCustomerRelease {
   RevenueCatStore(this.source, this._apiKey, this._currentOrg);
   @override
   final String source;
@@ -295,6 +310,7 @@ class RevenueCatStore implements StorePurchases {
         source: source,
         productId: product.id,
         transactionId: r.storeTransaction.transactionIdentifier,
+        orgId: orgId,
       ));
     } on PlatformException catch (e) {
       final code = rc.PurchasesErrorHelper.getErrorCode(e);
@@ -307,6 +323,7 @@ class RevenueCatStore implements StorePurchases {
           _ => PurchaseStatus.error,
         },
         error: e,
+        orgId: orgId,
       ));
     }
   }
@@ -318,8 +335,21 @@ class RevenueCatStore implements StorePurchases {
     await _ready(orgId);
     final info = await rc.Purchases.restorePurchases();
     for (final id in info.activeSubscriptions) {
-      _purchases.add(StorePurchase(source: source, productId: id, restored: true, status: PurchaseStatus.restored));
+      _purchases.add(StorePurchase(source: source, productId: id, restored: true, status: PurchaseStatus.restored, orgId: orgId));
     }
+  }
+
+  /// Logs RevenueCat out to an anonymous customer (it refuses when already anonymous).
+  @override
+  Future<void> release() async {
+    if (_configured == null) return;
+    await _configured;
+    try {
+      if (!await rc.Purchases.isAnonymous) await rc.Purchases.logOut();
+    } catch (e) {
+      debugPrint('store log out failed: $e');
+    }
+    _user = null;
   }
 
   @override
@@ -401,7 +431,27 @@ StorePurchases defaultStore(
   };
 }
 
-final storeProvider = Provider<StorePurchases>((ref) => defaultStore(() => ref.read(currentOrgProvider)?.id));
+/// The RevenueCat customer starts as the workspace open in the app only where the app's server
+/// sells plans (Casama Cloud, or any server whose billing is on). On a self-hosted server it starts
+/// anonymous: a self-hosted workspace id must never reach RevenueCat, since Cloud's webhook would
+/// get purchases for a workspace it doesn't know (SELFHOST-CLOUD-MODELS-PLAN §7.4).
+final storeProvider = Provider<StorePurchases>((ref) => defaultStore(() => storeCustomerFor(ref)));
+
+/// The workspace id RevenueCat may use as its customer now, or null for anonymous.
+@visibleForTesting
+String? storeCustomerFor(Ref ref) {
+  final org = ref.read(currentOrgProvider);
+  if (org == null) return null;
+  if (isCasamaCloud(ref.read(backendProvider).apiUrl)) return org.id;
+  // Another server that sells plans (a dev stack) says so in its billing. Read while billing is
+  // itself loading (the verifier starts from inside it), it isn't known yet: anonymous until a
+  // purchase logs in as the workspace it is for.
+  try {
+    return ref.read(billingProvider).value?.enabled == true ? org.id : null;
+  } catch (_) {
+    return null;
+  }
+}
 
 /// The current workspace's billing; `enabled` is false on self-hosted servers.
 ///
@@ -511,6 +561,9 @@ class PurchaseVerifier {
   Future<void> _verify(StorePurchase p) async {
     final org = ref.read(currentOrgProvider);
     if (org == null) return;
+    // Bought for another workspace (a Casama Cloud workspace paying for Cloud models on a
+    // self-hosted server): the Cloud models flow verifies it with Cloud (§7.4).
+    if (p.orgId != null && p.orgId != org.id) return;
 
     if (p.status == PurchaseStatus.canceled) {
       // Finished so a cancelled transaction never stays in the store's queue.

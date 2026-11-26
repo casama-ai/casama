@@ -34,12 +34,18 @@ class MainFlutterWindow: NSWindow {
 
     RegisterGeneratedPlugins(registry: flutterViewController)
     ShortcutBridge.shared.attach(flutterViewController.engine.binaryMessenger)
+    if #available(macOS 14.0, *) {
+      MainActor.assumeIsolated { WidgetOpen.open = { ShortcutBridge.shared.open($0) } }
+    }
     SiriBridge.shared.attach(flutterViewController.engine.binaryMessenger)
     MacBridge.shared.attach(flutterViewController.engine.binaryMessenger)
     WebAuthBridge.shared.attach(flutterViewController.engine.binaryMessenger)
     IslandController.shared.attach(flutterViewController.engine.binaryMessenger)
     NotificationsBridge.shared.attach(flutterViewController.engine.binaryMessenger)
     PermissionsBridge.shared.attach(flutterViewController.engine.binaryMessenger)
+    SpeechAnalyzerBridge.shared.attach(messenger: flutterViewController.engine.binaryMessenger)
+    OnDeviceModelBridge.shared.attach(messenger: flutterViewController.engine.binaryMessenger)
+    FileProviderBridge.shared.attach(messenger: flutterViewController.engine.binaryMessenger)
     #if CASAMA_APP_BROWSER
     AppBrowser.shared.attach(flutterViewController, window: self)
     #endif
@@ -83,14 +89,20 @@ class MainFlutterWindow: NSWindow {
 // chat's delivered notifications (aps.thread-id = the conversation) once it's open. The dock badge
 // stays on casama/mac.
 
-final class NotificationsBridge {
+final class NotificationsBridge: NSObject, UNUserNotificationCenterDelegate {
   static let shared = NotificationsBridge()
   private var channel: FlutterMethodChannel?
+  private var pendingReplies: [[String: String]] = []
+  private weak var previousDelegate: UNUserNotificationCenterDelegate?
 
   func attach(_ messenger: FlutterBinaryMessenger) {
     let center = UNUserNotificationCenter.current()
+    if center.delegate !== self {
+      previousDelegate = center.delegate
+      center.delegate = self
+    }
     center.getNotificationCategories { existing in
-      var categories = existing.filter { $0.identifier != "APPROVAL" }
+      var categories = existing.filter { $0.identifier != "APPROVAL" && $0.identifier != "REPLY" }
       categories.insert(
         UNNotificationCategory(
           identifier: "APPROVAL",
@@ -100,10 +112,24 @@ final class NotificationsBridge {
           ],
           intentIdentifiers: [],
           options: []))
+      categories.insert(
+        UNNotificationCategory(
+          identifier: "REPLY",
+          actions: [
+            UNTextInputNotificationAction(
+              identifier: "reply",
+              title: "Reply",
+              options: [],
+              textInputButtonTitle: "Send",
+              textInputPlaceholder: "Reply…"
+            ),
+          ],
+          intentIdentifiers: [],
+          options: []))
       center.setNotificationCategories(categories)
     }
     let channel = FlutterMethodChannel(name: "casama/notifications", binaryMessenger: messenger)
-    channel.setMethodCallHandler { call, result in
+    channel.setMethodCallHandler { [weak self] call, result in
       let args = call.arguments as? [String: Any] ?? [:]
       switch call.method {
       case "clear":
@@ -113,6 +139,10 @@ final class NotificationsBridge {
           if !ids.isEmpty { center.removeDeliveredNotifications(withIdentifiers: ids) }
         }
         result(nil)
+      case "takeInlineReplies":
+        let replies = self?.pendingReplies ?? []
+        self?.pendingReplies.removeAll()
+        result(replies)
       case "badge", "takeAction":
         result(nil)
       default:
@@ -120,6 +150,62 @@ final class NotificationsBridge {
       }
     }
     self.channel = channel
+  }
+
+  /// Forwards an inline text reply from macOS Notification Center to Dart (§5.3).
+  func deliverReply(botId: String, conversationId: String, text: String) {
+    let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+    guard !trimmed.isEmpty, !botId.isEmpty else { return }
+    let payload: [String: String] = [
+      "bot_id": botId,
+      "conversation_id": conversationId,
+      "text": trimmed,
+    ]
+    if let channel = channel {
+      DispatchQueue.main.async {
+        channel.invokeMethod("inlineReply", arguments: payload)
+      }
+    } else {
+      pendingReplies.append(payload)
+    }
+  }
+
+  func userNotificationCenter(
+    _ center: UNUserNotificationCenter,
+    willPresent notification: UNNotification,
+    withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
+  ) {
+    if let prev = previousDelegate, prev.responds(to: #selector(UNUserNotificationCenterDelegate.userNotificationCenter(_:willPresent:withCompletionHandler:))) {
+      prev.userNotificationCenter?(center, willPresent: notification, withCompletionHandler: completionHandler)
+    } else {
+      completionHandler([.badge])
+    }
+  }
+
+  func userNotificationCenter(
+    _ center: UNUserNotificationCenter,
+    didReceive response: UNNotificationResponse,
+    withCompletionHandler completionHandler: @escaping () -> Void
+  ) {
+    if response.actionIdentifier == "reply",
+       let textResponse = response as? UNTextInputNotificationResponse
+    {
+      let userInfo = response.notification.request.content.userInfo
+      let botId = (userInfo["bot_id"] as? String)
+        ?? ((userInfo["casama_sender"] as? [String: Any])?["bot_id"] as? String)
+        ?? ""
+      let convId = (userInfo["conversation_id"] as? String)
+        ?? ((userInfo["casama_sender"] as? [String: Any])?["conversation_id"] as? String)
+        ?? ""
+      deliverReply(botId: botId, conversationId: convId, text: textResponse.userText)
+      completionHandler()
+      return
+    }
+    if let prev = previousDelegate, prev.responds(to: #selector(UNUserNotificationCenterDelegate.userNotificationCenter(_:didReceive:withCompletionHandler:))) {
+      prev.userNotificationCenter?(center, didReceive: response, withCompletionHandler: completionHandler)
+    } else {
+      completionHandler()
+    }
   }
 }
 
@@ -304,6 +390,7 @@ final class MacBridge: NSObject {
     let file = NSMenu(title: "File")
     file.addItem(item("New Chat", "n", [.command], "newChat"))
     file.addItem(item("New Bot…", "n", [.command, .shift], "newBot"))
+    file.addItem(item("Quick Ask", "k", [.command, .shift], "quickAsk"))
     file.addItem(item("Search…", "k", [.command], "search"))
     file.addItem(.separator())
     file.addItem(NSMenuItem(title: "Close Window", action: #selector(NSWindow.performClose(_:)), keyEquivalent: "w"))
@@ -325,6 +412,7 @@ final class MacBridge: NSObject {
     if let help = main.items.first(where: { $0.submenu?.title == "Help" })?.submenu {
       help.removeAllItems()
       help.addItem(item("Casama Help", "?", [.command], "help"))
+      help.addItem(item("Send Feedback…", "", [], "feedback"))
     }
   }
 }

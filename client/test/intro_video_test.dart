@@ -90,8 +90,8 @@ void main() {
     expect(inApp('https://cdn.example.com/a/film.MOV'), isTrue);
     expect(inApp('https://cdn.example.com/live/index.m3u8'), isTrue);
     expect(inApp('https://cdn.example.com/film.webm?v=2'), isTrue);
-    expect(inApp('https://www.youtube.com/watch?v=2-6dP3YVn98'), isFalse);
-    expect(inApp('https://youtu.be/2-6dP3YVn98'), isFalse);
+    expect(inApp('https://www.youtube.com/watch?v=QCdp2VIByDs'), isFalse);
+    expect(inApp('https://youtu.be/QCdp2VIByDs'), isFalse);
     expect(inApp('https://casama.ai/#film'), isFalse);
     expect(inApp(kIntroFilmUrl, player: false), isFalse);
   });

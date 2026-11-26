@@ -123,3 +123,39 @@ Open **Settings > Cards**:
 When a card is made or refreshed, the data service gets only what is looked up: a place rounded to
 about a kilometre, a ticker, a currency, a word, a trip (places, dates, how many travellers), a stay (the place, dates, guests) or what you're shopping for and your country. It never gets your name, account or chat. See
 [Privacy and security](/guide/privacy).
+
+## Self-hosting
+
+Live cards work with no keys: weather, rates, crypto, earthquakes, storms, holidays and reference
+come from free public services. Servers that bill people need their own keys for a few of them,
+because some free services are for non-commercial use only. See `LIVE_*` in `.env.example`.
+
+Flight fares work with no key through Kiwi.com's MCP server. To add Google Flights, set
+`LIVE_SERPAPI_KEY` (a SerpApi key) and keep `LIVE_SERPAPI_MONTHLY_CAP` under your SerpApi plan;
+`LIVE_FARES=off` turns fares off. Price watches need nothing extra; they use Kiwi.com only. To earn
+from bookings, set `LIVE_FARES_AFFILIATE_URL` to your affiliate network's link with `{url}` where the
+booking page goes (`LIVE_FARES_AFFILIATE_HOSTS` lists the booking sites it applies to, default
+`kiwi.com`). For a **Compare on Aviasales** button under each Fares card, set
+`LIVE_FARES_COMPARE_URL` to your affiliate link with `{url}` where the Aviasales search page goes,
+for example a Travelpayouts `https://tp.media/r?marker=…&trs=…&p=4114&u={url}` link.
+
+Hotel prices work with no key through trivago's MCP server, and product prices through Shopify's
+catalog. With `LIVE_SERPAPI_KEY` set, Google Hotels answers when trivago can't, and Google Shopping
+answers product searches first (it is the one source with every store of a country); each Google
+search counts toward `LIVE_SERPAPI_MONTHLY_CAP` and, on servers that bill, costs the workspace
+credits like a Google Flights search. `LIVE_STAYS=off` and `LIVE_PRODUCTS=off` turn them off;
+`LIVE_STAYS_ORDER` and `LIVE_PRODUCTS_ORDER` set the order (`trivago`, `google`, `shopify`).
+Shopify asks who is calling: `LIVE_SHOPIFY_PROFILE_URL` names a public file that says so (Casama's
+by default). Price watches on hotels and products use the free sources only. To earn from links,
+set `LIVE_STAYS_COMPARE_URL` (a **Compare on Booking.com** link, an affiliate link with `{url}`) or
+`LIVE_PRODUCTS_AFFILIATE` (store links by host, as JSON); cards with one say so.
+
+The calendar, the places card, the strip of days and taps on them need Kiwi.com (the default). A
+server set to `LIVE_FARES_ORDER=serpapi` keeps the fares card and its details only. Nothing new to
+configure.
+
+Parcel tracking works with no key: the card links the carrier's tracking page. For live status, set
+`LIVE_DHL_KEY` (DHL's free Shipment Tracking API from developer.dhl.com, 250 calls a day, for DHL
+numbers), `LIVE_SHIP24_KEY` (Ship24, any carrier; its free plan is 100 calls a month, so keep
+`LIVE_SHIP24_MONTHLY_CAP` under your plan) or `LIVE_17TRACK_KEY` (17TRACK, paid, any carrier). Bots can also offer AfterShip's free
+tracking MCP server for personal use.

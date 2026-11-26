@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:casama_sdk/casama_sdk.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../core/apple_device_actions.dart';
 import '../../core/backend.dart';
 import '../../core/providers.dart';
 import 'device_collector.dart';
@@ -254,7 +255,12 @@ class DeviceSync {
   }
 }
 
-final deviceCollectorProvider = Provider<DeviceCollector>((ref) => PluginDeviceCollector());
+final deviceCollectorProvider = Provider<DeviceCollector>(
+  (ref) => PluginDeviceCollector(
+    alarms: ref.watch(alarmKitClientProvider),
+    home: ref.watch(homeKitClientProvider),
+  ),
+);
 final deviceTriggerPlatformProvider = Provider<DeviceTriggerPlatform>((ref) => PluginTriggerPlatform());
 
 final deviceSyncProvider = Provider<DeviceSync>((ref) {

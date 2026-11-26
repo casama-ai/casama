@@ -21,8 +21,8 @@ It reads a page only when you ask: when you start a message about it, switch on 
      paste it into the extension.
    - **With an emailed code**: type your email address, then the six-digit code.
 
-You can
-add more accounts later from the **Account** menu, and switch workspaces there too.
+To use a self-hosted server, tap **Change** next to the server before signing in and enter its address. You can
+add more accounts and servers later from the **Account** menu, and switch workspaces there too.
 
 ## The side panel
 
@@ -192,7 +192,7 @@ Whatever you pick, it reads only when you ask.
 
 ## Pages it never reads
 
-- Casama's own pages.
+- Casama's own pages, including your own server's address if you self-host.
 - Any page with a password or card field. Screenshots and saves skip these too.
 - Banking and payment, health, password manager and government ID sites, by default.
 - Sites on your **never-list** in Settings, one per line.

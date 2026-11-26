@@ -2,9 +2,10 @@ import 'dart:async';
 import 'dart:typed_data';
 
 // The generated client's gallery models share names with core/gallery_models.dart (D-315).
-import 'package:casama_sdk/casama_sdk.dart' hide GalleryRef, GalleryAccess, GalleryNeeds, GalleryInput, GalleryChange, GalleryStats, GalleryAccessDiff, GalleryInstalledItem, GalleryMissing, GalleryInstallResult, GalleryRequest, GallerySubmission;
+import 'package:casama_sdk/casama_sdk.dart' hide GalleryRef, GalleryAccess, GalleryNeeds, GalleryInput, GalleryChange, GalleryStats, GalleryAccessDiff, GalleryInstalledItem, GalleryMissing, GalleryInstallResult, GalleryRequest, GallerySubmission, SelfhostApi;
 
 import 'gallery_models.dart';
+import 'selfhost_api.dart';
 import 'key_providers.dart';
 import 'gallery_parts.dart';
 import '../features/widgets/glance.dart';
@@ -583,10 +584,15 @@ class ChatMessageView {
     this.call,
     this.callId,
     this.keepGoing = false,
+    this.movedAuthorName,
   });
 
   /// The reply a run gave when it ran out of steps or time (D-505): the app offers Keep going.
   final bool keepGoing;
+
+  /// A message moved from another server whose author hasn't accepted their invite here yet:
+  /// their name, shown as "name (invited)" (SELFHOST-CLOUD-MODELS-PLAN §7.5).
+  final String? movedAuthorName;
 
   /// A call's card (D-327 §8, call card plan).
   final MessageCall? call;
@@ -627,6 +633,7 @@ class ChatMessageView {
     if (suggestionList.isNotEmpty) 'suggestions': [for (final s in suggestionList) {'id': s.id, 'title': s.title, 'body': s.body}],
     if (call case final c?) 'call': c.raw,
     'call_id': ?callId,
+    'moved_author_name': ?movedAuthorName,
   };
   static ChatMessageView fromJson(Map<String, dynamic> j) => ChatMessageView(
     id: j['id'] as String,
@@ -660,6 +667,7 @@ class ChatMessageView {
     },
     call: j['call'] is Map ? MessageCall.fromContent([j['call']]) : null,
     callId: j['call_id'] as String?,
+    movedAuthorName: j['moved_author_name'] as String?,
   );
 
   final String id;
@@ -1871,6 +1879,11 @@ abstract class Backend {
   /// Casama's monthly email (D-408): whether this server sends it (Casama Cloud). False on
   /// self-hosted servers, where the switch, the sign-up box and the card stay hidden.
   bool get newsletterAvailable;
+
+  /// `/v1/config` `cloud_models` (SELFHOST-CLOUD-MODELS-PLAN §13.3): whether this server offers
+  /// Casama Cloud models, and whether they're connected. Null from a server that doesn't say
+  /// (older ones), where `GET /v1/selfhost/cloud-models` decides.
+  ({bool available, bool connected})? get cloudModelsConfig;
 
   /// The person's choice; null when this server doesn't send it.
   Future<NewsletterChoice?> newsletter();
@@ -3510,6 +3523,10 @@ abstract class Backend {
   /// The current sign-in, for players and images that load straight from the API.
   Map<String, String> get authHeaders;
 
+  /// Self-hosted licenses: this server's license state, Cloud's personal keys and the admin
+  /// console's license list (docs/SELF-HOSTING-PLAN.md §11.5, §11.6).
+  SelfhostApi get selfhost;
+
   // The Library (D-274): everything bots made.
 
   /// A page of the workspace's creations, newest first (or recently opened), with the kinds that
@@ -3597,6 +3614,28 @@ abstract class Backend {
   /// A sleeping computer's saved home folder as a .tar.gz, without waking it; null when there is
   /// none.
   Future<Uint8List?> downloadSavedFiles(String id);
+
+  /// The signed-in user's profile and workspace list from `/v1/me`.
+  Future<Me?> getMe();
+
+  /// Stores the Apple Declared Age Range band on the user's private record (`PUT /v1/me/age-band`).
+  Future<AgeBandResult> setMyAgeBand(AccountAgeBand? ageBand);
+
+  /// Holds or releases proactive check-in pushes on this device (`PATCH /v1/devices/{id}`).
+  Future<void> updateCurrentDeviceQuiet(DateTime? quietUntil);
+
+  /// Mints a read-only `cfk_` key for the Apple File Provider extension (`POST /v1/file-keys`).
+  Future<FileKeyCreated> createFileKey({
+    required String orgId,
+    required FileKeyCreatePlatformEnum platform,
+    String? label,
+  });
+
+  /// Lists active read-only File Provider keys (`GET /v1/file-keys`).
+  Future<List<FileKey>> listFileKeys();
+
+  /// Revokes a read-only File Provider key (`DELETE /v1/file-keys/{id}`).
+  Future<void> deleteFileKey(String id);
 }
 
 /// What Settings → Usage is narrowed to (D-353): one bot, model, source or person. Null is all.

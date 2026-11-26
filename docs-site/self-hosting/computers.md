@@ -1,9 +1,5 @@
 # Computer providers
 
-::: warning Self-hosting is paused
-Self-hosting is paused while the Casama Engine moves to a separate license. The install commands on this page are removed for now, and the rest is kept as a reference. Casama Cloud is the way to run Casama today.
-:::
-
 Every bot can have its own Linux computer: a shell, files, a browser and, with the desktop image, a
 screen you can watch live. The sandbox supervisor creates these computers through a **provider**.
 The default provider runs them as Docker containers on your server. You can also run them on E2B,
@@ -37,7 +33,7 @@ is configured on the supervisor.
 ::: warning Settings go on the supervisor
 The bundled compose file passes only the Docker settings to the `supervisor` service. To use a
 hosted provider, add its settings to `services.supervisor.environment` in
-`infra/compose/docker-compose.yml` (see
+the compose file in your install folder (see
 [Advanced settings](/self-hosting/configuration#advanced-settings)), then run
 `casama selfhost up`.
 :::
@@ -46,7 +42,7 @@ To send every new computer to a hosted provider, set its settings and `DEFAULT_P
 example:
 
 ```yaml
-# infra/compose/docker-compose.yml, under services.supervisor.environment
+# the compose file, under services.supervisor.environment
 DEFAULT_PROVIDER: e2b
 E2B_API_KEY: ${E2B_API_KEY:-}
 ```
@@ -72,7 +68,7 @@ Every container runs with:
 
 With gVisor (`runsc`), each computer gets a user-space kernel between it and the host. The installer
 sets `SANDBOX_RUNTIME=runsc` on the first run when `docker info` lists `runsc`. To add it later,
-install gVisor, register it with Docker, set `SANDBOX_RUNTIME=runsc` in `infra/compose/.env` and run
+install gVisor, register it with Docker, set `SANDBOX_RUNTIME=runsc` in `.env` and run
 `casama selfhost up`. Computers pick it up the next time they start.
 
 ### Docker settings
@@ -80,22 +76,22 @@ install gVisor, register it with Docker, set `SANDBOX_RUNTIME=runsc` in `infra/c
 | Name                      | Compose default                         | What it does                                                                 |
 | ------------------------- | --------------------------------------- | ---------------------------------------------------------------------------- |
 | `SANDBOX_RUNTIME`         | Set by the installer                    | Docker runtime for computers (`runsc` for gVisor). Empty: Docker's default.  |
-| `COMPUTER_IMAGE_HEADLESS` | `<CASAMA_REGISTRY>/computer-headless:<CASAMA_VERSION>` | Image for headless computers. `casama/computer-headless:local` unless you installed with `--pull`. |
-| `COMPUTER_IMAGE_DESKTOP`  | `<CASAMA_REGISTRY>/computer-desktop:<CASAMA_VERSION>`  | Image for desktop computers.                                                 |
+| `COMPUTER_IMAGE_HEADLESS` | `CASAMA_IMAGE_COMPUTER_HEADLESS` from `images.env` | Image for headless computers.                        |
+| `COMPUTER_IMAGE_DESKTOP`  | `CASAMA_IMAGE_COMPUTER_DESKTOP` from `images.env`  | Image for desktop computers.                          |
 | `COMPUTER_MEMORY_MB`      | `2048`                                  | Memory for each new computer.                                                |
 | `COMPUTER_CPUS`           | `1` (not passed by Compose)             | CPUs for each new computer.                                                  |
 | `COMPUTER_BURST_CPUS`     | `2`                                     | CPUs a computer may use while the machine has them free; when it's busy, each computer's share still follows its size. The browser starts about three times faster under gVisor with 2. |
 | `WARM_POOL_SIZE`          | `0`                                     | Started headless computers kept waiting. See [Scaling](/self-hosting/operations#scaling). |
 | `DOCKER_SOCKET`           | `/var/run/docker.sock`                  | The Docker socket the supervisor uses.                                       |
-| `EGRESS_CONTAINER`        | `casama-egress`                         | Container name of the egress proxy.                                          |
-| `EGRESS_CONTROL_URL`      | `http://casama-egress:3129`             | The egress proxy's control API.                                              |
+| `EGRESS_CONTAINER`        | `casama-selfhost-egress`                         | Container name of the egress proxy.                                          |
+| `EGRESS_CONTROL_URL`      | `http://casama-selfhost-egress:3129`             | The egress proxy's control API.                                              |
 | `EGRESS_CONTROL_TOKEN`    | Generated                               | Token for the control API.                                                   |
-| `TURN_CONTAINER`          | `casama-turn`                           | Container name of the TURN relay.                                            |
-| `SUPERVISOR_CONTAINER`    | `casama-supervisor`                     | The supervisor's own container name, so it can join computer networks.       |
+| `TURN_CONTAINER`          | `casama-selfhost-turn`                           | Container name of the TURN relay.                                            |
+| `SUPERVISOR_CONTAINER`    | `casama-selfhost-supervisor`                     | The supervisor's own container name, so it can join computer networks.       |
 | `COMPUTER_TOKEN_SECRET`   | Generated                               | Derives each computer's tokens. Don't change it on a running server.         |
 
 Compose names the egress proxy, TURN relay and supervisor containers with a prefix,
-`CASAMA_CONTAINER_PREFIX` (default `casama`), and bot computers' containers, networks and volumes
+`CASAMA_CONTAINER_PREFIX` (default `casama-selfhost`), and bot computers' containers, networks and volumes
 use it too (`NAME_PREFIX` on the supervisor). To run two Casama stacks on one Docker host, give
 the second one its own prefix and its own ports in its `.env`.
 
@@ -145,8 +141,8 @@ two settings:
 
 | Name                    | Default                                          | What it does                    |
 | ----------------------- | ------------------------------------------------ | ------------------------------- |
-| `HOSTED_IMAGE_HEADLESS` | `ghcr.io/stackwares/casama/computer-headless:latest`    | Image for headless computers.   |
-| `HOSTED_IMAGE_DESKTOP`  | `ghcr.io/stackwares/casama/computer-desktop:latest`     | Image for desktop computers.    |
+| `HOSTED_IMAGE_HEADLESS` | `ghcr.io/casama-ai/computer-headless:latest`    | Image for headless computers.   |
+| `HOSTED_IMAGE_DESKTOP`  | `ghcr.io/casama-ai/computer-desktop:latest`     | Image for desktop computers.    |
 
 If you build your own images, push them to a registry these providers can pull from and set both.
 
@@ -154,7 +150,7 @@ If you build your own images, push them to a registry these providers can pull f
 
 One pod per computer, created in a namespace through the Kubernetes API. Inside the cluster, the
 supervisor uses its service account and reaches pods by IP; outside, it uses the API server's pod
-proxy. The [Helm chart](/self-hosting/operations#kubernetes-with-helm) sets this up for you.
+proxy.
 
 | Name                     | Default                         | What it does                                                         |
 | ------------------------ | ------------------------------- | -------------------------------------------------------------------- |
@@ -233,12 +229,10 @@ Casama has two computer images, both built from `infra/images/computer/`:
 | `computer-headless`         | Ubuntu 24.04, `computerd`, shell tools, git, Node.js 24, Python 3, Chromium, agent-browser, LibreOffice, pandoc, Poppler, qpdf and Tesseract |
 | `computer-desktop`          | The headless image plus an X server, a window manager, accessibility tools, a text editor and the Neko WebRTC streamer for live view |
 
-The installer always built the headless image, or pulled it with `--pull`. The desktop image came
-with the installer's `--with-desktop` option, or could be built on its own from the `images` profile.
+The release pins both images in `images.env`, and they're built from the public source. Get the
+desktop image with the installer option `--with-desktop`.
 
-Compose tags them `${CASAMA_REGISTRY}/computer-headless:${CASAMA_VERSION}` and
-`${CASAMA_REGISTRY}/computer-desktop:${CASAMA_VERSION}` (by default `casama/...:local`; with
-`--pull`, `ghcr.io/stackwares/casama/...` at the pulled tag). To build them outside Compose:
+To build your own from the public repository:
 
 ```sh
 docker build -f infra/images/computer/Dockerfile.headless -t casama/computer-headless:dev .
@@ -247,11 +241,11 @@ docker build -f infra/images/computer/Dockerfile.desktop \
 ```
 
 Both build on x86-64 and ARM64. `computerd` listens on port 7070; the headless image starts it
-with `CMD ["computerd"]`, and the desktop image with `desktop-start`.
+with `CMD ["computerd"]`, and the desktop image with `desktop-start`. Set `COMPUTER_IMAGE_HEADLESS`
+and `COMPUTER_IMAGE_DESKTOP` to use them.
 
-Rebuild or pull the images after each upgrade (the installer does this for the headless image, and
-for the desktop image with `--with-desktop`). A computer picks up a new image the next time it sleeps and
-wakes. For hosted providers, rebuild your templates, snapshots or registry images too.
+An update brings new images. A computer picks up a new image the next time it sleeps and wakes. For
+hosted providers, rebuild your templates, snapshots or registry images too.
 
 ## The egress proxy
 
@@ -278,7 +272,7 @@ Viewers always use the relay; media flows viewer ↔ relay ↔ computer, so the 
 reachable from outside. The relay refuses every peer address except its own, so it can't be used
 to reach other hosts.
 
-1. Build the desktop image (the installer's `--with-desktop` option).
+1. Get the desktop image (`./install.sh --with-desktop`).
 2. Open port 3478, UDP and TCP, on the server. Compose publishes both.
 3. Make sure `TURN_PUBLIC_HOST` is a name viewers can resolve to the server. The installer sets it to
    your domain, or `localhost` for `--local`.

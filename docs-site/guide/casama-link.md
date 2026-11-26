@@ -1,9 +1,5 @@
 # Casama Link
 
-::: warning Self-hosting is paused
-Self-hosting is paused while the Casama Engine moves to a separate license. Casama Link connects a self-hosted server to Casama Cloud, so it's paused too. This page is kept as a reference. Casama Cloud is the way to run Casama today.
-:::
-
 <img class="doc-art" src="/art/casama-link.webp" srcset="/art/casama-link-800.webp 800w, /art/casama-link.webp 1600w" sizes="(max-width: 760px) 100vw, 688px" width="1600" height="900" alt="Two lanterns far apart, at a house on a hill and on a boat at sea, joined by one thread of light.">
 
 Casama Link connects a Casama server you run yourself to a Casama Cloud workspace. It used to be
@@ -32,9 +28,9 @@ part.
   notification part alone: `casama selfhost remote link`. See
   [Link without an address](/self-hosting/remote-access#link-without-an-address).
 - **I don't want to host bot computers or manage model keys.** Cloud computers and credits.
-- **My server runs on a platform without Docker (Render, Railway, DigitalOcean App Platform).**
+- **My server's machine can't run bot computers.**
   Cloud computers give its bots somewhere to run. See
-  [Self-hosting](/self-hosting/).
+  [Cloud computers and credits](/self-hosting/casama-link-cloud).
 
 ## Keys
 

@@ -41,6 +41,7 @@ lib/src/api/mail_api.dart
 lib/src/api/mcp_api.dart
 lib/src/api/memory_api.dart
 lib/src/api/moderation_api.dart
+lib/src/api/moves_api.dart
 lib/src/api/notifications_api.dart
 lib/src/api/owner_api.dart
 lib/src/api/packs_api.dart
@@ -57,6 +58,7 @@ lib/src/api/routines_api.dart
 lib/src/api/runs_api.dart
 lib/src/api/search_api.dart
 lib/src/api/secrets_api.dart
+lib/src/api/selfhost_api.dart
 lib/src/api/sites_api.dart
 lib/src/api/skills_api.dart
 lib/src/api/support_api.dart
@@ -86,6 +88,7 @@ lib/src/model/accept_bot_link_request.dart
 lib/src/model/accept_skill_proposal_request.dart
 lib/src/model/accepted.dart
 lib/src/model/accepted_suggestion.dart
+lib/src/model/account_age_band.dart
 lib/src/model/account_deletion.dart
 lib/src/model/acquisition.dart
 lib/src/model/action_admin_limit_reset_campaign200_response.dart
@@ -178,6 +181,7 @@ lib/src/model/admin_user_list.dart
 lib/src/model/admin_vendor.dart
 lib/src/model/admin_vendor_list.dart
 lib/src/model/admit_waitlist_request.dart
+lib/src/model/age_band_result.dart
 lib/src/model/agent_import_plan.dart
 lib/src/model/agent_import_plan_leftovers_inner.dart
 lib/src/model/agent_import_plan_skipped_inner.dart
@@ -196,6 +200,7 @@ lib/src/model/app_catalog.dart
 lib/src/model/app_mention_ref.dart
 lib/src/model/apple_sign_in_token_request.dart
 lib/src/model/apple_sign_in_token_result.dart
+lib/src/model/apply_cloud_models_request.dart
 lib/src/model/apply_computer_update_request.dart
 lib/src/model/apply_skill_update_request.dart
 lib/src/model/approval.dart
@@ -266,6 +271,7 @@ lib/src/model/browser_waiting_event.dart
 lib/src/model/browser_waiting_event_payload.dart
 lib/src/model/browser_waiting_resolved_event.dart
 lib/src/model/browser_waiting_resolved_event_payload.dart
+lib/src/model/business_license_created.dart
 lib/src/model/calendar_trigger_config.dart
 lib/src/model/call_step_request.dart
 lib/src/model/call_step_result.dart
@@ -315,7 +321,31 @@ lib/src/model/checkpoint_list.dart
 lib/src/model/claim_mail_address_request.dart
 lib/src/model/claim_partner_request.dart
 lib/src/model/clean_storage_result.dart
+lib/src/model/cloud_connect_code.dart
+lib/src/model/cloud_connect_code_request.dart
+lib/src/model/cloud_link_status.dart
+lib/src/model/cloud_link_status_included.dart
+lib/src/model/cloud_link_status_jobs.dart
+lib/src/model/cloud_link_status_plan.dart
+lib/src/model/cloud_link_status_seats.dart
+lib/src/model/cloud_link_status_today.dart
+lib/src/model/cloud_link_status_trial.dart
 lib/src/model/cloud_models.dart
+lib/src/model/cloud_models_fallback.dart
+lib/src/model/cloud_models_off.dart
+lib/src/model/cloud_models_off_bots_inner.dart
+lib/src/model/cloud_models_off_bots_inner_to.dart
+lib/src/model/cloud_models_policy.dart
+lib/src/model/cloud_models_preview.dart
+lib/src/model/cloud_models_preview_bots_inner.dart
+lib/src/model/cloud_models_preview_bots_inner_from.dart
+lib/src/model/cloud_models_preview_jobs.dart
+lib/src/model/cloud_models_preview_jobs_embedding.dart
+lib/src/model/cloud_models_state.dart
+lib/src/model/cloud_models_state_me.dart
+lib/src/model/cloud_models_state_memory_reindex.dart
+lib/src/model/cloud_models_state_payer.dart
+lib/src/model/cloud_models_state_status_error.dart
 lib/src/model/coding_agent_info.dart
 lib/src/model/coding_agent_list.dart
 lib/src/model/coding_agent_test_result.dart
@@ -345,6 +375,7 @@ lib/src/model/computer_usage_day.dart
 lib/src/model/computer_vitals.dart
 lib/src/model/connect_app_request.dart
 lib/src/model/connect_app_response.dart
+lib/src/model/connect_cloud_models_request.dart
 lib/src/model/connect_domain_request.dart
 lib/src/model/connect_domain_result.dart
 lib/src/model/connect_domain_result_claim.dart
@@ -366,6 +397,7 @@ lib/src/model/create_admin_testimonial_request.dart
 lib/src/model/create_bot_link_request.dart
 lib/src/model/create_bot_request.dart
 lib/src/model/create_bot_share_request.dart
+lib/src/model/create_business_license_request.dart
 lib/src/model/create_channel_request.dart
 lib/src/model/create_checkpoint_request.dart
 lib/src/model/create_comp_code_request.dart
@@ -388,6 +420,7 @@ lib/src/model/create_knowledge_source_request_files_inner.dart
 lib/src/model/create_link_key_request.dart
 lib/src/model/create_local_device_request.dart
 lib/src/model/create_mcp_key_request.dart
+lib/src/model/create_move_request.dart
 lib/src/model/create_organization_request.dart
 lib/src/model/create_page_command_request.dart
 lib/src/model/create_page_watcher_request.dart
@@ -440,6 +473,7 @@ lib/src/model/deleted_computer.dart
 lib/src/model/deleted_conversation.dart
 lib/src/model/deleted_conversations.dart
 lib/src/model/deleted_device.dart
+lib/src/model/deleted_file_key.dart
 lib/src/model/deleted_highlight.dart
 lib/src/model/deleted_id.dart
 lib/src/model/deleted_knowledge_source.dart
@@ -460,6 +494,8 @@ lib/src/model/deleted_watcher.dart
 lib/src/model/deleted_widget_key.dart
 lib/src/model/device_access_requested_event.dart
 lib/src/model/device_access_requested_event_payload.dart
+lib/src/model/device_action_access_requested_event.dart
+lib/src/model/device_action_access_requested_event_payload.dart
 lib/src/model/device_browser_access_requested_event.dart
 lib/src/model/device_browser_access_requested_event_payload.dart
 lib/src/model/device_data_used_event.dart
@@ -473,6 +509,7 @@ lib/src/model/device_permission_needed_event_payload.dart
 lib/src/model/device_permission_type.dart
 lib/src/model/device_permissions.dart
 lib/src/model/device_place.dart
+lib/src/model/device_quiet_result.dart
 lib/src/model/device_reading.dart
 lib/src/model/device_reading_input.dart
 lib/src/model/device_request.dart
@@ -511,6 +548,10 @@ lib/src/model/feedback_request.dart
 lib/src/model/feedback_row.dart
 lib/src/model/feedback_sent.dart
 lib/src/model/feedback_status.dart
+lib/src/model/file_key.dart
+lib/src/model/file_key_create.dart
+lib/src/model/file_key_created.dart
+lib/src/model/file_key_list.dart
 lib/src/model/file_search_result.dart
 lib/src/model/for_you.dart
 lib/src/model/for_you_approval.dart
@@ -645,6 +686,9 @@ lib/src/model/lease_changed_event.dart
 lib/src/model/lease_changed_event_payload.dart
 lib/src/model/leave_waitlist_request.dart
 lib/src/model/library_starter.dart
+lib/src/model/license_edition.dart
+lib/src/model/license_feature.dart
+lib/src/model/license_issued.dart
 lib/src/model/limit_reset_audience.dart
 lib/src/model/limit_reset_campaign.dart
 lib/src/model/limit_reset_campaign_input.dart
@@ -715,7 +759,26 @@ lib/src/model/model_fallback_event_payload.dart
 lib/src/model/model_option.dart
 lib/src/model/model_option_list.dart
 lib/src/model/model_policy.dart
+lib/src/model/move_check.dart
+lib/src/model/move_check_after.dart
+lib/src/model/move_check_after_invites_inner.dart
+lib/src/model/move_check_after_keys.dart
+lib/src/model/move_check_after_reconnect_inner.dart
+lib/src/model/move_check_request.dart
+lib/src/model/move_error.dart
+lib/src/model/move_finish_request.dart
+lib/src/model/move_fit.dart
+lib/src/model/move_fit_plan.dart
+lib/src/model/move_fit_target.dart
 lib/src/model/move_mail_address_request.dart
+lib/src/model/move_over.dart
+lib/src/model/move_part_received.dart
+lib/src/model/move_progress.dart
+lib/src/model/move_progress_progress.dart
+lib/src/model/move_start_request.dart
+lib/src/model/move_state.dart
+lib/src/model/move_token.dart
+lib/src/model/moved_to.dart
 lib/src/model/newsletter_status.dart
 lib/src/model/notice_event.dart
 lib/src/model/notice_event_payload.dart
@@ -796,6 +859,7 @@ lib/src/model/payment_request_list.dart
 lib/src/model/payment_settings.dart
 lib/src/model/pending_invite.dart
 lib/src/model/pending_invite_list.dart
+lib/src/model/personal_license_request.dart
 lib/src/model/phone_call.dart
 lib/src/model/phone_call_list.dart
 lib/src/model/pin_live_card.dart
@@ -846,6 +910,7 @@ lib/src/model/provider_connect_request.dart
 lib/src/model/provider_connect_response.dart
 lib/src/model/provider_id.dart
 lib/src/model/public_config.dart
+lib/src/model/public_config_cloud_models.dart
 lib/src/model/public_config_key_providers.dart
 lib/src/model/public_config_signup_gate.dart
 lib/src/model/public_testimonial.dart
@@ -880,6 +945,7 @@ lib/src/model/remote_app_config_update_urls.dart
 lib/src/model/remove_pack200_response.dart
 lib/src/model/removed_link_server.dart
 lib/src/model/rename_two_step_factor_request.dart
+lib/src/model/renew_license_request.dart
 lib/src/model/reorder_admin_testimonials_request.dart
 lib/src/model/replaced_data_keys.dart
 lib/src/model/replay.dart
@@ -958,6 +1024,13 @@ lib/src/model/secret_requested_event_payload.dart
 lib/src/model/secret_resolved_event.dart
 lib/src/model/secret_resolved_event_payload.dart
 lib/src/model/secret_store_settings.dart
+lib/src/model/selfhost_license_list.dart
+lib/src/model/selfhost_license_row.dart
+lib/src/model/selfhost_stats.dart
+lib/src/model/selfhost_stats_by_edition_inner.dart
+lib/src/model/selfhost_stats_by_engine_version_inner.dart
+lib/src/model/selfhost_stats_daily_active_inner.dart
+lib/src/model/selfhost_status.dart
 lib/src/model/send_message_request.dart
 lib/src/model/send_message_response.dart
 lib/src/model/server_capacity.dart
@@ -967,6 +1040,7 @@ lib/src/model/server_capacity_latest.dart
 lib/src/model/set_admin_bot_request.dart
 lib/src/model/set_admin_pin_request.dart
 lib/src/model/set_ads_measurement_request.dart
+lib/src/model/set_age_band_request.dart
 lib/src/model/set_analytics_opt_out_request.dart
 lib/src/model/set_attribution_request.dart
 lib/src/model/set_bot_a2a_request.dart
@@ -995,6 +1069,7 @@ lib/src/model/set_profile_space_request.dart
 lib/src/model/set_reaction_request.dart
 lib/src/model/set_remote_access_settings_request.dart
 lib/src/model/set_secret_store_request.dart
+lib/src/model/set_selfhost_license_request.dart
 lib/src/model/set_signup_gate_request.dart
 lib/src/model/set_support_ticket_status.dart
 lib/src/model/set_telephony_request.dart
@@ -1119,6 +1194,8 @@ lib/src/model/tool_started_event_payload_place.dart
 lib/src/model/transcription.dart
 lib/src/model/transfer_out_request.dart
 lib/src/model/transfer_out_result.dart
+lib/src/model/trial_license_accepted.dart
+lib/src/model/trial_license_request.dart
 lib/src/model/ui_action_part.dart
 lib/src/model/ui_shown_event.dart
 lib/src/model/ui_shown_event_payload.dart
@@ -1130,6 +1207,7 @@ lib/src/model/update_admin_testimonial_request.dart
 lib/src/model/update_card_prefs.dart
 lib/src/model/update_channel_request.dart
 lib/src/model/update_chat_link_request.dart
+lib/src/model/update_cloud_models_request.dart
 lib/src/model/update_comp_code_request.dart
 lib/src/model/update_comp_request.dart
 lib/src/model/update_computer_request.dart
@@ -1137,6 +1215,7 @@ lib/src/model/update_conversation_request.dart
 lib/src/model/update_creation_request.dart
 lib/src/model/update_credential_request.dart
 lib/src/model/update_default_invite_request.dart
+lib/src/model/update_device_quiet_request.dart
 lib/src/model/update_domain_request.dart
 lib/src/model/update_gallery_request.dart
 lib/src/model/update_integration_request.dart

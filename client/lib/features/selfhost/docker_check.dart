@@ -38,6 +38,13 @@ class DockerCheck {
   final bool Function(String path) exists;
 
   bool get isMac => platform == TargetPlatform.macOS;
+  bool get isWindows => platform == TargetPlatform.windows;
+
+  /// Docker comes as the Docker Desktop app here (Mac and Windows), which the app can open.
+  bool get desktopApp => isMac || isWindows;
+
+  /// Docker Desktop's usual place on Windows.
+  static String get windowsApp => '${Platform.environment['ProgramFiles'] ?? r'C:\Program Files'}\\Docker\\Docker\\Docker Desktop.exe';
 
   /// Docker Desktop's usual places on a Mac.
   static List<String> get macApps => [
@@ -57,12 +64,13 @@ class DockerCheck {
     } on ProcessException {
       // No command line yet: Docker Desktop puts it on the PATH the first time it is opened.
       lastDetail = 'docker: command not found';
+      if (isWindows) return File(windowsApp).existsSync() ? DockerState.notRunning : DockerState.notInstalled;
       return isMac && macApps.any(exists) ? DockerState.notRunning : DockerState.notInstalled;
     }
     if (info.exitCode != 0) {
       final said = '${info.stderr}'.trim();
       lastDetail = said.isEmpty ? 'docker info: exit ${info.exitCode}' : _lastLines(said);
-      if (!isMac && said.toLowerCase().contains('permission denied')) return DockerState.noPermission;
+      if (!desktopApp && said.toLowerCase().contains('permission denied')) return DockerState.noPermission;
       return DockerState.notRunning;
     }
     try {
@@ -93,15 +101,23 @@ class DockerCheck {
   }
 
   /// The download for this computer: Docker Desktop's installer on a Mac (the right one for its
-  /// chip), Docker's install guide on Linux.
+  /// chip) or Windows (it sets up WSL 2 itself), Docker's install guide on Linux.
   Future<Uri> downloadUrl() async {
+    if (isWindows) return remoteUri('docker_windows', 'https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe');
     if (!isMac) return remoteUri('docker_linux', 'https://docs.docker.com/engine/install/');
     final arch = await appleChip() ? 'arm64' : 'amd64';
     return remoteUri('docker_mac_$arch', 'https://desktop.docker.com/mac/main/$arch/Docker.dmg');
   }
 
-  /// Opens Docker Desktop on a Mac. Returns false when it couldn't be opened.
+  /// Opens Docker Desktop on a Mac or Windows. Returns false when it couldn't be opened.
   Future<bool> open() async {
+    if (isWindows) {
+      try {
+        return (await runner.run('cmd', ['/c', 'start', '', windowsApp])).exitCode == 0;
+      } catch (_) {
+        return false;
+      }
+    }
     if (!isMac) return false;
     try {
       return (await runner.run('open', ['-a', 'Docker'])).exitCode == 0;
@@ -112,6 +128,7 @@ class DockerCheck {
 
   /// Free disk space in GB where the server's data goes, or null when it can't be read.
   Future<double?> freeDiskGb() async {
+    if (isWindows) return null;
     try {
       final r = await runner.run('df', ['-Pk', Platform.environment['HOME'] ?? '/']);
       if (r.exitCode != 0) return null;

@@ -38,7 +38,8 @@ there, the watch waits until you tap **Try again**.
 
 **With a code.** On the watch, choose **Sign in with a code**. It shows a code that lasts ten
 minutes. In Casama on your phone or computer, open **Settings → Watch → Sign in a watch with a
-code**, type it, check which watch is asking, and tap **Sign it in**. 
+code**, type it, check which watch is asking, and tap **Sign it in**. This works with Casama Cloud.
+A [self-hosted](/self-hosting/) server signs a watch in through the iPhone.
 
 The watch never holds your password. It makes a key of its own and only the key's fingerprint
 leaves it.
@@ -143,6 +144,14 @@ In Casama on your iPhone, open **Settings → Watch**, find the watch under **Si
 tap **Remove**. It signs out at once. You can also tap **Sign out of this watch** on the watch, or
 sign out of Casama on the phone. A removed watch's complications say "Open Casama to sign in".
 A signed-out watch stays signed out until you tap **Sign in** on it.
+
+## Self-hosting
+
+A watch talks to your own server, so the server must be reachable from the watch. Away from home,
+use a [Casama Link](./casama-link) address. Sign in through the iPhone, since a watch can't learn a
+server's address by itself. The watch needs https, except for a server on your home network (an
+address like `192.168.1.20`, a `.local` name or a bare name), which it also reaches over http. Pushes go through Casama Cloud's relay, as they do for the phone; with
+private notifications on they carry no words and the watch fetches the rest itself.
 
 ## Limits
 
