@@ -8,8 +8,14 @@ import UserNotifications
 /// Group (or renders the bot's initials on its deterministic color per §12.2), and updates the
 /// notification via `INSendMessageIntent` so Siri announces it on AirPods/CarPlay/Watch and
 /// supports voice replies.
+///
+/// The communication-notification capability sits on the app (Runner.entitlements); this extension
+/// needs none of its own. The bot is a sender in Casama only: never suggested as a contact or a
+/// Messages person (SIRI-AI-PLAN §17), so its handle can't match anyone in Contacts and its
+/// suggestion type is none.
 final class NotificationService: UNNotificationServiceExtension {
   private static let groupId = "group.ai.casama.app"
+  private let lock = NSLock()
   private var contentHandler: ((UNNotificationContent) -> Void)?
   private var bestAttemptContent: UNMutableNotificationContent?
 
@@ -19,7 +25,7 @@ final class NotificationService: UNNotificationServiceExtension {
   ) {
     self.contentHandler = contentHandler
     guard let mutable = request.content.mutableCopy() as? UNMutableNotificationContent else {
-      contentHandler(request.content)
+      deliver(request.content)
       return
     }
     self.bestAttemptContent = mutable
@@ -28,7 +34,7 @@ final class NotificationService: UNNotificationServiceExtension {
           let botId = sender["bot_id"] as? String, !botId.isEmpty,
           let botName = sender["name"] as? String, !botName.isEmpty
     else {
-      contentHandler(mutable)
+      deliver(mutable)
       return
     }
 
@@ -37,23 +43,28 @@ final class NotificationService: UNNotificationServiceExtension {
     let conversationId = (sender["conversation_id"] as? String) ?? botId
 
     resolveAvatarData(botId: botId, botName: botName, urlString: avatarUrlString, mark: avatarMark) {
-      [weak self] imageData in
-      guard let self = self else { return }
-      let updated = self.applyCommunicationIntent(
+      imageData in
+      self.applyCommunicationIntent(
         to: mutable,
         botId: botId,
         botName: botName,
         conversationId: conversationId,
         avatarData: imageData
       )
-      contentHandler(updated)
     }
   }
 
   override func serviceExtensionTimeWillExpire() {
-    if let contentHandler = contentHandler, let best = bestAttemptContent {
-      contentHandler(best)
-    }
+    if let best = bestAttemptContent { deliver(best) }
+  }
+
+  /// Hands iOS the notification once: from the avatar path or, when time runs out, as it came.
+  private func deliver(_ content: UNNotificationContent) {
+    lock.lock()
+    let handler = contentHandler
+    contentHandler = nil
+    lock.unlock()
+    handler?(content)
   }
 
   private func applyCommunicationIntent(
@@ -62,7 +73,7 @@ final class NotificationService: UNNotificationServiceExtension {
     botName: String,
     conversationId: String,
     avatarData: Data?
-  ) -> UNNotificationContent {
+  ) {
     let handle = INPersonHandle(value: "casama-bot:\(botId)", type: .unknown)
     let image = avatarData.map { INImage(imageData: $0) }
     let person = INPerson(
@@ -73,7 +84,7 @@ final class NotificationService: UNNotificationServiceExtension {
       contactIdentifier: nil,
       customIdentifier: botId,
       isMe: false,
-      suggestionType: .instantMessageAddress
+      suggestionType: .none
     )
     let intent = INSendMessageIntent(
       recipients: nil,
@@ -88,15 +99,20 @@ final class NotificationService: UNNotificationServiceExtension {
     if let image = image {
       intent.setImage(image, forParameterNamed: \.sender)
     }
+    // Donated first, as Apple's communication-notification flow asks, then the content updated
+    // from the intent once the donation is in.
     let interaction = INInteraction(intent: intent, response: nil)
     interaction.direction = .incoming
-    interaction.donate(completion: nil)
-
-    do {
-      return try content.updating(from: intent)
-    } catch {
-      NSLog("CasamaNotify: content.updating(from: INSendMessageIntent) failed: %@", error.localizedDescription)
-      return content
+    interaction.donate { error in
+      if let error {
+        NSLog("CasamaNotify: donating the message interaction failed: %@", error.localizedDescription)
+      }
+      do {
+        self.deliver(try content.updating(from: intent))
+      } catch {
+        NSLog("CasamaNotify: content.updating(from: INSendMessageIntent) failed: %@", error.localizedDescription)
+        self.deliver(content)
+      }
     }
   }
 
@@ -182,15 +198,7 @@ final class NotificationService: UNNotificationServiceExtension {
   /// Renders a 64x64 circular badge with the bot's initials on its color (§12.2).
   private static func renderInitialsAvatar(name: String, botId: String, mark: String?) -> Data? {
     let size: CGFloat = 64
-    let palette: [UIColor] = [
-      UIColor(red: 0.48, green: 0.56, blue: 1.00, alpha: 1.0),
-      UIColor(red: 0.54, green: 0.42, blue: 0.96, alpha: 1.0),
-      UIColor(red: 0.24, green: 0.75, blue: 0.82, alpha: 1.0),
-      UIColor(red: 0.94, green: 0.40, blue: 0.42, alpha: 1.0),
-      UIColor(red: 0.28, green: 0.72, blue: 0.52, alpha: 1.0),
-      UIColor(red: 0.95, green: 0.62, blue: 0.26, alpha: 1.0),
-    ]
-    let color = colorFromMark(mark) ?? palette[abs(botId.hashValue) % palette.count]
+    let color = colorFromMark(mark) ?? initialsColor(name: name)
     let words = name.split(separator: " ").prefix(2)
     let initials = words.compactMap { $0.first.map { String($0).uppercased() } }.joined()
     let text = initials.isEmpty ? "C" : initials
@@ -216,6 +224,24 @@ final class NotificationService: UNNotificationServiceExtension {
       attrStr.draw(in: drawRect)
     }
     return img.pngData()
+  }
+
+  /// The first color of the bot's initials gradient, picked from its name as the app does
+  /// (`botPalette` in client/lib/ui/bot_avatar.dart), so the notification matches the app. Stable
+  /// across launches, unlike Swift's per-process salted `hashValue`.
+  static func initialsColor(name: String) -> UIColor {
+    let palette: [UInt32] = [0x14B8A6, 0x6366F1, 0xF59E0B, 0xEC4899, 0x3B82F6, 0x8B5CF6, 0x10B981, 0xF97316]
+    var h: UInt32 = 0
+    for unit in name.lowercased().utf16 {
+      h = (h &* 31 &+ UInt32(unit)) & 0x7fff_ffff
+    }
+    let rgb = palette[Int(h % UInt32(palette.count))]
+    return UIColor(
+      red: CGFloat((rgb >> 16) & 0xFF) / 255.0,
+      green: CGFloat((rgb >> 8) & 0xFF) / 255.0,
+      blue: CGFloat(rgb & 0xFF) / 255.0,
+      alpha: 1.0
+    )
   }
 
   private static func colorFromMark(_ mark: String?) -> UIColor? {

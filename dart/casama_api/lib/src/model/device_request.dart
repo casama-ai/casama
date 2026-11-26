@@ -31,6 +31,8 @@ class DeviceRequest {
     required  this.params,
 
     required  this.createdAt,
+
+     this.expiresAt,
   });
 
   @JsonKey(
@@ -105,6 +107,19 @@ class DeviceRequest {
 
 
 
+      /// Don't act on it after this time (an alarm whose time has passed, a cancellation nobody waits for any more). Requests past it are no longer listed.
+  @JsonKey(
+    
+    name: r'expires_at',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final DateTime? expiresAt;
+
+
+
 
 
     @override
@@ -114,7 +129,8 @@ class DeviceRequest {
       other.kind == kind &&
       other.action == action &&
       other.params == params &&
-      other.createdAt == createdAt;
+      other.createdAt == createdAt &&
+      other.expiresAt == expiresAt;
 
     @override
     int get hashCode =>
@@ -123,7 +139,8 @@ class DeviceRequest {
         kind.hashCode +
         action.hashCode +
         params.hashCode +
-        createdAt.hashCode;
+        createdAt.hashCode +
+        (expiresAt == null ? 0 : expiresAt.hashCode);
 
   factory DeviceRequest.fromJson(Map<String, dynamic> json) => _$DeviceRequestFromJson(json);
 

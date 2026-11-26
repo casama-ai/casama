@@ -18532,6 +18532,10 @@
           "account_age_band_updated_at": {
             "type": "string",
             "format": "date-time"
+          },
+          "accepted": {
+            "type": "boolean",
+            "description": "Whether the band sent was saved; account_age_band is the band in force either way. A higher band is saved only one step at a time and only once the current band is 30 days old; declining keeps a band already known. Always sent; missing only from servers before this rule, which saved every band."
           }
         },
         "required": [
@@ -24944,6 +24948,14 @@
           "created_at": {
             "type": "string",
             "format": "date-time"
+          },
+          "expires_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "Don't act on it after this time (an alarm whose time has passed, a cancellation nobody waits for any more). Requests past it are no longer listed."
           }
         },
         "required": [
@@ -62603,6 +62615,7 @@
           }
         ],
         "summary": "Save the account's declared age band (no birth date; docs/APPLE-INTEGRATIONS-PLAN.md §5.2)",
+        "description": "Only this route changes the band. A lower (more restrictive) band always applies, and a first band applies after none or declined. Declining keeps a band already known. A higher band applies only one step at a time (under13, 13to15, 16to17, 18plus) and only once the current band has stood for 30 days; otherwise the current band stays and `accepted` is false. The response is the band that applies now.",
         "requestBody": {
           "required": true,
           "content": {
@@ -71037,6 +71050,20 @@
             "required": false,
             "description": "Include the browser kinds (browser_tab, browser_history). Left out by default so app builds that don't know them keep reading the list",
             "name": "all_kinds",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ],
+              "description": "Include the Apple action kinds (alarm, home). Left out by default so app builds that don't know them keep reading the list"
+            },
+            "required": false,
+            "description": "Include the Apple action kinds (alarm, home). Left out by default so app builds that don't know them keep reading the list",
+            "name": "action_kinds",
             "in": "query"
           }
         ],

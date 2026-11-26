@@ -7360,6 +7360,18 @@ abstract class AppLocalizations {
   /// **'Take photo'**
   String get attachCamera;
 
+  /// The composer's + menu on iPhone and iPad: opens the system document scanner and attaches the pages as a PDF.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan document'**
+  String get attachScan;
+
+  /// No description provided for @scanFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t scan the document. Try again.'**
+  String get scanFailed;
+
   /// No description provided for @dropToAttach.
   ///
   /// In en, this message translates to:
@@ -17362,6 +17374,18 @@ abstract class AppLocalizations {
   /// **'browser history and bookmarks'**
   String get deviceKindBrowserHistory;
 
+  /// Alarms and timers on an iPhone (AlarmKit), lowercase: it follows "your" in a sentence.
+  ///
+  /// In en, this message translates to:
+  /// **'alarms'**
+  String get deviceKindAlarm;
+
+  /// Accessories in Apple's Home app (HomeKit): lights, plugs, locks. Follows "your" in a sentence; Home is the app's name.
+  ///
+  /// In en, this message translates to:
+  /// **'Home accessories'**
+  String get deviceKindHome;
+
   /// No description provided for @deviceBrowserAsks.
   ///
   /// In en, this message translates to:
@@ -24776,6 +24800,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Waiting on you: {bots}.'**
   String siriNeedsYouBots(String bots);
+
+  /// Siri, asked to start a computer by someone in teen mode (13 to 17) or under 13.
+  ///
+  /// In en, this message translates to:
+  /// **'Computers aren\'t available for this account.'**
+  String get siriComputersUnavailable;
+
+  /// No description provided for @siriNoComputers.
+  ///
+  /// In en, this message translates to:
+  /// **'You have no computers in this workspace.'**
+  String get siriNoComputers;
+
+  /// No description provided for @siriStartingComputer.
+  ///
+  /// In en, this message translates to:
+  /// **'Starting {computer}.'**
+  String siriStartingComputer(String computer);
+
+  /// No description provided for @siriComputerFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t start the computer right now.'**
+  String get siriComputerFailed;
+
+  /// No description provided for @siriWhichBotToStop.
+  ///
+  /// In en, this message translates to:
+  /// **'Which bot should I stop?'**
+  String get siriWhichBotToStop;
+
+  /// No description provided for @siriBotNotRunning.
+  ///
+  /// In en, this message translates to:
+  /// **'That bot isn\'t running right now.'**
+  String get siriBotNotRunning;
+
+  /// No description provided for @siriStopped.
+  ///
+  /// In en, this message translates to:
+  /// **'Stopped.'**
+  String get siriStopped;
+
+  /// No description provided for @siriStopFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t stop the bot right now.'**
+  String get siriStopFailed;
+
+  /// Chip over the chats list while an Apple Focus filter is on and the person tapped it to see every bot again.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus filter · Showing all'**
+  String get focusFilterShowingAll;
+
+  /// Chip over the chats list while an Apple Focus filter shows only the bots chosen for that Focus; tap to show all.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Focus filter · 1 shown} other{Focus filter · {count} shown}}'**
+  String focusFilterShown(int count);
+
+  /// No description provided for @under13Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Casama is for people 13 and older'**
+  String get under13Title;
+
+  /// Covers the app when Apple's Declared Age Range says the account holder is under 13.
+  ///
+  /// In en, this message translates to:
+  /// **'This account can\'t use Casama based on its declared age range. You can sign out, or export your data from another account.'**
+  String get under13Body;
 
   /// No description provided for @siriSpotlightSetting.
   ///

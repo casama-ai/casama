@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:casama_sdk/casama_sdk.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
+import '../../core/age_range.dart';
 import '../../core/number_format.dart';
 import '../../core/providers.dart';
 import '../../core/widgets.dart';
@@ -528,7 +529,8 @@ class ProjectScreen extends ConsumerWidget {
             GroupedCard(
               children: [
                 // The folder the bot keeps this project's working files in (code, drafts, assets).
-                if (folder != null)
+                // The folder is on the bot's computer, which teen mode doesn't open (decision 1b).
+                if (folder != null && !ref.watch(isTeenModeProvider))
                   GroupedTile(
                     key: const Key('projectFiles'),
                     icon: LucideIcons.folderOpen,

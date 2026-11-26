@@ -135,7 +135,9 @@ class BotsList extends ConsumerWidget {
       data: (all) {
         final focusFilter = ref.watch(focusFilterProvider);
         final items = byRecentChat(focusFilter.filterBots(all, (b) => b.id));
-        final previewLines = chatPreviewLines(items.length + groups.length);
+        // A Focus filter (docs/APPLE-INTEGRATIONS-PLAN.md §6.1) keeps the group chats with a chosen bot.
+        final shownGroups = focusFilter.filterGroups(groups, (g) => g.botIds);
+        final previewLines = chatPreviewLines(items.length + shownGroups.length);
         return items.isEmpty
           ? Column(
               children: [
@@ -229,7 +231,8 @@ class BotsList extends ConsumerWidget {
                       }
                       i -= 1;
                       if (i == items.length) {
-                        return _GroupChatsSection(bots: items);
+                        // Every bot, so a group's title and faces stay whole under a Focus filter.
+                        return _GroupChatsSection(bots: all);
                       }
                       if (i > items.length) {
                         return TextButton.icon(
@@ -549,9 +552,14 @@ class _GroupChatsSection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final scheme = context.colorScheme;
-    final groups =
-        ref.watch(groupChatsProvider).value ?? const <Conversation>[];
-    if (groups.isEmpty && bots.length < 2) return const SizedBox.shrink();
+    final focusFilter = ref.watch(focusFilterProvider);
+    final groups = focusFilter.filterGroups(
+      ref.watch(groupChatsProvider).value ?? const <Conversation>[],
+      (g) => g.botIds,
+    );
+    if (groups.isEmpty && (bots.length < 2 || focusFilter.isFilteringBots)) {
+      return const SizedBox.shrink();
+    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [

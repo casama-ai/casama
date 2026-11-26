@@ -19,6 +19,8 @@ abstract class _$DeviceRequestCWProxy {
 
   DeviceRequest createdAt(DateTime createdAt);
 
+  DeviceRequest expiresAt(DateTime? expiresAt);
+
   /// Creates a new instance with the provided field values.
   /// Omitted fields keep their values; explicit `null` clears nullable fields.
   /// The public API rejects `null` for non-nullable fields. To update a single field use `DeviceRequest(...).copyWith.fieldName(value)`.
@@ -34,6 +36,7 @@ abstract class _$DeviceRequestCWProxy {
     DeviceRequestActionEnum action,
     Map<String, Object?> params,
     DateTime createdAt,
+    DateTime? expiresAt,
   });
 }
 
@@ -62,6 +65,9 @@ class _$DeviceRequestCWProxyImpl implements _$DeviceRequestCWProxy {
   @override
   DeviceRequest createdAt(DateTime createdAt) => call(createdAt: createdAt);
 
+  @override
+  DeviceRequest expiresAt(DateTime? expiresAt) => call(expiresAt: expiresAt);
+
   /// Creates a new instance with the provided field values.
   /// Omitted fields keep their values; explicit `null` clears nullable fields.
   /// The public API rejects `null` for non-nullable fields. To update a single field use `DeviceRequest(...).copyWith.fieldName(value)`.
@@ -78,6 +84,7 @@ class _$DeviceRequestCWProxyImpl implements _$DeviceRequestCWProxy {
     Object? action = const $CopyWithPlaceholder(),
     Object? params = const $CopyWithPlaceholder(),
     Object? createdAt = const $CopyWithPlaceholder(),
+    Object? expiresAt = const $CopyWithPlaceholder(),
   }) {
     return DeviceRequest(
       id: id == const $CopyWithPlaceholder() || id == null
@@ -104,6 +111,10 @@ class _$DeviceRequestCWProxyImpl implements _$DeviceRequestCWProxy {
           ? _value.createdAt
           // ignore: cast_nullable_to_non_nullable
           : createdAt as DateTime,
+      expiresAt: expiresAt == const $CopyWithPlaceholder()
+          ? _value.expiresAt
+          // ignore: cast_nullable_to_non_nullable
+          : expiresAt as DateTime?,
     );
   }
 }
@@ -120,34 +131,47 @@ extension $DeviceRequestCopyWith on DeviceRequest {
 // **************************************************************************
 
 DeviceRequest _$DeviceRequestFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('DeviceRequest', json, ($checkedConvert) {
-      $checkKeys(
-        json,
-        requiredKeys: const [
-          'id',
-          'source_id',
-          'kind',
-          'action',
-          'params',
-          'created_at',
-        ],
-      );
-      final val = DeviceRequest(
-        id: $checkedConvert('id', (v) => v as String),
-        sourceId: $checkedConvert('source_id', (v) => v as String),
-        kind: $checkedConvert('kind', (v) => v as String),
-        action: $checkedConvert(
-          'action',
-          (v) => $enumDecode(_$DeviceRequestActionEnumEnumMap, v),
-        ),
-        params: $checkedConvert('params', (v) => v as Map<String, dynamic>),
-        createdAt: $checkedConvert(
-          'created_at',
-          (v) => DateTime.parse(v as String),
-        ),
-      );
-      return val;
-    }, fieldKeyMap: const {'sourceId': 'source_id', 'createdAt': 'created_at'});
+    $checkedCreate(
+      'DeviceRequest',
+      json,
+      ($checkedConvert) {
+        $checkKeys(
+          json,
+          requiredKeys: const [
+            'id',
+            'source_id',
+            'kind',
+            'action',
+            'params',
+            'created_at',
+          ],
+        );
+        final val = DeviceRequest(
+          id: $checkedConvert('id', (v) => v as String),
+          sourceId: $checkedConvert('source_id', (v) => v as String),
+          kind: $checkedConvert('kind', (v) => v as String),
+          action: $checkedConvert(
+            'action',
+            (v) => $enumDecode(_$DeviceRequestActionEnumEnumMap, v),
+          ),
+          params: $checkedConvert('params', (v) => v as Map<String, dynamic>),
+          createdAt: $checkedConvert(
+            'created_at',
+            (v) => DateTime.parse(v as String),
+          ),
+          expiresAt: $checkedConvert(
+            'expires_at',
+            (v) => v == null ? null : DateTime.parse(v as String),
+          ),
+        );
+        return val;
+      },
+      fieldKeyMap: const {
+        'sourceId': 'source_id',
+        'createdAt': 'created_at',
+        'expiresAt': 'expires_at',
+      },
+    );
 
 Map<String, dynamic> _$DeviceRequestToJson(DeviceRequest instance) =>
     <String, dynamic>{
@@ -157,6 +181,7 @@ Map<String, dynamic> _$DeviceRequestToJson(DeviceRequest instance) =>
       'action': _$DeviceRequestActionEnumEnumMap[instance.action]!,
       'params': instance.params,
       'created_at': instance.createdAt.toIso8601String(),
+      'expires_at': ?instance.expiresAt?.toIso8601String(),
     };
 
 const _$DeviceRequestActionEnumEnumMap = {

@@ -663,7 +663,7 @@ _bodyData=jsonEncode(setAttributionRequest);
   }
 
   /// Save the account&#39;s declared age band (no birth date; docs/APPLE-INTEGRATIONS-PLAN.md §5.2)
-  /// 
+  /// Only this route changes the band. A lower (more restrictive) band always applies, and a first band applies after none or declined. Declining keeps a band already known. A higher band applies only one step at a time (under13, 13to15, 16to17, 18plus) and only once the current band has stood for 30 days; otherwise the current band stays and &#x60;accepted&#x60; is false. The response is the band that applies now.
   ///
   /// Parameters:
   /// * [setAgeBandRequest] 

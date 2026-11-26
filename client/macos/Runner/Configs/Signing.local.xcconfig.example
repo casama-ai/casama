@@ -13,3 +13,9 @@ CASAMA_DEBUG_PROFILE = Casama Mac Development
 CASAMA_WIDGET_DEBUG_ENTITLEMENTS = CasamaWidgetsMac/CasamaWidgetsMac.entitlements
 CASAMA_WIDGET_DEBUG_SIGN_STYLE = Manual
 CASAMA_WIDGET_DEBUG_PROFILE = Casama Widgets Mac Development
+// The File Provider extension the same way: a Mac development profile for
+// ai.casama.app.CasamaFileProvider (app group + the ai.casama.app.widgets keychain group) lets
+// Finder's Casama Computers read the file key the app stores.
+CASAMA_FILE_PROVIDER_DEBUG_ENTITLEMENTS = CasamaFileProvider/CasamaFileProvider.entitlements
+CASAMA_FILE_PROVIDER_DEBUG_SIGN_STYLE = Manual
+CASAMA_FILE_PROVIDER_DEBUG_PROFILE = Casama File Provider Mac Development

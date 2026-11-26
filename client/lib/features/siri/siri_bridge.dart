@@ -183,7 +183,7 @@ class SiriBridge {
     if (!_signedIn) return {'status': SiriStatus.signedOut, 'say': l10n.siriSignedOut};
     if (_locked) return {'status': SiriStatus.openApp, 'say': l10n.siriOpenToFinish};
     if (_ref.read(isTeenModeProvider) || _ref.read(isUnder13BlockedProvider)) {
-      return {'status': SiriStatus.failed, 'say': 'Computers are not available for this account.'};
+      return {'status': SiriStatus.failed, 'say': l10n.siriComputersUnavailable};
     }
     final orgId = _ref.read(currentOrgIdProvider);
     if (orgId == null) return {'status': SiriStatus.signedOut, 'say': l10n.siriSignedOut};
@@ -191,7 +191,7 @@ class SiriBridge {
     try {
       final backend = _ref.read(backendProvider);
       final computers = await backend.computers(orgId);
-      if (computers.isEmpty) return {'status': SiriStatus.failed, 'say': 'You have no computers in this workspace.'};
+      if (computers.isEmpty) return {'status': SiriStatus.failed, 'say': l10n.siriNoComputers};
       final target = name.isEmpty
           ? computers.first
           : computers.firstWhere(
@@ -199,9 +199,10 @@ class SiriBridge {
               orElse: () => computers.first,
             );
       await backend.startComputer(target.id);
-      return {'status': SiriStatus.working, 'say': 'Starting ${target.name}.'};
-    } catch (_) {
-      return {'status': SiriStatus.failed, 'say': 'Could not start the computer right now.'};
+      return {'status': SiriStatus.working, 'say': l10n.siriStartingComputer(target.name)};
+    } catch (e) {
+      debugPrint('siri start_computer failed: $e');
+      return {'status': SiriStatus.failed, 'say': l10n.siriComputerFailed};
     }
   }
 
@@ -210,17 +211,18 @@ class SiriBridge {
     if (!_signedIn) return {'status': SiriStatus.signedOut, 'say': l10n.siriSignedOut};
     if (_locked) return {'status': SiriStatus.openApp, 'say': l10n.siriOpenToFinish};
     final botId = args['bot_id'] is String ? args['bot_id'] as String : '';
-    if (botId.isEmpty) return {'status': SiriStatus.failed, 'say': 'Which bot should I stop?'};
+    if (botId.isEmpty) return {'status': SiriStatus.failed, 'say': l10n.siriWhichBotToStop};
     final active = _ref.read(runTrackerProvider).where((r) => r.botId == botId && r.ending == null).toList();
-    if (active.isEmpty) return {'status': SiriStatus.replied, 'say': 'That bot is not running right now.'};
+    if (active.isEmpty) return {'status': SiriStatus.replied, 'say': l10n.siriBotNotRunning};
     try {
       final backend = _ref.read(backendProvider);
       for (final r in active) {
         await backend.cancelRun(r.runId);
       }
-      return {'status': SiriStatus.replied, 'say': 'Stopped.'};
-    } catch (_) {
-      return {'status': SiriStatus.failed, 'say': 'Could not stop the bot right now.'};
+      return {'status': SiriStatus.replied, 'say': l10n.siriStopped};
+    } catch (e) {
+      debugPrint('siri stop_bot failed: $e');
+      return {'status': SiriStatus.failed, 'say': l10n.siriStopFailed};
     }
   }
 

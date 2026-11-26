@@ -124,6 +124,10 @@ export const listDeviceGrants = createRoute({
         description:
           "Include the browser kinds (browser_tab, browser_history). Left out by default so app builds that don't know them keep reading the list",
       }),
+      action_kinds: z.enum(["true", "false"]).optional().openapi({
+        description:
+          "Include the Apple action kinds (alarm, home). Left out by default so app builds that don't know them keep reading the list",
+      }),
     }),
   },
   responses: { 200: jsonResponse("Grants", z.object({ items: z.array(DeviceGrant) })), 401: e401 },

@@ -4,7 +4,8 @@ import UniformTypeIdentifiers
 
 /// macOS Finder Quick Action extension (docs/APPLE-INTEGRATIONS-PLAN.md §6.7).
 /// Shows "Ask Casama" in Finder's Quick Actions and right-click menu for files, copies them into
-/// the shared App Group, and hands off to the Casama app.
+/// the shared App Group, and hands off to the Casama app, which takes them over `casama/mac`
+/// (takeSharedFiles). Each hand-off replaces the last share, text included.
 final class ActionRequestHandler: NSObject, NSExtensionRequestHandling {
   private static let groupId = "V8V5US964Z.ai.casama.app"
 
@@ -12,6 +13,9 @@ final class ActionRequestHandler: NSObject, NSExtensionRequestHandling {
     guard let items = context.inputItems as? [NSExtensionItem] else {
       context.completeRequest(returningItems: nil)
       return
+    }
+    if let container = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: Self.groupId) {
+      try? FileManager.default.removeItem(at: container.appendingPathComponent("shared", isDirectory: true))
     }
     let group = DispatchGroup()
     var files: [[String: String]] = []
@@ -24,8 +28,10 @@ final class ActionRequestHandler: NSObject, NSExtensionRequestHandling {
           provider.loadItem(forTypeIdentifier: UTType.fileURL.identifier) { data, _ in
             defer { group.leave() }
             if let url = data as? URL, let copied = Self.copyIntoGroup(url: url) {
+              var file = ["path": copied.path, "name": copied.lastPathComponent]
+              if let mime = UTType(filenameExtension: copied.pathExtension)?.preferredMIMEType { file["mime"] = mime }
               lock.lock()
-              files.append(["path": copied.path, "name": copied.lastPathComponent])
+              files.append(file)
               lock.unlock()
             }
           }
@@ -34,15 +40,20 @@ final class ActionRequestHandler: NSObject, NSExtensionRequestHandling {
     }
 
     group.notify(queue: .main) {
+      let defaults = UserDefaults(suiteName: Self.groupId)
+      defaults?.removeObject(forKey: "shared_text")
       if !files.isEmpty,
-         let defaults = UserDefaults(suiteName: Self.groupId),
          let data = try? JSONSerialization.data(withJSONObject: files),
          let json = String(data: data, encoding: .utf8)
       {
-        defaults.set(json, forKey: "shared_files")
-      }
-      if let url = URL(string: "casama://app/quick-ask?shared=1") {
-        NSWorkspace.shared.open(url)
+        defaults?.set(json, forKey: "shared_files")
+        // A link of its own each time, so a running Casama opens a fresh quick ask for these files.
+        let at = Int64(Date().timeIntervalSince1970 * 1000)
+        if let url = URL(string: "casama://app/quick-ask?shared=1&at=\(at)") {
+          NSWorkspace.shared.open(url)
+        }
+      } else {
+        defaults?.removeObject(forKey: "shared_files")
       }
       context.completeRequest(returningItems: nil)
     }

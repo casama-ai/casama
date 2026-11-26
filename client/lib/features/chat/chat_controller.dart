@@ -1537,7 +1537,10 @@ class ChatController extends Notifier<ChatState> {
           try {
             await _backend.updateConversation(targetConv, title: title);
             if (ref.mounted) ref.invalidate(conversationsProvider(botId));
-          } catch (_) {}
+          } catch (e) {
+            // The server names the chat itself later; this one only comes sooner.
+            debugPrint('on-device chat title not saved: $e');
+          }
         }());
       }
       to = conversationId;

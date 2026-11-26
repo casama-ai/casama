@@ -4760,7 +4760,10 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
-        /** Save the account's declared age band (no birth date; docs/APPLE-INTEGRATIONS-PLAN.md §5.2) */
+        /**
+         * Save the account's declared age band (no birth date; docs/APPLE-INTEGRATIONS-PLAN.md §5.2)
+         * @description Only this route changes the band. A lower (more restrictive) band always applies, and a first band applies after none or declined. Declining keeps a band already known. A higher band applies only one step at a time (under13, 13to15, 16to17, 18plus) and only once the current band has stood for 30 days; otherwise the current band stays and `accepted` is false. The response is the band that applies now.
+         */
         put: operations["setMyAgeBand"];
         post?: never;
         delete?: never;
@@ -15319,6 +15322,8 @@ export interface components {
             account_age_band: components["schemas"]["AccountAgeBand"];
             /** Format: date-time */
             account_age_band_updated_at: string;
+            /** @description Whether the band sent was saved; account_age_band is the band in force either way. A higher band is saved only one step at a time and only once the current band is 30 days old; declining keeps a band already known. Always sent; missing only from servers before this rule, which saved every band. */
+            accepted?: boolean;
         };
         SetAgeBandRequest: {
             age_band: components["schemas"]["AccountAgeBand"];
@@ -17068,6 +17073,11 @@ export interface components {
             };
             /** Format: date-time */
             created_at: string;
+            /**
+             * Format: date-time
+             * @description Don't act on it after this time (an alarm whose time has passed, a cancellation nobody waits for any more). Requests past it are no longer listed.
+             */
+            expires_at?: string | null;
         };
         DeviceSource: {
             /** Format: uuid */
@@ -43622,6 +43632,8 @@ export interface operations {
                 bot_id?: string;
                 /** @description Include the browser kinds (browser_tab, browser_history). Left out by default so app builds that don't know them keep reading the list */
                 all_kinds?: "true" | "false";
+                /** @description Include the Apple action kinds (alarm, home). Left out by default so app builds that don't know them keep reading the list */
+                action_kinds?: "true" | "false";
             };
             header?: never;
             path?: never;

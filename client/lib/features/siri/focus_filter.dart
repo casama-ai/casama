@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../core/providers.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 /// Focus Filter state (docs/APPLE-INTEGRATIONS-PLAN.md §6.1).
 /// Driven by `CasamaFocusFilter` (`SetFocusFilterIntent`) over `casama/siri` `focusFilter`.
@@ -26,6 +27,14 @@ class FocusFilterState {
   List<T> filterBots<T>(List<T> bots, String Function(T) idOf) {
     if (!isFilteringBots) return bots;
     return bots.where((b) => botIds.contains(idOf(b))).toList(growable: false);
+  }
+
+  /// Chats with several bots (group chats): kept when any of their bots is one the Focus chose.
+  List<T> filterGroups<T>(List<T> groups, Iterable<String> Function(T) botIdsOf) {
+    if (!isFilteringBots) return groups;
+    return groups
+        .where((g) => botIdsOf(g).any(botIds.contains))
+        .toList(growable: false);
   }
 
   FocusFilterState copyWith({
@@ -79,33 +88,73 @@ final focusFilterProvider =
       FocusFilterNotifier.new,
     );
 
+/// How long a failed hold or release waits before it is tried again, in order. After the last one
+/// it waits for the next Focus change or sign-in.
+const focusHoldRetryDelays = [
+  Duration(seconds: 5),
+  Duration(seconds: 30),
+  Duration(minutes: 2),
+  Duration(minutes: 10),
+];
+
+/// How long one hold lasts on the server, and how often it is renewed while the Focus stays on: a
+/// phone that dies mid-Focus doesn't hold check-ins for long.
+const focusHoldFor = Duration(hours: 4);
+const focusHoldRenewEvery = Duration(hours: 2);
+
 /// Syncs `FocusFilterState.holdCheckIns` to `PATCH /v1/devices/{id}` (`quiet_until`), holding
-/// proactive check-in pushes while a Focus mode is active and releasing them when Focus ends.
+/// proactive check-in pushes while a Focus mode is active and releasing them when Focus ends. A
+/// failed hold or release (offline, or this device not registered for pushes yet) is logged and
+/// tried again, a few times with growing waits.
 final focusFilterSyncProvider = Provider<void>((ref) {
   Timer? refreshTimer;
+  Timer? retryTimer;
   var hadHold = false;
+  // Each change starts a new round; a retry or renewal from an older round does nothing.
+  var round = 0;
+
+  Future<void> send(DateTime? Function() until, int forRound, int attempt) async {
+    if (forRound != round || !ref.mounted) return;
+    final backend = ref.read(backendProvider);
+    if (backend.userId == null) return;
+    Object? failure;
+    try {
+      if (await backend.updateCurrentDeviceQuiet(until())) return;
+      failure = 'this device is not registered for pushes yet';
+    } catch (e) {
+      failure = e;
+    }
+    if (forRound != round || !ref.mounted) return;
+    if (attempt >= focusHoldRetryDelays.length) {
+      debugPrint('focus hold failed, giving up until the next change: $failure');
+      return;
+    }
+    final wait = focusHoldRetryDelays[attempt];
+    debugPrint('focus hold failed, trying again in ${wait.inSeconds}s: $failure');
+    retryTimer?.cancel();
+    retryTimer = Timer(wait, () => unawaited(send(until, forRound, attempt + 1)));
+  }
 
   Future<void> sync(FocusFilterState filter) async {
+    final current = ++round;
     refreshTimer?.cancel();
     refreshTimer = null;
+    retryTimer?.cancel();
+    retryTimer = null;
     final backend = ref.read(backendProvider);
     if (backend.userId == null) return;
     final shouldHold = filter.active && filter.holdCheckIns;
     if (shouldHold) {
       hadHold = true;
-      final until = DateTime.now().toUtc().add(const Duration(hours: 4));
-      try {
-        await backend.updateCurrentDeviceQuiet(until);
-      } catch (_) {}
-      refreshTimer = Timer.periodic(const Duration(hours: 2), (_) {
-        final next = DateTime.now().toUtc().add(const Duration(hours: 4));
-        unawaited(backend.updateCurrentDeviceQuiet(next).catchError((_) {}));
+      DateTime holdUntil() => DateTime.now().toUtc().add(focusHoldFor);
+      await send(holdUntil, current, 0);
+      if (current != round || !ref.mounted) return;
+      refreshTimer = Timer.periodic(focusHoldRenewEvery, (_) {
+        unawaited(send(holdUntil, current, 0));
       });
     } else if (hadHold) {
       hadHold = false;
-      try {
-        await backend.updateCurrentDeviceQuiet(null);
-      } catch (_) {}
+      await send(() => null, current, 0);
     }
   }
 
@@ -121,6 +170,7 @@ final focusFilterSyncProvider = Provider<void>((ref) {
 
   ref.onDispose(() {
     refreshTimer?.cancel();
+    retryTimer?.cancel();
   });
 });
 
@@ -134,9 +184,10 @@ class FocusFilterChip extends ConsumerWidget {
     if (!filter.active || filter.botIds.isEmpty) {
       return const SizedBox.shrink();
     }
+    final l10n = AppLocalizations.of(context);
     final label = filter.showAllOverride
-        ? 'Focus filter · Showing all'
-        : 'Focus filter · ${filter.botIds.length} shown';
+        ? l10n.focusFilterShowingAll
+        : l10n.focusFilterShown(filter.botIds.length);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       child: Align(

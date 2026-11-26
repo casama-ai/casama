@@ -657,6 +657,7 @@ _responseData = rawData == null ? null : deserialize<BrowserTriggerList, Browser
   /// Parameters:
   /// * [botId] 
   /// * [allKinds] - Include the browser kinds (browser_tab, browser_history). Left out by default so app builds that don't know them keep reading the list
+  /// * [actionKinds] - Include the Apple action kinds (alarm, home). Left out by default so app builds that don't know them keep reading the list
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -669,6 +670,7 @@ _responseData = rawData == null ? null : deserialize<BrowserTriggerList, Browser
   Future<Response<ListDeviceGrants200Response>> listDeviceGrants({ 
     String? botId,
     String? allKinds,
+    String? actionKinds,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -698,6 +700,7 @@ _responseData = rawData == null ? null : deserialize<BrowserTriggerList, Browser
     final _queryParameters = <String, dynamic>{
       if (botId != null) r'bot_id': botId,
       if (allKinds != null) r'all_kinds': allKinds,
+      if (actionKinds != null) r'action_kinds': actionKinds,
     };
 
     final _response = await _dio.request<Object>(

@@ -23,6 +23,10 @@ import WebKit
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
+    // This app delegate answers the notification center before any plugin registers (Firebase
+    // Messaging then leaves it in place and gets each callback forwarded), so inline replies reach
+    // didReceive below, and it is set before launch finishes, as iOS needs for a cold-start tap.
+    UNUserNotificationCenter.current().delegate = self
     // Phone-call voice (D-135): bots ring this phone with VoIP pushes.
     let registry = PKPushRegistry(queue: .main)
     registry.delegate = self
@@ -83,28 +87,39 @@ import WebKit
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 
-  /// Handoff from Mac / iPad (docs/APPLE-INTEGRATIONS-PLAN.md §6.10).
+  /// Handoff from Mac / iPad (docs/APPLE-INTEGRATIONS-PLAN.md §6.10). With scenes iOS sends it to
+  /// SceneDelegate instead; this covers a launch without one.
   override func application(
     _ application: UIApplication,
     continue userActivity: NSUserActivity,
     restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void
   ) -> Bool {
-    if userActivity.activityType == "ai.casama.app.viewing",
-       let info = userActivity.userInfo,
-       let kind = info["kind"] as? String,
-       let id = info["id"] as? String
-    {
-      let botId = (info["bot_id"] as? String) ?? (kind == "bot" ? id : "")
-      let path = kind == "chat" && !botId.isEmpty
-        ? "/bots/\(botId)/chat?c=\(id)"
-        : (!botId.isEmpty ? "/bots/\(botId)/chat" : "/bots")
-      ShortcutBridge.shared.open(path)
-      return true
-    }
+    if Handoff.open(userActivity) { return true }
     return super.application(application, continue: userActivity, restorationHandler: restorationHandler)
   }
 
-  /// Inline text replies on REPLY notifications (Siri, AirPods, CarPlay, Lock Screen; §5.3).
+  /// A notification arriving with the app open. Flutter hands it to the plugins; Firebase Messaging
+  /// answers its own pushes with the options Dart set (D-325: the badge, no banner). Anything nobody
+  /// answers gets those same options, as when Firebase owned the notification center.
+  override func userNotificationCenter(
+    _ center: UNUserNotificationCenter,
+    willPresent notification: UNNotification,
+    withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
+  ) {
+    var answered = false
+    super.userNotificationCenter(center, willPresent: notification) { options in
+      guard !answered else { return }
+      answered = true
+      completionHandler(options)
+    }
+    if !answered {
+      answered = true
+      completionHandler(Self.foregroundPresentationOptions())
+    }
+  }
+
+  /// Inline text replies on REPLY notifications (Siri, AirPods, CarPlay, Lock Screen; §5.3): iOS
+  /// keeps the app running until Dart has sent the reply. Taps and buttons go to the plugins.
   override func userNotificationCenter(
     _ center: UNUserNotificationCenter,
     didReceive response: UNNotificationResponse,
@@ -123,12 +138,32 @@ import WebKit
       NotificationsBridge.shared.deliverReply(
         botId: botId,
         conversationId: convId,
-        text: textResponse.userText
+        text: textResponse.userText,
+        completion: completionHandler
       )
-      completionHandler()
       return
     }
-    super.userNotificationCenter(center, didReceive: response, withCompletionHandler: completionHandler)
+    var answered = false
+    super.userNotificationCenter(center, didReceive: response) {
+      guard !answered else { return }
+      answered = true
+      completionHandler()
+    }
+    if !answered {
+      answered = true
+      completionHandler()
+    }
+  }
+
+  /// What Dart asked Firebase Messaging to show for a notification with the app open
+  /// (setForegroundNotificationPresentationOptions, stored by the plugin under this key).
+  private static func foregroundPresentationOptions() -> UNNotificationPresentationOptions {
+    let saved = UserDefaults.standard.dictionary(forKey: "flutter_firebase_messaging_presentation_options") ?? [:]
+    var options: UNNotificationPresentationOptions = []
+    if saved["alert"] as? Bool == true { options.formUnion([.banner, .list]) }
+    if saved["badge"] as? Bool == true { options.insert(.badge) }
+    if saved["sound"] as? Bool == true { options.insert(.sound) }
+    return options
   }
 
   func pushRegistry(_ registry: PKPushRegistry, didUpdate credentials: PKPushCredentials, for type: PKPushType) {
@@ -429,10 +464,27 @@ final class SignInSheet: NSObject, ASWebAuthenticationPresentationContextProvidi
 
 /// `casama/notifications` (D-325): the app icon badge, and clearing a chat's delivered
 /// notifications (the server sends replies with aps.thread-id = the conversation) once it's open.
+///
+/// Inline replies (§5.3): each gets an id and waits in UserDefaults until Dart confirms it, so one
+/// typed while Casama wasn't running survives until Dart next starts. While Dart works on it a
+/// background task keeps the app running and the notification's completion handler waits; both
+/// end when Dart answers or when iOS's background time runs out (the reply then stays queued).
 final class NotificationsBridge {
   static let shared = NotificationsBridge()
+  private static let pendingKey = "casama.notifications.pending_inline_replies"
   private var channel: FlutterMethodChannel?
-  private var pendingReplies: [[String: String]] = []
+  /// Dart has taken the queue, so its inlineReply handler is listening.
+  private var dartReady = false
+  /// Replies Dart hasn't confirmed, oldest first.
+  private var pending: [[String: String]]
+  /// Ids handed to this engine's Dart and not yet answered, so a second take doesn't repeat them.
+  private var inFlight = Set<String>()
+  /// Finishes a reply's wait (its completion handler, its background task), by reply id.
+  private var waiting: [String: () -> Void] = [:]
+
+  private init() {
+    pending = (UserDefaults.standard.array(forKey: Self.pendingKey) as? [[String: String]]) ?? []
+  }
 
   func attach(_ messenger: FlutterBinaryMessenger) {
     let channel = FlutterMethodChannel(name: "casama/notifications", binaryMessenger: messenger)
@@ -462,33 +514,118 @@ final class NotificationsBridge {
         // iOS buttons arrive through Firebase Messaging's tap handler.
         result(nil)
       case "takeInlineReplies":
-        let replies = self?.pendingReplies ?? []
-        self?.pendingReplies.removeAll()
-        result(replies)
+        result(self?.takeReplies() ?? [])
+      case "inlineReplyDone":
+        if let id = args["id"] as? String { self?.finish(id) }
+        result(nil)
       default:
         result(FlutterMethodNotImplemented)
       }
     }
     self.channel = channel
+    // A new engine: its Dart hasn't taken anything yet.
+    dartReady = false
+    inFlight.removeAll()
   }
 
-  /// Forwards an inline notification text reply to Dart (docs/APPLE-INTEGRATIONS-PLAN.md §5.3).
-  /// Queues the reply if the Flutter channel isn't attached yet (e.g. cold launch from Lock Screen).
-  func deliverReply(botId: String, conversationId: String, text: String) {
+  /// Hands an inline notification text reply to Dart, and calls [completion] once Dart has sent it
+  /// (or iOS's background time runs out). Queued until Dart is listening (a cold start from the
+  /// Lock Screen starts no Flutter engine, so then it waits for the next time Casama opens).
+  func deliverReply(botId: String, conversationId: String, text: String, completion: @escaping () -> Void) {
+    guard Thread.isMainThread else {
+      DispatchQueue.main.async { self.deliverReply(botId: botId, conversationId: conversationId, text: text, completion: completion) }
+      return
+    }
     let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
-    guard !trimmed.isEmpty, !botId.isEmpty else { return }
+    guard !trimmed.isEmpty, !botId.isEmpty else {
+      completion()
+      return
+    }
+    let id = UUID().uuidString.lowercased()
     let payload: [String: String] = [
+      "id": id,
       "bot_id": botId,
       "conversation_id": conversationId,
       "text": trimmed,
     ]
-    if let channel = channel {
-      DispatchQueue.main.async {
-        channel.invokeMethod("inlineReply", arguments: payload)
+    pending.append(payload)
+    save()
+    var task = UIBackgroundTaskIdentifier.invalid
+    var done = false
+    let end = { [weak self] in
+      guard !done else { return }
+      done = true
+      self?.waiting[id] = nil
+      completion()
+      if task != .invalid {
+        UIApplication.shared.endBackgroundTask(task)
+        task = .invalid
       }
-    } else {
-      pendingReplies.append(payload)
     }
+    waiting[id] = end
+    task = UIApplication.shared.beginBackgroundTask(withName: "casama.inline-reply") { end() }
+    send(payload)
+  }
+
+  private func send(_ payload: [String: String]) {
+    guard dartReady, let channel, let id = payload["id"] else { return }
+    inFlight.insert(id)
+    channel.invokeMethod("inlineReply", arguments: payload) { [weak self] answer in
+      guard let self else { return }
+      if (answer as? NSObject) === FlutterMethodNotImplemented {
+        // Dart's handler is gone (its engine restarted): keep the reply for the next take.
+        self.inFlight.remove(id)
+        self.dartReady = false
+        return
+      }
+      // Sent, or Dart gave up on it (signed out, an error): either way it's done.
+      self.finish(id)
+    }
+  }
+
+  private func takeReplies() -> [[String: String]] {
+    dartReady = true
+    let fresh = pending.filter { !inFlight.contains($0["id"] ?? "") }
+    for reply in fresh { if let id = reply["id"] { inFlight.insert(id) } }
+    return fresh
+  }
+
+  private func finish(_ id: String) {
+    inFlight.remove(id)
+    pending.removeAll { $0["id"] == id }
+    save()
+    waiting[id]?()
+  }
+
+  private func save() {
+    if pending.isEmpty {
+      UserDefaults.standard.removeObject(forKey: Self.pendingKey)
+    } else {
+      UserDefaults.standard.set(pending, forKey: Self.pendingKey)
+    }
+  }
+}
+
+/// Handoff from a Mac or iPad viewing a bot or chat (docs/APPLE-INTEGRATIONS-PLAN.md §6.10): opens
+/// the same place here. Answers whether the activity was Casama's.
+enum Handoff {
+  static let viewingType = "ai.casama.app.viewing"
+
+  static func open(_ activity: NSUserActivity) -> Bool {
+    guard let path = path(for: activity) else { return false }
+    ShortcutBridge.shared.open(path)
+    return true
+  }
+
+  static func path(for activity: NSUserActivity) -> String? {
+    guard activity.activityType == viewingType,
+          let info = activity.userInfo,
+          let kind = info["kind"] as? String,
+          let id = info["id"] as? String
+    else { return nil }
+    let botId = (info["bot_id"] as? String) ?? (kind == "bot" ? id : "")
+    if kind == "chat" && !botId.isEmpty { return "/bots/\(botId)/chat?c=\(id)" }
+    return botId.isEmpty ? "/bots" : "/bots/\(botId)/chat"
   }
 }
 

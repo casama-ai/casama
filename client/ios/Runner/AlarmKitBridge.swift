@@ -13,6 +13,14 @@ final class AlarmKitBridge {
 
   private var channel: FlutterMethodChannel?
 
+  /// An ISO-8601 time with or without fractional seconds ("2026-11-26T09:00:00.000Z", as
+  /// JavaScript's toISOString writes it, or "2026-11-26T09:00:00Z").
+  static func parseISO8601(_ value: String) -> Date? {
+    let withFraction = ISO8601DateFormatter()
+    withFraction.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+    return withFraction.date(from: value) ?? ISO8601DateFormatter().date(from: value)
+  }
+
   func attach(messenger: FlutterBinaryMessenger) {
     let ch = FlutterMethodChannel(name: Self.channelName, binaryMessenger: messenger)
     ch.setMethodCallHandler { [weak self] call, result in
@@ -92,7 +100,7 @@ final class AlarmKitBridge {
             _ = try await AlarmManager.shared.schedule(id: id, configuration: config)
             result(["ok": true, "alarm_id": id.uuidString, "kind": "timer", "duration_seconds": duration])
           } else if let atStr = args["at"] as? String,
-                    let date = ISO8601DateFormatter().date(from: atStr)
+                    let date = Self.parseISO8601(atStr)
           {
             let schedule = Alarm.Schedule.fixed(date)
             let config = AlarmManager.AlarmConfiguration.alarm(

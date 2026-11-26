@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -146,6 +148,9 @@ class SpeechToTextDictation implements DeviceDictation {
 
 /// On-device SpeechAnalyzer dictation on iOS 26+ and macOS 26+ (docs/APPLE-INTEGRATIONS-PLAN.md §7.2),
 /// falling back to [SpeechToTextDictation] on older OS versions and other platforms.
+///
+/// The native side (SpeechAnalyzerBridge.swift) sends `onWords {words, final}` with everything heard
+/// so far and `onEnd {reason}` once; after `stop` it settles the last words before `onEnd`.
 class SpeechAnalyzerDictation implements DeviceDictation {
   SpeechAnalyzerDictation({
     MethodChannel? channel,
@@ -155,7 +160,13 @@ class SpeechAnalyzerDictation implements DeviceDictation {
 
   final MethodChannel _channel;
   final DeviceDictation _fallback;
-  bool _usingNative = false;
+
+  /// A native session is starting or running (until its onEnd): stop and cancel go to it, and
+  /// its handler is on the channel.
+  bool _native = false;
+
+  /// Cancelled while the native session was still starting: no falling back then.
+  bool _startCancelled = false;
   void Function(String words)? _onWords;
   void Function(DeviceDictationEnd end)? _onEnd;
 
@@ -184,50 +195,55 @@ class SpeechAnalyzerDictation implements DeviceDictation {
     if (await _nativeSupported()) {
       _onWords = onWords;
       _onEnd = onEnd;
+      _native = true;
+      _startCancelled = false;
       _channel.setMethodCallHandler(_handleNative);
+      var started = false;
       try {
-        final started = await _channel.invokeMethod<bool>('start') ?? false;
-        if (started) {
-          _usingNative = true;
-          return true;
-        }
+        started = await _channel.invokeMethod<bool>('start') ?? false;
       } catch (e) {
         debugPrint('SpeechAnalyzer unavailable, falling back: $e');
       }
-      _channel.setMethodCallHandler(null);
-      _onWords = null;
-      _onEnd = null;
+      if (started && !_startCancelled) return true;
+      final cancelled = _startCancelled;
+      _endNative();
+      if (cancelled) return started;
     }
-    _usingNative = false;
     return _fallback.start(onWords: onWords, onEnd: onEnd);
   }
 
   Future<void> _handleNative(MethodCall call) async {
+    if (!_native) return;
     final args = call.arguments is Map ? call.arguments as Map : const {};
     switch (call.method) {
       case 'onWords':
-        final words = (args['words'] as String?)?.trim() ?? '';
+        final words = args['words'] is String ? (args['words'] as String).trim() : '';
         if (words.isNotEmpty) _onWords?.call(words);
       case 'onEnd':
-        final reason = args['reason'] as String?;
-        final end = switch (reason) {
+        final end = switch (args['reason']) {
           'done' => DeviceDictationEnd.done,
           'nothingHeard' => DeviceDictationEnd.nothingHeard,
           _ => DeviceDictationEnd.failed,
         };
         final cb = _onEnd;
-        _onEnd = null;
-        _onWords = null;
-        _usingNative = false;
+        _endNative();
         cb?.call(end);
     }
   }
 
+  /// The native session is over: forget its callbacks and take the handler off the channel.
+  void _endNative() {
+    _native = false;
+    _onWords = null;
+    _onEnd = null;
+    _channel.setMethodCallHandler(null);
+  }
+
   @override
   Future<void> stop() async {
-    if (_usingNative) {
+    if (_native) {
+      // onEnd follows once the analyzer has settled the last words.
       await _channel.invokeMethod<void>('stop').catchError((_) {});
-      _usingNative = false;
     } else {
       await _fallback.stop();
     }
@@ -235,20 +251,27 @@ class SpeechAnalyzerDictation implements DeviceDictation {
 
   @override
   Future<void> cancel() async {
-    if (_usingNative) {
-      _onWords = null;
-      _onEnd = null;
-      _usingNative = false;
+    if (_native) {
+      _startCancelled = true;
+      _endNative();
       await _channel.invokeMethod<void>('cancel').catchError((_) {});
     } else {
       await _fallback.cancel();
     }
   }
+
+  /// Drops a native session still going and its channel handler.
+  void dispose() {
+    if (_native) unawaited(_channel.invokeMethod<void>('cancel').catchError((_) {}));
+    _endNative();
+  }
 }
 
-final deviceDictationProvider = Provider<DeviceDictation>(
-  (ref) => SpeechAnalyzerDictation(),
-);
+final deviceDictationProvider = Provider<DeviceDictation>((ref) {
+  final dictation = SpeechAnalyzerDictation();
+  ref.onDispose(dictation.dispose);
+  return dictation;
+});
 
 /// Which dictation the mic uses next. The server first; after it fails, the device's own for a
 /// while, then the server again, so one bad moment doesn't stick for the rest of the day.

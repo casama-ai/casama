@@ -21,34 +21,49 @@ enum FileProviderKeyStore {
     #endif
   }
 
-  static func save(key: String, apiUrl: String, orgId: String) {
-    let data = Data(key.utf8)
-    let query: [String: Any] = [
+  /// The keychain item, in the group the app shares with its File Provider extension.
+  private static func query() -> [String: Any] {
+    var q: [String: Any] = [
       kSecClass as String: kSecClassGenericPassword,
       kSecAttrService as String: service,
       kSecAttrAccount as String: accountKey,
       kSecAttrAccessGroup as String: accessGroup,
     ]
-    SecItemDelete(query as CFDictionary)
-    var add = query
-    add[kSecValueData as String] = data
-    add[kSecAttrAccessible as String] = kSecAttrAccessibleAfterFirstUnlock
-    SecItemAdd(add as CFDictionary, nil)
+    #if os(macOS)
+    // Access groups only work in the data protection keychain on the Mac (as WidgetKey).
+    q[kSecUseDataProtectionKeychain as String] = true
+    #endif
+    return q
+  }
 
+  /// Stores the key and where it works. Answers whether the keychain took the key (false where
+  /// signing doesn't grant the shared keychain group); nothing is stored then.
+  @discardableResult
+  static func save(key: String, apiUrl: String, orgId: String) -> Bool {
+    let q = query()
+    let attributes: [String: Any] = [
+      kSecValueData as String: Data(key.utf8),
+      kSecAttrAccessible as String: kSecAttrAccessibleAfterFirstUnlock,
+    ]
+    var status = SecItemUpdate(q as CFDictionary, attributes as CFDictionary)
+    if status == errSecItemNotFound {
+      status = SecItemAdd(q.merging(attributes) { $1 } as CFDictionary, nil)
+    }
+    guard status == errSecSuccess else {
+      NSLog("Casama file provider: keychain refused the file key (OSStatus %d)", status)
+      defaults.removeObject(forKey: configDefaultsKey)
+      return false
+    }
     defaults.set(["api_url": apiUrl, "org_id": orgId], forKey: configDefaultsKey)
+    return true
   }
 
   static func load() -> (key: String, apiUrl: String, orgId: String)? {
-    let query: [String: Any] = [
-      kSecClass as String: kSecClassGenericPassword,
-      kSecAttrService as String: service,
-      kSecAttrAccount as String: accountKey,
-      kSecAttrAccessGroup as String: accessGroup,
-      kSecReturnData as String: true,
-      kSecMatchLimit as String: kSecMatchLimitOne,
-    ]
+    var q = query()
+    q[kSecReturnData as String] = true
+    q[kSecMatchLimit as String] = kSecMatchLimitOne
     var item: CFTypeRef?
-    let status = SecItemCopyMatching(query as CFDictionary, &item)
+    let status = SecItemCopyMatching(q as CFDictionary, &item)
     guard status == errSecSuccess,
           let data = item as? Data,
           let key = String(data: data, encoding: .utf8),
@@ -60,13 +75,7 @@ enum FileProviderKeyStore {
   }
 
   static func clear() {
-    let query: [String: Any] = [
-      kSecClass as String: kSecClassGenericPassword,
-      kSecAttrService as String: service,
-      kSecAttrAccount as String: accountKey,
-      kSecAttrAccessGroup as String: accessGroup,
-    ]
-    SecItemDelete(query as CFDictionary)
+    SecItemDelete(query() as CFDictionary)
     defaults.removeObject(forKey: configDefaultsKey)
   }
 }

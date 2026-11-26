@@ -26,4 +26,10 @@ CASAMA_DEBUG_PROFILE =
 CASAMA_WIDGET_DEBUG_ENTITLEMENTS = CasamaWidgetsMac/CasamaWidgetsMacLocal.entitlements
 CASAMA_WIDGET_DEBUG_SIGN_STYLE = Automatic
 CASAMA_WIDGET_DEBUG_PROFILE =
+
+// The File Provider extension (CasamaFileProvider) too: without a profile it leaves out the shared
+// keychain group, so Finder's Casama Computers can't read the app's file key and stays empty.
+CASAMA_FILE_PROVIDER_DEBUG_ENTITLEMENTS = CasamaFileProvider/CasamaFileProviderLocal.entitlements
+CASAMA_FILE_PROVIDER_DEBUG_SIGN_STYLE = Automatic
+CASAMA_FILE_PROVIDER_DEBUG_PROFILE =
 #include? "Signing.local.xcconfig"

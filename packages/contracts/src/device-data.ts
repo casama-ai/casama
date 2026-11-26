@@ -24,6 +24,8 @@ export const DeviceKind = z
 
 /** Kinds from the browser extension (D-323 E2, E6): live reads only, on web device sources. */
 export const BROWSER_DEVICE_KINDS = ["browser_tab", "browser_history"] as const;
+/** Apple action kinds (AlarmKit, HomeKit): live actions, listed only to builds that know them. */
+export const ACTION_DEVICE_KINDS = ["alarm", "home"] as const;
 
 export const DeviceKindSettings = z
   .object({
@@ -119,6 +121,10 @@ export const DeviceRequest = z
     ]),
     params: z.record(z.string(), z.unknown()),
     created_at: z.iso.datetime({ offset: true }),
+    expires_at: z.iso.datetime({ offset: true }).nullable().optional().openapi({
+      description:
+        "Don't act on it after this time (an alarm whose time has passed, a cancellation nobody waits for any more). Requests past it are no longer listed.",
+    }),
   })
   .openapi("DeviceRequest");
 

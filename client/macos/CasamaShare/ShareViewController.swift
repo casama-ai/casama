@@ -4,7 +4,8 @@ import UniformTypeIdentifiers
 
 /// macOS Share Extension (docs/APPLE-INTEGRATIONS-PLAN.md §6.7).
 /// Collects shared text, URLs, or files from Safari, Finder, or Photos, saves them to the
-/// shared App Group `V8V5US964Z.ai.casama.app`, and opens Casama's quick-ask panel.
+/// shared App Group `V8V5US964Z.ai.casama.app`, and opens Casama's quick-ask panel. The app takes
+/// them over `casama/mac` (takeSharedText, takeSharedFiles). Each share replaces the last one.
 final class ShareViewController: NSViewController {
   private static let groupId = "V8V5US964Z.ai.casama.app"
 
@@ -22,6 +23,7 @@ final class ShareViewController: NSViewController {
       extensionContext?.completeRequest(returningItems: nil)
       return
     }
+    Self.clearPreviousShare()
     let group = DispatchGroup()
     var texts: [String] = []
     var files: [[String: String]] = []
@@ -35,7 +37,7 @@ final class ShareViewController: NSViewController {
             defer { group.leave() }
             if let url = data as? URL, let copied = Self.copyIntoGroup(url: url) {
               lock.lock()
-              files.append(["path": copied.path, "name": copied.lastPathComponent])
+              files.append(Self.describe(copied))
               lock.unlock()
             }
           }
@@ -65,7 +67,9 @@ final class ShareViewController: NSViewController {
 
     group.notify(queue: .main) { [weak self] in
       let defaults = UserDefaults(suiteName: Self.groupId)
-      if !texts.isEmpty {
+      if texts.isEmpty {
+        defaults?.removeObject(forKey: "shared_text")
+      } else {
         defaults?.set(texts.joined(separator: "\n"), forKey: "shared_text")
       }
       if !files.isEmpty,
@@ -73,12 +77,29 @@ final class ShareViewController: NSViewController {
          let json = String(data: data, encoding: .utf8)
       {
         defaults?.set(json, forKey: "shared_files")
+      } else {
+        defaults?.removeObject(forKey: "shared_files")
       }
-      if let url = URL(string: "casama://app/quick-ask?shared=1") {
+      // A link of its own each time, so a running Casama opens a fresh quick ask for this share.
+      let at = Int64(Date().timeIntervalSince1970 * 1000)
+      if !texts.isEmpty || !files.isEmpty, let url = URL(string: "casama://app/quick-ask?shared=1&at=\(at)") {
         NSWorkspace.shared.open(url)
       }
       self?.extensionContext?.completeRequest(returningItems: nil)
     }
+  }
+
+  /// Removes the files the last share copied in; the app reads them only until the next share.
+  private static func clearPreviousShare() {
+    guard let container = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: groupId) else { return }
+    try? FileManager.default.removeItem(at: container.appendingPathComponent("shared", isDirectory: true))
+  }
+
+  /// `{path, name, mime}`, as the app's parseSharedFiles reads it.
+  private static func describe(_ file: URL) -> [String: String] {
+    var out = ["path": file.path, "name": file.lastPathComponent]
+    if let mime = UTType(filenameExtension: file.pathExtension)?.preferredMIMEType { out["mime"] = mime }
+    return out
   }
 
   private static func copyIntoGroup(url: URL) -> URL? {

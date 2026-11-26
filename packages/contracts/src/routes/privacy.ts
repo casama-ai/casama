@@ -144,6 +144,8 @@ export const setMyAgeBand = createRoute({
   security,
   summary:
     "Save the account's declared age band (no birth date; docs/APPLE-INTEGRATIONS-PLAN.md §5.2)",
+  description:
+    "Only this route changes the band. A lower (more restrictive) band always applies, and a first band applies after none or declined. Declining keeps a band already known. A higher band applies only one step at a time (under13, 13to15, 16to17, 18plus) and only once the current band has stood for 30 days; otherwise the current band stays and `accepted` is false. The response is the band that applies now.",
   request: { body: jsonBody(SetAgeBandRequest) },
   responses: { 200: jsonResponse("Saved", AgeBandResult), 400: e400, 401: e401 },
 });

@@ -76,8 +76,9 @@ final class CasamaFileProviderExtension: NSObject, NSFileProviderReplicatedExten
         completionHandler(nil, nil, error)
         return
       }
-      if let http = response as? HTTPURLResponse, http.statusCode == 401 {
-        completionHandler(nil, nil, NSFileProviderError(.notAuthenticated))
+      // An error answer's body isn't the file.
+      if let failure = fileProviderError(for: response) {
+        completionHandler(nil, nil, failure)
         return
       }
       guard let tempUrl = tempUrl else {
@@ -192,8 +193,8 @@ private final class CasamaFileEnumerator: NSObject, NSFileProviderEnumerator {
         observer.finishEnumeratingWithError(error)
         return
       }
-      if let http = response as? HTTPURLResponse, http.statusCode == 401 {
-        observer.finishEnumeratingWithError(NSFileProviderError(.notAuthenticated))
+      if let failure = fileProviderError(for: response) {
+        observer.finishEnumeratingWithError(failure)
         return
       }
       guard let data = data,
@@ -241,13 +242,13 @@ private final class CasamaFileEnumerator: NSObject, NSFileProviderEnumerator {
         observer.finishEnumeratingWithError(error)
         return
       }
-      if let http = response as? HTTPURLResponse, http.statusCode == 401 {
-        observer.finishEnumeratingWithError(NSFileProviderError(.notAuthenticated))
-        return
-      }
       if let http = response as? HTTPURLResponse, http.statusCode == 409 {
         // Computer is asleep: return empty list without waking it.
         observer.finishEnumerating(upTo: nil)
+        return
+      }
+      if let failure = fileProviderError(for: response) {
+        observer.finishEnumeratingWithError(failure)
         return
       }
       guard let data = data,
@@ -257,7 +258,10 @@ private final class CasamaFileEnumerator: NSObject, NSFileProviderEnumerator {
         observer.finishEnumerating(upTo: nil)
         return
       }
+      // The server writes times with milliseconds (JavaScript's toISOString); accept both forms.
       let iso = ISO8601DateFormatter()
+      let isoMs = ISO8601DateFormatter()
+      isoMs.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
       let out: [NSFileProviderItem] = entries.compactMap { e in
         guard let name = e["name"] as? String,
               let fullPath = e["path"] as? String,
@@ -265,7 +269,7 @@ private final class CasamaFileEnumerator: NSObject, NSFileProviderEnumerator {
         else { return nil }
         let isDir = kind == "dir"
         let size = (e["size"] as? NSNumber)?.intValue ?? 0
-        let mod = (e["modified"] as? String).flatMap { iso.date(from: $0) }
+        let mod = (e["modified"] as? String).flatMap { isoMs.date(from: $0) ?? iso.date(from: $0) }
         let prefix = isDir ? "dir" : "file"
         return CasamaFileItem(
           id: NSFileProviderItemIdentifier("\(prefix):\(computerId):\(fullPath)"),
@@ -279,6 +283,19 @@ private final class CasamaFileEnumerator: NSObject, NSFileProviderEnumerator {
       observer.didEnumerate(out)
       observer.finishEnumerating(upTo: nil)
     }.resume()
+  }
+}
+
+/// The File Provider error for a server answer that isn't a success, or nil for a 2xx.
+@available(iOS 16.0, macOS 13.0, *)
+private func fileProviderError(for response: URLResponse?) -> Error? {
+  guard let http = response as? HTTPURLResponse else { return NSFileProviderError(.serverUnreachable) }
+  switch http.statusCode {
+  case 200..<300: return nil
+  case 401, 403: return NSFileProviderError(.notAuthenticated)
+  case 404, 410: return NSFileProviderError(.noSuchItem)
+  case 408, 429, 500...599: return NSFileProviderError(.serverUnreachable)
+  default: return NSFileProviderError(.cannotSynchronize)
   }
 }
 

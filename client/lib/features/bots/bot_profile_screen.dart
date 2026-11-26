@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:casama_sdk/casama_sdk.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
+import '../../core/age_range.dart';
 import '../../core/backend.dart';
 import '../../core/billing.dart';
 import '../../core/providers.dart';
@@ -217,6 +218,7 @@ class _BotProfileScreenState extends ConsumerState<BotProfileScreen> {
       );
     }
     final computers = ref.watch(computersProvider).value ?? const <Computer>[];
+    final teen = ref.watch(isTeenModeProvider);
     final usable = computers
         .where(
           // Only the computers that can be the bot's own. A person's computer is lent to a bot
@@ -298,13 +300,15 @@ class _BotProfileScreenState extends ConsumerState<BotProfileScreen> {
         ),
         _BotTiles(
           tiles: [
-            _BotTile(
-              key: const Key('botTile-computer'),
-              accent: _Accent.sky,
-              icon: LucideIcons.monitor,
-              label: l10n.botComputer,
-              onTap: () => context.pushOnce('/computer?bot=${bot.id}'),
-            ),
+            // Teen mode has no computers (docs/APPLE-INTEGRATIONS-PLAN.md decision 1b).
+            if (!teen)
+              _BotTile(
+                key: const Key('botTile-computer'),
+                accent: _Accent.sky,
+                icon: LucideIcons.monitor,
+                label: l10n.botComputer,
+                onTap: () => context.pushOnce('/computer?bot=${bot.id}'),
+              ),
             _BotTile(
               key: const Key('botTile-memory'),
               accent: _Accent.pink,
@@ -575,6 +579,8 @@ class _BotProfileScreenState extends ConsumerState<BotProfileScreen> {
         SectionHeader(title: l10n.botAbilities),
         GroupedCard(
           children: [
+            // No computer to pick in teen mode.
+            if (!teen)
             Builder(
               builder: (context) {
                 final current = usable

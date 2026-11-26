@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'age_range.dart';
 import 'auth_return_error.dart';
 import 'admin_security.dart';
 import 'backend.dart' show PackFrom;
@@ -197,6 +198,12 @@ GoRouterPageBuilder _tab(
   );
 };
 
+/// The pages teen mode doesn't open: a computer, its live view and the list of computers.
+bool teenBlockedLocation(String location) =>
+    location == '/computer' ||
+    location.startsWith('/computer/') ||
+    location == '/settings/computers';
+
 /// Re-evaluates redirects when sign-in or workspace state changes.
 class _RouterRefresh extends ChangeNotifier {
   _RouterRefresh(Ref ref) {
@@ -205,6 +212,7 @@ class _RouterRefresh extends ChangeNotifier {
     ref.listen(organizationsProvider, (_, _) => notifyListeners());
     ref.listen(joinableWorkspacesProvider, (_, _) => notifyListeners());
     ref.listen(pendingReferralProvider, (_, _) => notifyListeners());
+    ref.listen(isTeenModeProvider, (_, _) => notifyListeners());
     GuidedSetup.active.addListener(notifyListeners);
     AdminSecurity.authFormsClosed.addListener(notifyListeners);
   }
@@ -368,6 +376,9 @@ final routerProvider = Provider<GoRouter>((ref) {
         return Uri(path: '/link', queryParameters: {'code': pendingLink}).toString();
       }
       if (loc == '/sign-in') return hasOrg ? afterSignIn() : '/welcome';
+      // Teen mode (13 to 17) has no computers (docs/APPLE-INTEGRATIONS-PLAN.md decision 1b): a link
+      // or a notification leads to the chats rather than a page that can't work.
+      if (ref.read(isTeenModeProvider) && teenBlockedLocation(loc)) return '/bots';
       return null;
     },
     routes: [

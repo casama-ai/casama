@@ -6,6 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../l10n/generated/app_localizations.dart';
+import 'backend.dart';
 import 'providers.dart';
 
 /// Declared Age Range band (docs/APPLE-INTEGRATIONS-PLAN.md §5.2, §12.1).
@@ -25,6 +27,15 @@ enum AgeBand {
   bool get isUnder13 => this == AgeBand.under13;
   bool get isTeen => this == AgeBand.teen13to15 || this == AgeBand.teen16to17;
   bool get isRestricted => isUnder13 || isTeen;
+
+  /// Lower is stricter. A band nobody has stated counts as the least strict.
+  int get strictness => switch (this) {
+    AgeBand.under13 => 0,
+    AgeBand.teen13to15 => 1,
+    AgeBand.teen16to17 => 2,
+    AgeBand.adult18plus => 3,
+    AgeBand.declined || AgeBand.unknown => 4,
+  };
 
   AccountAgeBand? toApi() => switch (this) {
     AgeBand.under13 => AccountAgeBand.under13,
@@ -112,41 +123,103 @@ final isUnder13BlockedProvider = Provider<bool>(
 );
 
 /// Syncs `account_age_band` from `/v1/me` on sign-in and refreshes via Apple's Declared Age Range
-/// framework on iOS every 30 days when supported.
-final ageBandSyncProvider = Provider<void>((ref) {
-  Future<void> sync() async {
-    final backend = ref.read(backendProvider);
-    if (backend.userId == null) {
-      ref.read(ageBandProvider.notifier).setBand(AgeBand.unknown);
-      return;
-    }
-    DateTime? updatedAt;
-    try {
-      final me = await backend.getMe();
-      if (!ref.mounted) return;
-      final existing = AgeBand.fromApi(me?.accountAgeBand?.value);
-      ref.read(ageBandProvider.notifier).setBand(existing);
-      updatedAt = me?.accountAgeBandUpdatedAt;
-    } catch (_) {}
+/// framework on iOS every 30 days when supported. A failed check or send is logged and tried again
+/// the next time the app comes to the front (or launches); nothing counts as checked until the
+/// server has the band. Public for tests: [AgeBandSync].
+class AgeBandSync {
+  AgeBandSync(this._ref);
 
-    final service = ref.read(ageRangeServiceProvider);
-    if (!AgeRangeService.needsRefresh(updatedAt)) return;
-    if (!await service.isSupported()) return;
-    final band = await service.requestAgeRange();
-    if (!ref.mounted || band == null || band == AgeBand.unknown) return;
-    ref.read(ageBandProvider.notifier).setBand(band);
-    try {
-      await backend.setMyAgeBand(band.toApi());
-    } catch (_) {}
+  final Ref _ref;
+
+  /// A band Apple gave this session that the server hasn't taken yet: sent again without asking
+  /// Apple twice.
+  AgeBand? _unsent;
+  var _retry = false;
+  Future<void>? _running;
+
+  /// Whether a failed check or send waits for the next resume.
+  bool get needsRetry => _retry;
+
+  Future<void> sync() => _running ??= _sync().whenComplete(() => _running = null);
+
+  void signedOut() {
+    _unsent = null;
+    _retry = false;
+    _ref.read(ageBandProvider.notifier).setBand(AgeBand.unknown);
   }
 
+  Future<void> _sync() async {
+    _retry = false;
+    final backend = _ref.read(backendProvider);
+    if (backend.userId == null) {
+      signedOut();
+      return;
+    }
+    final unsent = _unsent;
+    if (unsent != null) {
+      await _send(backend, unsent);
+      return;
+    }
+    final Me? me;
+    try {
+      me = await backend.getMe();
+    } catch (e) {
+      // Without the server's answer the band can't be judged stale or fresh: try again later
+      // rather than asking Apple every time.
+      debugPrint('age band check failed: $e');
+      _retry = true;
+      return;
+    }
+    if (!_ref.mounted) return;
+    _ref
+        .read(ageBandProvider.notifier)
+        .setBand(AgeBand.fromApi(me?.accountAgeBand?.value));
+    if (!AgeRangeService.needsRefresh(me?.accountAgeBandUpdatedAt)) return;
+    final service = _ref.read(ageRangeServiceProvider);
+    if (!await service.isSupported()) return;
+    final band = await service.requestAgeRange();
+    if (!_ref.mounted || band == null || band == AgeBand.unknown) return;
+    // A stricter band applies at once, even before the server has it; a looser one waits for
+    // the server's answer.
+    if (band.strictness < _ref.read(ageBandProvider).strictness) {
+      _ref.read(ageBandProvider.notifier).setBand(band);
+    }
+    await _send(backend, band);
+  }
+
+  Future<void> _send(Backend backend, AgeBand band) async {
+    try {
+      final result = await backend.setMyAgeBand(band.toApi());
+      _unsent = null;
+      // The server decides which band is in force (it may keep a stricter one; rules in
+      // apps/server/src/api/age-band.ts), so the app follows its answer, not Apple's raw one.
+      if (_ref.mounted) {
+        _ref.read(ageBandProvider.notifier).setBand(AgeBand.fromApi(result.accountAgeBand?.value));
+      }
+    } catch (e) {
+      debugPrint('age band send failed: $e');
+      _unsent = band;
+      _retry = true;
+    }
+  }
+}
+
+final ageBandSyncProvider = Provider<AgeBandSync>((ref) {
+  final sync = AgeBandSync(ref);
   ref.listen(signedInProvider, (_, next) {
     if (next.value == true) {
-      unawaited(sync());
+      unawaited(sync.sync());
     } else if (next.value == false) {
-      ref.read(ageBandProvider.notifier).setBand(AgeBand.unknown);
+      sync.signedOut();
     }
   }, fireImmediately: true);
+  final lifecycle = AppLifecycleListener(
+    onResume: () {
+      if (sync.needsRetry) unawaited(sync.sync());
+    },
+  );
+  ref.onDispose(lifecycle.dispose);
+  return sync;
 });
 
 /// Covers the app when the signed-in account is declared under 13 (docs/APPLE-INTEGRATIONS-PLAN.md §5.2).
@@ -159,6 +232,7 @@ class Under13BlockedGate extends ConsumerWidget {
     final blocked = ref.watch(isUnder13BlockedProvider);
     final signedIn = ref.watch(signedInProvider).value == true;
     if (!blocked || !signedIn) return child;
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       key: const Key('under13BlockedGate'),
       body: SafeArea(
@@ -173,13 +247,13 @@ class Under13BlockedGate extends ConsumerWidget {
                   const Icon(Icons.shield_outlined, size: 48),
                   const SizedBox(height: 16),
                   Text(
-                    'Casama is for people 13 and older',
+                    l10n.under13Title,
                     style: Theme.of(context).textTheme.headlineSmall,
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    'This account cannot use Casama based on its declared age range. You can sign out or export your data from another account.',
+                    l10n.under13Body,
                     style: Theme.of(context).textTheme.bodyMedium,
                     textAlign: TextAlign.center,
                   ),
@@ -187,7 +261,7 @@ class Under13BlockedGate extends ConsumerWidget {
                   FilledButton(
                     key: const Key('under13SignOut'),
                     onPressed: () => unawaited(ref.read(backendProvider).signOut()),
-                    child: const Text('Sign out'),
+                    child: Text(l10n.signOut),
                   ),
                 ],
               ),

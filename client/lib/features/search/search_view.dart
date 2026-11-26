@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:casama_sdk/casama_sdk.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
+import '../../core/age_range.dart';
 import '../../core/providers.dart';
 import '../../core/shortcuts.dart' show askPath;
 import '../../core/widgets.dart';
@@ -325,7 +326,9 @@ class _SearchViewState extends ConsumerState<SearchView> {
       _Place('projects', LucideIcons.folderKanban, l10n.projects, '/projects'),
       _Place('library', LucideIcons.library, l10n.library, '/library', words: 'pages sites games pictures images videos documents files made creations'),
       _Place('skills', LucideIcons.bookOpen, l10n.skills, '/settings/skills', words: 'catalog'),
-      _Place('computers', LucideIcons.monitor, l10n.computers, '/settings/computers', words: 'machines'),
+      // Teen mode has no computers (docs/APPLE-INTEGRATIONS-PLAN.md decision 1b).
+      if (!ref.watch(isTeenModeProvider))
+        _Place('computers', LucideIcons.monitor, l10n.computers, '/settings/computers', words: 'machines'),
       _Place('usage', LucideIcons.chartColumn, l10n.usage, '/settings/usage', words: 'cost spend billing'),
       _Place('settings', LucideIcons.settings, l10n.settings, '/settings', words: 'preferences account'),
     ];

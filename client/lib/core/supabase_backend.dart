@@ -548,6 +548,7 @@ class SupabaseBackend implements Backend {
     final voip = _voipToken;
     _deviceToken = null;
     _voipToken = null;
+    _deviceId = null;
     try {
       if (device != null) await supabase.from('devices').delete().eq('fcm_token', device).timeout(const Duration(seconds: 5));
     } catch (_) {}
@@ -7243,7 +7244,14 @@ class SupabaseBackend implements Backend {
 
   @override
   Future<List<DeviceGrant>> deviceGrants({String? botId, bool allKinds = false}) async =>
-      (await api.devices.listDeviceGrants(botId: botId, allKinds: allKinds ? 'true' : null)).data!.items;
+      (await api.devices.listDeviceGrants(
+        botId: botId,
+        allKinds: allKinds ? 'true' : null,
+        // This build knows the Apple action kinds (alarm, home); older builds leave them out.
+        actionKinds: 'true',
+      ))
+          .data!
+          .items;
 
   @override
   Future<BrowserTabSummary?> browserTab() async {
@@ -7693,38 +7701,36 @@ class SupabaseBackend implements Backend {
       )).data!;
 
   @override
-  Future<void> updateCurrentDeviceQuiet(DateTime? quietUntil) async {
+  Future<bool> updateCurrentDeviceQuiet(DateTime? quietUntil) async {
     final uid = supabase.auth.currentUser?.id;
-    if (uid == null) return;
+    if (uid == null) return false;
+    // This device's own row only: the id the push registration got back, else the row with this
+    // device's push token. Never a guess (another phone of the same kind would be held instead).
     var id = _deviceId;
-    if (id == null && _deviceToken != null) {
+    final token = _deviceToken;
+    if (id == null && token != null) {
       try {
         final row = await supabase
             .from('devices')
             .select('id')
             .eq('user_id', uid)
-            .eq('fcm_token', _deviceToken!)
+            .eq('fcm_token', token)
             .maybeSingle();
         if (row?['id'] is String) id = row!['id'] as String;
-      } catch (_) {}
+      } catch (e) {
+        debugPrint('focus hold: device lookup failed: $e');
+      }
     }
     if (id == null) {
-      try {
-        final platform = _focusPlatform;
-        var q = supabase.from('devices').select('id').eq('user_id', uid);
-        if (platform != null) q = q.eq('platform', platform);
-        final rows = await q.order('last_seen_at', ascending: false).limit(1);
-        if (rows.isNotEmpty && rows.first['id'] is String) {
-          id = rows.first['id'] as String;
-        }
-      } catch (_) {}
+      debugPrint('focus hold skipped: this device has no push registration yet');
+      return false;
     }
-    if (id == null) return;
     _deviceId = id;
     await api.devices.updateDeviceQuiet(
       id: id,
       updateDeviceQuietRequest: UpdateDeviceQuietRequest(quietUntil: quietUntil),
     );
+    return true;
   }
 
   @override

@@ -3621,8 +3621,10 @@ abstract class Backend {
   /// Stores the Apple Declared Age Range band on the user's private record (`PUT /v1/me/age-band`).
   Future<AgeBandResult> setMyAgeBand(AccountAgeBand? ageBand);
 
-  /// Holds or releases proactive check-in pushes on this device (`PATCH /v1/devices/{id}`).
-  Future<void> updateCurrentDeviceQuiet(DateTime? quietUntil);
+  /// Holds or releases proactive check-in pushes on this device (`PATCH /v1/devices/{id}`). Only
+  /// ever this device's own registered row: false (nothing sent) while this device hasn't
+  /// registered for pushes yet, so the caller can try again later.
+  Future<bool> updateCurrentDeviceQuiet(DateTime? quietUntil);
 
   /// Mints a read-only `cfk_` key for the Apple File Provider extension (`POST /v1/file-keys`).
   Future<FileKeyCreated> createFileKey({

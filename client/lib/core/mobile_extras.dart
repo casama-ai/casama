@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_widget/home_widget.dart';
 import 'package:image_picker/image_picker.dart' show XFile;
@@ -14,6 +15,20 @@ const appGroupId = 'group.ai.casama.app';
 
 bool get _ios => !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS;
 bool get _android => !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
+bool get _mac => !kIsWeb && defaultTargetPlatform == TargetPlatform.macOS;
+
+/// The Mac app's own channel: its Share and Finder Quick Action extensions leave what was shared in
+/// the Team-ID app group (`V8V5US964Z.ai.casama.app`), which the app reads natively.
+const _macChannel = MethodChannel('casama/mac');
+
+/// What the Mac's extensions left under [method] (`takeSharedText` or `takeSharedFiles`), taken once.
+Future<String?> _takeFromMac(String method) async {
+  try {
+    return await _macChannel.invokeMethod<String>(method);
+  } catch (_) {
+    return null;
+  }
+}
 
 // Home-screen widgets moved to features/widgets/glance_sync.dart (D-405).
 
@@ -91,8 +106,9 @@ final shareToBotProvider = Provider<void>((ref) {
   ref.onDispose(sub.cancel);
 });
 
-/// Reads (and clears) text the iOS share extension left in the App Group.
+/// Reads (and clears) text the iOS or Mac share extension left in the App Group.
 Future<String> takeSharedText() async {
+  if (_mac) return await _takeFromMac('takeSharedText') ?? '';
   if (!_ios) return '';
   try {
     await HomeWidget.setAppGroupId(appGroupId);
@@ -127,9 +143,11 @@ List<SharedAttachment> parseSharedFiles(String? json) {
   }
 }
 
-/// Reads (and clears) the files the iOS share extension left in the App Group. The copies stay
-/// until the next share replaces them, so a retry can still read them.
+/// Reads (and clears) the files the iOS or Mac share extension (or the Mac's Finder Quick Action)
+/// left in the App Group. The copies stay until the next share replaces them, so a retry can still
+/// read them.
 Future<List<SharedAttachment>> takeSharedFiles() async {
+  if (_mac) return parseSharedFiles(await _takeFromMac('takeSharedFiles'));
   if (!_ios) return const [];
   try {
     await HomeWidget.setAppGroupId(appGroupId);

@@ -41,7 +41,11 @@ final class FileProviderBridge {
         result(FlutterError(code: "bad_args", message: "key, api_url and org_id are required", details: nil))
         return
       }
-      FileProviderKeyStore.save(key: key, apiUrl: apiUrl, orgId: orgId)
+      guard FileProviderKeyStore.save(key: key, apiUrl: apiUrl, orgId: orgId) else {
+        // This build's signing doesn't grant the keychain group the extension reads from.
+        result(FlutterError(code: "keychain_failed", message: "The keychain didn't take the file key", details: nil))
+        return
+      }
       registerDomain(result: result)
     case "clearKey":
       FileProviderKeyStore.clear()

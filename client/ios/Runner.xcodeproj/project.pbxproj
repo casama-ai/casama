@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		006C4C84C94C846FADF8A364 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD3D9A9447A0EB3E60E2BC1E /* Foundation.framework */; };
-		06B2F9194DEB15B4AE122F68 /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = B30F549DD837AAD90314AC9B /* AppIcon.icon */; };
 		094CCB08D8EFFD2BE7AA4825 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD3D9A9447A0EB3E60E2BC1E /* Foundation.framework */; };
 		0A417F45C87E32A5EED30C40 /* OnDeviceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83D1B1D6170ED23783E301F3 /* OnDeviceModel.swift */; };
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
@@ -17,6 +16,7 @@
 		2140DBB090325B934B438CB1 /* FileProviderKeyStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FDFEEBC4D75834961F95594 /* FileProviderKeyStore.swift */; };
 		2F6E926AB8CFE5909963ABF6 /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B370E26B455198A65289EFCC /* Pods_RunnerTests.framework */; };
 		331C808B294A63AB00263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C807B294A618700263BE5 /* RunnerTests.swift */; };
+		C5A1F1D0E2B3000000000002 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = C5A1F1D0E2B3000000000001 /* PrivacyInfo.xcprivacy */; };
 		38409D763242E5E045C67C64 /* CasamaFileProviderExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A312838720468BFBAF85881A /* CasamaFileProviderExtension.swift */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
 		3EE93AAE3D4C5C30DFA08B1F /* CasamaWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 372577EE13E4ED7A2E3B937D /* CasamaWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -306,9 +306,9 @@
 		9A089E8B3CE16ADC9C1A03A1 /* AgeRange.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AgeRange.swift; path = AgeRange.swift; sourceTree = "<group>"; };
 		9CC1DC9BE4B334AE268E7910 /* CasamaNotify.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CasamaNotify.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		9F75516A8D22141DD4E40105 /* DocumentScanner.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DocumentScanner.swift; path = DocumentScanner.swift; sourceTree = "<group>"; };
+		C5A1F1D0E2B3000000000001 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = CasamaFileProvider/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		A312838720468BFBAF85881A /* CasamaFileProviderExtension.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CasamaFileProviderExtension.swift; path = Shared/CasamaFileProviderExtension.swift; sourceTree = "<group>"; };
 		B28329C64B6F9CCC1440CE45 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		B30F549DD837AAD90314AC9B /* AppIcon.icon */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.iconcomposer.icon; name = AppIcon.icon; path = AppIcon.icon; sourceTree = "<group>"; };
 		B370E26B455198A65289EFCC /* Pods_RunnerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RunnerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C09A9A2D202DC427236702D3 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = CasamaNotify/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		C59E16A9B89B4BE3FBE0F2C4 /* FocusFilter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FocusFilter.swift; path = Siri/FocusFilter.swift; sourceTree = "<group>"; };
@@ -526,6 +526,7 @@
 			children = (
 				A312838720468BFBAF85881A /* CasamaFileProviderExtension.swift */,
 				7FDFEEBC4D75834961F95594 /* FileProviderKeyStore.swift */,
+				C5A1F1D0E2B3000000000001 /* PrivacyInfo.xcprivacy */,
 			);
 			name = CasamaFileProvider;
 			sourceTree = "<group>";
@@ -618,7 +619,6 @@
 				7AA6BB103BA8E94C942A82C2 /* AlarmKitBridge.swift */,
 				9F75516A8D22141DD4E40105 /* DocumentScanner.swift */,
 				36FBB37BA5FEB8B64F2D8D8D /* HomeKitBridge.swift */,
-				B30F549DD837AAD90314AC9B /* AppIcon.icon */,
 			);
 			path = Runner;
 			sourceTree = "<group>";
@@ -1013,7 +1013,6 @@
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
 				4B5A0F1C2D3E4F5061728397 /* PrivacyInfo.xcprivacy in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
-				06B2F9194DEB15B4AE122F68 /* AppIcon.icon in Resources */,
 				7E58658917C6912789CC0B1B /* Skills.skillsbundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1041,6 +1040,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C5A1F1D0E2B3000000000002 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1490,11 +1490,13 @@
 		};
 		277BD55B6464587D45FE4D90 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_ENTITLEMENTS = CasamaFileProvider/CasamaFileProvider.entitlements;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = V8V5US964Z;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
@@ -1510,6 +1512,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = ai.casama.app.CasamaFileProvider;
 				PRODUCT_MODULE_NAME = "$(TARGET_NAME)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "Casama File Provider iOS Development";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
@@ -1597,6 +1600,7 @@
 		};
 		529054D8E423618AB2FAB2CE /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9740EEB21CF90195004384FC /* Debug.xcconfig */;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ENABLE_OBJC_WEAK = NO;
@@ -1686,11 +1690,13 @@
 		};
 		7F345CEAA9885E5487AF3CEA /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_ENTITLEMENTS = CasamaNotify/CasamaNotify.entitlements;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = V8V5US964Z;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
@@ -1706,6 +1712,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = ai.casama.app.CasamaNotify;
 				PRODUCT_MODULE_NAME = "$(TARGET_NAME)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "Casama Notify iOS Development";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
@@ -1716,6 +1723,7 @@
 		};
 		865DC74AD27768AEDA07F467 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9740EEB21CF90195004384FC /* Debug.xcconfig */;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ENABLE_OBJC_WEAK = NO;
@@ -1935,6 +1943,7 @@
 		};
 		A0D2113941E6EA4D8B83CE2A /* Profile */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ENABLE_OBJC_WEAK = NO;
@@ -2304,6 +2313,7 @@
 		};
 		FCA0E49F2CC110B1DCD9C375 /* Profile */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ENABLE_OBJC_WEAK = NO;

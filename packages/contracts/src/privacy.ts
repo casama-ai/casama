@@ -148,7 +148,12 @@ export const SetAgeBandRequest = z
 
 export const AgeBandResult = z
   .object({
+    /** The band that applies now, which may not be the one sent (see setMyAgeBand). */
     account_age_band: AccountAgeBand,
     account_age_band_updated_at: z.iso.datetime({ offset: true }),
+    accepted: z.boolean().optional().openapi({
+      description:
+        "Whether the band sent was saved; account_age_band is the band in force either way. A higher band is saved only one step at a time and only once the current band is 30 days old; declining keeps a band already known. Always sent; missing only from servers before this rule, which saved every band.",
+    }),
   })
   .openapi("AgeBandResult");

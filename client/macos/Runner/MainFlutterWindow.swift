@@ -143,7 +143,8 @@ final class NotificationsBridge: NSObject, UNUserNotificationCenterDelegate {
         let replies = self?.pendingReplies ?? []
         self?.pendingReplies.removeAll()
         result(replies)
-      case "badge", "takeAction":
+      case "badge", "takeAction", "inlineReplyDone":
+        // inlineReplyDone: the iPhone's confirmation of a queued reply; the Mac doesn't wait for one.
         result(nil)
       default:
         result(FlutterMethodNotImplemented)
@@ -250,6 +251,14 @@ final class MacBridge: NSObject {
         result(nil)
       case "glance":
         result(Self.writeGlance(call.arguments as? [String: Any] ?? [:]))
+      case "takeSharedText", "takeSharedFiles":
+        // What the Share and Finder Quick Action extensions left in the app group (shared_text, or
+        // shared_files: a JSON list of {path, name, mime}), taken once.
+        let key = call.method == "takeSharedText" ? "shared_text" : "shared_files"
+        let defaults = UserDefaults(suiteName: Self.widgetGroup)
+        let value = defaults?.string(forKey: key)
+        defaults?.removeObject(forKey: key)
+        result(value)
       case "canvases":
         let args = call.arguments as? [String: Any] ?? [:]
         DispatchQueue.global(qos: .utility).async {

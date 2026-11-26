@@ -61,6 +61,16 @@ class AppDelegate: FlutterAppDelegate {
     ShortcutBridge.shared.open("/quick-ask?text=\(encoded)")
   }
 
+  // A share from the Share or Finder Quick Action extension (casama://app/quick-ask?shared=1)
+  // brings the window back, which closing it hid, so its quick ask shows. app_links still gets every
+  // link: with this override it catches them itself and passes them on here.
+  override func application(_ application: NSApplication, open urls: [URL]) {
+    if urls.contains(where: { $0.scheme == "casama" && $0.host == "app" && $0.path == "/quick-ask" }) {
+      IslandController.shared.showMainWindow()
+    }
+    super.application(application, open: urls)
+  }
+
   // casama.ai links the App Store build opens (applinks:casama.ai, D-326). app_links catches
   // casama:// links itself but leaves universal links to the app delegate.
   override func application(

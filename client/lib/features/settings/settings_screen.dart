@@ -9,6 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../voice/call_tools_sheet.dart';
 import '../chat/chat_detail.dart';
 import '../../core/fold/fold.dart';
+import '../../core/age_range.dart';
 import '../../core/analytics.dart';
 import '../../core/billing.dart';
 import '../../l10n/generated/app_localizations.dart';
@@ -478,7 +479,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ];
           final advancedRows = <Widget>[
                   GroupedTile(key: const Key('settingsSecrets'), icon: LucideIcons.lock, title: l10n.secrets, subtitle: l10n.secretsRowHelp, onTap: () => open('/settings/secrets'), selected: sel('/settings/secrets')),
-                  GroupedTile(key: const Key('settingsComputers'), icon: LucideIcons.monitor, title: l10n.computers, subtitle: l10n.computersRowHelp, onTap: () => open('/settings/computers'), selected: sel('/settings/computers')),
+                  // Teen mode has no computers (docs/APPLE-INTEGRATIONS-PLAN.md decision 1b).
+                  if (!ref.watch(isTeenModeProvider))
+                    GroupedTile(key: const Key('settingsComputers'), icon: LucideIcons.monitor, title: l10n.computers, subtitle: l10n.computersRowHelp, onTap: () => open('/settings/computers'), selected: sel('/settings/computers')),
                   // Device connections (D-149): data this device shares with your bots.
                   GroupedTile(
                     key: const Key('settingsDevices'),

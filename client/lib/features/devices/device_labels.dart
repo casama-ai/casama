@@ -16,8 +16,8 @@ String deviceKindLabel(AppLocalizations l10n, DeviceKind kind) => switch (kind) 
   DeviceKind.activity => l10n.deviceKindActivity,
   DeviceKind.browserTab => l10n.deviceKindBrowserTab,
   DeviceKind.browserHistory => l10n.deviceKindBrowserHistory,
-  DeviceKind.alarm => 'alarms',
-  DeviceKind.home => 'Home accessories',
+  DeviceKind.alarm => l10n.deviceKindAlarm,
+  DeviceKind.home => l10n.deviceKindHome,
 };
 
 /// Casama for Chrome's kinds (D-323 E2, E6): read live from the browser, never kept.

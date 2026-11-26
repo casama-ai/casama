@@ -340,44 +340,64 @@ class PushRegistrar {
   var _appleRepliesListening = false;
 
   /// iOS & macOS inline notification replies (`REPLY_MESSAGE` category, docs/APPLE-INTEGRATIONS-PLAN.md §5.1).
+  ///
+  /// The iPhone keeps the app awake until a reply is sent (a background task and the notification's
+  /// completion handler): a reply pushed with `inlineReply` is answered with whether it went out, and
+  /// each queued one Dart takes with `takeInlineReplies` is confirmed with `inlineReplyDone` {id, ok}.
   void _listenForAppleInlineReplies() {
     if (_appleRepliesListening || kIsWeb) return;
     if (defaultTargetPlatform != TargetPlatform.iOS && defaultTargetPlatform != TargetPlatform.macOS) return;
     _appleRepliesListening = true;
     notificationsChannel.setMethodCallHandler((call) async {
       if (call.method == 'inlineReply' && call.arguments is Map) {
-        await handleInlineReply(Map<String, dynamic>.from(call.arguments as Map));
+        return handleInlineReply(Map<String, dynamic>.from(call.arguments as Map));
       }
       return null;
     });
     unawaited(() async {
+      List<Object?>? pending;
       try {
-        final pending = await notificationsChannel.invokeMethod<List<Object?>>('takeInlineReplies');
-        if (pending == null) return;
-        for (final item in pending) {
-          if (item is Map) {
-            await handleInlineReply(Map<String, dynamic>.from(item));
+        pending = await notificationsChannel.invokeMethod<List<Object?>>('takeInlineReplies');
+      } catch (e) {
+        debugPrint('inline notification replies unavailable: $e');
+      }
+      for (final item in pending ?? const <Object?>[]) {
+        if (item is! Map) continue;
+        final data = Map<String, dynamic>.from(item);
+        final ok = await handleInlineReply(data);
+        final id = data['id'];
+        if (id is String && id.isNotEmpty) {
+          try {
+            await notificationsChannel.invokeMethod<void>('inlineReplyDone', {'id': id, 'ok': ok});
+          } catch (e) {
+            debugPrint('inline notification reply not confirmed: $e');
           }
         }
-      } catch (_) {}
+      }
     }());
   }
 
-  /// Sends an inline reply typed directly in an iOS or macOS notification banner.
+  /// Sends an inline reply typed directly in an iOS or macOS notification banner. Answers whether
+  /// it went out; never throws.
   @visibleForTesting
-  Future<void> handleInlineReply(Map<String, dynamic> data) async {
+  Future<bool> handleInlineReply(Map<String, dynamic> data) async {
     final text = data['text'] is String ? (data['text'] as String).trim() : '';
-    if (text.isEmpty || _backend.userId == null) return;
+    if (text.isEmpty || _backend.userId == null) return false;
     var conversationId = data['conversation_id'] is String ? (data['conversation_id'] as String).trim() : '';
     final botId = data['bot_id'] is String ? (data['bot_id'] as String).trim() : '';
     try {
       if (conversationId.isEmpty) {
-        if (botId.isEmpty) return;
+        if (botId.isEmpty) return false;
         conversationId = (await _backend.createConversation(botId)).id;
       }
-      await _backend.send(conversationId, text);
+      // The native reply id: the same reply handed over twice (the app stopped before confirming it)
+      // is sent once.
+      final id = data['id'];
+      await _backend.send(conversationId, text, idempotencyKey: id is String && id.isNotEmpty ? id : null);
+      return true;
     } catch (e) {
       debugPrint('inline notification reply failed: $e');
+      return false;
     }
   }
 

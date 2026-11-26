@@ -24,6 +24,7 @@ import '../../core/license_errors.dart';
 import '../../core/chat_focus.dart';
 import '../settings/model_keys_screen.dart' show casamaCloudCredentialId;
 import '../../core/device_dictation.dart';
+import '../../core/age_range.dart';
 import '../../core/document_scanner.dart';
 import '../../core/display_text.dart';
 import '../../core/haptics.dart';
@@ -990,16 +991,21 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     await _addFiles([(jpeg ? 'pasted-$stamp.jpg' : 'pasted-$stamp.png', bytes, jpeg ? 'image/jpeg' : 'image/png')]);
   }
 
-  /// Native iOS/iPadOS document scanner (docs/APPLE-INTEGRATIONS-PLAN.md §6.4).
+  /// Native iOS/iPadOS document scanner (docs/APPLE-INTEGRATIONS-PLAN.md §6.4). Closing the
+  /// scanner answers nothing and says nothing; a scan that failed says so in plain words.
   Future<void> _scanDocument() async {
     if (!mounted) return;
+    final ScannedDocument? doc;
     try {
-      final doc = await ref.read(documentScannerProvider).scan();
-      if (doc == null || !mounted) return;
-      await _addFiles([(doc.name, doc.bytes, 'application/pdf')]);
+      doc = await ref.read(documentScannerProvider).scan();
     } catch (e) {
-      if (mounted) showError(context, '$e');
+      debugPrint('document scan failed: $e');
+      if (e is PlatformException && e.code == 'cancelled') return;
+      if (mounted) showError(context, context.l10n.scanFailed);
+      return;
     }
+    if (doc == null || !mounted) return;
+    await _addFiles([(doc.name, doc.bytes, 'application/pdf')]);
   }
 
   /// Edit and resend (D-108): the conversation forks at this message and reruns from it.
@@ -1376,6 +1382,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     // Power users can see what each reply cost under it (D-307).
     final showUsage = ref.watch(showReplyUsageProvider);
     final layout = layoutFor(MediaQuery.sizeOf(context).width);
+    // Teen mode (13 to 17) has no computers (docs/APPLE-INTEGRATIONS-PLAN.md decision 1b): no way in.
+    final teen = ref.watch(isTeenModeProvider);
     final shell = ShellLayout.maybeOf(context);
     // The chat list is on screen beside this chat.
     final besideList = shell != null && shell.size == LayoutSize.split && shell.pane == PaneRole.detail;
@@ -1420,7 +1428,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         onTitleTap: widget.group ? null : () => context.pushOnce('/bots/${widget.botId}/settings'),
         actions: [
           // Two panes (D-411): the bot's computer takes the list's place beside this chat, and back.
-          if (besideList && !widget.group)
+          if (besideList && !widget.group && !teen)
             _LiveDot(
               live: computerLive,
               child: HeaderIconButton(
@@ -1432,7 +1440,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
               ),
             )
           // Phones and tablets: a live way into the computer while the bot works on it.
-          else if (layout != LayoutSize.desktop && computerLive)
+          else if (layout != LayoutSize.desktop && computerLive && !teen)
             _LiveDot(
               live: true,
               child: HeaderIconButton(icon: LucideIcons.monitor, tooltip: l10n.chatComputerLive, onPressed: () => context.pushOnce('/computer?bot=${widget.botId}')),
@@ -1458,7 +1466,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             MadeHereButton(
               botId: widget.botId,
               conversationId: chat.conversationId,
-              onDesktop: layout == LayoutSize.desktop
+              // Teen mode has no side panel (it holds the computer): the phone's way, then.
+              onDesktop: layout == LayoutSize.desktop && !teen
                   ? () {
                       ref.read(sidePanelMadeHereProvider.notifier).set(widget.botId, true);
                       if (!ref.read(computerPanelProvider)) ref.read(computerPanelProvider.notifier).toggle();
@@ -1467,7 +1476,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             ),
           _MoreMenu(
             botId: widget.botId,
-            showComputer: layout != LayoutSize.desktop,
+            showComputer: layout != LayoutSize.desktop && !teen,
             onConversations: widget.group ? null : () => _showConversations(context, chat.conversationId),
             projectId: _currentConversation(chat.conversationId)?.projectId,
             onMakeProject: _canMakeProject(chat.conversationId) ? () => _makeProject(chat.conversationId!) : null,
@@ -1477,7 +1486,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           ),
           // Far right, next to the panel it opens and closes; the live dot shows while the bot works on its computer.
           // Group chats have no computer panel (the shell shows it only beside a bot's own chat).
-          if (layout == LayoutSize.desktop && !widget.group)
+          if (layout == LayoutSize.desktop && !widget.group && !teen)
             _LiveDot(
               live: computerLive,
               child: HeaderIconButton(
@@ -2711,7 +2720,7 @@ class _AttachButton extends StatelessWidget {
         if (photos) item(const Key('attachPhotos'), LucideIcons.images, l10n.attachPhotos, onPhotos),
         if (mobile) item(const Key('attachCamera'), LucideIcons.camera, l10n.attachCamera, onCamera),
         if (isIos && onScan != null)
-          item(const Key('attachScan'), LucideIcons.scanLine, 'Scan document', onScan!),
+          item(const Key('attachScan'), LucideIcons.scanLine, l10n.attachScan, onScan!),
         item(const Key('attachFiles'), LucideIcons.paperclip, l10n.attachFiles, onFiles),
       ],
       builder: (context, controller, _) => IconButton(

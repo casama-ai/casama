@@ -8566,9 +8566,16 @@ class FakeBackend implements Backend {
     computerActions.add('saved-files');
     return archive;
   }
+  /// Computers started (by id), and an error for the next start to throw.
+  final startedComputers = <String>[];
+  Object? startComputerError;
   @override
-  Future<Computer> startComputer(String id) async =>
-      (await computers(orgId)).first;
+  Future<Computer> startComputer(String id) async {
+    final error = startComputerError;
+    if (error != null) throw error;
+    startedComputers.add(id);
+    return (await computers(orgId)).first;
+  }
   @override
   Future<Computer> stopComputer(String id) async =>
       (await computers(orgId)).first;
@@ -8785,24 +8792,57 @@ class FakeBackend implements Backend {
   Me? fakeMe;
   final ageBandCalls = <AccountAgeBand?>[];
   final quietUntilCalls = <DateTime?>[];
+  /// The File Provider keys the server holds now (revoked ones leave), and every id revoked.
   final createdFileKeys = <FileKeyCreated>[];
   final deletedFileKeyIds = <String>[];
+  var _fileKeysMade = 0;
+
+  /// The next this many `/v1/me` reads and age band sends fail (a network error).
+  var getMeFailures = 0;
+  var getMeCalls = 0;
+  var ageBandFailures = 0;
+
+  /// When set, the server keeps this band whatever the app sends (its rules refuse a raise).
+  AccountAgeBand? ageBandServerKeeps;
 
   @override
-  Future<Me?> getMe() async => fakeMe;
+  Future<Me?> getMe() async {
+    getMeCalls++;
+    if (getMeFailures > 0) {
+      getMeFailures--;
+      throw Exception('offline');
+    }
+    return fakeMe;
+  }
 
   @override
   Future<AgeBandResult> setMyAgeBand(AccountAgeBand? ageBand) async {
     ageBandCalls.add(ageBand);
+    if (ageBandFailures > 0) {
+      ageBandFailures--;
+      throw Exception('offline');
+    }
+    final kept = ageBandServerKeeps;
     return AgeBandResult(
-      accountAgeBand: ageBand,
+      accountAgeBand: kept ?? ageBand,
       accountAgeBandUpdatedAt: DateTime.now().toUtc(),
+      accepted: kept == null || kept == ageBand,
     );
   }
 
+  /// The next this many holds fail (a network error); [quietUnregistered] answers "this device
+  /// isn't registered yet" instead.
+  var quietFailures = 0;
+  var quietUnregistered = false;
+
   @override
-  Future<void> updateCurrentDeviceQuiet(DateTime? quietUntil) async {
+  Future<bool> updateCurrentDeviceQuiet(DateTime? quietUntil) async {
     quietUntilCalls.add(quietUntil);
+    if (quietFailures > 0) {
+      quietFailures--;
+      throw Exception('offline');
+    }
+    return !quietUnregistered;
   }
 
   @override
@@ -8811,14 +8851,15 @@ class FakeBackend implements Backend {
     required FileKeyCreatePlatformEnum platform,
     String? label,
   }) async {
+    _fileKeysMade++;
     final created = FileKeyCreated(
-      id: 'fk-${createdFileKeys.length + 1}',
+      id: 'fk-$_fileKeysMade',
       orgId: orgId,
       platform: platform == FileKeyCreatePlatformEnum.macos
           ? FileKeyCreatedPlatformEnum.macos
           : FileKeyCreatedPlatformEnum.ios,
       label: label ?? 'Test',
-      key: 'cfk_test_${createdFileKeys.length + 1}',
+      key: 'cfk_test_$_fileKeysMade',
       lastUsedAt: null,
       createdAt: DateTime.now().toUtc(),
     );
@@ -8841,8 +8882,12 @@ class FakeBackend implements Backend {
       ),
   ];
 
+  /// While set, revoking a File Provider key fails (offline).
+  var fileKeyDeleteFails = false;
+
   @override
   Future<void> deleteFileKey(String id) async {
+    if (fileKeyDeleteFails) throw Exception('offline');
     deletedFileKeyIds.add(id);
     createdFileKeys.removeWhere((k) => k.id == id);
   }

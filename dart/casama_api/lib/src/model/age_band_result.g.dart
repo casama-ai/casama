@@ -11,6 +11,8 @@ abstract class _$AgeBandResultCWProxy {
 
   AgeBandResult accountAgeBandUpdatedAt(DateTime accountAgeBandUpdatedAt);
 
+  AgeBandResult accepted(bool? accepted);
+
   /// Creates a new instance with the provided field values.
   /// Omitted fields keep their values; explicit `null` clears nullable fields.
   /// The public API rejects `null` for non-nullable fields. To update a single field use `AgeBandResult(...).copyWith.fieldName(value)`.
@@ -22,6 +24,7 @@ abstract class _$AgeBandResultCWProxy {
   AgeBandResult call({
     AccountAgeBand? accountAgeBand,
     DateTime accountAgeBandUpdatedAt,
+    bool? accepted,
   });
 }
 
@@ -40,6 +43,9 @@ class _$AgeBandResultCWProxyImpl implements _$AgeBandResultCWProxy {
   AgeBandResult accountAgeBandUpdatedAt(DateTime accountAgeBandUpdatedAt) =>
       call(accountAgeBandUpdatedAt: accountAgeBandUpdatedAt);
 
+  @override
+  AgeBandResult accepted(bool? accepted) => call(accepted: accepted);
+
   /// Creates a new instance with the provided field values.
   /// Omitted fields keep their values; explicit `null` clears nullable fields.
   /// The public API rejects `null` for non-nullable fields. To update a single field use `AgeBandResult(...).copyWith.fieldName(value)`.
@@ -52,6 +58,7 @@ class _$AgeBandResultCWProxyImpl implements _$AgeBandResultCWProxy {
   AgeBandResult call({
     Object? accountAgeBand = const $CopyWithPlaceholder(),
     Object? accountAgeBandUpdatedAt = const $CopyWithPlaceholder(),
+    Object? accepted = const $CopyWithPlaceholder(),
   }) {
     return AgeBandResult(
       accountAgeBand: accountAgeBand == const $CopyWithPlaceholder()
@@ -64,6 +71,10 @@ class _$AgeBandResultCWProxyImpl implements _$AgeBandResultCWProxy {
           ? _value.accountAgeBandUpdatedAt
           // ignore: cast_nullable_to_non_nullable
           : accountAgeBandUpdatedAt as DateTime,
+      accepted: accepted == const $CopyWithPlaceholder()
+          ? _value.accepted
+          // ignore: cast_nullable_to_non_nullable
+          : accepted as bool?,
     );
   }
 }
@@ -100,6 +111,7 @@ AgeBandResult _$AgeBandResultFromJson(Map<String, dynamic> json) =>
             'account_age_band_updated_at',
             (v) => DateTime.parse(v as String),
           ),
+          accepted: $checkedConvert('accepted', (v) => v as bool?),
         );
         return val;
       },
@@ -114,6 +126,7 @@ Map<String, dynamic> _$AgeBandResultToJson(AgeBandResult instance) =>
       'account_age_band': _$AccountAgeBandEnumMap[instance.accountAgeBand],
       'account_age_band_updated_at': instance.accountAgeBandUpdatedAt
           .toIso8601String(),
+      'accepted': ?instance.accepted,
     };
 
 const _$AccountAgeBandEnumMap = {

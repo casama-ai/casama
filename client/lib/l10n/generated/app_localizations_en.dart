@@ -4760,6 +4760,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get attachCamera => 'Take photo';
 
   @override
+  String get attachScan => 'Scan document';
+
+  @override
+  String get scanFailed => 'Couldn\'t scan the document. Try again.';
+
+  @override
   String get dropToAttach => 'Drop files to attach';
 
   @override
@@ -11038,6 +11044,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deviceKindBrowserHistory => 'browser history and bookmarks';
 
   @override
+  String get deviceKindAlarm => 'alarms';
+
+  @override
+  String get deviceKindHome => 'Home accessories';
+
+  @override
   String get deviceBrowserAsks => 'What Bots May Ask Your Browser';
 
   @override
@@ -15628,6 +15640,54 @@ class AppLocalizationsEn extends AppLocalizations {
   String siriNeedsYouBots(String bots) {
     return 'Waiting on you: $bots.';
   }
+
+  @override
+  String get siriComputersUnavailable =>
+      'Computers aren\'t available for this account.';
+
+  @override
+  String get siriNoComputers => 'You have no computers in this workspace.';
+
+  @override
+  String siriStartingComputer(String computer) {
+    return 'Starting $computer.';
+  }
+
+  @override
+  String get siriComputerFailed => 'Couldn\'t start the computer right now.';
+
+  @override
+  String get siriWhichBotToStop => 'Which bot should I stop?';
+
+  @override
+  String get siriBotNotRunning => 'That bot isn\'t running right now.';
+
+  @override
+  String get siriStopped => 'Stopped.';
+
+  @override
+  String get siriStopFailed => 'Couldn\'t stop the bot right now.';
+
+  @override
+  String get focusFilterShowingAll => 'Focus filter · Showing all';
+
+  @override
+  String focusFilterShown(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Focus filter · $count shown',
+      one: 'Focus filter · 1 shown',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get under13Title => 'Casama is for people 13 and older';
+
+  @override
+  String get under13Body =>
+      'This account can\'t use Casama based on its declared age range. You can sign out, or export your data from another account.';
 
   @override
   String get siriSpotlightSetting => 'Show in Spotlight and Siri';

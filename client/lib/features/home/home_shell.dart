@@ -1177,8 +1177,11 @@ class _Sidebar extends ConsumerWidget {
     final focusFilter = ref.watch(focusFilterProvider);
     final bots = focusFilter.filterBots(allBots, (b) => b.id);
     final folders = ref.watch(botFoldersProvider).value ?? const <BotFolder>[];
-    final groups =
-        ref.watch(groupChatsProvider).value ?? const <Conversation>[];
+    // A Focus filter (docs/APPLE-INTEGRATIONS-PLAN.md §6.1) keeps the group chats with a chosen bot.
+    final groups = focusFilter.filterGroups(
+      ref.watch(groupChatsProvider).value ?? const <Conversation>[],
+      (g) => g.botIds,
+    );
     final routeUri = routerStateOf(context)?.uri;
     final location = routeUri?.path ?? '';
     final scheme = context.colorScheme;
@@ -1338,9 +1341,10 @@ class _Sidebar extends ConsumerWidget {
                   for (final g in groups)
                     Builder(
                       builder: (context) {
+                        // Every bot, so the title and faces stay whole under a Focus filter.
                         final members = [
                           for (final id in g.botIds)
-                            ?bots.where((b) => b.id == id).firstOrNull,
+                            ?allBots.where((b) => b.id == id).firstOrNull,
                         ];
                         return _SidebarItem(
                           key: Key('sidebar-group-${g.id}'),
@@ -1349,7 +1353,7 @@ class _Sidebar extends ConsumerWidget {
                             bots: members,
                             ringColor: scheme.surfaceContainerLow,
                           ),
-                          label: groupTitle(g, bots),
+                          label: groupTitle(g, allBots),
                           subtitle: l10n.groupBotCount(g.botIds.length),
                           selected: location == '/groups/${g.id}',
                           trailing: BotActivity(

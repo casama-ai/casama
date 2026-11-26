@@ -24,6 +24,8 @@ class AgeBandResult {
     required  this.accountAgeBand,
 
     required  this.accountAgeBandUpdatedAt,
+
+     this.accepted,
   });
 
   @JsonKey(
@@ -50,17 +52,32 @@ class AgeBandResult {
 
 
 
+      /// Whether the band sent was saved; account_age_band is the band in force either way. A higher band is saved only one step at a time and only once the current band is 30 days old; declining keeps a band already known. Always sent; missing only from servers before this rule, which saved every band.
+  @JsonKey(
+    
+    name: r'accepted',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final bool? accepted;
+
+
+
 
 
     @override
     bool operator ==(Object other) => identical(this, other) || other is AgeBandResult &&
       other.accountAgeBand == accountAgeBand &&
-      other.accountAgeBandUpdatedAt == accountAgeBandUpdatedAt;
+      other.accountAgeBandUpdatedAt == accountAgeBandUpdatedAt &&
+      other.accepted == accepted;
 
     @override
     int get hashCode =>
         (accountAgeBand == null ? 0 : accountAgeBand.hashCode) +
-        accountAgeBandUpdatedAt.hashCode;
+        accountAgeBandUpdatedAt.hashCode +
+        accepted.hashCode;
 
   factory AgeBandResult.fromJson(Map<String, dynamic> json) => _$AgeBandResultFromJson(json);
 
