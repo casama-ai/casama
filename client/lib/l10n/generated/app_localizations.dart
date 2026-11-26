@@ -19704,7 +19704,7 @@ abstract class AppLocalizations {
   /// No description provided for @aiConsentWhat.
   ///
   /// In en, this message translates to:
-  /// **'Your messages, files and photos, your voice in calls, what bots remember about you, the web pages your bots open for you (on their own computer or in the browser on this device), and any phone data you turn on, such as calendar or health.'**
+  /// **'Your messages, files and photos, your voice in calls, voice messages and dictation, what bots remember about you, the web pages your bots open for you (on their own computer or in the browser on this device), and any phone data you turn on, such as calendar or health.'**
   String get aiConsentWhat;
 
   /// No description provided for @aiConsentWhoTitle.
@@ -19716,7 +19716,7 @@ abstract class AppLocalizations {
   /// No description provided for @aiConsentWho.
   ///
   /// In en, this message translates to:
-  /// **'OpenRouter, which passes it to the company that makes the model you use, such as DeepSeek, Google or OpenAI. Calls use Google Gemini. Web searches go to Parallel, Serper or DeepSeek. With your own API key, it goes to that provider instead.'**
+  /// **'OpenRouter, which passes it to the company that makes the model you use, such as DeepSeek, Google or OpenAI. Calls use Google Gemini, and OpenAI turns voice messages and dictation into text. Web searches go to Parallel, Serper or DeepSeek. With your own API key, it goes to that provider instead.'**
   String get aiConsentWho;
 
   /// No description provided for @aiConsentWhyTitle.
@@ -43135,6 +43135,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Check approvals for {n, plural, =1{1 bot} other{{n} bots}}'**
   String wsMoveAfterReset(int n);
+
+  /// No description provided for @wsMoveAfterCloudModels.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect Casama Cloud models in Settings, or pick another model, for {n, plural, =1{1 bot} other{{n} bots}}'**
+  String wsMoveAfterCloudModels(int n);
 
   /// No description provided for @wsMoveAfterKeys.
   ///

@@ -462,6 +462,7 @@ void main() {
               'reset': {'bots': [], 'workspace': []},
               'keys': {'brought': true},
               'reindexing': true,
+              'cloud_models_needed': {'bots': 2},
             },
             movedTo: {
               'url': 'https://api.casama.ai',
@@ -484,6 +485,12 @@ void main() {
         expect(find.textContaining('passed on for 30 days'), findsOneWidget);
         expect(
           find.text('Memory search catches up in a few minutes.'),
+          findsOneWidget,
+        );
+        expect(
+          find.text(
+            'Connect Casama Cloud models in Settings, or pick another model, for 2 bots',
+          ),
           findsOneWidget,
         );
         // Moving to Cloud: the reminder is about a license for the old server.

@@ -11,6 +11,7 @@ import 'app.dart';
 import 'core/linux_file_dialogs.dart';
 import 'core/local_cache.dart';
 import 'core/ads_attribution.dart';
+import 'core/ai_consent_device.dart';
 import 'core/config.dart';
 import 'core/desktop_window.dart';
 import 'core/open_links.dart';
@@ -63,6 +64,8 @@ Future<(Widget, SupabaseBackend)> bootstrap(AppConfig config, {VoidCallback? onS
   final linkBrowser = LinkBrowserInApp.preload();
   // The app lock (D-375) is read before the first frame, so a locked app never shows itself.
   final appLock = AppLockSettingsNotifier.preload();
+  // Whether this device agreed to AI providers, so an app that agreed never flashes the step.
+  final aiConsentDevice = AiConsentDevice.preload();
   final saved = await ServerConfigCache.read(config.apiUrl);
   final server = saved ?? (await CasamaClient.connect(config.apiUrl)).config;
   if (saved == null) unawaited(ServerConfigCache.write(config.apiUrl, server));
@@ -95,6 +98,7 @@ Future<(Widget, SupabaseBackend)> bootstrap(AppConfig config, {VoidCallback? onS
   await pendingOpen;
   await linkBrowser;
   await appLock;
+  await aiConsentDevice;
   final app = ProviderScope(
     retry: appProviderRetry,
     overrides: [

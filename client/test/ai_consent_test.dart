@@ -8,6 +8,7 @@ import 'package:casama/features/settings/name_step.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_test.dart' show harness, setSize;
 import 'fake_backend.dart';
@@ -85,6 +86,7 @@ void main() {
   });
 
   testWidgets('withdrawing brings the step back', (tester) async {
+    SharedPreferences.setMockInitialValues({'voice.aiConsent.v1': true});
     await setSize(tester, const Size(400, 800));
     final backend = FakeBackend();
     await tester.pumpWidget(
@@ -102,6 +104,9 @@ void main() {
     await tester.pumpAndSettle();
     expect(backend.aiConsent, isNull);
     expect(find.byKey(const Key('aiConsentStep')), findsOneWidget);
+    // The call screen's own yes for voice goes too, so the next call asks again.
+    final prefs = await tester.runAsync(SharedPreferences.getInstance);
+    expect(prefs!.containsKey('voice.aiConsent.v1'), isFalse);
   });
 
   testWidgets(

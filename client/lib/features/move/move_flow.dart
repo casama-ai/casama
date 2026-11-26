@@ -464,6 +464,7 @@ class MoveAfterView extends ConsumerWidget {
     final webhooks = list(r['webhooks']);
     final reset = list((r['reset'] as Map?)?['bots']);
     final renamed = list(r['renamed']);
+    final cloudBots = ((r['cloud_models_needed'] as Map?)?['bots'] as num?)?.toInt() ?? 0;
     final keysBrought = (r['keys'] as Map?)?['brought'] == true || bringKeys;
     final items = <Widget>[
       for (final a in reconnect)
@@ -472,6 +473,7 @@ class MoveAfterView extends ConsumerWidget {
       for (final a in chatApps) _Check(l10n.wsMoveAfterChatApp('${a['name']}')),
       for (final w in webhooks) _Check(l10n.wsMoveAfterWebhook('${w['name']}')),
       if (reset.isNotEmpty) _Check(l10n.wsMoveAfterReset(reset.length)),
+      if (cloudBots > 0) _Check(l10n.wsMoveAfterCloudModels(cloudBots)),
       if (renamed.isNotEmpty) _Check(l10n.wsMoveAfterRenamed(renamed.length)),
       if (!keysBrought) _Check(l10n.wsMoveAfterKeys),
     ];

@@ -15,6 +15,7 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'admin_security.dart';
+import 'ai_consent_device.dart';
 import 'selfhost_api.dart';
 import 'ads_attribution.dart';
 import 'apple_sign_in.dart';
@@ -529,6 +530,8 @@ class SupabaseBackend implements Backend {
   /// in (offline, say), their watches' records go back to signed in: they were marked on the way
   /// out, and a watch mustn't be taken back later for a sign-out that never happened.
   Future<void> _endSession(String? me, Future<void> Function() signOut) async {
+    // The next person to sign in on this device sees the AI providers step again.
+    await AiConsentDevice.save(null);
     try {
       await signOut();
     } catch (_) {
@@ -1983,10 +1986,11 @@ class SupabaseBackend implements Backend {
     );
   }
 
+  /// The account's agreement, only when it was given on this device too ([AiConsentDevice]).
   @override
   DateTime? get aiConsentAt {
-    final v = supabase.auth.currentUser?.userMetadata?['ai_consent_at'];
-    return v is String ? DateTime.tryParse(v) : null;
+    final user = supabase.auth.currentUser;
+    return AiConsentDevice.consentAt(user?.id, user?.userMetadata);
   }
 
   @override
@@ -2007,6 +2011,7 @@ class SupabaseBackend implements Backend {
         },
       ),
     );
+    await AiConsentDevice.save(allowed ? supabase.auth.currentUser?.id : null);
   }
 
   @override

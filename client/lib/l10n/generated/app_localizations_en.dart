@@ -12485,14 +12485,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get aiConsentWhat =>
-      'Your messages, files and photos, your voice in calls, what bots remember about you, the web pages your bots open for you (on their own computer or in the browser on this device), and any phone data you turn on, such as calendar or health.';
+      'Your messages, files and photos, your voice in calls, voice messages and dictation, what bots remember about you, the web pages your bots open for you (on their own computer or in the browser on this device), and any phone data you turn on, such as calendar or health.';
 
   @override
   String get aiConsentWhoTitle => 'Who gets it';
 
   @override
   String get aiConsentWho =>
-      'OpenRouter, which passes it to the company that makes the model you use, such as DeepSeek, Google or OpenAI. Calls use Google Gemini. Web searches go to Parallel, Serper or DeepSeek. With your own API key, it goes to that provider instead.';
+      'OpenRouter, which passes it to the company that makes the model you use, such as DeepSeek, Google or OpenAI. Calls use Google Gemini, and OpenAI turns voice messages and dictation into text. Web searches go to Parallel, Serper or DeepSeek. With your own API key, it goes to that provider instead.';
 
   @override
   String get aiConsentWhyTitle => 'What they do with it';
@@ -26987,6 +26987,22 @@ class AppLocalizationsEn extends AppLocalizations {
       one: '1 bot',
     );
     return 'Check approvals for $_temp0';
+  }
+
+  @override
+  String wsMoveAfterCloudModels(int n) {
+    final intl.NumberFormat nNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String nString = nNumberFormat.format(n);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$nString bots',
+      one: '1 bot',
+    );
+    return 'Connect Casama Cloud models in Settings, or pick another model, for $_temp0';
   }
 
   @override

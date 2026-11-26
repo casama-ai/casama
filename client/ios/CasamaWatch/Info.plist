@@ -39,7 +39,7 @@
 		<true/>
 	</dict>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Casama records your voice when you ask a bot something, and sends it to your server to turn into text.</string>
+	<string>Casama records your voice when you ask a bot something and sends it to your Casama server, where an AI provider (OpenAI, on Casama Cloud) turns it into text for your bot.</string>
 	<key>WKApplication</key>
 	<true/>
 	<key>UIBackgroundModes</key>

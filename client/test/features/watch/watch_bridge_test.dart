@@ -8,6 +8,8 @@ import 'package:casama/core/backend.dart';
 import 'package:casama/core/local_cache.dart';
 import 'package:casama/core/providers.dart';
 import 'package:casama/features/app_lock/app_lock.dart';
+import 'package:casama/features/privacy/ai_consent_step.dart'
+    show aiConsentNeededProvider, aiConsentProvider;
 import 'package:casama/features/watch/watch_bridge.dart';
 import 'package:casama/features/watch/watch_key_store.dart';
 import 'package:casama_sdk/casama_sdk.dart' show OrganizationWithRole, OrgRole;
@@ -26,6 +28,15 @@ class _LockOn extends AppLockSettingsNotifier {
   @override
   AppLockSettings build() => const AppLockSettings(enabled: true, userId: 'me');
 }
+
+/// The AI providers step: up until [agree].
+class _ConsentStep extends Notifier<bool> {
+  @override
+  bool build() => true;
+  void agree() => state = false;
+}
+
+final _consentStep = NotifierProvider<_ConsentStep, bool>(_ConsentStep.new);
 
 Map<String, Object?> _request(
   String id, {
@@ -94,9 +105,11 @@ void main() {
 
   tearDown(() => messenger.setMockMethodCallHandler(channel, null));
 
-  ProviderContainer container({bool lockOn = false}) {
+  ProviderContainer container({bool lockOn = false, bool consentStep = false}) {
     final c = ProviderContainer(
       overrides: [
+        if (consentStep)
+          aiConsentNeededProvider.overrideWith((ref) => ref.watch(_consentStep)),
         backendProvider.overrideWithValue(backend),
         localCacheProvider.overrideWithValue(const NoCache()),
         watchBridgeSupportedProvider.overrideWithValue(true),
@@ -847,6 +860,37 @@ void main() {
       expect(opened, ['/approvals/a1']);
     },
   );
+
+  test('AI providers step up: the request waits, and agreeing on the phone signs the watch in', () async {
+    held = [_request('r1')];
+    final c = container(consentStep: true);
+    final bridge = await start(c);
+    await bridge.handle(MethodCall('request', _request('r1')));
+    await bridge.takeRequests();
+    expect(answers(), isEmpty, reason: 'no voice can reach a provider before the person agreed');
+    expect(backend.watchKeysRegistered, isEmpty);
+
+    c.read(_consentStep.notifier).agree();
+    await until(() => answers().isNotEmpty);
+    expect(answers().single['request_id'], 'r1');
+    expect(answers().single['ok'], true);
+    expect(backend.watchKeysRegistered, hasLength(1));
+  });
+
+  test('withdrawing the AI providers yes signs the watches out', () async {
+    backend.aiConsent = DateTime.utc(2026, 11, 26);
+    final c = container();
+    final bridge = await start(c);
+    await bridge.handle(MethodCall('request', _request('r1')));
+    expect(answers().single['ok'], true);
+    expect(c.read(aiConsentProvider), isNotNull);
+    calls.clear();
+
+    await c.read(aiConsentProvider.notifier).set(false);
+    await pumpEventQueue();
+    expect(calls.where((c) => c.method == 'signOut'), hasLength(1));
+    expect((await WatchKeyStore.load()).where((r) => r.active), isEmpty);
+  });
 
   test('status reads what native code says', () async {
     final bridge = await start(container());

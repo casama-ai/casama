@@ -12,6 +12,8 @@ import '../../core/widgets.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../ui/adaptive_modal.dart';
 import '../app_lock/app_lock.dart';
+import '../privacy/ai_consent_step.dart'
+    show aiConsentNeededProvider, aiConsentProvider;
 import '../settings/about_you_screen.dart' show aboutYouProvider;
 import 'watch_key_store.dart';
 import 'watch_state.dart';
@@ -216,11 +218,14 @@ class WatchBridge {
     });
   }
 
+  /// Signed in all the way, and past the AI providers step where this app shows it: a watch's
+  /// voice goes to an AI provider for text, so no watch signs in before the person agreed here.
   bool get _signedIn {
     final backend = _ref.read(backendProvider);
     return backend.isSignedIn &&
         !backend.twoStepCodeNeeded &&
-        backend.userId != null;
+        backend.userId != null &&
+        !_ref.read(aiConsentNeededProvider);
   }
 
   Future<Map<String, Object?>> _signIn(Map<String, Object?> args) async {
@@ -630,6 +635,17 @@ final watchBridgeProvider = Provider<WatchBridge?>((ref) {
   ref.listen(currentOrgIdProvider, (prev, next) {
     if (next != null && next != prev) unawaited(bridge.workspaceChanged(next));
   }, fireImmediately: true);
+  // A watch that asked while the AI providers step was up is answered once the person agrees.
+  ref.listen(aiConsentNeededProvider, (prev, next) {
+    if (prev == true && !next) unawaited(bridge.catchUp());
+  });
+  // Withdrawing in Settings > Privacy stops the watches too: they sign out until the person agrees
+  // again. Only a real withdrawal: null at startup, before the account loads, isn't one.
+  ref.listen(aiConsentProvider, (prev, next) {
+    if (prev != null && next == null && ref.read(signedInProvider).value == true) {
+      unawaited(bridge.signedOut());
+    }
+  });
   final lifecycle = AppLifecycleListener(
     onResume: () => unawaited(bridge.catchUp()),
   );

@@ -26,7 +26,7 @@
 	<key>NSAppleEventsUsageDescription</key>
 	<string>Quick ask reads the front window's title and your browser's current tab, only when you press the shortcut.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Casama uses the microphone for dictation and voice calls with your bots.</string>
+	<string>Casama uses the microphone for dictation and live calls with your bots. Only after you agree, your voice goes to AI providers to answer you: Google Gemini for calls, OpenAI to turn dictation into text.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>When Casama's dictation service can't be reached, your device's own speech recognition turns what you say into text.</string>
 	<key>NSUserActivityTypes</key>
