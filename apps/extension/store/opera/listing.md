@@ -41,7 +41,7 @@ Review approvals, answer bot questions, and manage active runs right from the In
 PRIVATE BY DESIGN
 Casama reads a page only when you explicitly ask, never in the background. It never reads Casama's own pages or pages with password or payment fields, and you can add your own sites to a never-list.
 
-Requires a Casama account (free to start at https://casama.ai) or a self-hosted Casama server.
+Requires a Casama account (free to start at https://casama.ai).
 ```
 
 ## Notes for reviewers

@@ -304,12 +304,12 @@ and for bought domains `listDomainRecords`, `addDomainRecord`, `renewDomain` and
 Two more libraries need `dart:io`, so they're separate imports and don't work on the web:
 
 - `package:casama_sdk/chatgpt_sign_in.dart` has `signInWithChatGpt`, which connects a ChatGPT plan
-  through the browser, as `casama credential chatgpt` does. It listens on a loopback port for the
+  through the browser, as `casama credential chatgpt` does. It isn't available on Casama Cloud. It listens on a loopback port for the
   sign-in to come back and gives up after `timeout` (default 10 minutes). The tokens stay on the
   server. OpenAI refuses the code of a person's first sign-in on a server (the server answers
   `chatgpt_sign_in_retry`), so the function starts a second sign-in itself and sends the same
   browser tab back to OpenAI, once; anything else is thrown as it came.
-- `package:casama_sdk/casama_link.dart` is Casama Link for a self-hosted server, the part
+- `package:casama_sdk/casama_link.dart` is Casama Link for a self-hosted server (paused), the part
   `casama selfhost remote` and the desktop app share: `CasamaLinkClient` for the calls to Casama
   Cloud, and `RemoteAccessSetup`, which links a server and turns remote access on or off for the
   stack in a folder. See [Use your server on your phone](/self-hosting/remote-access).

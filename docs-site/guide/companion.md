@@ -77,8 +77,7 @@ computer are still there, and files on its own computer are reachable again.
 ### Computer hours
 
 A bot on **Automatic** starts its own computer when it needs one, and that uses computer hours (the
-Free plan has 5 a month). **Only my computer** avoids that. On a self-hosted server with no cloud
-computers, your computer is the only place the bot has, so it behaves like **Only my computer**.
+Free plan has 5 a month). **Only my computer** avoids that.
 
 ### In the app
 

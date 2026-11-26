@@ -133,16 +133,7 @@ Australia, Japan, UK, Canada, Saudi Arabia, UAE, Singapore); China doesn't yet. 
 API limits apply (Zoho Books: 1,000 calls a day on its free plan). To cut access, remove the
 connection in Casama, or revoke Casama under **Connected Apps** in your Zoho account.
 
-On a server without its own Zoho client, the same four apps show as **Zoho Mail, Zoho CRM, Zoho
-Desk and Zoho Books**, one at a time, through Composio's sign-in (on servers whose admin added a
-Composio key).
-
-To give a self-hosted server the one-sign-in Zoho app, create a **Server-based Applications**
-client at [api-console.zoho.com](https://api-console.zoho.com) with `<your API address>/oauth/callback`
-as its redirect URI. Under **Settings**, turn on *Use the same OAuth credentials for all data
-centers* and every data centre. Then set `ZOHO_OAUTH_CLIENT_ID` and `ZOHO_OAUTH_CLIENT_SECRET`.
-
-For any other Zoho app, or on a server without Composio, **Zoho MCP** connects through your own
+For any other Zoho app, **Zoho MCP** connects through your own
 Zoho MCP server, which is free with a Zoho account. Open [mcp.zoho.com](https://mcp.zoho.com),
 create a server and add the tools the bot may use from Zoho Mail, CRM, Desk, Projects, Books and
 other Zoho apps. Then copy the MCP URL from the server's **Connect** page and paste it into Casama.
@@ -168,36 +159,12 @@ accepted; for any other server, use [a custom server](#add-a-custom-server).
 
 ### When an app says "Needs setup"
 
-Some vendors don't let apps register themselves for one-click sign-in. For those, whoever runs
-your Casama server registers an OAuth client with the vendor once. The connect sheet says so and
-shows the redirect address to register, which is `<your API address>/oauth/callback`.
+Some vendors don't let apps register themselves for one-click sign-in. On Casama Cloud, Casama
+sets those up, and until it does the connect sheet offers **Sign in through Composio**, or
+**Composio**, **Pipedream** or **Zapier** (sign in with your own account there), then ask your bot
+to use the app through it.
 
-| App                                          | What the server needs                                     |
-| -------------------------------------------- | --------------------------------------------------------- |
-| Gmail, Calendar, Drive, Docs, Sheets, Slides, Contacts | `GOOGLE_OAUTH_CLIENT_ID` and `GOOGLE_OAUTH_CLIENT_SECRET` |
-| GitHub, Slack, Asana, HubSpot, Box, Figma    | An entry in `MCP_OAUTH_CLIENTS`                           |
-| Zoho (Mail, CRM, Desk, Books in one)         | `ZOHO_OAUTH_CLIENT_ID` and `ZOHO_OAUTH_CLIENT_SECRET` ([Zoho](#zoho)) |
-
-Until that's done there are two other ways in:
-
-- **The server has a Composio key** (`COMPOSIO_API_KEY`, as on Casama Cloud): these apps show
-  **Sign in through Composio**. One click, and you sign in to the app itself; Composio handles the
-  connection on the server's account, and the bot gets the app's tools.
-- **No Composio key:** the connect sheet offers **Composio**, **Pipedream** or **Zapier** with one
-  click (sign in with your own account there), then ask your bot to use the app through it.
-
-Vendors only send people back to `https` or `localhost` addresses. A server on a private network
-address over `http` (local development) uses `http://localhost:<port>/oauth/callback`, so finish
-the sign-in in a browser on that machine. Set `OAUTH_REDIRECT_URL` to use another address.
-
-`MCP_OAUTH_CLIENTS` is JSON keyed by app id:
-
-```json
-{ "slack": { "client_id": "123.456", "client_secret": "your-client-secret" } }
-```
-
-GitHub also accepts a fine-grained personal access token, so it works without this setup. See
-[Configuration](/self-hosting/configuration) for where server settings go.
+GitHub also accepts a fine-grained personal access token, so it works without this setup.
 
 ## Manage a connection
 
@@ -239,7 +206,7 @@ Google's Gmail server can't send email: the bot writes drafts and you send them 
 Google app is its own connection with its own consent.
 
 ::: warning Google Developer Preview
-Google's MCP servers are in Developer Preview. Tool calls only work once your server's Google
+Google's MCP servers are in Developer Preview. Tool calls only work once the Google
 Cloud project is enrolled in the
 [Workspace Developer Preview Program](https://developers.google.com/workspace/preview), which
 needs a Google Workspace account. When you set up the Google client, turn on **Use this client

@@ -17,13 +17,12 @@ Casama is not affiliated with xAI or Grok Bot. Grok Bot is a trademark of its ow
 | Team Bots in Slack or Teams | Chat apps connected to a bot, and workspaces for the people | [Chat apps](/guide/chat-apps), [Workspaces and teams](/guide/workspaces) |
 | A workflow you record once | Teach by showing: record it on the bot's computer and it becomes a skill | [Teach by showing](/guide/teach) |
 | "Ask first" rules | A bot's autonomy level and action rules | [Autonomy and approvals](/guide/autonomy) |
-| A weekly usage pool, then billing at token cost | Credits on Casama Cloud with a budget per run and per day, or your own model keys when self-hosted | [Usage, budgets and plans](/guide/usage) |
+| A weekly usage pool, then billing at token cost | Credits on Casama Cloud with a budget per run and per day, or your own model keys | [Usage, budgets and plans](/guide/usage) |
 
 ## Before you start
 
-1. **Choose where Casama runs.** Casama Cloud has a free plan, and bots run on models Casama picks.
-   On your own server you bring a model key and can use any provider, a ChatGPT plan or local models.
-   See [self-hosting](/self-hosting/) and [pricing](https://casama.ai/pricing).
+1. **Start on Casama Cloud.** It has a free plan, and bots run on models Casama picks.
+   You can also connect your own provider keys. See [pricing](https://casama.ai/pricing).
 2. **Collect what each Bot has.** From Grok Bot, write down each Bot's instructions, its schedules, the
    apps it uses and the channels it answers in. If you shared a Bot as a template, you have its
    configuration in the template link.
@@ -52,7 +51,7 @@ the new bot's instructions.
 2. Under **Persona**, pick a starting point or leave it on **Blank**, then paste the Grok Bot
    instructions into **Instructions**. The gallery has [starter bots](https://gallery.casama.ai/#bot)
    for common jobs.
-3. Give it a name, and on a self-hosted server pick a model key and model under **Advanced**.
+3. Give it a name.
 4. Set how often it asks before acting. New bots start on **Ask for risky actions**.
 
 The main difference: every bot has its own computer. In Grok Bot, one computer and one set of files and
@@ -122,8 +121,8 @@ message the bot answers; mail from strangers is kept but starts nothing. Plus ad
 
 ## What's different
 
-- **Models.** On Casama Cloud, Casama chooses the model. On a self-hosted server you choose it, per bot.
-- **Hosting.** Grok Bot runs only in xAI's cloud. Casama can run on your own server for free.
+- **Models.** On Casama Cloud, Casama chooses the model, or you connect your own provider keys.
+- **Hosting.** Grok Bot runs only in xAI's cloud. Casama runs on Casama Cloud; self-hosting is paused.
 - **Spend.** Casama shows what each reply cost, and a run stops when it reaches its budget.
 - **Maturity.** Casama is new and has a smaller community than Grok Bot.
 

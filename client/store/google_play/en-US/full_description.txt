@@ -24,7 +24,7 @@ Works with your apps
 Connect Gmail, Google Calendar, Notion, Slack, Drive and many more. Logins from your password manager are filled in for the bot and never shown to the AI.
 
 Open source, and yours
-Casama is open source. Use Casama Cloud, where the AI models are picked for you and no keys are needed, or connect the app to a server you run yourself, with any model you like.
+Casama is open source: the apps, SDKs, CLI and the safety rules that decide what a bot may do are public, so you can read exactly when a bot must ask you first. Bots run on Casama Cloud, where the AI models are picked for you and no keys are needed, or you can connect your own provider keys.
 
 On your Wear OS watch
 Casama has a Wear OS app. Ask a bot by voice, answer approvals and follow work in progress from your wrist. Add Casama tiles to your watch: Needs you (approve or deny requests), Ask (one tap to talk to a bot), Up next (your next routine, with Run now) and a tile for any one bot. Add Casama complications to your watch face: how many requests need you, your credits used, and a mic button that opens Ask.

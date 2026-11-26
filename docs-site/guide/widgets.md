@@ -99,8 +99,7 @@ Widgets update whenever Casama is open, and on their own about every half hour. 
 show changes, the server tells them to refresh, so a new request usually appears within a minute,
 even with Casama closed. A widget that couldn't refresh says how old its data is ("as of 9:41").
 
-A self-hosted server sends these refreshes through Casama Cloud's relay, as it does notifications;
-they carry nothing but "something changed".
+Refreshes carry nothing but "something changed".
 
 ## Privacy
 

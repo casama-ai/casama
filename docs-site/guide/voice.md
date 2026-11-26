@@ -6,25 +6,7 @@ such as a voiceover.
 
 On Casama Cloud, voice runs on Casama's own keys and is paid from your
 [credits](/guide/usage#credits), so there are no keys to add and no voice providers to pick. If
-you're out of credits, dictation uses your device's own speech recognition instead. The rest of
-this section is for self-hosted servers, where voice runs on your workspace's own provider keys
-(or keys the server's admin set up for everyone).
-
-## Which keys you need
-
-Add keys in **Settings** → **Model keys** → **Add Key**.
-
-| Feature                      | Needs                                                                             |
-| ---------------------------- | --------------------------------------------------------------------------------- |
-| Dictation                    | An OpenRouter key, or the server's shared one                                      |
-| Read aloud                   | An OpenRouter key, or the server's shared one                                      |
-| Spoken audio a bot makes     | An OpenRouter key, or the server's shared one                                      |
-| Live calls                   | A Google AI (Gemini) key, used only for calls. Included on Casama Cloud, and on servers whose admin set a server-wide key |
-| Bot rings your phone         | A Google AI key for the call, plus push set up on the server for iOS and Android |
-| Wake word                    | No key: it runs on your device                                                     |
-
-Every minute, second or character of voice is recorded in [Usage](/guide/usage). On your own keys,
-the provider bills your own account.
+you're out of credits, dictation uses your device's own speech recognition instead.
 
 ## Dictate a message
 
@@ -32,8 +14,7 @@ the provider bills your own account.
 2. Speak, then tap **Stop and transcribe**.
 3. The text lands in the message box. Edit it if you like, then send.
 
-Dictation uses Whisper Large V3 Turbo on OpenRouter: the workspace's OpenRouter key, or the
-server's shared one when the workspace has none.
+Dictation uses Whisper Large V3 Turbo on OpenRouter.
 
 If the dictation service fails or isn't available, the app falls back to your device's own speech
 recognition, where the device has one.
@@ -81,9 +62,7 @@ own Google key when the workspace has none. The bot's voice is one of Gemini's b
    phone call.
 
 On Casama Cloud, calls are included and paid from credits; a workspace with no credits left sees
-the paywall instead. On a self-hosted server with no live-call key, the call screen says so, with **Get a free key from Google**
-(Google AI Studio) and **Add a Google AI key** (opens **Model keys** with Google picked). Only
-owners and admins can add keys.
+the paywall instead.
 
 ### Keep a call going while you use the app
 
@@ -278,21 +257,6 @@ When you answer, the live call opens in the same conversation and the bot speaks
   right away, without restarting the app.
 - To stop a bot from calling you at all, open the bot's settings and turn off **Can call me**. It
   then sends a notification instead.
-
-The server's owner can change the call and ring limits in the admin console (**Services** → **Call
-limits**); see [Configuration](/self-hosting/configuration).
-
-### Server setup for ringing phones
-
-If you self-host, phones need push credentials on the server:
-
-| Platform | Settings                                                                                         |
-| -------- | ------------------------------------------------------------------------------------------------ |
-| iOS      | `APNS_KEY_P8` (the `.p8` key, inline or a file path), `APNS_KEY_ID`, `APNS_TEAM_ID`, `APNS_VOIP_TOPIC` |
-| Android  | `FCM_SERVICE_ACCOUNT` (a Firebase service account, JSON text or a file path)                     |
-
-`APNS_VOIP_TOPIC` defaults to `ai.casama.app.voip`. Without these, desktop and web still ring
-through the banner while the app is open. See [Configuration](/self-hosting/configuration).
 
 ## Limits
 

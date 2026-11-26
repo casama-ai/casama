@@ -4,16 +4,12 @@ Casama Cloud, the hosted service at casama.ai, is invite-only for now. That mean
 can be made only for an email address that has been let in. Everyone who already has an account
 keeps signing in as before.
 
-Running Casama on your own server needs no invite. See [Self-hosting](/self-hosting/).
-
 ## Join the waitlist
 
 1. Get the app at **[casama.ai/download](https://casama.ai/download)** (or open
    **[app.casama.ai](https://app.casama.ai)** in your browser) and tap **Join the Waitlist** on the
    sign-in screen. Prefer not to install yet? Go to **casama.ai/waitlist**.
-2. Enter your email address. You can add a line about what you would have a bot do first. If you
-   run Casama on your own server, tick **I run Casama on my own server**: people who do are let in
-   first.
+2. Enter your email address. You can add a line about what you would have a bot do first.
 3. Joining the waitlist sends no email.
 
 We let people in a few at a time, every day. When it's your turn you get one email, "You're in".

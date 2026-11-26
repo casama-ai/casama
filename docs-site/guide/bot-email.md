@@ -4,9 +4,7 @@ Every bot can have its own email address, like `ada@example.com`. Give it one an
 write to it by email; it reads the mail and answers in the same thread, with files. Forward it
 anything: bills, bookings, newsletters. Each thread also shows up as a chat in the Casama app.
 
-This is a Casama Cloud service. Nothing to set up: no account, no DNS, no webhook. (Self-hosted
-servers keep the [bring-your-own email chat app](/guide/chat-apps), where the address lives on
-your own domain.)
+This is a Casama Cloud service. Nothing to set up: no account, no DNS, no webhook.
 
 ## Claim an address
 

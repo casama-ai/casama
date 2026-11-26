@@ -107,12 +107,6 @@ are removed (the computer itself stays and starts fresh). After 12 months withou
 Casama (24 months if they ever paid), the account is removed through the normal account deletion,
 followed by a 7-day grace period in which signing in cancels it.
 
-On a self-hosted server everything is **Off** by default. The instance owner sets each step to
-**Off**, **Report** or **On** in **Admin → Overview → Inactive accounts**. **Report** only counts
-what would happen, and the card shows the numbers. **Admin → Users** shows each account's state and
-has a **Keep** switch. A step set to **On** acts only 14 days after the owner presses **Email
-everyone about the rule**. The job runs daily at 04:05 UTC.
-
 Paid workspaces, active free-plan grants, unexpired purchased credits, accounts that hold a domain
 bought through Casama, instance admins, accounts marked **Keep**, authors of gallery items and
 workspaces with an open content report are never touched.
@@ -163,15 +157,7 @@ If you think a copy of the database has leaked, rotating isn't enough: whoever h
 old server key could still open it. An owner can instead replace the workspace's key through the
 API (`POST /v1/orgs/{id}/encryption/replace-key`). New content uses the new key at once, and
 existing content moves onto it in the background; everything stays readable meanwhile. This also
-replaces the About you keys of the workspace's members. On a self-hosted server, the instance owner
-can replace every key on the server at once. There's no button for this in the app yet.
-
-::: tip Self-hosting
-Encryption needs `CONTENT_ENCRYPTION_KEY` (32 bytes, base64) or an AWS KMS key on the server.
-`install.sh` generates the key for new installs and fills it in on older ones the next time it runs.
-Without one, the setting reads **Not available: this server has no encryption key set up**. See
-[Configuration](/self-hosting/configuration).
-:::
+replaces the About you keys of the workspace's members. There's no button for this in the app yet.
 
 ## Two-step sign-in
 
@@ -327,29 +313,17 @@ OpenTelemetry collector, each run, model step and tool call becomes a span with 
 counts, cost, tool name, risk and outcome. Spans never carry prompts, messages, arguments or
 results.
 
-A self-hosted server can also send model calls to Langfuse for debugging. Those include model
-input and output, with secrets and model keys removed. Workspaces can opt out with the
-`llm_tracing` workspace setting through the [API](/develop/api).
-
 ## Telemetry and usage analytics
 
-- **Usage ping:** off by default. A self-hosted server sends nothing unless its owner sets
-  `TELEMETRY=on`. Then, once a week, it sends a random instance id, the Casama version, and the
-  number of bots and users active in the last 7 days. Nothing else. The admin console shows
-  whether it's on.
 - **Product analytics:** On Casama Cloud, the official app and server capture usage metrics (screen
   views, milestone completions, daily activity rollups) to PostHog, and the same events (without
   the workspace rollups) to Google Analytics 4, to improve the app. Google Analytics runs without
   advertising ids, Google Signals or ad personalization. One switch covers both: you can opt out at
-  any time in **Settings → Privacy → Share Usage Data**. On self-hosted servers, product analytics
-  is completely disabled unless the server owner explicitly sets `PRODUCT_ANALYTICS=on` and supplies
-  PostHog or Google Analytics keys (`ANALYTICS_PROVIDERS` picks which).
+  any time in **Settings → Privacy → Share Usage Data**.
 - **Who is counted:** a person is identified only by their account id, only on Casama Cloud, and only
   while their switch is on. Workspace admins can also turn usage data off for a whole workspace in
   **Settings → Privacy → Usage Data for This Workspace**. Automated work (routines, watchers, chat apps) is counted per
   workspace, never as a person being active. Deleting your account also deletes your analytics.
-- **On someone else's server:** the official app connected to a self-hosted server sends crash
-  reports and one anonymous "the app was used today" ping a day. No screens, no events, no account id.
 - **Error reports:** An app sends crash reports to one service at a time: Sentry, PostHog or, in the
   official iOS, Android, Wear OS and macOS apps, Firebase Crashlytics (Apple Watch and the browser
   extension use Sentry, with PostHog also available in the extension). Which one can change without
@@ -380,7 +354,7 @@ The full rules are in the [privacy policy](https://casama.ai/privacy#ads).
 - **What Meta never gets:** names, email addresses (hashed or not), chats, files, bot or workspace
   content, device data, health data or Google user data.
 - **When nothing goes to Meta:** in the EEA, the UK and Switzerland; from the Mac, Windows, Linux and
-  watch apps and the browser extension; from self-hosted servers and community builds; when a
+  watch apps and the browser extension; from community builds; when a
   browser sends Global Privacy Control or Do Not Track.
 - **The switch:** **Settings → Privacy → Help measure our ads**, on by default where the law allows.
   Turning off **Share Usage Data** turns it off too, and so does a workspace admin turning usage data
@@ -394,17 +368,14 @@ The full rules are in the [privacy policy](https://casama.ai/privacy#ads).
 - The app has no screen to change member roles, so making someone else an owner before deleting
   your account isn't possible in the app yet.
 - A deletion can't be undone from the app once requested.
-- The `llm_tracing` opt-out has no switch in the app.
 
 ## Questions about your data
 
 Email [privacy@casama.ai](mailto:privacy@casama.ai) for privacy questions or requests about data
-held by Casama Cloud. On a self-hosted server, ask whoever runs it.
+held by Casama Cloud.
 
 ## Related
 
 - [Workspaces and teams](/guide/workspaces)
 - [Autonomy, approvals and action rules](/guide/autonomy)
 - [Memory](/guide/memory)
-- [Self-hosting configuration](/self-hosting/configuration)
-- [Operations](/self-hosting/operations)

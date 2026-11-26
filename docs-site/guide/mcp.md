@@ -26,14 +26,11 @@ This page is about AI apps using Casama. To let your bots use other MCP servers 
 1. Open **Settings → Workspace settings** and open **Advanced**.
 2. Under **Connect AI Apps**, copy the address.
 
-It's your API's address followed by `/mcp`, for example `https://api.example.com/mcp`. Self-hosters
-can set the advertised address with `PUBLIC_API_URL`; otherwise Casama uses the address the request
-came in on.
+On Casama Cloud it's `https://api.casama.ai/mcp`.
 
 ## Add Casama to your AI app
 
-On Casama Cloud the address is `https://api.casama.ai/mcp`. On your own server, use
-[your address](#find-your-address). Every app below signs in with OAuth: you pick the workspace and
+On Casama Cloud the address is `https://api.casama.ai/mcp`. Every app below signs in with OAuth: you pick the workspace and
 tap **Allow** in Casama, as in [Hosted with OAuth](#hosted-with-oauth-recommended).
 
 | App | Where to add it |
@@ -178,8 +175,7 @@ approve it in the Casama app, or with `decide_approval` if your workspace allows
 ## Docs tools for building on Casama
 
 For people building on Casama, and their coding agents, there's a docs-only server at
-`https://api.casama.ai/mcp/docs`. It needs no sign-in and can't see any account. A self-hosted
-server has one too, at `/mcp/docs`, reading the docs shipped with that server.
+`https://api.casama.ai/mcp/docs`. It needs no sign-in and can't see any account.
 
 ```sh
 claude mcp add --transport http casama-docs https://api.casama.ai/mcp/docs
@@ -227,8 +223,7 @@ known app on the **Allow** screen. Today you can add Casama yourself with the Ge
 **Developer Mode**:
 
 1. Turn on Developer Mode in the Gemini app's settings.
-2. Add a remote MCP server with the address `https://api.casama.ai/mcp` (or
-   [your own](#find-your-address)).
+2. Add a remote MCP server with the address `https://api.casama.ai/mcp`.
 3. Sign in to Casama when Gemini asks, pick the workspace and tap **Allow**.
 
 Then ask, for example:

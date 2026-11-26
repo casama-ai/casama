@@ -233,12 +233,8 @@ Casama has two computer images, both built from `infra/images/computer/`:
 | `computer-headless`         | Ubuntu 24.04, `computerd`, shell tools, git, Node.js 24, Python 3, Chromium, agent-browser, LibreOffice, pandoc, Poppler, qpdf and Tesseract |
 | `computer-desktop`          | The headless image plus an X server, a window manager, accessibility tools, a text editor and the Neko WebRTC streamer for live view |
 
-The installer always builds the headless image, or pulls it with `--pull`. Get the desktop image
-with `./install.sh --with-desktop`, or build it on its own:
-
-```sh
-COMPOSE_PROFILES=images docker compose -f infra/compose/docker-compose.yml --env-file infra/compose/.env build computer-desktop
-```
+The installer always built the headless image, or pulled it with `--pull`. The desktop image came
+with the installer's `--with-desktop` option, or could be built on its own from the `images` profile.
 
 Compose tags them `${CASAMA_REGISTRY}/computer-headless:${CASAMA_VERSION}` and
 `${CASAMA_REGISTRY}/computer-desktop:${CASAMA_VERSION}` (by default `casama/...:local`; with
@@ -282,7 +278,7 @@ Viewers always use the relay; media flows viewer ↔ relay ↔ computer, so the 
 reachable from outside. The relay refuses every peer address except its own, so it can't be used
 to reach other hosts.
 
-1. Build the desktop image (`./install.sh --with-desktop`).
+1. Build the desktop image (the installer's `--with-desktop` option).
 2. Open port 3478, UDP and TCP, on the server. Compose publishes both.
 3. Make sure `TURN_PUBLIC_HOST` is a name viewers can resolve to the server. The installer sets it to
    your domain, or `localhost` for `--local`.

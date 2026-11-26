@@ -1,10 +1,10 @@
 # CLI
 
-`casama` is the command-line client for Casama. It talks to any Casama server: sign in, manage
+`casama` is the command-line client for Casama. It talks to Casama Cloud: sign in, manage
 workspaces and their people, model keys and bots, chat with a bot and watch it work, read and
 manage conversations, approvals, routines, tasks, watchers, memory, skills, plugins, apps, secrets,
 knowledge, channels, projects, the Library and billing, reach into a bot's computer, move routines
-and skills as files, and run your own server. Every command can print JSON for scripts.
+and skills as files. Every command can print JSON for scripts.
 
 ## Install
 
@@ -50,13 +50,13 @@ dart compile exe bin/casama.dart -o casama
 
 ## Connect and sign in
 
-The CLI talks to Casama Cloud (`https://api.casama.ai`) until you point it somewhere else. For
-your own server, save its address once, then log in:
+The CLI talks to Casama Cloud (`https://api.casama.ai`). Log in:
 
 ```sh
-casama config --api-url https://casama.example.com
 casama login --email ana@example.com
 ```
+
+(Self-hosted servers: paused. `casama config --api-url` can still point the CLI at another server.)
 
 `login` asks for your password (or reads `CASAMA_PASSWORD`). If your account has two-step sign-in,
 it asks for the code from your authenticator app (or takes `--code`, or `CASAMA_2FA_CODE`). With
@@ -120,9 +120,7 @@ Commands that delete, revoke, reset or spend money only say what they would do u
 
 `--email` can also come from `CASAMA_EMAIL`, and `--password` from `CASAMA_PASSWORD`.
 
-`pair` works with any server, Casama Cloud included. If the server only answers on your own computer
-or network, `pair` says so: a phone somewhere else needs
-[remote access](#self-hosting-selfhost) first (`casama selfhost remote on`).
+`pair` works with Casama Cloud.
 
 ### Workspaces: `org` and `invite`
 
@@ -168,7 +166,7 @@ Model keys are stored in the server's vault and never shown again. `key` is an a
 | `casama credential add --provider <id> [--label <name>] [--key <key>] [--base-url <url>]` | Add a key. Prompts for it (or reads `CASAMA_MODEL_KEY`) when `--key` is missing. `--label` defaults to `Default`. |
 | `casama credential list` | Keys in the workspace: id, provider, label, last 4 characters and test status. A ChatGPT plan shows its account and status instead. |
 | `casama credential test <id> [--model <model>]` | Check a key with a one-token call. Exits 1 if it fails. |
-| `casama credential chatgpt [--reconnect <id>] [--no-browser]` | Connect your ChatGPT plan in the browser so your bots can run on it instead of an API key. Only you can use the plan. `--no-browser` only prints the link. |
+| `casama credential chatgpt [--reconnect <id>] [--no-browser]` | Connect your ChatGPT plan in the browser so your bots can run on it instead of an API key. Not available on Casama Cloud, and self-hosted servers are paused. `--no-browser` only prints the link. |
 | `casama credential remove <id>` | Delete a key (a ChatGPT sign-in is revoked first) |
 
 `add`, `list` and `chatgpt` take `--org`. `--provider` is one of: `openai`, `anthropic`, `google`,
@@ -603,7 +601,7 @@ casama domains check bakery.com
 Self-hosting is paused while the Casama Engine moves to a separate license. These commands need a checkout that is no longer published, so they are kept as a reference only.
 :::
 
-`selfhost` wraps the repository's `install.sh` and Docker Compose. Run it from a clone of the
+`selfhost` wrapped the repository's `install.sh` and Docker Compose. Run it from a clone of the
 repository, or point at one with `--dir <path>` (or `CASAMA_SELFHOST_DIR`). `--dir` goes right after
 `selfhost`: `casama selfhost --dir /srv/casama status`. Without either, it uses the current folder. When remote
 access is on, `up`, `down`, `status` and `logs` include the Casama Link connector (its service is
@@ -736,7 +734,7 @@ against the hash in its catalog record, before it writes anything. With a public
 (`--public-key`, or `CASAMA_GALLERY_PUBLIC_KEY`) it also checks `manifest.sig`, the catalog's
 Ed25519 signature, and refuses a missing or wrong one. Without a key it says the copy isn't
 signature-checked. `--json-only` skips the item files. Serve the folder over HTTP and set the
-server's `GALLERY_URL` to its address (see [Configuration](/self-hosting/configuration)).
+server's `GALLERY_URL` to its address (self-hosting is paused).
 
 ```sh
 casama gallery search "summarize unread email" --type skill --type routine

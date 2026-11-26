@@ -301,7 +301,6 @@ On Casama Cloud, plans limit how many bots can check in and how often they look:
 | **Max** | 20 | 1 hour | Yes |
 
 Going past a limit opens the paywall. After a downgrade, the oldest bots keep their check-ins.
-Self-hosted servers have no such limits.
 
 ## Limits
 

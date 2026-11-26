@@ -213,8 +213,7 @@ transfer code to move them.
 | Domains (connected or bought) | 0 | 1 | 5 | 20 |
 | Search engines may list a site | No | Yes | Yes | Yes |
 
-When you're at the limit, unpublish a site before publishing another, or upgrade. Self-hosted
-servers have no limits.
+When you're at the limit, unpublish a site before publishing another, or upgrade.
 
 If your plan changes and your workspace has more domains than it includes, nothing changes for 14
 days; you hear about it on the first day and the tenth. Then the newest domains over the limit
@@ -228,10 +227,3 @@ after reports, or when its workspace is suspended. Undoing a delete brings it ba
 
 Anyone who can change the page: the person it was made for and the people who manage the bot. On
 Casama Cloud you need to have confirmed your email address.
-
-## Self-hosted servers
-
-Site addresses are off until the server has a sites domain, and connected domains need the
-server to make certificates for them. See
-[Configuration](/self-hosting/configuration#sites-and-domains). On a self-hosted server the TXT
-record is always required.

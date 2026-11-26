@@ -4467,7 +4467,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get modelKeysHelp =>
-      'OpenRouter, OpenAI, Anthropic, Google, xAI or your own server';
+      'OpenRouter, OpenAI, Anthropic, Google, xAI or another compatible provider';
 
   @override
   String get signOutConfirm =>
@@ -4521,7 +4521,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get providerHintGoogle => 'live calls only';
 
   @override
-  String get providerHintCompatible => 'Ollama, LM Studio, vLLM';
+  String get providerHintCompatible => 'Any OpenAI-compatible API';
 
   @override
   String get providerHintSearch => 'web search';

@@ -1,6 +1,6 @@
 # Saved resets
 
-A saved reset refills your workspace’s included credits. Your server’s administrator may give you
+A saved reset refills your workspace’s included credits. Casama may give you
 one after an outage or as goodwill. It cannot be purchased or earned.
 
 Look under the credit meter in **Usage** or **Billing**. The message shows the exact expiry in your

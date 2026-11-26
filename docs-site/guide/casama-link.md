@@ -1,5 +1,9 @@
 # Casama Link
 
+::: warning Self-hosting is paused
+Self-hosting is paused while the Casama Engine moves to a separate license. Casama Link connects a self-hosted server to Casama Cloud, so it's paused too. This page is kept as a reference. Casama Cloud is the way to run Casama today.
+:::
+
 <img class="doc-art" src="/art/casama-link.webp" srcset="/art/casama-link-800.webp 800w, /art/casama-link.webp 1600w" sizes="(max-width: 760px) 100vw, 688px" width="1600" height="900" alt="Two lanterns far apart, at a house on a hill and on a boat at sea, joined by one thread of light.">
 
 Casama Link connects a Casama server you run yourself to a Casama Cloud workspace. It used to be
@@ -12,9 +16,7 @@ It has two parts. You can use either one, or both.
 | **Remote access** | An `https://….casama.link` address your phone can reach with no domain or open ports, sign-in by scanning a code, and notifications in the apps from the App Store and Google Play | Free on every plan. Live video away from the computer comes with Plus and up. | [Use your server on your phone](/self-hosting/remote-access) |
 | **Cloud computers and credits** | Bot computers that run on Casama Cloud, and model calls paid from Casama Cloud credits | Billed to the cloud workspace | [Cloud computers and credits](/self-hosting/casama-link-cloud) |
 
-Casama Link needs a Casama Cloud account, and Casama Cloud is invite-only for now. People who run
-their own server are let in first: tick **I run Casama on my own server** at casama.ai/waitlist.
-See [Getting an invite](/guide/getting-an-invite).
+Casama Link needs a Casama Cloud account. See [Getting an invite](/guide/getting-an-invite).
 
 Your bots, chats, memory and files stay on your server either way. Casama Cloud keeps a record of
 the linked server (its name, its address and when it last checked in) and passes on what the part
@@ -32,7 +34,7 @@ part.
 - **I don't want to host bot computers or manage model keys.** Cloud computers and credits.
 - **My server runs on a platform without Docker (Render, Railway, DigitalOcean App Platform).**
   Cloud computers give its bots somewhere to run. See
-  [Other ways to deploy](/self-hosting/#other-ways-to-deploy).
+  [Self-hosting](/self-hosting/).
 
 ## Keys
 

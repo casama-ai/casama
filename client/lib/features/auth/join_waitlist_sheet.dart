@@ -5,7 +5,6 @@ import 'package:material_ui/material_ui.dart';
 import '../../core/backend.dart';
 import '../../core/haptics.dart';
 import '../../core/id_token_email.dart';
-import '../../core/link_browser.dart';
 import '../../core/providers.dart';
 import '../../core/widgets.dart';
 import '../../theme/app_colors.dart';
@@ -13,10 +12,7 @@ import '../../theme/app_tokens.dart';
 import '../../ui/form_sheet.dart';
 import 'invite_gate.dart';
 
-/// Where "Run It Yourself" goes: the self-hosting guide.
-final selfHostingDocs = Uri.parse('https://docs.casama.ai/self-hosting/');
-
-/// Join the Waitlist (D-427, WAITLIST-PLAN §5.2, §5.4): email, one optional line, two boxes, then a
+/// Join the Waitlist (D-427, WAITLIST-PLAN §5.2, §5.4): email, one optional line, the newsletter box, then a
 /// calm "You're on the list". The server answers the same for every address, so this does too.
 class JoinWaitlistSheet extends ConsumerStatefulWidget {
   const JoinWaitlistSheet({super.key, this.initialEmail});
@@ -32,7 +28,6 @@ class _JoinWaitlistSheetState extends ConsumerState<JoinWaitlistSheet> {
   late final _email = TextEditingController(text: widget.initialEmail ?? '');
   late final _prefilled = (widget.initialEmail ?? '').isNotEmpty;
   final _note = TextEditingController();
-  var _selfHosting = false;
   var _newsletter = false;
   var _invalid = false;
   var _busy = false;
@@ -62,7 +57,6 @@ class _JoinWaitlistSheetState extends ConsumerState<JoinWaitlistSheet> {
             WaitlistJoin(
               email: email,
               note: _note.text.trim().isEmpty ? null : _note.text.trim(),
-              selfHosting: _selfHosting,
               newsletter: _newsletter,
             ),
           );
@@ -106,16 +100,6 @@ class _JoinWaitlistSheetState extends ConsumerState<JoinWaitlistSheet> {
               onPressed: () => replaceSheet(context, openHaveInvite),
               icon: const Icon(LucideIcons.ticket, size: 18),
               label: Text(l10n.iHaveAnInvite),
-            ),
-          ),
-          Text(l10n.waitlistJoinedSelfHost, style: muted),
-          Align(
-            alignment: AlignmentDirectional.centerStart,
-            child: TextButton.icon(
-              key: const Key('waitlistSelfHost'),
-              onPressed: () => openWebLink(selfHostingDocs),
-              icon: const Icon(LucideIcons.serverCog, size: 18),
-              label: Text(l10n.waitlistRunItYourself),
             ),
           ),
         ],
@@ -172,13 +156,6 @@ class _JoinWaitlistSheetState extends ConsumerState<JoinWaitlistSheet> {
             prefixIcon: const Icon(LucideIcons.sparkles, size: 20),
           ),
           onSubmitted: (_) => _join(),
-        ),
-        FormSwitch(
-          key: const Key('waitlistSelfHosting'),
-          icon: LucideIcons.server,
-          title: l10n.waitlistSelfHosting,
-          value: _selfHosting,
-          onChanged: _busy ? null : (v) => setState(() => _selfHosting = v),
         ),
         CheckboxListTile(
           key: const Key('waitlistNewsletter'),

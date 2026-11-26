@@ -9,9 +9,6 @@ step in when a bot needs a hand.
 
 <figure class="casama-shot"><img class="shot-light" src="/screens/casama-computer-v2-light.webp" alt="Anna's chat beside her own computer, with the live screen and a Take Control button"><img class="shot-dark" src="/screens/casama-computer-v2-dark.webp" alt=""><figcaption>A bot's computer: watch it work, or take over.</figcaption></figure>
 
-If you run your own server, provider setup (Docker, gVisor, E2B, Daytona) lives on
-[Self-hosting computers](/self-hosting/computers).
-
 ## Team, private and personal computers
 
 | Kind | Who uses it | Shown in the app as |
@@ -61,8 +58,7 @@ persists. On the default Docker provider the rest of the filesystem is read-only
 tools into the home folder: `pip install` installs for the user, and `npm install -g` installs
 under `~/.npm-global`. `/tmp` is a 1 GB scratch space that's cleared when the computer sleeps.
 
-By default, a computer on the Docker provider gets 1 CPU and 1 GB of memory. Your server's
-operator can change these defaults.
+By default, a computer on the Docker provider gets 1 CPU and 1 GB of memory. 
 
 On Casama Cloud, your plan sets each computer's size and how many can run at once:
 
@@ -75,8 +71,7 @@ On Casama Cloud, your plan sets each computer's size and how many can run at onc
 
 When you're at the limit and something needs another computer, Casama puts one that nobody has used
 for 2 minutes to sleep. If every running computer is in use, the new one doesn't start and the app
-offers a bigger plan. See [Usage and plans](/guide/usage). Self-hosted servers have no such
-limits.
+offers a bigger plan. See [Usage and plans](/guide/usage).
 
 ## Headless and desktop computers
 
@@ -413,7 +408,6 @@ For every timeout and cap across Casama, see [Limits](/guide/limits).
 - [In-app browser](/guide/in-app-browser)
 - [Teach by showing](/guide/teach)
 - [Coding agents](/guide/coding-agents)
-- [Self-hosting computers](/self-hosting/computers)
 - [Autonomy and approvals](/guide/autonomy)
 - [Limits](/guide/limits)
 - [Computer use agents you can watch and take over](https://casama.ai/learn/what-is-a-computer-use-agent) (on casama.ai)

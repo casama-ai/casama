@@ -17,7 +17,7 @@ onMounted(() => countDocsEvent("page_not_found"));
     <ul>
       <li><a :href="withBase('/')">Docs home</a></li>
       <li><a :href="withBase('/quick-start')">Quick start</a></li>
-      <li><a :href="withBase('/self-hosting/')">Self-hosting</a></li>
+      <li><a :href="withBase('/self-hosting/')">Self-hosting (paused)</a></li>
       <li><a href="https://casama.ai">casama.ai</a></li>
     </ul>
   </div>

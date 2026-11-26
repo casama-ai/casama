@@ -18,8 +18,8 @@ server Casama Cloud's computers and model credits; that part is billed and has i
 
 You need:
 
-- **A server on this computer**, started by the desktop app's **Run on This Mac** setup or
-  installed with `./install.sh --local`. See [Run a server on your own computer](/self-hosting/#run-a-server-on-your-own-computer).
+- **A server on this computer**, started by the desktop app's Run on This Mac setup or
+  installed with the installer's `--local` option. See [Self-hosting](/self-hosting/).
 - **Your account on that server.** Remote access refuses to turn on while nobody has signed up,
   because it closes sign-ups and the first account would otherwise belong to whoever finds the
   address first.

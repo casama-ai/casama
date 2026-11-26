@@ -24,7 +24,7 @@ Works with your apps
 Connect Gmail, Google Calendar, Notion, Slack, Drive and many more. Logins from your password manager are filled in for the bot and never shown to the AI.
 
 Open source, and yours
-Casama is open source. Use Casama Cloud, where the AI models are picked for you and no keys are needed, or connect the app to a server you run yourself, with any model you like.
+Casama is open source: the apps, SDKs, CLI and the safety rules that decide what a bot may do are public, so you can read exactly when a bot must ask you first. Bots run on Casama Cloud, where the AI models are picked for you and no keys are needed, or you can connect your own provider keys.
 
 The same chats on your iPhone, iPad and on the web.
 

@@ -15,28 +15,18 @@ environment variables on the API, worker and supervisor. See
 ## Change a setting
 
 1. Edit `infra/compose/.env`. Use one `NAME=value` per line. An empty value counts as unset.
-2. Apply it:
-
-   ```sh
-   casama selfhost up
-   ```
-
-   Or, without the CLI:
-
-   ```sh
-   docker compose -f infra/compose/docker-compose.yml --env-file infra/compose/.env up -d
-   ```
+2. Apply it with `casama selfhost up`.
 
 Compose recreates every service whose settings changed. All Casama services read their settings
-only at start, so every change needs this step. `docker compose restart` is not enough: it restarts
+only at start, so every change needs this step. A plain restart is not enough: it restarts
 containers with their old settings.
 
 ::: tip Optional profiles
 `casama selfhost up` names no Compose profile except `link`, which it adds while remote access is
 on. If you changed a setting for the web app, monitoring, search, page PDFs or backups, add the
-profile: `docker compose ... --profile monitoring up -d`.
+profile.
 Docker Compose also reads `COMPOSE_PROFILES` from the env file, so `COMPOSE_PROFILES=monitoring,web`
-in `.env` keeps them on for every command. Re-running `./install.sh` adds the `backup` profile by
+in `.env` keeps them on for every command. The installer adds the `backup` profile by
 itself once you installed with `--backups`.
 :::
 
@@ -61,7 +51,7 @@ listed under [Advanced settings](#advanced-settings), with how to add them.
 | `FIREFOX_EXTENSIONS`     | `true`                          | Lets Casama for Firefox call the API. Firefox gives every install its own address, so it can't be listed by id; `false` keeps it out. |
 | `RATE_LIMIT_PER_MINUTE`  | `120`                           | Requests per minute on the API and webhooks, per signed-in user or else per IP address. Casama Link endpoints get ten times as much. |
 | `UPDATE_CHECK_URL`       | (empty: no update checks)       | Where the admin console checks for new releases, in the shape of GitHub's latest-release API.                                         |
-| `CASAMA_REGISTRY`        | `casama` (build locally)        | Where the Casama images come from. `./install.sh --pull` sets `ghcr.io/stackwares/casama`, and re-runs then pull instead of build.     |
+| `CASAMA_REGISTRY`        | `casama` (build locally)        | Where the Casama images come from. the installer's `--pull` option sets `ghcr.io/stackwares/casama`, and re-runs then pull instead of build.     |
 | `CASAMA_VERSION`         | `local`                         | The tag of the Casama images Compose builds or pulls. `--pull [tag]` sets it (default `latest`).                                      |
 | `CASAMA_SERVER_IMAGE`    | (empty: registry and tag above) | Runs the API and worker on one exact image, such as your own build of `apps/server/Dockerfile`. Upgrades leave it alone; empty it to go back. |
 | `API_DRAIN_SECONDS`      | `30`                            | How long a stopping API lets the requests it's answering finish before it exits.                                                       |
@@ -97,7 +87,7 @@ SIGNUP_HOOK_URI=https://casama.example.com/hooks/auth/before-user-created
 
 If a load balancer or another reverse proxy terminates TLS:
 
-1. Set `CASAMA_SITE=:80` so Caddy serves plain HTTP. `./install.sh --behind-proxy --domain <name>` does this.
+1. Set `CASAMA_SITE=:80` so Caddy serves plain HTTP. the installer's `--behind-proxy --domain <name>` option does this.
 2. Keep `CASAMA_PUBLIC_URL` on the public `https://` address.
 3. Route your proxy to Caddy's HTTP port (`HTTP_PORT`), including WebSocket upgrades.
 4. Set `HTTP_BIND=127.0.0.1` (the installer does this with `--behind-proxy`). Docker-published ports skip the host firewall, so `0.0.0.0` would serve plain HTTP to anyone who can reach the server's IP.
@@ -169,7 +159,7 @@ printed from what the API sends; outside URLs and other files are blocked.
 
 1. Add `pdf` to `COMPOSE_PROFILES` in `infra/compose/.env` (or pass `--profile pdf`).
 2. Set `PDF_RENDERER_URL=http://pdf:3000` in the same file.
-3. Run `docker compose -f infra/compose/docker-compose.yml --env-file infra/compose/.env up -d`.
+3. Apply it with `casama selfhost up`.
 
 | Name               | Default                 | What it does                                          |
 | ------------------ | ----------------------- | ----------------------------------------------------- |
@@ -383,7 +373,7 @@ On Linux, use the host's LAN address instead (for example `http://192.168.1.20:1
 
 Add `--embedding-model embeddinggemma` (after `ollama pull embeddinggemma`) so memory search runs
 locally too, and `--vision-model <name>` for a model that reads images but isn't recognized by
-name. [Local models](/guide/bots#local-models) has the details.
+name.
 
 ## Object storage
 
@@ -432,11 +422,7 @@ S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID:-}
 S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:-}
 ```
 
-Then start it with the profile:
-
-```sh
-docker compose -f infra/compose/docker-compose.yml --env-file infra/compose/.env --profile s3 up -d
-```
+Then start the stack with the `s3` profile on.
 
 `casama selfhost backup` archives the `objects` volume only. With S3, back up the bucket with your
 storage provider's tools.
@@ -544,7 +530,7 @@ one with its own domain. With **Private Notifications** on, they carry no text. 
 | `MCP_OAUTH_CLIENTS`           | (empty)   | OAuth clients for apps that don't support automatic registration, as JSON by app id: `{"slack":{"client_id":"...","client_secret":"..."}}`.                     |
 | `COMPOSIO_API_KEY`            | (empty)   | A server-wide Composio key. Apps whose own sign-in needs a client the server doesn't have (GitHub, Slack, Asana, Google's apps without a Google client, and others) then offer **Sign in through Composio**. The admin console's Services tab can switch back to people's own accounts. |
 | `OAUTH_REDIRECT_URL`          | `<PUBLIC_API_URL>/oauth/callback` | Where vendors send people back after an app sign-in. Change it only if vendors must use another address.                                 |
-| `SEARXNG_URL`                 | (empty)   | A SearXNG instance for web search in workspaces without their own search key (Brave Search, Tavily, Parallel or Serper). Free: `./install.sh --search` runs one (`http://searxng:8080`). Its settings must allow JSON results. It is always tried last. |
+| `SEARXNG_URL`                 | (empty)   | A SearXNG instance for web search in workspaces without their own search key (Brave Search, Tavily, Parallel or Serper). Free: the installer's `--search` option runs one (`http://searxng:8080`). Its settings must allow JSON results. It is always tried last. |
 | `SEARCH_PROVIDER_ORDER`       | `parallel,serper,searxng` | The server's own web search for workspaces without a key, in the order tried; the next one answers when one fails or finds nothing. Names: `parallel`, `serper`, `deepseek`, `searxng`. A provider without its key is skipped. Answers are kept for 6 hours per workspace. |
 | `PARALLEL_API_KEY`            | (empty)   | The server's [Parallel](https://parallel.ai) Search key ($1 per 1,000 searches). The server pays; usage shows each search's cost. |
 | `SERPER_API_KEY`              | (empty)   | The server's [Serper](https://serper.dev) key, Google results ($1 per 1,000 searches). |
@@ -849,7 +835,7 @@ server has a key.
 
 | Name                               | Default         | What it does                                                                                                    |
 | ---------------------------------- | --------------- | --------------------------------------------------------------------------------------------------------------- |
-| `CONTENT_ENCRYPTION_KEY`           | (generated)     | The server key that wraps workspace keys: 32 bytes, base64. `install.sh` makes one unless KMS is set; back it up. |
+| `CONTENT_ENCRYPTION_KEY`           | (generated)     | The server key that wraps workspace keys: 32 bytes, base64. the installer makes one unless KMS is set; back it up. |
 | `CONTENT_ENCRYPTION_KEY_PREVIOUS`  | (empty)         | Older keys during a rotation, comma-separated.                                                                  |
 | `CONTENT_KMS_KEY_ID`               | (empty)         | Use AWS KMS instead: the key's id or ARN.                                                                       |
 | `CONTENT_KMS_REGION`               | (empty)         | The KMS key's region.                                                                                           |

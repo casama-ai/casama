@@ -6925,7 +6925,7 @@ abstract class AppLocalizations {
   /// No description provided for @modelKeysHelp.
   ///
   /// In en, this message translates to:
-  /// **'OpenRouter, OpenAI, Anthropic, Google, xAI or your own server'**
+  /// **'OpenRouter, OpenAI, Anthropic, Google, xAI or another compatible provider'**
   String get modelKeysHelp;
 
   /// No description provided for @signOutConfirm.
@@ -7021,7 +7021,7 @@ abstract class AppLocalizations {
   /// No description provided for @providerHintCompatible.
   ///
   /// In en, this message translates to:
-  /// **'Ollama, LM Studio, vLLM'**
+  /// **'Any OpenAI-compatible API'**
   String get providerHintCompatible;
 
   /// No description provided for @providerHintSearch.

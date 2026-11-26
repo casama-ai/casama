@@ -244,8 +244,8 @@ void main() {
       find.byKey(const Key('waitlistNote')),
       'Sort my inbox',
     );
-    await tester.tap(find.byKey(const Key('waitlistSelfHosting')));
-    await tester.pumpAndSettle();
+    // No "I run my own server" switch while self-hosting is paused (D-578).
+    expect(find.byKey(const Key('waitlistSelfHosting')), findsNothing);
     // The monthly email stays unticked unless ticked.
     await tester.tap(find.byKey(const Key('waitlistSubmit')));
     await tester.pumpAndSettle();
@@ -253,11 +253,12 @@ void main() {
     final join = backend.waitlistJoins.single;
     expect(join.email, 'ana@example.com');
     expect(join.note, 'Sort my inbox');
-    expect(join.selfHosting, isTrue);
+    expect(join.selfHosting, isFalse);
     expect(join.newsletter, isFalse);
     expect(find.byKey(const Key('waitlistJoined')), findsOneWidget);
     expect(find.text("You're on the list."), findsOneWidget);
     expect(find.byKey(const Key('waitlistHaveInvite')), findsOneWidget);
+    expect(find.byKey(const Key('waitlistSelfHost')), findsNothing);
   });
 
   group('I Have an Invite', () {

@@ -72,7 +72,7 @@ Let the bots you pick work in this browser, where you're already signed in, so t
 PRIVATE BY DESIGN
 It reads a page only when you ask (start a message, switch on a chip, use the menu or a shortcut, or save), never in the background. It never reads Casama's own pages or pages with a password or card field, and banking, health, password manager and government ID sites are off by default. Add your own sites to the never-list. Your sign-in stays in this browser and isn't synced.
 
-Works with Casama Cloud and with self-hosted Casama servers. You need a Casama account (free to start) at https://casama.ai.
+Works with Casama Cloud. You need a Casama account (free to start) at https://casama.ai.
 ```
 
 ## Privacy practices tab

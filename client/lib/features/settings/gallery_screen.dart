@@ -450,9 +450,7 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen> {
               price: () => f.price == GalleryPrice.plan ? null : GalleryPrice.plan,
             );
           }),
-          chip('selfhosted', l10n.galleryFilterSelfHosted, f.selfHosted, () {
-            _filter = f.copyWith(selfHosted: !f.selfHosted);
-          }),
+          // 'Works self-hosted' is hidden while self-hosting is paused (D-578).
           chip('computer', l10n.galleryFilterComputer, f.computer, () {
             _filter = f.copyWith(computer: !f.computer);
           }),

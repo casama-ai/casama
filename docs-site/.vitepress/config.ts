@@ -86,7 +86,7 @@ const searchTitles: Record<string, string> = {
   "develop/webhooks.md": "Webhooks: send Casama events to your own URL",
   "develop/api.md": "Casama HTTP API reference (OpenAPI 3.1)",
   "develop/sdk.md": "Dart SDK for the Casama API",
-  "faq.md": "Casama FAQ: pricing, privacy and self-hosting",
+  "faq.md": "Casama FAQ: pricing, privacy and models",
   "guide/skills.md": "Skills: a repeatable way of working for a bot",
   "guide/routines.md": "Routines: scheduled and triggered bot work",
   "guide/computers.md": "Computers: a Linux machine for every Casama bot",
@@ -97,10 +97,10 @@ const searchTitles: Record<string, string> = {
   "guide/library.md": "The Library: files and pages your bots keep for you",
   "guide/chat.md": "Chatting with a bot: messages, files and voice",
   "guide/bots.md": "Bots and models: pick the AI model for each bot",
-  "self-hosting/index.md": "Self-hosting Casama: run it on your own server",
-  "self-hosting/configuration.md": "Self-hosting configuration: all settings",
-  "self-hosting/operations.md": "Operating a Casama server: updates and backups",
-  "self-hosting/troubleshooting.md": "Self-hosting troubleshooting: common fixes",
+  "self-hosting/index.md": "Self-hosting Casama (paused): reference",
+  "self-hosting/configuration.md": "Self-hosting configuration (paused): all settings",
+  "self-hosting/operations.md": "Operating a Casama server (paused): updates and backups",
+  "self-hosting/troubleshooting.md": "Self-hosting troubleshooting (paused): common fixes",
 };
 
 export default defineConfig({
@@ -108,7 +108,7 @@ export default defineConfig({
   // Every page's <title> reads "<what it covers> | Casama docs": the docs' own name in the search result.
   titleTemplate: ":title | Casama docs",
   description:
-    "Casama docs: guides, the HTTP API, SDKs and self-hosting for open-source AI teammates that have their own computers.",
+    "Casama docs: guides, the HTTP API and SDKs for AI teammates that have their own computers.",
   sitemap: {
     hostname: "https://docs.casama.ai",
   },
@@ -178,7 +178,7 @@ export default defineConfig({
     const home = pageData.relativePath === "index.md";
     const title = home ? "Casama docs" : `${pageData.title} | Casama docs`;
     const description =
-      pageData.description || "Self-hostable AI teammates with their own computers.";
+      pageData.description || "AI teammates with their own computers.";
     const crumbs = cleanPath(pageData.relativePath).split("/").filter(Boolean);
     const data: Record<string, unknown>[] = [
       {
@@ -246,7 +246,7 @@ export default defineConfig({
     nav: [
       { text: "Get started", link: "/quick-start" },
       { text: "Guides", link: "/guide/bots" },
-      { text: "Self-hosting", link: "/self-hosting/" },
+      { text: "Self-hosting (paused)", link: "/self-hosting/" },
       { text: "Build on Casama", link: "/develop/api" },
       { text: "API", link: "/api/", target: "_self" },
     ],
@@ -335,10 +335,10 @@ export default defineConfig({
         ],
       },
       {
-        text: "Self-hosting",
+        text: "Self-hosting (paused)",
         collapsed: false,
         items: [
-          { text: "Install", link: "/self-hosting/" },
+          { text: "Overview", link: "/self-hosting/" },
           { text: "Configuration", link: "/self-hosting/configuration" },
           { text: "Casama Link", link: "/guide/casama-link" },
           { text: "Use it on your phone", link: "/self-hosting/remote-access" },

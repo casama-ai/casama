@@ -47,7 +47,7 @@ again.
 from `public.ecr.aws`, which allows only a few anonymous pulls at a time. The installer already
 pulls two at a time and retries five times.
 
-**Fix:** Wait a few minutes and run `./install.sh` again. Images that finished downloading are
+**Fix:** Wait a few minutes and run the installer again. Images that finished downloading are
 kept.
 
 ### "Warning: less than 8 GB of memory"
@@ -91,7 +91,7 @@ migrations it hasn't applied yet (tracked in `public.casama_migrations`).
 - `SAML_PRIVATE_KEY` is in PKCS#8 format. Auth needs PKCS#1. Installers before November 2026 wrote
   PKCS#8.
 
-**Fix:** Run `./install.sh` again: it converts the SAML key and leaves the rest of `.env` alone. Set
+**Fix:** Run the installer again: it converts the SAML key and leaves the rest of `.env` alone. Set
 `SIGNUP_HOOK_URI` to empty or to `https://<your domain>/hooks/auth/before-user-created`. Then run
 `casama selfhost up`.
 
@@ -235,7 +235,7 @@ shows "Sandbox supervisor: Not configured" or unhealthy.
 
 **Fix:** Check `casama selfhost logs supervisor`. The supervisor refuses to start without
 `SUPERVISOR_TOKEN` (16+ characters), `COMPUTER_TOKEN_SECRET` and `EGRESS_CONTROL_TOKEN`; re-run
-`./install.sh` to add missing generated settings. If it logs
+the installer to add missing generated settings. If it logs
 `DEFAULT_PROVIDER=<name> isn't configured on this supervisor`, add that provider's settings or
 remove `DEFAULT_PROVIDER`.
 
@@ -251,7 +251,7 @@ remove `DEFAULT_PROVIDER`.
 **Fix:**
 
 1. Check the images: `docker images | grep computer-`. Get the desktop one with
-   `./install.sh --with-desktop`.
+   the installer's `--with-desktop` option.
 2. Check `docker info | grep -i runsc`. If it's missing, set `SANDBOX_RUNTIME=` (empty) and run
    `casama selfhost up`, or install gVisor.
 3. Check `free -h` and `df -h`, and the supervisor's logs.
@@ -290,7 +290,7 @@ worker.
 an image built before your upgrade, or a desktop image that wasn't rebuilt, has an older `computerd`
 that can't run them. Hosted templates and snapshots built from older images have the same problem.
 
-**Fix:** Rebuild the images with `./install.sh --with-desktop` (or without `--with-desktop` if you
+**Fix:** Rebuild the images with the installer's `--with-desktop` option (or without `--with-desktop` if you
 don't use desktops), then let the computer sleep and wake, or restart it from the app. For hosted
 providers, rebuild your templates or snapshots from the new images.
 
@@ -424,7 +424,7 @@ a company network or a strict firewall often blocks it.
 the `link` profile.
 
 **Fix:** Start it with `casama selfhost up` (which adds the profile while remote access is on), or
-re-run `./install.sh`. With plain Compose, add `--profile link`.
+re-run the installer. With plain Compose, add `--profile link`.
 
 ### The connector is connected, but the address doesn't answer
 
@@ -499,7 +499,7 @@ the key doesn't match.
 **Cause:** `restore` doesn't restore `infra/compose/.env`. A new install generated new keys, so
 tokens, the JWT secret or `CONTENT_ENCRYPTION_KEY` no longer match the data.
 
-**Fix:** Put the backup's `env` file at `infra/compose/.env`, run `./install.sh` (it keeps that
+**Fix:** Put the backup's `env` file at `infra/compose/.env`, run the installer (it keeps that
 file), then restore again. See [Restore](/self-hosting/operations#restore).
 
 ### The Library's files are missing after a restore

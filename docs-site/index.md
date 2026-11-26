@@ -5,7 +5,7 @@ titleTemplate: AI teammates with their own computers
 hero:
   name: Casama
   text: AI teammates with their own computers
-  tagline: Bots that remember, work on real computers, ask before risky steps, and run on your own server with any model.
+  tagline: Bots that remember, work on real computers, ask before risky steps, and run on Casama Cloud.
   actions:
     - theme: brand
       text: Quick start
@@ -14,8 +14,8 @@ hero:
       text: What is Casama?
       link: /introduction
     - theme: alt
-      text: Self-host
-      link: /self-hosting/
+      text: Plans and usage
+      link: /guide/usage
 features:
   - title: Bots that reach out first
     details: Each bot has instructions, memory, skills and a budget. It sends a morning brief, spots things it could do for you, and keeps working on schedules and triggers while you're away.
@@ -53,15 +53,15 @@ features:
     details: One-click app connections, MCP servers, plugins and password managers, with secrets kept out of the model's sight. Plus an API, CLI and SDK to build on.
     link: /guide/connections
     linkText: Apps and connections
-  - title: Any model
-    details: Bring your own key for OpenAI, Anthropic, Google, xAI, OpenRouter or any OpenAI-compatible endpoint, run local models for free, or sign in with a ChatGPT plan on your own server.
+  - title: Your choice of model
+    details: On Casama Cloud, Casama picks the models, or you connect your own provider keys (OpenAI, Anthropic, Google, OpenRouter and other OpenAI-compatible providers).
     link: /guide/bots
     linkText: Choose a model
-  - title: Yours to run
-    details: Open source apps, SDKs and CLI (AGPL-3.0 and Apache-2.0), and the safety rules you can read. Self-hosting is paused while the engine moves to a separate license.
+  - title: Open source
+    details: The apps, SDKs and CLI are open source (AGPL-3.0 and Apache-2.0), and so are the safety rules you can read. Self-hosting is paused while the engine moves to a separate license.
     link: /self-hosting/
-    linkText: Self-hosting
-  - title: Or let us run it
+    linkText: Self-hosting (paused)
+  - title: Runs on Casama Cloud
     details: Casama Cloud is the hosted service, with a free plan and paid plans from $15 a month. Casama picks the models, so there are no keys to add, and models, computers and voice are paid from credits.
     link: /guide/usage
     linkText: Plans and usage

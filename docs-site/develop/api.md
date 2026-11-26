@@ -56,7 +56,7 @@ curl -s https://casama.example.com/v1/config
 | `default_models` | The default model id for each model provider |
 | `default_reasoning_effort` | `none`, `low`, `medium`, `high`, `xhigh` or `max` |
 | `signup_proofs` | Proofs a new account must carry, if any: `app_check`, `pow` |
-| `chatgpt_sign_in` | Whether people can connect a ChatGPT plan here |
+| `chatgpt_sign_in` | Whether people can connect a ChatGPT plan here (off on Casama Cloud) |
 | `wallpapers_enabled` | Whether wallpaper photo search is available |
 | `trace_url_template` | Where a run's trace opens, with `{trace_id}` in it, or `null` |
 | `server_voice` | Voice features the server's own keys cover: `live`, `read_aloud`, `dictation` |
@@ -125,8 +125,7 @@ the token as shown above.
 
 A few endpoints need no bearer token:
 
-- `GET /v1/config`, `GET /v1/app-config` (the owner's
-  [remote app settings](/self-hosting/operations#remote-app-settings)) and `GET /v1/signup/challenge`
+- `GET /v1/config`, `GET /v1/app-config` (the owner's remote app settings) and `GET /v1/signup/challenge`
 - `GET /v1/join/preview` and `GET /v1/referral/preview`, which show what an invite opens before
   you join
 - the [waitlist routes](#the-waitlist-casama-cloud)
@@ -149,7 +148,7 @@ sign a phone in to a server reached through [Casama Link](/guide/casama-link).
 ## The waitlist (Casama Cloud)
 
 Casama Cloud can take new accounts by invitation only. The routes below exist only there. A server
-without the waitlist, such as a self-hosted one, answers every one of them with 404
+without the waitlist answers every one of them with 404
 `waitlist_off`. While the gate is on, `GET /v1/config` carries `signup_gate` and
 `signups_by_invitation: true`.
 
@@ -272,15 +271,14 @@ your logs, and include it when you report a problem.
 ## Rate limits
 
 Requests to `/v1/*` and `/hooks/*` are limited per minute, per signed-in user (or per client IP
-address without a token). The default is 120 requests a minute; self-hosters change it with
-`RATE_LIMIT_PER_MINUTE`.
+address without a token). The default is 120 requests a minute.
 
 Over the limit, the API answers 429 with the code `rate_limited` and a `Retry-After` header in
 seconds. Wait that long, then retry.
 
 The window is a fixed minute kept in the API process's memory, so a server that runs several API
-processes counts each one separately. The [Casama Link](/guide/casama-link) paths under `/link/`,
-which self-hosted servers call, get ten times the limit.
+processes counts each one separately. The [Casama Link](/guide/casama-link) paths under `/link/`
+get ten times the limit.
 
 ## Idempotency keys
 

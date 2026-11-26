@@ -83,7 +83,7 @@ See what your bots need in the Inbox: approve or deny a step, answer requests, a
 PRIVATE BY DESIGN
 It reads a page only when you ask, never in the background. It never reads Casama's own pages or pages with a password or card field, and you can add your own sites to a never-list. Your sign-in stays in this browser.
 
-Works with Casama Cloud and with self-hosted Casama servers. You need a Casama account (free to start) at https://casama.ai. Letting bots work in your own tabs needs Chrome or Edge.
+Works with Casama Cloud. You need a Casama account (free to start) at https://casama.ai. Letting bots work in your own tabs needs Chrome or Edge.
 ```
 
 ## Data collection (Firefox's consent at install)

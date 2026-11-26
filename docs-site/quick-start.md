@@ -1,78 +1,51 @@
 # Quick start
 
-Sign in, and give your first bot a task. About 15 minutes.
+Sign in, and give your first bot a task. About 10 minutes.
 
 ::: warning Self-hosting is paused
-Self-hosting is paused while the Casama Engine moves to a separate license, so there is no server to start for now. Use Casama Cloud: steps 1 and 3 below that mention your own server are kept as a reference.
+Self-hosting is paused while the Casama Engine moves to a separate license, so there is no server to start for now. Casama Cloud is the way to run Casama today.
 :::
 
-Don't want to run a server? Get [Casama Cloud](https://casama.ai/download) in the app or at
-[app.casama.ai](https://app.casama.ai), and skip to [step 5](#_5-meet-your-first-bot). You can also
-start with nothing to install by messaging [@casama_ai_bot](https://t.me/casama_ai_bot) on Telegram,
-emailing **get@casama.app**, or messaging Casama on [Messenger](https://m.me/1539129842611601) — see
-[Chat apps](/guide/chat-apps).
+Get [Casama Cloud](https://casama.ai/download) in the app or at [app.casama.ai](https://app.casama.ai).
+You can also start with nothing to install by messaging
+[@casama_ai_bot](https://t.me/casama_ai_bot) on Telegram, emailing **get@casama.app**, or messaging
+Casama on [Messenger](https://m.me/1539129842611601). See [Chat apps](/guide/chat-apps).
 
-## 1. Start a server
-
-The install commands are removed while self-hosting is paused. Use [Casama Cloud](https://casama.ai/download) instead and go on to step 2.
-
-## 2. Install a client
+## 1. Install a client
 
 - **Apps**: iOS, iPadOS, Android, macOS, Windows, Linux and the web. On a Mac, get the app from
-  [casama.ai/download](https://casama.ai/download) rather than the Mac App Store if you want bots
-  to use your Mac or to run a server on it; see
+  [casama.ai/download](https://casama.ai/download) if you want bots to use your Mac; see
   [which Mac app to get](/faq#should-i-get-the-mac-app-from-the-website-or-the-mac-app-store).
 - **CLI**: `brew install stackwares/tap/casama`, or download a binary from the
   [releases page](https://github.com/casama-ai/casama-releases/releases). See [CLI](/develop/cli).
 
-## 3. Sign in to your server
+## 2. Sign in
 
 **In the app:**
 
 1. Tap **Let's Go**.
-2. Tap **More Options**, then the button that shows the current server (**Server:** followed by an
-   address). Enter your server's address (for example `https://casama.example.com`, or the address
-   `--local` printed) and tap **Connect**.
-3. Tap **Continue with Email** → **Use a Password Instead** → **New here? Create an account**, and
-   enter an email and password.
-
-The first account on a server becomes its owner.
-
-::: info Email links, Google and Apple
-Signing in with an emailed link needs the server to send email, and Google and Apple sign-in need
-them set up on the server. A new server has neither, so start with a password. See
-[Configuration](/self-hosting/configuration).
-:::
+2. Tap **Continue with Email** → **Use a Password Instead** → **New here? Create an account**, and
+   enter an email and password. You can also continue with Google or Apple.
 
 **With the CLI:**
 
 ```sh
-casama config --api-url https://casama.example.com
 casama signup --email you@example.com
 ```
 
-## 4. Add a model
+## 3. Models
 
-Bots need a model. On Casama Cloud they already have one. On your own server, open **Settings** →
-**Model keys** and pick one of these:
-
-- **Continue with ChatGPT** to use a ChatGPT plan you already pay for. This needs the desktop app,
-  or `casama credential chatgpt` in the CLI.
-- **Add Key** for OpenRouter, OpenAI, Anthropic, Google or xAI.
-- **Add Key** → **OpenAI-compatible server** for a local model served by Ollama, LM Studio or vLLM.
-  Use an address the server can reach: on a self-hosted server, that's the model machine's network
-  address rather than `localhost`, allowed with `OUTBOUND_ALLOW_CIDRS`
-  (see [Configuration](/self-hosting/configuration)). Calls to a local model cost nothing.
+Bots need a model. On Casama Cloud they already have one: Casama picks the models. If you'd rather
+use your own provider account, open **Settings** → **Model keys**, tap **Add Key** and pick OpenAI,
+Anthropic, Google, OpenRouter or another OpenAI-compatible provider.
 
 With the CLI:
 
 ```sh
 casama credential add --provider openrouter      # prompts for the key
-casama credential chatgpt                        # or sign in with a ChatGPT plan
-casama credential add --provider openai_compatible --base-url http://192.168.1.20:11434/v1
 ```
 
-## 5. Meet your first bot
+## 4. Meet your first bot
 
 The first time you sign in, the app asks **What should bots call you?**, then makes a workspace
 named after you and a personal bot called Casama, and opens its chat. This is the bot's
@@ -93,7 +66,7 @@ casama bot create Anna --credential <id>
 casama chat Anna "Research the top three open-source vector databases and write a comparison to report.md"
 ```
 
-## 6. Give it real work
+## 5. Give it real work
 
 Try a task that needs its computer:
 

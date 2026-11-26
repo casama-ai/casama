@@ -6,7 +6,7 @@ Self-hosting is paused while the Casama Engine moves to a separate license. The 
 
 This page covers day-to-day work on a running Casama server: upgrades, backups, monitoring, logs,
 audit-log forwarding and scaling, plus the Kubernetes Helm chart. The commands use the
-[Casama CLI](/develop/cli), which wraps `install.sh` and `docker compose` for your checkout.
+[Casama CLI](/develop/cli), which wraps the installer and `docker compose` for your checkout.
 
 ## Everyday commands
 
@@ -92,11 +92,11 @@ ZeptoMail sends made directly by Supabase Auth are excluded.
    casama selfhost upgrade
    ```
 
-   This runs `git pull --ff-only` in the checkout, then `./install.sh`. The installer keeps
+   This runs `git pull --ff-only` in the checkout, then the installer. The installer keeps
    `infra/compose/.env`, adds any settings the new release introduced, rebuilds the images (or, if
    you installed with `--pull`, pulls the published ones for `CASAMA_VERSION`), applies new database
    migrations and restarts the services that changed. A server pinned to one image tag stays on it:
-   run `./install.sh --pull` (or `--pull <tag>`) to move it. If you set `CASAMA_SERVER_IMAGE`, the API
+   run the installer's `--pull` option (or `--pull <tag>`) to move it. If you set `CASAMA_SERVER_IMAGE`, the API
    and worker stay on that image until you change or empty it.
 
 3. Check the result with `casama selfhost status` and the admin console.
@@ -112,19 +112,8 @@ calls through Twilio end when the API restarts.
 
 `casama selfhost upgrade` runs the installer with no options. If you installed with
 `--with-desktop`, `--monitoring`, `--web` or `--search`, upgrade by hand instead so those parts are
-updated too:
-
-```sh
-git pull --ff-only
-./install.sh --with-desktop --monitoring --web --search
-```
-
-The installer doesn't rebuild an existing web image. After an upgrade with `--web`, rebuild it:
-
-```sh
-docker compose -f infra/compose/docker-compose.yml --env-file infra/compose/.env --profile web build web
-docker compose -f infra/compose/docker-compose.yml --env-file infra/compose/.env --profile web up -d
-```
+updated too: pull the checkout, then run the installer again with the same options. The installer
+doesn't rebuild an existing web image, so after an upgrade with `--web`, rebuild the `web` service.
 
 Notes:
 
@@ -151,7 +140,7 @@ Notes:
 
 ### Published images
 
-`./install.sh --pull [tag]` and the desktop app's **Run on This Mac** setup use published
+the installer's `--pull [tag]` option and the desktop app's Run on This Mac setup use published
 images instead of building them. They're at `ghcr.io/stackwares/casama/<name>`, for `linux/amd64`
 and `linux/arm64`:
 
@@ -236,7 +225,7 @@ Then sync `/backups` to other storage with your usual tool.
 
 ### Off-site backups
 
-`./install.sh --backups` starts a `backup` container that does this every day, without cron. It
+the installer's `--backups` option starts a `backup` container that does this every day, without cron. It
 dumps the database, the Library's files, optionally the computer archives, encrypts each file with
 age, and uploads the
 folder to any S3-compatible bucket (Cloudflare R2, AWS S3, Backblaze B2, MinIO). The `.env` and
@@ -313,7 +302,7 @@ from; on a new machine, saved secrets (model keys, app sign-ins) have to be ente
 1. Clone the same release of the repository.
 2. Copy the backup's `env` file to `infra/compose/.env` (decrypt it first with
    `age -d -i backup.key -o infra/compose/.env env.age` if it's encrypted).
-3. Run `./install.sh`. It keeps that `.env`, so the new stack uses the same keys.
+3. Run the installer. It keeps that `.env`, so the new stack uses the same keys.
 4. Run `casama selfhost restore <backup-folder>`.
 
 ::: warning Test your restores
@@ -327,17 +316,8 @@ answer with their saved model keys, and that a computer wakes with its files.
 
 The `monitoring` profile adds Prometheus, node-exporter and a Grafana dashboard.
 
-1. Turn it on:
-
-   ```sh
-   ./install.sh --monitoring
-   ```
-
-   Or add the profile to a running stack:
-
-   ```sh
-   docker compose -f infra/compose/docker-compose.yml --env-file infra/compose/.env --profile monitoring up -d
-   ```
+1. Turn it on with the installer's `--monitoring` option, or add the `monitoring` profile to the
+   running stack.
 
 2. Grafana listens on `127.0.0.1:3001` on the server. From your computer, open an SSH tunnel:
 
@@ -666,13 +646,8 @@ attaches the proxy and the relay to each computer's network by container name.
      - "10.0.0.2:8788:8788"
    ```
 
-3. Build and start only those services:
-
-   ```sh
-   docker compose -f infra/compose/docker-compose.yml --env-file infra/compose/.env build supervisor egress turn
-   COMPOSE_PROFILES=images docker compose -f infra/compose/docker-compose.yml --env-file infra/compose/.env build computer-headless
-   docker compose -f infra/compose/docker-compose.yml --env-file infra/compose/.env up -d supervisor egress turn
-   ```
+3. Build and start only the `supervisor`, `egress` and `turn` services, and build the
+   `computer-headless` image on that host.
 
 4. On both hosts, set `TURN_PUBLIC_HOST` to a name that points at the computer host, and open 3478
    (UDP and TCP) there.
