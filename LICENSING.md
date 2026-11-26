@@ -15,6 +15,7 @@ computer and what its network allows.
 |---|---|
 | `client/` (apps for iOS, Android, macOS, Windows, Linux and the web; `client/ios/CasamaWatch`; `client/wear`) | [AGPL-3.0-only](LICENSES/AGPL-3.0.txt) |
 | `apps/extension` (browser extension) | AGPL-3.0-only |
+| `snap/`, `scripts/package-linux.sh`, `scripts/package-snap.sh` (the Linux snap and the scripts that build it) | AGPL-3.0-only |
 | `dart/computerd` (the agent inside each computer) | AGPL-3.0-only |
 | `dart/selfhost` (the installer the apps and CLI use to run Casama on your own machine) | Apache-2.0 |
 | `packages/safety` (when a bot must ask first, what it may never do on websites, roles, quiet hours, hiding secrets) | AGPL-3.0-only |

@@ -1,6 +1,6 @@
 # Domain terms and prices
 
-These terms apply when you buy a domain through Casama (version 2026-11-16). They sit alongside
+These terms apply when you buy a domain through Casama (version 2026-11-27). They sit alongside
 Casama's [terms of service](https://casama.ai/terms) and [privacy policy](https://casama.ai/privacy).
 
 ## Who you're dealing with
@@ -54,5 +54,27 @@ renewal price for each name before you buy, and each domain's screen shows its n
 | Renewal | As shown on the domain's screen and in the 30-day notice; the same formula on that day's cost |
 | Late renewal (up to 25 days after expiry) | The same as renewal: no extra fee |
 | Restore (after 25 days, through support) | The registry's restore fee plus one year's renewal, quoted before you pay |
+
+### Prices by ending
+
+As of 2026-11-27, in US dollars before tax. The price shown in **Find a Domain** on the day you buy is
+the one charged; these can change when the registrar's cost changes, and a renewal is charged at its
+price on the renewal day.
+
+| Ending | First year | Renewal | Late renewal (up to 25 days after expiry) | Restore (after 25 days) |
+|---|---|---|---|---|
+| .com | $10.99 | $28.99 | $28.99 | registry restore fee + $28.99 |
+| .net | $13.99 | $31.99 | $31.99 | registry restore fee + $31.99 |
+| .org | $13.99 | $26.99 | $26.99 | registry restore fee + $26.99 |
+| .co | $5.99 | $57.99 | $57.99 | registry restore fee + $57.99 |
+| .io | $26.99 | $101.99 | $101.99 | registry restore fee + $101.99 |
+| .app | $13.99 | $35.99 | $35.99 | registry restore fee + $35.99 |
+| .dev | $13.99 | $30.99 | $30.99 | registry restore fee + $30.99 |
+| .xyz | $3.99 | $27.99 | $27.99 | registry restore fee + $27.99 |
+| .me | $3.99 | $36.99 | $36.99 | registry restore fee + $36.99 |
+| .info | $8.99 | $51.99 | $51.99 | registry restore fee + $51.99 |
+
+The registry restore fee depends on the ending and the registrar; Casama quotes the exact amount in
+dollars before you pay, and charges nothing until you agree.
 
 Premium names (priced higher by their registry) and endings with residency rules aren't sold.
