@@ -1,6 +1,6 @@
 # Casama MCP server
 
-[![stackwares/casama MCP server](https://glama.ai/mcp/servers/stackwares/casama/badges/score.svg)](https://glama.ai/mcp/servers/stackwares/casama)
+[![casama-ai/casama MCP server](https://glama.ai/mcp/servers/casama-ai/casama/badges/score.svg)](https://glama.ai/mcp/servers/casama-ai/casama)
 
 Two things for AI coding tools, over the Model Context Protocol:
 
