@@ -27,7 +27,8 @@ computer and what its network allows.
 | `agent-kit/`, `examples/`, `packs/`, `skills/` | Apache-2.0 (adapted skills keep their own license file) |
 | `docs-site/` | Apache-2.0 |
 
-Each folder has its own `LICENSE` file. Third-party code keeps its own license.
+Each folder has its own `LICENSE` file, and that file wins. The [LICENSE](LICENSE) at the top (AGPL-3.0)
+covers anything without one. Third-party code keeps its own license.
 
 ## What AGPL-3.0 means for the apps
 
