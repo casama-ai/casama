@@ -117,6 +117,65 @@ describe("json catalog", () => {
   });
 });
 
+const DESCRIBED = JSON.stringify({
+  push: {
+    done: "Done",
+    "@done": { description: "Button that closes a sheet.", maxLength: 12 },
+    reply: "{bot} replied",
+    "@reply": { placeholders: { bot: { type: "String", example: "Ada" } } },
+    plain: "Ok",
+  },
+});
+
+describe("json catalog with descriptions", () => {
+  const options = { messageFormat: "icu", descriptions: true };
+
+  it("reads each @entry as its sibling's description, placeholders and limit", () => {
+    expect(jsonAdapter.read(DESCRIBED, ctx(options))).toEqual([
+      {
+        key: "push.done",
+        text: "Done",
+        kind: "icu",
+        description: "Button that closes a sheet.",
+        maxLength: 12,
+      },
+      {
+        key: "push.reply",
+        text: "{bot} replied",
+        kind: "icu",
+        placeholders: { bot: { type: "String", example: "Ada" } },
+      },
+      { key: "push.plain", text: "Ok", kind: "icu" },
+    ]);
+  });
+
+  it("never writes or reads back an @entry", () => {
+    const translations = new Map([
+      ["push.done", "Fertig"],
+      ["push.@done.description", "no"],
+    ]);
+    const out = jsonAdapter.write(
+      { source: DESCRIBED, previous: null, translations },
+      ctx(options),
+    );
+    expect(JSON.parse(out)).toEqual({ push: { done: "Fertig" } });
+    const edited = '{"push": {"done": "Fertig", "@done": {"description": "x"}}}';
+    const back = jsonAdapter.readTarget(edited, ctx(options));
+    expect(back.kind === "keys" && [...back.values]).toEqual([["push.done", "Fertig"]]);
+  });
+
+  it("refuses an @entry that describes nothing, or isn't an object", () => {
+    expect(() => jsonAdapter.read('{"@gone": {"description": "x"}}', ctx(options))).toThrow(
+      /describes no string/,
+    );
+    expect(() => jsonAdapter.read('{"a": "A", "@a": "x"}', ctx(options))).toThrow(/object/);
+  });
+
+  it("leaves @ keys as ordinary strings without the option", () => {
+    expect(jsonAdapter.read('{"@a": "A"}', ctx()).map((u) => u.key)).toEqual(["@a"]);
+  });
+});
+
 const GALLERY = JSON.stringify({
   schema: 1,
   items: [

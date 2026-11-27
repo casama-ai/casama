@@ -5,6 +5,9 @@
  * Options:
  * - `messageFormat`: "plain" (default) or "icu" (the server's message catalog).
  * - `apostrophes`: ICU apostrophe quoting (default true for "icu", as intl-messageformat does).
+ * - `descriptions`: an `@name` entry beside `name` describes it, as in ARB files:
+ *   `{ "title": "Done", "@title": { "description": "…", "placeholders": {…}, "maxLength": 40 } }`.
+ *   `@` entries are never translated and never written to a target.
  * - `items`: read a list instead of a catalog: `{ "path": "items", "id": "id",
  *   "fields": ["name", "description", "examples", "document.capabilities"] }`. Each field may be a
  *   string or a list of strings. The target is an overlay: `{ "<id>": { "name": "…", … } }`.
@@ -57,6 +60,37 @@ function leaves(value: Json | undefined, prefix: string, out: Map<string, string
   } else if (isObject(value)) {
     for (const [k, v] of Object.entries(value)) leaves(v, prefix ? `${prefix}.${k}` : k, out);
   }
+}
+
+/** What an `@name` entry says about the string beside it. */
+type Meta = Pick<Unit, "description" | "placeholders" | "maxLength">;
+
+/**
+ * The catalog without its `@name` entries, which are collected into `meta` by the key they
+ * describe. An entry that describes nothing is a mistake (a renamed or misspelled key).
+ */
+function takeMeta(value: Json, prefix: string, meta: Map<string, Meta>, path: string): Json {
+  const below = (k: string) => (prefix ? `${prefix}.${k}` : k);
+  if (Array.isArray(value)) return value.map((v, i) => takeMeta(v, below(String(i)), meta, path));
+  if (!isObject(value)) return value;
+  const out: { [k: string]: Json } = {};
+  for (const [k, v] of Object.entries(value)) {
+    if (!k.startsWith("@")) {
+      out[k] = takeMeta(v, below(k), meta, path);
+      continue;
+    }
+    const name = k.slice(1);
+    if (typeof value[name] !== "string")
+      throw new AdapterError(path, `"${below(k)}" describes no string named "${below(name)}"`);
+    if (!isObject(v)) throw new AdapterError(path, `"${below(k)}" must be an object`);
+    const entry: Meta = {};
+    if (typeof v.description === "string") entry.description = v.description;
+    if (isObject(v.placeholders))
+      entry.placeholders = v.placeholders as NonNullable<Unit["placeholders"]>;
+    if (typeof v.maxLength === "number") entry.maxLength = v.maxLength;
+    meta.set(below(name), entry);
+  }
+  return out;
 }
 
 /** The source's shape with only translated strings; undefined when nothing is translated. */
@@ -116,6 +150,10 @@ function itemsAsOverlay(data: Json, ctx: AdapterContext, opt: ItemsOption): { [k
   return out;
 }
 
+/** A catalog's strings: without its `@name` entries when the surface describes them that way. */
+const catalog = (data: Json, ctx: AdapterContext, meta: Map<string, Meta>) =>
+  ctx.options.descriptions === true ? takeMeta(data, "", meta, ctx.path) : data;
+
 export const jsonAdapter: Adapter = {
   id: "json",
   mode: "kv",
@@ -123,30 +161,32 @@ export const jsonAdapter: Adapter = {
   read(content, ctx) {
     const data = parse(content, ctx.path);
     const opt = itemsOption(ctx);
-    const shape = opt ? itemsAsOverlay(data, ctx, opt) : data;
+    const meta = new Map<string, Meta>();
+    const shape = opt ? itemsAsOverlay(data, ctx, opt) : catalog(data, ctx, meta);
     const map = new Map<string, string>();
     leaves(shape, "", map);
     const icu = ctx.options.messageFormat === "icu";
     const units: Unit[] = [];
     for (const [key, text] of map) {
       if (!text.trim()) continue;
-      units.push(
-        icu ? { key, text, kind: "icu" } : { key, text, kind: "plain", tokens: ["brace"] },
-      );
+      units.push({
+        ...meta.get(key),
+        ...(icu ? { key, text, kind: "icu" } : { key, text, kind: "plain", tokens: ["brace"] }),
+      });
     }
     return units;
   },
 
   readTarget(content, ctx) {
     const values = new Map<string, string>();
-    leaves(parse(content, ctx.path), "", values);
+    leaves(catalog(parse(content, ctx.path), ctx, new Map()), "", values);
     return { kind: "keys", values };
   },
 
   write(input, ctx) {
     const data = parse(input.source, ctx.path);
     const opt = itemsOption(ctx);
-    const shape = opt ? itemsAsOverlay(data, ctx, opt) : data;
+    const shape = opt ? itemsAsOverlay(data, ctx, opt) : catalog(data, ctx, new Map());
     const out = project(shape, "", input.translations) ?? (Array.isArray(shape) ? [] : {});
     return `${JSON.stringify(out, null, 2)}\n`;
   },

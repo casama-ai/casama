@@ -1,5 +1,4 @@
 agente de IA
-agente de IA de código abierto
 asistente de IA
 automatización con IA
 automatización del navegador

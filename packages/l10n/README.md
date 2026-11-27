@@ -49,7 +49,7 @@ found from the current folder upward), `--locale a,b`, `--surface a,b` and `--js
 | Adapter | Files | Notes |
 |---|---|---|
 | `arb` | Flutter ARB | ICU messages, `@key` descriptions and placeholders. Writes `@@locale` and the translated keys in the template's order. Option `apostrophes` matches gen-l10n's `use-escaping` |
-| `json` | JSON catalogs, gallery-style lists | Flat or nested. `messageFormat: "icu"` for ICU catalogs. `items: { path, id, fields }` reads a list and writes an overlay `{ id: { field } }` |
+| `json` | JSON catalogs, gallery-style lists | Flat or nested. `messageFormat: "icu"` for ICU catalogs. `descriptions: true` reads ARB-style `@key` entries beside each string (`description`, `placeholders`, `maxLength`). `items: { path, id, fields }` reads a list and writes an overlay `{ id: { field } }` |
 | `text` | One string per file | Store listing folders (`name.txt`, `subtitle.txt`, …) |
 | `markdown` | Docs and blog pages | Front matter fields (`frontMatter`, default title and description), headings, paragraphs, lists, tables, VitePress containers. Code blocks stay byte-identical |
 | `html` | Pages and fragments | Text blocks with their inline tags, plus `alt`, `title`, `aria-label`, `placeholder` and meta descriptions. `<script>`, `<code>`, `translate="no"` stay untouched. Option `separate` (such as `["nav", ".stores"]`) makes each child of those containers its own segment |

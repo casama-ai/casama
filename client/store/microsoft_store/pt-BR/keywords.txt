@@ -1,5 +1,4 @@
 agente de IA
-agente de IA open source
 assistente de IA
 automação com IA
 automação de navegador
