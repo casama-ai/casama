@@ -478,8 +478,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     key: const Key('settingsLanguage'),
                     icon: LucideIcons.languages,
                     title: l10n.language,
-                    trailing: Text(AppLanguage.nameOf(Localizations.localeOf(context)), style: context.textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant)),
-                    // The picker, once there's more than one language to pick (and in debug builds).
+                    // The current language as the subtitle, like the other rows' one-line summaries.
+                    subtitle: AppLanguage.nameOf(Localizations.localeOf(context)),
+                    // The picker, once there's more than one language to pick (and in debug builds);
+                    // GroupedTile adds the chevron when it opens something.
                     onTap: ref.watch(languagePickerShownProvider) ? () => chooseLanguage(context, ref) : null,
                   ),
               ]),
