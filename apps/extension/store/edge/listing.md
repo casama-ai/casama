@@ -84,14 +84,15 @@ Re-render in Edge later if wanted (plan §19).
 ```text
 Casama for Edge needs a Casama account. Please use this test account on Casama Cloud:
 
-  Email: <reviewer account email, from Vaultwarden "Chrome Web Store reviewer">
+  Email: <reviewer account email, from Vaultwarden "Casama · store review account (review@casama.ai)">
   Password: <from the same Vaultwarden item>
 
 This is the same package as our Chrome Web Store item. The steps are the same as there:
 
 1. After installing, the extension's Settings open. Tap "Agree and continue", pick "On all sites" (recommended), and tap Continue.
 2. In another tab, sign in at https://app.casama.ai with the account above (Continue with Email, then Use a Password Instead). Open Settings, Sign In on Another Device, copy the sign-in link, and paste it under "Paste a sign-in link" in the extension's settings. (The "Use the web app" button works once our server knows this Edge item's id.)
-3. Open any news article, select a sentence, and click the Casama button in the toolbar. The side panel opens. Type a question and press Enter: the reply streams in.
+3. The sign-in card in the side panel offers "Let bots use this browser": one press pairs the browser; "Not now" hides the card.
+4. Open any news article, select a sentence, and click the Casama button in the toolbar. The side panel opens. Type a question and press Enter: the reply streams in.
 4. Library tab: tap "Markdown" to save the page.
 5. Send "Ask me to approve something" to the "Approver" bot: an approval appears in the Inbox, and within a minute as an Edge notification with Approve and Deny buttons.
 
