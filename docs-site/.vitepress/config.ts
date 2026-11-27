@@ -90,7 +90,7 @@ const searchTitles: Record<string, string> = {
   "guide/skills.md": "Skills: a repeatable way of working for a bot",
   "guide/routines.md": "Routines: scheduled and triggered bot work",
   "guide/computers.md": "Computers: a Linux machine for every Casama bot",
-  "guide/in-app-browser.md": "In-app browser: let bots browse on your phone, Mac or Linux computer",
+  "guide/in-app-browser.md": "In-app browser: bots browse on your device",
   "guide/limits.md": "Limits: every default cap, timeout and budget",
   "guide/pages.md": "Pages: reports and dashboards a bot publishes",
   "guide/memory.md": "Memory and knowledge: what a Casama bot remembers",
@@ -103,8 +103,8 @@ const searchTitles: Record<string, string> = {
   "self-hosting/licenses.md": "Self-hosting licenses: personal, trial, business",
   "self-hosting/updates.md": "Update a Casama server, with rollback",
   "self-hosting/casama-link-cloud.md":
-    "Casama Cloud models, computers and credits for self-hosters",
-  "self-hosting/move-to-cloud.md": "Move a self-hosted workspace to Casama Cloud, and back",
+    "Casama Cloud for self-hosters: models, credits",
+  "self-hosting/move-to-cloud.md": "Move a self-hosted workspace to Cloud and back",
   "self-hosting/what-goes-home.md": "What a self-hosted Casama server sends home",
   "self-hosting/configuration.md": "Self-hosting configuration: all settings",
   "self-hosting/operations.md": "Operating a Casama server: updates and backups",
@@ -399,11 +399,6 @@ export default defineConfig({
         icon: "youtube",
         link: "https://www.youtube.com/@casamaai",
         ariaLabel: "Casama on YouTube",
-      },
-      {
-        icon: "instagram",
-        link: "https://www.instagram.com/casamaai/",
-        ariaLabel: "Casama on Instagram",
       },
       {
         icon: "facebook",
