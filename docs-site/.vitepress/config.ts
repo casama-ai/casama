@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { defineConfig } from "vitepress";
 
 const repo = "https://github.com/casama-ai/casama";
@@ -160,11 +160,7 @@ export default defineConfig({
       },
     ],
     ["link", { rel: "alternate", type: "text/plain", href: "/llms.txt", title: "llms.txt" }],
-    ["meta", { property: "og:image", content: "https://docs.casama.ai/og-image.png" }],
-    ["meta", { property: "og:image:width", content: "1200" }],
-    ["meta", { property: "og:image:height", content: "630" }],
-    ["meta", { name: "twitter:card", content: "summary_large_image" }],
-    ["meta", { name: "twitter:image", content: "https://docs.casama.ai/og-image.png" }],
+    // Share images are per page (transformHead below).
   ],
   // A page with no description of its own gets its first paragraph, so search results and share
   // cards say what the page is about instead of repeating the site's one line.
@@ -186,6 +182,12 @@ export default defineConfig({
     const title = home ? "Casama docs" : `${pageData.title} | Casama docs`;
     const description =
       pageData.description || "Self-hostable AI teammates with their own computers.";
+    // Each page shares its own card (public/cards/<path>.jpg, drawn by visuals/render-cards.mjs);
+    // the docs home, and a page whose card isn't drawn yet, share the docs card.
+    const cardPath = `cards/${pageData.relativePath.replace(/\.md$/, ".jpg")}`;
+    const hasCard = !home && existsSync(new URL(`../public/${cardPath}`, import.meta.url));
+    const image = `${site}/${hasCard ? cardPath : "og-card.jpg"}`;
+    const imageAlt = hasCard ? `${pageData.title} · Casama docs` : "Casama docs: guides for using, hosting and building on Casama.";
     const crumbs = cleanPath(pageData.relativePath).split("/").filter(Boolean);
     const data: Record<string, unknown>[] = [
       {
@@ -241,11 +243,15 @@ export default defineConfig({
       ["meta", { property: "og:url", content: url }],
       ["meta", { property: "og:title", content: title }],
       ["meta", { property: "og:description", content: description }],
-      ["meta", { property: "og:image", content: "https://casama.ai/og-image.png" }],
+      ["meta", { property: "og:image", content: image }],
+      ["meta", { property: "og:image:width", content: "1200" }],
+      ["meta", { property: "og:image:height", content: "630" }],
+      ["meta", { property: "og:image:alt", content: imageAlt }],
       ["meta", { name: "twitter:card", content: "summary_large_image" }],
       ["meta", { name: "twitter:title", content: title }],
       ["meta", { name: "twitter:description", content: description }],
-      ["meta", { name: "twitter:image", content: "https://casama.ai/og-image.png" }],
+      ["meta", { name: "twitter:image", content: image }],
+      ["meta", { name: "twitter:image:alt", content: imageAlt }],
       ["script", { type: "application/ld+json" }, JSON.stringify(data).replace(/</g, "\\u003c")],
     ];
   },

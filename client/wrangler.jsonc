@@ -12,8 +12,10 @@
     // Every path that may be 25 MiB or more, and the main files we precompress at Brotli 11 (these
     // always go through R2). cloudflare/prepare.mjs refuses to deploy a large file that isn't listed
     // here; the rest of the app never runs the Worker.
-    "run_worker_first": ["/main.dart.wasm", "/main.dart.js"]
+    // /join/* gets the invite's share card (cloudflare/worker.js).
+    "run_worker_first": ["/main.dart.wasm", "/main.dart.js", "/join/*"]
   },
+  "vars": { "API_URL": "https://api.casama.ai" },
   "r2_buckets": [{ "binding": "LARGE", "bucket_name": "casama-app-large" }],
   "routes": [{ "pattern": "app.casama.ai", "custom_domain": true }],
   "workers_dev": false
