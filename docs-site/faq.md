@@ -90,26 +90,20 @@ available. The code is on
 [GitHub](https://github.com/casama-ai/casama). See [Open source](https://casama.ai/open-source)
 and [LICENSING.md](https://github.com/casama-ai/casama/blob/main/LICENSING.md).
 
-### Why is Casama Cloud invite-only?
-
-We're letting people in as we add capacity, so Casama stays fast for everyone who is in. A
-self-hosted server's personal license also comes from a Casama account. See
-[Getting an invite](/guide/getting-an-invite).
-
-### How do I get an invite?
+### How do I sign up?
 
 Get the app at [casama.ai/download](https://casama.ai/download) (or open
-[app.casama.ai](https://app.casama.ai)) and tap **Join the Waitlist** on the sign-in screen, or join
-at casama.ai/waitlist. You can also start from Telegram ([@casama_ai_bot](https://t.me/casama_ai_bot)),
-email (**get@casama.app**) or Messenger ([m.me/1539129842611601](https://m.me/1539129842611601)).
-We'll email you once when it's your turn — or ask someone who uses Casama: every member has a few
-invites to share.
+[app.casama.ai](https://app.casama.ai)) and continue with Google, Apple or your email. There's no
+waitlist and no invite needed. You can also start from Telegram
+([@casama_ai_bot](https://t.me/casama_ai_bot)), email (**get@casama.app**) or Messenger
+([m.me/1539129842611601](https://m.me/1539129842611601)). See [Signing up](/guide/getting-an-invite).
 
 ### I have an invite code. What now?
 
-Download the app (or open [app.casama.ai](https://app.casama.ai)) and tap **I Have an Invite** on
-the sign-in screen, or enter it at casama.ai/waitlist with your email. Then sign in with that
-address — Google, Apple and the email link all work, as long as it's the same address. You can also
+Open your friend's invite link, or enter the code at
+[casama.ai/waitlist](https://casama.ai/waitlist) with your email. Then sign up with that address — Google, Apple and the email
+link all work, as long as it's the same address. You and your friend both get credits after your
+first chat. You can also
 send your code to [@casama_ai_bot](https://t.me/casama_ai_bot) on Telegram or put it in the subject
 of an email to **get@casama.app**.
 

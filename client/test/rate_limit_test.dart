@@ -2,6 +2,7 @@ import 'package:casama/core/rate_limit.dart';
 import 'package:casama/core/widgets.dart';
 import 'package:casama/l10n/generated/app_localizations.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:casama/l10n/delegates.dart';
@@ -149,5 +150,49 @@ void main() {
     await tester.pump(const Duration(seconds: 2));
     expect(find.text('You can try again now.'), findsOneWidget);
     await tester.pumpAndSettle(const Duration(seconds: 10));
+  });
+
+  testWidgets('a list that hit the limit counts down and loads again by itself (D-610)', (
+    tester,
+  ) async {
+    var retries = 0;
+    await tester.pumpWidget(
+      MaterialApp(
+        localizationsDelegates: testLocalizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: Scaffold(
+          body: AsyncView<int>(
+            value: AsyncValue.error(_limited(3), StackTrace.empty),
+            onRetry: () => retries++,
+            data: (_) => const Text('loaded'),
+          ),
+        ),
+      ),
+    );
+    expect(find.text('Too many requests at once. Try again in 4 seconds.'), findsOneWidget);
+    await tester.pump(const Duration(seconds: 1));
+    expect(find.text('Too many requests at once. Try again in 3 seconds.'), findsOneWidget);
+    expect(retries, 0);
+    await tester.pump(const Duration(seconds: 3));
+    expect(retries, 1);
+    await tester.pump(const Duration(seconds: 10));
+    expect(retries, 1);
+  });
+
+  testWidgets('an inline load error that hit the limit retries by itself (D-610)', (
+    tester,
+  ) async {
+    var retries = 0;
+    await tester.pumpWidget(
+      MaterialApp(
+        localizationsDelegates: testLocalizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: Scaffold(
+          body: InlineError(error: _limited(2), onRetry: () => retries++),
+        ),
+      ),
+    );
+    await tester.pump(const Duration(seconds: 3));
+    expect(retries, 1);
   });
 }

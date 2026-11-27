@@ -1724,6 +1724,26 @@ class SupabaseBackend implements Backend {
       )).data!;
 
   @override
+  Future<CompSettings> adminCompSettings() async => (await api.comps.adminCompSettings()).data!;
+  @override
+  Future<List<CompCode>> adminCompCodes() async => (await api.comps.listAdminCompCodes()).data!;
+  @override
+  Future<CreatedCompCode> adminCreateCompCode(CreateCompCodeRequest request) async =>
+      (await api.comps.createAdminCompCode(createCompCodeRequest: request)).data!;
+  @override
+  Future<CompCode> adminUpdateCompCode(String id, UpdateCompCodeRequest request) async =>
+      (await api.comps.updateAdminCompCode(id: id, updateCompCodeRequest: request)).data!;
+  @override
+  Future<List<Comp>> adminComps({bool running = true, int? limit}) async =>
+      (await api.comps.listAdminComps(running: running ? 'true' : 'false', limit: limit)).data!;
+  @override
+  Future<Comp> adminGrantComp(GrantCompRequest request) async =>
+      (await api.comps.grantAdminComp(grantCompRequest: request)).data!;
+  @override
+  Future<Comp> adminUpdateComp(String id, UpdateCompRequest request) async =>
+      (await api.comps.updateAdminComp(id: id, updateCompRequest: request)).data!;
+
+  @override
   Future<void> report(ReportTarget kind, String targetId, ReportReason reason, {String? note}) async {
     await api.moderation.createReport(
       createReportRequest: CreateReportRequest(targetKind: kind, targetId: targetId, reason: reason, note: note),

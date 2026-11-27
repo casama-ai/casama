@@ -115,4 +115,19 @@ void main() {
     expect(find.byKey(const Key('noComputer')), findsOneWidget);
     await tester.pumpWidget(const SizedBox());
   });
+
+  testWidgets('the panel says which bot is using the team computer (D-617)', (tester) async {
+    await setSize(tester, const Size(800, 1000));
+    final backend = FakeBackend()..teamComputerState = ComputerState.running;
+    await tester.pumpWidget(harness(backend, const Scaffold(body: ComputerScreen(embedded: true))));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('computerInUseBy')), findsNothing);
+    await tester.pumpWidget(const SizedBox());
+
+    backend.computerInUseBy = ComputerInUseBy(botId: botId, botName: 'UT Shopper', runId: runId, conversationId: null);
+    await tester.pumpWidget(harness(backend, const Scaffold(body: ComputerScreen(embedded: true))));
+    await tester.pumpAndSettle();
+    expect(find.text('UT Shopper is using this computer'), findsOneWidget);
+    await tester.pumpWidget(const SizedBox());
+  });
 }

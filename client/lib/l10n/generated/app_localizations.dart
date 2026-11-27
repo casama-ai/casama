@@ -400,6 +400,12 @@ abstract class AppLocalizations {
   /// **'You can try again now.'**
   String get tooManyRequestsReady;
 
+  /// No description provided for @computerInUseBy.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is using this computer'**
+  String computerInUseBy(String name);
+
   /// No description provided for @authAccountExists.
   ///
   /// In en, this message translates to:
@@ -40772,6 +40778,402 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'year'**
   String get planChangePeriodYear;
+
+  /// No description provided for @adminFreePlans.
+  ///
+  /// In en, this message translates to:
+  /// **'Free Plans'**
+  String get adminFreePlans;
+
+  /// No description provided for @adminAboutFreePlans.
+  ///
+  /// In en, this message translates to:
+  /// **'Gift codes and free plans for friends. Codes are redeemed on the web, then the plan works in every app.'**
+  String get adminAboutFreePlans;
+
+  /// No description provided for @adminFreeOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Free plans are off on this server. Turn them on with scripts/comps.sh on.'**
+  String get adminFreeOff;
+
+  /// No description provided for @adminFreeNewCode.
+  ///
+  /// In en, this message translates to:
+  /// **'New Gift Code'**
+  String get adminFreeNewCode;
+
+  /// No description provided for @adminFreeGive.
+  ///
+  /// In en, this message translates to:
+  /// **'Give a Plan'**
+  String get adminFreeGive;
+
+  /// No description provided for @adminFreeStatRunning.
+  ///
+  /// In en, this message translates to:
+  /// **'Free plans running'**
+  String get adminFreeStatRunning;
+
+  /// No description provided for @adminFreeStatCodesLive.
+  ///
+  /// In en, this message translates to:
+  /// **'Codes that still work'**
+  String get adminFreeStatCodesLive;
+
+  /// No description provided for @adminFreeStatRedeemed.
+  ///
+  /// In en, this message translates to:
+  /// **'Codes redeemed'**
+  String get adminFreeStatRedeemed;
+
+  /// No description provided for @adminFreeCodes.
+  ///
+  /// In en, this message translates to:
+  /// **'Gift Codes'**
+  String get adminFreeCodes;
+
+  /// No description provided for @adminFreeCodesNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No gift codes yet. Make one to give someone a free plan.'**
+  String get adminFreeCodesNone;
+
+  /// No description provided for @adminFreeWho.
+  ///
+  /// In en, this message translates to:
+  /// **'Who Has One'**
+  String get adminFreeWho;
+
+  /// No description provided for @adminFreeFilterRunning.
+  ///
+  /// In en, this message translates to:
+  /// **'Running'**
+  String get adminFreeFilterRunning;
+
+  /// No description provided for @adminFreeFilterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get adminFreeFilterAll;
+
+  /// No description provided for @adminFreeNoneRunning.
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody has a free plan right now.'**
+  String get adminFreeNoneRunning;
+
+  /// No description provided for @adminFreeNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No free plans yet.'**
+  String get adminFreeNone;
+
+  /// No description provided for @adminFreeStatusLive.
+  ///
+  /// In en, this message translates to:
+  /// **'Live'**
+  String get adminFreeStatusLive;
+
+  /// No description provided for @adminFreeStatusUsedUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Used Up'**
+  String get adminFreeStatusUsedUp;
+
+  /// No description provided for @adminFreeStatusOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get adminFreeStatusOff;
+
+  /// No description provided for @adminFreeStatusExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'Expired'**
+  String get adminFreeStatusExpired;
+
+  /// No description provided for @adminFreeNoRedeemBy.
+  ///
+  /// In en, this message translates to:
+  /// **'No end date'**
+  String get adminFreeNoRedeemBy;
+
+  /// No description provided for @adminFreeTurnOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn Off'**
+  String get adminFreeTurnOff;
+
+  /// No description provided for @adminFreeTurnOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn On'**
+  String get adminFreeTurnOn;
+
+  /// No description provided for @adminFreePlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan'**
+  String get adminFreePlan;
+
+  /// No description provided for @adminFreeMonths.
+  ///
+  /// In en, this message translates to:
+  /// **'Months'**
+  String get adminFreeMonths;
+
+  /// No description provided for @adminFreeUses.
+  ///
+  /// In en, this message translates to:
+  /// **'How many people can use it'**
+  String get adminFreeUses;
+
+  /// No description provided for @adminFreeUsesHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Each person can redeem one gift code ever. Use 1 for a code meant for one person.'**
+  String get adminFreeUsesHelp;
+
+  /// No description provided for @adminFreeRedeemByLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Redeem By'**
+  String get adminFreeRedeemByLabel;
+
+  /// No description provided for @adminFreeAnyTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Any time'**
+  String get adminFreeAnyTime;
+
+  /// No description provided for @adminFreeNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Note (only you see it)'**
+  String get adminFreeNote;
+
+  /// No description provided for @adminFreeNoteHint.
+  ///
+  /// In en, this message translates to:
+  /// **'For Maya'**
+  String get adminFreeNoteHint;
+
+  /// No description provided for @adminFreeCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'Make Code'**
+  String get adminFreeCreate;
+
+  /// No description provided for @adminFreeMadeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Gift Code Ready'**
+  String get adminFreeMadeTitle;
+
+  /// No description provided for @adminFreeMadeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy it now. It\'s shown only this once: afterwards only its last characters are kept.'**
+  String get adminFreeMadeBody;
+
+  /// No description provided for @adminFreeCopyCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy Code'**
+  String get adminFreeCopyCode;
+
+  /// No description provided for @adminFreeCopyLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy Link'**
+  String get adminFreeCopyLink;
+
+  /// No description provided for @adminFreeCopyMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy Message'**
+  String get adminFreeCopyMessage;
+
+  /// No description provided for @adminFreeDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get adminFreeDone;
+
+  /// No description provided for @adminFreeEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Their email'**
+  String get adminFreeEmail;
+
+  /// No description provided for @adminFreeGiveHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'It goes on the oldest workspace they own, so they need a Casama account first.'**
+  String get adminFreeGiveHelp;
+
+  /// No description provided for @adminFreeGiveButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Give Plan'**
+  String get adminFreeGiveButton;
+
+  /// No description provided for @adminFreeFromCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Gift code'**
+  String get adminFreeFromCode;
+
+  /// No description provided for @adminFreeFromGrant.
+  ///
+  /// In en, this message translates to:
+  /// **'Given'**
+  String get adminFreeFromGrant;
+
+  /// No description provided for @adminFreeExtend.
+  ///
+  /// In en, this message translates to:
+  /// **'Extend'**
+  String get adminFreeExtend;
+
+  /// No description provided for @adminFreeExtendButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Extend Plan'**
+  String get adminFreeExtendButton;
+
+  /// No description provided for @adminFreeEndNow.
+  ///
+  /// In en, this message translates to:
+  /// **'End Now'**
+  String get adminFreeEndNow;
+
+  /// No description provided for @adminFreeEndTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'End this free plan now?'**
+  String get adminFreeEndTitle;
+
+  /// No description provided for @adminFreeEndBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The workspace moves to Free right away. Credits already given stay.'**
+  String get adminFreeEndBody;
+
+  /// No description provided for @adminFreeExtended.
+  ///
+  /// In en, this message translates to:
+  /// **'Free plan extended'**
+  String get adminFreeExtended;
+
+  /// No description provided for @adminFreeEndedDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Free plan ended'**
+  String get adminFreeEndedDone;
+
+  /// No description provided for @adminFreeReasonExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'Ran out'**
+  String get adminFreeReasonExpired;
+
+  /// No description provided for @adminFreeReasonRevoked.
+  ///
+  /// In en, this message translates to:
+  /// **'Ended by you'**
+  String get adminFreeReasonRevoked;
+
+  /// No description provided for @adminFreeReasonReplaced.
+  ///
+  /// In en, this message translates to:
+  /// **'They bought a plan'**
+  String get adminFreeReasonReplaced;
+
+  /// No description provided for @adminFreeColWho.
+  ///
+  /// In en, this message translates to:
+  /// **'Who'**
+  String get adminFreeColWho;
+
+  /// No description provided for @adminFreeColPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan'**
+  String get adminFreeColPlan;
+
+  /// No description provided for @adminFreeColEnds.
+  ///
+  /// In en, this message translates to:
+  /// **'Ends'**
+  String get adminFreeColEnds;
+
+  /// No description provided for @adminFreeCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied'**
+  String get adminFreeCopied;
+
+  /// No description provided for @adminFreeInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Check the numbers and the email address.'**
+  String get adminFreeInvalid;
+
+  /// No description provided for @adminFreeStatRunningValue.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} of {max}'**
+  String adminFreeStatRunningValue(int count, int max);
+
+  /// No description provided for @adminFreePlanMonths.
+  ///
+  /// In en, this message translates to:
+  /// **'{plan} · {months, plural, =1{1 month} other{{months} months}}'**
+  String adminFreePlanMonths(String plan, int months);
+
+  /// No description provided for @adminFreeUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'{used} of {total} redeemed'**
+  String adminFreeUsed(int used, int total);
+
+  /// No description provided for @adminFreeRedeemBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Redeem by {date}'**
+  String adminFreeRedeemBy(String date);
+
+  /// No description provided for @adminFreeEnds.
+  ///
+  /// In en, this message translates to:
+  /// **'Ends {date}'**
+  String adminFreeEnds(String date);
+
+  /// No description provided for @adminFreeEndedOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Ended {date}'**
+  String adminFreeEndedOn(String date);
+
+  /// No description provided for @adminFreeGiven.
+  ///
+  /// In en, this message translates to:
+  /// **'{plan} given until {date}'**
+  String adminFreeGiven(String plan, String date);
+
+  /// No description provided for @adminFreeMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Here\'s {what} of Casama {plan}, free: {link}\n\nOpen it in Safari or Chrome, tap Redeem on the web and sign in with your Casama account. Nothing to pay, no card.'**
+  String adminFreeMessage(String what, String plan, String link);
+
+  /// No description provided for @adminFreeMonthCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{months, plural, =1{1 month} other{{months} months}}'**
+  String adminFreeMonthCount(int months);
 
   /// No description provided for @adminPartners.
   ///

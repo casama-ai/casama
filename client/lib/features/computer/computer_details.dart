@@ -45,12 +45,15 @@ String? computerAccessLine(BuildContext context, Computer c) {
   return names.isEmpty ? l10n.computerCanUseNothing : l10n.computerCanUse(names.join(', '));
 }
 
-/// "Last used 2 hours ago" for a computer that isn't on; "Last seen 5 minutes ago" for a personal
-/// computer that isn't connected. Null while it's on, or when it never was.
+/// "Last used 2 hours ago" for a cloud computer, on or not: a running one shows it too, so it
+/// doesn't jump from "Running" to "last used 9 hours ago" when it sleeps (the customer's build 108
+/// round, L8). "Last seen 5 minutes ago" for a personal computer that isn't connected. Null when it
+/// never was used, for a connected personal computer, or after an error.
 String? computerActivityLine(BuildContext context, Computer c) {
   final on = c.state == ComputerState.running || c.state == ComputerState.idle;
-  if (on || c.state == ComputerState.error) return null;
+  if (c.state == ComputerState.error) return null;
   if (c.kind == ComputerKindEnum.local) {
+    if (on) return null;
     final seen = c.device?.lastSeenAt ?? c.lastActiveAt;
     return seen == null ? null : context.l10n.computerLastSeen(relativeTime(seen, context));
   }

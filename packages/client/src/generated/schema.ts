@@ -12513,6 +12513,16 @@ export interface components {
              * @description When its saved files were removed because the workspace went unused for 6 months (docs/INACTIVE-ACCOUNTS-PLAN.md); it starts fresh. Null: never.
              */
             files_removed_at?: string | null;
+            /** @description The bot driving its screen right now (a browser or desktop step in a working run, within the last 2 minutes); null when none. A team computer's every chat shows the same screen, so the panel says whose work it is (D-617). */
+            in_use_by?: {
+                /** Format: uuid */
+                bot_id: string;
+                bot_name: string;
+                /** Format: uuid */
+                run_id: string;
+                /** Format: uuid */
+                conversation_id: string | null;
+            } | null;
         };
         /** @enum {string} */
         ComputerState: "provisioning" | "starting" | "running" | "idle" | "sleeping" | "stopped" | "error";

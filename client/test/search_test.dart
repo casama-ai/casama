@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -53,6 +54,49 @@ void main() {
     await tester.tap(find.byKey(const Key('result-message-msg-1')));
     await tester.pumpAndSettle();
     expect(find.text('chat $convId msg-1'), findsOneWidget);
+  });
+
+  Future<FakeBackend> openSearch(WidgetTester tester, FakeBackend backend) async {
+    await setSize(tester, const Size(700, 1000));
+    final router = GoRouter(routes: [GoRoute(path: '/', builder: (_, _) => const SearchScreen())]);
+    await tester.pumpWidget(ProviderScope(
+      overrides: [backendProvider.overrideWithValue(backend)],
+      child: MaterialApp.router(
+        routerConfig: router,
+        localizationsDelegates: testLocalizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+      ),
+    ));
+    await tester.pumpAndSettle();
+    return backend;
+  }
+
+  testWidgets('a message hit is named by its own words, with its chat below', (tester) async {
+    await openSearch(tester, FakeBackend());
+    await tester.enterText(find.byKey(const Key('searchField')), 'invoice');
+    await tester.pump(const Duration(milliseconds: 300));
+    await tester.pumpAndSettle();
+    expect(find.text('Please draft the invoice for Northwind'), findsOneWidget);
+    expect(find.textContaining('Invoices'), findsOneWidget);
+  });
+
+  testWidgets('a search that hit the rate limit counts down and searches again (D-610)', (tester) async {
+    final options = RequestOptions(path: '/v1/search');
+    final backend = FakeBackend()
+      ..failSearches.add(DioException(
+        requestOptions: options,
+        type: DioExceptionType.badResponse,
+        response: Response(requestOptions: options, statusCode: 429, headers: Headers.fromMap({'retry-after': ['2']})),
+      ));
+    await openSearch(tester, backend);
+    await tester.enterText(find.byKey(const Key('searchField')), 'invoice');
+    await tester.pump(const Duration(milliseconds: 300));
+    await tester.pump();
+    expect(find.text('Too many requests at once. Try again in 3 seconds.'), findsOneWidget);
+    await tester.pump(const Duration(seconds: 3));
+    await tester.pumpAndSettle();
+    expect(backend.searches, ['invoice', 'invoice']);
+    expect(find.text('MESSAGES'), findsOneWidget);
   });
 
   testWidgets('opened with a query (Siri search, /search?q=), it searches at once', (tester) async {

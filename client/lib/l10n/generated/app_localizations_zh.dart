@@ -170,6 +170,11 @@ class AppLocalizationsZh extends AppLocalizations {
   String get tooManyRequestsReady => '现在可以重试了。';
 
   @override
+  String computerInUseBy(String name) {
+    return '$name 正在使用这台电脑';
+  }
+
+  @override
   String get authAccountExists => '此邮箱已注册账号，请直接登录。';
 
   @override
@@ -24730,6 +24735,241 @@ class AppLocalizationsZh extends AppLocalizations {
   String get planChangePeriodYear => '年';
 
   @override
+  String get adminFreePlans => 'Free Plans';
+
+  @override
+  String get adminAboutFreePlans =>
+      'Gift codes and free plans for friends. Codes are redeemed on the web, then the plan works in every app.';
+
+  @override
+  String get adminFreeOff =>
+      'Free plans are off on this server. Turn them on with scripts/comps.sh on.';
+
+  @override
+  String get adminFreeNewCode => 'New Gift Code';
+
+  @override
+  String get adminFreeGive => 'Give a Plan';
+
+  @override
+  String get adminFreeStatRunning => 'Free plans running';
+
+  @override
+  String get adminFreeStatCodesLive => 'Codes that still work';
+
+  @override
+  String get adminFreeStatRedeemed => 'Codes redeemed';
+
+  @override
+  String get adminFreeCodes => 'Gift Codes';
+
+  @override
+  String get adminFreeCodesNone =>
+      'No gift codes yet. Make one to give someone a free plan.';
+
+  @override
+  String get adminFreeWho => 'Who Has One';
+
+  @override
+  String get adminFreeFilterRunning => 'Running';
+
+  @override
+  String get adminFreeFilterAll => 'All';
+
+  @override
+  String get adminFreeNoneRunning => 'Nobody has a free plan right now.';
+
+  @override
+  String get adminFreeNone => 'No free plans yet.';
+
+  @override
+  String get adminFreeStatusLive => 'Live';
+
+  @override
+  String get adminFreeStatusUsedUp => 'Used Up';
+
+  @override
+  String get adminFreeStatusOff => 'Off';
+
+  @override
+  String get adminFreeStatusExpired => 'Expired';
+
+  @override
+  String get adminFreeNoRedeemBy => 'No end date';
+
+  @override
+  String get adminFreeTurnOff => 'Turn Off';
+
+  @override
+  String get adminFreeTurnOn => 'Turn On';
+
+  @override
+  String get adminFreePlan => 'Plan';
+
+  @override
+  String get adminFreeMonths => 'Months';
+
+  @override
+  String get adminFreeUses => 'How many people can use it';
+
+  @override
+  String get adminFreeUsesHelp =>
+      'Each person can redeem one gift code ever. Use 1 for a code meant for one person.';
+
+  @override
+  String get adminFreeRedeemByLabel => 'Redeem By';
+
+  @override
+  String get adminFreeAnyTime => 'Any time';
+
+  @override
+  String get adminFreeNote => 'Note (only you see it)';
+
+  @override
+  String get adminFreeNoteHint => 'For Maya';
+
+  @override
+  String get adminFreeCreate => 'Make Code';
+
+  @override
+  String get adminFreeMadeTitle => 'Gift Code Ready';
+
+  @override
+  String get adminFreeMadeBody =>
+      'Copy it now. It\'s shown only this once: afterwards only its last characters are kept.';
+
+  @override
+  String get adminFreeCopyCode => 'Copy Code';
+
+  @override
+  String get adminFreeCopyLink => 'Copy Link';
+
+  @override
+  String get adminFreeCopyMessage => 'Copy Message';
+
+  @override
+  String get adminFreeDone => 'Done';
+
+  @override
+  String get adminFreeEmail => 'Their email';
+
+  @override
+  String get adminFreeGiveHelp =>
+      'It goes on the oldest workspace they own, so they need a Casama account first.';
+
+  @override
+  String get adminFreeGiveButton => 'Give Plan';
+
+  @override
+  String get adminFreeFromCode => 'Gift code';
+
+  @override
+  String get adminFreeFromGrant => 'Given';
+
+  @override
+  String get adminFreeExtend => 'Extend';
+
+  @override
+  String get adminFreeExtendButton => 'Extend Plan';
+
+  @override
+  String get adminFreeEndNow => 'End Now';
+
+  @override
+  String get adminFreeEndTitle => 'End this free plan now?';
+
+  @override
+  String get adminFreeEndBody =>
+      'The workspace moves to Free right away. Credits already given stay.';
+
+  @override
+  String get adminFreeExtended => 'Free plan extended';
+
+  @override
+  String get adminFreeEndedDone => 'Free plan ended';
+
+  @override
+  String get adminFreeReasonExpired => 'Ran out';
+
+  @override
+  String get adminFreeReasonRevoked => 'Ended by you';
+
+  @override
+  String get adminFreeReasonReplaced => 'They bought a plan';
+
+  @override
+  String get adminFreeColWho => 'Who';
+
+  @override
+  String get adminFreeColPlan => 'Plan';
+
+  @override
+  String get adminFreeColEnds => 'Ends';
+
+  @override
+  String get adminFreeCopied => 'Copied';
+
+  @override
+  String get adminFreeInvalid => 'Check the numbers and the email address.';
+
+  @override
+  String adminFreeStatRunningValue(int count, int max) {
+    return '$count of $max';
+  }
+
+  @override
+  String adminFreePlanMonths(String plan, int months) {
+    String _temp0 = intl.Intl.pluralLogic(
+      months,
+      locale: localeName,
+      other: '$months months',
+      one: '1 month',
+    );
+    return '$plan · $_temp0';
+  }
+
+  @override
+  String adminFreeUsed(int used, int total) {
+    return '$used of $total redeemed';
+  }
+
+  @override
+  String adminFreeRedeemBy(String date) {
+    return 'Redeem by $date';
+  }
+
+  @override
+  String adminFreeEnds(String date) {
+    return 'Ends $date';
+  }
+
+  @override
+  String adminFreeEndedOn(String date) {
+    return 'Ended $date';
+  }
+
+  @override
+  String adminFreeGiven(String plan, String date) {
+    return '$plan given until $date';
+  }
+
+  @override
+  String adminFreeMessage(String what, String plan, String link) {
+    return 'Here\'s $what of Casama $plan, free: $link\n\nOpen it in Safari or Chrome, tap Redeem on the web and sign in with your Casama account. Nothing to pay, no card.';
+  }
+
+  @override
+  String adminFreeMonthCount(int months) {
+    String _temp0 = intl.Intl.pluralLogic(
+      months,
+      locale: localeName,
+      other: '$months months',
+      one: '1 month',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get adminPartners => 'Partners';
 
   @override
@@ -26738,7 +26978,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get settingsWordsAppearance =>
-      'theme 主题 dark mode 深色模式 light mode 浅色模式 night 夜间 colors 颜色 fonts 字体 text size 字号 background 背景 wallpaper 壁纸 look 外观 style 风格 themes effects 效果 motion 动效 animations 动画 haptics 触感 震动 振动 反馈 触控板 trackpad';
+      'theme 主题 dark mode 深色模式 light mode 浅色模式 night 夜间 colors colours 颜色 fonts font 字体 text size 字号 background 背景 wallpaper 壁纸 look 外观 style 风格 themes effects 效果 motion 动效 animations 动画 haptics 触感 触觉 vibration vibrate 震动 振动 feedback 反馈 trackpad 触控板';
 
   @override
   String get settingsWordsQuietHours =>
@@ -28098,86 +28338,84 @@ class AppLocalizationsZh extends AppLocalizations {
   String get siriGeminiOff => '此手机上已为 Casama 关闭 Gemini（Casama → 设置 → 隐私）。';
 
   @override
-  String get suggestionActionTurnOn => 'Turn on';
+  String get suggestionActionTurnOn => '开启';
 
   @override
   String suggestionActionRemindMe(String date) {
-    return 'Remind me $date';
+    return '$date 提醒我';
   }
 
   @override
-  String get suggestionActionPickTime => 'Pick a time';
+  String get suggestionActionPickTime => '选择时间';
 
   @override
-  String get suggestionActionPutAwayAll => 'Put away all';
+  String get suggestionActionPutAwayAll => '全部搁置';
 
   @override
   String suggestionActionPutAwayAllCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Put away all $count ideas',
-      one: 'Put away 1 idea',
+      other: '暂时搁置全部 $count 个想法',
+      one: '暂时搁置 1 个想法',
     );
     return '$_temp0';
   }
 
   @override
-  String get suggestionActionOpen => 'Open';
+  String get suggestionActionOpen => '打开';
 
   @override
-  String get suggestionActionGotIt => 'Got it';
+  String get suggestionActionGotIt => '知道了';
 
   @override
-  String get suggestionActionLater => 'Later';
+  String get suggestionActionLater => '稍后';
 
   @override
-  String get suggestionActionSomethingElse => 'Something else';
+  String get suggestionActionSomethingElse => '其他问题';
 
   @override
-  String get suggestionTurnedOn => 'Turned on';
+  String get suggestionTurnedOn => '已开启';
 
   @override
   String suggestionReminderSet(String date) {
-    return 'Reminder set for $date';
+    return '已设置 $date 提醒';
   }
 
   @override
-  String get suggestionSnoozed => 'Saved for later';
+  String get suggestionSnoozed => '已留待稍后';
 
   @override
-  String get suggestionSnoozedExpired => 'Put away — snoozed twice';
+  String get suggestionSnoozedExpired => '已暂时搁置——已延后两次';
 
   @override
   String suggestionPutAwayCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Put away $count ideas',
-      one: 'Put away 1 idea',
+      other: '已暂时搁置 $count 个想法',
     );
     return '$_temp0';
   }
 
   @override
-  String get suggestionUndo => 'Undo';
+  String get suggestionUndo => '撤销';
 
   @override
-  String get suggestionLaterTomorrow => 'Tomorrow morning';
+  String get suggestionLaterTomorrow => '明天早上';
 
   @override
-  String get suggestionLaterEvening => 'This evening';
+  String get suggestionLaterEvening => '今天傍晚';
 
   @override
-  String get suggestionLaterNextWeek => 'Next week';
+  String get suggestionLaterNextWeek => '下周';
 
   @override
   String suggestionMoreWaiting(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count more ideas waiting',
-      one: '1 more idea waiting',
+      other: '还有 $count 个想法待处理',
     );
     return '$_temp0';
   }
@@ -28187,8 +28425,7 @@ class AppLocalizationsZh extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$name · $count ideas',
-      one: '$name · 1 idea',
+      other: '$name · $count 个想法',
     );
     return '$_temp0';
   }
@@ -28198,8 +28435,7 @@ class AppLocalizationsZh extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$name · $count routine results today',
-      one: '$name · 1 routine result today',
+      other: '$name · 今天 $count 项例行任务结果',
     );
     return '$_temp0';
   }
@@ -28209,8 +28445,7 @@ class AppLocalizationsZh extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$name · $count updates today',
-      one: '$name · 1 update today',
+      other: '$name · 今天 $count 项更新',
     );
     return '$_temp0';
   }
@@ -28220,8 +28455,7 @@ class AppLocalizationsZh extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count routine results today',
-      one: '1 routine result today',
+      other: '今天 $count 项例行任务结果',
     );
     return '$_temp0';
   }
@@ -28231,15 +28465,14 @@ class AppLocalizationsZh extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count updates today',
-      one: '1 update today',
+      other: '今天 $count 项更新',
     );
     return '$_temp0';
   }
 
   @override
   String briefSinceYesterday(String summary) {
-    return 'Since yesterday: $summary';
+    return '昨天以来：$summary';
   }
 
   @override
@@ -28247,8 +28480,7 @@ class AppLocalizationsZh extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count pages',
-      one: '1 page',
+      other: '$count 个页面',
     );
     return '$_temp0';
   }
@@ -28258,8 +28490,7 @@ class AppLocalizationsZh extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count routine results',
-      one: '1 routine result',
+      other: '$count 项例行任务结果',
     );
     return '$_temp0';
   }
@@ -28269,41 +28500,40 @@ class AppLocalizationsZh extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count updates',
-      one: '1 update',
+      other: '$count 项更新',
     );
     return '$_temp0';
   }
 
   @override
-  String get notifTurnOn => 'Turn on';
+  String get notifTurnOn => '开启';
 
   @override
-  String get notifOpen => 'Open';
+  String get notifOpen => '打开';
 
   @override
-  String get notifGotIt => 'Got it';
+  String get notifGotIt => '知道了';
 
   @override
-  String get notifRemindMe => 'Remind me';
+  String get notifRemindMe => '提醒我';
 
   @override
-  String get notifLater => 'Later';
+  String get notifLater => '稍后';
 
   @override
-  String get watchTurnOn => 'Turn on';
+  String get watchTurnOn => '开启';
 
   @override
-  String get watchGotIt => 'Got it';
+  String get watchGotIt => '知道了';
 
   @override
-  String get watchRemindMe => 'Remind';
+  String get watchRemindMe => '提醒';
 
   @override
-  String get watchLater => 'Later';
+  String get watchLater => '稍后';
 
   @override
-  String get watchOpen => 'Open';
+  String get watchOpen => '打开';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -28469,6 +28699,11 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get tooManyRequestsReady => '你現在可以重試了。';
+
+  @override
+  String computerInUseBy(String name) {
+    return '$name 正在使用這台電腦';
+  }
 
   @override
   String get authAccountExists => '此電子郵件已有帳號。請改用登入。';
@@ -51447,7 +51682,7 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get settingsWordsAppearance =>
-      'theme dark mode light mode night colors colours fonts font text size background wallpaper look style themes effects motion animations 主題 深色模式 淺色模式 夜間 顏色 色彩 字體 字型 文字大小 背景 桌布 風格 樣式 特效 動態 動畫 haptics 觸覺 震動 振動 回饋 觸控板 軌跡板 trackpad';
+      'theme dark mode light mode night colors colours fonts font text size background wallpaper look style themes effects motion animations haptics vibration vibrate feedback trackpad 主題 深色模式 淺色模式 夜間 顏色 色彩 字體 字型 文字大小 背景 桌布 風格 樣式 特效 動態 動畫 觸覺 觸覺回饋 震動 振動 回饋 觸控板 軌跡板';
 
   @override
   String get settingsWordsQuietHours =>
@@ -52805,4 +53040,202 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   @override
   String get siriGeminiOff =>
       '這支手機已關閉 Gemini 對 Casama 的存取權（Casama → 設定 → 隱私權）。';
+
+  @override
+  String get suggestionActionTurnOn => '開啟';
+
+  @override
+  String suggestionActionRemindMe(String date) {
+    return '$date 提醒我';
+  }
+
+  @override
+  String get suggestionActionPickTime => '選擇時間';
+
+  @override
+  String get suggestionActionPutAwayAll => '全部收起';
+
+  @override
+  String suggestionActionPutAwayAllCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '收起全部 $count 個點子',
+      one: '收起 1 個點子',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get suggestionActionOpen => '開啟';
+
+  @override
+  String get suggestionActionGotIt => '我知道了';
+
+  @override
+  String get suggestionActionLater => '稍後再說';
+
+  @override
+  String get suggestionActionSomethingElse => '其他原因';
+
+  @override
+  String get suggestionTurnedOn => '已開啟';
+
+  @override
+  String suggestionReminderSet(String date) {
+    return '已設定 $date 提醒';
+  }
+
+  @override
+  String get suggestionSnoozed => '已留待稍後';
+
+  @override
+  String get suggestionSnoozedExpired => '已收起——已延後兩次';
+
+  @override
+  String suggestionPutAwayCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '已收起 $count 個點子',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get suggestionUndo => '還原';
+
+  @override
+  String get suggestionLaterTomorrow => '明天早上';
+
+  @override
+  String get suggestionLaterEvening => '今天傍晚';
+
+  @override
+  String get suggestionLaterNextWeek => '下週';
+
+  @override
+  String suggestionMoreWaiting(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '還有 $count 個點子待處理',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String botIdeasGrouped(String name, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$name · $count 個點子',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String updatesGroupedRoutine(String name, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$name · 今天 $count 項例行任務結果',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String updatesGroupedNotice(String name, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$name · 今天 $count 個更新',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String updatesGroupedRoutinePlain(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '今天 $count 項例行任務結果',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String updatesGroupedNoticePlain(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '今天 $count 個更新',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String briefSinceYesterday(String summary) {
+    return '昨天以來：$summary';
+  }
+
+  @override
+  String briefSincePages(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 個頁面',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String briefSinceRoutines(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 項例行任務結果',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String briefSinceUpdates(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 個更新',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get notifTurnOn => '開啟';
+
+  @override
+  String get notifOpen => '開啟';
+
+  @override
+  String get notifGotIt => '我知道了';
+
+  @override
+  String get notifRemindMe => '提醒我';
+
+  @override
+  String get notifLater => '稍後再說';
+
+  @override
+  String get watchTurnOn => '開啟';
+
+  @override
+  String get watchGotIt => '我知道了';
+
+  @override
+  String get watchRemindMe => '提醒';
+
+  @override
+  String get watchLater => '稍後再說';
+
+  @override
+  String get watchOpen => '開啟';
 }

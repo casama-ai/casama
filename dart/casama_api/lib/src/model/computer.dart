@@ -4,6 +4,7 @@
 
 // ignore_for_file: unused_element
 import 'package:casama_api/src/model/computer_size.dart';
+import 'package:casama_api/src/model/computer_in_use_by.dart';
 import 'package:casama_api/src/model/computer_state.dart';
 import 'package:casama_api/src/model/computer_operation.dart';
 import 'package:casama_api/src/model/computer_device.dart';
@@ -65,6 +66,8 @@ class Computer {
      this.updateAvailableSince,
 
      this.filesRemovedAt,
+
+     this.inUseBy,
   });
 
   @JsonKey(
@@ -325,6 +328,18 @@ class Computer {
 
 
 
+  @JsonKey(
+    
+    name: r'in_use_by',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final ComputerInUseBy? inUseBy;
+
+
+
 
 
     @override
@@ -349,7 +364,8 @@ class Computer {
       other.idleSleepMinutes == idleSleepMinutes &&
       other.operation == operation &&
       other.updateAvailableSince == updateAvailableSince &&
-      other.filesRemovedAt == filesRemovedAt;
+      other.filesRemovedAt == filesRemovedAt &&
+      other.inUseBy == inUseBy;
 
     @override
     int get hashCode =>
@@ -373,7 +389,8 @@ class Computer {
         idleSleepMinutes.hashCode +
         (operation == null ? 0 : operation.hashCode) +
         (updateAvailableSince == null ? 0 : updateAvailableSince.hashCode) +
-        (filesRemovedAt == null ? 0 : filesRemovedAt.hashCode);
+        (filesRemovedAt == null ? 0 : filesRemovedAt.hashCode) +
+        (inUseBy == null ? 0 : inUseBy.hashCode);
 
   factory Computer.fromJson(Map<String, dynamic> json) => _$ComputerFromJson(json);
 

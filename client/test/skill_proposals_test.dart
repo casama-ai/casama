@@ -36,6 +36,12 @@ void main() {
       ]);
     await tester.pumpWidget(harness(backend, const InboxScreen(initialFilter: InboxFilter.needsYou)));
     await tester.pumpAndSettle();
+    // More than two ideas from one bot share a card (D-603 §5.4); open it.
+    final group = find.byKey(const Key('botIdeasGroup-$botId'));
+    if (group.evaluate().isNotEmpty) {
+      await tester.tap(group);
+      await tester.pumpAndSettle();
+    }
     expect(find.byKey(const Key('proposal-p1')), findsOneWidget);
     expect(find.byKey(const Key('proposal-p2')), findsOneWidget);
     expect(find.text('Uses: crm.query'), findsOneWidget);

@@ -135,4 +135,17 @@ void main() {
     expect(computerAccessLine(ctx, local), isNull);
     expect(computerActivityLine(ctx, old), isNull);
   });
+
+  testWidgets('a running cloud computer says when it was last used too (L8)', (tester) async {
+    late BuildContext ctx;
+    await tester.pumpWidget(harness(FakeBackend(), Builder(builder: (c) {
+      ctx = c;
+      return const SizedBox();
+    })));
+    final at = DateTime.now().subtract(const Duration(hours: 2));
+    final team = _computer(id: computerId, kind: ComputerKindEnum.team, name: 'Team computer', lastActiveAt: at);
+    expect(computerActivityLine(ctx, team), 'Last used 2 hours ago');
+    final local = _computer(id: _localId, kind: ComputerKindEnum.local, name: 'Mac', lastActiveAt: at);
+    expect(computerActivityLine(ctx, local), isNull);
+  });
 }

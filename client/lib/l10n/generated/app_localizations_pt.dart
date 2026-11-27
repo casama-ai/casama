@@ -175,6 +175,11 @@ class AppLocalizationsPt extends AppLocalizations {
   String get tooManyRequestsReady => 'Você já pode tentar novamente.';
 
   @override
+  String computerInUseBy(String name) {
+    return '$name está usando este computador';
+  }
+
+  @override
   String get authAccountExists =>
       'Já existe uma conta com este e-mail. Entre nela.';
 
@@ -25740,6 +25745,241 @@ class AppLocalizationsPt extends AppLocalizations {
   String get planChangePeriodYear => 'ano';
 
   @override
+  String get adminFreePlans => 'Free Plans';
+
+  @override
+  String get adminAboutFreePlans =>
+      'Gift codes and free plans for friends. Codes are redeemed on the web, then the plan works in every app.';
+
+  @override
+  String get adminFreeOff =>
+      'Free plans are off on this server. Turn them on with scripts/comps.sh on.';
+
+  @override
+  String get adminFreeNewCode => 'New Gift Code';
+
+  @override
+  String get adminFreeGive => 'Give a Plan';
+
+  @override
+  String get adminFreeStatRunning => 'Free plans running';
+
+  @override
+  String get adminFreeStatCodesLive => 'Codes that still work';
+
+  @override
+  String get adminFreeStatRedeemed => 'Codes redeemed';
+
+  @override
+  String get adminFreeCodes => 'Gift Codes';
+
+  @override
+  String get adminFreeCodesNone =>
+      'No gift codes yet. Make one to give someone a free plan.';
+
+  @override
+  String get adminFreeWho => 'Who Has One';
+
+  @override
+  String get adminFreeFilterRunning => 'Running';
+
+  @override
+  String get adminFreeFilterAll => 'All';
+
+  @override
+  String get adminFreeNoneRunning => 'Nobody has a free plan right now.';
+
+  @override
+  String get adminFreeNone => 'No free plans yet.';
+
+  @override
+  String get adminFreeStatusLive => 'Live';
+
+  @override
+  String get adminFreeStatusUsedUp => 'Used Up';
+
+  @override
+  String get adminFreeStatusOff => 'Off';
+
+  @override
+  String get adminFreeStatusExpired => 'Expired';
+
+  @override
+  String get adminFreeNoRedeemBy => 'No end date';
+
+  @override
+  String get adminFreeTurnOff => 'Turn Off';
+
+  @override
+  String get adminFreeTurnOn => 'Turn On';
+
+  @override
+  String get adminFreePlan => 'Plan';
+
+  @override
+  String get adminFreeMonths => 'Months';
+
+  @override
+  String get adminFreeUses => 'How many people can use it';
+
+  @override
+  String get adminFreeUsesHelp =>
+      'Each person can redeem one gift code ever. Use 1 for a code meant for one person.';
+
+  @override
+  String get adminFreeRedeemByLabel => 'Redeem By';
+
+  @override
+  String get adminFreeAnyTime => 'Any time';
+
+  @override
+  String get adminFreeNote => 'Note (only you see it)';
+
+  @override
+  String get adminFreeNoteHint => 'For Maya';
+
+  @override
+  String get adminFreeCreate => 'Make Code';
+
+  @override
+  String get adminFreeMadeTitle => 'Gift Code Ready';
+
+  @override
+  String get adminFreeMadeBody =>
+      'Copy it now. It\'s shown only this once: afterwards only its last characters are kept.';
+
+  @override
+  String get adminFreeCopyCode => 'Copy Code';
+
+  @override
+  String get adminFreeCopyLink => 'Copy Link';
+
+  @override
+  String get adminFreeCopyMessage => 'Copy Message';
+
+  @override
+  String get adminFreeDone => 'Done';
+
+  @override
+  String get adminFreeEmail => 'Their email';
+
+  @override
+  String get adminFreeGiveHelp =>
+      'It goes on the oldest workspace they own, so they need a Casama account first.';
+
+  @override
+  String get adminFreeGiveButton => 'Give Plan';
+
+  @override
+  String get adminFreeFromCode => 'Gift code';
+
+  @override
+  String get adminFreeFromGrant => 'Given';
+
+  @override
+  String get adminFreeExtend => 'Extend';
+
+  @override
+  String get adminFreeExtendButton => 'Extend Plan';
+
+  @override
+  String get adminFreeEndNow => 'End Now';
+
+  @override
+  String get adminFreeEndTitle => 'End this free plan now?';
+
+  @override
+  String get adminFreeEndBody =>
+      'The workspace moves to Free right away. Credits already given stay.';
+
+  @override
+  String get adminFreeExtended => 'Free plan extended';
+
+  @override
+  String get adminFreeEndedDone => 'Free plan ended';
+
+  @override
+  String get adminFreeReasonExpired => 'Ran out';
+
+  @override
+  String get adminFreeReasonRevoked => 'Ended by you';
+
+  @override
+  String get adminFreeReasonReplaced => 'They bought a plan';
+
+  @override
+  String get adminFreeColWho => 'Who';
+
+  @override
+  String get adminFreeColPlan => 'Plan';
+
+  @override
+  String get adminFreeColEnds => 'Ends';
+
+  @override
+  String get adminFreeCopied => 'Copied';
+
+  @override
+  String get adminFreeInvalid => 'Check the numbers and the email address.';
+
+  @override
+  String adminFreeStatRunningValue(int count, int max) {
+    return '$count of $max';
+  }
+
+  @override
+  String adminFreePlanMonths(String plan, int months) {
+    String _temp0 = intl.Intl.pluralLogic(
+      months,
+      locale: localeName,
+      other: '$months months',
+      one: '1 month',
+    );
+    return '$plan · $_temp0';
+  }
+
+  @override
+  String adminFreeUsed(int used, int total) {
+    return '$used of $total redeemed';
+  }
+
+  @override
+  String adminFreeRedeemBy(String date) {
+    return 'Redeem by $date';
+  }
+
+  @override
+  String adminFreeEnds(String date) {
+    return 'Ends $date';
+  }
+
+  @override
+  String adminFreeEndedOn(String date) {
+    return 'Ended $date';
+  }
+
+  @override
+  String adminFreeGiven(String plan, String date) {
+    return '$plan given until $date';
+  }
+
+  @override
+  String adminFreeMessage(String what, String plan, String link) {
+    return 'Here\'s $what of Casama $plan, free: $link\n\nOpen it in Safari or Chrome, tap Redeem on the web and sign in with your Casama account. Nothing to pay, no card.';
+  }
+
+  @override
+  String adminFreeMonthCount(int months) {
+    String _temp0 = intl.Intl.pluralLogic(
+      months,
+      locale: localeName,
+      other: '$months months',
+      one: '1 month',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get adminPartners => 'Partners';
 
   @override
@@ -27837,7 +28077,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get settingsWordsAppearance =>
-      'tema modo escuro claro noite cores fontes fonte tamanho do texto fundo papel de parede visual estilo efeitos movimento animações animacoes aparência aparencia tatil tátil haptico háptico vibracao vibração trackpad';
+      'tema modo escuro claro noite cores fontes fonte tamanho do texto fundo papel de parede visual estilo efeitos movimento animações animacoes aparência aparencia tatil tátil haptico háptico vibracao vibrração vibrar retorno feedback trackpad';
 
   @override
   String get settingsWordsQuietHours =>
@@ -29265,86 +29505,86 @@ class AppLocalizationsPt extends AppLocalizations {
       'O Gemini está desativado para o Casama neste celular (Casama → Configurações → Privacidade).';
 
   @override
-  String get suggestionActionTurnOn => 'Turn on';
+  String get suggestionActionTurnOn => 'Ativar';
 
   @override
   String suggestionActionRemindMe(String date) {
-    return 'Remind me $date';
+    return 'Lembrar-me $date';
   }
 
   @override
-  String get suggestionActionPickTime => 'Pick a time';
+  String get suggestionActionPickTime => 'Escolher horário';
 
   @override
-  String get suggestionActionPutAwayAll => 'Put away all';
+  String get suggestionActionPutAwayAll => 'Guardar todas';
 
   @override
   String suggestionActionPutAwayAllCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Put away all $count ideas',
-      one: 'Put away 1 idea',
+      other: 'Guardar todas as $count ideias',
+      one: 'Guardar $count ideia',
     );
     return '$_temp0';
   }
 
   @override
-  String get suggestionActionOpen => 'Open';
+  String get suggestionActionOpen => 'Abrir';
 
   @override
-  String get suggestionActionGotIt => 'Got it';
+  String get suggestionActionGotIt => 'Entendi';
 
   @override
-  String get suggestionActionLater => 'Later';
+  String get suggestionActionLater => 'Depois';
 
   @override
-  String get suggestionActionSomethingElse => 'Something else';
+  String get suggestionActionSomethingElse => 'Outro motivo';
 
   @override
-  String get suggestionTurnedOn => 'Turned on';
+  String get suggestionTurnedOn => 'Ativado';
 
   @override
   String suggestionReminderSet(String date) {
-    return 'Reminder set for $date';
+    return 'Lembrete definido para $date';
   }
 
   @override
-  String get suggestionSnoozed => 'Saved for later';
+  String get suggestionSnoozed => 'Salva para depois';
 
   @override
-  String get suggestionSnoozedExpired => 'Put away — snoozed twice';
+  String get suggestionSnoozedExpired => 'Guardada – adiada duas vezes';
 
   @override
   String suggestionPutAwayCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Put away $count ideas',
-      one: 'Put away 1 idea',
+      other: '$count ideias guardadas',
+      one: '$count ideia guardada',
     );
     return '$_temp0';
   }
 
   @override
-  String get suggestionUndo => 'Undo';
+  String get suggestionUndo => 'Desfazer';
 
   @override
-  String get suggestionLaterTomorrow => 'Tomorrow morning';
+  String get suggestionLaterTomorrow => 'Amanhã de manhã';
 
   @override
-  String get suggestionLaterEvening => 'This evening';
+  String get suggestionLaterEvening => 'Hoje à noite';
 
   @override
-  String get suggestionLaterNextWeek => 'Next week';
+  String get suggestionLaterNextWeek => 'Próxima semana';
 
   @override
   String suggestionMoreWaiting(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count more ideas waiting',
-      one: '1 more idea waiting',
+      other: 'Mais $count ideias aguardando',
+      one: 'Mais $count ideia aguardando',
     );
     return '$_temp0';
   }
@@ -29354,8 +29594,8 @@ class AppLocalizationsPt extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$name · $count ideas',
-      one: '$name · 1 idea',
+      other: '$name · $count ideias',
+      one: '$name · $count ideia',
     );
     return '$_temp0';
   }
@@ -29365,8 +29605,8 @@ class AppLocalizationsPt extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$name · $count routine results today',
-      one: '$name · 1 routine result today',
+      other: '$name · $count resultados de rotinas hoje',
+      one: '$name · $count resultado de rotina hoje',
     );
     return '$_temp0';
   }
@@ -29376,8 +29616,8 @@ class AppLocalizationsPt extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$name · $count updates today',
-      one: '$name · 1 update today',
+      other: '$name · $count atualizações hoje',
+      one: '$name · $count atualização hoje',
     );
     return '$_temp0';
   }
@@ -29387,8 +29627,8 @@ class AppLocalizationsPt extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count routine results today',
-      one: '1 routine result today',
+      other: '$count resultados de rotinas hoje',
+      one: '$count resultado de rotina hoje',
     );
     return '$_temp0';
   }
@@ -29398,15 +29638,15 @@ class AppLocalizationsPt extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count updates today',
-      one: '1 update today',
+      other: '$count atualizações hoje',
+      one: '$count atualização hoje',
     );
     return '$_temp0';
   }
 
   @override
   String briefSinceYesterday(String summary) {
-    return 'Since yesterday: $summary';
+    return 'Desde ontem: $summary';
   }
 
   @override
@@ -29414,8 +29654,8 @@ class AppLocalizationsPt extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count pages',
-      one: '1 page',
+      other: '$count páginas',
+      one: '$count página',
     );
     return '$_temp0';
   }
@@ -29425,8 +29665,8 @@ class AppLocalizationsPt extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count routine results',
-      one: '1 routine result',
+      other: '$count resultados de rotinas',
+      one: '$count resultado de rotina',
     );
     return '$_temp0';
   }
@@ -29436,39 +29676,39 @@ class AppLocalizationsPt extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count updates',
-      one: '1 update',
+      other: '$count atualizações',
+      one: '$count atualização',
     );
     return '$_temp0';
   }
 
   @override
-  String get notifTurnOn => 'Turn on';
+  String get notifTurnOn => 'Ativar';
 
   @override
-  String get notifOpen => 'Open';
+  String get notifOpen => 'Abrir';
 
   @override
-  String get notifGotIt => 'Got it';
+  String get notifGotIt => 'Entendi';
 
   @override
-  String get notifRemindMe => 'Remind me';
+  String get notifRemindMe => 'Lembrar-me';
 
   @override
-  String get notifLater => 'Later';
+  String get notifLater => 'Depois';
 
   @override
-  String get watchTurnOn => 'Turn on';
+  String get watchTurnOn => 'Ativar';
 
   @override
-  String get watchGotIt => 'Got it';
+  String get watchGotIt => 'Entendi';
 
   @override
-  String get watchRemindMe => 'Remind';
+  String get watchRemindMe => 'Lembrar';
 
   @override
-  String get watchLater => 'Later';
+  String get watchLater => 'Depois';
 
   @override
-  String get watchOpen => 'Open';
+  String get watchOpen => 'Abrir';
 }

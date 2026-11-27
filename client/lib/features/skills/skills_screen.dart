@@ -198,15 +198,22 @@ class SkillsScreen extends ConsumerWidget {
 }
 
 /// Workspace skills first, untitled when no bot has its own; then each bot's own copies under
-/// that bot's name.
+/// that bot's name. Copies of bots that were deleted (archived) or aren't shown here are left out:
+/// they made "Only for A removed bot" groups, one per deleted bot, so a skill showed twice
+/// (the customer's build 108 round).
+@visibleForTesting
+List<(String?, List<SkillView>)> groupSkills(List<SkillView> items, List<Bot> bots, AppLocalizations l10n) =>
+    _grouped(items, bots, l10n);
+
 List<(String?, List<SkillView>)> _grouped(List<SkillView> items, List<Bot> bots, AppLocalizations l10n) {
   final shared = [for (final s in items) if (s.botId == null) s];
+  final known = {for (final b in bots) b.id: b.name};
   final byBot = <String, List<SkillView>>{};
   for (final s in items) {
-    if (s.botId != null) (byBot[s.botId!] ??= []).add(s);
+    if (s.botId != null && known.containsKey(s.botId)) (byBot[s.botId!] ??= []).add(s);
   }
   if (byBot.isEmpty) return [(null, shared)];
-  String name(String id) => bots.where((b) => b.id == id).firstOrNull?.name ?? l10n.skillsRemovedBot;
+  String name(String id) => known[id] ?? l10n.skillsRemovedBot;
   final ids = byBot.keys.toList()..sort((a, b) => name(a).toLowerCase().compareTo(name(b).toLowerCase()));
   return [
     if (shared.isNotEmpty) (l10n.skillsForAllBots, shared),

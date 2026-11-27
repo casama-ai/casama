@@ -277,6 +277,7 @@ import 'package:casama_api/src/model/computer_file_entry.dart';
 import 'package:casama_api/src/model/computer_file_list.dart';
 import 'package:casama_api/src/model/computer_history.dart';
 import 'package:casama_api/src/model/computer_history_entry.dart';
+import 'package:casama_api/src/model/computer_in_use_by.dart';
 import 'package:casama_api/src/model/computer_list.dart';
 import 'package:casama_api/src/model/computer_operation.dart';
 import 'package:casama_api/src/model/computer_process.dart';
@@ -1806,6 +1807,8 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return ComputerHistory.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'ComputerHistoryEntry':
           return ComputerHistoryEntry.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'ComputerInUseBy':
+          return ComputerInUseBy.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'ComputerList':
           return ComputerList.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'ComputerOperation':

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart' show ProviderListenable;
 import 'package:casama_sdk/casama_sdk.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -28,15 +29,22 @@ const _channel = MethodChannel('casama/mac');
 bool get _isMac => !kIsWeb && defaultTargetPlatform == TargetPlatform.macOS;
 
 /// The Mac app's menu bar actions (File, Go, Settings…, Help) and its dock badge: the count of
-/// what waits for you, the same as the Inbox badge. Watched by the app root on macOS.
+/// what waits for you, the same as the Inbox badge. Watched by the app root; on Windows and Linux it
+/// only remembers the last chat's bot for Ctrl+N.
 final macBridgeProvider = Provider<void>((ref) {
-  if (!_isMac) return;
-  _channel.setMethodCallHandler((call) async {
-    if (call.method == 'menu' && call.arguments is String) await _menu(ref, call.arguments as String);
-    return null;
-  });
-  ref.onDispose(() => _channel.setMethodCallHandler(null));
-  // The bot whose chat was on screen last, for New Chat from anywhere else (E1).
+  if (kIsWeb || !const {TargetPlatform.macOS, TargetPlatform.windows, TargetPlatform.linux}.contains(defaultTargetPlatform)) return;
+  if (_isMac) {
+    _channel.setMethodCallHandler((call) async {
+      if (call.method == 'menu' && call.arguments is String) {
+        Analytics.feature('mac_menu');
+        await desktopAction(ref.read, call.arguments as String);
+      }
+      return null;
+    });
+    ref.onDispose(() => _channel.setMethodCallHandler(null));
+  }
+  // The bot whose chat was on screen last, for New Chat from anywhere else (E1). Windows and Linux
+  // need it too: they reach New Chat through the shell's Ctrl+N (L11).
   final delegate = ref.read(routerProvider).routerDelegate;
   void remember() {
     final bot = _botChat.firstMatch(delegate.currentConfiguration.uri.path)?.group(1);
@@ -45,12 +53,14 @@ final macBridgeProvider = Provider<void>((ref) {
 
   delegate.addListener(remember);
   ref.onDispose(() => delegate.removeListener(remember));
+  if (!_isMac) return;
   ref.listen<int>(inboxBadgeProvider, (_, count) => unawaited(_channel.invokeMethod('badge', count).catchError((_) => null)), fireImmediately: true);
 });
 
-Future<void> _menu(Ref ref, String action) async {
-  Analytics.feature('mac_menu');
-  final router = ref.read(routerProvider);
+/// One menu or shortcut action: the Mac menu bar sends these, and Windows and Linux reach the same
+/// ones by keyboard (Ctrl+N, Ctrl+1…5; the customer's build 108 round, L11).
+Future<void> desktopAction(T Function<T>(ProviderListenable<T>) read, String action) async {
+  final router = read(routerProvider);
   final context = router.routerDelegate.navigatorKey.currentContext;
   switch (action) {
     case 'settings':
@@ -62,15 +72,15 @@ Future<void> _menu(Ref ref, String action) async {
       final bot = newChatBot(
         location: uri,
         lastChatBot: _lastChatBot,
-        bots: ref.read(botsProvider).value ?? const [],
-        folders: ref.read(botFoldersProvider).value ?? const [],
-        groupIds: {for (final g in ref.read(groupChatsProvider).value ?? const <Conversation>[]) g.id},
+        bots: read(botsProvider).value ?? const [],
+        folders: read(botFoldersProvider).value ?? const [],
+        groupIds: {for (final g in read(groupChatsProvider).value ?? const <Conversation>[]) g.id},
       );
       if (bot == null) {
         router.go('/bots');
         return;
       }
-      final chat = ref.read(chatControllerProvider(bot).notifier);
+      final chat = read(chatControllerProvider(bot).notifier);
       final target = '/bots/$bot/chat';
       if (uri.toString() == target) {
         await chat.newChat();
@@ -83,7 +93,7 @@ Future<void> _menu(Ref ref, String action) async {
     case 'search':
       if (context != null && context.mounted) await showWorkspaceSearch(context);
     case 'quickAsk':
-      ref.read(desktopShellProvider).openQuickAsk();
+      read(desktopShellProvider).openQuickAsk();
     case 'feedback':
       router.go('/settings/support');
     case 'checkUpdates':
@@ -94,6 +104,17 @@ Future<void> _menu(Ref ref, String action) async {
       if (action.startsWith('go:/')) router.go(action.substring(3));
   }
 }
+
+/// Ctrl+key on Windows and Linux for the actions the Mac menu bar gives Cmd+key (L11): New Chat
+/// and the Go menu's five places, in the same order as `MainFlutterWindow.swift`.
+const desktopShortcutActions = <(LogicalKeyboardKey, String)>[
+  (LogicalKeyboardKey.keyN, 'newChat'),
+  (LogicalKeyboardKey.digit1, 'go:/bots'),
+  (LogicalKeyboardKey.digit2, 'go:/inbox?tab=0'),
+  (LogicalKeyboardKey.digit3, 'go:/tasks'),
+  (LogicalKeyboardKey.digit4, 'go:/computer'),
+  (LogicalKeyboardKey.digit5, 'go:/pages'),
+];
 
 final _botChat = RegExp(r'^/bots/([^/]+)/chat');
 String? _lastChatBot;

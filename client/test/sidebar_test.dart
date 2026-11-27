@@ -66,6 +66,23 @@ void main() {
     expect(groupBotsByFolder(bots, const []).single.$2.map((b) => b.id), ['b', 'd', 'a', 'c', 'e']);
   });
 
+  test('while the pointer is over the sidebar the order holds, so a click lands on the bot it aimed at', () {
+    final f = FakeBackend();
+    final bots = [
+      f.bot(id: 'a', name: 'A'),
+      f.bot(id: 'b', name: 'B'),
+      f.bot(id: 'c', name: 'C', status: BotStatusEnum.working),
+    ];
+    // C just started working: it would go first, but the pointer is over the list.
+    expect(groupBotsByFolder(bots, const [], hold: ['a', 'b', 'c']).single.$2.map((b) => b.id), ['a', 'b', 'c']);
+    // A bot new to the list goes after the held ones.
+    expect(
+      groupBotsByFolder([...bots, f.bot(id: 'd', name: 'D')], const [], hold: ['b', 'a', 'c']).single.$2.map((b) => b.id),
+      ['b', 'a', 'c', 'd'],
+    );
+    expect(groupBotsByFolder(bots, const []).single.$2.map((b) => b.id), ['c', 'a', 'b']);
+  });
+
   testWidgets('a working bot scrolled out of view below shows a cue that scrolls to it (E3)', (tester) async {
     await setSize(tester, const Size(1400, 820));
     final backend = FakeBackend();

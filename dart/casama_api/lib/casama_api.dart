@@ -367,6 +367,7 @@ export 'package:casama_api/src/model/computer_file_entry.dart';
 export 'package:casama_api/src/model/computer_file_list.dart';
 export 'package:casama_api/src/model/computer_history.dart';
 export 'package:casama_api/src/model/computer_history_entry.dart';
+export 'package:casama_api/src/model/computer_in_use_by.dart';
 export 'package:casama_api/src/model/computer_list.dart';
 export 'package:casama_api/src/model/computer_operation.dart';
 export 'package:casama_api/src/model/computer_process.dart';

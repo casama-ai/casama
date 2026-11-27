@@ -8012,6 +8012,39 @@
             ],
             "format": "date-time",
             "description": "When its saved files were removed because the workspace went unused for 6 months (docs/INACTIVE-ACCOUNTS-PLAN.md); it starts fresh. Null: never."
+          },
+          "in_use_by": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "bot_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "bot_name": {
+                "type": "string"
+              },
+              "run_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "conversation_id": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "uuid"
+              }
+            },
+            "required": [
+              "bot_id",
+              "bot_name",
+              "run_id",
+              "conversation_id"
+            ],
+            "description": "The bot driving its screen right now (a browser or desktop step in a working run, within the last 2 minutes); null when none. A team computer's every chat shows the same screen, so the panel says whose work it is (D-617)."
           }
         },
         "required": [

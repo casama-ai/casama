@@ -1989,6 +1989,152 @@ class FakeBackend implements Backend {
     );
     return RedeemedComp(planCode: 'pro', planName: 'Pro', endsAt: ends, orgId: orgId);
   }
+  // Admin → Free Plans.
+  var compSettings = CompSettings(enabled: true, grantPlans: ['plus', 'pro', 'max'], codePlans: ['plus', 'pro'], maxMonths: 12, maxActive: 50);
+  final adminCodes = <CompCode>[
+    CompCode(
+      id: 'code-1',
+      hint: '…KQKE',
+      planCode: 'plus',
+      months: 3,
+      maxRedemptions: 1,
+      redeemedCount: 1,
+      redeemBy: null,
+      note: 'For Troy',
+      disabled: false,
+      createdAt: DateTime.utc(2026, 11, 22),
+    ),
+  ];
+  final adminCompList = <Comp>[
+    Comp(
+      id: 'comp-1',
+      orgId: 'org-9',
+      orgName: "Troy's space",
+      userId: 'user-9',
+      email: 'tr••••@example.com',
+      planCode: 'plus',
+      months: 3,
+      startsAt: DateTime.utc(2026, 11, 22),
+      endsAt: DateTime.utc(2027, 2, 22),
+      from: CompFromEnum.code,
+      codeId: 'code-1',
+      note: null,
+      endedAt: null,
+      endReason: null,
+      createdAt: DateTime.utc(2026, 11, 22),
+    ),
+  ];
+  CreateCompCodeRequest? lastCompCodeRequest;
+  GrantCompRequest? lastGrantRequest;
+  @override
+  Future<CompSettings> adminCompSettings() async => compSettings;
+  @override
+  Future<List<CompCode>> adminCompCodes() async => List.of(adminCodes);
+  @override
+  Future<CreatedCompCode> adminCreateCompCode(CreateCompCodeRequest request) async {
+    lastCompCodeRequest = request;
+    final made = CreatedCompCode(
+      id: 'code-${adminCodes.length + 1}',
+      hint: '…7KQ2',
+      planCode: request.planCode,
+      months: request.months,
+      maxRedemptions: request.maxRedemptions ?? 1,
+      redeemedCount: 0,
+      redeemBy: request.redeemBy,
+      note: request.note,
+      disabled: false,
+      createdAt: DateTime.now().toUtc(),
+      code: 'G-ABCDE-F7KQ2',
+      link: 'https://casama.ai/g/G-ABCDE-F7KQ2',
+    );
+    adminCodes.insert(
+      0,
+      CompCode(
+        id: made.id,
+        hint: made.hint,
+        planCode: made.planCode,
+        months: made.months,
+        maxRedemptions: made.maxRedemptions,
+        redeemedCount: 0,
+        redeemBy: made.redeemBy,
+        note: made.note,
+        disabled: false,
+        createdAt: made.createdAt,
+      ),
+    );
+    return made;
+  }
+  @override
+  Future<CompCode> adminUpdateCompCode(String id, UpdateCompCodeRequest request) async {
+    final i = adminCodes.indexWhere((c) => c.id == id);
+    final c = adminCodes[i];
+    final next = CompCode(
+      id: c.id,
+      hint: c.hint,
+      planCode: c.planCode,
+      months: c.months,
+      maxRedemptions: request.maxRedemptions ?? c.maxRedemptions,
+      redeemedCount: c.redeemedCount,
+      redeemBy: request.redeemBy ?? c.redeemBy,
+      note: c.note,
+      disabled: request.disabled ?? c.disabled,
+      createdAt: c.createdAt,
+    );
+    adminCodes[i] = next;
+    return next;
+  }
+  @override
+  Future<List<Comp>> adminComps({bool running = true, int? limit}) async =>
+      [for (final c in adminCompList) if (!running || c.endedAt == null) c];
+  @override
+  Future<Comp> adminGrantComp(GrantCompRequest request) async {
+    lastGrantRequest = request;
+    final now = DateTime.now().toUtc();
+    final made = Comp(
+      id: 'comp-${adminCompList.length + 1}',
+      orgId: 'org-${adminCompList.length + 10}',
+      orgName: 'Friend space',
+      userId: 'user-x',
+      email: 'fr••••@example.com',
+      planCode: request.planCode,
+      months: request.months,
+      startsAt: now,
+      endsAt: now.add(Duration(days: 30 * request.months)),
+      from: CompFromEnum.grant,
+      codeId: null,
+      note: request.note,
+      endedAt: null,
+      endReason: null,
+      createdAt: now,
+    );
+    adminCompList.insert(0, made);
+    return made;
+  }
+  @override
+  Future<Comp> adminUpdateComp(String id, UpdateCompRequest request) async {
+    final i = adminCompList.indexWhere((c) => c.id == id);
+    final c = adminCompList[i];
+    final ended = request.revoke == true;
+    final next = Comp(
+      id: c.id,
+      orgId: c.orgId,
+      orgName: c.orgName,
+      userId: c.userId,
+      email: c.email,
+      planCode: c.planCode,
+      months: c.months + (request.extendMonths ?? 0),
+      startsAt: c.startsAt,
+      endsAt: ended ? DateTime.now().toUtc() : c.endsAt.add(Duration(days: 30 * (request.extendMonths ?? 0))),
+      from: c.from,
+      codeId: c.codeId,
+      note: c.note,
+      endedAt: ended ? DateTime.now().toUtc() : null,
+      endReason: ended ? 'revoked' : null,
+      createdAt: c.createdAt,
+    );
+    adminCompList[i] = next;
+    return next;
+  }
   @override
   Future<ReferralPreview> previewReferral(String code) async {
     if (code.toUpperCase() != 'ANA234') {
@@ -2583,10 +2729,13 @@ class FakeBackend implements Backend {
   final searches = <String>[];
   final searchKinds = <List<String>?>[];
   var searchFindsNothing = false;
+  /// Errors the next searches throw, in order (a 429, say).
+  final failSearches = <Object>[];
   @override
   Future<SearchResponse> search(String orgId, String query, {List<String>? kinds}) async {
     searches.add(query);
     searchKinds.add(kinds);
+    if (failSearches.isNotEmpty) throw failSearches.removeAt(0);
     bool wanted(String kind) => !searchFindsNothing && (kinds == null || kinds.contains(kind));
     return SearchResponse(
       query: query,
@@ -3173,6 +3322,8 @@ class FakeBackend implements Backend {
   /// Chats deleted, by id, and bots whose chats were all deleted.
   final deletedConversations = <String>[];
   final clearedBots = <String>[];
+  /// Listing a bot's chats fails (a 429 or a slow server).
+  var failConversations = false;
 
   /// Whether the person may delete the fake chat (they started it, or manage the bot).
   var canDeleteChats = true;
@@ -3181,7 +3332,7 @@ class FakeBackend implements Backend {
   var fakeChatIsGeneral = false;
   List<Conversation> topics = [];
   @override
-  Future<List<Conversation>> conversations(String botId) async => [
+  Future<List<Conversation>> conversations(String botId) async => failConversations ? throw Exception('busy') : [
     if (!deletedConversations.contains(convId) && !clearedBots.contains(botId))
       Conversation(
         id: convId,
@@ -3241,8 +3392,22 @@ class FakeBackend implements Backend {
     clearedBots.add(botId);
     return (1, 0);
   }
+  /// Makes the next new chat wait for this, then fail with [failCreateConversation] when set.
+  Completer<void>? holdCreateConversation;
+  Object? failCreateConversation;
   @override
-  Future<Conversation> createConversation(String botId) async => Conversation(
+  Future<Conversation> createConversation(String botId) async {
+    final hold = holdCreateConversation;
+    if (hold != null) await hold.future;
+    final fail = failCreateConversation;
+    if (fail != null) {
+      failCreateConversation = null;
+      throw fail;
+    }
+    return _newConversation(botId);
+  }
+
+  Conversation _newConversation(String botId) => Conversation(
     id: convId,
     botId: botId,
     title: null,
@@ -5236,10 +5401,19 @@ class FakeBackend implements Backend {
   @override
   Future<List<ChatMessageView>> messages(String conversationId, {int? limit, String? before, String? around}) async {
     if (offline) throw Exception('offline');
+    if (failMessages.isNotEmpty) throw failMessages.removeAt(0);
     messageRequests.add((limit: limit, before: before, around: around));
+    final own = messagesByConversation[conversationId];
+    if (own != null) return own;
     if (limit == null) return storedMessages;
     return pageOfThread(storedMessages, (m) => m.id, limit: limit, before: before, around: around);
   }
+
+  /// Errors the next thread reads throw, in order (a 429, say).
+  final failMessages = <Object>[];
+
+  /// A thread of its own for these conversations (a group beside a bot's own chat).
+  final messagesByConversation = <String, List<ChatMessageView>>{};
 
   /// What each thread read asked for (paging tests).
   final messageRequests = <({int? limit, String? before, String? around})>[];
@@ -5302,9 +5476,18 @@ class FakeBackend implements Backend {
 
   @override
   Future<void> cancelRun(String runId) async {
+    cancelCalls++;
+    if (cancelHangs > 0) {
+      cancelHangs--;
+      await Completer<void>().future;
+    }
     if (runAlreadyFinished) throw const RunAlreadyFinished();
     cancelled = true;
   }
+
+  /// How many Stop requests never answer, from the next one on.
+  var cancelHangs = 0;
+  var cancelCalls = 0;
 
   /// The server answers Stop with "already finished" (the chat missed the run's end).
   var runAlreadyFinished = false;
@@ -8572,6 +8755,8 @@ class FakeBackend implements Backend {
   ComputerState teamComputerState = ComputerState.sleeping;
   /// When its saved files were removed for being unused (docs/INACTIVE-ACCOUNTS-PLAN.md).
   DateTime? computerFilesRemovedAt;
+  /// The bot driving the team computer's screen (D-617).
+  ComputerInUseBy? computerInUseBy;
   @override
   Future<List<Computer>> computers(String orgId) async => [
     Computer(
@@ -8593,6 +8778,7 @@ class FakeBackend implements Backend {
       operation: computerOperation,
       updateAvailableSince: computerUpdateSince,
       filesRemovedAt: computerFilesRemovedAt,
+      inUseBy: computerInUseBy,
     ),
     ...extraComputers,
   ];

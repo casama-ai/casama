@@ -496,6 +496,16 @@ String? playSubscriptionToReplace(rc.CustomerInfo info, String newProductId) {
   return null;
 }
 
+/// Reads the month's spend, plan, credits and computer hours again, for a screen that shows them
+/// as it opens. They load once a session otherwise: the customer's build 108 Mac showed the
+/// computer hours of the day before (13.1 h, down from 13.4), and Windows showed $18.99 in
+/// Settings beside $19.41 on Usage.
+void refreshSpend(WidgetRef ref) {
+  ref.invalidate(billingProvider);
+  ref.invalidate(usageMonthProvider);
+  ref.invalidate(billingUsageProvider);
+}
+
 /// This month's billed usage and the latest credit changes for the current workspace.
 final billingUsageProvider = FutureProvider<BillingUsage?>((ref) async {
   final org = ref.watch(currentOrgProvider);

@@ -627,6 +627,8 @@ class _ComputerPanelState extends ConsumerState<ComputerPanel> {
               if (!personal && !resetting) ComputerUpdateCard(computer: computer),
               // The month's computer hours are used (D-447): why it won't start, before Start is tapped.
               if (!personal && !running) const ComputerHoursCard(),
+              // A team computer shows the same screen in every chat: whose work it is (D-617).
+              if (!personal && computer.inUseBy != null) ComputerInUseLine(name: computer.inUseBy!.botName),
               _ComputerTabs(tabIds: tabIds),
               const SizedBox(height: AppSpace.xs),
               Expanded(
@@ -1564,6 +1566,36 @@ class _InlineLiveState extends ConsumerState<_InlineLive> {
 }
 
 /// A note above a personal computer's screen: it shows screenshots, not a live view (D-218).
+/// "Shopper is using this computer" above the panel's tabs, while a bot's run drives its screen
+/// (D-617).
+class ComputerInUseLine extends StatelessWidget {
+  const ComputerInUseLine({super.key, required this.name});
+  final String name;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Padding(
+      key: const Key('computerInUseBy'),
+      padding: const EdgeInsets.fromLTRB(AppSpace.md, 0, AppSpace.md, AppSpace.xs),
+      child: Row(
+        children: [
+          Icon(LucideIcons.mousePointer2, size: 14, color: scheme.primary),
+          const SizedBox(width: 6),
+          Expanded(
+            child: Text(
+              context.l10n.computerInUseBy(name),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context).textTheme.labelMedium?.copyWith(color: scheme.onSurfaceVariant),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _ScreenNote extends StatelessWidget {
   const _ScreenNote({required this.text});
   final String text;

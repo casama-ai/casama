@@ -278,6 +278,32 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
   static String _draftKeyFor(String botId, String? conversationId) => 'draft:$botId:${conversationId ?? 'new'}';
 
+  /// Counts the chats this screen has shown: a send that comes back after the person moved on
+  /// puts its words back in the chat it came from, never in the one on screen.
+  int _chatGen = 0;
+
+  /// The group's last speaker as the composer's "… will answer" line shows it (L7).
+  ({String? conversationId, String? id})? _speaker;
+
+  /// Leaves the chat on screen for another: its draft is saved and the box emptied, and until the
+  /// next chat's draft is bound nothing typed or put back is saved as the old chat's (a request
+  /// typed in one bot was posted to the group, build 108). Returns the new chat's number.
+  int _leaveDraft() {
+    _saveDraft();
+    _draftKey = null;
+    _draftConversation = null;
+    if (_input.text.isNotEmpty) _input.clear();
+    return ++_chatGen;
+  }
+
+  /// [message] goes back to its own chat's draft, when the screen has moved to another chat
+  /// meanwhile; true when it did.
+  bool _restoreElsewhere(int gen, String botId, String? conversationId, String message) {
+    if (gen == _chatGen) return false;
+    unawaited(cacheWrite(_cache, _draftKeyFor(botId, conversationId), message));
+    return true;
+  }
+
   void _saveDraftSoon() {
     if (_draftKey == null) return;
     _draftSave?.cancel();
@@ -313,7 +339,10 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     if (!mounted || _draftKey != key) return;
     final text = saved is String ? saved : '';
     // On first open, what was typed while the chat loaded wins over an older draft.
-    if (!wasBound && _input.text.isNotEmpty) return;
+    if (!wasBound && _input.text.isNotEmpty) {
+      _saveDraft();
+      return;
+    }
     if (_input.text == text) return;
     _input.value = TextEditingValue(text: text, selection: TextSelection.collapsed(offset: text.length));
   }
@@ -640,7 +669,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     if (old.botId != widget.botId || old.conversationId != widget.conversationId || old.focusMessageId != widget.focusMessageId || old.group != widget.group) {
       if (old.botId != widget.botId && widget.focusMessageId == null) _focusComposerSoon();
       // Keep what was typed in the chat being left before the next one opens.
-      _saveDraft();
+      final gen = _leaveDraft();
       _rowCache.clear();
       _stickToBottom = true;
       _opening = true;
@@ -650,8 +679,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         try {
           await c.open(widget.conversationId, around: widget.focusMessageId);
         } finally {
-          if (mounted && _opening) setState(() => _opening = false);
-          if (mounted) unawaited(_bindDraft(ref.read(chatControllerProvider(widget.botId)).conversationId));
+          if (mounted && _opening && gen == _chatGen) setState(() => _opening = false);
+          if (mounted && gen == _chatGen) unawaited(_bindDraft(ref.read(chatControllerProvider(widget.botId)).conversationId));
         }
       });
     }
@@ -868,9 +897,13 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     _stickToBottom = true;
     if (_touchFirst) FocusManager.instance.primaryFocus?.unfocus();
     var notSent = false;
+    // The chat this message belongs to, whatever is on screen when the send comes back.
+    final gen = _chatGen;
+    final fromBot = widget.botId;
+    final fromConversation = ref.read(chatControllerProvider(fromBot)).conversationId;
     final ok = await runGuarded(context, () async {
       try {
-        await ref.read(chatControllerProvider(widget.botId).notifier).send(message, attachments: attachments, skills: skills, apps: apps, uploads: uploads);
+        await ref.read(chatControllerProvider(fromBot).notifier).send(message, attachments: attachments, skills: skills, apps: apps, uploads: uploads);
       } on UploadsFailed {
         notSent = true;
       }
@@ -878,7 +911,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     });
     // Failed before its bubble showed (the chat itself couldn't be created): back to the box.
     if (ok == null && mounted && text == null) {
-      final kept = ref.read(chatControllerProvider(widget.botId)).entries.any((e) => e is MessageEntry && e.failed && e.text == message.trim());
+      final kept = ref.read(chatControllerProvider(fromBot)).entries.any((e) => e is MessageEntry && e.failed && e.text == message.trim());
+      if (!kept && _restoreElsewhere(gen, fromBot, fromConversation, message)) return;
       if (!kept) {
         setState(() {
           if (_input.text.trim().isEmpty) _input.text = message;
@@ -892,6 +926,10 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     if (notSent) {
       // Nothing is lost: the words and files come back to the box, failed ones marked to retry.
       if (!mounted) return;
+      if (_restoreElsewhere(gen, fromBot, fromConversation, message)) {
+        showFailure(context, context.l10n.messageNotSent);
+        return;
+      }
       setState(() {
         if (_input.text.trim().isEmpty) _input.text = message;
         _pending.insertAll(0, [for (final p in items) if (!_pending.contains(p)) p]);
@@ -1345,6 +1383,13 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     // Only what the screen around the thread shows. A streamed word changes none of it, so it
     // rebuilds the thread alone (the Consumer below), not the header and the composer.
     final chat = ref.watch(chatControllerProvider(widget.botId).select((c) => _chatFrame(c, group: widget.group)));
+    final speaker = holdSpeaker(
+      held: _speaker,
+      conversationId: chat.conversationId,
+      lastSpeakerId: chat.lastSpeakerId,
+      running: chat.running,
+    );
+    _speaker = speaker;
     final controller = ref.read(chatControllerProvider(widget.botId).notifier);
     final computer = computerForBot(
       ref.watch(computersProvider).value ?? const [],
@@ -1432,6 +1477,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             ? GroupAvatar(bots: [for (final id in group.botIds) ?groupBots.where((b) => b.id == id).firstOrNull], size: 36)
             : BotAvatar(name: name.isEmpty ? '?' : name, avatar: bot?.avatarUrl, size: 36, status: chat.running ? BotStatusEnum.working : bot?.status),
         onTitleTap: widget.group ? null : () => context.pushOnce('/bots/${widget.botId}/settings'),
+        titleTooltip: widget.group ? null : l10n.botProfile,
         actions: [
           // Two panes (D-411): the bot's computer takes the list's place beside this chat, and back.
           if (besideList && !widget.group && !teen)
@@ -1724,7 +1770,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                               : [widget.botId],
                           group: widget.group,
                           controller: _mentions,
-                          lastSpeakerId: widget.group ? chat.lastSpeakerId : null,
+                          lastSpeakerId: widget.group ? speaker.id : null,
                         ),
                         _SkillPicker(
                           botId: widget.botId,
@@ -2458,7 +2504,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     // topic and a new chat's first message don't change the address. Going to the same address
     // does nothing, so the person was stuck in the new topic (D-413); open it here instead.
     if (widget.conversationId == id && ref.read(chatControllerProvider(widget.botId)).conversationId != id) {
-      _saveDraft();
+      final gen = _leaveDraft();
       _rowCache.clear();
       _stickToBottom = true;
       setState(() => _opening = true);
@@ -2467,8 +2513,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         try {
           await c.open(id);
         } finally {
-          if (mounted && _opening) setState(() => _opening = false);
-          if (mounted) unawaited(_bindDraft(ref.read(chatControllerProvider(widget.botId)).conversationId));
+          if (mounted && _opening && gen == _chatGen) setState(() => _opening = false);
+          if (mounted && gen == _chatGen) unawaited(_bindDraft(ref.read(chatControllerProvider(widget.botId)).conversationId));
         }
       });
       return;
@@ -2741,6 +2787,19 @@ class _AttachButton extends StatelessWidget {
 }
 
 /// The parts of [ChatState] the chat screen shows outside the thread (a record: equal by value).
+/// The last speaker the group's "… will answer" line names (L7): it holds while bots are working,
+/// so it doesn't switch with every bot that posts, and moves when they're done or the chat changes.
+@visibleForTesting
+({String? conversationId, String? id}) holdSpeaker({
+  required ({String? conversationId, String? id})? held,
+  required String? conversationId,
+  required String? lastSpeakerId,
+  required bool running,
+}) {
+  if (held != null && running && held.conversationId == conversationId && held.id != null) return held;
+  return (conversationId: conversationId, id: lastSpeakerId);
+}
+
 typedef _ChatFrame = ({bool loading, bool loadFailed, bool offline, bool running, bool empty, String? conversationId, String? lastSpeakerId});
 
 _ChatFrame _chatFrame(ChatState c, {required bool group}) => (

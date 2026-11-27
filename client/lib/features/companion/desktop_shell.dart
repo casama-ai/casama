@@ -11,6 +11,7 @@ import 'package:window_manager/window_manager.dart';
 
 import '../../core/linux_desktop_entry.dart';
 import '../../core/router.dart';
+import '../../core/telemetry.dart';
 import '../island/island_bridge.dart';
 import '../island/island_feed.dart';
 import '../island/island_tray.dart';
@@ -74,7 +75,10 @@ class DesktopShell {
     try {
       _tray = TrayIcon.create();
       final tray = _tray;
-      if (tray != null) {
+      if (tray == null) {
+        // The customer's Windows app had no tray icon and nothing said why (build 108, L13).
+        Telemetry.captureException(StateError('tray icon not created'), StackTrace.current, context: {'service': 'tray'}, warning: true);
+      } else {
         tray.icon = ImageAsset.fromAsset('assets/tray_icon.png');
         tray.setTooltip('Casama');
         tray.setContextMenuTrigger(ContextMenuTrigger.clicked);
@@ -82,8 +86,9 @@ class DesktopShell {
         tray.setVisible(true);
         ref.listen(islandFeedProvider, (_, feed) => _showFeed(feed));
       }
-    } catch (e) {
+    } catch (e, st) {
       debugPrint('tray unavailable: $e');
+      Telemetry.captureException(e, st, context: {'service': 'tray'}, warning: true);
     }
   }
 

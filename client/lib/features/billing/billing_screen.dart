@@ -122,6 +122,10 @@ class _BillingScreenState extends ConsumerState<BillingScreen> {
     super.initState();
     // Store purchases and restores are verified by the server as they arrive.
     ref.read(purchaseVerifierProvider);
+    // Plan, credits and computer hours as they are now, not as they were when the app opened.
+    Future.microtask(() {
+      if (mounted) refreshSpend(ref);
+    });
   }
 
   Future<void> _run(Future<void> Function() action) async {

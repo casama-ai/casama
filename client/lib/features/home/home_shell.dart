@@ -3,6 +3,7 @@ import '../notifications/newsletter.dart';
 import 'dart:async';
 import 'dart:math' as math;
 
+import 'package:flutter/foundation.dart' show defaultTargetPlatform, kIsWeb;
 import 'package:flutter/gestures.dart' show kDoubleTapTimeout;
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
@@ -175,6 +176,10 @@ Rect stripSlot(MediaQueryData media, FoldInfo fold, double tabsHeight) {
   final bottom = math.max(media.size.height - floor, fold.stripTop);
   return Rect.fromLTRB(left, fold.stripTop, left + width, bottom);
 }
+
+/// Windows and Linux: the shell takes the Mac menu bar's shortcuts with Ctrl (L11).
+bool get _ctrlShortcuts =>
+    !kIsWeb && (defaultTargetPlatform == TargetPlatform.windows || defaultTargetPlatform == TargetPlatform.linux);
 
 class HomeShell extends ConsumerWidget {
   const HomeShell({super.key, required this.location, required this.child, this.uri});
@@ -367,6 +372,15 @@ class HomeShell extends ConsumerWidget {
             showWorkspaceSearch(context),
         const SingleActivator(LogicalKeyboardKey.keyK, control: true): () =>
             showWorkspaceSearch(context),
+        // The Mac menu bar's File and Go shortcuts, for Windows and Linux (the customer's build
+        // 108 round, L11). The Mac keeps its Cmd versions in the menu bar; a browser keeps these
+        // keys for its own tabs and windows.
+        if (_ctrlShortcuts) ...{
+          for (final (key, action) in desktopShortcutActions)
+            SingleActivator(key, control: true): () => unawaited(desktopAction(ref.read, action)),
+          const SingleActivator(LogicalKeyboardKey.keyN, control: true, shift: true): () =>
+              unawaited(desktopAction(ref.read, 'newBot')),
+        },
       },
       child: Focus(
         autofocus: true,
@@ -1155,7 +1169,7 @@ class _Rail extends ConsumerWidget {
 }
 
 /// Wide windows: the mark and workspace, the main sections, the bots, and who is signed in.
-class _Sidebar extends ConsumerWidget {
+class _Sidebar extends StatefulWidget {
   const _Sidebar({
     required this.dests,
     required this.index,
@@ -1169,7 +1183,65 @@ class _Sidebar extends ConsumerWidget {
   final String? selectedBotId;
   final ValueChanged<int> onSelected;
 
+  static const double width = _SidebarBody.width;
+
+  @override
+  State<_Sidebar> createState() => _SidebarState();
+}
+
+/// Holds the bots' order while the pointer is over the sidebar: a bot that started working used
+/// to jump to the top under the cursor, so a click opened another bot (the customer's build 108
+/// round). Working bots still go first (E3), once the pointer leaves.
+class _SidebarState extends State<_Sidebar> {
+  var _hovering = false;
+  List<String>? _shown;
+
+  @override
+  Widget build(BuildContext context) => MouseRegion(
+    onEnter: (_) => _hovering = true,
+    onExit: (_) => setState(() => _hovering = false),
+    child: _SidebarBody(
+      dests: widget.dests,
+      index: widget.index,
+      badge: widget.badge,
+      selectedBotId: widget.selectedBotId,
+      onSelected: widget.onSelected,
+      hold: _hovering ? _shown : null,
+      onOrder: (ids) => _shown = ids,
+    ),
+  );
+}
+
+class _SidebarBody extends ConsumerWidget {
+  const _SidebarBody({
+    required this.dests,
+    required this.index,
+    required this.badge,
+    required this.selectedBotId,
+    required this.onSelected,
+    this.hold,
+    required this.onOrder,
+  });
+  final List<_Dest> dests;
+  final int index;
+  final int badge;
+  final String? selectedBotId;
+  final ValueChanged<int> onSelected;
+
+  /// The order to keep for bots outside folders (the pointer is over the sidebar).
+  final List<String>? hold;
+
+  /// The order the bots outside folders were shown in.
+  final ValueChanged<List<String>> onOrder;
+
   static const double width = 272;
+
+  List<(BotFolder?, List<Bot>)> _grouped(List<Bot> bots, List<BotFolder> folders) {
+    final out = groupBotsByFolder(bots, folders, hold: hold);
+    final loose = out.where((g) => g.$1 == null).firstOrNull?.$2 ?? const <Bot>[];
+    onOrder([for (final b in loose) b.id]);
+    return out;
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -1197,7 +1269,9 @@ class _Sidebar extends ConsumerWidget {
               padding: const EdgeInsets.fromLTRB(20, 18, 16, 18),
               child: Row(
                 children: [
-                  const CasamaMark(size: 34),
+                  // Still: the sidebar is always on screen, and a looping bot here asked for a
+                  // frame on every vsync while the app sat idle (D-615).
+                  const CasamaMark(size: 34, animate: false),
                   const SizedBox(width: 8),
                   // The current workspace; tap to switch, create or join one (D-099).
                   const Expanded(child: WorkspaceSwitcher()),
@@ -1271,10 +1345,7 @@ class _Sidebar extends ConsumerWidget {
                     onTap: () => context.go('/inbox'),
                   ),
                   // Bots outside folders first, then each folder in order (D-100).
-                  for (final (folder, group) in groupBotsByFolder(
-                    bots,
-                    folders,
-                  )) ...[
+                  for (final (folder, group) in _grouped(bots, folders)) ...[
                     if (folder != null)
                       Padding(
                         key: Key('sidebar-folder-${folder.id}'),
@@ -1812,15 +1883,24 @@ class _SuspendedBanner extends StatelessWidget {
 /// Bots without a folder first (folder null), then each folder in order with its bots in order.
 List<(BotFolder?, List<Bot>)> groupBotsByFolder(
   List<Bot> bots,
-  List<BotFolder> folders,
-) {
+  List<BotFolder> folders, {
+  List<String>? hold,
+}) {
   int byKey(Bot a, Bot b) => a.sortKey.compareTo(b.sortKey);
   final known = {for (final f in folders) f.id};
   final out = <(BotFolder?, List<Bot>)>[];
   // Bots outside folders that are working or waiting on the person go first (E3, D-549); the
   // rest keep their order. List.sort isn't stable, so ties fall back to the original position.
   final at = {for (var i = 0; i < bots.length; i++) bots[i].id: i};
+  // [hold]: the order on screen while the pointer is over it; bots new to the list go after.
+  final held = hold == null ? null : {for (var i = 0; i < hold.length; i++) hold[i]: i};
   int busyFirst(Bot a, Bot b) {
+    if (held != null) {
+      final x = held[a.id], y = held[b.id];
+      if (x != null && y != null) return x.compareTo(y);
+      if (x != null) return -1;
+      if (y != null) return 1;
+    }
     final busy = (botNeedsAttention(b) ? 1 : 0) - (botNeedsAttention(a) ? 1 : 0);
     if (busy != 0) return busy;
     final key = byKey(a, b);

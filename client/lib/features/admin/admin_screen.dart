@@ -33,6 +33,7 @@ import 'services_tab.dart';
 import 'testimonials_tab.dart';
 import 'users_tab.dart';
 import 'vendors_tab.dart';
+import 'free_plans_tab.dart';
 import 'partners_tab.dart';
 import 'selfhost_licenses_tab.dart';
 import 'waitlist_tab.dart';
@@ -106,7 +107,10 @@ class _UnlockedAdminScreenState extends ConsumerState<_UnlockedAdminScreen> {
   }
 
   List<AdminSection> _sections(bool billingEnabled) =>
-      [for (final s in AdminSection.values) if ((s != AdminSection.resets && s != AdminSection.partners && s != AdminSection.selfhost) || billingEnabled) s];
+      [for (final s in AdminSection.values) if (!_billingOnly.contains(s) || billingEnabled) s];
+
+  /// Sections that only mean something where billing is on (Casama Cloud).
+  static const _billingOnly = {AdminSection.resets, AdminSection.partners, AdminSection.freePlans, AdminSection.selfhost};
 
   void _open(AdminSection section) {
     final next = section == AdminSection.overview ? null : section;
@@ -137,6 +141,7 @@ class _UnlockedAdminScreenState extends ConsumerState<_UnlockedAdminScreen> {
     AdminSection.vendors => const VendorsTab(),
     AdminSection.resets => const ResetsTab(),
     AdminSection.partners => const PartnersTab(),
+    AdminSection.freePlans => const FreePlansTab(),
     AdminSection.selfhost => const SelfhostLicensesTab(),
     AdminSection.users => const UsersTab(),
     AdminSection.workspaces => const WorkspacesTab(),

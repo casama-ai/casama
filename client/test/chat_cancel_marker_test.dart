@@ -1,5 +1,7 @@
 // After Stop the chat says the reply was cancelled, also when the run's own run.cancelled never
 // arrives, and after a reload; a reply that finished before the stop landed gets no marker (E4).
+import 'dart:async';
+
 import 'package:casama/core/backend.dart';
 import 'package:casama/core/providers.dart';
 import 'package:casama/features/chat/chat_controller.dart';
@@ -55,6 +57,29 @@ void main() {
     expect(marks, hasLength(1));
     expect(marks.single.refId, runId);
     expect(container.read(chatControllerProvider(botId)).running, isFalse);
+  });
+
+  test('a Stop request that never answers is sent again, then the marker goes in', () async {
+    final realTimeout = cancelRequestTimeout;
+    cancelRequestTimeout = const Duration(milliseconds: 30);
+    addTearDown(() => cancelRequestTimeout = realTimeout);
+    final (container, backend, c) = await running();
+    backend
+      ..runStatuses[runId] = RunStatus.cancelled
+      ..cancelHangs = 1;
+    await c.cancel();
+    expect(backend.cancelCalls, 2);
+    expect(cancelled(container), hasLength(1));
+    expect(container.read(chatControllerProvider(botId)).running, isFalse);
+  });
+
+  test('a Stop that never answers twice says so instead of hanging on Working', () async {
+    final realTimeout = cancelRequestTimeout;
+    cancelRequestTimeout = const Duration(milliseconds: 30);
+    addTearDown(() => cancelRequestTimeout = realTimeout);
+    final (_, backend, c) = await running();
+    backend.cancelHangs = 2;
+    await expectLater(c.cancel(), throwsA(isA<TimeoutException>()));
   });
 
   test('run.cancelled arriving in time puts one marker in', () async {

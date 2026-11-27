@@ -221,6 +221,9 @@ void main() {
     await setSize(tester, const Size(900, 3000));
     await tester.pumpWidget(harness(_ExpiringBackend(), const InboxScreen(initialFilter: InboxFilter.needsYou)));
     await tester.pumpAndSettle();
+    // Three ideas from one bot share a card (D-603 §5.4); open it.
+    await tester.tap(find.byKey(const Key('botIdeasGroup-$botId')));
+    await tester.pumpAndSettle();
     String details(String id) => tester.widget<Text>(find.byKey(Key('details-$id'))).textSpan!.toPlainText();
     expect(details('soon'), 'Ada · 40 minutes ago · Expires in 3 hours');
     expect(details('later'), 'Ada · 5 hours ago');

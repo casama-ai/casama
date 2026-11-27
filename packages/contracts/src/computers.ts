@@ -32,6 +32,15 @@ export const ComputerOperation = z
   })
   .openapi("ComputerOperation");
 
+export const ComputerUser = z
+  .object({
+    bot_id: Uuid,
+    bot_name: z.string(),
+    run_id: Uuid,
+    conversation_id: Uuid.nullable(),
+  })
+  .openapi("ComputerUser");
+
 export const Computer = z
   .object({
     id: Uuid,
@@ -78,6 +87,10 @@ export const Computer = z
     files_removed_at: ts.nullable().optional().openapi({
       description:
         "When its saved files were removed because the workspace went unused for 6 months (docs/INACTIVE-ACCOUNTS-PLAN.md); it starts fresh. Null: never.",
+    }),
+    in_use_by: ComputerUser.nullable().optional().openapi({
+      description:
+        "The bot driving its screen right now (a browser or desktop step in a working run, within the last 2 minutes); null when none. A team computer's every chat shows the same screen, so the panel says whose work it is (D-617).",
     }),
   })
   .openapi("Computer");

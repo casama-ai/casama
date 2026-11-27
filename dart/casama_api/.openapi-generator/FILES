@@ -367,6 +367,7 @@ lib/src/model/computer_file_entry.dart
 lib/src/model/computer_file_list.dart
 lib/src/model/computer_history.dart
 lib/src/model/computer_history_entry.dart
+lib/src/model/computer_in_use_by.dart
 lib/src/model/computer_list.dart
 lib/src/model/computer_operation.dart
 lib/src/model/computer_process.dart

@@ -74,6 +74,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   final _search = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    // The month's spend on the Usage row is read fresh, as the Usage page reads it.
+    Future.microtask(() {
+      if (mounted) refreshSpend(ref);
+    });
+  }
+
+  @override
   void dispose() {
     _search.dispose();
     super.dispose();

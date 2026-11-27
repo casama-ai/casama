@@ -715,7 +715,15 @@ final class AppBrowser: NSObject, WKNavigationDelegate, WKUIDelegate, FlutterPla
     return "needs_macos_14"
   }
 
+  /// Ends the activity once the bot has sent no page command for a while (D-615): it used to last
+  /// for the rest of the session after one load, so macOS could never nap the idle app.
+  private var napIdleEnd: DispatchWorkItem?
+
   private func beginNapPrevention() {
+    napIdleEnd?.cancel()
+    let end = DispatchWorkItem { [weak self] in self?.endNapPrevention() }
+    napIdleEnd = end
+    DispatchQueue.main.asyncAfter(deadline: .now() + 120, execute: end)
     if napToken != nil { return }
     napToken = ProcessInfo.processInfo.beginActivity(
       options: [.userInitiatedAllowingIdleSystemSleep, .latencyCritical],
@@ -723,6 +731,8 @@ final class AppBrowser: NSObject, WKNavigationDelegate, WKUIDelegate, FlutterPla
   }
 
   private func endNapPrevention() {
+    napIdleEnd?.cancel()
+    napIdleEnd = nil
     if let token = napToken {
       ProcessInfo.processInfo.endActivity(token)
       napToken = nil

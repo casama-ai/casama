@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -78,6 +79,8 @@ String errorText(BuildContext context, Object error) {
     if (status >= 500) return context.l10n.serverNotResponding;
     return context.l10n.somethingWentWrong;
   }
+  // A request with a time limit that ran out (Stop, say): no answer came, as when offline.
+  if (error is TimeoutException) return context.l10n.connectionFailed;
   if (error is StateError && error.message == 'Microphone permission denied') {
     return context.l10n.devicePermissionDenied;
   }
@@ -276,7 +279,16 @@ class AsyncView<T> extends StatelessWidget {
     );
   }
 
-  Widget _error(BuildContext context, Object e) => EmptyState(
+  Widget _error(BuildContext context, Object e) {
+    // Too many requests (D-610): count down, then try again by itself. It used to show the wait it
+    // started with for good ("Try again in 23 seconds" for ten minutes on the Computer panel).
+    final wait = retryAfterOf(e);
+    final retry = onRetry;
+    if (wait != null && retry != null) return RateLimitedRetry(key: ObjectKey(e), wait: wait, onRetry: retry);
+    return _plainError(context, e);
+  }
+
+  Widget _plainError(BuildContext context, Object e) => EmptyState(
         icon: LucideIcons.cloudOff,
         title: context.l10n.somethingWentWrong,
         message: errorText(context, e),
@@ -291,6 +303,107 @@ class AsyncView<T> extends StatelessWidget {
       );
 }
 
+/// A load that hit the rate limit (D-610): "Try again in N seconds", counting down, and when the
+/// wait is over [onRetry] runs by itself. The Retry button stays for anyone who wants it sooner.
+class RateLimitedRetry extends StatefulWidget {
+  const RateLimitedRetry({super.key, required this.wait, required this.onRetry, this.compact = false});
+
+  final Duration wait;
+  final VoidCallback onRetry;
+
+  /// One line, for an [InlineError]'s place.
+  final bool compact;
+
+  @override
+  State<RateLimitedRetry> createState() => _RateLimitedRetryState();
+}
+
+class _RateLimitedRetryState extends State<RateLimitedRetry> {
+  late DateTime _until;
+  late int _start;
+  int _ticks = 0;
+  Timer? _tick;
+
+  @override
+  void initState() {
+    super.initState();
+    _begin();
+  }
+
+  @override
+  void didUpdateWidget(RateLimitedRetry old) {
+    super.didUpdateWidget(old);
+    // Another 429 for the same wait (the retry was refused again): count down again.
+    if (old.wait != widget.wait || !(_tick?.isActive ?? false)) _begin();
+  }
+
+  void _begin() {
+    _tick?.cancel();
+    // At least a second, and one past the server's window so the retry lands in the next one.
+    final seconds = (widget.wait.inMilliseconds / 1000).ceil().clamp(1, 3600) + 1;
+    _start = seconds;
+    _ticks = 0;
+    _until = DateTime.now().add(Duration(seconds: seconds));
+    _tick = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (!mounted) return;
+      _ticks++;
+      if (_left == 0) {
+        _tick?.cancel();
+        widget.onRetry();
+        return;
+      }
+      setState(() {});
+    });
+  }
+
+  /// By the timer's own ticks, or the clock when timers ran late (the app was in the background).
+  int get _left {
+    final ms = _until.difference(DateTime.now()).inMilliseconds;
+    final byClock = ms <= 0 ? 0 : (ms / 1000).ceil();
+    final byTicks = _start - _ticks;
+    final left = byTicks < byClock ? byTicks : byClock;
+    return left < 0 ? 0 : left;
+  }
+
+  @override
+  void dispose() {
+    _tick?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final left = _left;
+    final text = left > 0 ? l10n.tooManyRequestsWait(left) : l10n.tooManyRequestsReady;
+    void retryNow() {
+      _tick?.cancel();
+      widget.onRetry();
+    }
+
+    if (widget.compact) {
+      final scheme = Theme.of(context).colorScheme;
+      return Row(
+        children: [
+          Icon(LucideIcons.hourglass, size: 16, color: scheme.onSurfaceVariant),
+          const SizedBox(width: 6),
+          Expanded(child: Text(text, style: Theme.of(context).textTheme.bodySmall?.copyWith(height: 1.35))),
+          TextButton(onPressed: retryNow, child: Text(l10n.retry)),
+        ],
+      );
+    }
+    return EmptyState(
+      icon: LucideIcons.hourglass,
+      message: text,
+      action: FilledButton.tonalIcon(
+        onPressed: retryNow,
+        icon: const Icon(LucideIcons.rotateCw, size: 18),
+        label: Text(l10n.retry),
+      ),
+    );
+  }
+}
+
 /// A one-line load failure with a retry, for lists inside sheets and forms where a full [AsyncView] would not fit.
 class InlineError extends StatelessWidget {
   const InlineError({super.key, required this.error, this.onRetry});
@@ -299,6 +412,9 @@ class InlineError extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final wait = retryAfterOf(error);
+    final retry = onRetry;
+    if (wait != null && retry != null) return RateLimitedRetry(key: ObjectKey(error), wait: wait, onRetry: retry, compact: true);
     final scheme = Theme.of(context).colorScheme;
     return Row(
       children: [

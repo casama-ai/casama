@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show ProviderListenable;
 
 import 'core/age_range.dart';
+import 'core/background_tickers.dart';
 import 'core/app_language.dart';
 import 'core/file_provider.dart';
 import 'core/fold/fold.dart';
@@ -185,7 +186,8 @@ class CasamaApp extends ConsumerWidget {
       // The wallpaper, painted once behind every navigator: pages are see-through over it, so it
       // stays still while they change and never blacks out or reloads between them.
       // What the window is on a folding phone (D-411): its fold and its side strip, for everything.
-      builder: (context, child) => FoldScope(
+      // No endless animation while a desktop window is in the background (D-615).
+      builder: (context, child) => BackgroundTickers(child: FoldScope(
         child: Effects(
         fewer: appearance.fewerEffects,
         child: Wallpaper(
@@ -222,6 +224,7 @@ class CasamaApp extends ConsumerWidget {
           ),
           ),
         ),
+      ),
       ),
       ),
       ),

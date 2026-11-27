@@ -13,6 +13,7 @@ import '../../core/local_cache.dart';
 import '../../core/on_device_model.dart';
 import '../../core/providers.dart';
 import '../../core/review_prompt.dart';
+import '../../core/router.dart' show routerProvider;
 import '../../core/server_reachability.dart';
 import '../../core/telemetry.dart';
 import '../computer/bot_cursors.dart';
@@ -928,12 +929,16 @@ class ChatController extends Notifier<ChatState> {
       hasEarlier: hasEarlier,
       lastSent: state.conversationId == id ? state.lastSent : null,
       loadingEarlier: state.conversationId == id && state.loadingEarlier,
-      entries: [
-        ..._placeDeviceCards([..._entriesOf(id, messages), ..._keptFailure(id, messages)]),
-        // A message on its way that this load already brought shows once, as the saved one.
-        for (final e in _notDelivered(id))
-          if (!(e is MessageEntry && messages.any((m) => m.id == _sending[e.id]))) e,
-      ],
+      // Messages the server doesn't have yet keep their place by time (L15): put after everything
+      // the server sent, a Not sent message moved below replies that came after it.
+      entries: placeLocalByTime(
+        _placeDeviceCards([..._entriesOf(id, messages), ..._keptFailure(id, messages)]),
+        [
+          // A message on its way that this load already brought shows once, as the saved one.
+          for (final e in _notDelivered(id))
+            if (!(e is MessageEntry && messages.any((m) => m.id == _sending[e.id]))) e,
+        ],
+      ),
       answeredUi: {for (final m in messages) ?m.uiActionSurface},
       reactions: state.conversationId == id ? state.reactions : const {},
     );
@@ -1203,6 +1208,20 @@ class ChatController extends Notifier<ChatState> {
   /// and follows the next bot still working.
   bool group = false;
 
+  /// Whether the last open was of the group chat ([group]); null before the first.
+  bool? _openedGroup;
+
+  /// Whether this controller's chat is the page the app shows now (L12). True when the app's
+  /// router isn't there to ask (tests that run the controller alone).
+  bool _onScreen() {
+    try {
+      final uri = ref.read(routerProvider).routerDelegate.currentConfiguration.uri;
+      return chatOnScreen(uri, botId: botId, groupId: _openedGroup == true ? state.conversationId : null);
+    } catch (_) {
+      return true;
+    }
+  }
+
   /// How many messages a chat opens with, and how many each step up the thread adds (Fix 10).
   static const pageSize = 60;
 
@@ -1283,7 +1302,13 @@ class ChatController extends Notifier<ChatState> {
     _sub = null;
     unawaited(sub?.cancel());
     _releaseRun();
+    // A group chat and its lead bot's own chat share this controller (D-611). Going from one to
+    // the other starts clean, and the bot's chat never falls back to the group's id: it did when
+    // listing the bot's chats failed, and the group showed in the bot's chat under "← General".
+    final switched = _openedGroup != null && _openedGroup != group;
+    _openedGroup = group;
     final keepCurrent =
+        !switched &&
         state.entries.isNotEmpty &&
         (conversationId == null || conversationId == state.conversationId);
     _park();
@@ -1312,14 +1337,14 @@ class ChatController extends Notifier<ChatState> {
 
     if (id == null) {
       final saved =
-          state.conversationId ?? await cacheRead(cache, 'lastconv:$botId');
+          (switched ? null : state.conversationId) ?? await cacheRead(cache, 'lastconv:$botId');
       if (stale()) return false;
       if (saved is String && !showingCached) {
         await loadCached(saved);
         if (stale()) return false;
       }
       try {
-        final list = await _backend.conversations(botId);
+        final list = await _outlastLimit(() => _backend.conversations(botId), patience: openRateLimitPatience);
         if (stale()) return false;
         id = list.isEmpty ? null : list.first.id;
         unawaited(cacheWrite(cache, 'lastconv:$botId', id));
@@ -1345,7 +1370,7 @@ class ChatController extends Notifier<ChatState> {
     // A reload keeps what the person has already scrolled back through.
     final want = _loadedFor == id && _loadedCount > pageSize ? _loadedCount : pageSize;
     try {
-      messages = await _backend.messages(id, limit: want, around: around);
+      messages = await _outlastLimit(() => _backend.messages(id!, limit: want, around: around), patience: openRateLimitPatience);
     } catch (_) {
       if (stale()) return false;
       if (showingCached && state.conversationId == id) {
@@ -1544,7 +1569,7 @@ class ChatController extends Notifier<ChatState> {
         await before;
         final existing = state.conversationId;
         if (existing == null) {
-          conversationId = (await _backend.createConversation(botId)).id;
+          conversationId = (await _outlastLimit(() => _backend.createConversation(botId))).id;
           createdNewConversation = true;
         } else {
           conversationId = existing;
@@ -1703,16 +1728,46 @@ class ChatController extends Notifier<ChatState> {
   /// Runs [attempt] until it reaches the server: a connection failure tries again after each of
   /// [sendRetryDelays]; any other error, or the last failure, is thrown. [onWay] runs once the
   /// first request is out.
+  ///
+  /// Too many requests (D-610) is never a reason for "Not sent": the message waits as long as the
+  /// server asks and goes again, for up to [sendRateLimitPatience], with the bubble still sending.
   Future<SendMessageResponse> _deliver(Future<SendMessageResponse> Function() attempt, {required void Function() onWay}) async {
-    for (var tries = 0; ; tries++) {
+    final started = DateTime.now();
+    var tries = 0;
+    var first = true;
+    while (true) {
       final sending = attempt();
-      onWay();
+      if (first) onWay();
+      first = false;
       try {
         return await sending;
       } catch (e) {
-        if (tries >= sendRetryDelays.length || !isConnectionFailure(e) || !ref.mounted) rethrow;
-        await Future<void>.delayed(sendRetryDelays[tries]);
         if (!ref.mounted) rethrow;
+        final wait = rateLimitWait(e, since: started);
+        if (wait != null) {
+          await Future<void>.delayed(wait);
+          if (!ref.mounted) rethrow;
+          continue;
+        }
+        if (tries >= sendRetryDelays.length || !isConnectionFailure(e)) rethrow;
+        await Future<void>.delayed(sendRetryDelays[tries++]);
+        if (!ref.mounted) rethrow;
+      }
+    }
+  }
+
+  /// [run] again after each 429 for as long as [patience] allows (D-610): [sendRateLimitPatience]
+  /// for a send, [openRateLimitPatience] for opening a chat ("This chat didn't load" under load,
+  /// build 108).
+  Future<T> _outlastLimit<T>(Future<T> Function() run, {Duration? patience}) async {
+    final started = DateTime.now();
+    while (true) {
+      try {
+        return await run();
+      } catch (e) {
+        final wait = ref.mounted ? rateLimitWait(e, since: started, patience: patience) : null;
+        if (wait == null) rethrow;
+        await Future<void>.delayed(wait);
       }
     }
   }
@@ -1755,7 +1810,14 @@ class ChatController extends Notifier<ChatState> {
     final run = state.activeRunId;
     if (run == null) return;
     try {
-      await _backend.cancelRun(run);
+      // A Stop that never got an answer left the chat on Working with the reply still coming
+      // (build 108, Windows): it has a time limit and goes once more before it says so.
+      try {
+        await _backend.cancelRun(run).timeout(cancelRequestTimeout);
+      } on TimeoutException {
+        if (!ref.mounted || state.activeRunId != run) return;
+        await _backend.cancelRun(run).timeout(cancelRequestTimeout);
+      }
       await _settleCancel(run);
     } on RunAlreadyFinished {
       // It had already ended and this chat missed it: let it go and show how it ended, instead
@@ -2305,7 +2367,9 @@ class ChatController extends Notifier<ChatState> {
         // Then, on Casama Cloud, the one-time "Casama is open source" ask (D-577), and last the
         // one-time invite ask (D-588); each only counts the reply when another ask showed.
         final personAsked = state.activeRunId == _sentRun;
-        bool stillIdle() => ref.mounted && state.activeRunId == null;
+        // Still idle, and still the screen in front: an ask that opened seconds later covered
+        // whatever page the person had moved to (the customer's Memory page, build 108, L12).
+        bool stillIdle() => ref.mounted && state.activeRunId == null && _onScreen();
         final review = ref.read(reviewPromptProvider);
         final testimonial = ref.read(testimonialAskProvider);
         final star = ref.read(starAskProvider);
@@ -2374,6 +2438,28 @@ List<Duration> sendRetryDelays = const [
   Duration(seconds: 60),
 ];
 
+/// How long a message keeps waiting out "too many requests" before it shows Not sent (D-610).
+@visibleForTesting
+Duration sendRateLimitPatience = const Duration(minutes: 10);
+
+/// How long opening a chat keeps waiting out "too many requests" before it says it didn't load.
+@visibleForTesting
+Duration openRateLimitPatience = const Duration(minutes: 1);
+
+/// How long to wait before sending again when [e] is a 429 (the server's retry-after, at least a
+/// second and a moment past its window), or null when it isn't one or [since] is too long ago.
+Duration? rateLimitWait(Object e, {required DateTime since, Duration? patience}) {
+  if (e is! DioException || e.response?.statusCode != 429) return null;
+  if (DateTime.now().difference(since) >= (patience ?? sendRateLimitPatience)) return null;
+  final raw = int.tryParse(e.response?.headers.value('retry-after')?.trim() ?? '');
+  final seconds = (raw == null || raw < 1) ? 2 : raw;
+  return Duration(seconds: seconds > 60 ? 60 : seconds, milliseconds: 250);
+}
+
+/// How long one Stop request may take before it is sent again (once).
+@visibleForTesting
+Duration cancelRequestTimeout = const Duration(seconds: 10);
+
 /// How long Stop waits for the run's own run.cancelled before it puts the marker in itself.
 @visibleForTesting
 Duration cancelSettleWait = const Duration(seconds: 3);
@@ -2382,6 +2468,37 @@ Duration cancelSettleWait = const Duration(seconds: 3);
 /// when the server answers. Older ones wait for Try Again.
 @visibleForTesting
 Duration autoResendWindow = const Duration(minutes: 10);
+
+/// [local] entries (messages the server doesn't have yet) placed among [saved] by time (L15):
+/// each goes before the first saved message written after it, in their own order, and those
+/// with no time, or newer than everything, go at the end.
+@visibleForTesting
+List<ChatEntry> placeLocalByTime(List<ChatEntry> saved, List<ChatEntry> local) {
+  if (local.isEmpty) return saved;
+  final out = [...saved];
+  var from = 0;
+  for (final e in local) {
+    final at = e is MessageEntry ? e.at : null;
+    var i = out.length;
+    if (at != null) {
+      for (var j = from; j < out.length; j++) {
+        final o = out[j];
+        if (o is MessageEntry && !local.contains(o) && o.at != null && o.at!.isAfter(at)) {
+          i = j;
+          break;
+        }
+      }
+    }
+    out.insert(i, e);
+    from = i + 1;
+  }
+  return out;
+}
+
+/// Whether [location] shows the chat with [botId], or the group chat [groupId] when given (L12).
+@visibleForTesting
+bool chatOnScreen(Uri location, {required String botId, String? groupId}) =>
+    groupId != null ? location.path == '/groups/$groupId' : location.path == '/bots/$botId/chat';
 
 /// Whether [e] means the request never got an answer from the server (no connection, a timeout,
 /// or a gateway with no server behind it), so trying again may work.

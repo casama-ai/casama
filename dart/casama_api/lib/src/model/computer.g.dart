@@ -49,6 +49,8 @@ abstract class _$ComputerCWProxy {
 
   Computer filesRemovedAt(DateTime? filesRemovedAt);
 
+  Computer inUseBy(ComputerInUseBy? inUseBy);
+
   /// Creates a new instance with the provided field values.
   /// Omitted fields keep their values; explicit `null` clears nullable fields.
   /// The public API rejects `null` for non-nullable fields. To update a single field use `Computer(...).copyWith.fieldName(value)`.
@@ -79,6 +81,7 @@ abstract class _$ComputerCWProxy {
     ComputerOperation? operation,
     DateTime? updateAvailableSince,
     DateTime? filesRemovedAt,
+    ComputerInUseBy? inUseBy,
   });
 }
 
@@ -157,6 +160,9 @@ class _$ComputerCWProxyImpl implements _$ComputerCWProxy {
   Computer filesRemovedAt(DateTime? filesRemovedAt) =>
       call(filesRemovedAt: filesRemovedAt);
 
+  @override
+  Computer inUseBy(ComputerInUseBy? inUseBy) => call(inUseBy: inUseBy);
+
   /// Creates a new instance with the provided field values.
   /// Omitted fields keep their values; explicit `null` clears nullable fields.
   /// The public API rejects `null` for non-nullable fields. To update a single field use `Computer(...).copyWith.fieldName(value)`.
@@ -188,6 +194,7 @@ class _$ComputerCWProxyImpl implements _$ComputerCWProxy {
     Object? operation = const $CopyWithPlaceholder(),
     Object? updateAvailableSince = const $CopyWithPlaceholder(),
     Object? filesRemovedAt = const $CopyWithPlaceholder(),
+    Object? inUseBy = const $CopyWithPlaceholder(),
   }) {
     return Computer(
       id: id == const $CopyWithPlaceholder() || id == null
@@ -276,6 +283,10 @@ class _$ComputerCWProxyImpl implements _$ComputerCWProxy {
           ? _value.filesRemovedAt
           // ignore: cast_nullable_to_non_nullable
           : filesRemovedAt as DateTime?,
+      inUseBy: inUseBy == const $CopyWithPlaceholder()
+          ? _value.inUseBy
+          // ignore: cast_nullable_to_non_nullable
+          : inUseBy as ComputerInUseBy?,
     );
   }
 }
@@ -373,6 +384,12 @@ Computer _$ComputerFromJson(Map<String, dynamic> json) => $checkedCreate(
         'files_removed_at',
         (v) => v == null ? null : DateTime.parse(v as String),
       ),
+      inUseBy: $checkedConvert(
+        'in_use_by',
+        (v) => v == null
+            ? null
+            : ComputerInUseBy.fromJson(v as Map<String, dynamic>),
+      ),
     );
     return val;
   },
@@ -387,6 +404,7 @@ Computer _$ComputerFromJson(Map<String, dynamic> json) => $checkedCreate(
     'idleSleepMinutes': 'idle_sleep_minutes',
     'updateAvailableSince': 'update_available_since',
     'filesRemovedAt': 'files_removed_at',
+    'inUseBy': 'in_use_by',
   },
 );
 
@@ -412,6 +430,7 @@ Map<String, dynamic> _$ComputerToJson(Computer instance) => <String, dynamic>{
   'operation': ?instance.operation?.toJson(),
   'update_available_since': ?instance.updateAvailableSince?.toIso8601String(),
   'files_removed_at': ?instance.filesRemovedAt?.toIso8601String(),
+  'in_use_by': ?instance.inUseBy?.toJson(),
 };
 
 const _$ComputerKindEnumEnumMap = {

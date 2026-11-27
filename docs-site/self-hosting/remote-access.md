@@ -21,8 +21,7 @@ You need:
   because it closes sign-ups and the first account would otherwise belong to whoever finds the
   address first.
 - **A free Casama Cloud account** where you are an owner or admin of a workspace. You can make one
-  while you approve the link. Casama Cloud is invite-only for now: see
-  [Getting an invite](/guide/getting-an-invite).
+  while you approve the link: see [Signing up](/guide/getting-an-invite).
 - **Outbound port 7844, TCP and UDP.** The `connector` container dials out to Cloudflare on it. Most
   home networks allow it. Some company networks and VPNs don't.
 - **A Casama Cloud that gives out addresses.** The CLI and the app use `https://api.casama.ai`. If

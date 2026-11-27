@@ -24,6 +24,21 @@ DioException _status(int code) {
   );
 }
 
+DioException _limited(int seconds) {
+  final options = RequestOptions(path: '/v1/conversations/c/messages');
+  return DioException(
+    requestOptions: options,
+    type: DioExceptionType.badResponse,
+    response: Response(
+      requestOptions: options,
+      statusCode: 429,
+      headers: Headers.fromMap({
+        'retry-after': ['$seconds'],
+      }),
+    ),
+  );
+}
+
 void main() {
   final realDelays = sendRetryDelays;
   setUp(
@@ -96,6 +111,25 @@ void main() {
     await c.send('One');
     await c.send('Two');
     expect(backend.sendKeys.toSet(), hasLength(2));
+  });
+
+  test('too many requests waits and sends again, never Not sent (D-610)', () async {
+    final (container, backend, c) = setUpChat();
+    await c.open(convId);
+    backend.failSends.add(_limited(1));
+    await c.send('Find robot vacuums');
+    expect(backend.sent, ['Find robot vacuums']);
+    expect(backend.sendKeys, hasLength(2));
+    expect(backend.sendKeys.toSet(), hasLength(1));
+    expect(messages(container).last.failed, isFalse);
+  });
+
+  test('a 429 waits the server\'s retry-after, within the patience (D-610)', () {
+    final now = DateTime.now();
+    expect(rateLimitWait(_limited(8), since: now), const Duration(seconds: 8, milliseconds: 250));
+    expect(rateLimitWait(_limited(500), since: now), const Duration(seconds: 60, milliseconds: 250));
+    expect(rateLimitWait(_status(422), since: now), isNull);
+    expect(rateLimitWait(_limited(8), since: now.subtract(sendRateLimitPatience)), isNull);
   });
 
   test('a 4xx is not tried again', () async {

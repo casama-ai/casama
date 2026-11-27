@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:casama_sdk/casama_sdk.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
+import '../../core/rate_limit.dart';
 import '../../core/age_range.dart';
 import '../../core/providers.dart';
 import '../../core/shortcuts.dart' show askPath;
@@ -119,6 +120,12 @@ class _Note extends _Entry {
   const _Note(this.text, {this.action});
   final String text;
   final Widget? action;
+}
+
+/// A widget of its own in the list (the rate-limit countdown).
+class _Box extends _Entry {
+  const _Box(this.child);
+  final Widget child;
 }
 
 class _Row extends _Entry {
@@ -431,6 +438,14 @@ class _SearchViewState extends ConsumerState<SearchView> {
       ],
       if (q.length < 2)
         _Note(l10n.searchKeepTyping)
+      else if (_error != null && retryAfterOf(_error!) != null)
+        // Too many requests (D-610): count down and search again by itself.
+        _Box(RateLimitedRetry(
+          key: ObjectKey(_error),
+          wait: retryAfterOf(_error!)!,
+          onRetry: () => _run(q),
+          compact: true,
+        ))
       else if (_error != null)
         _Note(
           errorText(context, _error!),
@@ -493,6 +508,19 @@ class _SearchViewState extends ConsumerState<SearchView> {
     ].join(' · ');
     final snippet = snippetSpans(context, item.snippet);
     final showBot = bot != null && (item.kind == SearchKind.message || item.kind == SearchKind.chat);
+    // A message is named by its own words, with the chat it is in below (it was named by the chat's
+    // topic, so 14 hits in one search all read alike).
+    final words = item.snippet.replaceAll(RegExp('[«»]'), '').trim();
+    if (item.kind == SearchKind.message && words.isNotEmpty) {
+      final under = [meta, if (item.title.isNotEmpty) item.title].where((x) => x.isNotEmpty).join(' · ');
+      return _Row(
+        key: Key('result-${item.kind.name}-${item.id}'),
+        leading: showBot ? BotAvatar(name: bot.name, avatar: bot.avatarUrl, size: 36) : SearchIconTile(icon),
+        title: words,
+        subtitle: under.isEmpty ? null : TextSpan(text: under),
+        open: _target(item),
+      );
+    }
     return _Row(
       key: Key('result-${item.kind.name}-${item.id}'),
       leading: showBot ? BotAvatar(name: bot.name, avatar: bot.avatarUrl, size: 36) : SearchIconTile(icon),
@@ -588,6 +616,11 @@ class _SearchViewState extends ConsumerState<SearchView> {
                   ),
               ],
             ),
+          );
+        case _Box():
+          return Padding(
+            padding: const EdgeInsets.fromLTRB(AppSpace.md + AppSpace.xs, AppSpace.md, AppSpace.md, AppSpace.xs),
+            child: e.child,
           );
         case _Note():
           return Padding(

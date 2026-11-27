@@ -59,6 +59,15 @@ class _UsageScreenState extends ConsumerState<UsageScreen> {
 
   void _setFilter(UsageFilter f) => setState(() => _filter = f);
 
+  @override
+  void initState() {
+    super.initState();
+    // The totals here and in Settings are read fresh, so they agree.
+    Future.microtask(() {
+      if (mounted) refreshSpend(ref);
+    });
+  }
+
   String _periodLabel(UsagePeriod p) => switch (p) {
     UsagePeriod.day => context.l10n.periodToday,
     UsagePeriod.week => context.l10n.periodWeek,
@@ -119,8 +128,7 @@ class _UsageScreenState extends ConsumerState<UsageScreen> {
   /// Fetches the report, the balance and the billed items again (the header button and pull to refresh).
   Future<void> _refresh(UsageQuery query) async {
     ref.invalidate(usageReportProvider);
-    ref.invalidate(billingProvider);
-    ref.invalidate(billingUsageProvider);
+    refreshSpend(ref);
     await ref.read(usageReportProvider(query).future).catchError((_) => null);
   }
 }

@@ -172,6 +172,11 @@ class AppLocalizationsKo extends AppLocalizations {
   String get tooManyRequestsReady => '이제 다시 시도할 수 있어요.';
 
   @override
+  String computerInUseBy(String name) {
+    return '이 컴퓨터 사용 중: $name';
+  }
+
+  @override
   String get authAccountExists => '이미 이 이메일로 가입된 계정이 있어요. 로그인해 주세요.';
 
   @override
@@ -25157,6 +25162,241 @@ class AppLocalizationsKo extends AppLocalizations {
   String get planChangePeriodYear => '년';
 
   @override
+  String get adminFreePlans => 'Free Plans';
+
+  @override
+  String get adminAboutFreePlans =>
+      'Gift codes and free plans for friends. Codes are redeemed on the web, then the plan works in every app.';
+
+  @override
+  String get adminFreeOff =>
+      'Free plans are off on this server. Turn them on with scripts/comps.sh on.';
+
+  @override
+  String get adminFreeNewCode => 'New Gift Code';
+
+  @override
+  String get adminFreeGive => 'Give a Plan';
+
+  @override
+  String get adminFreeStatRunning => 'Free plans running';
+
+  @override
+  String get adminFreeStatCodesLive => 'Codes that still work';
+
+  @override
+  String get adminFreeStatRedeemed => 'Codes redeemed';
+
+  @override
+  String get adminFreeCodes => 'Gift Codes';
+
+  @override
+  String get adminFreeCodesNone =>
+      'No gift codes yet. Make one to give someone a free plan.';
+
+  @override
+  String get adminFreeWho => 'Who Has One';
+
+  @override
+  String get adminFreeFilterRunning => 'Running';
+
+  @override
+  String get adminFreeFilterAll => 'All';
+
+  @override
+  String get adminFreeNoneRunning => 'Nobody has a free plan right now.';
+
+  @override
+  String get adminFreeNone => 'No free plans yet.';
+
+  @override
+  String get adminFreeStatusLive => 'Live';
+
+  @override
+  String get adminFreeStatusUsedUp => 'Used Up';
+
+  @override
+  String get adminFreeStatusOff => 'Off';
+
+  @override
+  String get adminFreeStatusExpired => 'Expired';
+
+  @override
+  String get adminFreeNoRedeemBy => 'No end date';
+
+  @override
+  String get adminFreeTurnOff => 'Turn Off';
+
+  @override
+  String get adminFreeTurnOn => 'Turn On';
+
+  @override
+  String get adminFreePlan => 'Plan';
+
+  @override
+  String get adminFreeMonths => 'Months';
+
+  @override
+  String get adminFreeUses => 'How many people can use it';
+
+  @override
+  String get adminFreeUsesHelp =>
+      'Each person can redeem one gift code ever. Use 1 for a code meant for one person.';
+
+  @override
+  String get adminFreeRedeemByLabel => 'Redeem By';
+
+  @override
+  String get adminFreeAnyTime => 'Any time';
+
+  @override
+  String get adminFreeNote => 'Note (only you see it)';
+
+  @override
+  String get adminFreeNoteHint => 'For Maya';
+
+  @override
+  String get adminFreeCreate => 'Make Code';
+
+  @override
+  String get adminFreeMadeTitle => 'Gift Code Ready';
+
+  @override
+  String get adminFreeMadeBody =>
+      'Copy it now. It\'s shown only this once: afterwards only its last characters are kept.';
+
+  @override
+  String get adminFreeCopyCode => 'Copy Code';
+
+  @override
+  String get adminFreeCopyLink => 'Copy Link';
+
+  @override
+  String get adminFreeCopyMessage => 'Copy Message';
+
+  @override
+  String get adminFreeDone => 'Done';
+
+  @override
+  String get adminFreeEmail => 'Their email';
+
+  @override
+  String get adminFreeGiveHelp =>
+      'It goes on the oldest workspace they own, so they need a Casama account first.';
+
+  @override
+  String get adminFreeGiveButton => 'Give Plan';
+
+  @override
+  String get adminFreeFromCode => 'Gift code';
+
+  @override
+  String get adminFreeFromGrant => 'Given';
+
+  @override
+  String get adminFreeExtend => 'Extend';
+
+  @override
+  String get adminFreeExtendButton => 'Extend Plan';
+
+  @override
+  String get adminFreeEndNow => 'End Now';
+
+  @override
+  String get adminFreeEndTitle => 'End this free plan now?';
+
+  @override
+  String get adminFreeEndBody =>
+      'The workspace moves to Free right away. Credits already given stay.';
+
+  @override
+  String get adminFreeExtended => 'Free plan extended';
+
+  @override
+  String get adminFreeEndedDone => 'Free plan ended';
+
+  @override
+  String get adminFreeReasonExpired => 'Ran out';
+
+  @override
+  String get adminFreeReasonRevoked => 'Ended by you';
+
+  @override
+  String get adminFreeReasonReplaced => 'They bought a plan';
+
+  @override
+  String get adminFreeColWho => 'Who';
+
+  @override
+  String get adminFreeColPlan => 'Plan';
+
+  @override
+  String get adminFreeColEnds => 'Ends';
+
+  @override
+  String get adminFreeCopied => 'Copied';
+
+  @override
+  String get adminFreeInvalid => 'Check the numbers and the email address.';
+
+  @override
+  String adminFreeStatRunningValue(int count, int max) {
+    return '$count of $max';
+  }
+
+  @override
+  String adminFreePlanMonths(String plan, int months) {
+    String _temp0 = intl.Intl.pluralLogic(
+      months,
+      locale: localeName,
+      other: '$months months',
+      one: '1 month',
+    );
+    return '$plan · $_temp0';
+  }
+
+  @override
+  String adminFreeUsed(int used, int total) {
+    return '$used of $total redeemed';
+  }
+
+  @override
+  String adminFreeRedeemBy(String date) {
+    return 'Redeem by $date';
+  }
+
+  @override
+  String adminFreeEnds(String date) {
+    return 'Ends $date';
+  }
+
+  @override
+  String adminFreeEndedOn(String date) {
+    return 'Ended $date';
+  }
+
+  @override
+  String adminFreeGiven(String plan, String date) {
+    return '$plan given until $date';
+  }
+
+  @override
+  String adminFreeMessage(String what, String plan, String link) {
+    return 'Here\'s $what of Casama $plan, free: $link\n\nOpen it in Safari or Chrome, tap Redeem on the web and sign in with your Casama account. Nothing to pay, no card.';
+  }
+
+  @override
+  String adminFreeMonthCount(int months) {
+    String _temp0 = intl.Intl.pluralLogic(
+      months,
+      locale: localeName,
+      other: '$months months',
+      one: '1 month',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get adminPartners => 'Partners';
 
   @override
@@ -27205,7 +27445,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get settingsWordsAppearance =>
-      '테마 다크 모드 라이트 모드 야간 색상 글꼴 폰트 텍스트 크기 배경 배경화면 스타일 효과 모션 애니메이션 theme dark mode light mode night colors fonts font text size background wallpaper look style themes effects motion animations 햅틱 진동 트랙패드 haptics vibration trackpad';
+      '테마 다크 모드 라이트 모드 야간 색상 글꼴 폰트 텍스트 크기 배경 배경화면 스타일 효과 모션 애니메이션 theme dark mode light mode night colors fonts font text size background wallpaper look style themes effects motion animations 햅틱 진동 피드백 트랙패드 haptics vibration vibrate feedback trackpad';
 
   @override
   String get settingsWordsQuietHours =>
@@ -28580,86 +28820,86 @@ class AppLocalizationsKo extends AppLocalizations {
       '이 휴대폰에서 Casama의 Gemini 연동이 꺼져 있어요 (Casama → 설정 → 개인정보 보호).';
 
   @override
-  String get suggestionActionTurnOn => 'Turn on';
+  String get suggestionActionTurnOn => '켜기';
 
   @override
   String suggestionActionRemindMe(String date) {
-    return 'Remind me $date';
+    return '$date에 알림';
   }
 
   @override
-  String get suggestionActionPickTime => 'Pick a time';
+  String get suggestionActionPickTime => '시간 선택';
 
   @override
-  String get suggestionActionPutAwayAll => 'Put away all';
+  String get suggestionActionPutAwayAll => '모두 정리하기';
 
   @override
   String suggestionActionPutAwayAllCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Put away all $count ideas',
-      one: 'Put away 1 idea',
+      other: '아이디어 $count개 모두 정리하기',
+      one: '아이디어 1개 정리하기',
     );
     return '$_temp0';
   }
 
   @override
-  String get suggestionActionOpen => 'Open';
+  String get suggestionActionOpen => '열기';
 
   @override
-  String get suggestionActionGotIt => 'Got it';
+  String get suggestionActionGotIt => '확인';
 
   @override
-  String get suggestionActionLater => 'Later';
+  String get suggestionActionLater => '나중에';
 
   @override
-  String get suggestionActionSomethingElse => 'Something else';
+  String get suggestionActionSomethingElse => '기타';
 
   @override
-  String get suggestionTurnedOn => 'Turned on';
+  String get suggestionTurnedOn => '켜짐';
 
   @override
   String suggestionReminderSet(String date) {
-    return 'Reminder set for $date';
+    return '$date에 알림을 설정했어요';
   }
 
   @override
-  String get suggestionSnoozed => 'Saved for later';
+  String get suggestionSnoozed => '나중에 볼 수 있게 저장했어요';
 
   @override
-  String get suggestionSnoozedExpired => 'Put away — snoozed twice';
+  String get suggestionSnoozedExpired => '두 번 미뤄서 정리했어요';
 
   @override
   String suggestionPutAwayCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: 'Put away $count ideas',
-      one: 'Put away 1 idea',
+      other: '아이디어 $count개를 정리했어요',
+      one: '아이디어 1개를 정리했어요',
     );
     return '$_temp0';
   }
 
   @override
-  String get suggestionUndo => 'Undo';
+  String get suggestionUndo => '실행 취소';
 
   @override
-  String get suggestionLaterTomorrow => 'Tomorrow morning';
+  String get suggestionLaterTomorrow => '내일 아침';
 
   @override
-  String get suggestionLaterEvening => 'This evening';
+  String get suggestionLaterEvening => '오늘 저녁';
 
   @override
-  String get suggestionLaterNextWeek => 'Next week';
+  String get suggestionLaterNextWeek => '다음 주';
 
   @override
   String suggestionMoreWaiting(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count more ideas waiting',
-      one: '1 more idea waiting',
+      other: '아이디어 $count개 더 대기 중',
+      one: '아이디어 1개 더 대기 중',
     );
     return '$_temp0';
   }
@@ -28669,8 +28909,8 @@ class AppLocalizationsKo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$name · $count ideas',
-      one: '$name · 1 idea',
+      other: '$name · 아이디어 $count개',
+      one: '$name · 아이디어 1개',
     );
     return '$_temp0';
   }
@@ -28680,8 +28920,8 @@ class AppLocalizationsKo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$name · $count routine results today',
-      one: '$name · 1 routine result today',
+      other: '$name · 오늘 루틴 결과 $count개',
+      one: '$name · 오늘 루틴 결과 1개',
     );
     return '$_temp0';
   }
@@ -28691,8 +28931,8 @@ class AppLocalizationsKo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$name · $count updates today',
-      one: '$name · 1 update today',
+      other: '$name · 오늘 업데이트 $count개',
+      one: '$name · 오늘 업데이트 1개',
     );
     return '$_temp0';
   }
@@ -28702,8 +28942,8 @@ class AppLocalizationsKo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count routine results today',
-      one: '1 routine result today',
+      other: '오늘 루틴 결과 $count개',
+      one: '오늘 루틴 결과 1개',
     );
     return '$_temp0';
   }
@@ -28713,15 +28953,15 @@ class AppLocalizationsKo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count updates today',
-      one: '1 update today',
+      other: '오늘 업데이트 $count개',
+      one: '오늘 업데이트 1개',
     );
     return '$_temp0';
   }
 
   @override
   String briefSinceYesterday(String summary) {
-    return 'Since yesterday: $summary';
+    return '어제 이후: $summary';
   }
 
   @override
@@ -28729,8 +28969,8 @@ class AppLocalizationsKo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count pages',
-      one: '1 page',
+      other: '페이지 $count개',
+      one: '페이지 1개',
     );
     return '$_temp0';
   }
@@ -28740,8 +28980,8 @@ class AppLocalizationsKo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count routine results',
-      one: '1 routine result',
+      other: '루틴 결과 $count개',
+      one: '루틴 결과 1개',
     );
     return '$_temp0';
   }
@@ -28751,39 +28991,39 @@ class AppLocalizationsKo extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count updates',
-      one: '1 update',
+      other: '업데이트 $count개',
+      one: '업데이트 1개',
     );
     return '$_temp0';
   }
 
   @override
-  String get notifTurnOn => 'Turn on';
+  String get notifTurnOn => '켜기';
 
   @override
-  String get notifOpen => 'Open';
+  String get notifOpen => '열기';
 
   @override
-  String get notifGotIt => 'Got it';
+  String get notifGotIt => '확인';
 
   @override
-  String get notifRemindMe => 'Remind me';
+  String get notifRemindMe => '알림 설정';
 
   @override
-  String get notifLater => 'Later';
+  String get notifLater => '나중에';
 
   @override
-  String get watchTurnOn => 'Turn on';
+  String get watchTurnOn => '켜기';
 
   @override
-  String get watchGotIt => 'Got it';
+  String get watchGotIt => '확인';
 
   @override
-  String get watchRemindMe => 'Remind';
+  String get watchRemindMe => '알림 설정';
 
   @override
-  String get watchLater => 'Later';
+  String get watchLater => '나중에';
 
   @override
-  String get watchOpen => 'Open';
+  String get watchOpen => '열기';
 }

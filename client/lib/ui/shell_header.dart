@@ -27,6 +27,7 @@ class ShellHeader extends StatelessWidget implements PreferredSizeWidget {
     this.actions = const [],
     this.bottom,
     this.onTitleTap,
+    this.titleTooltip,
     this.showBack,
     this.phoneFallback,
   });
@@ -48,6 +49,11 @@ class ShellHeader extends StatelessWidget implements PreferredSizeWidget {
   final List<Widget> actions;
   final PreferredSizeWidget? bottom;
   final VoidCallback? onTitleTap;
+
+  /// What tapping the title opens, said on hover: a bot's name in its chat header opens its
+  /// profile, and on a computer it sits right beside the same name in the sidebar (a click meant
+  /// for the sidebar opened the profile, the customer's build 108 round).
+  final String? titleTooltip;
 
   /// Defaults to whether the route can pop.
   final bool? showBack;
@@ -116,6 +122,7 @@ class ShellHeader extends StatelessWidget implements PreferredSizeWidget {
         borderRadius: AppRadius.rowAll,
         child: Padding(padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4), child: title0),
       );
+      if (titleTooltip != null) title0 = Tooltip(message: titleTooltip, child: title0);
     }
     final Widget? lead = beside
         ? (shell.canToggleList ? const ListPaneToggle() : null)

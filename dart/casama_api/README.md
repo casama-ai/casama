@@ -1090,6 +1090,7 @@ Class | Method | HTTP request | Description
  - [ComputerFileList](doc/ComputerFileList.md)
  - [ComputerHistory](doc/ComputerHistory.md)
  - [ComputerHistoryEntry](doc/ComputerHistoryEntry.md)
+ - [ComputerInUseBy](doc/ComputerInUseBy.md)
  - [ComputerList](doc/ComputerList.md)
  - [ComputerOperation](doc/ComputerOperation.md)
  - [ComputerProcess](doc/ComputerProcess.md)

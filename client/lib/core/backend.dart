@@ -1835,6 +1835,15 @@ abstract class Backend {
   // Gift codes for free plans (docs/COMP-PLANS-PLAN.md); redeemed on the web and desktop only.
   Future<CompCodePreview> previewCompCode(String code);
   Future<RedeemedComp> redeemCompCode(String code, String orgId);
+  // Free plans, from the instance owner (Admin → Free Plans).
+  Future<CompSettings> adminCompSettings();
+  Future<List<CompCode>> adminCompCodes();
+  /// The new code is in the result once, never again.
+  Future<CreatedCompCode> adminCreateCompCode(CreateCompCodeRequest request);
+  Future<CompCode> adminUpdateCompCode(String id, UpdateCompCodeRequest request);
+  Future<List<Comp>> adminComps({bool running = true, int? limit});
+  Future<Comp> adminGrantComp(GrantCompRequest request);
+  Future<Comp> adminUpdateComp(String id, UpdateCompRequest request);
   // Reports and blocks (D-301)
   Future<void> report(ReportTarget kind, String targetId, ReportReason reason, {String? note});
   Future<List<BlockedPerson>> blockedPeople();
