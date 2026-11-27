@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
+import 'call_audio.dart';
+
 /// How a session of the device's own dictation ended.
 enum DeviceDictationEnd {
   /// It stopped (the person tapped stop, or paused long enough) after hearing something.
@@ -100,6 +102,7 @@ class SpeechToTextDictation implements DeviceDictation {
           listenFor: const Duration(minutes: 1),
         ),
       );
+      unawaited(allowHapticsDuringRecording());
       return true;
     } catch (e) {
       debugPrint('device dictation failed to start: $e');

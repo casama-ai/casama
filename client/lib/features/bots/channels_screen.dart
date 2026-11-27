@@ -270,7 +270,7 @@ class _AddChannelState extends ConsumerState<_AddChannel> {
           onChanged: hapticOnChanged((k) => setState(() {
             _kind = k ?? _kind;
             if (_name.text.isEmpty || ChannelKind.values.any((x) => channelKindName(x) == _name.text)) _name.text = channelKindName(_kind);
-          }), haptic: HapticsHelper.selection),
+          })),
         ),
         TextField(
           key: const Key('channelName'),
@@ -303,7 +303,7 @@ class _AddChannelState extends ConsumerState<_AddChannel> {
                 initialValue: _mac,
                 decoration: InputDecoration(labelText: l10n.chatAppsMac),
                 items: [for (final d in macs) DropdownMenuItem(value: d.computerId, child: Text(d.name))],
-                onChanged: hapticOnChanged((v) => setState(() => _mac = v), haptic: HapticsHelper.selection),
+                onChanged: hapticOnChanged((v) => setState(() => _mac = v)),
               );
             },
           ),

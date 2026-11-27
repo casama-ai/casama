@@ -8,6 +8,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../core/date_format.dart';
+import '../../core/haptics.dart';
 import '../../core/providers.dart';
 import '../../core/widgets.dart';
 import '../../theme/app_colors.dart';
@@ -181,7 +182,7 @@ class _DomainScreenState extends ConsumerState<DomainScreen> {
         value: _domain,
         onRetry: _load,
         data: (d) => RefreshIndicator(
-          onRefresh: () => _load(quiet: true),
+          onRefresh: hapticRefresh(() => _load(quiet: true)),
           child: PageColumn(children: _sections(context, d)),
         ),
       ),

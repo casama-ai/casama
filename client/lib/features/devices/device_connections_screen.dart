@@ -267,7 +267,7 @@ class _KindCard extends StatelessWidget {
             onTap: busy
                 ? null
                 : () {
-                    HapticsHelper.light();
+                    Haptic.toggle(!on);
                     onToggle(!on);
                   },
             trailing: Switch(
@@ -359,7 +359,7 @@ class _KindAdvanced extends StatelessWidget {
               title: l10n.devicePrivateModel,
               subtitle: l10n.devicePrivateModelHelp,
               onTap: () {
-                HapticsHelper.light();
+                Haptic.toggle(!private);
                 onSettings(with_(privateModel: !private));
               },
               trailing: Switch(
@@ -383,7 +383,7 @@ class _KindAdvanced extends StatelessWidget {
                         DeviceKindSettingsExtrasEnum.bloodPressure => l10n.healthExtraBloodPressure,
                       },
                       onTap: () {
-                        HapticsHelper.light();
+                        Haptic.toggle(!extraOn);
                         setExtra(!extraOn);
                       },
                       trailing: Switch(key: Key('healthExtra-${x.value}'), value: extraOn, onChanged: hapticOnChanged(setExtra)),

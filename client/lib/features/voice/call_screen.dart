@@ -11,6 +11,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../core/haptics.dart';
 import '../../core/providers.dart';
 import '../../core/voice.dart';
 import '../../core/widgets.dart';
@@ -404,6 +405,7 @@ class _CallScreenState extends ConsumerState<CallScreen>
   }
 
   Future<void> _hangUp() async {
+    Haptic.press();
     final c = _c;
     if (c == null) {
       _leave();

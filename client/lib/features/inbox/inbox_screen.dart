@@ -540,7 +540,7 @@ class _InboxFeedState extends ConsumerState<_InboxFeed> {
           };
         }
         return RefreshIndicator(
-          onRefresh: refresh,
+          onRefresh: hapticRefresh(refresh),
           child: LayoutBuilder(
             builder: (context, constraints) {
               final side = pageSide(constraints.maxWidth);
@@ -874,6 +874,7 @@ class _ApprovalCardState extends ConsumerState<ApprovalCard> {
 
   Future<void> _decide(bool approve, {bool always = false}) async {
     final l10n = context.l10n;
+    if (!approve) Haptic.tap();
     // Allowing a high-risk request asks to unlock again (D-375).
     if (approve && widget.approval.risk == Risk.high && (!await confirmIdentity(context, ref) || !mounted)) return;
     setState(() => _busy = true);
@@ -884,6 +885,7 @@ class _ApprovalCardState extends ConsumerState<ApprovalCard> {
     if (!mounted) return;
     setState(() => _busy = false);
     if (ok == true) {
+      if (approve) Haptic.confirm();
       ref.invalidate(approvalsProvider);
       ref.invalidate(notificationsProvider);
       showMessage(context, approve ? l10n.approved : l10n.denied);

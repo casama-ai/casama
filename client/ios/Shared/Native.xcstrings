@@ -3361,6 +3361,18 @@
         }
       }
     },
+    "notifGotIt" : {
+      "comment" : "Notification button (phone and desktop). Acknowledge an informational suggestion. Max 12 chars.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Got it"
+          }
+        }
+      }
+    },
     "notifNotNow" : {
       "comment" : "Notification button (phone and desktop). Dismiss a bot's suggestion.",
       "extractionState" : "manual",
@@ -3441,6 +3453,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "稍後再說"
+          }
+        }
+      }
+    },
+    "notifOpen" : {
+      "comment" : "Notification button (phone and desktop). Open a suggested link. Max 12 chars.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open"
+          }
+        }
+      }
+    },
+    "notifRemindMe" : {
+      "comment" : "Notification button (phone and desktop). Set a suggested reminder. Max 16 chars.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remind me"
           }
         }
       }
@@ -3693,6 +3729,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "傳送"
+          }
+        }
+      }
+    },
+    "notifTurnOn" : {
+      "comment" : "Notification button (phone and desktop). Turn on a suggested routine. Max 16 chars.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn on"
           }
         }
       }

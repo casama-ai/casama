@@ -557,20 +557,28 @@ class _NewRoutineSheetState extends ConsumerState<NewRoutineSheet> {
                   GroupedTile(
                     icon: LucideIcons.usersRound,
                     title: l10n.calendarOutsideGuests,
-                    onTap: () => setState(() => _outsideGuests = !_outsideGuests),
+                    onTap: () {
+                      final next = !_outsideGuests;
+                      Haptic.toggle(next);
+                      setState(() => _outsideGuests = next);
+                    },
                     trailing: Switch(
                       key: const Key('routineOutsideGuests'),
                       value: _outsideGuests,
-                      onChanged: hapticOnChanged((v) => setState(() => _outsideGuests = v), haptic: HapticsHelper.soft),
+                      onChanged: hapticOnChanged((v) => setState(() => _outsideGuests = v)),
                     ),
                   ),
                   GroupedTile(
                     icon: LucideIcons.video,
                     title: l10n.calendarVideoLink,
-                    onTap: () => setState(() => _videoLink = !_videoLink),
+                    onTap: () {
+                      final next = !_videoLink;
+                      Haptic.toggle(next);
+                      setState(() => _videoLink = next);
+                    },
                     trailing: Switch(
                       value: _videoLink,
-                      onChanged: hapticOnChanged((v) => setState(() => _videoLink = v), haptic: HapticsHelper.soft),
+                      onChanged: hapticOnChanged((v) => setState(() => _videoLink = v)),
                     ),
                   ),
                 ],

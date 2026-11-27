@@ -41,7 +41,7 @@ class _ScopePicker extends ConsumerWidget {
         DropdownMenuItem(value: null, child: Text(l10n.wholeWorkspace)),
         for (final b in bots) DropdownMenuItem(value: b.id, child: Text(b.name)),
       ],
-      onChanged: hapticOnChanged(onChanged, haptic: HapticsHelper.selection),
+      onChanged: hapticOnChanged(onChanged),
     );
   }
 }

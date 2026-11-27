@@ -43,7 +43,7 @@ class AppBrowserWorkspaceTile extends ConsumerWidget {
       title: l10n.appBrowserWorkspaceSwitch,
       subtitle: l10n.appBrowserWorkspaceSwitchHelp,
       onTap: () {
-        HapticsHelper.light();
+        Haptic.toggle(!on);
         set(!on);
       },
       trailing: Switch(

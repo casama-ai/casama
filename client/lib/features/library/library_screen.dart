@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../../core/haptics.dart';
 import '../../core/providers.dart';
 import '../../core/widgets.dart';
 import '../../theme/app_colors.dart';
@@ -548,7 +549,7 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen> {
           );
         }
         return RefreshIndicator(
-          onRefresh: () => ref.refresh(libraryProvider(_q).future),
+          onRefresh: hapticRefresh(() => ref.refresh(libraryProvider(_q).future)),
           child: NotificationListener<ScrollNotification>(
             onNotification: _onScroll,
             child: LayoutBuilder(

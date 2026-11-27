@@ -86,6 +86,18 @@ fun SettingsScreen(nav: NavHostController) {
         }
         item {
             SwitchButton(
+                checked = switches.haptics,
+                onCheckedChange = {
+                    graph.settings.setHaptics(it)
+                    if (it) graph.haptics.click()
+                },
+                label = { Text(stringResource(R.string.watch_haptics), maxLines = 3) },
+                modifier = Modifier.fillMaxWidth().transformedHeight(this, spec),
+                transformation = SurfaceTransformation(spec),
+            )
+        }
+        item {
+            SwitchButton(
                 checked = switches.shareCrashReports,
                 onCheckedChange = {
                     graph.settings.setShareCrashReports(it)

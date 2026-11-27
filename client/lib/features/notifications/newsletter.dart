@@ -153,7 +153,6 @@ class _NewsletterCardState extends ConsumerState<NewsletterCard> {
     });
     if (!mounted) return;
     if (ok == true && subscribed == true) {
-      HapticsHelper.success();
       showSuccess(context, l10n.newsletterCardDone);
     }
     ref.invalidate(newsletterProvider);

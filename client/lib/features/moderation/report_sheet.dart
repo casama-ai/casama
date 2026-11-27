@@ -138,7 +138,7 @@ class _ReportSheetState extends ConsumerState<ReportSheet> {
                 selected: _reason == r,
                 showCheckmark: false,
                 onSelected: (_) {
-                  HapticsHelper.light();
+                  Haptic.select();
                   setState(() => _reason = r);
                 },
               ),

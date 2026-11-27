@@ -1,8 +1,8 @@
 import 'dart:math' as math;
 
 import 'package:material_ui/material_ui.dart';
-import 'package:flutter/services.dart';
 
+import '../core/haptics.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_tokens.dart';
 import 'effects.dart';
@@ -100,7 +100,7 @@ class _ActionButton extends StatelessWidget {
             child: InkWell(
               key: action.key,
               onTap: () {
-                HapticFeedback.selectionClick();
+                Haptic.select();
                 action.onPressed();
               },
               child: SizedBox.square(dimension: FloatingTabChrome.barHeight, child: Icon(action.icon, size: 22, color: scheme.onSurfaceVariant)),
@@ -164,7 +164,7 @@ class _PillBar extends StatelessWidget {
                     spec: destinations[i],
                     selected: i == currentIndex,
                     onTap: () {
-                      HapticFeedback.selectionClick();
+                      Haptic.select();
                       onSelected(i);
                     },
                   ),

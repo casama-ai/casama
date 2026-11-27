@@ -476,6 +476,7 @@ class _LiveViewScreenState extends ConsumerState<LiveViewScreen> with WidgetsBin
       if (l != null) _lease = l;
     });
     if (l != null) {
+      Haptic.tap();
       _lastInput = DateTime.now();
       _conn?.requestControl();
       _focus.requestFocus();
@@ -521,7 +522,10 @@ class _LiveViewScreenState extends ConsumerState<LiveViewScreen> with WidgetsBin
     if (!mounted) return;
     _conn?.releaseControl();
     final l = await runGuarded(context, () => ref.read(backendProvider).releaseLease(widget.computerId, note: text.isEmpty ? null : text));
-    if (mounted && l != null) setState(() => _lease = l);
+    if (mounted && l != null) {
+      Haptic.confirm();
+      setState(() => _lease = l);
+    }
   }
 
   bool get _controlling => _lease?.you == true && (_conn?.isHost.value ?? false);

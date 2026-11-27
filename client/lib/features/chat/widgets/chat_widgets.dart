@@ -4,11 +4,11 @@ import 'dart:math' as math;
 
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../core/haptics.dart';
 import '../../../core/number_format.dart';
 import '../../../core/providers.dart';
 import '../../../core/widgets.dart';
@@ -1661,7 +1661,7 @@ class _ApprovalPromptState extends ConsumerState<ApprovalPrompt> {
   var _always = false;
 
   Future<void> _decide(bool approve, {bool always = false}) async {
-    HapticFeedback.mediumImpact();
+    if (!approve) Haptic.tap();
     // Allowing a high-risk request asks to unlock again (D-375).
     if (approve && widget.entry.risk == 'high' && (!await confirmIdentity(context, ref) || !mounted)) return;
     setState(() => _busy = true);
@@ -1681,6 +1681,7 @@ class _ApprovalPromptState extends ConsumerState<ApprovalPrompt> {
       if (ok == true) _localDecision = approve ? 'approved' : 'denied';
     });
     if (ok == true) {
+      if (approve) Haptic.confirm();
       ref.invalidate(approvalsProvider);
       // The server marked its notification read; the inbox list catches up.
       ref.invalidate(notificationsProvider);

@@ -379,7 +379,6 @@ class _VaultsState extends ConsumerState<_Vaults> {
                 (on) => setState(
                   () => on == true ? _chosen.add(v.id) : _chosen.remove(v.id),
                 ),
-                haptic: HapticsHelper.soft,
               ),
             ),
         ],

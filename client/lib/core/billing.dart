@@ -619,7 +619,7 @@ class PurchaseVerifier {
         ..addAll([for (final d in reloadsAfterPurchase) Timer(d, () => ref.invalidate(billingProvider))]);
       // A new purchase went through (Restore Purchases replays old ones, quietly).
       if (!p.restored) {
-        HapticsHelper.success();
+        Haptic.celebrate();
         _tell(PurchaseOutcome.purchased);
         // A good moment for the store's rating prompt (D-305); the store shows it over the celebration.
         unawaited(ref.read(reviewPromptProvider).moment(ReviewMoment.purchase));
@@ -630,6 +630,7 @@ class PurchaseVerifier {
           'kind': _kind(p),
         });
       } else {
+        Haptic.confirm();
         _tell(PurchaseOutcome.restored);
         Analytics.log('restore_purchases', {'outcome': 'restored', 'store': p.source});
       }

@@ -241,7 +241,7 @@ class _AboutYouScreenState extends ConsumerState<AboutYouScreen> {
               onTap: _busy
                   ? null
                   : () {
-                      HapticsHelper.light();
+                      Haptic.toggle(!learn);
                       _save(learn: !learn);
                     },
               trailing: Switch(
@@ -259,7 +259,7 @@ class _AboutYouScreenState extends ConsumerState<AboutYouScreen> {
                 onTap: _busy
                     ? null
                     : () {
-                        HapticsHelper.light();
+                        Haptic.toggle(!v.adultSites);
                         _setAdultSites(!v.adultSites);
                       },
                 trailing: Switch(
@@ -282,7 +282,7 @@ class _AboutYouScreenState extends ConsumerState<AboutYouScreen> {
                     title: l10n.useInThisSpace(org.name),
                     subtitle: l10n.useInThisSpaceHelp,
                     onTap: () {
-                      HapticsHelper.light();
+                      Haptic.toggle(!shared);
                       setShared(!shared);
                     },
                     trailing: Switch(key: const Key('useInThisSpace'), value: shared, onChanged: hapticOnChanged(setShared)),

@@ -285,7 +285,7 @@ class _BoardScreenState extends ConsumerState<BoardScreen> {
                       tasks: shown,
                       bottom: AppSpace.xxl + barInset,
                       onLongPress: (t) {
-                        HapticsHelper.medium();
+                        Haptic.threshold();
                         _moveSheet(t, items);
                       },
                     ),
@@ -916,8 +916,15 @@ class _Column extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final color = _statusColor(context, status);
     return DragTarget<Task>(
-      onWillAcceptWithDetails: (d) => d.data.status != status,
-      onAcceptWithDetails: (d) => onDrop(d.data),
+      onWillAcceptWithDetails: (d) {
+        final accept = d.data.status != status;
+        if (accept) Haptic.select();
+        return accept;
+      },
+      onAcceptWithDetails: (d) {
+        Haptic.drop();
+        onDrop(d.data);
+      },
       builder: (context, candidates, _) => Container(
         key: Key('column-${status.value}'),
         width: width,
@@ -968,6 +975,8 @@ class _Column extends ConsumerWidget {
                     LongPressDraggable<Task>(
                       data: t,
                       delay: const Duration(milliseconds: 150),
+                      hapticFeedbackOnStart: false,
+                      onDragStarted: Haptic.lift,
                       feedback: Material(
                         color: Colors.transparent,
                         child: SizedBox(width: 260, child: _Card(task: t)),

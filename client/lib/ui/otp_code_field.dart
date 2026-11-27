@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 
+import '../core/haptics.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_tokens.dart';
 
@@ -119,7 +120,7 @@ class _OtpCodeFieldState extends State<OtpCodeField>
   void _reject() {
     final generation = ++_rejectGeneration;
     final rejected = widget.controller.text;
-    HapticFeedback.mediumImpact();
+    Haptic.reject();
     _focus.requestFocus();
     if (rejected.isNotEmpty) {
       widget.controller.selection = TextSelection(
@@ -145,7 +146,7 @@ class _OtpCodeFieldState extends State<OtpCodeField>
     widget.onChanged?.call(text);
     if (widget.enabled && text.length == OtpCodeField.length && text != _sent) {
       _sent = text;
-      HapticFeedback.lightImpact();
+      Haptic.tap();
       widget.onCompleted?.call(text);
     }
   }

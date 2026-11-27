@@ -19564,6 +19564,30 @@ abstract class AppLocalizations {
   /// **'No celebrations, bouncing tabs or animated bots.'**
   String get fewerEffectsHelp;
 
+  /// No description provided for @haptics.
+  ///
+  /// In en, this message translates to:
+  /// **'Haptics'**
+  String get haptics;
+
+  /// No description provided for @trackpadHaptics.
+  ///
+  /// In en, this message translates to:
+  /// **'Trackpad Haptics'**
+  String get trackpadHaptics;
+
+  /// No description provided for @hapticsHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Gentle taps when something happens or a bot needs you.'**
+  String get hapticsHelp;
+
+  /// No description provided for @watchHaptics.
+  ///
+  /// In en, this message translates to:
+  /// **'Haptics'**
+  String get watchHaptics;
+
   /// No description provided for @settingsAppSection.
   ///
   /// In en, this message translates to:
@@ -43792,7 +43816,7 @@ abstract class AppLocalizations {
   /// Settings search: extra words that find the row titled by the 'appearance' string. Not shown on screen. Space-separated, lower case; translate the words people would type and keep brand names and common English terms.
   ///
   /// In en, this message translates to:
-  /// **'theme dark mode light mode night colors colours fonts font text size background wallpaper look style themes effects motion animations'**
+  /// **'theme dark mode light mode night colors colours fonts font text size background wallpaper look style themes effects motion animations haptics vibration vibrate feedback trackpad'**
   String get settingsWordsAppearance;
 
   /// Settings search: extra words that find the row titled by the 'quietHours' string. Not shown on screen. Space-separated, lower case; translate the words people would type and keep brand names and common English terms.
@@ -46248,6 +46272,234 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Gemini is turned off for Casama on this phone (Casama → Settings → Privacy).'**
   String get siriGeminiOff;
+
+  /// Primary button on a turn_on suggestion card. Enables a bot routine directly. Keep short (<= 16 chars) so it fits on one button.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on'**
+  String get suggestionActionTurnOn;
+
+  /// Primary button on a remind suggestion card. Sets a one-time reminder at the formatted date/time. Button wraps on narrow phones.
+  ///
+  /// In en, this message translates to:
+  /// **'Remind me {date}'**
+  String suggestionActionRemindMe(String date);
+
+  /// Secondary button on a remind suggestion card. Opens a date/time picker. Keep short (<= 18 chars).
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a time'**
+  String get suggestionActionPickTime;
+
+  /// Button to dismiss all visible ideas in Needs you at once (with Undo). Keep short (<= 18 chars).
+  ///
+  /// In en, this message translates to:
+  /// **'Put away all'**
+  String get suggestionActionPutAwayAll;
+
+  /// Button to dismiss all visible ideas in Needs you, showing the count.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Put away 1 idea} other{Put away all {count} ideas}}'**
+  String suggestionActionPutAwayAllCount(int count);
+
+  /// Primary button on a look suggestion with a link. Opens the link and clears the card. Keep short (<= 12 chars).
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get suggestionActionOpen;
+
+  /// Button on a look suggestion to acknowledge and clear it without starting a bot run. Keep short (<= 12 chars).
+  ///
+  /// In en, this message translates to:
+  /// **'Got it'**
+  String get suggestionActionGotIt;
+
+  /// Snooze button on a suggestion card: hides it until the next morning brief. Distinct from Not now. Keep short (<= 12 chars).
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get suggestionActionLater;
+
+  /// Secondary button on an answer suggestion card. Opens the chat composer so the person can type a custom reply.
+  ///
+  /// In en, this message translates to:
+  /// **'Something else'**
+  String get suggestionActionSomethingElse;
+
+  /// Toast shown after a turn_on suggestion enables a routine directly.
+  ///
+  /// In en, this message translates to:
+  /// **'Turned on'**
+  String get suggestionTurnedOn;
+
+  /// Toast shown after a remind suggestion schedules a one-time reminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder set for {date}'**
+  String suggestionReminderSet(String date);
+
+  /// Toast shown after snoozing a suggestion until the next brief.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved for later'**
+  String get suggestionSnoozed;
+
+  /// Toast shown when snoozing a suggestion a second time expires it.
+  ///
+  /// In en, this message translates to:
+  /// **'Put away — snoozed twice'**
+  String get suggestionSnoozedExpired;
+
+  /// Toast shown after Put away all clears visible ideas.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Put away 1 idea} other{Put away {count} ideas}}'**
+  String suggestionPutAwayCount(int count);
+
+  /// Action button on a toast to undo Put away all. Keep short (<= 10 chars).
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get suggestionUndo;
+
+  /// Snooze option in Later menu: next morning brief.
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow morning'**
+  String get suggestionLaterTomorrow;
+
+  /// Snooze option in Later menu: 6 PM today.
+  ///
+  /// In en, this message translates to:
+  /// **'This evening'**
+  String get suggestionLaterEvening;
+
+  /// Snooze option in Later menu: Monday morning next week.
+  ///
+  /// In en, this message translates to:
+  /// **'Next week'**
+  String get suggestionLaterNextWeek;
+
+  /// Subtle footer in Needs you when more than 8 ideas are queued behind the visible 8.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 more idea waiting} other{{count} more ideas waiting}}'**
+  String suggestionMoreWaiting(int count);
+
+  /// Grouped card title in Needs you when one bot has more than 2 open ideas. Expands in place.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{{name} · 1 idea} other{{name} · {count} ideas}}'**
+  String botIdeasGrouped(String name, int count);
+
+  /// Grouped row in Updates combining multiple routine results from one bot on the same day.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{{name} · 1 routine result today} other{{name} · {count} routine results today}}'**
+  String updatesGroupedRoutine(String name, int count);
+
+  /// Grouped row in Updates combining multiple notifications of the same kind from one bot on the same day.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{{name} · 1 update today} other{{name} · {count} updates today}}'**
+  String updatesGroupedNotice(String name, int count);
+
+  /// Grouped row in Updates combining multiple routine results on the same day when bot name is unknown.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 routine result today} other{{count} routine results today}}'**
+  String updatesGroupedRoutinePlain(int count);
+
+  /// Grouped row in Updates combining multiple notifications on the same day when bot name is unknown.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 update today} other{{count} updates today}}'**
+  String updatesGroupedNoticePlain(int count);
+
+  /// Summary line under a morning brief card counting pages and routine results since yesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'Since yesterday: {summary}'**
+  String briefSinceYesterday(String summary);
+
+  /// Page count fragment inside briefSinceYesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 page} other{{count} pages}}'**
+  String briefSincePages(int count);
+
+  /// Routine result count fragment inside briefSinceYesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 routine result} other{{count} routine results}}'**
+  String briefSinceRoutines(int count);
+
+  /// Update count fragment inside briefSinceYesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 update} other{{count} updates}}'**
+  String briefSinceUpdates(int count);
+
+  /// Notification button (phone and desktop). Turn on a suggested routine. Max 16 chars.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on'**
+  String get notifTurnOn;
+
+  /// Notification button (phone and desktop). Open a suggested link. Max 12 chars.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get notifOpen;
+
+  /// Notification button (phone and desktop). Acknowledge an informational suggestion. Max 12 chars.
+  ///
+  /// In en, this message translates to:
+  /// **'Got it'**
+  String get notifGotIt;
+
+  /// Notification button (phone and desktop). Set a suggested reminder. Max 16 chars.
+  ///
+  /// In en, this message translates to:
+  /// **'Remind me'**
+  String get notifRemindMe;
+
+  /// Notification button (phone and desktop). Snooze a suggestion until the next brief. Max 12 chars.
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get notifLater;
+
+  /// Watch button (tiny screen, max 12 chars). Turn on a suggested routine.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on'**
+  String get watchTurnOn;
+
+  /// Watch button (tiny screen, max 10 chars). Acknowledge an informational suggestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Got it'**
+  String get watchGotIt;
+
+  /// Watch button (tiny screen, max 10 chars). Set a suggested reminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Remind'**
+  String get watchRemindMe;
+
+  /// Watch button (tiny screen, max 10 chars). Snooze a suggestion until later.
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get watchLater;
+
+  /// Watch button (tiny screen, max 10 chars). Open a suggested link on phone.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get watchOpen;
 }
 
 class _AppLocalizationsDelegate

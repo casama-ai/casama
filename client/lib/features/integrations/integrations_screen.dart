@@ -1138,7 +1138,6 @@ class _AddIntegrationSheetState extends ConsumerState<AddIntegrationSheet> {
           ],
           onChanged: hapticOnChanged(
             (v) => setState(() => _kind = v ?? _kind),
-            haptic: HapticsHelper.selection,
           ),
         ),
         TextField(

@@ -4,6 +4,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../core/haptics.dart';
 import '../core/widgets.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_tokens.dart';
@@ -109,7 +110,12 @@ class ScreenTile extends StatelessWidget {
           clipBehavior: Clip.antiAlias,
           child: InkWell(
             onTap: onTap,
-            onLongPress: onLongPress,
+            onLongPress: onLongPress == null
+                ? null
+                : () {
+                    Haptic.threshold();
+                    onLongPress!();
+                  },
             child: AspectRatio(
               aspectRatio: aspectRatio,
               child: Stack(
@@ -311,6 +317,7 @@ class _ScreenTileCornerState extends ConsumerState<ScreenTileCorner> {
                       .read(screenCardCornerProvider.notifier)
                       .set(Alignment(p.dx + w / 2 < box.maxWidth / 2 ? -1 : 1, p.dy + h / 2 < box.maxHeight / 2 ? -1 : 1));
                   setState(() => _drag = null);
+                  Haptic.snap();
                 },
                 child: widget.child,
               ),

@@ -33,6 +33,7 @@ enum WatchAccount {
     static let lastAskBot = "last_ask_bot"
     static let hideWristDown = "hide_wrist_down"
     static let readAloud = "read_aloud"
+    static let haptics = "haptics"
     static let shareCrashReports = "share_crash_reports"
     static let serverAnalyticsOptOut = "server_analytics_opt_out"
     static let remoteCrashReporter = "remote_crash_reporter"
@@ -105,6 +106,11 @@ enum WatchAccount {
   static var readAloud: Bool {
     get { d.bool(forKey: K.readAloud) }
     set { d.set(newValue, forKey: K.readAloud) }
+  }
+  /// Haptics on the wrist: on unless turned off (docs/HAPTICS-PLAN.md §7.4).
+  static var haptics: Bool {
+    get { d.object(forKey: K.haptics) as? Bool ?? true }
+    set { d.set(newValue, forKey: K.haptics) }
   }
   /// Share scrubbed crash reports: on unless turned off (D-539).
   static var shareCrashReports: Bool {

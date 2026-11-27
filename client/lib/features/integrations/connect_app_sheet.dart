@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:casama_sdk/casama_sdk.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
+import '../../core/haptics.dart';
 import '../../core/providers.dart';
 import '../../core/sign_in_sheet.dart';
 import '../../core/widgets.dart';
@@ -233,7 +234,7 @@ class _ConnectAppSheetState extends ConsumerState<ConnectAppSheet> {
 
   Future<void> _succeed(Integration i) async {
     _poll?.cancel();
-    HapticFeedback.mediumImpact();
+    Haptic.confirm();
     final bots = await ref.read(botsProvider.future).catchError((_) => const <Bot>[]);
     if (!mounted) return;
     setState(() {

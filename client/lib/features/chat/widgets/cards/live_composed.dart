@@ -4,6 +4,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../../core/haptics.dart';
 import '../../../../core/widgets.dart';
 import '../../../../theme/app_colors.dart';
 import '../../../../theme/app_tokens.dart';
@@ -856,7 +857,7 @@ class _QuizState extends State<_Quiz> {
                       onTap: done
                           ? null
                           : () {
-                              HapticFeedback.selectionClick();
+                              Haptic.select();
                               setState(() => _picked = i);
                               widget.ctl.act('quiz.answer', {'choice': i, 'option': o, if (right != null) 'correct': right == i}, o);
                             },

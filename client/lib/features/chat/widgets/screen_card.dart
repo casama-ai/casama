@@ -379,8 +379,8 @@ class _ScreenCardState extends ConsumerState<ScreenCard> with WidgetsBindingObse
     _signalNeedsYou();
   }
 
-  /// The card turned amber: one light haptic, one pulse, and the only thing a screen reader hears
-  /// from it (§5, §6).
+  /// The card turned amber: one attention signature haptic, one pulse, and the only thing a screen
+  /// reader hears from it (§5, §6).
   void _signalNeedsYou() {
     final w = _work;
     final take = w?.takeoverComputer;
@@ -388,7 +388,7 @@ class _ScreenCardState extends ConsumerState<ScreenCard> with WidgetsBindingObse
     final key = '${w!.reply}:$take';
     if (_signalled == key) return;
     _signalled = key;
-    unawaited(HapticsHelper.light());
+    unawaited(Haptic.attention());
     setState(() => _pulse++);
     unawaited(
       SemanticsService.sendAnnouncement(View.of(context), context.l10n.screenCardNeedsYou(_botName), Directionality.of(context)),

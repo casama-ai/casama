@@ -5827,7 +5827,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String creditsExplainerPlan(String price, String amount) {
-    return '1 额度 = $price。你的方案每月会增加 $amount；未用完的额度可结转至下个月。';
+    return '1 额度 = $price。你的方案每月会增加 $amount；未用完的额度可顺延至下个月。';
   }
 
   @override
@@ -12062,6 +12062,18 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get fewerEffectsHelp => '不显示庆祝动画、弹跳标签或动态机器人。';
+
+  @override
+  String get haptics => '触感反馈';
+
+  @override
+  String get trackpadHaptics => '触控板触感';
+
+  @override
+  String get hapticsHelp => '当有事情发生或机器人需要你时，提供轻柔的触感提示。';
+
+  @override
+  String get watchHaptics => '触感';
 
   @override
   String get settingsAppSection => '应用';
@@ -26726,7 +26738,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get settingsWordsAppearance =>
-      'theme 主题 dark mode 深色模式 light mode 浅色模式 night 夜间 colors 颜色 fonts 字体 text size 字号 background 背景 wallpaper 壁纸 look 外观 style 风格 themes effects 效果 motion 动效 animations 动画';
+      'theme 主题 dark mode 深色模式 light mode 浅色模式 night 夜间 colors 颜色 fonts 字体 text size 字号 background 背景 wallpaper 壁纸 look 外观 style 风格 themes effects 效果 motion 动效 animations 动画 haptics 触感 震动 振动 反馈 触控板 trackpad';
 
   @override
   String get settingsWordsQuietHours =>
@@ -28084,6 +28096,214 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get siriGeminiOff => '此手机上已为 Casama 关闭 Gemini（Casama → 设置 → 隐私）。';
+
+  @override
+  String get suggestionActionTurnOn => 'Turn on';
+
+  @override
+  String suggestionActionRemindMe(String date) {
+    return 'Remind me $date';
+  }
+
+  @override
+  String get suggestionActionPickTime => 'Pick a time';
+
+  @override
+  String get suggestionActionPutAwayAll => 'Put away all';
+
+  @override
+  String suggestionActionPutAwayAllCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Put away all $count ideas',
+      one: 'Put away 1 idea',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get suggestionActionOpen => 'Open';
+
+  @override
+  String get suggestionActionGotIt => 'Got it';
+
+  @override
+  String get suggestionActionLater => 'Later';
+
+  @override
+  String get suggestionActionSomethingElse => 'Something else';
+
+  @override
+  String get suggestionTurnedOn => 'Turned on';
+
+  @override
+  String suggestionReminderSet(String date) {
+    return 'Reminder set for $date';
+  }
+
+  @override
+  String get suggestionSnoozed => 'Saved for later';
+
+  @override
+  String get suggestionSnoozedExpired => 'Put away — snoozed twice';
+
+  @override
+  String suggestionPutAwayCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Put away $count ideas',
+      one: 'Put away 1 idea',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get suggestionUndo => 'Undo';
+
+  @override
+  String get suggestionLaterTomorrow => 'Tomorrow morning';
+
+  @override
+  String get suggestionLaterEvening => 'This evening';
+
+  @override
+  String get suggestionLaterNextWeek => 'Next week';
+
+  @override
+  String suggestionMoreWaiting(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count more ideas waiting',
+      one: '1 more idea waiting',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String botIdeasGrouped(String name, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$name · $count ideas',
+      one: '$name · 1 idea',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String updatesGroupedRoutine(String name, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$name · $count routine results today',
+      one: '$name · 1 routine result today',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String updatesGroupedNotice(String name, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$name · $count updates today',
+      one: '$name · 1 update today',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String updatesGroupedRoutinePlain(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count routine results today',
+      one: '1 routine result today',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String updatesGroupedNoticePlain(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count updates today',
+      one: '1 update today',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String briefSinceYesterday(String summary) {
+    return 'Since yesterday: $summary';
+  }
+
+  @override
+  String briefSincePages(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pages',
+      one: '1 page',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String briefSinceRoutines(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count routine results',
+      one: '1 routine result',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String briefSinceUpdates(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count updates',
+      one: '1 update',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get notifTurnOn => 'Turn on';
+
+  @override
+  String get notifOpen => 'Open';
+
+  @override
+  String get notifGotIt => 'Got it';
+
+  @override
+  String get notifRemindMe => 'Remind me';
+
+  @override
+  String get notifLater => 'Later';
+
+  @override
+  String get watchTurnOn => 'Turn on';
+
+  @override
+  String get watchGotIt => 'Got it';
+
+  @override
+  String get watchRemindMe => 'Remind';
+
+  @override
+  String get watchLater => 'Later';
+
+  @override
+  String get watchOpen => 'Open';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -39009,6 +39229,18 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get fewerEffectsHelp => '關閉慶祝特效、跳動分頁與機器人動畫。';
+
+  @override
+  String get haptics => '觸覺回饋';
+
+  @override
+  String get trackpadHaptics => '觸控式軌跡板觸覺回饋';
+
+  @override
+  String get hapticsHelp => '當有事情發生或機器人需要你時，提供輕柔的觸覺提示。';
+
+  @override
+  String get watchHaptics => '觸覺回饋';
 
   @override
   String get settingsAppSection => '應用程式';
@@ -51215,7 +51447,7 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get settingsWordsAppearance =>
-      'theme dark mode light mode night colors colours fonts font text size background wallpaper look style themes effects motion animations 主題 深色模式 淺色模式 夜間 顏色 色彩 字體 字型 文字大小 背景 桌布 風格 樣式 特效 動態 動畫';
+      'theme dark mode light mode night colors colours fonts font text size background wallpaper look style themes effects motion animations 主題 深色模式 淺色模式 夜間 顏色 色彩 字體 字型 文字大小 背景 桌布 風格 樣式 特效 動態 動畫 haptics 觸覺 震動 振動 回饋 觸控板 軌跡板 trackpad';
 
   @override
   String get settingsWordsQuietHours =>
@@ -51775,7 +52007,7 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get iosUsageLocationWhenInUse =>
-      '儲存你命名的地點（例如家或公司），並讓機器人提醒你何時該出門前往下一個約會。僅當你在「裝置連線」中開啟「地點」時才會使用。';
+      '儲存你命名的地點（例如家或公司），並讓機器人提醒你何時該出門前往下一個行程。僅當你在「裝置連線」中開啟「地點」時才會使用。';
 
   @override
   String get iosUsageCamera => '當你拍攝照片以傳送給機器人或用於個人檔案時，Casama 會使用相機。';

@@ -4311,7 +4311,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String deleteAccountConfirm(String email) {
-    return 'Tek sahibi olduğunuz çalışma alanları, botları ve bilgisayarları dahil hesabınızla birlikte silinir. Web üzerinden alınan bir plan otomatik olarak iptal edilir. App Store veya Google Play\'den alınan bir plan ise iptal edilmez: İlgili mağazadan iptal edin. Onaylamak için $email yazın.';
+    return 'Tek sahibi olduğunuz çalışma alanları, botları ve bilgisayarları dahil hesabınızla birlikte silinir. Web üzerinden alınan bir plan otomatik olarak iptal edilir. App Store veya Google Play\'den alınan bir plan ise iptal edilmez: ilgili mağazadan iptal edin. Onaylamak için $email yazın.';
   }
 
   @override
@@ -12542,6 +12542,19 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get fewerEffectsHelp =>
       'Kutlamalar, zıplayan sekmeler veya hareketli botlar yok.';
+
+  @override
+  String get haptics => 'Dokunsal geri bildirim';
+
+  @override
+  String get trackpadHaptics => 'Trackpad dokunsal geri bildirimi';
+
+  @override
+  String get hapticsHelp =>
+      'Bir şey olduğunda veya bir botun size ihtiyacı olduğunda hafif dokunuşlar.';
+
+  @override
+  String get watchHaptics => 'Dokunsal';
 
   @override
   String get settingsAppSection => 'Uygulama';
@@ -27183,7 +27196,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String cloudAccountDeleteConfirm(String email) {
-    return 'Casama Cloud hesabınızı silmek için $email yazın. Yalnızca size ait olan Cloud çalışma alanları da silinir ve Casama Cloud modelleri bunların ödediği sunucularda durur. Web üzerinden alınan bir plan otomatik olarak iptal edilir. App Store veya Google Play\'den alınan bir plan ise iptal edilmez: İlgili mağazadan iptal edin.';
+    return 'Casama Cloud hesabınızı silmek için $email yazın. Yalnızca size ait olan Cloud çalışma alanları da silinir ve Casama Cloud modelleri bunların ödediği sunucularda durur. Web üzerinden alınan bir plan otomatik olarak iptal edilir. App Store veya Google Play\'den alınan bir plan ise iptal edilmez: ilgili mağazadan iptal edin.';
   }
 
   @override
@@ -27811,7 +27824,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get settingsWordsAppearance =>
-      'tema koyu mod açık mod gece renkler yazı tipleri yazı boyutu arka plan duvar kağıdı görünüm stil efektler hareket animasyonlar';
+      'tema koyu mod açık mod gece renkler yazı tipleri yazı boyutu arka plan duvar kağıdı görünüm stil efektler hareket animasyonlar dokunsal titreşim titresim haptik trackpad';
 
   @override
   String get settingsWordsQuietHours =>
@@ -29237,4 +29250,212 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get siriGeminiOff =>
       'Bu telefonda Casama için Gemini kapalı (Casama → Ayarlar → Gizlilik).';
+
+  @override
+  String get suggestionActionTurnOn => 'Turn on';
+
+  @override
+  String suggestionActionRemindMe(String date) {
+    return 'Remind me $date';
+  }
+
+  @override
+  String get suggestionActionPickTime => 'Pick a time';
+
+  @override
+  String get suggestionActionPutAwayAll => 'Put away all';
+
+  @override
+  String suggestionActionPutAwayAllCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Put away all $count ideas',
+      one: 'Put away 1 idea',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get suggestionActionOpen => 'Open';
+
+  @override
+  String get suggestionActionGotIt => 'Got it';
+
+  @override
+  String get suggestionActionLater => 'Later';
+
+  @override
+  String get suggestionActionSomethingElse => 'Something else';
+
+  @override
+  String get suggestionTurnedOn => 'Turned on';
+
+  @override
+  String suggestionReminderSet(String date) {
+    return 'Reminder set for $date';
+  }
+
+  @override
+  String get suggestionSnoozed => 'Saved for later';
+
+  @override
+  String get suggestionSnoozedExpired => 'Put away — snoozed twice';
+
+  @override
+  String suggestionPutAwayCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Put away $count ideas',
+      one: 'Put away 1 idea',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get suggestionUndo => 'Undo';
+
+  @override
+  String get suggestionLaterTomorrow => 'Tomorrow morning';
+
+  @override
+  String get suggestionLaterEvening => 'This evening';
+
+  @override
+  String get suggestionLaterNextWeek => 'Next week';
+
+  @override
+  String suggestionMoreWaiting(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count more ideas waiting',
+      one: '1 more idea waiting',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String botIdeasGrouped(String name, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$name · $count ideas',
+      one: '$name · 1 idea',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String updatesGroupedRoutine(String name, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$name · $count routine results today',
+      one: '$name · 1 routine result today',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String updatesGroupedNotice(String name, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$name · $count updates today',
+      one: '$name · 1 update today',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String updatesGroupedRoutinePlain(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count routine results today',
+      one: '1 routine result today',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String updatesGroupedNoticePlain(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count updates today',
+      one: '1 update today',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String briefSinceYesterday(String summary) {
+    return 'Since yesterday: $summary';
+  }
+
+  @override
+  String briefSincePages(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pages',
+      one: '1 page',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String briefSinceRoutines(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count routine results',
+      one: '1 routine result',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String briefSinceUpdates(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count updates',
+      one: '1 update',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get notifTurnOn => 'Turn on';
+
+  @override
+  String get notifOpen => 'Open';
+
+  @override
+  String get notifGotIt => 'Got it';
+
+  @override
+  String get notifRemindMe => 'Remind me';
+
+  @override
+  String get notifLater => 'Later';
+
+  @override
+  String get watchTurnOn => 'Turn on';
+
+  @override
+  String get watchGotIt => 'Got it';
+
+  @override
+  String get watchRemindMe => 'Remind';
+
+  @override
+  String get watchLater => 'Later';
+
+  @override
+  String get watchOpen => 'Open';
 }

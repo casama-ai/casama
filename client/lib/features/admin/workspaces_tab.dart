@@ -6,6 +6,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../core/billing.dart';
 import '../../core/display_text.dart';
+import '../../core/haptics.dart';
 import '../../core/providers.dart';
 import '../../core/widgets.dart';
 import '../../theme/app_colors.dart';
@@ -723,7 +724,7 @@ class _LimitBlock extends StatelessWidget {
             Expanded(child: Text(label, style: context.textTheme.titleSmall)),
             Text(context.l10n.adminQuotaNoLimit, style: context.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant)),
             const SizedBox(width: AppSpace.xxs),
-            Switch.adaptive(key: switchKey, value: noLimit, onChanged: onNoLimit),
+            Switch(key: switchKey, value: noLimit, onChanged: hapticOnChanged(onNoLimit)),
           ],
         ),
         const SizedBox(height: AppSpace.xxs),

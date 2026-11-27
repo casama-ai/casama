@@ -396,7 +396,7 @@ class _GrantTile extends ConsumerWidget {
             confirmKey: const Key('canvasStopConfirm'),
           );
           if (!yes || !context.mounted) return;
-          HapticsHelper.light();
+          Haptic.toggle(false);
           final ok = await runGuarded(context, () async {
             await ref.read(backendProvider).setCanvasGrant(grant.botId, false);
             return true;

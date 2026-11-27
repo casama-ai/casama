@@ -286,6 +286,7 @@ class DevicePcmAudio implements PcmAudio {
       ),
     );
     _mic = s.listen(onChunk);
+    unawaited(allowHapticsDuringRecording());
     // Calls start on the speaker; the call screen can switch to the earpiece or a headset.
     if (CallAudioRoutes.supported) {
       try {

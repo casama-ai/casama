@@ -15,6 +15,7 @@ import '../../ui/segmented.dart';
 import 'admin_nav.dart';
 import 'admin_search.dart';
 import 'app_settings_card.dart';
+import 'haptics_lab.dart';
 import 'remote_settings_cards.dart';
 import 'ui/admin_ui.dart';
 import '../app_browser/app_browser_admin.dart';
@@ -83,6 +84,7 @@ class ServicesTab extends ConsumerWidget {
                   AdminJsonSettingTile(kind: AdminJsonSettingKind.modelCatalog),
                   AdminJsonSettingTile(kind: AdminJsonSettingKind.browserGuard),
                   AdminJsonSettingTile(kind: AdminJsonSettingKind.callLimits),
+                  HapticsLabAdminTile(),
                 ],
               ),
             ),
@@ -370,7 +372,7 @@ class _CloudModelsSheetState extends State<_CloudModelsSheet> {
           ],
           onChanged: hapticOnChanged((v) {
             if (v != null) setState(() => _resolution = v);
-          }, haptic: HapticsHelper.selection),
+          }),
         ),
         box(const Key('cloudVideo'), _video, l10n.adminCloudVideo, l10n.adminCloudVideoHelp),
         // Calls go to Google's Gemini Live; the rest are OpenRouter model ids (D-261).

@@ -43,10 +43,9 @@ class ActivityScreen extends ConsumerWidget {
         data: (items) => items.isEmpty
             ? EmptyState(icon: LucideIcons.activity, title: l10n.noRuns, message: l10n.noRunsHelp)
             : RefreshIndicator(
-                onRefresh: () async {
-                  HapticsHelper.medium();
+                onRefresh: hapticRefresh(() async {
                   ref.invalidate(runsProvider(botId));
-                },
+                }),
                 child: PageListView(
                   itemCount: items.length,
                   itemBuilder: (context, i) => _RunCard(run: items[i], onTap: () => context.pushOnce('/bots/$botId/runs/${items[i].id}')).appListItemEntrance(i),

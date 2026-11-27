@@ -315,7 +315,7 @@ class _PrivacyScreenState extends ConsumerState<PrivacyScreen> {
                             if (d == null) return;
                             await runGuarded(context, () => ref.read(backendProvider).setRetentionDays(org.id, d));
                             ref.invalidate(_retentionProvider);
-                          }, haptic: HapticsHelper.selection),
+                          }),
                         ),
                 ),
               ),

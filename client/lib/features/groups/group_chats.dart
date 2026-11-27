@@ -235,12 +235,14 @@ class _NewGroupState extends ConsumerState<_NewGroup> {
   }
 
   void _toggle(String id) {
+    var added = false;
     setState(() {
       if (_picked.remove(id)) return;
       if (_picked.length >= _maxGroupBots) return;
       _picked.add(id);
+      added = true;
     });
-    HapticsHelper.soft();
+    Haptic.toggle(added);
   }
 
   void _makeLead(String id) {
@@ -248,7 +250,7 @@ class _NewGroupState extends ConsumerState<_NewGroup> {
     setState(() => _picked
       ..remove(id)
       ..insert(0, id));
-    HapticsHelper.selection();
+    Haptic.select();
   }
 
   Future<void> _create() async {
@@ -266,7 +268,7 @@ class _NewGroupState extends ConsumerState<_NewGroup> {
     );
     if (!mounted) return;
     if (c == null) return setState(() => _busy = false);
-    HapticsHelper.success();
+    Haptic.confirm();
     Navigator.pop(context, c.id);
   }
 

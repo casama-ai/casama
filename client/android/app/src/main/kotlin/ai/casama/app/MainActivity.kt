@@ -80,6 +80,8 @@ class MainActivity : FlutterFragmentActivity() {
             }
         // Wear OS (D-410): signing a watch in, workspace switches and sign-out (WATCH-PROTOCOL §3).
         WearBridge.attach(MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "casama/watch"), this)
+        // Semantic haptics and signature patterns (docs/HAPTICS-PLAN.md §7.2).
+        HapticsBridge.attach(flutterEngine, this)
         // The browser a bot can use on this phone (docs/PHONE-BROWSER-PLAN.md). A stub unless the
         // build switch is on.
         AppBrowserBridge.attach(flutterEngine, this)

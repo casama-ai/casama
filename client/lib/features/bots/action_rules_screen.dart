@@ -168,7 +168,7 @@ class _AddRuleState extends ConsumerState<_AddRule> {
           initialValue: _category,
           decoration: InputDecoration(labelText: l10n.whenTheBot),
           items: [for (final c in _categories) DropdownMenuItem(value: c, child: Text(categoryLabel(context, c)))],
-          onChanged: hapticOnChanged((v) => setState(() => _category = v ?? 'send'), haptic: HapticsHelper.selection),
+          onChanged: hapticOnChanged((v) => setState(() => _category = v ?? 'send')),
         ),
         DropdownButtonFormField<String>(
           isExpanded: true,
@@ -181,7 +181,7 @@ class _AddRuleState extends ConsumerState<_AddRule> {
             DropdownMenuItem(value: 'ask', child: Text(l10n.ruleAsk)),
             DropdownMenuItem(value: 'hand_off', child: Text(l10n.ruleHandOff)),
           ],
-          onChanged: hapticOnChanged((v) => setState(() => _rule = v ?? 'ask'), haptic: HapticsHelper.selection),
+          onChanged: hapticOnChanged((v) => setState(() => _rule = v ?? 'ask')),
         ),
         TextField(
           key: const Key('ruleDomains'),

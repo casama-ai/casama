@@ -11,6 +11,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/fold/fold.dart';
+import '../../core/haptics.dart';
 import '../../core/providers.dart';
 import '../../core/router.dart';
 import '../../core/widgets.dart';
@@ -238,8 +239,8 @@ class _BubbleState extends ConsumerState<_Bubble>
   void _changed() {
     if (!mounted) return;
     final needs = widget.call.needsPerson;
-    // Something needs the person (an approval): a light tap, once.
-    if (needs && !_wasNeedingPerson) unawaited(HapticFeedback.lightImpact());
+    // Something needs the person (an approval): signature attention tap, once.
+    if (needs && !_wasNeedingPerson) unawaited(Haptic.attention());
     _wasNeedingPerson = needs;
     setState(() {});
   }
@@ -305,6 +306,7 @@ class _BubbleState extends ConsumerState<_Bubble>
       case 'mute':
         c.setMuted(!c.muted);
       case 'end':
+        Haptic.press();
         unawaited(c.end(CallEnd.hungUp));
     }
   }
@@ -376,6 +378,7 @@ class _BubbleState extends ConsumerState<_Bubble>
                     : ((at.dy - top) / (bottom - top)).clamp(0.0, 1.0);
                 _drag = null;
               });
+              Haptic.snap();
               unawaited(_save());
             },
             child: ExcludeSemantics(
@@ -613,7 +616,10 @@ class _CallSidebarCardState extends ConsumerState<CallSidebarCard> {
                         foregroundColor: scheme.onError,
                       ),
                       icon: const Icon(LucideIcons.phoneOff, size: 18),
-                      onPressed: () => unawaited(c.end(CallEnd.hungUp)),
+                      onPressed: () {
+                        Haptic.press();
+                        unawaited(c.end(CallEnd.hungUp));
+                      },
                     ),
                   ],
                 ),

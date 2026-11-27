@@ -201,13 +201,12 @@ class BotsList extends ConsumerWidget {
               ],
             )
           : RefreshIndicator(
-              onRefresh: () async {
-                HapticsHelper.medium();
+              onRefresh: hapticRefresh(() async {
                 ref.invalidate(botsProvider);
                 // Its rows also count what each bot waits on.
                 ref.invalidate(approvalsProvider);
                 ref.invalidate(takeoversProvider);
-              },
+              }),
               child: LayoutBuilder(
                 builder: (context, constraints) {
                   final side = pageSide(constraints.maxWidth);
@@ -810,7 +809,6 @@ class _CreateBotSheetState extends ConsumerState<CreateBotSheet> {
             _modelPicked = false;
             _fillDefaultModel(keys);
           }),
-          haptic: HapticsHelper.selection,
         ),
       ),
       const SizedBox(height: 8),

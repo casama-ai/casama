@@ -8,6 +8,7 @@ import 'package:flutter/widgets.dart' show FocusManager;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/chat_focus.dart';
+import '../../core/haptics.dart';
 import '../../core/providers.dart';
 import '../../core/screen_awake.dart';
 import '../../ui/bot_cursor.dart';
@@ -433,6 +434,7 @@ class AppBrowserController extends Notifier<AppBrowserSession>
         });
       case 'handoff':
         _handBack ??= Completer<bool>();
+        Haptic.attention();
         _set(
           state.copyWith(
             phase: AppBrowserPhase.yourTurn,

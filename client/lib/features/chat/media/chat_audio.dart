@@ -9,6 +9,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../../../core/backend.dart';
+import '../../../core/haptics.dart';
 import '../../../core/providers.dart';
 import '../../../core/widgets.dart';
 import '../../../theme/app_colors.dart';
@@ -195,7 +196,13 @@ class _ChatAudioState extends ConsumerState<ChatAudio> {
                           value: progress,
                           onChanged: _player == null || total == Duration.zero
                               ? null
-                              : (v) => _player!.seek(total * v),
+                              : (v) {
+                                  if ((progress > 0.0 && v <= 0.0) ||
+                                      (progress < 1.0 && v >= 1.0)) {
+                                    Haptic.snap();
+                                  }
+                                  _player!.seek(total * v);
+                                },
                         ),
                       ),
                     ),

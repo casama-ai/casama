@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../../../../core/haptics.dart';
 import '../../../../core/widgets.dart';
 import '../../../../theme/app_colors.dart';
 import '../../../../theme/app_tokens.dart';
@@ -327,7 +328,7 @@ class _CurrencyState extends State<_Currency> {
                   IconButton(
                     tooltip: l.cardSwap,
                     onPressed: () {
-                      HapticFeedback.selectionClick();
+                      Haptic.select();
                       setState(() => _swapped = !_swapped);
                     },
                     icon: const Icon(LucideIcons.arrowUpDown, size: 18),

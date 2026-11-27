@@ -327,6 +327,14 @@ List<AdminPlace> adminPlaces(BuildContext context, List<AdminSection> sections) 
         subtitle: l10n.adminCallLimitsHelp,
         words: 'voice call silence ring length json',
       ),
+      setting(
+        'hapticsLab',
+        AdminSection.services,
+        LucideIcons.vibrate,
+        'Haptics Lab',
+        AdminAnchors.advanced,
+        words: 'haptics vibration taptic trackpad signatures tune lab',
+      ),
     ],
     AdminSection.mail: [
       setting(

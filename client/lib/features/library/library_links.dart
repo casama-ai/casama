@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../../core/haptics.dart';
 import '../../core/providers.dart';
 import '../../core/widgets.dart';
 import '../chat/chat_controller.dart' show ToolEntry, ToolStatus;
@@ -303,7 +304,10 @@ class ShowInLibraryMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => GestureDetector(
-    onLongPressStart: (d) => _menu(context, ref, d.globalPosition),
+    onLongPressStart: (d) {
+      Haptic.threshold();
+      _menu(context, ref, d.globalPosition);
+    },
     onSecondaryTapDown: (d) => _menu(context, ref, d.globalPosition),
     child: child,
   );

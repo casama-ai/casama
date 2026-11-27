@@ -1,6 +1,6 @@
-import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../core/haptics.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_tokens.dart';
 import 'floating_tab_chrome.dart';
@@ -221,7 +221,7 @@ class StripTabs extends StatelessWidget {
                           spec: destinations[i],
                           selected: i == currentIndex,
                           onTap: () {
-                            HapticFeedback.selectionClick();
+                            Haptic.select();
                             onSelected(i);
                           },
                         ),
@@ -248,7 +248,7 @@ class StripTabs extends StatelessWidget {
                 child: InkWell(
                   key: action.key,
                   onTap: () {
-                    HapticFeedback.selectionClick();
+                    Haptic.select();
                     action.onPressed();
                   },
                   child: SizedBox.square(

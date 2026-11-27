@@ -1110,7 +1110,7 @@ class _ComputerTabs extends StatelessWidget {
                     ),
                     labelPadding: const EdgeInsets.symmetric(horizontal: 4),
                     splashBorderRadius: BorderRadius.circular(AppRadius.pill),
-                    onTap: (_) => HapticsHelper.light(),
+                    onTap: (_) => Haptic.select(),
                     tabs: [
                       for (final t in tabIds)
                         switch (t) {

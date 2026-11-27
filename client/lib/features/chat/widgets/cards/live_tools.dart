@@ -6,6 +6,7 @@ import 'package:json_schema_builder/json_schema_builder.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../../../../core/haptics.dart';
 import '../../../../core/widgets.dart';
 import '../../../../theme/app_colors.dart';
 import '../../../../theme/app_tokens.dart';
@@ -317,7 +318,7 @@ class _RandomState extends State<_Random> {
   int _spins = 0;
 
   void _go() {
-    HapticFeedback.mediumImpact();
+    Haptic.tap();
     final p = widget.p;
     setState(() {
       _spins++;

@@ -17,6 +17,7 @@ import '../../core/age_range.dart';
 import '../../core/app_page.dart';
 import '../../core/chat_focus.dart';
 import '../../core/fold/fold.dart';
+import '../../core/haptics.dart';
 import '../../core/media_cache.dart';
 import '../../ui/shell_layout.dart';
 import '../../ui/side_strip.dart';
@@ -1683,14 +1684,18 @@ class _ResizablePanelState extends ConsumerState<_ResizablePanel> {
   void _move(PointerMoveEvent e, double max) {
     if (!_dragging) return;
     if ((e.position.dx - _startX).abs() > 3) _moved = true;
-    ref
-        .read(computerPanelWidthProvider.notifier)
-        .set(
-          (_startWidth - (e.position.dx - _startX)).clamp(
-            ComputerPanelWidth.min,
-            max,
-          ),
-        );
+    final prev = ref.read(computerPanelWidthProvider);
+    final next = (_startWidth - (e.position.dx - _startX)).clamp(
+      ComputerPanelWidth.min,
+      max,
+    );
+    const def = ComputerPanelWidth.defaultWidth;
+    final hitStop =
+        (prev > ComputerPanelWidth.min && next <= ComputerPanelWidth.min) ||
+        (prev < max && next >= max) ||
+        ((prev - def).sign != (next - def).sign && (prev - def).abs() > 0.5);
+    if (hitStop) Haptic.snap();
+    ref.read(computerPanelWidthProvider.notifier).set(next);
   }
 
   void _up() {

@@ -66,7 +66,7 @@ class AdminSectionList extends StatelessWidget {
     );
     final refresh = onRefresh;
     if (refresh == null) return list;
-    return RefreshIndicator(onRefresh: refresh, child: list);
+    return RefreshIndicator(onRefresh: hapticRefresh(refresh), child: list);
   }
 }
 
@@ -119,7 +119,7 @@ class AdminSectionHeader extends StatelessWidget {
           key: Key('adminRefresh-${section.id}'),
           tooltip: context.l10n.adminRefresh,
           onPressed: () {
-            HapticsHelper.light();
+            Haptic.tap();
             onRefresh!();
           },
           icon: const Icon(LucideIcons.refreshCw, size: 18),

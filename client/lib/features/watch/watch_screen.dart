@@ -314,7 +314,7 @@ class _WatchScreenState extends ConsumerState<WatchScreen> {
                     onTap: level == prefs.allow
                         ? null
                         : () {
-                            HapticsHelper.light();
+                            Haptic.select();
                             unawaited(_update(allow: level));
                           },
                   ),

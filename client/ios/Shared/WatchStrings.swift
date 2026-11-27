@@ -3,6 +3,7 @@
 import Foundation
 
 enum WatchL10n {
+  static var haptics: String { localized("watchHaptics", "Haptics") }
   /// Shown on the watch app (D-410). Title of the watch app's first screen.
   static var now: String { localized("watchNow", "Now") }
   /// Shown on the watch app (D-410). The main button: ask a bot by voice.
@@ -323,6 +324,16 @@ enum WatchL10n {
   }
   /// Shown on the watch app Settings screen (D-539). Toggle to send scrubbed crash reports.
   static var shareCrashReports: String { localized("watchShareCrashReports", "Share crash reports") }
+  /// Watch button (tiny screen, max 12 chars). Turn on a suggested routine.
+  static var turnOn: String { localized("watchTurnOn", "Turn on") }
+  /// Watch button (tiny screen, max 10 chars). Acknowledge an informational suggestion.
+  static var gotIt: String { localized("watchGotIt", "Got it") }
+  /// Watch button (tiny screen, max 10 chars). Set a suggested reminder.
+  static var remindMe: String { localized("watchRemindMe", "Remind") }
+  /// Watch button (tiny screen, max 10 chars). Snooze a suggestion until later.
+  static var later: String { localized("watchLater", "Later") }
+  /// Watch button (tiny screen, max 10 chars). Open a suggested link on phone.
+  static var open: String { localized("watchOpen", "Open") }
 
   private static func localized(_ key: String, _ english: String) -> String {
     NSLocalizedString(key, tableName: "Watch", value: english, comment: "")

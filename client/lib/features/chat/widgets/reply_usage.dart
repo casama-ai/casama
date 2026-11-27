@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:casama_sdk/casama_sdk.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
-import '../../../core/haptics.dart';
 import '../../../core/number_format.dart';
 import '../../../core/providers.dart';
 import '../../../core/widgets.dart';
@@ -68,7 +67,6 @@ class ReplyUsageLine extends ConsumerWidget {
           key: Key('replyUsage-$runId'),
           borderRadius: BorderRadius.circular(AppRadius.icon),
           onTap: () {
-            HapticsHelper.light();
             showAdaptiveSheet<void>(
               context: context,
               builder: (_) => ReplyUsageSheet(runId: runId, botId: botId),

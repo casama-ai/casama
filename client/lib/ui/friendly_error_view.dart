@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 
+import '../core/haptics.dart';
 import '../l10n/generated/app_localizations.dart';
 
 /// Friendly replacement for Flutter's red error screen (debug) and empty grey box (release),
@@ -36,7 +37,7 @@ class _FriendlyErrorViewState extends State<FriendlyErrorView> {
   }
 
   Future<void> _copy() async {
-    HapticFeedback.mediumImpact();
+    Haptic.tap();
 
     await Clipboard.setData(ClipboardData(text: '${widget.details.exceptionAsString()}\n\n${widget.details.stack}'));
 

@@ -16,7 +16,7 @@ import 'effects.dart';
 void showCelebration(BuildContext context, String message, {Mascot? mascot}) {
   final overlay = Overlay.maybeOf(context, rootOverlay: true);
   if (overlay == null) return;
-  HapticsHelper.success();
+  Haptic.celebrate();
   late final OverlayEntry entry;
   entry = OverlayEntry(
     builder: (_) => _Celebration(

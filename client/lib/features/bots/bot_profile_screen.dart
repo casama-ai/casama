@@ -493,7 +493,6 @@ class _BotProfileScreenState extends ConsumerState<BotProfileScreen> {
                       }
                     }
                   }),
-                  haptic: HapticsHelper.selection,
                 ),
               ),
               if (_credentialId != _workspaceDefaultKey)

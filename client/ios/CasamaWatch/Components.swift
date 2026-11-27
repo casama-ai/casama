@@ -5,10 +5,23 @@ import WatchKit
 
 enum Haptic {
   /// One for "needs you", one for "done", one for a problem, a click when a hold completes (§6.7).
-  static func needsYou() { WKInterfaceDevice.current().play(.notification) }
-  static func done() { WKInterfaceDevice.current().play(.success) }
-  static func problem() { WKInterfaceDevice.current().play(.failure) }
-  static func click() { WKInterfaceDevice.current().play(.click) }
+  /// Silenced when the watch's own Haptics switch is off (docs/HAPTICS-PLAN.md §7.4).
+  static func needsYou() {
+    guard WatchAccount.haptics else { return }
+    WKInterfaceDevice.current().play(.notification)
+  }
+  static func done() {
+    guard WatchAccount.haptics else { return }
+    WKInterfaceDevice.current().play(.success)
+  }
+  static func problem() {
+    guard WatchAccount.haptics else { return }
+    WKInterfaceDevice.current().play(.failure)
+  }
+  static func click() {
+    guard WatchAccount.haptics else { return }
+    WKInterfaceDevice.current().play(.click)
+  }
 }
 
 /// Whether the person's words should be hidden now: wrist down with the switch on (§6.1 J, §10).

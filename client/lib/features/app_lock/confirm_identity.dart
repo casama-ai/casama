@@ -2,11 +2,11 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart' show HapticFeedback;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../../core/haptics.dart';
 import '../../core/providers.dart';
 import '../../core/widgets.dart';
 import '../../theme/app_colors.dart';
@@ -137,11 +137,13 @@ Future<bool> confirmIdentity(
   if (!context.mounted) return false;
   switch (result) {
     case UnlockResult.ok:
+      Haptic.confirm();
       return true;
     // The lock is off and this device can't check right now: nothing to ask with.
     case UnlockResult.unavailable when !locked:
       return true;
     case UnlockResult.failed || UnlockResult.unavailable:
+      Haptic.reject();
       showMessage(context, l10n.appLockNotChecked);
       return false;
     case UnlockResult.cancelled || null:
@@ -198,7 +200,7 @@ class _PinSetupSheetState extends State<_PinSetupSheet> {
     } else if (first == pin) {
       Navigator.of(context).pop(pin);
     } else {
-      HapticFeedback.mediumImpact();
+      Haptic.reject();
       setState(() {
         _first = null;
         _mismatch = true;
@@ -281,6 +283,7 @@ class _PinCheckSheetState extends ConsumerState<_PinCheckSheet> {
       Navigator.of(context).pop(result);
       return;
     }
+    Haptic.reject();
     _wrong++;
     if (_wrong >= maxPinFailures) {
       Navigator.of(context).pop(UnlockResult.failed);

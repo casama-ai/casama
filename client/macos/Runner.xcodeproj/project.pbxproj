@@ -99,6 +99,7 @@
 		571260AA515AC3386A4599A9 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 571218D411B095FDD7EEC56F /* InfoPlist.xcstrings */; };
 		5712DB86C4F59FBAD921307D /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 5712BA9A32DDAA5435A1CB26 /* InfoPlist.xcstrings */; };
 		5712FB416A923BC888A88730 /* ServicesMenu.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 5712717E80147C04FDFC1F6D /* ServicesMenu.xcstrings */; };
+		A10C5763C9EA10E57EAE0F80 /* AppShortcuts.strings in Resources */ = {isa = PBXBuildFile; fileRef = A10C57A173CBA5FE03FE9111 /* AppShortcuts.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -271,6 +272,19 @@
 		571218D411B095FDD7EEC56F /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = InfoPlist.xcstrings; path = CasamaShare/InfoPlist.xcstrings; sourceTree = SOURCE_ROOT; };
 		5712BA9A32DDAA5435A1CB26 /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = InfoPlist.xcstrings; path = Runner/InfoPlist.xcstrings; sourceTree = SOURCE_ROOT; };
 		5712717E80147C04FDFC1F6D /* ServicesMenu.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = ServicesMenu.xcstrings; path = Runner/ServicesMenu.xcstrings; sourceTree = SOURCE_ROOT; };
+		A10C573A1C93E628C70AFEC6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = "../ios/Siri/en.lproj/AppShortcuts.strings"; sourceTree = SOURCE_ROOT; };
+		A10C57948AF94EA771AEE472 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = "../ios/Siri/de.lproj/AppShortcuts.strings"; sourceTree = SOURCE_ROOT; };
+		A10C57F57AF3D410C6D99032 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = "../ios/Siri/es.lproj/AppShortcuts.strings"; sourceTree = SOURCE_ROOT; };
+		A10C570E6AC40A6431F01EFD /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = "../ios/Siri/fr.lproj/AppShortcuts.strings"; sourceTree = SOURCE_ROOT; };
+		A10C5766671104816F2E3A86 /* id */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = id; path = "../ios/Siri/id.lproj/AppShortcuts.strings"; sourceTree = SOURCE_ROOT; };
+		A10C573BFF000497F6AEA68D /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = "../ios/Siri/it.lproj/AppShortcuts.strings"; sourceTree = SOURCE_ROOT; };
+		A10C5723D42B68064D9F7CBF /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = "../ios/Siri/ja.lproj/AppShortcuts.strings"; sourceTree = SOURCE_ROOT; };
+		A10C57C4C07DB391DE55DACE /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = "../ios/Siri/ko.lproj/AppShortcuts.strings"; sourceTree = SOURCE_ROOT; };
+		A10C5797130BF3B9756C65C5 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "../ios/Siri/pt-BR.lproj/AppShortcuts.strings"; sourceTree = SOURCE_ROOT; };
+		A10C57578EB21D45A654A5B6 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = "../ios/Siri/tr.lproj/AppShortcuts.strings"; sourceTree = SOURCE_ROOT; };
+		A10C5739775BE59199280A3A /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = "../ios/Siri/vi.lproj/AppShortcuts.strings"; sourceTree = SOURCE_ROOT; };
+		A10C57592A12AA190BA3E0DD /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "../ios/Siri/zh-Hans.lproj/AppShortcuts.strings"; sourceTree = SOURCE_ROOT; };
+		A10C571F53E58E1EA672E577 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "../ios/Siri/zh-Hant.lproj/AppShortcuts.strings"; sourceTree = SOURCE_ROOT; };
 		A10C57959A45D44E6FCF5836 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = "de.lproj/MainMenu.strings"; sourceTree = "<group>"; };
 		A10C57C0BC1E08F9743B2D50 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = "es.lproj/MainMenu.strings"; sourceTree = "<group>"; };
 		A10C5767AD8F41A7BB0A18C4 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = "fr.lproj/MainMenu.strings"; sourceTree = "<group>"; };
@@ -454,6 +468,7 @@
 		453C3A5BAF054374D27C5F02 /* Siri */ = {
 			isa = PBXGroup;
 			children = (
+				A10C57A173CBA5FE03FE9111 /* AppShortcuts.strings */,
 				571254491F95ED364FD227BA /* AppShortcuts.xcstrings */,
 				58B43BFD9080409C244FB9EB /* FocusFilter.swift */,
 				179622128F2CEF889C965783 /* SiriToolsPhase4.swift */,
@@ -838,6 +853,7 @@
 				33CC10F32044A3C60003C045 /* Assets.xcassets in Resources */,
 				4B5A0F1C2D3E4F5061728395 /* PrivacyInfo.xcprivacy in Resources */,
 				33CC10F62044A3C60003C045 /* MainMenu.xib in Resources */,
+				A10C5763C9EA10E57EAE0F80 /* AppShortcuts.strings in Resources */,
 				5483E8A1E0B322A02CDA1288 /* AppIcon.icon in Resources */,
 				C590175D5FA3515328D39684 /* Skills.skillsbundle in Resources */,
 			);
@@ -1156,6 +1172,7 @@
 			path = Runner;
 			sourceTree = "<group>";
 		};
+		A10C57A173CBA5FE03FE9111 /* AppShortcuts.strings */ = {isa = PBXVariantGroup; children = (A10C573A1C93E628C70AFEC6 /* en */, A10C57948AF94EA771AEE472 /* de */, A10C57F57AF3D410C6D99032 /* es */, A10C570E6AC40A6431F01EFD /* fr */, A10C5766671104816F2E3A86 /* id */, A10C573BFF000497F6AEA68D /* it */, A10C5723D42B68064D9F7CBF /* ja */, A10C57C4C07DB391DE55DACE /* ko */, A10C5797130BF3B9756C65C5 /* pt-BR */, A10C57578EB21D45A654A5B6 /* tr */, A10C5739775BE59199280A3A /* vi */, A10C57592A12AA190BA3E0DD /* zh-Hans */, A10C571F53E58E1EA672E577 /* zh-Hant */); name = AppShortcuts.strings; sourceTree = "<group>"; };
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */

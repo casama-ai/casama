@@ -177,6 +177,12 @@ final class AppModel: ObservableObject {
   @Published var readAloud = WatchAccount.readAloud {
     didSet { WatchAccount.readAloud = readAloud }
   }
+  @Published var haptics = WatchAccount.haptics {
+    didSet {
+      WatchAccount.haptics = haptics
+      if haptics { Haptic.click() }
+    }
+  }
   @Published var shareCrashReports = WatchAccount.shareCrashReports {
     didSet {
       WatchAccount.shareCrashReports = shareCrashReports

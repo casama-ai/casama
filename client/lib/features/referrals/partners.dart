@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../../core/haptics.dart';
 import '../../core/link_browser.dart';
 import '../../core/partner_code.dart';
 import '../../core/providers.dart';
@@ -114,7 +115,7 @@ class PartnerCodeCard extends StatelessWidget {
     } catch (_) {
       return;
     }
-    HapticFeedback.selectionClick();
+    Haptic.tap();
     if (context.mounted) showMessage(context, context.l10n.inviteFriendsCopied);
   }
 

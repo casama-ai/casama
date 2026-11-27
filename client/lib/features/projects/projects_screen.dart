@@ -209,7 +209,7 @@ class _NewProjectState extends ConsumerState<_NewProject> {
           isExpanded: true,
           decoration: InputDecoration(labelText: l10n.projectLead),
           items: [for (final b in bots) DropdownMenuItem(value: b.id, child: Text(b.name))],
-          onChanged: hapticOnChanged((v) => setState(() => _lead = v), haptic: HapticsHelper.selection),
+          onChanged: hapticOnChanged((v) => setState(() => _lead = v)),
         ),
         _CoverRow(
           value: _cover,
@@ -546,7 +546,7 @@ class ProjectScreen extends ConsumerWidget {
                     subtitle: autonomous ? l10n.projectWorksAloneOn : l10n.projectWorksAloneOff,
                     showChevron: false,
                     onTap: () {
-                      HapticsHelper.light();
+                      Haptic.toggle(!autonomous);
                       _setAlone(context, ref, p, botName, !autonomous);
                     },
                     trailing: Switch(key: const Key('projectAloneSwitch'), value: autonomous, onChanged: hapticOnChanged((v) => _setAlone(context, ref, p, botName, v))),

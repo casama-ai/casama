@@ -7,6 +7,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../core/analytics.dart';
+import '../../core/haptics.dart';
 import '../../core/providers.dart';
 import '../../core/sign_in_sheet.dart';
 import '../../core/widgets.dart';
@@ -279,7 +280,7 @@ class _ConnectServerSheetState extends ConsumerState<ConnectServerSheet> {
 
   void _succeed(Integration i) {
     _poll?.cancel();
-    HapticFeedback.mediumImpact();
+    Haptic.confirm();
     ref.invalidate(integrationsProvider);
     setState(() {
       _result = i;

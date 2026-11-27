@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pasteboard/pasteboard.dart';
 
+import '../../../core/haptics.dart';
 import '../../../core/widgets.dart';
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_tokens.dart';
@@ -277,7 +278,7 @@ class _StopButton extends StatelessWidget {
     return IconButton(
       tooltip: tooltip,
       onPressed: () {
-        HapticFeedback.lightImpact();
+        Haptic.press();
         onPressed();
       },
       icon: Container(
@@ -311,7 +312,7 @@ class _RoundButton extends StatelessWidget {
       onPressed: onPressed == null
           ? null
           : () {
-              HapticFeedback.lightImpact();
+              Haptic.tap();
               onPressed!();
             },
       icon: Icon(icon, size: 22),

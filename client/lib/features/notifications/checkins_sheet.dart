@@ -65,7 +65,7 @@ class _CheckinsSheetState extends State<_CheckinsSheet> {
               icon: LucideIcons.sun,
               title: l10n.checkins,
               onTap: () {
-                HapticsHelper.light();
+                Haptic.toggle(!_enabled);
                 setState(() => _enabled = !_enabled);
               },
               trailing: Switch(key: const Key('checkinsEnabled'), value: _enabled, onChanged: hapticOnChanged((v) => setState(() => _enabled = v))),

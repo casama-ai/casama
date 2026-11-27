@@ -270,7 +270,7 @@ class _InviteLinkCard extends ConsumerWidget {
                   title: l10n.askBeforeJoining,
                   subtitle: l10n.askBeforeJoiningHelp,
                   onTap: () {
-                    HapticsHelper.light();
+                    Haptic.toggle(!approval);
                     setApproval(!approval);
                   },
                   trailing: Switch(
@@ -615,7 +615,7 @@ class _EmailInviteCardState extends ConsumerState<_EmailInviteCard> {
               icon: LucideIcons.shieldUser,
               title: l10n.inviteAsAdmin,
               onTap: () {
-                HapticsHelper.light();
+                Haptic.toggle(!_admin);
                 setState(() => _admin = !_admin);
               },
               trailing: Switch(
@@ -811,7 +811,7 @@ class _DomainCard extends ConsumerWidget {
             title: l10n.joinByDomainSwitch(mine),
             subtitle: l10n.joinByDomainHelp,
             onTap: () {
-              HapticsHelper.light();
+              Haptic.toggle(!on);
               setDomain(!on);
             },
             trailing: Switch(
@@ -907,7 +907,6 @@ class _CustomLinksState extends ConsumerState<_CustomLinks> {
                   ],
                   onChanged: hapticOnChanged(
                     (v) => setState(() => _role = v ?? _role),
-                    haptic: HapticsHelper.selection,
                   ),
                 ),
                 DropdownButtonFormField<int?>(
@@ -921,7 +920,6 @@ class _CustomLinksState extends ConsumerState<_CustomLinks> {
                   ],
                   onChanged: hapticOnChanged(
                     (v) => setState(() => _days = v),
-                    haptic: HapticsHelper.selection,
                   ),
                 ),
                 DropdownButtonFormField<int?>(
@@ -938,7 +936,6 @@ class _CustomLinksState extends ConsumerState<_CustomLinks> {
                   ],
                   onChanged: hapticOnChanged(
                     (v) => setState(() => _uses = v),
-                    haptic: HapticsHelper.selection,
                   ),
                 ),
               ];

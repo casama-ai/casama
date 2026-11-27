@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/analytics.dart';
 import '../../core/display_text.dart';
+import '../../core/haptics.dart';
 import '../../core/number_format.dart';
 import '../../core/partner_code.dart';
 import '../../core/providers.dart';
@@ -122,7 +123,7 @@ class _InviteFriendsScreenState extends ConsumerState<InviteFriendsScreen> {
     } catch (_) {
       return;
     }
-    HapticFeedback.selectionClick();
+    Haptic.tap();
     Analytics.log('referral_shared', {'method': method});
     if (mounted) showMessage(context, context.l10n.inviteFriendsCopied);
   }
@@ -139,7 +140,7 @@ class _InviteFriendsScreenState extends ConsumerState<InviteFriendsScreen> {
     if (!mounted) return;
     setState(() => _busy = false);
     if (r == null) return;
-    HapticFeedback.mediumImpact();
+    Haptic.confirm();
     ref.invalidate(referralProvider);
     showMessage(context, context.l10n.inviteWaitingDone);
   }
@@ -219,7 +220,7 @@ class _InviteFriendsScreenState extends ConsumerState<InviteFriendsScreen> {
             );
           }
           return RefreshIndicator(
-            onRefresh: () => ref.refresh(referralProvider.future),
+            onRefresh: hapticRefresh(() => ref.refresh(referralProvider.future)),
             child: PageColumn(children: _sections(context, r)),
           );
         },

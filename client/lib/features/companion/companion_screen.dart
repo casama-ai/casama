@@ -194,7 +194,7 @@ class CompanionScreen extends ConsumerWidget {
                                   // also work on this one. The allow list alone decides that.
                                   await runGuarded(context, () => controller.save(botIds: ids.toList()));
                                   ref.invalidate(botPlacesProvider(b.id));
-                                }, haptic: HapticsHelper.soft),
+                                }),
                               ),
                           ],
                         ),

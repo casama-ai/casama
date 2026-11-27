@@ -8,6 +8,7 @@ import '../../../theme/app_tokens.dart';
 import '../../files/file_preview.dart';
 import '../media/markdown_image.dart';
 import 'mentions.dart';
+import '../../../core/haptics.dart';
 import '../../../core/link_browser.dart';
 import '../../../core/open_links.dart';
 import '../../../core/widgets.dart';
@@ -268,7 +269,7 @@ class _CodeBlockState extends State<_CodeBlock> {
 
   Future<void> _copy() async {
     await Clipboard.setData(ClipboardData(text: widget.code));
-    HapticFeedback.lightImpact();
+    Haptic.tap();
     if (!mounted) return;
     setState(() => _copied = true);
     await Future<void>.delayed(const Duration(milliseconds: 1600));

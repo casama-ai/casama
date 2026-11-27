@@ -312,6 +312,7 @@ private final class SpeechAnalyzerSession {
     let audio = AVAudioSession.sharedInstance()
     savedAudioSession = (audio.category, audio.mode, audio.categoryOptions)
     try audio.setCategory(.record, mode: .measurement, options: .duckOthers)
+    try? audio.setAllowHapticsAndSystemSoundsDuringRecording(true)
     try audio.setActive(true, options: .notifyOthersOnDeactivation)
   }
 

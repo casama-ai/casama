@@ -347,6 +347,9 @@ import WebKit
     if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "CasamaFileProvider") {
       FileProviderBridge.shared.attach(messenger: registrar.messenger())
     }
+    if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "CasamaHaptics") {
+      HapticsBridge.shared.attach(registrar.messenger())
+    }
   }
 }
 

@@ -4,6 +4,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../core/haptics.dart';
 import 'schemes.dart';
 import 'wallpaper.dart';
 
@@ -30,6 +31,7 @@ class Appearance {
     this.bodyFont = plainFont,
     this.wallpaper = defaultWallpaper,
     this.fewerEffects = defaultFewerEffects,
+    this.haptics = true,
   });
   final ThemeMode mode;
 
@@ -45,6 +47,10 @@ class Appearance {
   /// (see [Effects]). The Plain theme turns it on.
   final bool fewerEffects;
 
+  /// Tactile feedback across the app (docs/HAPTICS-PLAN.md §7.4). On by default; turning it off
+  /// silences every haptic the app plays.
+  final bool haptics;
+
   ThemeChoice get scheme => themeChoiceById(schemeId);
 
   Appearance copyWith({
@@ -54,6 +60,7 @@ class Appearance {
     String? bodyFont,
     WallpaperSpec? wallpaper,
     bool? fewerEffects,
+    bool? haptics,
   }) => Appearance(
     mode: mode ?? this.mode,
     schemeId: schemeId ?? this.schemeId,
@@ -61,6 +68,7 @@ class Appearance {
     bodyFont: bodyFont ?? this.bodyFont,
     wallpaper: wallpaper ?? this.wallpaper,
     fewerEffects: fewerEffects ?? this.fewerEffects,
+    haptics: haptics ?? this.haptics,
   );
 }
 
@@ -87,7 +95,10 @@ class AppearanceNotifier extends Notifier<Appearance> {
   Appearance build() {
     final initial = _initial;
     // Read before the app started, its gallery schemes already registered: nothing to load.
-    if (initial != null) return initial;
+    if (initial != null) {
+      Haptic.syncEnabled(initial.haptics);
+      return initial;
+    }
     gallerySchemeChoices.clear();
     _load();
     return const Appearance();
@@ -99,6 +110,8 @@ class AppearanceNotifier extends Notifier<Appearance> {
     try {
       final p = await SharedPreferences.getInstance();
       _restoreGallery(p.getString(_galleryKey));
+      final haptics = p.getBool(Haptic.prefsKey) ?? true;
+      Haptic.syncEnabled(haptics);
       return Appearance(
         mode:
             ThemeMode.values.asNameMap()[p.getString(_modeKey)] ??
@@ -108,6 +121,7 @@ class AppearanceNotifier extends Notifier<Appearance> {
         bodyFont: p.getString(_bodyKey) ?? plainFont,
         wallpaper: _loadWallpaper(p),
         fewerEffects: p.getBool(_fewerEffectsKey) ?? defaultFewerEffects,
+        haptics: haptics,
       );
     } catch (_) {
       return null;
@@ -212,6 +226,11 @@ class AppearanceNotifier extends Notifier<Appearance> {
   Future<void> setFewerEffects(bool on) async {
     state = state.copyWith(fewerEffects: on);
     await _save((p) => p.setBool(_fewerEffectsKey, on));
+  }
+
+  Future<void> setHaptics(bool on) async {
+    state = state.copyWith(haptics: on);
+    await Haptic.setEnabled(on);
   }
 
   Future<void> setScheme(String id) async {

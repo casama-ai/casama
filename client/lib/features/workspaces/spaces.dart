@@ -597,7 +597,7 @@ class FullAccessSwitch extends ConsumerWidget {
           title: l10n.fullAccess,
           subtitle: l10n.fullAccessHelp,
           onTap: () {
-            HapticsHelper.light();
+            Haptic.toggle(!on);
             set(!on);
           },
           trailing: Switch(key: const Key('fullAccess'), value: on, onChanged: hapticOnChanged(set)),
@@ -630,7 +630,7 @@ class BotToBotSwitch extends ConsumerWidget {
           title: l10n.botToBot,
           subtitle: l10n.botToBotHelp,
           onTap: () {
-            HapticsHelper.light();
+            Haptic.toggle(!on);
             set(!on);
           },
           trailing: Switch(key: const Key('botToBot'), value: on, onChanged: hapticOnChanged(set)),
@@ -685,7 +685,7 @@ class EncryptionSection extends ConsumerWidget {
           subtitle: '$status\n${l10n.encryptionHelp}${on ? '\n${l10n.encryptionKeyManaged}' : ''}',
           onTap: s.available || on
               ? () {
-                  HapticsHelper.light();
+                  Haptic.toggle(!on);
                   toggle(!on);
                 }
               : null,
@@ -892,7 +892,7 @@ class A2aSwitch extends ConsumerWidget {
           title: l10n.a2a,
           subtitle: l10n.a2aHelp,
           onTap: () {
-            HapticsHelper.light();
+            Haptic.toggle(!on);
             set(!on);
           },
           trailing: Switch(key: const Key('a2aSwitch'), value: on, onChanged: hapticOnChanged(set)),
@@ -926,7 +926,7 @@ class ChromeSwitches extends ConsumerWidget {
           title: l10n.chromeExtensionSwitch,
           subtitle: l10n.chromeExtensionSwitchHelp,
           onTap: () {
-            HapticsHelper.light();
+            Haptic.toggle(!s.extension);
             set(extension: !s.extension);
           },
           trailing: Switch(key: const Key('chromeExtensionSwitch'), value: s.extension, onChanged: hapticOnChanged((v) => set(extension: v))),
@@ -937,7 +937,7 @@ class ChromeSwitches extends ConsumerWidget {
           subtitle: l10n.chromeActSwitchHelp,
           onTap: s.extension
               ? () {
-                  HapticsHelper.light();
+                  Haptic.toggle(!s.act);
                   set(act: !s.act);
                 }
               : null,

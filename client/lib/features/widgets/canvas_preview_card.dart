@@ -73,7 +73,6 @@ class _CanvasPreviewCardState extends ConsumerState<CanvasPreviewCard> {
   }
 
   Future<void> _allow() async {
-    HapticsHelper.light();
     setState(() => _busy = true);
     final ok = await runGuarded(context, () async {
       await ref.read(backendProvider).setCanvasGrant(widget.preview.botId, true);
@@ -85,12 +84,14 @@ class _CanvasPreviewCardState extends ConsumerState<CanvasPreviewCard> {
       if (ok == true) _phase = _Phase.allowed;
     });
     if (ok == true) {
+      Haptic.confirm();
       Analytics.log('canvas_allowed', {'choice': 'allow'});
       canvasesChanged(ref);
     }
   }
 
   Future<void> _notNow() async {
+    Haptic.tap();
     setState(() => _busy = true);
     final ok = await runGuarded(context, () async {
       await ref.read(backendProvider).clearCanvas(widget.preview.canvasId);

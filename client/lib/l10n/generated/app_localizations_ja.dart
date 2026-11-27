@@ -11926,7 +11926,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get adultSites => '成人向けサイト';
 
   @override
-  String get adultSitesHelp => 'あなたが求めたときにボットが成人向けWebサイトを開けるようにします。18歳以上限定です。';
+  String get adultSitesHelp => '依頼したときだけ、ボットが成人向けWebサイトを開けるようにします。18歳以上限定です。';
 
   @override
   String get adultSitesConfirmTitle => '成人向けサイトをオンにしますか？';
@@ -12249,6 +12249,18 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get fewerEffectsHelp => 'お祝い演出、タブのバウンス、ボットのアニメーションをオフにします。';
+
+  @override
+  String get haptics => '触覚フィードバック';
+
+  @override
+  String get trackpadHaptics => 'トラックパッドの触覚';
+
+  @override
+  String get hapticsHelp => '何かが起きたときやボットがあなたを呼ぶときに、軽く振動します。';
+
+  @override
+  String get watchHaptics => '触覚';
 
   @override
   String get settingsAppSection => 'アプリ';
@@ -27147,7 +27159,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get settingsWordsAppearance =>
-      'テーマ ダークモード ライトモード 夜 色 カラー フォント 文字サイズ 背景 壁紙 スタイル 効果 モーション アニメーション theme dark light colors fonts wallpaper look style';
+      'テーマ ダークモード ライトモード 夜 色 カラー フォント 文字サイズ 背景 壁紙 スタイル 効果 モーション アニメーション theme dark light colors fonts wallpaper look style 触覚 バイブ 振動 トラックパッド haptics vibration trackpad';
 
   @override
   String get settingsWordsQuietHours =>
@@ -28516,4 +28528,212 @@ class AppLocalizationsJa extends AppLocalizations {
   @override
   String get siriGeminiOff =>
       'このスマートフォンではCasamaに対するGeminiが無効になっています（Casama → 設定 → プライバシー）。';
+
+  @override
+  String get suggestionActionTurnOn => 'Turn on';
+
+  @override
+  String suggestionActionRemindMe(String date) {
+    return 'Remind me $date';
+  }
+
+  @override
+  String get suggestionActionPickTime => 'Pick a time';
+
+  @override
+  String get suggestionActionPutAwayAll => 'Put away all';
+
+  @override
+  String suggestionActionPutAwayAllCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Put away all $count ideas',
+      one: 'Put away 1 idea',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get suggestionActionOpen => 'Open';
+
+  @override
+  String get suggestionActionGotIt => 'Got it';
+
+  @override
+  String get suggestionActionLater => 'Later';
+
+  @override
+  String get suggestionActionSomethingElse => 'Something else';
+
+  @override
+  String get suggestionTurnedOn => 'Turned on';
+
+  @override
+  String suggestionReminderSet(String date) {
+    return 'Reminder set for $date';
+  }
+
+  @override
+  String get suggestionSnoozed => 'Saved for later';
+
+  @override
+  String get suggestionSnoozedExpired => 'Put away — snoozed twice';
+
+  @override
+  String suggestionPutAwayCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Put away $count ideas',
+      one: 'Put away 1 idea',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get suggestionUndo => 'Undo';
+
+  @override
+  String get suggestionLaterTomorrow => 'Tomorrow morning';
+
+  @override
+  String get suggestionLaterEvening => 'This evening';
+
+  @override
+  String get suggestionLaterNextWeek => 'Next week';
+
+  @override
+  String suggestionMoreWaiting(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count more ideas waiting',
+      one: '1 more idea waiting',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String botIdeasGrouped(String name, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$name · $count ideas',
+      one: '$name · 1 idea',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String updatesGroupedRoutine(String name, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$name · $count routine results today',
+      one: '$name · 1 routine result today',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String updatesGroupedNotice(String name, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$name · $count updates today',
+      one: '$name · 1 update today',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String updatesGroupedRoutinePlain(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count routine results today',
+      one: '1 routine result today',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String updatesGroupedNoticePlain(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count updates today',
+      one: '1 update today',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String briefSinceYesterday(String summary) {
+    return 'Since yesterday: $summary';
+  }
+
+  @override
+  String briefSincePages(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pages',
+      one: '1 page',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String briefSinceRoutines(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count routine results',
+      one: '1 routine result',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String briefSinceUpdates(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count updates',
+      one: '1 update',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get notifTurnOn => 'Turn on';
+
+  @override
+  String get notifOpen => 'Open';
+
+  @override
+  String get notifGotIt => 'Got it';
+
+  @override
+  String get notifRemindMe => 'Remind me';
+
+  @override
+  String get notifLater => 'Later';
+
+  @override
+  String get watchTurnOn => 'Turn on';
+
+  @override
+  String get watchGotIt => 'Got it';
+
+  @override
+  String get watchRemindMe => 'Remind';
+
+  @override
+  String get watchLater => 'Later';
+
+  @override
+  String get watchOpen => 'Open';
 }

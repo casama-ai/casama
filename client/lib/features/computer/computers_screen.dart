@@ -88,11 +88,10 @@ class _ComputersScreenState extends ConsumerState<ComputersScreen> {
                 ),
               )
             : RefreshIndicator(
-          onRefresh: () async {
-            HapticsHelper.medium();
+          onRefresh: hapticRefresh(() async {
             ref.invalidate(computersProvider);
             await ref.read(computersProvider.future);
-          },
+          }),
           child: PageListView(
             // Pull to refresh works even when the list is shorter than the screen.
             physics: const AlwaysScrollableScrollPhysics(),
@@ -495,7 +494,7 @@ class _NewComputerSheetState extends ConsumerState<NewComputerSheet> {
           initialValue: _botId,
           decoration: InputDecoration(labelText: l10n.forBot, prefixIcon: const Icon(LucideIcons.bot, size: 20)),
           items: [for (final b in bots) DropdownMenuItem(value: b.id, child: Text(b.name))],
-          onChanged: hapticOnChanged((v) => setState(() => _botId = v), haptic: HapticsHelper.selection),
+          onChanged: hapticOnChanged((v) => setState(() => _botId = v)),
         ),
         TextField(
           key: const Key('computerName'),

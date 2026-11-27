@@ -9771,7 +9771,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get inviteFriendsStep2 =>
-      'Il s\'inscrit et saisit votre code sous une semaine';
+      'La personne invitée s\'inscrit et saisit votre code dans un délai d\'une semaine';
 
   @override
   String inviteFriendsStep3(String amount) {
@@ -12602,6 +12602,19 @@ class AppLocalizationsFr extends AppLocalizations {
       'Aucune célébration, aucun rebond d\'onglet ni bots animés.';
 
   @override
+  String get haptics => 'Retour haptique';
+
+  @override
+  String get trackpadHaptics => 'Retour haptique du trackpad';
+
+  @override
+  String get hapticsHelp =>
+      'De légères vibrations quand quelque chose se passe ou qu\'un bot a besoin de vous.';
+
+  @override
+  String get watchHaptics => 'Vibrations';
+
+  @override
   String get settingsAppSection => 'App';
 
   @override
@@ -14411,7 +14424,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get linkInvitesHelp =>
-      'Désactivé : personne ne peut créer de compte. Activé : les personnes que vous invitez par e-mail le peuvent. Changer ce réglage redémarre le serveur.';
+      'Désactivé : personne ne peut créer de nouveau compte. Activé : les personnes que vous invitez par e-mail le peuvent. Changer ce réglage redémarre le serveur.';
 
   @override
   String get linkKeepAwake => 'Garder ce Mac éveillé sur secteur';
@@ -27915,7 +27928,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get settingsWordsAppearance =>
-      'thème mode sombre mode clair nuit couleurs polices taille texte arrière-plan fond d\'écran style thèmes effets mouvement animations dark mode';
+      'thème mode sombre mode clair nuit couleurs polices taille texte arrière-plan fond d\'écran style thèmes effets mouvement animations dark mode haptique vibration vibrer vibrations trackpad';
 
   @override
   String get settingsWordsQuietHours =>
@@ -29346,4 +29359,212 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get siriGeminiOff =>
       'Gemini est désactivé pour Casama sur ce téléphone (Casama → Réglages → Confidentialité).';
+
+  @override
+  String get suggestionActionTurnOn => 'Turn on';
+
+  @override
+  String suggestionActionRemindMe(String date) {
+    return 'Remind me $date';
+  }
+
+  @override
+  String get suggestionActionPickTime => 'Pick a time';
+
+  @override
+  String get suggestionActionPutAwayAll => 'Put away all';
+
+  @override
+  String suggestionActionPutAwayAllCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Put away all $count ideas',
+      one: 'Put away 1 idea',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get suggestionActionOpen => 'Open';
+
+  @override
+  String get suggestionActionGotIt => 'Got it';
+
+  @override
+  String get suggestionActionLater => 'Later';
+
+  @override
+  String get suggestionActionSomethingElse => 'Something else';
+
+  @override
+  String get suggestionTurnedOn => 'Turned on';
+
+  @override
+  String suggestionReminderSet(String date) {
+    return 'Reminder set for $date';
+  }
+
+  @override
+  String get suggestionSnoozed => 'Saved for later';
+
+  @override
+  String get suggestionSnoozedExpired => 'Put away — snoozed twice';
+
+  @override
+  String suggestionPutAwayCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Put away $count ideas',
+      one: 'Put away 1 idea',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get suggestionUndo => 'Undo';
+
+  @override
+  String get suggestionLaterTomorrow => 'Tomorrow morning';
+
+  @override
+  String get suggestionLaterEvening => 'This evening';
+
+  @override
+  String get suggestionLaterNextWeek => 'Next week';
+
+  @override
+  String suggestionMoreWaiting(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count more ideas waiting',
+      one: '1 more idea waiting',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String botIdeasGrouped(String name, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$name · $count ideas',
+      one: '$name · 1 idea',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String updatesGroupedRoutine(String name, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$name · $count routine results today',
+      one: '$name · 1 routine result today',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String updatesGroupedNotice(String name, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$name · $count updates today',
+      one: '$name · 1 update today',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String updatesGroupedRoutinePlain(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count routine results today',
+      one: '1 routine result today',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String updatesGroupedNoticePlain(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count updates today',
+      one: '1 update today',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String briefSinceYesterday(String summary) {
+    return 'Since yesterday: $summary';
+  }
+
+  @override
+  String briefSincePages(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pages',
+      one: '1 page',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String briefSinceRoutines(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count routine results',
+      one: '1 routine result',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String briefSinceUpdates(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count updates',
+      one: '1 update',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get notifTurnOn => 'Turn on';
+
+  @override
+  String get notifOpen => 'Open';
+
+  @override
+  String get notifGotIt => 'Got it';
+
+  @override
+  String get notifRemindMe => 'Remind me';
+
+  @override
+  String get notifLater => 'Later';
+
+  @override
+  String get watchTurnOn => 'Turn on';
+
+  @override
+  String get watchGotIt => 'Got it';
+
+  @override
+  String get watchRemindMe => 'Remind';
+
+  @override
+  String get watchLater => 'Later';
+
+  @override
+  String get watchOpen => 'Open';
 }

@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../core/date_format.dart';
+import '../../../core/haptics.dart';
 import '../../../core/share.dart';
 import '../../../core/widgets.dart';
 import '../../../l10n/generated/app_localizations.dart';
@@ -120,7 +121,7 @@ class _MessageActionsState extends State<MessageActions> with SingleTickerProvid
 
   Future<void> _copy(BuildContext context) async {
     await Clipboard.setData(ClipboardData(text: text));
-    HapticFeedback.lightImpact();
+    Haptic.tap();
     if (context.mounted) showMessage(context, context.l10n.messageCopied);
   }
 
@@ -156,7 +157,7 @@ class _MessageActionsState extends State<MessageActions> with SingleTickerProvid
 
   Future<void> _menu(BuildContext context, Offset at) async {
     unfocusBeforeModal();
-    HapticFeedback.mediumImpact();
+    Haptic.threshold();
     final l10n = context.l10n;
     final overlay = Overlay.of(context).context.findRenderObject()! as RenderBox;
     final origin = shareOrigin(context);
@@ -340,7 +341,7 @@ class _MessageActionsState extends State<MessageActions> with SingleTickerProvid
           ? null
           : () {
               if (widget.myReaction == '❤️') return;
-              HapticFeedback.lightImpact();
+              Haptic.tap();
               onReact!('❤️', ReactionSurface.doubleTap);
             },
       child: AnimatedBuilder(

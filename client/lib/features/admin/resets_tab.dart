@@ -8,6 +8,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../core/date_format.dart';
+import '../../core/haptics.dart';
 import '../../core/number_format.dart';
 import '../../core/providers.dart';
 import '../../core/widgets.dart';
@@ -935,7 +936,13 @@ class _EditorState extends ConsumerState<_Editor> {
                         divisions: 9,
                         value: _percent.clamp(10, 100).toDouble(),
                         label: '$_percent%',
-                        onChanged: locked ? null : (v) => _update(() => _percent = v.round()),
+                        onChanged: locked
+                            ? null
+                            : (v) {
+                                final next = v.round();
+                                if (next != _percent) Haptic.snap();
+                                _update(() => _percent = next);
+                              },
                       ),
                     ],
                   ),

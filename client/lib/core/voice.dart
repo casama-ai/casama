@@ -46,6 +46,7 @@ class RecordDictation implements Dictation {
       await beginDictationCapture(() async {
         final path = '${(await getTemporaryDirectory()).path}/casama-dictation.m4a';
         await _rec.start(_nativeConfig, path: path);
+        await allowHapticsDuringRecording();
       });
       return true;
     } catch (e, st) {

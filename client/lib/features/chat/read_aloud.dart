@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../../core/haptics.dart';
 import '../../core/voice.dart';
 import '../../core/widgets.dart';
 import '../../theme/app_colors.dart';
@@ -110,7 +111,7 @@ class ReadAloudController extends Notifier<ReadAloudState?> {
     await _sub?.cancel();
     _sub = null;
     if (s != null) await _player.stop();
-    HapticFeedback.selectionClick();
+    Haptic.select();
     state = ReadAloudState(
       chatKey: chatKey,
       messageId: messageId,

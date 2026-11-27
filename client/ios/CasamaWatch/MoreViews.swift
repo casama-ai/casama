@@ -217,6 +217,7 @@ struct SettingsView: View {
         }
         Toggle(WatchL10n.hideDetails, isOn: $model.hideWhenWristDown)
         Toggle(WatchL10n.readRepliesAloud, isOn: $model.readAloud)
+        Toggle(WatchL10n.haptics, isOn: $model.haptics)
         Toggle(WatchL10n.shareCrashReports, isOn: $model.shareCrashReports)
       }
       Section {

@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../../core/haptics.dart';
 import '../../core/providers.dart';
 import '../../core/widgets.dart';
 import '../../theme/app_colors.dart';
@@ -85,7 +86,7 @@ class DomainsScreen extends ConsumerWidget {
                 action: buttons,
               )
             : RefreshIndicator(
-                onRefresh: () => ref.refresh(orgDomainsProvider(orgId).future),
+                onRefresh: hapticRefresh(() => ref.refresh(orgDomainsProvider(orgId).future)),
                 child: PageColumn(
                   children: [
                     GroupedCard(

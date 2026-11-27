@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -19,6 +20,7 @@ import '../../ui/app_card.dart';
 import '../../ui/form_sheet.dart';
 import '../../ui/page.dart';
 import '../../ui/segmented.dart';
+import '../admin/haptics_lab.dart';
 import 'appearance_preview.dart';
 import 'colors_panel.dart' show SchemeDots;
 import 'gallery_looks.dart';
@@ -303,6 +305,31 @@ class _AppearanceScreenState extends ConsumerState<AppearanceScreen> {
               value: appearance.fewerEffects,
               onChanged: hapticOnChanged(notifier.setFewerEffects),
             ),
+            if (Haptic.isSupportedIn(context))
+              SwitchListTile(
+                key: const Key('hapticsSwitch'),
+                secondary: Icon(
+                  LucideIcons.vibrate,
+                  color: scheme.onSurfaceVariant,
+                ),
+                title: Text(
+                  defaultTargetPlatform == TargetPlatform.macOS
+                      ? l10n.trackpadHaptics
+                      : l10n.haptics,
+                ),
+                subtitle: Text(l10n.hapticsHelp),
+                value: appearance.haptics,
+                // setHaptics plays one toggle(true) when turned on and nothing when turned off (§7.4).
+                onChanged: notifier.setHaptics,
+              ),
+            if (kDebugMode)
+              GroupedTile(
+                key: const Key('openHapticsLab'),
+                icon: LucideIcons.slidersHorizontal,
+                title: 'Haptics Lab', // l10n-ok: debug-only lab entry
+                subtitle: 'Feel and tune all 17 haptics (debug only)', // l10n-ok: debug-only lab entry
+                onTap: () => showHapticsLab(context),
+              ),
           ],
         ),
         const SizedBox(height: AppSpace.sm),

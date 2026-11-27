@@ -49,7 +49,7 @@ class Graph(app: Context) {
     val api = WatchApi(settings, keys, Device.userAgent())
     val session = Session(app, scope, settings, keys, cache, api)
     val outbox = AskOutbox(app)
-    val haptics = Haptics(app)
+    val haptics = Haptics(app, settings)
     val screenStats = ScreenStats(app, scope, api) { session.isSignedIn }
 }
 

@@ -101,8 +101,18 @@ List<Widget> appBrowserRunActions(
       s.phase == AppBrowserPhase.tookOver ||
       s.phase == AppBrowserPhase.yourTurn;
   void stop() {
-    HapticsHelper.medium();
+    Haptic.press();
     controller.stopBot();
+  }
+
+  void takeOver() {
+    Haptic.tap();
+    controller.takeOver();
+  }
+
+  void handBack() {
+    Haptic.confirm();
+    controller.handBack();
   }
 
   if (icons) {
@@ -112,14 +122,14 @@ List<Widget> appBrowserRunActions(
           key: const Key('appBrowserTakeOver'),
           tooltip: l10n.appBrowserTakeOver,
           icon: const Icon(LucideIcons.hand, size: 18),
-          onPressed: controller.takeOver,
+          onPressed: takeOver,
         ),
       if (held)
         IconButton(
           key: const Key('appBrowserHandBack'),
           tooltip: l10n.appBrowserHandBack,
           icon: const Icon(LucideIcons.play, size: 18),
-          onPressed: controller.handBack,
+          onPressed: handBack,
         ),
       if (s.botActive)
         IconButton(
@@ -135,13 +145,13 @@ List<Widget> appBrowserRunActions(
     if (s.botActive && !held)
       TextButton(
         key: const Key('appBrowserTakeOver'),
-        onPressed: controller.takeOver,
+        onPressed: takeOver,
         child: Text(l10n.appBrowserTakeOver),
       ),
     if (held)
       TextButton(
         key: const Key('appBrowserHandBack'),
-        onPressed: controller.handBack,
+        onPressed: handBack,
         child: Text(l10n.appBrowserHandBack),
       ),
     if (s.botActive)
@@ -183,6 +193,10 @@ class AppBrowserPageArea extends ConsumerWidget {
     final controller = ref.read(appBrowserProvider.notifier);
     final colors = context.appColors;
     final bot = s.run?.botName ?? '';
+    void handBack() {
+      Haptic.confirm();
+      controller.handBack();
+    }
     final banner = switch (s.phase) {
       AppBrowserPhase.yourTurn => AppBrowserBanner(
         key: const Key('appBrowserYourTurn'),
@@ -192,7 +206,7 @@ class AppBrowserPageArea extends ConsumerWidget {
         message: s.handoffReason,
         action: TextButton(
           key: const Key('appBrowserHandBackBanner'),
-          onPressed: controller.handBack,
+          onPressed: handBack,
           child: Text(l10n.appBrowserHandBack),
         ),
       ),
@@ -203,7 +217,7 @@ class AppBrowserPageArea extends ConsumerWidget {
         title: l10n.appBrowserPaused(bot),
         action: TextButton(
           key: const Key('appBrowserHandBackBanner'),
-          onPressed: controller.handBack,
+          onPressed: handBack,
           child: Text(l10n.appBrowserHandBack),
         ),
       ),

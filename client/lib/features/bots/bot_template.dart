@@ -127,7 +127,6 @@ class _ShareSheetState extends ConsumerState<_ShareSheet> {
           value: _memories,
           onChanged: hapticOnChanged(
             (v) => setState(() => _memories = v ?? false),
-            haptic: HapticsHelper.soft,
           ),
         ),
         OutlinedButton.icon(
@@ -347,7 +346,6 @@ class _ImportBotScreenState extends ConsumerState<ImportBotScreen> {
                     _credentialId = v;
                     _model = '';
                   }),
-                  haptic: HapticsHelper.selection,
                 ),
               ),
               if (!fixedModel) const SizedBox(height: AppSpace.sm),

@@ -7,6 +7,7 @@ import 'package:flutter_callkit_incoming/entities/entities.dart';
 import 'package:flutter_callkit_incoming/flutter_callkit_incoming.dart';
 
 import '../../core/app_language.dart';
+import '../../core/call_audio.dart';
 import '../../l10n/generated/app_localizations.dart';
 
 /// What the phone's own call controls ask of a live call (D-327 §7).
@@ -152,6 +153,7 @@ class CallKitCallSystem implements CallSystem {
         ),
       );
       await audio.future.timeout(audioWait, onTimeout: () {});
+      await allowHapticsDuringRecording();
     } catch (e) {
       debugPrint('CallKit start failed: $e');
     }
@@ -163,6 +165,7 @@ class CallKitCallSystem implements CallSystem {
     if (id == null || !_own) return;
     try {
       await FlutterCallkitIncoming.setCallConnected(id);
+      await allowHapticsDuringRecording();
     } catch (e) {
       debugPrint('CallKit connected failed: $e');
     }

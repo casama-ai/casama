@@ -4,6 +4,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../core/backend.dart' show CostsNotSupported;
+import '../../../core/haptics.dart';
 import '../../../core/widgets.dart';
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_tokens.dart';
@@ -271,12 +272,12 @@ class _CostsBody extends ConsumerWidget {
         : l10n.costEmptyDays(view.period.days);
 
     return RefreshIndicator(
-      onRefresh: () async {
+      onRefresh: hapticRefresh(() async {
         onRefresh();
         await ref
             .read(adminCostsProvider(view.query).future)
             .then<void>((_) {}, onError: (_) {});
-      },
+      }),
       child: ListView(
         key: const Key('costsList'),
         padding: EdgeInsets.only(

@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/backend.dart';
 import '../../core/date_format.dart';
+import '../../core/haptics.dart';
 import '../../core/providers.dart';
 import '../../core/widgets.dart';
 import '../../theme/app_colors.dart';
@@ -531,10 +532,10 @@ class _OwnerLiveScreenState extends ConsumerState<OwnerLiveScreen> {
       key: Key('liveKind-$kind'),
       icon: liveKindIcon(kind),
       title: liveKindLabel(context, kind),
-      trailing: Switch.adaptive(
+      trailing: Switch(
         key: Key('liveSwitch-$kind'),
         value: s.isOn(kind),
-        onChanged: s.paused ? null : (v) => _change(kinds: {kind: v}),
+        onChanged: s.paused ? null : hapticOnChanged((v) => _change(kinds: {kind: v})),
       ),
     );
     final known = {for (final k in s.kinds) k.kind};
@@ -551,7 +552,7 @@ class _OwnerLiveScreenState extends ConsumerState<OwnerLiveScreen> {
             iconColor: context.appColors.warning,
             title: l10n.livePauseAll,
             subtitle: l10n.livePauseAllHelp,
-            trailing: Switch.adaptive(key: const Key('livePauseSwitch'), value: s.paused, onChanged: (v) => _change(paused: v)),
+            trailing: Switch(key: const Key('livePauseSwitch'), value: s.paused, onChanged: hapticOnChanged((v) => _change(paused: v))),
           ),
           if (known.contains('daily_digest'))
             GroupedTile(
@@ -559,10 +560,10 @@ class _OwnerLiveScreenState extends ConsumerState<OwnerLiveScreen> {
               icon: liveKindIcon('daily_digest'),
               title: l10n.liveDailyDigest,
               subtitle: l10n.liveDailyDigestHelp,
-              trailing: Switch.adaptive(
+              trailing: Switch(
                 key: const Key('liveSwitch-daily_digest'),
                 value: s.isOn('daily_digest'),
-                onChanged: s.paused ? null : (v) => _change(kinds: {'daily_digest': v}),
+                onChanged: s.paused ? null : hapticOnChanged((v) => _change(kinds: {'daily_digest': v})),
               ),
             ),
           GroupedTile(

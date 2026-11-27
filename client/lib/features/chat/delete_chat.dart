@@ -4,7 +4,6 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../core/providers.dart';
 import '../../core/widgets.dart';
-import '../../core/haptics.dart';
 import '../../ui/adaptive_modal.dart';
 import '../../ui/form_sheet.dart';
 import '../groups/group_chats.dart';
@@ -45,10 +44,7 @@ Future<bool> confirmDeleteChat(
         submitLabel: l10n.deleteChat,
         submitKey: const Key('confirmDeleteChat'),
         destructive: true,
-        onSubmit: () {
-          HapticsHelper.heavy();
-          Navigator.pop(c, true);
-        },
+        onSubmit: () => Navigator.pop(c, true),
         children: [
           if (made > 0)
             CheckboxListTile(

@@ -4,6 +4,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter/physics.dart';
 
 import '../core/fold/fold.dart';
+import '../core/haptics.dart';
 
 /// Shows a modal sheet anchored to the bottom edge of the screen.
 ///
@@ -76,6 +77,7 @@ class SpringSheetRoute<T> extends PopupRoute<T> {
   double? _releaseVelocity;
 
   bool _popped = false;
+  bool _crossedClose = false;
 
   @override
   Color? get barrierColor => const Color(0x8A000000);
@@ -140,9 +142,17 @@ class SpringSheetRoute<T> extends PopupRoute<T> {
       delta *= 1 / (1 + overshoot * _overdragResistance);
     }
     controller.value -= delta;
+    if (!_crossedClose && controller.value < _closePosition) {
+      _crossedClose = true;
+      Haptic.threshold();
+    } else if (_crossedClose && controller.value >= _closePosition) {
+      _crossedClose = false;
+      Haptic.thresholdBack();
+    }
   }
 
   void _endDrag(double relativeVelocity) {
+    _crossedClose = false;
     if (_popped) return;
     final AnimationController controller = this.controller!;
     final double value = controller.value;

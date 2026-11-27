@@ -7,7 +7,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:material_ui/material_ui.dart';
 
-import '../../../core/haptics.dart';
 import '../../../core/providers.dart';
 import '../../../core/widgets.dart';
 import '../../../theme/app_colors.dart';
@@ -29,7 +28,6 @@ Future<Lease?> handBackScreen(
     onOpenLive();
     return lease;
   }
-  HapticsHelper.medium();
   final after = await runGuarded(
     context,
     () => backend.releaseLease(computerId),

@@ -265,6 +265,19 @@ final class MacBridge: NSObject {
           Self.writeCanvases(args)
           DispatchQueue.main.async { result(nil) }
         }
+      case "haptic":
+        let args = call.arguments as? [String: Any] ?? [:]
+        let pattern: NSHapticFeedbackManager.FeedbackPattern
+        switch args["pattern"] as? String {
+        case "alignment":
+          pattern = .alignment
+        case "levelChange":
+          pattern = .levelChange
+        default:
+          pattern = .generic
+        }
+        NSHapticFeedbackManager.defaultPerformer.perform(pattern, performanceTime: .now)
+        result(nil)
       default:
         result(FlutterMethodNotImplemented)
       }

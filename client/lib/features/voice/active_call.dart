@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/analytics.dart';
 import '../../core/backend.dart';
 import '../../core/call_audio.dart';
+import '../../core/haptics.dart';
 import '../../core/providers.dart';
 import '../../core/nav.dart';
 import '../../core/router.dart';
@@ -554,6 +555,7 @@ class CallController extends ChangeNotifier {
   void _markLive() {
     if (_systemLive) return;
     _systemLive = true;
+    Haptic.confirm();
     unawaited(system.connected());
   }
 
@@ -923,10 +925,12 @@ class CallController extends ChangeNotifier {
   Future<void> decide(ToolRun run, bool allow) async {
     final id = run.approvalId;
     if (id == null) return;
+    if (!allow) Haptic.tap();
     run.deciding = true;
     _changed();
     try {
       await backend.decideApproval(id, approve: allow);
+      if (allow) Haptic.confirm();
       // Intentionally not translated: this goes to the voice model, not the user.
       _call?.tellModel(
         allow
@@ -955,6 +959,7 @@ class CallController extends ChangeNotifier {
   void setMuted(bool muted) {
     if (_muted == muted) return;
     _muted = muted;
+    Haptic.toggle(muted);
     _call?.setMuted(muted);
     _syncSystem();
     _changed();
@@ -982,6 +987,7 @@ class CallController extends ChangeNotifier {
   Future<void> end(CallEnd reason) async {
     if (_ending || over) return;
     _ending = true;
+    if (reason == CallEnd.bot) Haptic.drop();
     _idleTimer?.cancel();
     _heartbeat?.cancel();
     _maxWarnTimer?.cancel();

@@ -350,8 +350,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     title: l10n.showBotSteps,
                     subtitle: l10n.showBotStepsHelp,
                     onTap: () {
-                      HapticsHelper.light();
-                      ref.read(showBotStepsProvider.notifier).set(!ref.read(showBotStepsProvider));
+                      final next = !ref.read(showBotStepsProvider);
+                      Haptic.toggle(next);
+                      ref.read(showBotStepsProvider.notifier).set(next);
                     },
                     trailing: Switch(
                       key: const Key('showBotSteps'),
@@ -365,8 +366,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     title: l10n.showScreenCard,
                     subtitle: l10n.showScreenCardHelp,
                     onTap: () {
-                      HapticsHelper.light();
                       final on = !ref.read(showScreenCardProvider);
+                      Haptic.toggle(on);
                       ref.read(showScreenCardProvider.notifier).set(on);
                       if (!on) Analytics.log('screen_card_hidden', {'how': 'setting'});
                     },
@@ -385,8 +386,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     title: l10n.showReplyUsage,
                     subtitle: l10n.showReplyUsageHelp,
                     onTap: () {
-                      HapticsHelper.light();
-                      ref.read(showReplyUsageProvider.notifier).set(!ref.read(showReplyUsageProvider));
+                      final next = !ref.read(showReplyUsageProvider);
+                      Haptic.toggle(next);
+                      ref.read(showReplyUsageProvider.notifier).set(next);
                     },
                     trailing: Switch(
                       key: const Key('showReplyUsage'),
@@ -401,8 +403,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       title: l10n.openLinksInApp,
                       subtitle: l10n.openLinksInAppHelp,
                       onTap: () {
-                        HapticsHelper.light();
-                        ref.read(linkBrowserInAppProvider.notifier).set(!ref.read(linkBrowserInAppProvider));
+                        final next = !ref.read(linkBrowserInAppProvider);
+                        Haptic.toggle(next);
+                        ref.read(linkBrowserInAppProvider.notifier).set(next);
                       },
                       trailing: Switch(
                         key: const Key('openLinksInApp'),
@@ -420,7 +423,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       title: l10n.openAtLogin,
                       subtitle: l10n.openAtLoginHelp,
                       onTap: () {
-                        HapticsHelper.light();
+                        Haptic.toggle(!on);
                         setOpenAtLogin(!on);
                       },
                       trailing: Switch(key: const Key('openAtLogin'), value: on, onChanged: hapticOnChanged(setOpenAtLogin)),
@@ -434,8 +437,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       title: l10n.islandStartElsewhere,
                       subtitle: l10n.islandStartElsewhereHelp,
                       onTap: () {
-                        HapticsHelper.light();
-                        ref.read(islandStartElsewhereProvider.notifier).set(!ref.read(islandStartElsewhereProvider));
+                        final next = !ref.read(islandStartElsewhereProvider);
+                        Haptic.toggle(next);
+                        ref.read(islandStartElsewhereProvider.notifier).set(next);
                       },
                       trailing: Switch(
                         key: const Key('islandStartElsewhere'),
@@ -449,8 +453,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       title: l10n.showBotsInNotch,
                       subtitle: l10n.showBotsInNotchHelp,
                       onTap: () {
-                        HapticsHelper.light();
-                        ref.read(islandNotchOnProvider.notifier).set(!ref.read(islandNotchOnProvider));
+                        final next = !ref.read(islandNotchOnProvider);
+                        Haptic.toggle(next);
+                        ref.read(islandNotchOnProvider.notifier).set(next);
                       },
                       trailing: Switch(
                         key: const Key('showBotsInNotch'),
@@ -464,8 +469,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         title: l10n.notchOnHover,
                         subtitle: l10n.notchOnHoverHelp,
                         onTap: () {
-                          HapticsHelper.light();
-                          ref.read(islandHoverOpensProvider.notifier).set(!ref.read(islandHoverOpensProvider));
+                          final next = !ref.read(islandHoverOpensProvider);
+                          Haptic.toggle(next);
+                          ref.read(islandHoverOpensProvider.notifier).set(next);
                         },
                         trailing: Switch(
                           key: const Key('notchOnHover'),
@@ -950,7 +956,7 @@ class _UpdatesRows extends ConsumerWidget {
             title: l10n.autoUpdates,
             subtitle: l10n.autoUpdatesHelp,
             onTap: () {
-              HapticsHelper.light();
+              Haptic.toggle(!auto);
               setAuto(!auto);
             },
             trailing: Switch(key: const Key('autoUpdates'), value: auto, onChanged: hapticOnChanged(setAuto)),

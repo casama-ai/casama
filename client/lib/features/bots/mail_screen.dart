@@ -5,6 +5,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../../core/haptics.dart';
 import '../../core/providers.dart';
 import '../../core/share.dart';
 import '../../core/widgets.dart';
@@ -425,7 +426,12 @@ class _MailRow extends ConsumerWidget {
     final who = mail.fromName ?? mail.fromAddr;
     return GestureDetector(
       // A long press starts selecting with this thread picked.
-      onLongPress: selecting ? null : onToggle,
+      onLongPress: selecting
+          ? null
+          : () {
+              Haptic.threshold();
+              onToggle();
+            },
       child: GroupedTile(
         icon: selecting
             ? (picked ? LucideIcons.circleCheck : LucideIcons.circle)

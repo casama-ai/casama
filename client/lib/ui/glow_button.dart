@@ -3,6 +3,8 @@
 
 import 'package:material_ui/material_ui.dart';
 
+import '../core/haptics.dart';
+
 /// The app's main-action button: a [FilledButton] in one solid color, a touch lighter at the
 /// top, with a soft shadow in its own color that lifts on hover and settles when pressed. Tonal,
 /// outlined and text buttons stay flat, so the main action is always the one that stands out.
@@ -84,12 +86,18 @@ class GlowButton extends StatelessWidget {
     final custom = style?.backgroundColor?.resolve(const {});
     final color = custom == null || custom.a == 0 ? null : custom;
     final s = (style?.copyWith(backgroundColor: const WidgetStatePropertyAll(null)) ?? const ButtonStyle()).merge(glow(context, color: color));
+    final longPress = onLongPress == null
+        ? null
+        : () {
+            Haptic.threshold();
+            onLongPress!();
+          };
     return _icon == null
-        ? FilledButton(key: _key, onPressed: onPressed, onLongPress: onLongPress, style: s, focusNode: focusNode, autofocus: autofocus, child: child)
+        ? FilledButton(key: _key, onPressed: onPressed, onLongPress: longPress, style: s, focusNode: focusNode, autofocus: autofocus, child: child)
         : FilledButton.icon(
             key: _key,
             onPressed: onPressed,
-            onLongPress: onLongPress,
+            onLongPress: longPress,
             style: s,
             focusNode: focusNode,
             autofocus: autofocus,

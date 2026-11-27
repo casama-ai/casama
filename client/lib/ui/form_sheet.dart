@@ -77,9 +77,15 @@ class FormSheet extends StatelessWidget {
     final submitChild = busy
         ? SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2.2, color: destructive ? scheme.onError : scheme.onPrimary))
         : Text(submitLabel);
+    final submitHandler = busy || onSubmit == null
+        ? null
+        : () {
+            if (destructive) Haptic.destroy();
+            onSubmit!();
+          };
     final submit = submitIcon == null || busy
-        ? GlowButton(key: submitKey, style: style, onPressed: busy ? null : onSubmit, child: submitChild)
-        : GlowButton.icon(key: submitKey, style: style, onPressed: onSubmit, icon: Icon(submitIcon, size: 18), label: submitChild);
+        ? GlowButton(key: submitKey, style: style, onPressed: submitHandler, child: submitChild)
+        : GlowButton.icon(key: submitKey, style: style, onPressed: submitHandler, icon: Icon(submitIcon, size: 18), label: submitChild);
     final cancel = TextButton(
       onPressed: busy ? null : (onCancel ?? () => Navigator.of(context).maybePop()),
       child: Text(cancelLabel ?? MaterialLocalizations.of(context).cancelButtonLabel),
@@ -470,7 +476,7 @@ Future<Choice<T>?> showChoiceSheet<T>(
                     destructive: c.destructive,
                     showChevron: false,
                     onTap: () {
-                      HapticsHelper.selection();
+                      Haptic.select();
                       Navigator.of(context).pop(c);
                     },
                     trailing: asks && c.trailing == null

@@ -165,7 +165,7 @@ class _ComputerUpdateCardState extends ConsumerState<ComputerUpdateCard> {
   }
 
   Future<void> _update() async {
-    HapticsHelper.medium();
+    Haptic.tap();
     setState(() => _busy = true);
     await confirmComputerUpdate(context, ref, widget.computer);
     if (mounted) setState(() => _busy = false);

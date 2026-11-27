@@ -1,9 +1,9 @@
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart' as ep;
-import 'package:flutter/services.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../core/backend.dart';
+import '../../../core/haptics.dart';
 import '../../../core/widgets.dart';
 import '../../app_browser/app_browser_overlay_guard.dart' show AppBrowserOverlayGuard;
 import '../../../theme/app_colors.dart';
@@ -65,7 +65,7 @@ class QuickReactionStrip extends StatelessWidget {
                 key: Key('quickReaction-$emoji'),
                 radius: 22,
                 onTap: () {
-                  HapticFeedback.selectionClick();
+                  Haptic.select();
                   onPick(emoji);
                 },
                 child: AnimatedContainer(
@@ -333,7 +333,7 @@ class _ReactionChip extends StatelessWidget {
             onTap: react == null
                 ? null
                 : () {
-                    HapticFeedback.selectionClick();
+                    Haptic.select();
                     react(mine ? null : group.emoji, ReactionSurface.chip);
                   },
             onLongPress: people == null ? null : () => people(group.emoji),
@@ -445,6 +445,7 @@ class _ReactionPeopleState extends State<_ReactionPeople> {
           TabBar(
             isScrollable: true,
             tabAlignment: TabAlignment.start,
+            onTap: (_) => Haptic.select(),
             padding: const EdgeInsets.symmetric(horizontal: AppSpace.md),
             tabs: [
               Tab(

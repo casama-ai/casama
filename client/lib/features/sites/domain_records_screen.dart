@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../../core/haptics.dart';
 import '../../core/providers.dart';
 import '../../core/widgets.dart';
 import '../../theme/app_colors.dart';
@@ -95,7 +96,7 @@ class DomainRecordsScreen extends ConsumerWidget {
         value: ref.watch(domainRecordsProvider(domainId)),
         onRetry: () => ref.invalidate(domainRecordsProvider(domainId)),
         data: (items) => RefreshIndicator(
-          onRefresh: () => ref.refresh(domainRecordsProvider(domainId).future),
+          onRefresh: hapticRefresh(() => ref.refresh(domainRecordsProvider(domainId).future)),
           child: PageColumn(
             children: [
               if (items.isEmpty)

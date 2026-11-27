@@ -9,6 +9,7 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../core/display_text.dart';
+import '../../core/haptics.dart';
 import '../../core/providers.dart';
 import '../../core/server_address.dart';
 import '../../core/share.dart';
@@ -916,7 +917,7 @@ Future<void> copyInvite(BuildContext context, String text) async {
   } catch (_) {
     return;
   }
-  HapticFeedback.selectionClick();
+  Haptic.tap();
   Analytics.log('invite_shared', {'method': 'copy'});
   if (context.mounted) showMessage(context, context.l10n.inviteLinkCopied);
 }

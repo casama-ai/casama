@@ -2,6 +2,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
+import '../core/haptics.dart';
 import '../core/widgets.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_tokens.dart';
@@ -28,7 +29,7 @@ class _OneTimeSecretCardState extends State<OneTimeSecretCard> {
     } catch (_) {
       return;
     }
-    HapticFeedback.lightImpact();
+    Haptic.tap();
     if (!mounted) return;
     setState(() => _copied = true);
     showMessage(context, context.l10n.keyCopied);

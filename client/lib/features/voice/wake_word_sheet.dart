@@ -64,7 +64,7 @@ class _WakeWordSheetState extends ConsumerState<WakeWordSheet> {
     _testSub = stream.listen(
       (_) {
         if (!mounted) return;
-        HapticsHelper.medium();
+        Haptic.confirm();
         setState(() {
           _heard = true;
           _testing = false;
@@ -169,7 +169,7 @@ class _WakeWordSheetState extends ConsumerState<WakeWordSheet> {
           initialValue: _bot,
           decoration: InputDecoration(labelText: l10n.wakeWordBot),
           items: [for (final b in bots) DropdownMenuItem(value: b.id, child: Text(b.name))],
-          onChanged: hapticOnChanged((v) => setState(() => _bot = v), haptic: HapticsHelper.selection),
+          onChanged: hapticOnChanged((v) => setState(() => _bot = v)),
         ),
         if (_progress != null && _progress! < 1) ...[Text(l10n.wakeWordDownloading), LinearProgressIndicator(value: _progress)],
         FormNote(l10n.wakeWordPrivacy),

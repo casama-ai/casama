@@ -117,7 +117,6 @@ class _McpConsentScreenState extends ConsumerState<McpConsentScreen> {
                     ],
                     onChanged: hapticOnChanged(
                       (v) => setState(() => _org = v),
-                      haptic: HapticsHelper.selection,
                     ),
                   ),
                   Row(

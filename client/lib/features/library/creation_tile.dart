@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../../core/haptics.dart';
 import '../../core/media_cache.dart';
 import '../../core/providers.dart';
 import '../../core/widgets.dart';
@@ -229,7 +230,12 @@ class _CreationTileState extends State<CreationTile> {
         child: InkWell(
           key: Key('creation-${c.id}'),
           onTap: widget.selecting && onPick != null ? onPick : widget.onTap,
-          onLongPress: onPick,
+          onLongPress: onPick == null
+              ? null
+              : () {
+                  Haptic.threshold();
+                  onPick();
+                },
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [

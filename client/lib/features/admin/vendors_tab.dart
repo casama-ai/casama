@@ -8,6 +8,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../core/haptics.dart';
 import '../../core/number_format.dart';
 import '../../core/providers.dart';
 import '../../core/widgets.dart';
@@ -789,7 +790,13 @@ class _VendorDetailState extends ConsumerState<VendorDetail> {
                                 divisions: 10,
                                 value: warnAt.clamp(0.5, 1.0),
                                 label: '${(warnAt * 100).round()}%',
-                                onChanged: busy ? null : (x) => setState(() => warnAt = (x * 100).round() / 100),
+                                onChanged: busy
+                                    ? null
+                                    : (x) {
+                                        final next = (x * 100).round() / 100;
+                                        if (next != warnAt) Haptic.snap();
+                                        setState(() => warnAt = next);
+                                      },
                               ),
                               if (errors['warn'] != null) Text(errors['warn']!, style: muted?.copyWith(color: context.colorScheme.error)),
                             ],

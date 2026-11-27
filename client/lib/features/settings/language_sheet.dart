@@ -36,7 +36,7 @@ class LanguageSheet extends ConsumerWidget {
     // The device is the empty value: a RadioGroup's null means nothing is picked.
     final value = chosen?.toLanguageTag() ?? '';
     void pick(String tag) {
-      HapticsHelper.light();
+      Haptic.select();
       Navigator.of(context).pop(tag);
     }
 

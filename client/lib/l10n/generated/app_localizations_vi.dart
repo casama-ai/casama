@@ -8132,7 +8132,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get needsSignoff => 'cần bạn xác nhận';
 
   @override
-  String get signOff => 'Xác nhận xong';
+  String get signOff => 'Phê duyệt hoàn thành';
 
   @override
   String get projectPlan => 'Kế hoạch';
@@ -12510,6 +12510,19 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String get fewerEffectsHelp =>
       'Tắt pháo giấy chúc mừng, tab nảy và ảnh động của bot.';
+
+  @override
+  String get haptics => 'Phản hồi xúc giác';
+
+  @override
+  String get trackpadHaptics => 'Xúc giác bàn di chuột';
+
+  @override
+  String get hapticsHelp =>
+      'Rung nhẹ khi có việc diễn ra hoặc khi bot cần bạn.';
+
+  @override
+  String get watchHaptics => 'Xúc giác';
 
   @override
   String get settingsAppSection => 'Ứng dụng';
@@ -27136,7 +27149,7 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String cloudAccountDeleteConfirm(String email) {
-    return 'Nhập $email để xóa tài khoản Casama Cloud của bạn. Các không gian làm việc Cloud chỉ do mình bạn sở hữu sẽ bị xóa theo, và mô hình Casama Cloud sẽ ngừng trên các máy chủ do chúng thanh toán. Gói bạn mua trên web sẽ tự động hủy. Gói mua trên App Store hoặc Google Play không tự hủy: hãy hủy tại cửa hàng đó.';
+    return 'Nhập $email để xóa tài khoản Casama Cloud của bạn. Các không gian làm việc Cloud chỉ do mình bạn sở hữu sẽ bị xóa theo, và mô hình Casama Cloud sẽ ngừng chạy trên các máy chủ mà những không gian làm việc đó trả tiền. Gói bạn mua trên web sẽ tự động hủy. Gói mua trên App Store hoặc Google Play không tự hủy: hãy hủy tại cửa hàng đó.';
   }
 
   @override
@@ -27765,7 +27778,7 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get settingsWordsAppearance =>
-      'chủ đề chế độ tối chế độ sáng ban đêm màu sắc phông chữ cỡ chữ hình nền diện mạo kiểu hiệu ứng chuyển động theme dark mode light mode night colors font text size background wallpaper look style effects motion animations';
+      'chủ đề chế độ tối chế độ sáng ban đêm màu sắc phông chữ cỡ chữ hình nền diện mạo kiểu hiệu ứng chuyển động theme dark mode light mode night colors font text size background wallpaper look style effects motion animations xúc giác rung phản hồi bàn di chuột haptics vibration trackpad';
 
   @override
   String get settingsWordsQuietHours =>
@@ -28359,7 +28372,7 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get iosUsageLocationWhenInUse =>
-      'Lưu các địa điểm bạn đặt tên, như Nhà hay Nơi làm việc, và để bot nhắc bạn khi đến giờ đi cho lịch hẹn tiếp theo. Chỉ dùng khi bạn bật Địa điểm trong Kết nối thiết bị.';
+      'Lưu các địa điểm bạn đặt tên, như Nhà hay Nơi làm việc, và để bot nhắc bạn lúc nên xuất phát để kịp lịch hẹn tiếp theo. Chỉ dùng khi bạn bật Địa điểm trong Kết nối thiết bị.';
 
   @override
   String get iosUsageCamera =>
@@ -29190,4 +29203,212 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String get siriGeminiOff =>
       'Gemini đang tắt đối với Casama trên điện thoại này (Casama → Cài đặt → Quyền riêng tư).';
+
+  @override
+  String get suggestionActionTurnOn => 'Turn on';
+
+  @override
+  String suggestionActionRemindMe(String date) {
+    return 'Remind me $date';
+  }
+
+  @override
+  String get suggestionActionPickTime => 'Pick a time';
+
+  @override
+  String get suggestionActionPutAwayAll => 'Put away all';
+
+  @override
+  String suggestionActionPutAwayAllCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Put away all $count ideas',
+      one: 'Put away 1 idea',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get suggestionActionOpen => 'Open';
+
+  @override
+  String get suggestionActionGotIt => 'Got it';
+
+  @override
+  String get suggestionActionLater => 'Later';
+
+  @override
+  String get suggestionActionSomethingElse => 'Something else';
+
+  @override
+  String get suggestionTurnedOn => 'Turned on';
+
+  @override
+  String suggestionReminderSet(String date) {
+    return 'Reminder set for $date';
+  }
+
+  @override
+  String get suggestionSnoozed => 'Saved for later';
+
+  @override
+  String get suggestionSnoozedExpired => 'Put away — snoozed twice';
+
+  @override
+  String suggestionPutAwayCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Put away $count ideas',
+      one: 'Put away 1 idea',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get suggestionUndo => 'Undo';
+
+  @override
+  String get suggestionLaterTomorrow => 'Tomorrow morning';
+
+  @override
+  String get suggestionLaterEvening => 'This evening';
+
+  @override
+  String get suggestionLaterNextWeek => 'Next week';
+
+  @override
+  String suggestionMoreWaiting(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count more ideas waiting',
+      one: '1 more idea waiting',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String botIdeasGrouped(String name, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$name · $count ideas',
+      one: '$name · 1 idea',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String updatesGroupedRoutine(String name, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$name · $count routine results today',
+      one: '$name · 1 routine result today',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String updatesGroupedNotice(String name, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$name · $count updates today',
+      one: '$name · 1 update today',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String updatesGroupedRoutinePlain(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count routine results today',
+      one: '1 routine result today',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String updatesGroupedNoticePlain(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count updates today',
+      one: '1 update today',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String briefSinceYesterday(String summary) {
+    return 'Since yesterday: $summary';
+  }
+
+  @override
+  String briefSincePages(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pages',
+      one: '1 page',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String briefSinceRoutines(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count routine results',
+      one: '1 routine result',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String briefSinceUpdates(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count updates',
+      one: '1 update',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get notifTurnOn => 'Turn on';
+
+  @override
+  String get notifOpen => 'Open';
+
+  @override
+  String get notifGotIt => 'Got it';
+
+  @override
+  String get notifRemindMe => 'Remind me';
+
+  @override
+  String get notifLater => 'Later';
+
+  @override
+  String get watchTurnOn => 'Turn on';
+
+  @override
+  String get watchGotIt => 'Got it';
+
+  @override
+  String get watchRemindMe => 'Remind';
+
+  @override
+  String get watchLater => 'Later';
+
+  @override
+  String get watchOpen => 'Open';
 }

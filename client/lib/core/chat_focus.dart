@@ -57,7 +57,6 @@ class ChatFocusReporter with WidgetsBindingObserver {
   String? get conversation => _conversation;
 
   /// What the server should see now: the open chat while the app is in front.
-  @visibleForTesting
   String? get focus => _foreground ? _conversation : null;
 
   /// On macOS, Linux and Windows, the chat stays open for the in-app browser while the window isn't

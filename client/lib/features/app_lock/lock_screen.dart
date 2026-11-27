@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../../core/haptics.dart';
 import '../../core/providers.dart';
 import '../../core/widgets.dart';
 import '../../l10n/generated/app_localizations.dart';
@@ -242,6 +243,11 @@ class _LockScreenState extends ConsumerState<LockScreen> {
           ),
     );
     if (!mounted) return;
+    if (result == UnlockResult.ok) {
+      Haptic.confirm();
+    } else if (result == UnlockResult.failed) {
+      Haptic.reject();
+    }
     final failures = ref.read(appLockProvider).failures;
     setState(() {
       _busy = false;

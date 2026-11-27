@@ -1,9 +1,9 @@
 import 'dart:math' as math;
 
 import 'package:material_ui/material_ui.dart';
-import 'package:flutter/services.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
+import '../../core/haptics.dart';
 import '../../core/widgets.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_tokens.dart';
@@ -458,16 +458,19 @@ class _Elapsed extends StatelessWidget {
   }
 }
 
-/// A light tick when a tool finishes; a firmer one when it needs the person.
+/// Haptic for a call tool state change (docs/HAPTICS-PLAN.md §5.2, §10 decision 3):
+/// only when a tool needs the person or fails, never on every finished tool.
 void toolHaptic(ToolRunState state) {
   switch (state) {
+    case ToolRunState.needsApproval:
+      Haptic.attention();
+    case ToolRunState.failed:
+      Haptic.reject();
+    case ToolRunState.running:
     case ToolRunState.done:
     case ToolRunState.approved:
-      HapticFeedback.selectionClick();
-    case ToolRunState.needsApproval:
-      HapticFeedback.mediumImpact();
-    case ToolRunState.failed:
-      HapticFeedback.lightImpact();
-    default:
+    case ToolRunState.declined:
+    case ToolRunState.background:
+      break;
   }
 }

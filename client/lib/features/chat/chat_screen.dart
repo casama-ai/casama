@@ -1057,6 +1057,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         return;
       }
       _recorder = dictation;
+      Haptic.tap();
       setState(() => _recording = true);
     } catch (e) {
       if (mounted) showError(context, e);
@@ -1083,7 +1084,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         });
         switch (end) {
           case DeviceDictationEnd.done:
-            HapticsHelper.success();
+            Haptic.confirm();
             _applyInput(join(latest));
           case DeviceDictationEnd.nothingHeard:
             showWarning(context, context.l10n.dictationEmpty);
@@ -1094,6 +1095,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       },
     );
     if (!started || !mounted) return false;
+    Haptic.tap();
     setState(() {
       _listening = device;
       _recording = true;
@@ -1151,6 +1153,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         showWarning(context, context.l10n.dictationEmpty);
         return;
       }
+      Haptic.confirm();
       _typeDictation(spoken);
     } catch (e) {
       if (!mounted) return;
@@ -1187,7 +1190,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         _offerDevice(context.l10n.dictationFailedUseDevice);
         return;
       }
-      HapticsHelper.error();
+      Haptic.reject();
       showToast(
         context,
         context.l10n.dictationFailed,
@@ -1201,7 +1204,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   /// Says why the server's dictation didn't work, with a button that starts the device listening
   /// right away. The snackbar floats over the composer, so "tap the mic" would mean reaching under it.
   void _offerDevice(String message) {
-    HapticsHelper.warning();
+    Haptic.warn();
     showToast(
       context,
       message,
@@ -2290,7 +2293,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                     ? null
                     : () async {
                         final l10n = context.l10n;
-                        HapticsHelper.medium();
+                        Haptic.press();
                         final done = await runGuarded(context, () => ref.read(backendProvider).restartComputer(about.id));
                         if (done != null && context.mounted) {
                           ref.invalidate(computersProvider);

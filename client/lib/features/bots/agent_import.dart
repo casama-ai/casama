@@ -172,7 +172,7 @@ class _PasteBotSheetState extends ConsumerState<PasteBotSheet> {
                 key: Key('pasteSource-${s.value}'),
                 label: Text(pasteSourceNames[s] ?? l10n.importPasteOther),
                 selected: _source == s,
-                onSelected: hapticOnChanged((_) => setState(() => _source = s), haptic: HapticsHelper.selection),
+                onSelected: hapticOnChanged((_) => setState(() => _source = s), haptic: Haptic.select),
               ),
           ],
         ),
@@ -297,7 +297,7 @@ class _AgentImportReviewScreenState extends ConsumerState<AgentImportReviewScree
     title: Text(title, maxLines: 2, overflow: TextOverflow.ellipsis),
     subtitle: subtitle == null ? null : Text(subtitle, maxLines: 1, overflow: TextOverflow.ellipsis),
     value: value,
-    onChanged: hapticOnChanged((v) => setState(() => onChanged(v ?? false)), haptic: HapticsHelper.soft),
+    onChanged: hapticOnChanged((v) => setState(() => onChanged(v ?? false))),
   );
 
   @override
@@ -372,7 +372,7 @@ class _AgentImportReviewScreenState extends ConsumerState<AgentImportReviewScree
           onChanged: hapticOnChanged((v) => setState(() {
             _credentialId = v;
             _model = '';
-          }), haptic: HapticsHelper.selection),
+          })),
         ),
         if (!fixedModel) const SizedBox(height: AppSpace.sm),
         if (!fixedModel) ModelPickerField(credentialId: _credentialId, value: _model, onChanged: (m) => setState(() => _model = m)),
@@ -499,7 +499,7 @@ class _MemoryImportSheetState extends ConsumerState<MemoryImportSheet> {
               title: Text(items[i].content),
               subtitle: Text(items[i].kind == ImportedMemoryItemKindEnum.preference ? l10n.memoryPreference : l10n.memoryFact),
               value: _keep.contains(i),
-              onChanged: hapticOnChanged((v) => setState(() => v == true ? _keep.add(i) : _keep.remove(i)), haptic: HapticsHelper.soft),
+              onChanged: hapticOnChanged((v) => setState(() => v == true ? _keep.add(i) : _keep.remove(i))),
             ),
       ],
     );

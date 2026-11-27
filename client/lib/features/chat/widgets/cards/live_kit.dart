@@ -14,6 +14,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/analytics.dart';
+import '../../../../core/haptics.dart';
 import '../../../../core/link_browser.dart';
 import '../../../../core/providers.dart';
 import '../../../../core/widgets.dart';
@@ -313,7 +314,7 @@ class LiveCardHostState extends ConsumerState<LiveCardHost> with WidgetsBindingO
         _version++;
       });
       Analytics.log('card_refreshed', {'card': widget.name, 'trigger': view != null && !force ? 'view' : (force ? 'manual' : 'auto'), 'result': error == null ? 'ok' : 'stale'});
-      if (force) HapticFeedback.selectionClick();
+      if (force) Haptic.select();
     } catch (e) {
       if (!mounted) return;
       setState(() {
@@ -768,7 +769,7 @@ class _SparklineState extends State<Sparkline> {
         void hit(Offset p) {
           final i = ((p.dx / box.maxWidth) * (pts.length - 1)).round().clamp(0, pts.length - 1);
           if (i != _at) {
-            HapticFeedback.selectionClick();
+            Haptic.select();
             setState(() => _at = i);
           }
         }
@@ -1033,7 +1034,7 @@ class ViewChips extends StatelessWidget {
                 child: InkWell(
                   customBorder: const StadiumBorder(),
                   onTap: () {
-                    HapticFeedback.selectionClick();
+                    Haptic.select();
                     onSelect(value);
                   },
                   child: Padding(

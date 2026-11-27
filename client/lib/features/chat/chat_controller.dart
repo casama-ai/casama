@@ -7,6 +7,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:casama_sdk/casama_sdk.dart';
 
 import '../../core/backend.dart';
+import '../../core/chat_focus.dart';
+import '../../core/haptics.dart';
 import '../../core/local_cache.dart';
 import '../../core/on_device_model.dart';
 import '../../core/providers.dart';
@@ -634,6 +636,29 @@ class ChatController extends Notifier<ChatState> {
 
   /// The last run this chat started from the composer (not a check-in or a run picked up later).
   String? _sentRun;
+
+  /// When the person sent their message on this device in this chat, for the >= 1.5 s wait check
+  /// before playing `Haptic.arrive` (§6).
+  DateTime? _sentAt;
+
+  /// When the active run started streaming, for the >= 20 s duration check on `Haptic.done` (§6).
+  DateTime? _runStartedAt;
+
+  /// Which run already played `Haptic.arrive`, and when, so `arrive` plays once per reply and
+  /// `done` skips if `arrive` played < 2 s earlier (§6).
+  String? _arriveRunId;
+  DateTime? _arriveAt;
+
+  /// Whether this chat's conversation is currently on screen with the app in front (§6).
+  bool get _isChatVisible {
+    final conv = state.conversationId;
+    if (conv == null) return false;
+    try {
+      return ref.read(chatFocusProvider).focus == conv;
+    } catch (_) {
+      return false;
+    }
+  }
   RunTracker get _runs {
     final known = _tracker;
     if (known != null) return known;
@@ -1545,6 +1570,8 @@ class ChatController extends Notifier<ChatState> {
         }());
       }
       to = conversationId;
+      final now = Haptic.debugClock();
+      _sentAt = now;
       final local = MessageEntry(id: 'local-${DateTime.now().microsecondsSinceEpoch}', role: 'user', text: trimmed, attachments: attachments, apps: apps, uploading: uploads != null, at: DateTime.now());
       optimistic = local;
       _sending[local.id] = key;
@@ -1800,7 +1827,13 @@ class ChatController extends Notifier<ChatState> {
     _quietChecks = 0;
     _startWatchdog(runId);
     _followedRun = runId;
-    if (sentHere) _sentRun = runId;
+    if (fresh) {
+      _runStartedAt = Haptic.debugClock();
+    }
+    if (sentHere) {
+      _sentRun = runId;
+      _sentAt ??= Haptic.debugClock();
+    }
     _runs.chatStarted(runId, botId: botId, conversationId: state.conversationId, sentHere: sentHere);
     // Group chats (D-118): the run may belong to any member (an @mention, the last speaker).
     if (group) {
@@ -1947,6 +1980,42 @@ class ChatController extends Notifier<ChatState> {
     at: event.ts,
   );
 
+  void _maybePlayArrive(String runId, String text) {
+    if (text.trim().isEmpty) return;
+    if (runId.isEmpty || _sentRun != runId || _arriveRunId == runId) return;
+    final sentAt = _sentAt;
+    if (sentAt == null) return;
+    final now = Haptic.debugClock();
+    if (now.difference(sentAt) < const Duration(milliseconds: 1500)) return;
+    _arriveRunId = runId;
+    _arriveAt = now;
+    Haptic.arrive(visible: _isChatVisible);
+  }
+
+  void _maybePlayDone(String runId, List<ChatEntry> entries) {
+    final hasReply = entries.any(
+      (x) =>
+          x is MessageEntry &&
+          x.role == 'assistant' &&
+          (x.runId == null || x.runId == runId) &&
+          (x.text.trim().isNotEmpty || x.attachments.isNotEmpty),
+    );
+    if (!hasReply) return;
+    final now = Haptic.debugClock();
+    final startedAt = _runStartedAt ?? _sentAt;
+    final ranLong =
+        startedAt != null &&
+        now.difference(startedAt) >= const Duration(seconds: 20);
+    final usedTools = entries.any((x) => x is ToolEntry);
+    if (!ranLong && !usedTools) return;
+    if (_arriveRunId == runId &&
+        _arriveAt != null &&
+        now.difference(_arriveAt!) < const Duration(seconds: 2)) {
+      return;
+    }
+    Haptic.done(visible: _isChatVisible);
+  }
+
   /// Applies one run event to the chat (public for tests).
   void apply(RunEventItem e) {
     // The bot's cursor on its screen follows the reply's own steps (BOT-CURSOR-PLAN).
@@ -1968,9 +2037,11 @@ class ChatController extends Notifier<ChatState> {
           final m = entries[i] as MessageEntry;
           entries[i] = m.copyWith(text: m.text + event.payload.text);
         }
+        _maybePlayArrive(event.runId, event.payload.text);
       case MessageCompletedItem(:final event):
         final id = event.payload.messageId;
         final text = event.payload.content.where((p) => p['type'] == 'text').map((p) => '${p['text'] ?? ''}').join();
+        _maybePlayArrive(event.runId, text);
         // Media the reply made (a generated image or video) comes with the finished message.
         final files = attachmentsOf(event.payload.content);
         final i = indexWhere((x) => x is MessageEntry && x.id == id);
@@ -2035,6 +2106,7 @@ class ChatController extends Notifier<ChatState> {
       case ApprovalRequestedItem(:final event):
         final run = state.activeRunId;
         if (run != null) _runs.chatStatus(run, 'waiting_approval');
+        Haptic.attention(visible: _isChatVisible);
         entries.add(
           ApprovalEntry(
             approvalId: event.payload.approvalId,
@@ -2055,18 +2127,24 @@ class ChatController extends Notifier<ChatState> {
         if (run != null) _runs.chatStatus(run, 'running');
         ref.invalidate(approvalsProvider);
       case SecretRequestedItem(:final event):
+        Haptic.attention(visible: _isChatVisible);
         final p = event.payload;
         entries.add(SecretEntry(requestId: p.requestId, name: p.name, service: p.service, hosts: p.allowedHosts.toList(), reason: p.reason, totp: p.kind.value == 'totp', loginHost: p.loginHost));
       case DeviceAccessRequestedItem() || DeviceBrowserAccessRequestedItem() || DeviceActionAccessRequestedItem() || DevicePermissionNeededItem() || CanvasPreviewItem():
         // Kept by run so a reload puts it back; a replayed event (following the run again) adds nothing.
         final card = _deviceCardOf(e);
-        if (card != null && _keepDeviceCard(card)) entries.add(card);
+        if (card != null && _keepDeviceCard(card)) {
+          if (card is! CanvasPreviewEntry) Haptic.attention(visible: _isChatVisible);
+          entries.add(card);
+        }
       case LocalMcpSignInNeededItem(:final event):
         final p = event.payload;
         if (!entries.any((x) => x is McpSignInEntry && x.integrationId == p.integrationId)) {
+          Haptic.attention(visible: _isChatVisible);
           entries.add(McpSignInEntry(integrationId: p.integrationId, deviceId: p.deviceId, server: p.server, label: p.label));
         }
       case McpQuestionItem(:final event):
+        Haptic.attention(visible: _isChatVisible);
         final p = event.payload;
         entries.add(McpQuestionEntry(questionId: p.questionId, connection: p.connection, message: p.message, schema: Map<String, Object?>.from(p.schema)));
       case McpQuestionResolvedItem(:final event):
@@ -2084,6 +2162,7 @@ class ChatController extends Notifier<ChatState> {
       case TakeoverRequestedItem(:final event):
         final run = state.activeRunId;
         if (run != null) _runs.chatStatus(run, 'waiting_takeover');
+        Haptic.attention(visible: _isChatVisible);
         entries.add(TakeoverEntry(computerId: event.payload.computerId, reason: event.payload.reason, takeoverId: event.payload.takeoverId, loginHost: event.payload.loginHost));
         ref.invalidate(takeoversProvider);
       case TakeoverResolvedItem(:final event):
@@ -2106,6 +2185,7 @@ class ChatController extends Notifier<ChatState> {
       case BrowserChoiceRequestedItem(:final event):
         final run = state.activeRunId;
         if (run != null) _runs.chatStatus(run, 'waiting_approval');
+        Haptic.attention(visible: _isChatVisible);
         final p = event.payload;
         entries.add(
           BrowserChoiceEntry(
@@ -2194,11 +2274,13 @@ class ChatController extends Notifier<ChatState> {
         return;
       case RunFailedItem(:final event) when state.activeRunId != null:
         _runs.chatEnded(state.activeRunId!, RunStatus.failed);
+        Haptic.reject(visible: _isChatVisible);
         entries.add(_failure(event));
         _finishStreaming(entries);
         state = state.copyWith(entries: entries, clearActiveRun: true);
         return;
       case RunFailedItem(:final event):
+        Haptic.reject(visible: _isChatVisible);
         entries.add(_failure(event));
         _finishStreaming(entries);
         state = state.copyWith(entries: entries, clearActiveRun: true);
@@ -2243,6 +2325,7 @@ class ChatController extends Notifier<ChatState> {
         entries.removeWhere((x) => x is MessageEntry && x.streaming);
         _dropSupersededFailures(entries, e.runId);
         _finishStreaming(entries);
+        _maybePlayDone(e.runId, entries);
         state = state.copyWith(entries: entries, clearActiveRun: true);
         return;
       case RunCompletedItem():
@@ -2250,6 +2333,7 @@ class ChatController extends Notifier<ChatState> {
         entries.removeWhere((x) => x is MessageEntry && x.streaming);
         _dropSupersededFailures(entries, e.runId);
         _finishStreaming(entries);
+        _maybePlayDone(e.runId, entries);
         state = state.copyWith(entries: entries, clearActiveRun: true);
         return;
       // A gallery card shown during the run (D-315); the finished reply carries it too.

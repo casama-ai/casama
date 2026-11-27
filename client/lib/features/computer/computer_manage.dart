@@ -644,7 +644,7 @@ class _ManageTabState extends ConsumerState<ManageTab> {
     final bottom = MediaQuery.paddingOf(context).bottom + AppSpace.xxl;
     // One column at the page's width, like the rest of the computer screen.
     return RefreshIndicator(
-      onRefresh: _refresh,
+      onRefresh: hapticRefresh(_refresh),
       child: ListView(
         key: const Key('manageList'),
         physics: const AlwaysScrollableScrollPhysics(),
@@ -1100,6 +1100,7 @@ class _ResetSheetState extends ConsumerState<_ResetSheet> {
           widget.computer.name.trim().toLowerCase();
 
   Future<void> _submit() async {
+    if (_erase) Haptic.destroy();
     setState(() => _busy = true);
     final ok = await runGuarded(
       context,
@@ -1114,7 +1115,6 @@ class _ResetSheetState extends ConsumerState<_ResetSheet> {
     if (!mounted) return;
     setState(() => _busy = false);
     if (ok == null) return;
-    HapticsHelper.heavy();
     Navigator.pop(context, true);
   }
 

@@ -285,6 +285,14 @@ enum NativeL10n {
   static var siriMe: String { localized("siriMe", "Me") }
   /// Siri, Shortcuts and App Intents on Apple devices. Used inside a sentence when the bot's name is unknown.
   static var siriABot: String { localized("siriABot", "a bot") }
+  /// Notification button (phone and desktop). Turn on a suggested routine. Max 16 chars.
+  static var notifTurnOn: String { localized("notifTurnOn", "Turn on") }
+  /// Notification button (phone and desktop). Open a suggested link. Max 12 chars.
+  static var notifOpen: String { localized("notifOpen", "Open") }
+  /// Notification button (phone and desktop). Acknowledge an informational suggestion. Max 12 chars.
+  static var notifGotIt: String { localized("notifGotIt", "Got it") }
+  /// Notification button (phone and desktop). Set a suggested reminder. Max 16 chars.
+  static var notifRemindMe: String { localized("notifRemindMe", "Remind me") }
 
   /// Text with its `{name}` blanks left in, for code that fills them itself.
   enum Template {

@@ -171,7 +171,13 @@ class BackgroundPanel extends ConsumerWidget {
                   value: spec.intensity,
                   onChanged: spec.pattern == WallpaperPattern.none
                       ? null
-                      : (v) => set(spec.copyWith(intensity: v)),
+                      : (v) {
+                          if ((spec.intensity > 0.0 && v <= 0.0) ||
+                              (spec.intensity < 1.0 && v >= 1.0)) {
+                            Haptic.snap();
+                          }
+                          set(spec.copyWith(intensity: v));
+                        },
                 ),
               ),
               Icon(
@@ -430,7 +436,13 @@ class _PhotoSection extends ConsumerWidget {
                         child: Slider(
                           key: Key(key),
                           value: value,
-                          onChanged: (v) => onChanged(apply(v)),
+                          onChanged: (v) {
+                            if ((value > 0.0 && v <= 0.0) ||
+                                (value < 1.0 && v >= 1.0)) {
+                              Haptic.snap();
+                            }
+                            onChanged(apply(v));
+                          },
                         ),
                       ),
                     ],

@@ -151,7 +151,7 @@ class _AppBrowserSettingsScreenState
     bool on, {
     required bool hasToken,
   }) async {
-    HapticsHelper.light();
+    Haptic.toggle(on);
     final l10n = context.l10n;
     final service = ref.read(appBrowserServiceProvider);
     final d = st.device;
@@ -432,7 +432,7 @@ class _AppBrowserSettingsScreenState
               onTap: _busy || mode == value
                   ? null
                   : () {
-                      HapticsHelper.light();
+                      Haptic.select();
                       _update(d, browserMode: value);
                     },
               trailing: Icon(
@@ -459,7 +459,7 @@ class _AppBrowserSettingsScreenState
             onTap: _busy
                 ? null
                 : () {
-                    HapticsHelper.light();
+                    Haptic.toggle(!allBots);
                     _update(d, allBots: !allBots);
                   },
             trailing: Switch(

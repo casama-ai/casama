@@ -23,6 +23,15 @@ class CallRoute {
   int get hashCode => Object.hash(kind, id);
 }
 
+/// Allows iOS to play haptics and system sounds while the microphone is recording (a live call or
+/// dictation, docs/HAPTICS-PLAN.md §7.3). Safe to call on any platform.
+Future<void> allowHapticsDuringRecording() async {
+  if (kIsWeb || defaultTargetPlatform != TargetPlatform.iOS) return;
+  try {
+    await AVAudioSession().setAllowHapticsAndSystemSoundsDuringRecording(true);
+  } catch (_) {}
+}
+
 /// Picks where a live call plays on phones: the speaker by default, the earpiece, or a Bluetooth
 /// or wired headset that's connected. Desktop and web play through whatever the system uses.
 abstract class CallAudioRoutes {

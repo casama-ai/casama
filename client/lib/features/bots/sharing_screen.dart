@@ -190,7 +190,6 @@ class _SharingScreenState extends ConsumerState<SharingScreen> {
                                         );
                                         _dirty = true;
                                       }),
-                                      haptic: HapticsHelper.selection,
                                     ),
                                   ),
                                   IconButton(

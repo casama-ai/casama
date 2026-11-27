@@ -316,7 +316,6 @@ class _PicksPageState extends ConsumerState<_PicksPage> {
       'action': 'added',
       'choice': set.id,
     });
-    HapticsHelper.success();
     ref.invalidate(skillsProvider);
     ref.read(galleryPicksDoneProvider.notifier).finish();
     final apps = result.missingApps.map((a) => a.name).join(', ');

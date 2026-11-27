@@ -113,7 +113,7 @@ class _CallToolsSheetState extends ConsumerState<CallToolsSheet> {
                   () => v == true
                       ? _chosen.add(callToolName(i, t.name))
                       : _chosen.remove(callToolName(i, t.name)),
-                ), haptic: HapticsHelper.soft),
+                )),
                 title: Text(t.name),
                 subtitle: t.description.isEmpty
                     ? null

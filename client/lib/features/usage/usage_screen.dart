@@ -11,6 +11,7 @@ import 'package:share_plus/share_plus.dart';
 import '../../core/backend.dart' show UsageFilter;
 import '../../core/billing.dart';
 import '../../core/display_text.dart';
+import '../../core/haptics.dart';
 import '../../core/number_format.dart';
 import '../../core/date_format.dart';
 import '../../core/providers.dart';
@@ -83,7 +84,7 @@ class _UsageScreenState extends ConsumerState<UsageScreen> {
         ),
       ],
       body: RefreshIndicator(
-        onRefresh: () => _refresh(query),
+        onRefresh: hapticRefresh(() => _refresh(query)),
         child: PageColumn(
           children: [
             // Credits first: what's left and roughly what it buys, in dollars (D-245). Nothing on a

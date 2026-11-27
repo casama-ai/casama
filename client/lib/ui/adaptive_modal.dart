@@ -5,7 +5,6 @@ import 'package:material_ui/material_ui.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../core/fold/fold.dart';
-import '../core/haptics.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_tokens.dart';
 import 'adaptive_sheet_route.dart';
@@ -124,11 +123,7 @@ Future<bool> showConfirm({
       submitKey: confirmKey,
       cancelLabel: cancelLabel,
       destructive: destructive,
-      onSubmit: () {
-        // Confirming something destructive (delete, archive, remove) gets a firm haptic.
-        if (destructive) HapticsHelper.heavy();
-        Navigator.pop(c, true);
-      },
+      onSubmit: () => Navigator.pop(c, true),
       children: const [],
     ),
   );

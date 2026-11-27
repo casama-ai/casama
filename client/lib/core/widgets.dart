@@ -87,7 +87,7 @@ String errorText(BuildContext context, Object error) {
 }
 
 void showError(BuildContext context, Object error, [StackTrace? stackTrace]) {
-  HapticsHelper.error();
+  Haptic.reject();
   // No rating prompt in a session where something went wrong (D-305).
   ReviewPrompt.errorThisSession = true;
   _reportShown(error);
@@ -116,7 +116,7 @@ void showError(BuildContext context, Object error, [StackTrace? stackTrace]) {
 /// [showError] for a screen that shows the message itself, in place (a sheet, whose toast would
 /// land on the page under it): the same haptic, usage event and crash report, and the words to show.
 String noteShownError(BuildContext context, Object error, [StackTrace? stackTrace]) {
-  HapticsHelper.error();
+  Haptic.reject();
   ReviewPrompt.errorThisSession = true;
   _reportShown(error);
   _captureUnexpected(error, stackTrace);
@@ -214,21 +214,21 @@ void showMessage(BuildContext context, String message) {
 
 /// [showMessage] for something that just worked (saved, sent, imported), with a success haptic.
 void showSuccess(BuildContext context, String message) {
-  HapticsHelper.success();
+  Haptic.confirm();
   showToast(context, message, kind: ToastKind.success);
 }
 
 /// [showMessage] for something the person has to fix or can't do here (an invalid email, a file
 /// too large, a missing permission), with a warning haptic.
 void showWarning(BuildContext context, String message) {
-  HapticsHelper.warning();
+  Haptic.warn();
   showToast(context, message, kind: ToastKind.warning);
 }
 
 /// [showMessage] for a failure that already has its own words (an upload that didn't go through),
 /// with an error haptic. For an error object, use [showError].
 void showFailure(BuildContext context, String message) {
-  HapticsHelper.error();
+  Haptic.reject();
   showToast(context, message, kind: ToastKind.error, copyText: message);
 }
 

@@ -540,14 +540,15 @@ class _AvatarCropperState extends State<AvatarCropper>
     );
   }
 
-  /// A light tick when the zoom crosses "fill" or reaches its closest.
+  /// A light tick when the zoom crosses "fill" or reaches its closest or furthest.
   void _tick(double before, double after) {
     final fill = _fill;
     final crossed =
         (before - fill).sign != (after - fill).sign &&
         (before - fill).abs() > 0.01;
     final hitMax = before > _minVisible && after <= _minVisible;
-    if (crossed || hitMax) HapticsHelper.selection();
+    final hitMin = before < _maxVisible && after >= _maxVisible;
+    if (crossed || hitMax || hitMin) Haptic.snap();
   }
 
   void _animateTo(_View target, {double velocity = 0}) {

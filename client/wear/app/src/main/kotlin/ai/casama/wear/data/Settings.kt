@@ -18,6 +18,7 @@ class Settings(context: Context) {
     data class Switches(
         val hideWhenWristDown: Boolean,
         val readRepliesAloud: Boolean,
+        val haptics: Boolean = true,
         val shareCrashReports: Boolean,
     )
 
@@ -27,6 +28,7 @@ class Settings(context: Context) {
     private fun readSwitches() = Switches(
         hideWhenWristDown = prefs.getBoolean(K_HIDE_WRIST_DOWN, true),
         readRepliesAloud = prefs.getBoolean(K_READ_ALOUD, false),
+        haptics = prefs.getBoolean(K_HAPTICS, true),
         shareCrashReports = prefs.getBoolean(K_SHARE_CRASH_REPORTS, true),
     )
 
@@ -37,6 +39,11 @@ class Settings(context: Context) {
 
     fun setReadRepliesAloud(on: Boolean) {
         prefs.edit { putBoolean(K_READ_ALOUD, on) }
+        _switches.value = readSwitches()
+    }
+
+    fun setHaptics(on: Boolean) {
+        prefs.edit { putBoolean(K_HAPTICS, on) }
         _switches.value = readSwitches()
     }
 
@@ -150,6 +157,7 @@ class Settings(context: Context) {
         const val K_GREET = "greet_pending"
         const val K_HIDE_WRIST_DOWN = "hide_wrist_down"
         const val K_READ_ALOUD = "read_aloud"
+        const val K_HAPTICS = "haptics"
         const val K_SHARE_CRASH_REPORTS = "share_crash_reports"
         const val K_SERVER_ANALYTICS_OPT_OUT = "server_analytics_opt_out"
         const val K_REMOTE_CRASH_REPORTER = "remote_crash_reporter"

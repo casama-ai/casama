@@ -4117,6 +4117,101 @@
         }
       }
     },
+    "watchGotIt" : {
+      "comment" : "Watch button (tiny screen, max 10 chars). Acknowledge an informational suggestion.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Got it"
+          }
+        }
+      }
+    },
+    "watchHaptics" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haptik"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haptics"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vibración"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vibrations"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haptik"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Feedback aptico"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "触覚"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "햅틱"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tátil"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dokunsal"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xúc giác"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "触感"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "觸覺回饋"
+          }
+        }
+      }
+    },
     "watchHeard" : {
       "comment" : "Shown on the watch app (D-410). What the server heard, shown for a moment.",
       "extractionState" : "manual",
@@ -4953,6 +5048,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "要傳送你在 {time} 提出的要求嗎？"
+          }
+        }
+      }
+    },
+    "watchLater" : {
+      "comment" : "Watch button (tiny screen, max 10 chars). Snooze a suggestion until later.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Later"
           }
         }
       }
@@ -6973,6 +7080,18 @@
         }
       }
     },
+    "watchOpen" : {
+      "comment" : "Watch button (tiny screen, max 10 chars). Open a suggested link on phone.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open"
+          }
+        }
+      }
+    },
     "watchOpenOnIphone" : {
       "comment" : "Shown on the watch app (D-410). Carry on on the iPhone.",
       "extractionState" : "manual",
@@ -8145,6 +8264,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "朗讀回覆"
+          }
+        }
+      }
+    },
+    "watchRemindMe" : {
+      "comment" : "Watch button (tiny screen, max 10 chars). Set a suggested reminder.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remind"
           }
         }
       }
@@ -10917,6 +11048,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "重試"
+          }
+        }
+      }
+    },
+    "watchTurnOn" : {
+      "comment" : "Watch button (tiny screen, max 12 chars). Turn on a suggested routine.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn on"
           }
         }
       }

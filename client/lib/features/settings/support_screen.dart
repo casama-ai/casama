@@ -448,7 +448,6 @@ class _FeedbackSheetState extends ConsumerState<FeedbackSheet> {
     setState(() => _busy = false);
     if (sent == null) return;
     Analytics.log('feedback_sent', {'kind': _kind.value});
-    HapticsHelper.success();
     final navigator = Navigator.of(context);
     navigator.pop();
     showSuccess(navigator.context, l10n.feedbackThanks);
@@ -486,7 +485,7 @@ class _FeedbackSheetState extends ConsumerState<FeedbackSheet> {
                 selected: _kind == k,
                 showCheckmark: false,
                 onSelected: (_) {
-                  HapticsHelper.light();
+                  Haptic.select();
                   setState(() => _kind = k);
                 },
               ),
