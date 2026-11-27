@@ -3,5 +3,5 @@ agen AI open source
 otomatisasi AI
 otomatisasi browser
 otomatisasi alur kerja
-pakai komputer AI
-bot produktivitas
+penggunaan komputer AI
+chatbot AI

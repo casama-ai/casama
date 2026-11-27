@@ -1,1 +1,1 @@
-agent,assistant,chatbot,automation,workflow,tasks,email,inbox,research,travel,voice,opensource,llm
+chat,bot,automation,workflow,email,inbox,research,travel,voice,browser,computer,planner,opensource

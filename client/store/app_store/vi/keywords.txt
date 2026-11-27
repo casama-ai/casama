@@ -1,1 +1,1 @@
-trợ lý,tự động hóa,công việc,email,hộp thư đến,nghiên cứu,du lịch,giọng nói,mã nguồn mở,năng suất
+chat,bot,quy trình,email,hộp thư,nghiên cứu,du lịch,giọng nói,trình duyệt,máy tính,lịch,trợ lý ảo

@@ -1,1 +1,1 @@
-Đồng đội AI làm việc thật trên máy tính riêng và hỏi trước khi hành động.
+AI agent & chatbot làm việc thật trên máy tính riêng và hỏi bạn trước.

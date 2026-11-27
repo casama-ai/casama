@@ -1,1 +1,1 @@
-Assistent,Agent,Chatbot,Automatisierung,Aufgaben,E-Mail,Posteingang,Recherche,Reisen,Sprache
+Chat,Bot,Automatisierung,Workflow,E-Mail,Posteingang,Recherche,Reise,Sprache,Browser,Computer,Planer

@@ -1,1 +1,1 @@
-asisten,otomatis,otomasi,produktivitas,tugas,email,riset,travel,suara,kerja,jadwal,chat,llm
+chat,bot,kecerdasan buatan,alur kerja,email,kotak masuk,riset,travel,suara,browser,komputer

@@ -1,1 +1,1 @@
-ai,asistan,sohbet,otomasyon,görev,e-posta,gelen kutusu,araştırma,seyahat,sesli,iş,açık kaynak
+AI,ajan,chatbot,görev,akış,e-posta,araştırma,seyahat,sesli,tarayıcı,bilgisayar,plan,açık kaynak

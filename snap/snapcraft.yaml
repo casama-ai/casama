@@ -2,10 +2,10 @@
 # builds; it does not run Flutter. Use scripts/package-snap.sh, which unpacks the bundle into
 # build/snap-bundle/ first. Publishing is a store upload: ask Oliver (AGENTS.md).
 name: casama
-title: Casama
+title: "Casama: AI Agent & Assistant"
 base: core24
 adopt-info: casama
-summary: Bots that do the work, with tools and a computer of their own
+summary: AI agents that do real tasks on their own computer, and ask before they act
 description: |
   Casama gives you bots that do real work: they chat with you, use your apps and tools, keep
   notes, run routines and have a computer of their own.

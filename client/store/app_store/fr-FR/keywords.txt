@@ -1,1 +1,1 @@
-assistant,intelligence artificielle,chatbot,agent,automatisation,tâches,e-mail,voyage,voix,recherche
+intelligence artificielle,chat,bot,automatisation,e-mail,recherche,voyage,voix,navigateur,ordinateur

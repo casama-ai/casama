@@ -1,10 +1,10 @@
 {
   "extName": {
-    "message": "Casama",
+    "message": "Casama: AI Agent & Browser Assistant",
     "description": "The extension's name in the browser and its store (Chrome Web Store, Edge Add-ons, Firefox Add-ons)."
   },
   "extDescription": {
-    "message": "Ask your AI bots about any page, save what matters, and answer what they need without leaving your tab.",
+    "message": "AI agent in your browser: ask about any page, save what matters and answer your bots without leaving the tab.",
     "description": "The store summary, at most 112 characters (Safari's limit; App Store Connect rejects longer)."
   },
   "actionTitle": {

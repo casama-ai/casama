@@ -6,7 +6,7 @@ nothing has been sent for review.
 
 | | App Store Connect | Google Play |
 |---|---|---|
-| Record | "Casama: AI Teammates", app id `6833509960`, iOS 1.0 and macOS 1.0 | `ai.casama.app`, draft |
+| Record | "Casama: AI Agent & Assistant" (en-US since 2026-11-28; was "Casama: AI Teammates"), app id `6833509960`, iOS 1.0 and macOS 1.0 | `ai.casama.app`, draft |
 | Name / title | `app_store/en-US/name.txt` | `google_play/en-US/title.txt` |
 | Subtitle / short description | `app_store/en-US/subtitle.txt` (30) | `google_play/en-US/short_description.txt` (80) |
 | Description | `app_store/en-US/description.txt` (iPhone and iPad), `app_store/en-US/mac/description.txt` | `google_play/en-US/full_description.txt` |

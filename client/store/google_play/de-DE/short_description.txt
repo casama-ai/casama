@@ -1,1 +1,1 @@
-KI-Teamkollegen, die auf eigenen Computern arbeiten und vor dem Handeln fragen.
+KI-Agent & Chatbot, der am eigenen Computer arbeitet und dich vorher fragt.

@@ -4,4 +4,4 @@ assistant IA
 automatisation IA
 automatisation navigateur
 automatisation de tâches
-ordinateur IA
+chatbot IA

@@ -3,4 +3,4 @@ asistente de IA
 automatización con IA
 automatización del navegador
 automatización de tareas
-uso de computadora con IA
+chatbot de IA

@@ -3,5 +3,5 @@ agente IA open source
 automazione IA
 automazione browser
 automazione attività
-uso computer IA
+chatbot IA
 bot produttività

@@ -4,4 +4,4 @@ KI-Assistent
 KI-Automatisierung
 Browser-Automatisierung
 Workflow-Automatisierung
-KI-Computernutzung
+KI-Chatbot

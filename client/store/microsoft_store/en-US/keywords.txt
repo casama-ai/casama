@@ -4,4 +4,4 @@ AI assistant
 AI automation
 browser automation
 workflow automation
-AI computer use
+AI chatbot

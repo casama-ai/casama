@@ -1,1 +1,1 @@
-assistente,automazione,attività,produttività,email,viaggi,ricerca,voce,lavoro,chat,agenda,llm
+chat,bot,automazione,workflow,email,posta,ricerca,viaggio,voce,browser,computer,agenda,opensource

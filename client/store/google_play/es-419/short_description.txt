@@ -1,1 +1,1 @@
-Colegas de IA que trabajan en su propia computadora y preguntan antes de actuar.
+Agente IA y chatbot: hace tareas reales en su computadora y te pregunta antes.

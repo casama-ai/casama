@@ -1,1 +1,1 @@
-Bots with their own computers
+Chatbot that automates tasks

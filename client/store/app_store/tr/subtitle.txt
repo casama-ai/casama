@@ -1,1 +1,1 @@
-Kendi bilgisayarı olan botlar
+Otomasyon yapan sohbet botu
