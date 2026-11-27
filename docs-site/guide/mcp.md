@@ -273,6 +273,13 @@ cuts off every connection you made to it. Questions:
 - The **Connect AI Apps** section is shown to owners and admins only.
 - OAuth sign-in only accepts apps whose redirect address is `https` or `localhost`.
 
+## Directories
+
+Casama is in the [official MCP registry](https://registry.modelcontextprotocol.io/) as
+`ai.casama/casama`, and in directories that read from it:
+
+<a href="https://serverdex.io/server/ai-casama-casama?utm_source=badge"><img src="https://serverdex.io/brand/badge.svg" alt="Casama — listed on Serverdex" width="123" height="40" loading="lazy"></a>
+
 ## Related
 
 - [Connections](/guide/connections)
