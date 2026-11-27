@@ -10,6 +10,7 @@ import 'package:casama/l10n/generated/app_localizations.dart';
 import 'app_test.dart' show setSize;
 import 'companion_test.dart' show FakeCompanion, MemoryMcp, MemoryTokens;
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 
 void main() {
@@ -34,7 +35,7 @@ void main() {
         localMcpStoreProvider.overrideWithValue(mcp),
       ],
       child: const MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: testLocalizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: CompanionScreen(),
       ),
@@ -95,7 +96,7 @@ void main() {
         localMcpStoreProvider.overrideWithValue(MemoryMcp()),
       ],
       child: const MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: testLocalizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: CompanionScreen(),
       ),
@@ -137,7 +138,7 @@ void main() {
             localMcpStoreProvider.overrideWithValue(mcp),
           ],
           child: const MaterialApp(
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            localizationsDelegates: testLocalizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: CompanionScreen(),
           ),
@@ -167,7 +168,7 @@ void main() {
         localMcpStoreProvider.overrideWithValue(mcp),
       ],
       child: const MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: testLocalizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: CompanionScreen(),
       ),

@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_test.dart' show setSize;
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 Future<(FakeBackend, GoRouter)> _open(WidgetTester tester) async {
   await setSize(tester, const Size(500, 900));
@@ -35,7 +36,7 @@ Future<(FakeBackend, GoRouter)> _open(WidgetTester tester) async {
       overrides: [backendProvider.overrideWithValue(backend)],
       child: MaterialApp.router(
         routerConfig: router,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: testLocalizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
       ),
     ),

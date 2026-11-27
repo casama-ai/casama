@@ -4,6 +4,7 @@ import 'package:casama/l10n/generated/app_localizations.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:casama/l10n/delegates.dart';
 
 DioException _limited(int seconds, {RequestOptions? options}) {
   final o = options ?? RequestOptions(path: '/v1/glance', method: 'GET');
@@ -115,7 +116,7 @@ void main() {
   ) async {
     await tester.pumpWidget(
       MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: testLocalizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: Scaffold(
           body: Builder(

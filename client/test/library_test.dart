@@ -17,6 +17,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_test.dart' show setSize;
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 FakeBackend _withThings() => FakeBackend()
   ..creationList = [
@@ -76,7 +77,7 @@ Widget _app(FakeBackend backend, GoRouter router) => ProviderScope(
   overrides: [backendProvider.overrideWithValue(backend)],
   child: MaterialApp.router(
     routerConfig: router,
-    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    localizationsDelegates: testLocalizationsDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
   ),
 );

@@ -9,11 +9,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:casama/l10n/delegates.dart';
 
 Widget _host(Widget child, {bool dark = false}) => ProviderScope(
   child: MaterialApp(
     theme: dark ? AppTheme.dark() : AppTheme.light(),
-    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    localizationsDelegates: testLocalizationsDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
     home: Scaffold(body: child),
   ),

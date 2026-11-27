@@ -300,7 +300,7 @@ void _realLocaleSweep(String code) {
       sweep.look();
     });
     expect(language, locale.languageCode);
-    expect(save, lookupAppLocalizations(locale).save);
+    expect(save, (await lookupAppLocalizations(locale)).save);
     expect(cancel.toLowerCase(), isNot('cancel'));
   });
   for (final MapEntry(key: name, value: screen) in _screens.entries) {

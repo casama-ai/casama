@@ -16,6 +16,7 @@ import 'package:casama/ui/mascot.dart';
 
 import 'app_test.dart' show setSize;
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 void main() {
   test('a bot avatar_url maps to a mascot, anything else to initials', () {
@@ -88,7 +89,7 @@ void main() {
       overrides: [backendProvider.overrideWithValue(backend)],
       child: MaterialApp.router(
         routerConfig: router,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: testLocalizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
       ),
     ));
@@ -124,7 +125,7 @@ void main() {
       ],
       child: MaterialApp.router(
         routerConfig: router,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: testLocalizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
       ),
     ));
@@ -137,7 +138,7 @@ void main() {
 
   testWidgets('a sheet can carry a group of mascots over its title', (tester) async {
     await tester.pumpWidget(MaterialApp(
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: testLocalizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: Scaffold(
         body: FormSheet(
@@ -170,7 +171,7 @@ void main() {
       overrides: [backendProvider.overrideWithValue(backend)],
       child: MaterialApp.router(
         routerConfig: router,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: testLocalizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
       ),
     ));

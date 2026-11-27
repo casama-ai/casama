@@ -20,6 +20,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_test.dart' show harness, setSize;
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 /// A router with the Library's routes as plain markers, and [home] at `/`.
 Widget _routed(
@@ -51,7 +52,7 @@ Widget _routed(
     overrides: [backendProvider.overrideWithValue(backend), ...overrides],
     child: MaterialApp.router(
       routerConfig: router,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: testLocalizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
     ),
   );

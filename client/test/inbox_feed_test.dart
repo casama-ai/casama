@@ -15,6 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_test.dart' show harness, setSize;
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 /// The fake's approval (appr1), brief and suggestion (s1), plus a takeover, a skill idea, two
 /// notifications (one about appr1) and a page published a few minutes ago.
@@ -187,7 +188,7 @@ void main() {
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
-        child: MaterialApp.router(theme: AppTheme.light(), routerConfig: router, localizationsDelegates: AppLocalizations.localizationsDelegates, supportedLocales: AppLocalizations.supportedLocales),
+        child: MaterialApp.router(theme: AppTheme.light(), routerConfig: router, localizationsDelegates: testLocalizationsDelegates, supportedLocales: AppLocalizations.supportedLocales),
       ),
     );
     Future<void> settle() async {

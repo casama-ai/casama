@@ -18,6 +18,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'fake_backend.dart';
 import 'support/shots.dart';
+import 'package:casama/l10n/delegates.dart';
 
 List<GalleryItem> _load(String file) => [
   for (final j
@@ -79,7 +80,7 @@ void main() {
                 theme: AppTheme.light(),
                 darkTheme: AppTheme.dark(),
                 themeMode: mode,
-                localizationsDelegates: AppLocalizations.localizationsDelegates,
+                localizationsDelegates: testLocalizationsDelegates,
                 supportedLocales: AppLocalizations.supportedLocales,
                 home: const GalleryPicksStep(),
               ),

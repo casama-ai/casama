@@ -15,6 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_test.dart' show setSize;
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 Widget _app(FakeBackend backend, {List<Uri>? opened}) {
   final router = GoRouter(
@@ -35,7 +36,7 @@ Widget _app(FakeBackend backend, {List<Uri>? opened}) {
     ],
     child: MaterialApp.router(
       routerConfig: router,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: testLocalizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
     ),
   );

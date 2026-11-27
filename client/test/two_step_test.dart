@@ -8,6 +8,7 @@ import 'package:casama/l10n/generated/app_localizations.dart';
 
 import 'app_test.dart' show harness, setSize;
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 void main() {
   testWidgets('sets up an authenticator app, then removes it', (tester) async {
@@ -64,7 +65,7 @@ void main() {
         overrides: [backendProvider.overrideWithValue(backend)],
         child: MaterialApp.router(
           routerConfig: router,
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: testLocalizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
         ),
       ),

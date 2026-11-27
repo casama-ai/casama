@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:casama/core/mobile_extras.dart';
 import 'package:casama/core/providers.dart';
 import 'package:casama/features/quick_ask/quick_ask_screen.dart';
-import 'package:casama/l10n/generated/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
@@ -13,6 +12,7 @@ import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 
 import 'app_test.dart' show setSize;
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 void main() {
   test('shared pictures and files become attachments; text stays text', () {
@@ -77,7 +77,7 @@ void main() {
           container: container,
           child: MaterialApp.router(
             routerConfig: router,
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            localizationsDelegates: testLocalizationsDelegates,
           ),
         ),
       );

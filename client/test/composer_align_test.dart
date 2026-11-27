@@ -2,6 +2,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:casama/features/chat/widgets/composer.dart';
 import 'package:casama/l10n/generated/app_localizations.dart';
+import 'package:casama/l10n/delegates.dart';
 
 void main() {
   // Phones pad the buttons to 48pt tap targets; desktop keeps them at 40pt.
@@ -14,7 +15,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           theme: ThemeData(materialTapTargetSize: tapTarget),
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: testLocalizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(
             body: Align(

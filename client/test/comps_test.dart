@@ -15,6 +15,7 @@ import 'app_test.dart' show setSize;
 import 'billing_test.dart' show app, pricingPlans, revealInPaywall, settle;
 import 'fake_backend.dart';
 import 'fake_unlockers.dart';
+import 'package:casama/l10n/delegates.dart';
 
 /// Free plans for friends (docs/COMP-PLANS-PLAN.md).
 FakeBackend comped({required Duration left}) {
@@ -58,7 +59,7 @@ Widget redeemApp(
     ],
     child: MaterialApp.router(
       routerConfig: router,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: testLocalizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
     ),
   );

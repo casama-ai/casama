@@ -27,6 +27,7 @@ import 'package:casama/theme/appearance.dart';
 import 'package:casama/theme/wallpaper.dart';
 
 import '../test/fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 /// A reply with the shapes bots write: headings, lists, code, tables and long paragraphs.
 String _reply(int n) =>
@@ -80,7 +81,7 @@ Widget _app(FakeBackend backend, WallpaperSpec wallpaper) => ProviderScope(
   child: MaterialApp(
     debugShowCheckedModeBanner: false,
     theme: AppTheme.light(Appearance(mode: ThemeMode.light, wallpaper: wallpaper)),
-    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    localizationsDelegates: testLocalizationsDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
     home: const ChatScreen(botId: botId, conversationId: convId),
   ),

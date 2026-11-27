@@ -19,6 +19,7 @@ import 'package:http/testing.dart';
 import 'app_test.dart' show setSize;
 import 'fake_backend.dart';
 import 'fake_voice.dart';
+import 'package:casama/l10n/delegates.dart';
 
 /// Phone-call voice (D-135).
 PhoneCall _call(String id, String reason) => PhoneCall(
@@ -77,7 +78,7 @@ Widget _app(FakeBackend backend, {FakeCallConnector? calls, CallSurface? surface
       routerProvider.overrideWithValue(router),
       if (calls != null) voiceCallConnectorProvider.overrideWithValue(calls),
     ],
-    child: MaterialApp.router(routerConfig: router, localizationsDelegates: AppLocalizations.localizationsDelegates, supportedLocales: AppLocalizations.supportedLocales),
+    child: MaterialApp.router(routerConfig: router, localizationsDelegates: testLocalizationsDelegates, supportedLocales: AppLocalizations.supportedLocales),
   );
 }
 
@@ -174,7 +175,7 @@ void main() {
     Widget tile() => ProviderScope(
           overrides: [fullScreenCallsProvider.overrideWithValue(phone)],
           child: MaterialApp(
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            localizationsDelegates: testLocalizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: const Scaffold(body: FullScreenCallsTile()),
           ),

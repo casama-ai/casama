@@ -3,9 +3,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:casama/l10n/generated/app_localizations.dart';
 import 'package:casama/ui/adaptive_modal.dart';
 import 'package:casama/ui/spring_sheet.dart';
+import 'package:casama/l10n/delegates.dart';
 
 Widget _app({bool reduceMotion = false}) => MaterialApp(
-  localizationsDelegates: AppLocalizations.localizationsDelegates,
+  localizationsDelegates: testLocalizationsDelegates,
   supportedLocales: AppLocalizations.supportedLocales,
   builder: (context, child) => MediaQuery(
     data: MediaQuery.of(context).copyWith(disableAnimations: reduceMotion),
@@ -81,7 +82,7 @@ void main() {
     await _phone(tester);
     await tester.pumpWidget(
       MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: testLocalizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: Scaffold(
           body: Builder(

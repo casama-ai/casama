@@ -6,6 +6,7 @@ import 'package:casama/core/haptics.dart';
 import 'package:casama/core/widgets.dart';
 import 'package:casama/l10n/generated/app_localizations.dart';
 import 'package:casama/ui/form_sheet.dart';
+import 'package:casama/l10n/delegates.dart';
 
 void main() {
   const channel = MethodChannel('haptic_feedback');
@@ -31,7 +32,7 @@ void main() {
   ];
 
   Widget app(Widget child) => MaterialApp(
-    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    localizationsDelegates: testLocalizationsDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
     home: Scaffold(body: child),
   );

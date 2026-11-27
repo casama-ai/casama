@@ -10,10 +10,12 @@ import 'package:casama/core/providers.dart';
 import 'package:casama/core/route_title.dart';
 import 'package:casama/core/router.dart';
 import 'package:casama/l10n/generated/app_localizations.dart';
+import 'package:casama/l10n/generated/app_localizations_en.dart';
 import 'package:casama/theme/app_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 void main() {
   testWidgets('the tab title names the page and follows navigation', (tester) async {
@@ -30,7 +32,7 @@ void main() {
         child: MaterialApp.router(
           theme: AppTheme.light(),
           routerConfig: router,
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: testLocalizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           builder: (context, child) => RouteTitle(router: router, enabled: true, child: child!),
         ),
@@ -67,7 +69,7 @@ void main() {
     expect(title(), 'Skills · Casama');
 
     // Every page in the router has a title of its own, except the ones that only pass through.
-    final l10n = lookupAppLocalizations(const Locale('en'));
+    final l10n = AppLocalizationsEn();
     final templates = <String>[];
     void walk(List<RouteBase> routes, String parent) {
       for (final r in routes) {

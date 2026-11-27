@@ -13,6 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_test.dart' show setSize;
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 /// Invites that spread (D-588, docs/INVITE-GROWTH-PLAN.md §4.5): the share text, "Who's it for?",
 /// the one-time ask after a reply, and the Chats button.
@@ -49,7 +50,7 @@ Future<BuildContext> _context(WidgetTester tester) async {
   late BuildContext captured;
   await tester.pumpWidget(
     MaterialApp(
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: testLocalizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: Builder(
         builder: (context) {
@@ -206,7 +207,7 @@ void main() {
     Future<void> pumpHost(WidgetTester tester) => tester.pumpWidget(
       MaterialApp(
         navigatorKey: navigator,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: testLocalizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: const SizedBox(),
       ),

@@ -1,10 +1,10 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:casama/features/routines/cron_words.dart';
-import 'package:casama/l10n/generated/app_localizations.dart';
+import 'package:casama/l10n/generated/app_localizations_en.dart';
 
 void main() {
-  final l10n = lookupAppLocalizations(const Locale('en'));
+  final l10n = AppLocalizationsEn();
   // The app formats times with MaterialLocalizations; the default English one is enough here.
   String time(int h, int m) => const DefaultMaterialLocalizations().formatTimeOfDay(TimeOfDay(hour: h, minute: m));
   String words(String cron) => cronToWords(cron, l10n, formatTime: time);

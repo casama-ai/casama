@@ -16,6 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'fake_backend.dart';
 import 'phone_layout_test.dart' show routes;
 import 'support/poses.dart';
+import 'package:casama/l10n/delegates.dart';
 
 /// Pages the shared list doesn't have: the Folding screen page, and the two settings pages main
 /// gained while this was being built (widgets, D-405; the watch, D-410).
@@ -42,7 +43,7 @@ void main() {
           child: MaterialApp.router(
             theme: AppTheme.light(),
             routerConfig: router,
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            localizationsDelegates: testLocalizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             builder: (context, child) =>
                 FoldScope(child: limitTextScale(context, child)),

@@ -17,6 +17,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'app_test.dart' show harness, setSize;
 import 'fake_backend.dart';
 import 'phone_layout_test.dart' show routes;
+import 'package:casama/l10n/delegates.dart';
 
 void main() {
   testWidgets('every page has a screen name: its route template, without ids', (tester) async {
@@ -30,7 +31,7 @@ void main() {
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
-        child: MaterialApp.router(theme: AppTheme.light(), routerConfig: router, localizationsDelegates: AppLocalizations.localizationsDelegates, supportedLocales: AppLocalizations.supportedLocales),
+        child: MaterialApp.router(theme: AppTheme.light(), routerConfig: router, localizationsDelegates: testLocalizationsDelegates, supportedLocales: AppLocalizations.supportedLocales),
       ),
     );
     Future<void> settle() async {

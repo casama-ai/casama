@@ -10,6 +10,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 /// Casama's open-source community in the app (D-577, docs/GITHUB-STARS-PLAN.md §5.3): the Cloud
 /// ask's timing, its once-ever rule, and its seven days from the other asks, both ways.
@@ -143,7 +144,7 @@ void main() {
     Future<void> pumpHost(WidgetTester tester) => tester.pumpWidget(
       MaterialApp(
         navigatorKey: navigator,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: testLocalizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: const SizedBox(),
       ),
@@ -300,7 +301,7 @@ void main() {
       bool? result = true;
       await tester.pumpWidget(
         MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: testLocalizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Builder(
             builder: (context) => TextButton(

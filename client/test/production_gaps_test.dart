@@ -10,11 +10,12 @@ import 'package:material_ui/material_ui.dart';
 
 import 'app_test.dart' show setSize;
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 Widget _app(FakeBackend backend, Widget home) => ProviderScope(
   overrides: [backendProvider.overrideWithValue(backend)],
   child: MaterialApp(
-    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    localizationsDelegates: testLocalizationsDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
     home: home,
   ),

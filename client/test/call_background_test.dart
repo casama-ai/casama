@@ -15,6 +15,7 @@ import 'package:material_ui/material_ui.dart';
 import 'active_call_test.dart' show CallsConnector;
 import 'fake_backend.dart';
 import 'fake_voice.dart' show FakeCallConnector;
+import 'package:casama/l10n/delegates.dart';
 
 class FakeCallSystem implements CallSystem {
   final log = <String>[];
@@ -290,7 +291,7 @@ void main() {
     await tester.runAsync(c.connect);
     await tester.pumpWidget(
       MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: testLocalizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: CallTabTitle(call: c),
       ),

@@ -21,6 +21,7 @@ import 'package:supabase_flutter/supabase_flutter.dart'
 import 'app_test.dart' show harness, setSize;
 import 'fake_backend.dart';
 import 'fake_unlockers.dart';
+import 'package:casama/l10n/delegates.dart';
 
 /// The lock's saved settings for the fake backend's person ('me').
 String saved(AppLockSettings s) => jsonEncode(s.toJson());
@@ -32,7 +33,7 @@ Widget gated(FakeBackend backend, FakeUnlockers unlockers) => ProviderScope(
     unlockersProvider.overrideWithValue(unlockers),
   ],
   child: MaterialApp(
-    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    localizationsDelegates: testLocalizationsDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
     builder: (context, child) => AppLockGate(child: child!),
     home: const Scaffold(

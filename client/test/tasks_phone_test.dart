@@ -11,6 +11,7 @@ import 'package:casama_sdk/casama_sdk.dart';
 
 import 'app_test.dart' show harness, setSize;
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 /// A second ticket, in progress, that belongs to the fake backend's project p1.
 Task _projectTicket() {
@@ -80,7 +81,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [backendProvider.overrideWithValue(_backend()), localCacheProvider.overrideWithValue(const NoCache())],
-        child: MaterialApp.router(routerConfig: router, localizationsDelegates: AppLocalizations.localizationsDelegates, supportedLocales: AppLocalizations.supportedLocales),
+        child: MaterialApp.router(routerConfig: router, localizationsDelegates: testLocalizationsDelegates, supportedLocales: AppLocalizations.supportedLocales),
       ),
     );
     await tester.pumpAndSettle();

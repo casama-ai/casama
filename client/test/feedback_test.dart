@@ -10,12 +10,13 @@ import 'package:material_ui/material_ui.dart';
 
 import 'app_test.dart' show setSize;
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 /// Feedback from the app (D-536): Help & support → Send feedback, and the owners' list.
 Widget _app(FakeBackend backend, Widget home) => ProviderScope(
   overrides: [backendProvider.overrideWithValue(backend)],
   child: MaterialApp(
-    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    localizationsDelegates: testLocalizationsDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
     home: home,
   ),
@@ -167,7 +168,7 @@ void main() {
           }),
         ],
         child: MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: testLocalizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: const SupportScreen(),
         ),

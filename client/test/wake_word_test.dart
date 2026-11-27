@@ -15,6 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_test.dart' show setSize;
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 class FakeWakeEngine implements WakeWordEngine {
   final heard = StreamController<void>.broadcast();
@@ -62,7 +63,7 @@ void main() {
     ]);
     await tester.pumpWidget(ProviderScope(
       overrides: [backendProvider.overrideWithValue(FakeBackend()), wakeWordEngineProvider.overrideWithValue(engine), routerProvider.overrideWithValue(router)],
-      child: MaterialApp.router(routerConfig: router, localizationsDelegates: AppLocalizations.localizationsDelegates, supportedLocales: AppLocalizations.supportedLocales),
+      child: MaterialApp.router(routerConfig: router, localizationsDelegates: testLocalizationsDelegates, supportedLocales: AppLocalizations.supportedLocales),
     ));
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('wakeWordOn')));
@@ -92,7 +93,7 @@ void main() {
     ]);
     await tester.pumpWidget(ProviderScope(
       overrides: [backendProvider.overrideWithValue(FakeBackend()), wakeWordEngineProvider.overrideWithValue(engine), routerProvider.overrideWithValue(router)],
-      child: MaterialApp.router(routerConfig: router, localizationsDelegates: AppLocalizations.localizationsDelegates, supportedLocales: AppLocalizations.supportedLocales),
+      child: MaterialApp.router(routerConfig: router, localizationsDelegates: testLocalizationsDelegates, supportedLocales: AppLocalizations.supportedLocales),
     ));
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('testWakeWord')));
@@ -117,7 +118,7 @@ void main() {
     ]);
     await tester.pumpWidget(ProviderScope(
       overrides: [backendProvider.overrideWithValue(FakeBackend()), wakeWordEngineProvider.overrideWithValue(engine), routerProvider.overrideWithValue(router)],
-      child: MaterialApp.router(routerConfig: router, localizationsDelegates: AppLocalizations.localizationsDelegates, supportedLocales: AppLocalizations.supportedLocales),
+      child: MaterialApp.router(routerConfig: router, localizationsDelegates: testLocalizationsDelegates, supportedLocales: AppLocalizations.supportedLocales),
     ));
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('wakeBot')), findsOneWidget);

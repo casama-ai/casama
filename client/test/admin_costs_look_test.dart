@@ -27,6 +27,7 @@ import 'admin_test_helpers.dart';
 import 'fake_backend.dart';
 import 'fake_unlockers.dart';
 import 'support/shots.dart';
+import 'package:casama/l10n/delegates.dart';
 
 const _wide = Size(1400, 900);
 const _phone = Size(390, 844);
@@ -82,7 +83,7 @@ void main() {
             theme: AppTheme.light(),
             darkTheme: AppTheme.dark(),
             themeMode: dark ? ThemeMode.dark : ThemeMode.light,
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            localizationsDelegates: testLocalizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             // The app's shell paints the plain backdrop behind every page; here the page stands alone.
             builder: (context, child) => ColoredBox(

@@ -21,11 +21,12 @@ import 'app_test.dart' show harness, setSize;
 import 'fake_backend.dart';
 import 'fake_unlockers.dart';
 import 'fake_live.dart';
+import 'package:casama/l10n/delegates.dart';
 
 Widget liveHarness(FakeBackend backend, FakeLiveConnector live, Widget child) => ProviderScope(
       overrides: [backendProvider.overrideWithValue(backend), unlockersProvider.overrideWithValue(FakeUnlockers()), liveConnectorProvider.overrideWithValue(live)],
       child: MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: testLocalizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: child,
       ),
@@ -293,7 +294,7 @@ void main() {
     ]);
     await tester.pumpWidget(ProviderScope(
       overrides: [backendProvider.overrideWithValue(backend), unlockersProvider.overrideWithValue(FakeUnlockers()), liveConnectorProvider.overrideWithValue(live)],
-      child: MaterialApp.router(routerConfig: router, localizationsDelegates: AppLocalizations.localizationsDelegates, supportedLocales: AppLocalizations.supportedLocales),
+      child: MaterialApp.router(routerConfig: router, localizationsDelegates: testLocalizationsDelegates, supportedLocales: AppLocalizations.supportedLocales),
     ));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
@@ -328,7 +329,7 @@ void main() {
     await tester.pumpWidget(ProviderScope(
       overrides: [backendProvider.overrideWithValue(backend), unlockersProvider.overrideWithValue(FakeUnlockers()), liveConnectorProvider.overrideWithValue(FakeLiveConnector())],
       child: MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: testLocalizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: const Scaffold(body: SizedBox(width: 420, child: ComputerScreen(embedded: true))),
       ),
@@ -351,7 +352,7 @@ void main() {
     await tester.pumpWidget(ProviderScope(
       overrides: [backendProvider.overrideWithValue(_AwakeDesktop()), unlockersProvider.overrideWithValue(FakeUnlockers()), liveConnectorProvider.overrideWithValue(FakeLiveConnector())],
       child: MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: testLocalizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: const Scaffold(body: SizedBox(width: 420, child: ComputerScreen(botId: botId, embedded: true))),
       ),
@@ -376,7 +377,7 @@ void main() {
     ]);
     await tester.pumpWidget(ProviderScope(
       overrides: [backendProvider.overrideWithValue(backend), unlockersProvider.overrideWithValue(FakeUnlockers()), liveConnectorProvider.overrideWithValue(FakeLiveConnector())],
-      child: MaterialApp.router(routerConfig: router, localizationsDelegates: AppLocalizations.localizationsDelegates, supportedLocales: AppLocalizations.supportedLocales),
+      child: MaterialApp.router(routerConfig: router, localizationsDelegates: testLocalizationsDelegates, supportedLocales: AppLocalizations.supportedLocales),
     ));
     await tester.pump();
     router.push('/computer/live?c=$computerId');
@@ -407,7 +408,7 @@ void main() {
     ]);
     await tester.pumpWidget(ProviderScope(
       overrides: [backendProvider.overrideWithValue(backend), unlockersProvider.overrideWithValue(FakeUnlockers()), liveConnectorProvider.overrideWithValue(live)],
-      child: MaterialApp.router(routerConfig: router, localizationsDelegates: AppLocalizations.localizationsDelegates, supportedLocales: AppLocalizations.supportedLocales),
+      child: MaterialApp.router(routerConfig: router, localizationsDelegates: testLocalizationsDelegates, supportedLocales: AppLocalizations.supportedLocales),
     ));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));

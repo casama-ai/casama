@@ -25,6 +25,7 @@ import 'package:casama/theme/wallpaper.dart';
 
 import 'app_test.dart' show StepsShown;
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 Widget _app(
   FakeBackend backend,
@@ -39,7 +40,7 @@ Widget _app(
         theme: AppTheme.light(a),
         darkTheme: AppTheme.dark(a),
         themeMode: a.mode,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: testLocalizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: child,
       );
@@ -440,7 +441,7 @@ void main() {
         overrides: [backendProvider.overrideWithValue(backend)],
         child: MaterialApp.router(
           routerConfig: router,
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: testLocalizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
         ),
       ),

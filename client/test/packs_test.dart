@@ -35,6 +35,7 @@ import 'package:material_ui/material_ui.dart';
 
 import 'app_test.dart' show harness, setSize;
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 const _url = 'https://github.com/acme/trip-kit';
 
@@ -76,7 +77,7 @@ Widget _routed(FakeBackend backend, String initial, {void Function(String id)? o
     child: MaterialApp.router(
       theme: AppTheme.light(),
       routerConfig: router,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: testLocalizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
     ),
   );

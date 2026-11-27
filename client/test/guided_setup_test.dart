@@ -29,6 +29,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'app_test.dart' show harness, setSize;
 import 'casama_link_test.dart' show FakeSetup, status;
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 /// Scripted answers for `docker`, `sysctl`, `open` and `df`.
 class _Runner implements ProcessRunner {
@@ -188,7 +189,7 @@ void main() {
         ],
         child: MaterialApp.router(
           routerConfig: router,
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: testLocalizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
         ),
       ),
@@ -560,7 +561,7 @@ void main() {
     );
     Widget app() => ProviderScope(
       overrides: [backendProvider.overrideWithValue(FakeBackend()..signedIn = false), localCacheProvider.overrideWithValue(const NoCache())],
-      child: MaterialApp.router(routerConfig: router, localizationsDelegates: AppLocalizations.localizationsDelegates, supportedLocales: AppLocalizations.supportedLocales),
+      child: MaterialApp.router(routerConfig: router, localizationsDelegates: testLocalizationsDelegates, supportedLocales: AppLocalizations.supportedLocales),
     );
     await tester.pumpWidget(app());
     await tester.pump(const Duration(milliseconds: 100));
@@ -603,7 +604,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [backendProvider.overrideWithValue(FakeBackend()..signedIn = false), localCacheProvider.overrideWithValue(const NoCache())],
-        child: MaterialApp.router(routerConfig: router, localizationsDelegates: AppLocalizations.localizationsDelegates, supportedLocales: AppLocalizations.supportedLocales),
+        child: MaterialApp.router(routerConfig: router, localizationsDelegates: testLocalizationsDelegates, supportedLocales: AppLocalizations.supportedLocales),
       ),
     );
     await tester.pump(const Duration(milliseconds: 100));
@@ -663,7 +664,7 @@ void main() {
           localCacheProvider.overrideWithValue(const NoCache()),
           usingLocalServerProvider.overrideWith((ref) async => true),
         ],
-        child: MaterialApp.router(routerConfig: router, localizationsDelegates: AppLocalizations.localizationsDelegates, supportedLocales: AppLocalizations.supportedLocales),
+        child: MaterialApp.router(routerConfig: router, localizationsDelegates: testLocalizationsDelegates, supportedLocales: AppLocalizations.supportedLocales),
       ),
     );
     await settle(tester);

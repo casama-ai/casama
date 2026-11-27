@@ -22,6 +22,7 @@ import 'package:material_ui/material_ui.dart';
 import 'app_test.dart' show setSize;
 import 'fake_backend.dart';
 import 'package:casama/ui/decode_size.dart';
+import 'package:casama/l10n/delegates.dart';
 
 const _pic = 'image:6f1c2e9a-3b4d-4c5e-8f70-1a2b3c4d5e6f:7a90ff7de9f4';
 
@@ -52,7 +53,7 @@ Widget _profile(FakeBackend backend) => ProviderScope(
     localCacheProvider.overrideWithValue(const NoCache()),
   ],
   child: MaterialApp.router(
-    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    localizationsDelegates: testLocalizationsDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
     routerConfig: GoRouter(
       initialLocation: '/bots/$botId/settings',
@@ -256,7 +257,7 @@ void main() {
               localCacheProvider.overrideWithValue(const NoCache()),
             ],
             child: MaterialApp(
-              localizationsDelegates: AppLocalizations.localizationsDelegates,
+              localizationsDelegates: testLocalizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: _Uploader(bytes),
             ),
@@ -294,7 +295,7 @@ void main() {
             localCacheProvider.overrideWithValue(const NoCache()),
           ],
           child: MaterialApp(
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            localizationsDelegates: testLocalizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: _Uploader(bytes),
           ),

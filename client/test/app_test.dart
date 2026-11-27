@@ -33,6 +33,7 @@ import 'fake_backend.dart';
 import 'fake_unlockers.dart';
 
 import 'package:casama/core/local_cache.dart';
+import 'package:casama/l10n/delegates.dart';
 
 Widget harness(
   FakeBackend backend,
@@ -49,7 +50,7 @@ Widget harness(
     ...overrides,
   ],
   child: MaterialApp(
-    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    localizationsDelegates: testLocalizationsDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
     home: child,
   ),

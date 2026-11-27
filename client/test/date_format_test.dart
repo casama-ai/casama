@@ -2,6 +2,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:casama/core/date_format.dart';
 import 'package:casama/l10n/generated/app_localizations.dart';
+import 'package:casama/l10n/delegates.dart';
 
 void main() {
   final moment = DateTime(2016, 7, 24, 14, 44, 5); // a Sunday
@@ -10,7 +11,7 @@ void main() {
     late BuildContext captured;
     await tester.pumpWidget(
       MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: testLocalizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         // The device's 24-hour setting, as the app reads it.
         builder: (context, child) => MediaQuery(data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: use24h), child: child!),

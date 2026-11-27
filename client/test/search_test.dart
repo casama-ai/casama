@@ -17,6 +17,7 @@ import 'package:casama/l10n/generated/app_localizations.dart';
 
 import 'app_test.dart' show harness, setSize;
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 void main() {
   testWidgets('search groups results and opens the exact message', (tester) async {
@@ -33,7 +34,7 @@ void main() {
       overrides: [backendProvider.overrideWithValue(backend)],
       child: MaterialApp.router(
         routerConfig: router,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: testLocalizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
       ),
     ));
@@ -62,7 +63,7 @@ void main() {
       overrides: [backendProvider.overrideWithValue(backend)],
       child: MaterialApp.router(
         routerConfig: router,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: testLocalizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
       ),
     ));
@@ -116,7 +117,7 @@ void main() {
           GoRoute(path: '/settings/skills', builder: (_, _) => const Text('skills')),
         ],
       ),
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: testLocalizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
     ),
   );
@@ -271,7 +272,7 @@ void main() {
     await tester.pumpWidget(ProviderScope(
       overrides: [backendProvider.overrideWithValue(FakeBackend())],
       child: MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: testLocalizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: Builder(
           builder: (context) => TextButton(onPressed: () => showWorkspaceSearch(context), child: const Text('open')),
@@ -300,7 +301,7 @@ void main() {
       overrides: [backendProvider.overrideWithValue(FakeBackend())],
       child: MaterialApp.router(
         routerConfig: router,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: testLocalizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
       ),
     ));

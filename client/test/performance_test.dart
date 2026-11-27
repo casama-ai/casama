@@ -22,6 +22,7 @@ import 'package:casama/ui/shell_header.dart';
 import 'package:markdown_widget/markdown_widget.dart';
 
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 /// Long enough that [markdownChunks] splits it.
 final _lead = '${'Some words to start the reply with. ' * 14}\n\n';
@@ -251,7 +252,7 @@ void main() {
           localCacheProvider.overrideWithValue(const NoCache()),
         ],
         child: MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: testLocalizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: const ChatScreen(botId: botId, conversationId: convId),
         ),
@@ -389,7 +390,7 @@ void main() {
       Widget buildChat() => UncontrolledProviderScope(
         container: container,
         child: MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: testLocalizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: const ChatScreen(botId: botId, conversationId: convId),
         ),

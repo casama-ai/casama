@@ -1,12 +1,11 @@
 // The call outside the app's window (D-327 Phase 4): the glance that the iPhone's Live Activity,
 // the Mac's menu bar and (after D-324's merge) the notch show, and their buttons.
 import 'dart:async';
-import 'dart:ui' show Locale;
 
 import 'package:casama/features/voice/active_call.dart';
 import 'package:casama/features/voice/call_glance.dart';
 import 'package:casama/features/voice/call_system.dart';
-import 'package:casama/l10n/generated/app_localizations.dart';
+import 'package:casama/l10n/generated/app_localizations_en.dart';
 import 'package:casama_sdk/casama_sdk.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -35,7 +34,7 @@ Future<void> settle() => Future<void>.delayed(const Duration(milliseconds: 20));
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  final l10n = lookupAppLocalizations(const Locale('en'));
+  final l10n = AppLocalizationsEn();
 
   test('the glance follows the call: name, timer start, mute, the job; buttons mute, open and end it', () async {
     final backend = FakeBackend()

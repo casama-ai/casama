@@ -10,6 +10,7 @@ import 'package:casama/features/chat/chat_detail.dart';
 import 'package:casama/features/chat/widgets/screen_card.dart';
 import 'package:casama/features/computer/bot_cursors.dart';
 import 'package:casama/l10n/generated/app_localizations.dart';
+import 'package:casama/l10n/generated/app_localizations_en.dart';
 import 'package:casama/theme/app_theme.dart';
 import 'package:casama/ui/screen_tile.dart';
 import 'package:casama/ui/shell_layout.dart';
@@ -20,6 +21,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 const _bot = 'bot-1';
 
@@ -63,7 +65,7 @@ Future<void> _pumpCard(WidgetTester tester, {ChatState? state, bool group = fals
       container: _container,
       child: MaterialApp(
         theme: AppTheme.light(),
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: testLocalizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: Scaffold(
           body: SizedBox(
@@ -235,7 +237,7 @@ void main() {
     expect(node.rect.width, closeTo(tile.width, 1));
     expect(node.rect.height, closeTo(tile.height, 1));
 
-    final hide = CustomSemanticsAction.getIdentifier(CustomSemanticsAction(label: lookupAppLocalizations(const Locale('en')).callTileHide));
+    final hide = CustomSemanticsAction.getIdentifier(CustomSemanticsAction(label: AppLocalizationsEn().callTileHide));
     expect(node.getSemanticsData().customSemanticsActionIds, contains(hide));
     tester.binding.performSemanticsAction(
       SemanticsActionEvent(type: SemanticsAction.customAction, viewId: tester.view.viewId, nodeId: node.id, arguments: hide),

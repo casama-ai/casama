@@ -14,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_test.dart' show harness, setSize;
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 const _otherBot = '99999999-9999-4999-8999-999999999999';
 const _otherConv = '88888888-8888-4888-8888-888888888888';
@@ -63,7 +64,7 @@ void main() {
             container = ProviderScope.containerOf(context);
             return MaterialApp.router(
               routerConfig: router,
-              localizationsDelegates: AppLocalizations.localizationsDelegates,
+              localizationsDelegates: testLocalizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
             );
           },

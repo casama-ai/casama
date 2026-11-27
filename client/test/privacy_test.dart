@@ -16,6 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'app_test.dart' show harness, setSize;
 import 'fake_backend.dart';
 import 'fake_unlockers.dart';
+import 'package:casama/l10n/delegates.dart';
 
 void main() {
   testWidgets('exports data, changes retention and deletes the account after typing the email', (tester) async {
@@ -29,7 +30,7 @@ void main() {
           saveExportProvider.overrideWithValue((Uint8List b, String name, {Rect? origin}) async => saved.add('$name:${b.length}')),
         ],
         child: const MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: testLocalizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: PrivacyScreen(),
         ),
@@ -67,7 +68,7 @@ void main() {
       ProviderScope(
         overrides: [backendProvider.overrideWithValue(backend), unlockersProvider.overrideWithValue(FakeUnlockers())],
         child: const MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: testLocalizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: PrivacyScreen(),
         ),
@@ -141,7 +142,7 @@ void main() {
           unlockersProvider.overrideWithValue(FakeUnlockers()),
         ],
         child: const MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: testLocalizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: PrivacyScreen(highlight: 'delete'),
         ),

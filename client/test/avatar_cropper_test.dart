@@ -7,6 +7,7 @@ import 'package:casama/ui/avatar_cropper.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:casama/l10n/delegates.dart';
 
 /// A [w]×[h] PNG: solid [color], or (see-through) a [color] square in the middle of nothing.
 /// With [topHalf], the top half is [topHalf] (to see where the frame sits).
@@ -70,7 +71,7 @@ class _Host extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MaterialApp(
-    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    localizationsDelegates: testLocalizationsDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
     home: Scaffold(
       body: Builder(

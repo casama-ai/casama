@@ -13,12 +13,13 @@ import 'package:casama/l10n/generated/app_localizations.dart';
 import 'package:casama/theme/app_theme.dart';
 
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 Widget _app(FakeBackend backend, Widget child) => ProviderScope(
       overrides: [backendProvider.overrideWithValue(backend)],
       child: MaterialApp(
         theme: AppTheme.light(),
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: testLocalizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: child,
       ),

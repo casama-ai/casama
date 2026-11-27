@@ -14,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'app_test.dart' show setSize;
 import 'fake_backend.dart';
 import 'fake_unlockers.dart';
+import 'package:casama/l10n/delegates.dart';
 
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
@@ -36,7 +37,7 @@ void main() {
           openUrlProvider.overrideWithValue((_) async {}),
         ],
         child: MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: testLocalizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Consumer(
             builder: (context, ref, _) => Scaffold(

@@ -21,6 +21,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_test.dart' show harness, setSize;
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 /// A bot that's waiting for an answer.
 class _WaitingBackend extends FakeBackend {
@@ -31,7 +32,7 @@ class _WaitingBackend extends FakeBackend {
 /// The profile at its real path, with the pages its tiles open stubbed out.
 Widget _profileApp(FakeBackend backend, GoRouter router) => ProviderScope(
   overrides: [backendProvider.overrideWithValue(backend), localCacheProvider.overrideWithValue(const NoCache())],
-  child: MaterialApp.router(routerConfig: router, localizationsDelegates: AppLocalizations.localizationsDelegates, supportedLocales: AppLocalizations.supportedLocales),
+  child: MaterialApp.router(routerConfig: router, localizationsDelegates: testLocalizationsDelegates, supportedLocales: AppLocalizations.supportedLocales),
 );
 
 GoRouter _router() => GoRouter(

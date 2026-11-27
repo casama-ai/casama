@@ -6,6 +6,35 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../l10n/enabled_locales.dart';
 import '../l10n/generated/app_localizations.dart';
+import '../l10n/generated/app_localizations_en.dart' show AppLocalizationsEn;
+
+/// The app's translations, loaded when a language is first used (`use-deferred-loading` in
+/// l10n.yaml). On the web every other language is its own file, so the start downloads English
+/// only; the eight megabytes of all twelve were most of the first load. English is imported here
+/// directly, so it's always in the main file and [english] needs no wait.
+abstract final class AppStrings {
+  static final AppLocalizations english = AppLocalizationsEn();
+  static final _loaded = <String, AppLocalizations>{};
+
+  static String _key(Locale l) => l.toLanguageTag();
+
+  /// The strings for [locale] once loaded; English (en, en-US, en-GB…) is always there. The debug
+  /// pseudo-locale en-XA is its own translation, loaded like any other.
+  static AppLocalizations? cached(Locale locale) =>
+      locale.languageCode == 'en' && locale.countryCode != 'XA' ? english : _loaded[_key(locale)];
+
+  /// Loads [locale]'s strings (one small download on the web the first time).
+  static Future<AppLocalizations> load(Locale locale) async =>
+      cached(locale) ?? (_loaded[_key(locale)] = await lookupAppLocalizations(locale));
+
+  /// [locale]'s strings if they're loaded, else English while they load.
+  static AppLocalizations of(Locale locale) {
+    final hit = cached(locale);
+    if (hit != null) return hit;
+    load(locale).ignore();
+    return english;
+  }
+}
 
 /// The app's language (docs/LOCALIZATION-PLAN.md §4.1): the device's, unless the person picked
 /// another one in Settings. A pick is kept on this device and saved to `profiles.locale`
@@ -29,11 +58,19 @@ abstract final class AppLanguage {
     } catch (_) {
       // No preferences: follow the device.
     }
+    // The language's strings start loading now, so notifications and native surfaces have them
+    // by the time they speak (English until then). Not awaited: the start doesn't wait for them.
+    AppStrings.load(current()).ignore();
   }
+
+  /// The language the app shows now, from the pick and the device's languages.
+  static Locale current() =>
+      resolve(chosen: chosen, device: PlatformDispatcher.instance.locales, supported: supported);
 
   /// Saves the choice on this device; null follows the device again.
   static Future<void> choose(Locale? locale) async {
     _chosen = locale;
+    AppStrings.load(current()).ignore();
     try {
       final prefs = await SharedPreferences.getInstance();
       if (locale == null) {
@@ -103,9 +140,7 @@ abstract final class AppLanguage {
 
   /// The app's strings where there's no widget to ask: notifications, the call's system controls,
   /// the watch, widgets, the island and the tray.
-  static AppLocalizations strings() => lookupAppLocalizations(
-    resolve(chosen: chosen, device: PlatformDispatcher.instance.locales, supported: supported),
-  );
+  static AppLocalizations strings() => AppStrings.of(current());
 
   /// The `Accept-Language` value: the pick, or the device's languages in order. Empty when the
   /// device names none, so no header goes: guessing English would be saved as the person's.
@@ -192,12 +227,19 @@ class DeviceLocalesNotifier extends Notifier<List<Locale>> with WidgetsBindingOb
 final deviceLocalesProvider = NotifierProvider<DeviceLocalesNotifier, List<Locale>>(DeviceLocalesNotifier.new);
 
 /// The app's strings for providers, rebuilt when the language changes.
-final appStringsProvider = Provider<AppLocalizations>(
-  (ref) => lookupAppLocalizations(
-    AppLanguage.resolve(
-      chosen: ref.watch(appLocaleProvider),
-      device: ref.watch(deviceLocalesProvider),
-      supported: ref.watch(supportedAppLocalesProvider),
-    ),
-  ),
-);
+final appStringsProvider = Provider<AppLocalizations>((ref) {
+  final locale = AppLanguage.resolve(
+    chosen: ref.watch(appLocaleProvider),
+    device: ref.watch(deviceLocalesProvider),
+    supported: ref.watch(supportedAppLocalesProvider),
+  );
+  final hit = AppStrings.cached(locale);
+  if (hit != null) return hit;
+  // English for the moment it takes to load, then the language itself.
+  var live = true;
+  ref.onDispose(() => live = false);
+  AppStrings.load(locale).then((_) {
+    if (live) ref.invalidateSelf();
+  }).ignore();
+  return AppStrings.english;
+});

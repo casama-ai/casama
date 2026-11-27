@@ -13,6 +13,7 @@ import 'package:material_ui/material_ui.dart';
 
 import 'app_test.dart' show harness, setSize;
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 /// Settings as a server sends them; [extra] adds fields (new or from the future).
 RemoteAppConfig _config([Map<String, dynamic> extra = const {}]) =>
@@ -94,7 +95,7 @@ void main() {
         late AppLocalizations l10n;
         await tester.pumpWidget(
           MaterialApp(
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            localizationsDelegates: testLocalizationsDelegates,
             home: Builder(
               builder: (context) {
                 l10n = AppLocalizations.of(context);
@@ -134,7 +135,7 @@ void main() {
       );
       await tester.pumpWidget(
         MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: testLocalizationsDelegates,
           home: Scaffold(
             body: QuickReactionStrip(onPick: (_) {}, onMore: () {}),
           ),

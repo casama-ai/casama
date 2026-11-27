@@ -15,6 +15,7 @@ import 'app_test.dart' show harness, setSize;
 import 'fake_backend.dart';
 import 'fake_unlockers.dart';
 import 'fake_live.dart';
+import 'package:casama/l10n/delegates.dart';
 
 void main() {
   test('the recorder gathers typing into one step and flushes on clicks, keys and pauses', () async {
@@ -47,7 +48,7 @@ void main() {
       ProviderScope(
         overrides: [backendProvider.overrideWithValue(backend), unlockersProvider.overrideWithValue(FakeUnlockers()), liveConnectorProvider.overrideWithValue(live)],
         child: MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: testLocalizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: const LiveViewScreen(computerId: computerId),
         ),

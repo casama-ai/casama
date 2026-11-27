@@ -11,6 +11,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'app_test.dart' show setSize;
 import 'fake_backend.dart';
 import 'fake_live.dart';
+import 'package:casama/l10n/delegates.dart';
 
 /// Activity-based keep-awake (D-195): presence only while the person is here, "Still watching?"
 /// after a long quiet spell, and no stream while nobody can see it.
@@ -23,7 +24,7 @@ void main() {
       ProviderScope(
         overrides: [backendProvider.overrideWithValue(b), liveConnectorProvider.overrideWithValue(live), if (org != null) currentOrgProvider.overrideWithValue(org)],
         child: MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: testLocalizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: const LiveViewScreen(computerId: computerId),
         ),

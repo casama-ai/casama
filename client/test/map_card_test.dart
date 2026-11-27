@@ -17,6 +17,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_test.dart' show harness, setSize;
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 class _ErrorImageCompleter extends ImageStreamCompleter {
   _ErrorImageCompleter(Object error) {
@@ -91,7 +92,7 @@ GoogleTilesClient _google({int sessionStatus = 200, List<Uri>? calls}) =>
     );
 
 Widget _cardApp(Widget card) => MaterialApp(
-  localizationsDelegates: AppLocalizations.localizationsDelegates,
+  localizationsDelegates: testLocalizationsDelegates,
   supportedLocales: AppLocalizations.supportedLocales,
   home: Scaffold(body: card),
 );
@@ -238,7 +239,7 @@ void main() {
       final tiles = _FallbackTestTileProvider(mapTilerStatusCode: 429);
       await tester.pumpWidget(
         MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: testLocalizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(
             body: BotMapCard(
@@ -298,7 +299,7 @@ void main() {
     final tiles = _FallbackTestTileProvider(mapTilerStatusCode: 404);
     await tester.pumpWidget(
       MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: testLocalizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: Scaffold(
           body: BotMapCard(
@@ -331,7 +332,7 @@ void main() {
       final firstTiles = _FallbackTestTileProvider(mapTilerStatusCode: 429);
       await tester.pumpWidget(
         MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: testLocalizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(
             body: BotMapCard(
@@ -360,7 +361,7 @@ void main() {
       final secondTiles = _FallbackTestTileProvider(mapTilerStatusCode: 429);
       await tester.pumpWidget(
         MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: testLocalizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(
             body: BotMapCard(

@@ -26,9 +26,11 @@ import 'package:casama/features/settings/settings_screen.dart';
 import 'package:casama/features/siri/focus_filter.dart';
 import 'package:casama/features/siri/siri_bridge.dart';
 import 'package:casama/l10n/generated/app_localizations.dart';
+import 'package:casama/l10n/generated/app_localizations_en.dart';
 
 import 'app_test.dart' show harness, setSize;
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 class _BotsStub extends BotsNotifier {
   _BotsStub(this.initial);
@@ -231,7 +233,7 @@ void main() {
         UncontrolledProviderScope(
           container: container,
           child: const MaterialApp(
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            localizationsDelegates: testLocalizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: Scaffold(body: FocusFilterChip()),
           ),
@@ -394,7 +396,7 @@ void main() {
         UncontrolledProviderScope(
           container: container,
           child: const MaterialApp(
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            localizationsDelegates: testLocalizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: Under13BlockedGate(
               child: Scaffold(body: Text('Main App')),
@@ -995,7 +997,7 @@ void main() {
     setUp(() => SharedPreferences.setMockInitialValues({}));
 
     test('AlarmKit and HomeKit kinds have their own words', () {
-      final l10n = lookupAppLocalizations(const Locale('en'));
+      final l10n = AppLocalizationsEn();
       expect(deviceKindLabel(l10n, DeviceKind.alarm), 'alarms');
       expect(deviceKindLabel(l10n, DeviceKind.home), 'Home accessories');
     });

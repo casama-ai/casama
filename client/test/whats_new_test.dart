@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:casama/features/whats_new/whats_new.dart';
-import 'package:casama/l10n/generated/app_localizations.dart';
+import 'package:casama/l10n/generated/app_localizations_en.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -14,7 +14,7 @@ import 'fake_backend.dart';
 final _appVersion = RegExp(r'^version:\s*([^+\s]+)', multiLine: true).firstMatch(File('pubspec.yaml').readAsStringSync())!.group(1)!;
 
 void main() {
-  final l10n = lookupAppLocalizations(const Locale('en'));
+  final l10n = AppLocalizationsEn();
 
   setUp(() => PackageInfo.setMockInitialValues(appName: 'Casama', packageName: 'ai.casama.app', version: _appVersion, buildNumber: '1', buildSignature: ''));
 

@@ -15,6 +15,7 @@ import 'package:material_ui/material_ui.dart';
 
 import 'app_test.dart' show harness, setSize;
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 const mac = 'computer:11111111-1111-4111-8111-111111111111';
 const otherMac = 'computer:55555555-5555-4555-8555-555555555555';
@@ -395,7 +396,7 @@ void main() {
 
   testWidgets('Health on an iPhone: Turn on first, then Open Health once it reads as off', (tester) async {
     Future<void> row(String state) => tester.pumpWidget(MaterialApp(
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: testLocalizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: Scaffold(body: PermissionRow(id: 'health', platform: 'ios', state: state, onTurnOn: () {})),
     ));

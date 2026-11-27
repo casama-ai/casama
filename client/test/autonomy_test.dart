@@ -16,6 +16,7 @@ import 'package:casama/features/settings/secrets_screen.dart';
 
 import 'app_test.dart' show harness, setSize;
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 void main() {
   testWidgets('approvals inbox approves, denies and always-allows', (
@@ -680,7 +681,7 @@ void main() {
         overrides: [backendProvider.overrideWithValue(backend)],
         child: MaterialApp.router(
           routerConfig: router,
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: testLocalizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
         ),
       ),
@@ -921,7 +922,7 @@ void main() {
           overrides: [backendProvider.overrideWithValue(backend)],
           child: MaterialApp.router(
             routerConfig: router,
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            localizationsDelegates: testLocalizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
           ),
         ),
@@ -1038,7 +1039,7 @@ void main() {
           overrides: [backendProvider.overrideWithValue(backend)],
           child: MaterialApp.router(
             routerConfig: router,
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            localizationsDelegates: testLocalizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
           ),
         ),

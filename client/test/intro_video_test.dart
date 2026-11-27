@@ -10,6 +10,7 @@ import 'package:video_player/video_player.dart';
 
 import 'app_test.dart' show harness, setSize;
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 /// The intro film row in an empty chat, and its remote links.
 void main() {
@@ -99,7 +100,7 @@ void main() {
   testWidgets('a film that cannot load shows Try again and Watch on YouTube, not a blank screen', (tester) async {
     await setSize(tester, phone);
     await tester.pumpWidget(MaterialApp(
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: testLocalizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: IntroFilmPlayer(
         film: Uri.parse(kIntroFilmUrl),

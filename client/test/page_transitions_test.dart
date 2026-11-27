@@ -14,6 +14,7 @@ import 'package:casama/theme/wallpaper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 void main() {
   testWidgets('desktop pages have no transition; Android and iOS keep theirs', (tester) async {
@@ -65,7 +66,7 @@ void main() {
         child: MaterialApp.router(
           theme: AppTheme.light().copyWith(platform: TargetPlatform.macOS),
           routerConfig: router,
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: testLocalizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
         ),
       ),

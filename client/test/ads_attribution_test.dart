@@ -20,6 +20,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'app_test.dart' show setSize;
 import 'fake_backend.dart';
 import 'fake_unlockers.dart';
+import 'package:casama/l10n/delegates.dart';
 
 /// Records what would reach Meta's native SDK.
 class FakeMetaDriver implements MetaSdkDriver {
@@ -442,7 +443,7 @@ void main() {
         ProviderScope(
           overrides: [backendProvider.overrideWithValue(backend)],
           child: const MaterialApp(
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            localizationsDelegates: testLocalizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: HeardFromStep(),
           ),
@@ -508,7 +509,7 @@ void main() {
             unlockersProvider.overrideWithValue(FakeUnlockers()),
           ],
           child: const MaterialApp(
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            localizationsDelegates: testLocalizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: PrivacyScreen(),
           ),

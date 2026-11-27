@@ -22,6 +22,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'app_test.dart' show setSize;
 import 'fake_backend.dart';
 import 'fake_unlockers.dart';
+import 'package:casama/l10n/delegates.dart';
 
 class FakeStore implements StorePurchases {
   FakeStore(this.source, {this.country, this.priced = false, this.trials = const {}});
@@ -111,7 +112,7 @@ Widget app(FakeBackend backend,
     ],
     child: MaterialApp.router(
       routerConfig: router,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: testLocalizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
     ),
   );
@@ -155,7 +156,7 @@ Future<void> pumpPaywall(WidgetTester tester, FakeBackend backend,
       manageSubscriptionsSheetProvider.overrideWithValue(() async => false),
     ],
     child: MaterialApp(
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: testLocalizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: Builder(builder: (context) => TextButton(onPressed: () => openPaywall(context), child: const Text('Open'))),
     ),
@@ -483,7 +484,7 @@ void main() {
       ],
       child: MaterialApp.router(
         routerConfig: router,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: testLocalizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
       ),
     ));
@@ -523,7 +524,7 @@ void main() {
         platformProvider.overrideWithValue(TargetPlatform.android),
       ],
       child: MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: testLocalizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: Consumer(
           builder: (context, ref, _) {
@@ -1188,7 +1189,7 @@ void main() {
           openUrlProvider.overrideWithValue((url) async => opened.add(url)),
         ],
         child: MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: testLocalizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Builder(builder: (context) => TextButton(onPressed: () => openOutOfCredits(context), child: const Text('Out'))),
         ),
@@ -1233,7 +1234,7 @@ void main() {
             platformProvider.overrideWithValue(TargetPlatform.iOS),
           ],
           child: const MaterialApp(
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            localizationsDelegates: testLocalizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: BillingScreen(highlight: 'credits'),
           ),
@@ -1270,7 +1271,7 @@ void main() {
           child: const MediaQuery(
             data: MediaQueryData(disableAnimations: true),
             child: MaterialApp(
-              localizationsDelegates: AppLocalizations.localizationsDelegates,
+              localizationsDelegates: testLocalizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: BillingScreen(highlight: 'link_cloud'),
             ),

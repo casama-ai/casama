@@ -12,6 +12,7 @@ import 'package:casama/ui/text_scale.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 const routes = [
   '/bots',
@@ -83,7 +84,7 @@ void main() {
           child: MaterialApp.router(
             theme: AppTheme.light(),
             routerConfig: router,
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            localizationsDelegates: testLocalizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             builder: limitTextScale,
           ),
@@ -132,7 +133,7 @@ void main() {
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
-        child: MaterialApp.router(theme: AppTheme.light(), routerConfig: router, localizationsDelegates: AppLocalizations.localizationsDelegates, supportedLocales: AppLocalizations.supportedLocales),
+        child: MaterialApp.router(theme: AppTheme.light(), routerConfig: router, localizationsDelegates: testLocalizationsDelegates, supportedLocales: AppLocalizations.supportedLocales),
       ),
     );
     Future<void> settle() async {

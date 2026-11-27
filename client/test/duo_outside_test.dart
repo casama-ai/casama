@@ -12,6 +12,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 
 import 'support/poses.dart';
+import 'package:casama/l10n/delegates.dart';
 
 final _iphone = TargetPlatformVariant.only(TargetPlatform.iOS);
 
@@ -21,7 +22,7 @@ Future<void> _pump(WidgetTester tester, DuoPose pose) async {
     ProviderScope(
       child: MaterialApp(
         theme: AppTheme.light(),
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: testLocalizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         builder: (context, child) => FoldScope(child: child!),
         home: OutsideShell(

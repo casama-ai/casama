@@ -2,12 +2,13 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:casama/features/notifications/notifications_primer.dart';
 import 'package:casama/l10n/generated/app_localizations.dart';
+import 'package:casama/l10n/delegates.dart';
 
 void main() {
   testWidgets('the notifications page explains why, and its buttons turn on or put it off', (tester) async {
     var on = 0, later = 0;
     await tester.pumpWidget(MaterialApp(
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: testLocalizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: NotificationsPrimer(onEnable: () => on++, onLater: () => later++),
     ));
@@ -21,7 +22,7 @@ void main() {
 
   testWidgets('a blocked site explains that Chrome will not ask again', (tester) async {
     await tester.pumpWidget(MaterialApp(
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: testLocalizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: NotificationsPrimer(onEnable: () {}, onLater: () {}, blocked: true),
     ));

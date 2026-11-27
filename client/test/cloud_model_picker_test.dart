@@ -11,6 +11,7 @@ import 'package:casama_sdk/casama_sdk.dart' show Credential, CredentialStatus, P
 
 import 'app_test.dart' show harness;
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 Credential _key(String id, ProviderId provider) => Credential(
   id: id,
@@ -49,7 +50,7 @@ Widget _picker(FakeBackend backend, String credentialId) {
       billingProvider.overrideWith((ref) async => backend.billing('org')),
     ],
     child: MaterialApp(
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: testLocalizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: Scaffold(
         body: ModelPickerField(
@@ -105,7 +106,7 @@ void main() {
           billingProvider.overrideWith((ref) async => backend.billing('org')),
         ],
         child: MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: testLocalizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: const ModelKeysScreen(),
         ),
@@ -170,7 +171,7 @@ void main() {
           billingProvider.overrideWith((ref) async => backend.billing('org')),
         ],
         child: MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: testLocalizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: const ModelKeysScreen(),
         ),
@@ -199,7 +200,7 @@ void main() {
           billingProvider.overrideWith((ref) async => backend.billing('org')),
         ],
         child: MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: testLocalizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: const ModelKeysScreen(),
         ),
@@ -226,7 +227,7 @@ void main() {
           billingProvider.overrideWith((ref) async => backend.billing('org')),
         ],
         child: MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: testLocalizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: const ModelKeysScreen(),
         ),

@@ -14,6 +14,7 @@ import 'fake_backend.dart';
 import 'fake_live.dart';
 import 'fake_unlockers.dart';
 import 'support/poses.dart';
+import 'package:casama/l10n/delegates.dart';
 
 final _iphone = TargetPlatformVariant.only(TargetPlatform.iOS);
 
@@ -28,7 +29,7 @@ Future<FakeLiveConnector> _pump(WidgetTester tester, DuoPose pose) async {
         liveConnectorProvider.overrideWithValue(live),
       ],
       child: MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: testLocalizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         builder: (context, child) => FoldScope(child: child!),
         home: const LiveViewScreen(computerId: computerId),

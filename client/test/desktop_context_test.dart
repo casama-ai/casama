@@ -9,11 +9,11 @@ import 'package:casama/core/providers.dart';
 import 'package:casama/features/desktop/desktop_context.dart';
 import 'package:casama/features/desktop/desktop_watch.dart';
 import 'package:casama/features/quick_ask/quick_ask_screen.dart';
-import 'package:casama/l10n/generated/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_test.dart' show setSize;
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 class FakeReader extends DesktopContextReader {
   FakeReader(this.apps);
@@ -151,7 +151,7 @@ void main() {
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
-        child: MaterialApp.router(routerConfig: router, localizationsDelegates: AppLocalizations.localizationsDelegates),
+        child: MaterialApp.router(routerConfig: router, localizationsDelegates: testLocalizationsDelegates),
       ),
     );
     await tester.pumpAndSettle();

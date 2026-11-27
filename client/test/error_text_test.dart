@@ -3,6 +3,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:casama/core/widgets.dart';
 import 'package:casama/l10n/generated/app_localizations.dart';
+import 'package:casama/l10n/delegates.dart';
 
 void main() {
   testWidgets(
@@ -11,7 +12,7 @@ void main() {
       late BuildContext ctx;
       await tester.pumpWidget(
         MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: testLocalizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Builder(
             builder: (c) {

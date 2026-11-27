@@ -18,6 +18,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_test.dart' show setSize;
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 Conversation _topic(
   String id,
@@ -44,7 +45,7 @@ Widget _app(FakeBackend backend, GoRouter router) => ProviderScope(
   ],
   child: MaterialApp.router(
     routerConfig: router,
-    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    localizationsDelegates: testLocalizationsDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
   ),
 );
@@ -518,7 +519,7 @@ void main() {
             localCacheProvider.overrideWithValue(const NoCache()),
           ],
           child: MaterialApp(
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            localizationsDelegates: testLocalizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: const InboxScreen(
               initialFilter: InboxFilter.updates,

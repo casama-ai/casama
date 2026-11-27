@@ -4,9 +4,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:stupid_simple_sheet/stupid_simple_sheet.dart';
 import 'package:casama/l10n/generated/app_localizations.dart';
 import 'package:casama/ui/adaptive_modal.dart';
+import 'package:casama/l10n/delegates.dart';
 
 Widget _app() => MaterialApp(
-  localizationsDelegates: AppLocalizations.localizationsDelegates,
+  localizationsDelegates: testLocalizationsDelegates,
   supportedLocales: AppLocalizations.supportedLocales,
   home: Scaffold(
     body: Builder(

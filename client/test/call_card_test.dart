@@ -12,6 +12,7 @@ import 'package:material_ui/material_ui.dart';
 
 import 'app_test.dart' show setSize;
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 const liveCall = '77777777-7777-4777-8777-777777777777';
 
@@ -133,7 +134,7 @@ Future<GoRouter> pumpChat(
       ],
       child: MaterialApp.router(
         routerConfig: router,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: testLocalizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
       ),
     ),

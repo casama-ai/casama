@@ -4,11 +4,12 @@ import 'package:casama/ui/friendly_error_view.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:casama/l10n/delegates.dart';
 
 void main() {
   FlutterErrorDetails details() => FlutterErrorDetails(exception: StateError('boom'), stack: StackTrace.current);
 
-  Widget app(Widget home) => MaterialApp(theme: AppTheme.light(), localizationsDelegates: AppLocalizations.localizationsDelegates, supportedLocales: AppLocalizations.supportedLocales, home: home);
+  Widget app(Widget home) => MaterialApp(theme: AppTheme.light(), localizationsDelegates: testLocalizationsDelegates, supportedLocales: AppLocalizations.supportedLocales, home: home);
 
   testWidgets('a broken screen says something went wrong, in the app colors', (tester) async {
     await tester.pumpWidget(app(FriendlyErrorView(details: details())));

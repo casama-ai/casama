@@ -18,6 +18,7 @@ import 'app_test.dart' show setSize;
 import 'fake_backend.dart';
 import 'fake_voice.dart';
 import 'package:casama/features/chat/read_aloud.dart';
+import 'package:casama/l10n/delegates.dart';
 
 Widget voiceHarness(FakeBackend backend, {FakeDictation? dictation, FakeDeviceDictation? device, FakePlayer? player, FakeCallConnector? calls, required Widget home}) {
   final router = GoRouter(routes: [
@@ -36,7 +37,7 @@ Widget voiceHarness(FakeBackend backend, {FakeDictation? dictation, FakeDeviceDi
     ],
     child: MaterialApp.router(
       routerConfig: router,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: testLocalizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
     ),
   );

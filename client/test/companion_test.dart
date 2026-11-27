@@ -11,6 +11,7 @@ import 'package:casama/l10n/generated/app_localizations.dart';
 
 import 'app_test.dart' show setSize;
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 class FakeCompanion implements Companion {
   final _status = ValueNotifier(CompanionStatus.off);
@@ -87,7 +88,7 @@ Widget companionHarness(FakeBackend backend, FakeCompanion companion, MemoryToke
         localMcpStoreProvider.overrideWithValue(mcp ?? MemoryMcp()),
       ],
       child: MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: testLocalizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: child,
       ),
@@ -162,7 +163,7 @@ void main() {
     await tester.pumpWidget(UncontrolledProviderScope(
       container: container,
       child: MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: testLocalizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: const CompanionOverlay(child: Scaffold(body: Align(alignment: Alignment.topLeft, child: Text('app')))),
       ),

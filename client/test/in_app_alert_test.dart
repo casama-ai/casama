@@ -12,6 +12,7 @@ import 'package:material_ui/material_ui.dart';
 
 import 'app_test.dart' show harness, setSize;
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 NotificationView _n(
   String id,
@@ -62,7 +63,7 @@ Widget _app(FakeBackend backend, {String start = '/'}) {
     overrides: [backendProvider.overrideWithValue(backend)],
     child: MaterialApp.router(
       routerConfig: router,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: testLocalizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
     ),
   );

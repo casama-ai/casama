@@ -27,6 +27,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'app_test.dart' show harness, setSize;
 import 'fake_backend.dart';
 import 'admin_test_helpers.dart';
+import 'package:casama/l10n/delegates.dart';
 
 FakeBackend _backend({bool buy = true}) => FakeBackend()
   ..sitesConfig = SitesConfig(
@@ -125,7 +126,7 @@ Widget _routed(
     ],
     child: MaterialApp.router(
       routerConfig: router,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: testLocalizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
     ),
   );

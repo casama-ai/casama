@@ -22,7 +22,7 @@ import 'package:casama/features/workspaces/spaces.dart';
 import 'package:casama/ui/shell_layout.dart';
 import 'package:casama/ui/bot_cursor.dart';
 import 'package:casama/ui/tool_words.dart';
-import 'package:casama/l10n/generated/app_localizations.dart';
+import 'package:casama/l10n/generated/app_localizations_en.dart';
 import 'package:casama_sdk/casama_sdk.dart';
 import 'package:flutter/foundation.dart' show debugDefaultTargetPlatformOverride;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -593,7 +593,7 @@ void main() {
   });
 
   test('browser steps that ran on the phone say so', () {
-    final l10n = lookupAppLocalizations(const Locale('en'));
+    final l10n = AppLocalizationsEn();
     expect(
       toolWords(l10n, 'browser.open', {
         'url': 'https://shop.example/a',
@@ -712,7 +712,7 @@ void main() {
   });
 
   test('Windows is a browser platform named "windows", with the WebView2 reason and OS label', () {
-    final l10n = lookupAppLocalizations(const Locale('en'));
+    final l10n = AppLocalizationsEn();
     debugDefaultTargetPlatformOverride = TargetPlatform.windows;
     addTearDown(() => debugDefaultTargetPlatformOverride = null);
     expect(appBrowserPlatform, isTrue);
@@ -758,7 +758,7 @@ void main() {
       linuxWebKitInstallCommand(osRelease: 'ID="opensuse-tumbleweed"\n'),
       'sudo zypper install libwebkit2gtk-4_1-0',
     );
-    final l10n = lookupAppLocalizations(const Locale('en'));
+    final l10n = AppLocalizationsEn();
     expect(
       appBrowserReasonText(
         l10n,

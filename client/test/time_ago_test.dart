@@ -2,11 +2,12 @@ import 'package:casama/core/widgets.dart';
 import 'package:casama/l10n/generated/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:casama/l10n/delegates.dart';
 
 /// Past times read as "3 hours ago", with the exact date and time on hover or long press.
 void main() {
   Widget app(Widget child) => MaterialApp(
-    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    localizationsDelegates: testLocalizationsDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
     home: Scaffold(body: Center(child: child)),
   );

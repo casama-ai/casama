@@ -24,6 +24,7 @@ import 'active_call_test.dart' show CallsConnector, settle;
 import 'app_test.dart' show setSize;
 import 'fake_backend.dart';
 import 'fake_voice.dart';
+import 'package:casama/l10n/delegates.dart';
 
 const jobRun = '66666666-6666-4666-8666-666666666666';
 
@@ -66,7 +67,7 @@ const jobRun = '66666666-6666-4666-8666-666666666666';
     ],
     child: MaterialApp.router(
       routerConfig: router,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: testLocalizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       builder: (context, child) => CallBubbleOverlay(child: child!),
     ),
@@ -349,7 +350,7 @@ void main() {
           ],
           child: MaterialApp.router(
             routerConfig: router,
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            localizationsDelegates: testLocalizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
           ),
         ),

@@ -20,6 +20,7 @@ import 'fake_backend.dart';
 import 'fake_unlockers.dart';
 import 'inbox_feed_test.dart' show busyBackend;
 import 'support/shots.dart';
+import 'package:casama/l10n/delegates.dart';
 
 /// [busyBackend] with two suggestions: an everyday one with days left, and an urgent one about
 /// to run out.
@@ -87,7 +88,7 @@ void main() {
               theme: AppTheme.light(),
               darkTheme: AppTheme.dark(),
               themeMode: dark ? ThemeMode.dark : ThemeMode.light,
-              localizationsDelegates: AppLocalizations.localizationsDelegates,
+              localizationsDelegates: testLocalizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: const InboxScreen(initialFilter: InboxFilter.needsYou),
             ),

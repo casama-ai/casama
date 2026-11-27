@@ -3,6 +3,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:casama/features/chat/widgets/composer.dart';
 import 'package:casama/l10n/generated/app_localizations.dart';
+import 'package:casama/l10n/delegates.dart';
 
 void main() {
   // macOS gives a text field no children, so anything under the message box's semantics node
@@ -17,7 +18,7 @@ void main() {
     addTearDown(focus.dispose);
     await tester.pumpWidget(
       MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: testLocalizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         // Like the chat screen: Cmd+F lives in a CallbackShortcuts around the page.
         home: CallbackShortcuts(

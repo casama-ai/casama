@@ -20,6 +20,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_test.dart' show harness, setSize;
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 SitesConfig _config({bool customDomains = true}) => SitesConfig(
   zone: 'sites.example',
@@ -56,7 +57,7 @@ Widget _routed(FakeBackend backend, String initial) {
     overrides: [backendProvider.overrideWithValue(backend)],
     child: MaterialApp.router(
       routerConfig: router,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: testLocalizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
     ),
   );

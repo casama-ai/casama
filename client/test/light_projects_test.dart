@@ -19,6 +19,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_test.dart' show harness, setSize;
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 Creation _in(String? projectId, String? projectTitle, Creation c) =>
     Creation.fromJson({
@@ -164,7 +165,7 @@ Widget _app(FakeBackend backend, String initial) {
     ],
     child: MaterialApp.router(
       routerConfig: _current,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: testLocalizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
     ),
   );

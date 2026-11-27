@@ -11,6 +11,7 @@ import 'package:material_ui/material_ui.dart';
 import 'app_test.dart' show setSize;
 import 'companion_test.dart' show FakeCompanion, MemoryMcp, MemoryTokens;
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 /// The companion page, paired, with commands on and Advanced open.
 Future<void> openCodingAgents(
@@ -28,7 +29,7 @@ Future<void> openCodingAgents(
         localMcpStoreProvider.overrideWithValue(MemoryMcp()),
       ],
       child: const MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: testLocalizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: CompanionScreen(),
       ),

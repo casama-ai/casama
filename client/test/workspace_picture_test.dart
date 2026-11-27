@@ -14,6 +14,7 @@ import 'package:material_ui/material_ui.dart';
 
 import 'app_test.dart' show setSize;
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 Future<Uint8List> _png(int side) async {
   final r = ui.PictureRecorder();
@@ -39,7 +40,7 @@ Widget _settings(FakeBackend backend) => ProviderScope(
     localCacheProvider.overrideWithValue(const NoCache()),
   ],
   child: const MaterialApp(
-    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    localizationsDelegates: testLocalizationsDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
     home: WorkspaceSettingsScreen(),
   ),

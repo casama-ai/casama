@@ -22,6 +22,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'app_test.dart' show harness, setSize;
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 // One transparent pixel.
 final _png = base64Decode(
@@ -343,7 +344,7 @@ void main() {
             currentOrgProvider.overrideWithValue(org),
           ],
           child: MaterialApp(
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            localizationsDelegates: testLocalizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: _inChat(
               const AttachmentView(

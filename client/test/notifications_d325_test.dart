@@ -16,6 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_test.dart' show setSize;
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 NotificationView _reply(String id, {String conversation = 'c1', DateTime? readAt, String? pushStatus = 'sent'}) => NotificationView(
   id: id,
@@ -51,7 +52,7 @@ Widget _app(FakeBackend backend, {String start = '/'}) {
   );
   return ProviderScope(
     overrides: [backendProvider.overrideWithValue(backend)],
-    child: MaterialApp.router(routerConfig: router, localizationsDelegates: AppLocalizations.localizationsDelegates, supportedLocales: AppLocalizations.supportedLocales),
+    child: MaterialApp.router(routerConfig: router, localizationsDelegates: testLocalizationsDelegates, supportedLocales: AppLocalizations.supportedLocales),
   );
 }
 
@@ -96,7 +97,7 @@ void main() {
         ProviderScope(
           overrides: [backendProvider.overrideWithValue(backend), signedInProvider.overrideWith((ref) => Stream.value(true))],
           child: MaterialApp(
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            localizationsDelegates: testLocalizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: const Scaffold(body: PushPrefsTile()),
           ),

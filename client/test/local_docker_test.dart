@@ -8,6 +8,7 @@ import 'package:material_ui/material_ui.dart';
 
 import 'app_test.dart' show harness, setSize;
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 /// This computer's own server is down because Docker isn't running (closed after a restart, or
 /// quit from its menu): the bar and the launch screen say so and open Docker.
@@ -68,7 +69,7 @@ void main() {
       var retries = 0;
       await tester.pumpWidget(
         MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: testLocalizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(
             body: ServerUnreachableView(

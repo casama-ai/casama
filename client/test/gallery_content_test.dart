@@ -13,6 +13,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 Widget _app(FakeBackend backend, Widget child, {String version = '0.8.0'}) =>
     ProviderScope(
@@ -22,7 +23,7 @@ Widget _app(FakeBackend backend, Widget child, {String version = '0.8.0'}) =>
       ],
       child: MaterialApp(
         theme: AppTheme.light(),
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: testLocalizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: Scaffold(body: child),
       ),

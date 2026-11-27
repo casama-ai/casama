@@ -21,6 +21,7 @@ import 'package:casama/ui/skeleton.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 /// How much of [finder] shows: the product of the opacities above it.
 double shown(WidgetTester tester, Finder finder) {
@@ -304,7 +305,7 @@ Future<(GoRouter, FakeBackend)> pumpRouter(WidgetTester tester) async {
         theme: AppTheme.light().copyWith(platform: TargetPlatform.android),
         builder: (context, child) => Wallpaper(child: child!),
         routerConfig: router,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: testLocalizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
       ),
     ),

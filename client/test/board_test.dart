@@ -10,6 +10,7 @@ import 'package:casama/l10n/generated/app_localizations.dart';
 import 'app_test.dart' show harness, setSize;
 import 'fake_unlockers.dart';
 import 'fake_backend.dart';
+import 'package:casama/l10n/delegates.dart';
 
 void main() {
   testWidgets('columns show tickets; a new ticket assigned to a bot is created', (tester) async {
@@ -156,7 +157,7 @@ void main() {
         unlockersProvider.overrideWithValue(FakeUnlockers()),
       ],
       child: MaterialApp.router(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: testLocalizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         routerConfig: router,
       ),

@@ -21,6 +21,7 @@ import 'app_test.dart' show setSize;
 import 'fake_backend.dart';
 import 'fake_voice.dart';
 import 'wake_word_test.dart' show FakeWakeEngine;
+import 'package:casama/l10n/delegates.dart';
 
 /// A new [FakeCall] for every connection, so two calls in a row are two calls.
 class CallsConnector implements VoiceCallConnector {
@@ -89,7 +90,7 @@ const otherBotId = 'bot-max';
     ],
     child: MaterialApp.router(
       routerConfig: router,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: testLocalizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       builder: (context, child) => CallBubbleOverlay(child: child!),
     ),
@@ -301,7 +302,7 @@ void main() {
             builder: (context, ref, _) {
               container = ProviderScope.containerOf(context);
               return MaterialApp(
-                localizationsDelegates: AppLocalizations.localizationsDelegates,
+                localizationsDelegates: testLocalizationsDelegates,
                 supportedLocales: AppLocalizations.supportedLocales,
                 builder: (context, child) => CallBubbleOverlay(child: child!),
                 home: const Scaffold(
