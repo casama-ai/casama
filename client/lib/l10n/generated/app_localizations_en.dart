@@ -18831,6 +18831,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Join the waitlist and we\'ll email you when it\'s your turn, or enter an invite code if you have one.';
 
   @override
+  String get inviteRefusedWaitlisted =>
+      'Casama Cloud is invite-only for now. We\'ll email you when it\'s your turn. Have an invite code? Use it now.';
+
+  @override
   String inviteFriendsInvitesLeft(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,

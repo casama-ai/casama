@@ -114,40 +114,56 @@ Future<void> showInviteRefusal(
   final otherEmail = message.contains(
     'Your invite is for another email address',
   );
+  // A Google or Apple sign-up the server has put on the waitlist itself: nothing left to join.
+  final waitlisted = message.contains("You're on the waitlist");
+  // A relay address stays out of the email step: Continue with Apple there brings it.
+  void haveInvite(BuildContext sheet) => replaceSheet(
+    sheet,
+    (c) => openHaveInvite(
+      c,
+      email: email != null && !isAppleRelayEmail(email) ? email : null,
+    ),
+  );
   return showAdaptiveSheet<void>(
     context: context,
     dialogMaxWidth: 460,
-    builder: (sheet) => FormSheet(
-      key: const Key('inviteRefusal'),
-      art: 'wait-ticket',
-      icon: LucideIcons.ticket,
-      title: otherEmail ? message : l10n.inviteGateLine,
-      subtitle: otherEmail ? null : l10n.inviteRefusedHelp,
-      submitLabel: l10n.joinTheWaitlist,
-      submitKey: const Key('refusalJoinWaitlist'),
-      onSubmit: () =>
-          replaceSheet(sheet, (c) => openJoinWaitlist(c, email: email)),
-      cancelLabel: l10n.notNow,
-      children: [
-        OutlinedButton.icon(
-          key: const Key('refusalHaveInvite'),
-          style: OutlinedButton.styleFrom(
-            shape: const StadiumBorder(),
-            minimumSize: const Size.fromHeight(48),
+    builder: (sheet) => waitlisted
+        ? FormSheet(
+            key: const Key('inviteRefusal'),
+            art: 'wait-ticket',
+            icon: LucideIcons.ticket,
+            title: l10n.inviteWaitlistedTitle,
+            subtitle: l10n.inviteRefusedWaitlisted,
+            submitLabel: l10n.iHaveAnInvite,
+            submitKey: const Key('refusalHaveInvite'),
+            onSubmit: () => haveInvite(sheet),
+            cancelLabel: l10n.notNow,
+            children: const [],
+          )
+        : FormSheet(
+            key: const Key('inviteRefusal'),
+            art: 'wait-ticket',
+            icon: LucideIcons.ticket,
+            title: otherEmail ? message : l10n.inviteGateLine,
+            subtitle: otherEmail ? null : l10n.inviteRefusedHelp,
+            submitLabel: l10n.joinTheWaitlist,
+            submitKey: const Key('refusalJoinWaitlist'),
+            onSubmit: () =>
+                replaceSheet(sheet, (c) => openJoinWaitlist(c, email: email)),
+            cancelLabel: l10n.notNow,
+            children: [
+              OutlinedButton.icon(
+                key: const Key('refusalHaveInvite'),
+                style: OutlinedButton.styleFrom(
+                  shape: const StadiumBorder(),
+                  minimumSize: const Size.fromHeight(48),
+                ),
+                onPressed: () => haveInvite(sheet),
+                icon: const Icon(LucideIcons.ticket, size: 18),
+                label: Text(l10n.iHaveAnInvite),
+              ),
+            ],
           ),
-          // A relay address stays out of the email step: Continue with Apple there brings it.
-          onPressed: () => replaceSheet(
-            sheet,
-            (c) => openHaveInvite(
-              c,
-              email: email != null && !isAppleRelayEmail(email) ? email : null,
-            ),
-          ),
-          icon: const Icon(LucideIcons.ticket, size: 18),
-          label: Text(l10n.iHaveAnInvite),
-        ),
-      ],
-    ),
   );
 }
 

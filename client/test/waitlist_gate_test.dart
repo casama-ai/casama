@@ -41,11 +41,12 @@ class _RefusingBackend extends FakeBackend {
 
 /// An Apple sign-in refused by the gate, as the backend passes it on: with the token's address.
 class _RefusingAppleBackend extends FakeBackend {
-  _RefusingAppleBackend(this.email);
+  _RefusingAppleBackend(this.email, {this.message = _refusal});
   final String email;
+  final String message;
   @override
   Future<void> signInWithProvider(String provider) async =>
-      throw IdTokenAuthException(_refusal, statusCode: '403', email: email);
+      throw IdTokenAuthException(message, statusCode: '403', email: email);
 }
 
 /// An ID token whose payload is [claims] (unsigned: only the payload is read).
@@ -134,6 +135,31 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.byKey(const Key('inviteRefusal')), findsNothing);
       expect(find.byKey(const Key('haveInviteCode')), findsOneWidget);
+    });
+
+    testWidgets('a Google refusal the server waitlisted says so, with no join step', (
+      tester,
+    ) async {
+      await setSize(tester, const Size(500, 1100));
+      const waitlisted =
+          "Casama Cloud is invite-only for now. You're on the waitlist, and we'll email you when you're in. Have an invite code? Tap I Have an Invite.";
+      final backend = _gated(
+        _RefusingAppleBackend('ana@gmail.com', message: waitlisted),
+      );
+      await _openSignIn(tester, backend);
+      await tester.tap(find.byKey(const Key('openSignIn')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('appleSignIn')));
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 3));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('inviteRefusal')), findsOneWidget);
+      expect(find.text("You're on the waitlist"), findsOneWidget);
+      expect(find.byKey(const Key('refusalJoinWaitlist')), findsNothing);
+      await tester.tap(find.byKey(const Key('refusalHaveInvite')));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('haveInviteCode')), findsOneWidget);
+      expect(backend.waitlistJoins, isEmpty);
     });
 
     testWidgets('Join the Waitlist after a refusal has the typed address filled in', (

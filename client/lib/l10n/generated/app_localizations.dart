@@ -30141,6 +30141,12 @@ abstract class AppLocalizations {
   /// **'Join the waitlist and we\'ll email you when it\'s your turn, or enter an invite code if you have one.'**
   String get inviteRefusedHelp;
 
+  /// No description provided for @inviteRefusedWaitlisted.
+  ///
+  /// In en, this message translates to:
+  /// **'Casama Cloud is invite-only for now. We\'ll email you when it\'s your turn. Have an invite code? Use it now.'**
+  String get inviteRefusedWaitlisted;
+
   /// D-427. Invite Friends while Casama Cloud is invite-only: how many of the member's invites are left. Never 'invite friends to get in' (App Store 3.2.2).
   ///
   /// In en, this message translates to:

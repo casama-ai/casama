@@ -45,7 +45,7 @@ Casama's [terms of service](https://casama.ai/terms) and [privacy policy](https:
 ## Prices
 
 Every price is worked out the same way from what the registrar charges Casama that day:
-**cost × 1.25 + $1.50, rounded up to the next .99**. Search shows the first year's price and the
+**cost × 1.25 + $3.00, rounded up to the next .99**. Search shows the first year's price and the
 renewal price for each name before you buy, and each domain's screen shows its next renewal price.
 
 | | Price |
@@ -63,16 +63,16 @@ price on the renewal day.
 
 | Ending | First year | Renewal | Late renewal (up to 25 days after expiry) | Restore (after 25 days) |
 |---|---|---|---|---|
-| .com | $10.99 | $28.99 | $28.99 | registry restore fee + $28.99 |
-| .net | $13.99 | $31.99 | $31.99 | registry restore fee + $31.99 |
-| .org | $13.99 | $26.99 | $26.99 | registry restore fee + $26.99 |
-| .co | $5.99 | $57.99 | $57.99 | registry restore fee + $57.99 |
-| .io | $26.99 | $101.99 | $101.99 | registry restore fee + $101.99 |
-| .app | $13.99 | $35.99 | $35.99 | registry restore fee + $35.99 |
-| .dev | $13.99 | $30.99 | $30.99 | registry restore fee + $30.99 |
-| .xyz | $3.99 | $27.99 | $27.99 | registry restore fee + $27.99 |
-| .me | $3.99 | $36.99 | $36.99 | registry restore fee + $36.99 |
-| .info | $8.99 | $51.99 | $51.99 | registry restore fee + $51.99 |
+| .com | $11.99 | $30.99 | $30.99 | registry restore fee + $30.99 |
+| .net | $15.99 | $32.99 | $32.99 | registry restore fee + $32.99 |
+| .org | $15.99 | $27.99 | $27.99 | registry restore fee + $27.99 |
+| .co | $6.99 | $59.99 | $59.99 | registry restore fee + $59.99 |
+| .io | $27.99 | $102.99 | $102.99 | registry restore fee + $102.99 |
+| .app | $15.99 | $36.99 | $36.99 | registry restore fee + $36.99 |
+| .dev | $15.99 | $31.99 | $31.99 | registry restore fee + $31.99 |
+| .xyz | $4.99 | $29.99 | $29.99 | registry restore fee + $29.99 |
+| .me | $5.99 | $37.99 | $37.99 | registry restore fee + $37.99 |
+| .info | $10.99 | $52.99 | $52.99 | registry restore fee + $52.99 |
 
 The registry restore fee depends on the ending and the registrar; Casama quotes the exact amount in
 dollars before you pay, and charges nothing until you agree.

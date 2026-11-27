@@ -6164,6 +6164,7 @@
   "inviteUseEmailHere": "On this device, use Continue with Email. Apple and Google work with an invite in the iPhone, Mac and Android apps.",
   "inviteDifferentCode": "Use a Different Code",
   "inviteRefusedHelp": "Join the waitlist and we'll email you when it's your turn, or enter an invite code if you have one.",
+  "inviteRefusedWaitlisted": "Casama Cloud is invite-only for now. We'll email you when it's your turn. Have an invite code? Use it now.",
   "inviteFriendsInvitesLeft": "{count, plural, =0{No invites left} =1{1 invite left} other{{count} invites left}}",
   "@inviteFriendsInvitesLeft": {"description": "D-427. Invite Friends while Casama Cloud is invite-only: how many of the member's invites are left. Never 'invite friends to get in' (App Store 3.2.2).", "placeholders": {"count": {"type": "int"}}},
   "inviteFriendsInvitesUsed": "{used} of {total} used. Each one lets a friend make an account.",
