@@ -1,0 +1,18 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "CFBundleDisplayName" : {
+      "comment" : "Name of the notification extension on iPhone. Casama is the brand.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama Notifications"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

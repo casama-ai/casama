@@ -7,6 +7,7 @@ import 'package:casama/core/backend.dart' show AuthMethods, PasskeyInfo;
 import 'package:casama/features/admin/admin_security_gate.dart';
 import 'package:casama/features/admin/security_tab.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:material_ui/material_ui.dart';
 
 import 'app_test.dart' show harness;
@@ -109,6 +110,9 @@ Future<void> pumpGate(
 }
 
 void main() {
+  // A remembered unlock method (a preference) from an earlier test file in the same suite shard
+  // would change which way the gate offers first.
+  setUp(() => SharedPreferences.setMockInitialValues({}));
   tearDown(() {
     AdminSecurity.forgetVerification();
     AdminSecurity.codeSentTo = null;

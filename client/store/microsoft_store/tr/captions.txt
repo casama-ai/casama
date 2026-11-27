@@ -1,0 +1,10 @@
+01-real-work.png	Gerçek işler sizin için tamamlanır
+02-customer-emails.png	Müşteri e-postaları sizin için yanıtlanır
+03-trips-ok.png	Seyahatler yalnızca onayınızla ayarlanır
+04-day-planned.png	Siz uyanmadan gününüz planlanır
+05-window-seat.png	Cam kenarı koltuk mu? Unutmaz
+06-flight-prices.png	Uçuş fiyatları sizin için izlenir
+07-sites-games.png	Siteler ve oyunlar sizin için hazırlanır
+08-inbox.png	Gelen kutunuz düzene girer
+09-birthday-dinner.png	Doğum günü yemeği, üç botun ortak planı
+10-make-it-yours.png	Kendinize göre uyarlayın

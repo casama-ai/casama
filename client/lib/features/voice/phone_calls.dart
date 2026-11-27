@@ -18,6 +18,7 @@ import '../../core/widgets.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_tokens.dart';
 import '../../core/analytics.dart';
+import '../../core/app_language.dart';
 import 'active_call.dart';
 import 'call_system.dart';
 
@@ -224,8 +225,11 @@ Future<void> sendRingDecline(String id, String token, {http.Client? client, Futu
   final c = client ?? http.Client();
   try {
     final base = await (apiUrl ?? () async => (await ServerAddress.load()).apiUrl)();
+    // Often a background isolate that never ran the app's startup, so the language is worked out
+    // here, without waiting on anything: a decline mustn't be late.
+    final language = AppLanguage.acceptLanguage();
     await c
-        .post(Uri.parse('$base/v1/calls/$id/decline-ring'), headers: {'content-type': 'application/json'}, body: jsonEncode({'token': token}))
+        .post(Uri.parse('$base/v1/calls/$id/decline-ring'), headers: {'content-type': 'application/json', if (language.isNotEmpty) AcceptLanguage.header: language}, body: jsonEncode({'token': token}))
         .timeout(const Duration(seconds: 15));
   } catch (e) {
     debugPrint('ring decline not sent: $e');

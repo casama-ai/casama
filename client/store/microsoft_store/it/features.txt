@@ -1,0 +1,8 @@
+Colleghi IA con un proprio computer isolato: browser, file e app
+Guarda un bot lavorare dal vivo o prendi il controllo in qualsiasi momento
+Invii, prenotazioni, pagamenti ed eliminazioni attendono il tuo OK, e Rifiuta annulla il lavoro
+I bot si avviano secondo una programmazione, all’arrivo di un’email o quando cambia una pagina web
+Memoria e competenze condivise in tutte le chat
+Oltre 40 bot pronti all’uso e chat di gruppo con persone e bot insieme
+I bot rispondono su WhatsApp, Telegram, Slack, Discord ed email
+App, SDK, CLI e regole di sicurezza open source

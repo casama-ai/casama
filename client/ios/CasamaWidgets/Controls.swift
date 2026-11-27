@@ -13,11 +13,11 @@ struct AskCasamaControl: ControlWidget {
   var body: some ControlWidgetConfiguration {
     StaticControlConfiguration(kind: "AskCasamaControl") {
       ControlWidgetButton(action: OpenCasamaIntent(path: "/quick-ask")) {
-        Label("Ask Casama", systemImage: "bubble.left.fill")
+        Label(NativeL10n.widgetAskCasama, systemImage: "bubble.left.fill")
       }
     }
-    .displayName("Ask Casama")
-    .description("Open quick ask with the keyboard up.")
+    .displayName(LocalizedStringResource("widgetAskCasama", defaultValue: "Ask Casama", table: "Native"))
+    .description(LocalizedStringResource("widgetControlAskDescription", defaultValue: "Open quick ask with the keyboard up.", table: "Native"))
   }
 }
 
@@ -26,11 +26,11 @@ struct TalkToBotControl: ControlWidget {
   var body: some ControlWidgetConfiguration {
     AppIntentControlConfiguration(kind: "TalkToBotControl", intent: TalkToBotControlIntent.self) { config in
       ControlWidgetButton(action: OpenCasamaIntent(path: config.bot.map { "/bots/\($0.id)/call" } ?? "/quick-ask")) {
-        Label(config.bot.map { "Talk to \($0.name)" } ?? "Talk to a bot", systemImage: "mic.fill")
+        Label(config.bot.map { NativeL10n.widgetTalkToName($0.name) } ?? NativeL10n.widgetTalkToBot, systemImage: "mic.fill")
       }
     }
-    .displayName("Talk to a bot")
-    .description("Start a voice call with the bot you pick.")
+    .displayName(LocalizedStringResource("widgetTalkToBot", defaultValue: "Talk to a bot", table: "Native"))
+    .description(LocalizedStringResource("widgetControlTalkDescription", defaultValue: "Start a voice call with the bot you pick.", table: "Native"))
     .promptsForUserConfiguration()
   }
 }
@@ -42,16 +42,16 @@ struct RunRoutineControl: ControlWidget {
       #if os(macOS)
       let path = config.routine.map { "/run-routine/\($0.id):\($0.botId)" } ?? "/bots"
       ControlWidgetButton(action: OpenCasamaIntent(path: path)) {
-        Label(config.routine?.name ?? "Run a routine", systemImage: "play.fill")
+        Label(config.routine?.name ?? NativeL10n.widgetRunRoutine, systemImage: "play.fill")
       }
       #else
       ControlWidgetButton(action: RunRoutineWidgetIntent(routineId: config.routine?.id ?? "", botId: config.routine?.botId ?? "")) {
-        Label(config.routine?.name ?? "Run a routine", systemImage: "play.fill")
+        Label(config.routine?.name ?? NativeL10n.widgetRunRoutine, systemImage: "play.fill")
       }
       #endif
     }
-    .displayName("Run a routine")
-    .description("Run the routine you pick, without opening Casama.")
+    .displayName(LocalizedStringResource("widgetRunRoutine", defaultValue: "Run a routine", table: "Native"))
+    .description(LocalizedStringResource("widgetControlRunDescription", defaultValue: "Run the routine you pick, without opening Casama.", table: "Native"))
     .promptsForUserConfiguration()
   }
 }

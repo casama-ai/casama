@@ -1,0 +1,37 @@
+Casama vous offre des collègues IA qui accomplissent le travail, au lieu d'en parler. Chaque bot dispose de son propre ordinateur, retient vos habitudes, continue d'avancer en votre absence et vous demande votre accord avant de payer, d'envoyer ou de supprimer quoi que ce soit.
+
+Demandez simplement : réserver le voyage, trier la boîte de réception, analyser le marché, créer le site. Le travail revient terminé.
+
+Un ordinateur rien qu'à lui
+Chaque bot travaille sur un ordinateur privé doté d'un navigateur, de fichiers et d'apps, isolé de vos propres appareils. Regardez-le travailler en direct ou prenez le contrôle quand vous voulez.
+
+Un navigateur intégré à l'app
+Les bots peuvent aussi utiliser un petit navigateur dans Casama sur votre iPhone sous vos yeux. Choisissez si un site s'ouvre ici ou sur l'ordinateur du bot, approuvez les étapes sensibles, saisissez vos mots de passe et prenez le contrôle à tout moment.
+
+Vous gardez la main
+Envoyer, réserver, payer et supprimer attendent votre OK. Le bot enregistre d'abord un point de contrôle : Refuser annule tout. Fixez un budget par bot et voyez le coût de chaque réponse.
+
+Il travaille en votre absence
+Les bots démarrent d'eux-mêmes : à heure fixe, à l'arrivée d'un e-mail, avant une réunion ou dès qu'une page web change. Réveillez-vous avec un résumé du matin présentant ce qui vous attend.
+
+Il se souvient
+Faits, préférences et travaux passés vous suivent dans chaque discussion. Montrez une tâche à un bot une fois et il la garde comme compétence. Tout ce qu'il crée — documents, sites ou jeux — est conservé dans votre Bibliothèque.
+
+Une équipe, pas un simple chatbot
+Donnez à chaque bot un rôle, des outils et un budget. Réunissez-les en groupe avec vos proches ou collègues, mentionnez @everyone et le bot principal répartit les tâches. Démarrez avec plus de 40 bots prêts à l'emploi : assistance personnelle, recherche, code ou organisation de voyages.
+
+Parlez, écrivez ou appelez
+Dictez un message, écoutez les réponses à voix haute ou appelez un bot en direct. Les bots peuvent aussi vous répondre sur WhatsApp, Telegram, Slack, Discord et par e-mail.
+
+Compatible avec vos apps
+Connectez Gmail, Google Agenda, Notion, Slack, Drive et bien d'autres. Les identifiants de votre gestionnaire de mots de passe sont saisis pour le bot sans jamais être montrés à l'IA. Avec votre accord, un bot peut lire vos données Apple Santé (pas, sommeil…) pour vous aider dans vos routines.
+
+Open source, et à vous
+Casama est open source : les apps, SDK, CLI et les règles de sécurité qui décident ce qu'un bot peut faire sont publics, afin que vous sachiez exactement quand il doit vous demander d'abord. Les bots tournent sur Casama Cloud, où les modèles d'IA sont choisis pour vous sans aucune clé, ou avec vos propres clés de fournisseur.
+
+Les mêmes discussions sur votre Mac et sur le web.
+
+Casama Cloud propose un forfait Gratuit. Les forfaits payants sont des abonnements à renouvellement automatique : le paiement est débité sur votre compte Apple et le forfait est renouvelé sauf résiliation au moins 24 heures avant la fin de la période. Gérez ou résiliez dans les réglages de votre compte App Store.
+
+Conditions d'utilisation : https://casama.ai/terms
+Politique de confidentialité : https://casama.ai/privacy

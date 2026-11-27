@@ -1,0 +1,34 @@
+Casama gibt dir KI-Teamkollegen, die Arbeit wirklich erledigen, statt nur darüber zu reden. Jeder Bot hat seinen eigenen Computer, merkt sich, wie du Dinge magst, arbeitet weiter, während du weg bist, und fragt nach, bevor er etwas zahlt, sendet oder löscht.
+
+Sag in einfachen Worten, was ansteht: Reise buchen, Posteingang sortieren, Markt recherchieren, Website bauen. Das Ergebnis kommt fertig zurück.
+
+Ein eigener Computer
+Jeder Bot arbeitet auf einem privaten Computer mit Browser, Dateien und Apps – getrennt von deinen eigenen Geräten. Schau ihm live bei der Arbeit zu oder übernimm jederzeit selbst die Steuerung.
+
+Du behältst die Kontrolle
+Senden, Buchen, Zahlen und Löschen warten auf dein OK. Der Bot speichert vorher einen Checkpoint, sodass „Ablehnen“ die Änderungen rückgängig macht. Lege für jeden Bot ein Budget fest und sieh, was jede Antwort gekostet hat.
+
+Arbeitet weiter, wenn du weg bist
+Bots starten von selbst: nach Zeitplan, wenn eine E-Mail eingeht, vor einem Termin oder wenn sich eine Seite ändert. Starte morgens mit einem Briefing zu allem, was dich braucht.
+
+Erinnert sich mit
+Fakten, Vorlieben und frühere Arbeit bleiben über jeden Chat hinweg erhalten. Zeig einem Bot eine Aufgabe einmal, und er behält sie als Skill. Alles, was er erstellt – von Dokumenten über Websites bis zu Spielen –, landet in deiner Bibliothek.
+
+Ein Team, nicht nur ein Chatbot
+Gib jedem Bot eine Rolle, Tools und ein Budget. Hol sie zusammen mit Familie oder Kollegen in einen Gruppenchat, schreib @everyone, und der leitende Bot teilt die Arbeit auf. Starte mit über 40 fertigen Bots – vom persönlichen Assistenten über Recherche und Coding bis zur Reiseplanung.
+
+Sprechen, schreiben oder anrufen
+Diktiere eine Nachricht, lass dir Antworten vorlesen oder ruf einen Bot live an. Bots antworten dir auch in WhatsApp, Telegram, Slack, Discord und per E-Mail.
+
+Arbeitet mit deinen Apps
+Verbinde Gmail, Google Kalender, Notion, Slack, Drive und viele mehr. Logins aus deinem Passwortmanager werden für den Bot ausgefüllt und der KI nie gezeigt.
+
+Open Source und unter deiner Kontrolle
+Casama ist Open Source: Die Apps, SDKs, CLI und die Sicherheitsregeln, die festlegen, was ein Bot tun darf, sind öffentlich – so siehst du genau, wann ein Bot dich vorher fragen muss. Bots laufen auf Casama Cloud, wo die KI-Modelle für dich ausgewählt werden und keine eigenen Schlüssel nötig sind, oder du verbindest deine eigenen Anbieter-Schlüssel.
+
+Dieselben Chats auf deinem iPhone, iPad und im Web.
+
+Casama Cloud bietet ein Kostenlos-Abo. Bezahlte Abos verlängern sich automatisch: Die Zahlung wird deinem Apple Account belastet, und das Abo verlängert sich, sofern es nicht mindestens 24 Stunden vor Ablauf des Zeitraums gekündigt wird. Verwalten oder kündigen kannst du es in deinen App Store-Kontoeinstellungen.
+
+Nutzungsbedingungen: https://casama.ai/terms
+Datenschutzerklärung: https://casama.ai/privacy

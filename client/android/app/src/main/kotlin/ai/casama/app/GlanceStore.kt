@@ -2,6 +2,7 @@ package ai.casama.app
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.res.Resources
 import android.text.format.DateFormat
 import android.text.format.DateUtils
 import java.time.OffsetDateTime
@@ -14,7 +15,7 @@ import org.json.JSONObject
  * [GlanceRefresh]) wrote into home_widget's `HomeWidgetPreferences`, the widgets' words beside it,
  * and whether the person is signed in. Parsed with org.json into small classes, once per change.
  *
- * Native code holds no copy of the app's text except the English fallbacks in [Words], used when
+ * Native code holds no copy of the app's text; [Words] falls back to generated resources when
  * the app hasn't written `glance_words` yet.
  */
 object GlanceStore {
@@ -160,7 +161,7 @@ object GlanceStore {
     val p = prefs(context)
     // Read loosely: home_widget stores whatever type Dart passed, and a wrong type mustn't crash.
     val all = p.all
-    val words = Words.from(all[KEY_WORDS] as? String)
+    val words = Words.from(all[KEY_WORDS] as? String, context.resources)
     val glance = parseCached(all[KEY_GLANCE] as? String)
     val state = when {
       !flag(all[KEY_SIGNED_IN]) -> State.SIGNED_OUT
@@ -340,76 +341,76 @@ object GlanceStore {
 }
 
 /**
- * The widgets' words (§17): the app's own from `app_en.arb`, written as `glance_words`, with an
- * English copy here for when they're missing. Placeholders: `{bot}`, `{time}`, `{n}`, `{amount}`,
+ * The widgets' words (§17): the app's own from `app_en.arb`, written as `glance_words`, with string
+ * resources generated from the same file for when they're missing. Placeholders: `{bot}`, `{time}`, `{n}`, `{amount}`,
  * `{title}`. The Canvas widget's words are the `canvas*` keys.
  */
-class Words(private val saved: JSONObject?) {
+class Words(private val saved: JSONObject?, private val resources: Resources) {
   operator fun get(key: String): String =
-    saved?.optString(key)?.takeIf { it.isNotEmpty() } ?: defaults[key] ?: key
+    saved?.optString(key)?.takeIf { it.isNotEmpty() } ?: defaults[key]?.let(resources::getString) ?: key
 
   fun fill(key: String, vararg values: Pair<String, String>): String =
     values.fold(get(key)) { s, (k, v) -> s.replace("{$k}", v) }
 
   companion object {
-    fun from(raw: String?) = Words(raw?.let { runCatching { JSONObject(it) }.getOrNull() })
+    fun from(raw: String?, resources: Resources) =
+      Words(raw?.let { runCatching { JSONObject(it) }.getOrNull() }, resources)
 
-    val defaults = mapOf(
-      "needs_you" to "Needs you",
-      "all_clear" to "All clear",
-      "allow" to "Allow",
-      "deny" to "Deny",
-      "review" to "Review",
-      "open" to "Open",
-      "do_it" to "Do it",
-      "run_now" to "Run now",
-      "started" to "Started",
-      "stop" to "Stop",
-      "ask" to "Ask",
-      "ask_bot" to "Ask {bot}",
-      "talk" to "Talk",
-      "try" to "Try",
-      "up_next" to "Up next",
-      "no_routines" to "No routines yet",
-      "working" to "Working",
-      "waiting" to "Waiting for you",
-      "idle" to "Idle",
-      "off" to "Turned off",
-      "replied_at" to "Replied {time}",
-      "brief" to "Brief",
-      "brief_at" to "Brief at {time}",
-      "no_brief" to "No brief yet",
-      "today" to "Today",
-      "credits" to "Credits",
-      "credits_left" to "{amount} left",
-      "spent_today" to "{amount} today",
-      "used_pct" to "{n}% used",
-      "resets_at" to "Resets {time}",
-      "finished" to "Finished",
-      "library" to "Library",
-      "no_creations" to "Nothing made yet",
-      "tasks" to "Tasks",
-      "todo" to "To do",
-      "in_progress" to "In progress",
-      "in_review" to "In review",
-      "blocked" to "Blocked",
-      "sign_in" to "Open Casama to sign in",
-      "no_bots" to "Meet your first bot",
-      "as_of" to "As of {time}",
-      "update_server" to "Update your Casama server to use this widget",
-      "needs_ok_from" to "{bot} needs your OK",
-      "suggests" to "{bot} suggests",
-      "take_over" to "{bot} wants you to take over",
-      "next_brief" to "Next brief {time}",
-      "nothing_next" to "Nothing coming up",
-      // The Canvas widget (docs/BOT-WIDGET-PLAN.md §6.5).
-      "canvas" to "Canvas",
-      "canvas_empty" to "Ask a bot to put something here",
-      "canvas_try" to "Try: put a daily verse on my Lock Screen",
-      // The unit after a countdown's number of days ("12 days"), as the app writes it.
-      "canvas_day" to "day",
-      "canvas_days" to "days",
-      "canvas_now" to "Now",
+    /** The app's own key → the English (or the phone's language) it falls back to. */
+    private val defaults = mapOf(
+      "needs_you" to R.string.widget_needs_you,
+      "all_clear" to R.string.widget_all_clear,
+      "allow" to R.string.widget_allow,
+      "deny" to R.string.widget_deny,
+      "review" to R.string.widget_review,
+      "open" to R.string.widget_open,
+      "do_it" to R.string.widget_do_it,
+      "run_now" to R.string.widget_run_now,
+      "started" to R.string.widget_started,
+      "stop" to R.string.widget_stop,
+      "ask" to R.string.widget_ask,
+      "ask_bot" to R.string.widget_ask_bot,
+      "talk" to R.string.widget_talk,
+      "try" to R.string.widget_try,
+      "up_next" to R.string.widget_up_next,
+      "no_routines" to R.string.widget_no_routines,
+      "working" to R.string.widget_working,
+      "waiting" to R.string.widget_waiting,
+      "idle" to R.string.widget_idle,
+      "off" to R.string.widget_status_off,
+      "replied_at" to R.string.widget_replied_at,
+      "brief" to R.string.widget_brief,
+      "brief_at" to R.string.widget_brief_at,
+      "no_brief" to R.string.widget_no_brief,
+      "today" to R.string.widget_today,
+      "credits" to R.string.widget_credits,
+      "credits_left" to R.string.widget_credits_left,
+      "spent_today" to R.string.widget_spent_today,
+      "used_pct" to R.string.widget_used_pct,
+      "resets_at" to R.string.widget_resets_at,
+      "finished" to R.string.widget_finished,
+      "library" to R.string.widget_library,
+      "no_creations" to R.string.widget_no_creations,
+      "tasks" to R.string.widget_tasks,
+      "todo" to R.string.widget_todo,
+      "in_progress" to R.string.widget_in_progress,
+      "in_review" to R.string.widget_in_review,
+      "blocked" to R.string.widget_blocked,
+      "sign_in" to R.string.widget_sign_in,
+      "no_bots" to R.string.widget_no_bots,
+      "as_of" to R.string.widget_fallback_as_of,
+      "update_server" to R.string.widget_update_server,
+      "needs_ok_from" to R.string.widget_needs_ok_from,
+      "suggests" to R.string.widget_suggests,
+      "take_over" to R.string.widget_fallback_wants_take_over,
+      "next_brief" to R.string.widget_next_brief,
+      "nothing_next" to R.string.widget_fallback_nothing_next,
+      "canvas" to R.string.widget_name_canvas,
+      "canvas_empty" to R.string.canvas_empty,
+      "canvas_try" to R.string.canvas_try,
+      "canvas_day" to R.string.widget_fallback_day,
+      "canvas_days" to R.string.widget_fallback_days,
+      "canvas_now" to R.string.canvas_now,
     )
   }
 }

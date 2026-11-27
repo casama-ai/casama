@@ -263,7 +263,11 @@ export const Me = z
     user_id: Uuid,
     email: z.string().nullable(),
     display_name: z.string().nullable(),
-    locale: z.string(),
+    /**
+     * The language the person picked (BCP-47). Clients treat null as "follow the device"; the
+     * server still sends "en" for that while older builds, which can't read a null, are in use.
+     */
+    locale: z.string().nullable(),
     timezone: z.string(),
     is_internal: z.boolean().optional(),
     account_age_band: AccountAgeBand.nullable().optional(),

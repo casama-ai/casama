@@ -276,7 +276,7 @@ class _BubbleState extends ConsumerState<_Bubble>
             children: [
               Icon(c.muted ? LucideIcons.mic : LucideIcons.micOff, size: 18),
               const SizedBox(width: AppSpace.sm),
-              Text(c.muted ? l10n.unmute : l10n.mute),
+              Text(c.muted ? l10n.callMicUnmute : l10n.callMicMute),
             ],
           ),
         ),
@@ -355,7 +355,7 @@ class _BubbleState extends ConsumerState<_Bubble>
           label: l10n.callBubbleLabel(name, labelTime),
           customSemanticsActions: {
             CustomSemanticsAction(
-              label: c.muted ? l10n.unmute : l10n.mute,
+              label: c.muted ? l10n.callMicUnmute : l10n.callMicMute,
             ): () =>
                 c.setMuted(!c.muted),
             CustomSemanticsAction(label: l10n.callEndCall): () =>
@@ -595,7 +595,7 @@ class _CallSidebarCardState extends ConsumerState<CallSidebarCard> {
                     ),
                     IconButton(
                       key: const Key('callCardMute'),
-                      tooltip: c.muted ? l10n.unmute : l10n.mute,
+                      tooltip: c.muted ? l10n.callMicUnmute : l10n.callMicMute,
                       visualDensity: VisualDensity.compact,
                       isSelected: c.muted,
                       icon: Icon(

@@ -26,6 +26,7 @@ computer and what its network allows.
 | `dart/cli` (the `casama` command) | Apache-2.0 |
 | `selfhost` (the self-host bundle: compose file, `install.sh`, settings) | Apache-2.0 |
 | `packages/mcp`, `packages/plugin-check` | Apache-2.0 |
+| `packages/l10n` (l10n-kit: finds new strings, checks and merges translations) | Apache-2.0 |
 | `packages/contracts` (API schemas and the OpenAPI document) | Apache-2.0 |
 | `packages/formats` (skill, pack, template and plugin file formats) | Apache-2.0 |
 | `agent-kit/`, `examples/`, `packs/`, `skills/` | Apache-2.0 (adapted skills keep their own license file) |

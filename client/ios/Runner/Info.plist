@@ -43,7 +43,7 @@
 	<key>NSHealthUpdateUsageDescription</key>
 	<string>Casama only reads Apple Health data; it never writes to it.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Save named places (Home, Work) and tell your bots when it's time to leave, only when you turn on Places in Device connections.</string>
+	<string>Save places you name, such as Home or Work, and let your bots remind you when to leave for your next appointment. Used only if you turn on Places in Device connections.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Tell your bots when you arrive at or leave your named places, even when Casama is closed. Only the place name and time are shared, never your route.</string>
 	<key>NSMicrophoneUsageDescription</key>

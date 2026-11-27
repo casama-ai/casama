@@ -5,6 +5,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../core/backend.dart';
 import '../../core/date_format.dart';
+import '../../core/list_format.dart';
 import '../../core/number_format.dart';
 import '../../core/widgets.dart';
 import '../../l10n/generated/app_localizations.dart';
@@ -25,7 +26,7 @@ List<({IconData icon, String text})> galleryAccessRows(
   if (access.reads.isNotEmpty)
     (
       icon: LucideIcons.eye,
-      text: l10n.galleryAccessReads(access.reads.join(', ')),
+      text: l10n.galleryAccessReads(joinList(l10n.localeName, access.reads)),
     ),
   for (final w in access.writes) (icon: LucideIcons.pencil, text: _sentence(w)),
   if (access.runsCode)

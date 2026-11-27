@@ -243,7 +243,7 @@ void main() {
     s.dispose();
   });
 
-  test("the Mac's menu bar: the call's line, Mute or Unmute, End Call, Show Call; the title counts", () {
+  test("the Mac's menu bar: the call's line, Mute or Unmute mic, End Call, Show Call; the title counts", () {
     final since = DateTime(2026, 11, 16, 10);
     final g = CallGlance(
       id: 'live-1',
@@ -255,7 +255,7 @@ void main() {
     );
     final menu = callMenu(g, l10n);
     expect(menu.status, 'Ava · Working on: Book the flight');
-    expect(menu.items.map((i) => i.$1), ['Mute', 'End Call', 'Show Call']);
+    expect(menu.items.map((i) => i.$1), ['Mute mic', 'End Call', 'Show Call']);
     expect(menu.items.map((i) => i.$2), [
       CallSystemAction.mute,
       CallSystemAction.end,
@@ -273,7 +273,7 @@ void main() {
       l10n,
     );
     expect(muted.status, 'Ava · Muted');
-    expect(muted.items.first, ('Unmute', CallSystemAction.unmute));
+    expect(muted.items.first, ('Unmute mic', CallSystemAction.unmute));
 
     expect(
       callMenuTitle(g, since.add(const Duration(minutes: 3, seconds: 12))),

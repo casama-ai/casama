@@ -319,7 +319,7 @@ void main() {
           findsOneWidget,
         );
         expect(find.byKey(const Key('galleryAccess')), findsOneWidget);
-        expect(find.text('Reads your email, calendar'), findsOneWidget);
+        expect(find.text('Reads: email, calendar'), findsOneWidget);
         expect(find.text('Made by Casama'), findsOneWidget);
       },
     );
@@ -402,7 +402,7 @@ void main() {
       await tester.tap(find.byKey(const Key('launch')));
       await tester.pumpAndSettle();
       expect(find.byKey(const Key('galleryWizardReview')), findsOneWidget);
-      expect(find.text('Reads your email, calendar'), findsOneWidget);
+      expect(find.text('Reads: email, calendar'), findsOneWidget);
       final field = tester.widget<TextField>(
         find.byKey(const Key('galleryInput-city')),
       );
@@ -427,7 +427,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('Daily brief is ready'), findsOneWidget);
       expect(
-        find.text('It works fully once you connect Gmail.'),
+        find.text('To work fully, it needs these apps connected: Gmail'),
         findsOneWidget,
       );
       await tester.tap(find.byKey(const Key('galleryWizardFinish')));
@@ -603,7 +603,7 @@ void main() {
         await tester.tap(find.byKey(const Key('galleryUpdate-notes')));
         await tester.pumpAndSettle();
         expect(find.byKey(const Key('galleryUpdateDialog')), findsOneWidget);
-        expect(find.text('Now reads your calendar'), findsOneWidget);
+        expect(find.text('Now reads: calendar'), findsOneWidget);
         expect(find.text('Reads your calendar too.'), findsOneWidget);
         await tester.tap(find.byKey(const Key('galleryUpdateConfirm')));
         await tester.pumpAndSettle();

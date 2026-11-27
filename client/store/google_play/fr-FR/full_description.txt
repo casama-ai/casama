@@ -1,0 +1,37 @@
+Casama vous offre des collègues IA qui accomplissent le travail, au lieu d'en parler. Chaque bot dispose de son propre ordinateur, retient vos habitudes, continue d'avancer en votre absence et vous demande votre accord avant de payer, d'envoyer ou de supprimer quoi que ce soit.
+
+Demandez simplement : réserver le voyage, trier la boîte de réception, analyser le marché, créer le site. Le travail revient terminé.
+
+Un ordinateur rien qu'à lui
+Chaque bot travaille sur un ordinateur privé doté d'un navigateur, de fichiers et d'apps, isolé de vos propres appareils. Regardez-le travailler en direct ou prenez le contrôle quand vous voulez.
+
+Vous gardez la main
+Envoyer, réserver, payer et supprimer attendent votre OK. Le bot enregistre d'abord un point de contrôle : Refuser annule tout. Fixez un budget par bot et voyez le coût de chaque réponse.
+
+Il travaille en votre absence
+Les bots démarrent d'eux-mêmes : à heure fixe, à l'arrivée d'un e-mail, avant une réunion ou dès qu'une page web change. Réveillez-vous avec un résumé du matin présentant ce qui vous attend.
+
+Il se souvient
+Faits, préférences et travaux passés vous suivent dans chaque discussion. Montrez une tâche à un bot une fois et il la garde comme compétence. Tout ce qu'il crée — documents, sites ou jeux — est conservé dans votre Bibliothèque.
+
+Une équipe, pas un simple chatbot
+Donnez à chaque bot un rôle, des outils et un budget. Réunissez-les en groupe avec vos proches ou collègues, mentionnez @everyone et le bot principal répartit les tâches. Démarrez avec plus de 40 bots prêts à l'emploi : assistance personnelle, recherche, code ou organisation de voyages.
+
+Parlez, écrivez ou appelez
+Dictez un message, écoutez les réponses à voix haute ou appelez un bot en direct. Les bots peuvent aussi vous répondre sur WhatsApp, Telegram, Slack, Discord et par e-mail.
+
+Compatible avec vos apps
+Connectez Gmail, Google Agenda, Notion, Slack, Drive et bien d'autres. Les identifiants de votre gestionnaire de mots de passe sont saisis pour le bot sans jamais être montrés à l'IA.
+
+Open source, et à vous
+Casama est open source : les apps, SDK, CLI et les règles de sécurité qui décident ce qu'un bot peut faire sont publics, afin que vous sachiez exactement quand il doit vous demander d'abord. Les bots tournent sur Casama Cloud, où les modèles d'IA sont choisis pour vous sans aucune clé, ou avec vos propres clés de fournisseur.
+
+Sur votre montre Wear OS
+Casama propose une app Wear OS. Parlez à un bot à la voix, répondez aux approbations et suivez le travail en cours au poignet. Ajoutez des cartes Casama : Vous attend (approuver ou refuser), Demander (parler en un appui), À venir (prochaine routine, avec Exécuter) et une carte par bot. Ajoutez des complications au cadran : demandes en attente, crédits utilisés et bouton micro pour ouvrir Demander.
+
+Les mêmes discussions sur votre téléphone, votre ordinateur, votre montre et le web.
+
+Casama Cloud propose un forfait Gratuit. Les forfaits payants se renouvellent automatiquement sauf résiliation au moins 24 heures avant la fin de la période. Gérez ou résiliez dans Google Play, sous Paiements et abonnements.
+
+Conditions d'utilisation : https://casama.ai/terms
+Politique de confidentialité : https://casama.ai/privacy

@@ -24,12 +24,12 @@ enum RunActions {
 
 @available(iOS 17.0, *)
 struct StopRunIntent: LiveActivityIntent {
-  static var title: LocalizedStringResource = "Stop the bot"
+  static var title: LocalizedStringResource = LocalizedStringResource("siriStopBot", defaultValue: "Stop the bot", table: "Native")
   static var isDiscoverable: Bool = false
   static var openAppWhenRun: Bool = false
   static var authenticationPolicy: IntentAuthenticationPolicy = .alwaysAllowed
 
-  @Parameter(title: "Run")
+  @Parameter(title: LocalizedStringResource("siriRun", defaultValue: "Run", table: "Native"))
   var runId: String
 
   init() {}
@@ -44,19 +44,19 @@ struct StopRunIntent: LiveActivityIntent {
 
 @available(iOS 17.0, *)
 struct AnswerRequestIntent: LiveActivityIntent {
-  static var title: LocalizedStringResource = "Answer a bot's request"
+  static var title: LocalizedStringResource = LocalizedStringResource("siriAnswerRequest", defaultValue: "Answer a bot's request", table: "Native")
   static var isDiscoverable: Bool = false
   static var openAppWhenRun: Bool = false
   static var authenticationPolicy: IntentAuthenticationPolicy = .requiresAuthentication
 
-  @Parameter(title: "Request")
+  @Parameter(title: LocalizedStringResource("siriRequest", defaultValue: "Request", table: "Native"))
   var approvalId: String
 
-  @Parameter(title: "Allow")
+  @Parameter(title: LocalizedStringResource("siriAllow", defaultValue: "Allow", table: "Native"))
   var allow: Bool
 
   /// A Home Screen widget's Allow/Deny (D-405): Dart then answers low-risk requests only (§10).
-  @Parameter(title: "From a widget", default: false)
+  @Parameter(title: LocalizedStringResource("siriFromWidget", defaultValue: "From a widget", table: "Native"), default: false)
   var fromWidget: Bool
 
   init() {}
@@ -84,15 +84,15 @@ struct AnswerRequestIntent: LiveActivityIntent {
 
 @available(iOS 17.0, *)
 struct RunRoutineWidgetIntent: LiveActivityIntent {
-  static var title: LocalizedStringResource = "Run a routine now"
+  static var title: LocalizedStringResource = LocalizedStringResource("siriRunRoutineNow", defaultValue: "Run a routine now", table: "Native")
   static var isDiscoverable: Bool = false
   static var openAppWhenRun: Bool = false
   static var authenticationPolicy: IntentAuthenticationPolicy = .requiresAuthentication
 
-  @Parameter(title: "Routine")
+  @Parameter(title: LocalizedStringResource("siriRoutine", defaultValue: "Routine", table: "Native"))
   var routineId: String
 
-  @Parameter(title: "Bot")
+  @Parameter(title: LocalizedStringResource("siriBot", defaultValue: "Bot", table: "Native"))
   var botId: String
 
   init() {}
@@ -114,15 +114,15 @@ struct RunRoutineWidgetIntent: LiveActivityIntent {
 
 @available(iOS 17.0, *)
 struct AcceptSuggestionIntent: LiveActivityIntent {
-  static var title: LocalizedStringResource = "Do what a bot suggests"
+  static var title: LocalizedStringResource = LocalizedStringResource("siriAcceptSuggestion", defaultValue: "Do what a bot suggests", table: "Native")
   static var isDiscoverable: Bool = false
   static var openAppWhenRun: Bool = false
   static var authenticationPolicy: IntentAuthenticationPolicy = .requiresAuthentication
 
-  @Parameter(title: "Suggestion")
+  @Parameter(title: LocalizedStringResource("siriSuggestion", defaultValue: "Suggestion", table: "Native"))
   var suggestionId: String
 
-  @Parameter(title: "Bot")
+  @Parameter(title: LocalizedStringResource("siriBot", defaultValue: "Bot", table: "Native"))
   var botId: String
 
   init() {}

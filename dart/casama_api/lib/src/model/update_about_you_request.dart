@@ -33,6 +33,8 @@ class UpdateAboutYouRequest {
      this.nameAsked,
 
      this.adultSites,
+
+     this.locale,
   });
 
   @JsonKey(
@@ -119,6 +121,18 @@ class UpdateAboutYouRequest {
 
 
 
+  @JsonKey(
+    
+    name: r'locale',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final String? locale;
+
+
+
 
 
     @override
@@ -129,7 +143,8 @@ class UpdateAboutYouRequest {
       other.replyStyle == replyStyle &&
       other.learn == learn &&
       other.nameAsked == nameAsked &&
-      other.adultSites == adultSites;
+      other.adultSites == adultSites &&
+      other.locale == locale;
 
     @override
     int get hashCode =>
@@ -139,7 +154,8 @@ class UpdateAboutYouRequest {
         replyStyle.hashCode +
         learn.hashCode +
         nameAsked.hashCode +
-        adultSites.hashCode;
+        adultSites.hashCode +
+        (locale == null ? 0 : locale.hashCode);
 
   factory UpdateAboutYouRequest.fromJson(Map<String, dynamic> json) => _$UpdateAboutYouRequestFromJson(json);
 

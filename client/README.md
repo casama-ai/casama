@@ -77,7 +77,16 @@ responses. Format only the files you change (`dart format <files>`).
 - State with Riverpod (no code generation); navigation with go_router.
 - Import `package:material_ui/material_ui.dart` and `package:cupertino_ui/cupertino_ui.dart`, not
   Flutter's deprecated `material.dart` and `cupertino.dart`.
-- Every user-facing string goes in `lib/l10n/app_en.arb`.
+- Every user-facing string goes in `lib/l10n/app_en.arb`. `test/hardcoded_strings_test.dart` fails
+  on a new literal in a widget, a toast or a named slot such as `title:`; text no one translates
+  takes `// l10n-ok: why`. After fixing one of the old ones listed in its baseline, run
+  `UPDATE_L10N_BASELINE=1 flutter test test/hardcoded_strings_test.dart`.
+- The app follows the device's language, or the one picked in Settings → Language
+  (`lib/core/app_language.dart`). Release builds offer only the languages the build switch turns on
+  (`lib/l10n/enabled_locales.dart`).
+- `test/l10n_sweep_test.dart` draws the main screens in a pseudo-locale (longer, accented, in ⟦ ⟧)
+  to find overflows and untranslated words. It is skipped unless that locale has been generated; in
+  Casama's repository `scripts/l10n-sweep.sh` does both (`docs/DEVELOPING.md`).
 - The app stays fully native: no embedded web views. The one exception is the phone browser
   (`lib/features/app_browser/`, D-476), a web area for other people's websites that a bot can drive;
   it never draws the app's own screens and is compiled in only with `scripts/app-browser-switch.sh on`.

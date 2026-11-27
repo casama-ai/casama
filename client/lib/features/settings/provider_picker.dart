@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:casama_sdk/casama_sdk.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:material_ui/material_ui.dart';
@@ -102,35 +104,43 @@ class _ProviderPickerState extends State<ProviderPicker> {
             },
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: AppSpace.xs),
-              child: Row(
-                children: [
-                  Text(
-                    l10n.moreProviders,
-                    style: context.textTheme.labelMedium?.copyWith(
-                      color: scheme.onSurfaceVariant,
-                      fontWeight: FontWeight.w700,
+              child: LayoutBuilder(
+                builder: (context, constraints) => Row(
+                  children: [
+                    // The count, the arrow and a stub of line keep their room (the 96).
+                    ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: math.max(0, constraints.maxWidth - 96)),
+                      child: Text(
+                        l10n.moreProviders,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: context.textTheme.labelMedium?.copyWith(
+                          color: scheme.onSurfaceVariant,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: AppSpace.xs),
-                  Text(
-                    '${widget.more.length}',
-                    style: context.textTheme.labelSmall?.copyWith(
-                      color: scheme.onSurfaceVariant,
+                    const SizedBox(width: AppSpace.xs),
+                    Text(
+                      '${widget.more.length}',
+                      style: context.textTheme.labelSmall?.copyWith(
+                        color: scheme.onSurfaceVariant,
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: AppSpace.sm),
-                  const Expanded(child: Divider()),
-                  const SizedBox(width: AppSpace.xs),
-                  AnimatedRotation(
-                    turns: _moreOpen ? 0.5 : 0,
-                    duration: AppMotion.of(context, AppMotion.fast),
-                    child: Icon(
-                      LucideIcons.chevronDown,
-                      size: 18,
-                      color: scheme.onSurfaceVariant,
+                    const SizedBox(width: AppSpace.sm),
+                    const Expanded(child: Divider()),
+                    const SizedBox(width: AppSpace.xs),
+                    AnimatedRotation(
+                      turns: _moreOpen ? 0.5 : 0,
+                      duration: AppMotion.of(context, AppMotion.fast),
+                      child: Icon(
+                        LucideIcons.chevronDown,
+                        size: 18,
+                        color: scheme.onSurfaceVariant,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

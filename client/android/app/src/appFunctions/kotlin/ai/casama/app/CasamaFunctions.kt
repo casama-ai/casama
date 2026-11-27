@@ -95,9 +95,9 @@ abstract class CasamaFunctions : AppFunctionService() {
     val now = System.currentTimeMillis()
     CasamaNeeds(
       count = view.needsCount,
-      summary = AssistantModel.needsSummary(view.needsCount, view.needs, view.quiet),
+      summary = AssistantModel.needsSummary(view.needsCount, view.needs, view.quiet, lines()),
       items = view.needs.map {
-        CasamaNeed(kind = it.kind, id = it.id, botName = it.bot, line = AssistantModel.needLine(it, view.quiet), minutesAgo = AssistantModel.minutesAgo(now, it.createdAtMs))
+        CasamaNeed(kind = it.kind, id = it.id, botName = it.bot, line = AssistantModel.needLine(it, view.quiet, lines()), minutesAgo = AssistantModel.minutesAgo(now, it.createdAtMs))
       },
       asOf = view.asOfIso,
     )
@@ -127,14 +127,14 @@ abstract class CasamaFunctions : AppFunctionService() {
       is AssistantModel.Match.Many -> throw AppFunctionInvalidArgumentException("More than one bot matches \"$botName\": ${m.items.joinToString { it.name }}.")
       is AssistantModel.Match.None -> throw AppFunctionElementNotFoundException("No bot is called \"$botName\". Bots: ${view.bots.joinToString { it.name }}.")
     }
-    if (phoneLocked()) return CasamaAskResult("locked", "Unlock your phone and try again.", null, bot?.name, null, false)
+    if (phoneLocked()) return CasamaAskResult("locked", getString(R.string.siri_unlock_phone), null, bot?.name, null, false)
     val answer = AppFunctionsBridge.call(
       this,
       "ask",
       mapOf("bot_id" to (bot?.id ?: ""), "text" to text, "wait_ms" to AssistantModel.ASK_WAIT_MS.toInt(), "request_id" to (requestId ?: "")),
       AssistantModel.ASK_WAIT_MS,
     ) ?: return openInstead(AssistantModel.quickAsk(bot?.id, text)).let { opened ->
-      CasamaAskResult("opened_app", "Open Casama to finish.", null, bot?.name, null, opened)
+      CasamaAskResult("opened_app", getString(R.string.siri_open_to_finish), null, bot?.name, null, opened)
     }
     failure(answer)
     val status = answer["status"] as? String ?: "failed"
@@ -142,7 +142,7 @@ abstract class CasamaFunctions : AppFunctionService() {
     val opened = if (AssistantModel.opensApp(status, open)) openInstead(open!!) else false
     return CasamaAskResult(
       status = status,
-      message = answer["say"] as? String ?: "Open Casama to finish.",
+      message = answer["say"] as? String ?: getString(R.string.siri_open_to_finish),
       reply = if (status == "replied") AssistantModel.capReply(answer["text"] as? String) else null,
       botName = answer["bot"] as? String ?: bot?.name,
       chatId = answer["conversation_id"] as? String,
@@ -169,17 +169,17 @@ abstract class CasamaFunctions : AppFunctionService() {
       is AssistantModel.Match.Many -> throw AppFunctionInvalidArgumentException("More than one routine matches \"$routine\": ${m.items.joinToString { it.name }}.")
       is AssistantModel.Match.None -> throw AppFunctionElementNotFoundException("No routine is called \"$routine\". Use listRoutines to see them.")
     }
-    if (phoneLocked()) return CasamaRunResult("locked", "Unlock your phone and try again.", r.name, r.bot, false)
+    if (phoneLocked()) return CasamaRunResult("locked", getString(R.string.siri_unlock_phone), r.name, r.bot, false)
     val answer = AppFunctionsBridge.call(
       this,
       "run",
       mapOf("routine_id" to AssistantModel.routineRef(r), "name" to r.name, "request_id" to (requestId ?: "")),
       0L,
-    ) ?: return CasamaRunResult("opened_app", "Open Casama to finish.", r.name, r.bot, openInstead("/run-routine/${AssistantModel.routineRef(r)}"))
+    ) ?: return CasamaRunResult("opened_app", getString(R.string.siri_open_to_finish), r.name, r.bot, openInstead("/run-routine/${AssistantModel.routineRef(r)}"))
     failure(answer)
     val status = answer["status"] as? String ?: "failed"
     val open = answer["open"] as? String
-    return CasamaRunResult(status, answer["say"] as? String ?: "Open Casama to finish.", r.name, r.bot, if (AssistantModel.opensApp(status, open)) openInstead(open!!) else false)
+    return CasamaRunResult(status, answer["say"] as? String ?: getString(R.string.siri_open_to_finish), r.name, r.bot, if (AssistantModel.opensApp(status, open)) openInstead(open!!) else false)
   }
 
   /**
@@ -238,15 +238,27 @@ abstract class CasamaFunctions : AppFunctionService() {
     )
   }
 
+  private fun lines() = AssistantModel.Lines(
+    aBot = getString(R.string.siri_a_bot_subject),
+    needsOk = getString(R.string.siri_bot_needs_ok),
+    takeOver = getString(R.string.siri_bot_needs_take_over),
+    suggestion = getString(R.string.siri_bot_has_suggestion),
+    needsYou = getString(R.string.siri_bot_needs_you_line),
+    nothing = getString(R.string.siri_nothing_needs_you),
+    one = getString(R.string.siri_one_thing_needs_you),
+    many = getString(R.string.siri_count_things_need_you),
+    waiting = getString(R.string.siri_needs_you_bots),
+  )
+
   private fun guardSignedIn(view: View) {
-    if (!view.signedIn) throw AppFunctionDeniedException("Sign in to Casama first.")
+    if (!view.signedIn) throw AppFunctionDeniedException(getString(R.string.siri_signed_out))
   }
 
   /** Dart said signed out or switched off: Gemini gets the matching exception, not an answer. */
   private fun failure(answer: Map<String, Any?>) {
     when (AssistantModel.failureFor(answer["status"] as? String)) {
-      AssistantModel.Failure.SIGNED_OUT -> throw AppFunctionDeniedException("Sign in to Casama first.")
-      AssistantModel.Failure.SWITCHED_OFF -> throw AppFunctionDisabledException("Gemini is turned off for Casama on this phone (Casama → Settings → Privacy).")
+      AssistantModel.Failure.SIGNED_OUT -> throw AppFunctionDeniedException(getString(R.string.siri_signed_out))
+      AssistantModel.Failure.SWITCHED_OFF -> throw AppFunctionDisabledException(getString(R.string.siri_gemini_off))
       null -> {}
     }
   }

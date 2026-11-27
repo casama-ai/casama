@@ -15,6 +15,8 @@ abstract class _$AdminDeviceKeyCWProxy {
 
   AdminDeviceKey lastUsedAt(DateTime? lastUsedAt);
 
+  AdminDeviceKey scope(AdminDeviceKeyScopeEnum scope);
+
   /// Creates a new instance with the provided field values.
   /// Omitted fields keep their values; explicit `null` clears nullable fields.
   /// The public API rejects `null` for non-nullable fields. To update a single field use `AdminDeviceKey(...).copyWith.fieldName(value)`.
@@ -28,6 +30,7 @@ abstract class _$AdminDeviceKeyCWProxy {
     String name,
     DateTime createdAt,
     DateTime? lastUsedAt,
+    AdminDeviceKeyScopeEnum scope,
   });
 }
 
@@ -51,6 +54,9 @@ class _$AdminDeviceKeyCWProxyImpl implements _$AdminDeviceKeyCWProxy {
   AdminDeviceKey lastUsedAt(DateTime? lastUsedAt) =>
       call(lastUsedAt: lastUsedAt);
 
+  @override
+  AdminDeviceKey scope(AdminDeviceKeyScopeEnum scope) => call(scope: scope);
+
   /// Creates a new instance with the provided field values.
   /// Omitted fields keep their values; explicit `null` clears nullable fields.
   /// The public API rejects `null` for non-nullable fields. To update a single field use `AdminDeviceKey(...).copyWith.fieldName(value)`.
@@ -65,6 +71,7 @@ class _$AdminDeviceKeyCWProxyImpl implements _$AdminDeviceKeyCWProxy {
     Object? name = const $CopyWithPlaceholder(),
     Object? createdAt = const $CopyWithPlaceholder(),
     Object? lastUsedAt = const $CopyWithPlaceholder(),
+    Object? scope = const $CopyWithPlaceholder(),
   }) {
     return AdminDeviceKey(
       id: id == const $CopyWithPlaceholder() || id == null
@@ -83,6 +90,10 @@ class _$AdminDeviceKeyCWProxyImpl implements _$AdminDeviceKeyCWProxy {
           ? _value.lastUsedAt
           // ignore: cast_nullable_to_non_nullable
           : lastUsedAt as DateTime?,
+      scope: scope == const $CopyWithPlaceholder() || scope == null
+          ? _value.scope
+          // ignore: cast_nullable_to_non_nullable
+          : scope as AdminDeviceKeyScopeEnum,
     );
   }
 }
@@ -98,34 +109,36 @@ extension $AdminDeviceKeyCopyWith on AdminDeviceKey {
 // JsonSerializableGenerator
 // **************************************************************************
 
-AdminDeviceKey _$AdminDeviceKeyFromJson(Map<String, dynamic> json) =>
-    $checkedCreate(
-      'AdminDeviceKey',
+AdminDeviceKey _$AdminDeviceKeyFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate(
+  'AdminDeviceKey',
+  json,
+  ($checkedConvert) {
+    $checkKeys(
       json,
-      ($checkedConvert) {
-        $checkKeys(
-          json,
-          requiredKeys: const ['id', 'name', 'created_at', 'last_used_at'],
-        );
-        final val = AdminDeviceKey(
-          id: $checkedConvert('id', (v) => v as String),
-          name: $checkedConvert('name', (v) => v as String),
-          createdAt: $checkedConvert(
-            'created_at',
-            (v) => DateTime.parse(v as String),
-          ),
-          lastUsedAt: $checkedConvert(
-            'last_used_at',
-            (v) => v == null ? null : DateTime.parse(v as String),
-          ),
-        );
-        return val;
-      },
-      fieldKeyMap: const {
-        'createdAt': 'created_at',
-        'lastUsedAt': 'last_used_at',
-      },
+      requiredKeys: const ['id', 'name', 'created_at', 'last_used_at', 'scope'],
     );
+    final val = AdminDeviceKey(
+      id: $checkedConvert('id', (v) => v as String),
+      name: $checkedConvert('name', (v) => v as String),
+      createdAt: $checkedConvert(
+        'created_at',
+        (v) => DateTime.parse(v as String),
+      ),
+      lastUsedAt: $checkedConvert(
+        'last_used_at',
+        (v) => v == null ? null : DateTime.parse(v as String),
+      ),
+      scope: $checkedConvert(
+        'scope',
+        (v) => $enumDecode(_$AdminDeviceKeyScopeEnumEnumMap, v),
+      ),
+    );
+    return val;
+  },
+  fieldKeyMap: const {'createdAt': 'created_at', 'lastUsedAt': 'last_used_at'},
+);
 
 Map<String, dynamic> _$AdminDeviceKeyToJson(AdminDeviceKey instance) =>
     <String, dynamic>{
@@ -133,4 +146,10 @@ Map<String, dynamic> _$AdminDeviceKeyToJson(AdminDeviceKey instance) =>
       'name': instance.name,
       'created_at': instance.createdAt.toIso8601String(),
       'last_used_at': instance.lastUsedAt?.toIso8601String(),
+      'scope': _$AdminDeviceKeyScopeEnumEnumMap[instance.scope]!,
     };
+
+const _$AdminDeviceKeyScopeEnumEnumMap = {
+  AdminDeviceKeyScopeEnum.full: 'full',
+  AdminDeviceKeyScopeEnum.read: 'read',
+};

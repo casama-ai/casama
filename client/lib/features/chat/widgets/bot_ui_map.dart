@@ -219,14 +219,15 @@ class _MapViewState extends State<_MapView> {
   String? _creditSession;
   final _controller = MapController();
 
-  /// The Google session for the current theme, asked for once per theme, not on every rebuild.
+  /// The Google session for the current theme and language, asked for once for each, not on every
+  /// rebuild.
   Future<GoogleTileSession?>? _session;
-  bool? _sessionDark;
+  (bool, String)? _sessionKey;
 
-  Future<GoogleTileSession?> _sessionFor(GoogleTilesClient google, bool dark) {
-    if (_session == null || _sessionDark != dark) {
-      _sessionDark = dark;
-      _session = google.session(dark: dark);
+  Future<GoogleTileSession?> _sessionFor(GoogleTilesClient google, bool dark, String language) {
+    if (_session == null || _sessionKey != (dark, language)) {
+      _sessionKey = (dark, language);
+      _session = google.session(dark: dark, language: language);
     }
     return _session!;
   }
@@ -281,6 +282,8 @@ class _MapViewState extends State<_MapView> {
   @override
   Widget build(BuildContext context) {
     final dark = Theme.of(context).brightness == Brightness.dark;
+    // Map labels in the app's language.
+    final language = mapLanguage(Localizations.localeOf(context));
     return ValueListenableBuilder<int>(
       valueListenable: widget.fallback,
       builder: (context, skip, _) {
@@ -292,8 +295,8 @@ class _MapViewState extends State<_MapView> {
         );
         if (source != MapTileSource.google) return _map(context, source, null);
         return FutureBuilder<GoogleTileSession?>(
-          key: ValueKey(dark),
-          future: _sessionFor(widget.google!, dark),
+          key: ValueKey((dark, language)),
+          future: _sessionFor(widget.google!, dark, language),
           builder: (context, snap) {
             if (snap.connectionState != ConnectionState.done) {
               // No tiles yet: the pins and route draw on an empty map for a moment.

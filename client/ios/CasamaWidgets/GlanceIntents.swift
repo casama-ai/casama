@@ -10,7 +10,7 @@ import Foundation
 
 @available(iOS 17.0, macOS 14.0, *)
 struct WidgetBotEntity: AppEntity {
-  static var typeDisplayRepresentation: TypeDisplayRepresentation = "Bot"
+  static var typeDisplayRepresentation = TypeDisplayRepresentation(name: LocalizedStringResource("siriBot", defaultValue: "Bot", table: "Native"))
   static var defaultQuery = WidgetBotQuery()
   let id: String
   let name: String
@@ -42,7 +42,7 @@ struct WidgetBotQuery: EntityQuery {
 
 @available(iOS 17.0, macOS 14.0, *)
 struct WidgetRoutineEntity: AppEntity {
-  static var typeDisplayRepresentation: TypeDisplayRepresentation = "Routine"
+  static var typeDisplayRepresentation = TypeDisplayRepresentation(name: LocalizedStringResource("siriRoutine", defaultValue: "Routine", table: "Native"))
   static var defaultQuery = WidgetRoutineQuery()
   let id: String
   let botId: String
@@ -75,10 +75,10 @@ struct WidgetRoutineQuery: EntityQuery {
 /// Bot and Ask: which bot. Left empty, the first one.
 @available(iOS 17.0, macOS 14.0, *)
 struct ChooseBotIntent: WidgetConfigurationIntent {
-  static var title: LocalizedStringResource = "Choose a bot"
-  static var description = IntentDescription("Pick the bot this widget shows.")
+  static var title: LocalizedStringResource = LocalizedStringResource("siriChooseBot", defaultValue: "Choose a bot", table: "Native")
+  static var description = IntentDescription(LocalizedStringResource("siriChooseBotDescription", defaultValue: "Pick the bot this widget shows.", table: "Native"))
 
-  @Parameter(title: "Bot")
+  @Parameter(title: LocalizedStringResource("siriBot", defaultValue: "Bot", table: "Native"))
   var bot: WidgetBotEntity?
 
   init() {}
@@ -88,10 +88,10 @@ struct ChooseBotIntent: WidgetConfigurationIntent {
 /// Routines: up to four the person starts by hand. Left empty, the next runs across bots.
 @available(iOS 17.0, macOS 14.0, *)
 struct ChooseRoutinesIntent: WidgetConfigurationIntent {
-  static var title: LocalizedStringResource = "Choose routines"
-  static var description = IntentDescription("Show the next runs, or up to four routines you pick.")
+  static var title: LocalizedStringResource = LocalizedStringResource("siriChooseRoutines", defaultValue: "Choose routines", table: "Native")
+  static var description = IntentDescription(LocalizedStringResource("siriChooseRoutinesDescription", defaultValue: "Show the next runs, or up to four routines you pick.", table: "Native"))
 
-  @Parameter(title: "Routines", size: 4)
+  @Parameter(title: LocalizedStringResource("siriRoutines", defaultValue: "Routines", table: "Native"), size: 4)
   var routines: [WidgetRoutineEntity]?
 
   init() {}

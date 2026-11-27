@@ -1,0 +1,1 @@
+Verschiebe Workspaces zwischen Casama Cloud und deinem eigenen Server, sieh beim Anmelden Konto und Server und erlebe flüssigeres Ändern der Fenstergröße unter Windows.

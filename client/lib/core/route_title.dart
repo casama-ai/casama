@@ -187,6 +187,7 @@ String tabTitleFor(String? fullPath, AppLocalizations l10n, {String? botName}) {
     '/settings/permissions' || '/permissions' => l10n.permissionsScreenTitle,
     '/settings/fold' => l10n.foldScreenTitle,
     '/settings/admin' => l10n.adminConsole,
+    '/admin/approve/:id' => l10n.adminAgentTitle,
     '/settings/live' => l10n.liveActivity,
     '/settings/billing' => l10n.billing,
     '/settings/billing/redeem' => l10n.redeemCodeTitle,

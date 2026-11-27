@@ -93,7 +93,7 @@ class _PasskeysScreenState extends ConsumerState<PasskeysScreen> {
                         icon: LucideIcons.keyRound,
                         title: p.name,
                         subtitle: p.lastUsedAt == null
-                            ? l10n.passkeyAddedOn(relativeTime(p.createdAt, context))
+                            ? l10n.passkeyAddedWhen(relativeTime(p.createdAt, context))
                             : l10n.passkeyLastUsed(relativeTime(p.lastUsedAt!, context)),
                         onTap: () => _rename(p),
                         trailing: Row(

@@ -380,7 +380,7 @@ class _TestimonialAskSheetState extends ConsumerState<TestimonialAskSheet> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final name = widget.name ?? l10n.testimonialAskSomeone;
+    final name = widget.name;
     return FormSheet(
       icon: LucideIcons.messageCircleHeart,
       title: l10n.testimonialAskTitle,
@@ -408,7 +408,7 @@ class _TestimonialAskSheetState extends ConsumerState<TestimonialAskSheet> {
           controlAffinity: ListTileControlAffinity.leading,
           onChanged: (v) => setState(() => _consent = v ?? false),
           title: Text(
-            l10n.testimonialAskConsent(name),
+            name == null ? l10n.testimonialAskConsentAnonymous : l10n.testimonialAskConsent(name),
             style: context.textTheme.bodyMedium,
           ),
         ),

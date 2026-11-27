@@ -2,6 +2,8 @@ import { createRoute, z } from "@hono/zod-openapi";
 import {
   AbuseEvent,
   AddAdminDeviceKeyRequest,
+  AdminAgentRequest,
+  AdminAgentRequestList,
   AdminAttention,
   AdminBotSetting,
   AdminCheck,
@@ -28,6 +30,7 @@ import {
   AdminPricing,
   AdminService,
   AdminUser,
+  AskAdminAgentRequest,
   BillingSettings,
   CloudModels,
   ConnectionSettings,
@@ -722,4 +725,72 @@ export const adminDeviceCheck = createRoute({
   summary: "Check the device's signature and record it on this sign-in session (owner only)",
   request: { body: jsonBody(AdminDeviceCheckRequest) },
   responses: { 200: jsonResponse("Check recorded", AdminCheck), ...problemResponses },
+});
+
+// --- Agent admin access (D-598): agents read with their own key, change only with a grant -------
+
+export const askAdminAgentRequest = createRoute({
+  operationId: "askAdminAgentRequest",
+  method: "post",
+  path: "/v1/admin/agent/requests",
+  tags: ["admin"],
+  security,
+  summary: "An agent asks the owner for admin changes (owner only; the agent key's fresh check)",
+  request: { body: jsonBody(AskAdminAgentRequest) },
+  responses: { 200: jsonResponse("Request", AdminAgentRequest), ...problemResponses },
+});
+
+export const adminAgentRequests = createRoute({
+  operationId: "adminAgentRequests",
+  method: "get",
+  path: "/v1/admin/agent/requests",
+  tags: ["admin"],
+  security,
+  summary: "Recent agent requests and what agents did (owner only)",
+  responses: { 200: jsonResponse("Requests", AdminAgentRequestList), 401: e401, 403: e403 },
+});
+
+export const adminAgentRequest = createRoute({
+  operationId: "adminAgentRequest",
+  method: "get",
+  path: "/v1/admin/agent/requests/{id}",
+  tags: ["admin"],
+  security,
+  summary: "One agent request: waiting, approved, denied, expired or ended (owner only)",
+  request: { params: z.object({ id: Uuid }) },
+  responses: { 200: jsonResponse("Request", AdminAgentRequest), ...problemResponses },
+});
+
+export const approveAdminAgentRequest = createRoute({
+  operationId: "approveAdminAgentRequest",
+  method: "post",
+  path: "/v1/admin/agent/requests/{id}/approve",
+  tags: ["admin"],
+  security,
+  summary:
+    "Approve an agent's request (owner only; a fresh passkey, Face ID or sign-in, not the PIN)",
+  request: { params: z.object({ id: Uuid }) },
+  responses: { 200: jsonResponse("Request", AdminAgentRequest), ...problemResponses },
+});
+
+export const denyAdminAgentRequest = createRoute({
+  operationId: "denyAdminAgentRequest",
+  method: "post",
+  path: "/v1/admin/agent/requests/{id}/deny",
+  tags: ["admin"],
+  security,
+  summary: "Deny an agent's request (owner only)",
+  request: { params: z.object({ id: Uuid }) },
+  responses: { 200: jsonResponse("Request", AdminAgentRequest), ...problemResponses },
+});
+
+export const endAdminAgentRequest = createRoute({
+  operationId: "endAdminAgentRequest",
+  method: "post",
+  path: "/v1/admin/agent/requests/{id}/end",
+  tags: ["admin"],
+  security,
+  summary: "End an agent's grant now: the owner's Stop or the agent's own done (owner only)",
+  request: { params: z.object({ id: Uuid }) },
+  responses: { 200: jsonResponse("Request", AdminAgentRequest), ...problemResponses },
 });

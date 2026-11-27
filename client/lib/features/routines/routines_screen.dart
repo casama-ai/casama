@@ -474,7 +474,7 @@ class _NewRoutineSheetState extends ConsumerState<NewRoutineSheet> {
         (_trigger != 'message' || _msgKind != null || [_msgSender, _msgSubject, _msgText, _msgTag].any((c) => c.text.trim().isNotEmpty));
     final now = DateTime.now();
     final tomorrow9 = DateTime(now.year, now.month, now.day + 1, 9);
-    final quick = <(String, DateTime)>[(l10n.inMinutes(15), now.add(const Duration(minutes: 15))), (l10n.inHours(1), now.add(const Duration(hours: 1))), (l10n.tomorrowAt9, tomorrow9)];
+    final quick = <(String, DateTime)>[(l10n.inMinutes(15), now.add(const Duration(minutes: 15))), (l10n.inHours(1), now.add(const Duration(hours: 1))), (l10n.routineTomorrowAt(tomorrow9.formattedTime(context)), tomorrow9)];
     VoidCallback? create;
     return SingleChildScrollView(
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,

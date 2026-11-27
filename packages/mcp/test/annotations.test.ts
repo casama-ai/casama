@@ -26,7 +26,9 @@ describe("tool annotations", () => {
     expect(tools.length).toBeGreaterThanOrEqual(20);
     for (const t of tools) {
       const ann = t.annotations ?? {};
-      expect(t.title ?? ann.title, `${t.name} title`).toBeTruthy();
+      expect(t.title, `${t.name} title`).toBeTruthy();
+      // Claude's connector directory reads the title from the annotations.
+      expect(ann.title, `${t.name} annotations.title`).toBe(t.title);
       expect(typeof ann.readOnlyHint, `${t.name} readOnlyHint`).toBe("boolean");
       expect(typeof ann.openWorldHint, `${t.name} openWorldHint`).toBe("boolean");
       if (!ann.readOnlyHint)

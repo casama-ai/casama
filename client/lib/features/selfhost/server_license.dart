@@ -10,6 +10,7 @@ import '../../core/cloud_account.dart';
 import '../../core/date_format.dart';
 import '../../core/license_errors.dart';
 import '../../core/link_browser.dart';
+import '../../core/number_format.dart';
 import '../../core/providers.dart';
 import '../../core/selfhost_api.dart';
 import '../../core/server_address.dart';
@@ -23,6 +24,11 @@ import 'local_updates.dart';
 import '../cloud_models/cloud_models_flag.dart';
 import '../cloud_models/cloud_models_screen.dart' show cloudModelsBanner;
 import '../cloud_models/cloud_models_state.dart' show cloudModelsStateProvider;
+
+/// The Business edition's list price in US dollars per active user a month, paying monthly and
+/// paying yearly.
+const _businessMonthlyUsd = 29;
+const _businessYearlyMonthlyUsd = 24;
 
 /// The license state of the server the app is using (docs/SELF-HOSTING-PLAN.md §11.6). Casama
 /// Cloud is never asked (it has no licensing), and a server that doesn't answer counts as off, so
@@ -282,7 +288,13 @@ class _ServerLicensePanelState extends ConsumerState<ServerLicensePanel> {
         InkWell(
           key: const Key('licensePartners'),
           onTap: () => openWebLink(Uri(scheme: 'mailto', path: partnersEmail, queryParameters: {'subject': 'Casama Business license'})),
-          child: Text(l10n.licenseBusinessContact(partnersEmail), style: context.textTheme.bodySmall?.copyWith(color: scheme.primary)),
+          child: Text(
+            l10n.licenseBusinessPrices(
+              _businessMonthlyUsd.humanizedCurrency(l10n.localeName, 'USD', decimalDigits: 0),
+              _businessYearlyMonthlyUsd.humanizedCurrency(l10n.localeName, 'USD', decimalDigits: 0),
+              partnersEmail,
+            ),
+            style: context.textTheme.bodySmall?.copyWith(color: scheme.primary)),
         ),
       ],
     );

@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
     <TextView style="@style/WidgetText.Title" android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp" android:text="Tasks" />
+        android:layout_marginBottom="10dp" android:text="@string/widget_tasks" />
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
         <TextView style="@style/WidgetText.Title" android:layout_width="0dp" android:layout_height="wrap_content"
             android:layout_weight="1" android:text="4" android:textSize="18sp" />
@@ -20,16 +20,16 @@
     </LinearLayout>
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
         <TextView style="@style/WidgetText.Second" android:layout_width="0dp" android:layout_height="wrap_content"
-            android:layout_weight="1" android:text="To do" android:textSize="11sp" />
+            android:layout_weight="1" android:text="@string/widget_todo" android:textSize="11sp" />
         <TextView style="@style/WidgetText.Second" android:layout_width="0dp" android:layout_height="wrap_content"
-            android:layout_weight="1" android:text="In progress" android:textSize="11sp" />
+            android:layout_weight="1" android:text="@string/widget_in_progress" android:textSize="11sp" />
         <TextView style="@style/WidgetText.Second" android:layout_width="0dp" android:layout_height="wrap_content"
-            android:layout_weight="1" android:text="In review" android:textSize="11sp" />
+            android:layout_weight="1" android:text="@string/widget_in_review" android:textSize="11sp" />
         <TextView style="@style/WidgetText.Second" android:layout_width="0dp" android:layout_height="wrap_content"
-            android:layout_weight="1" android:text="Blocked" android:textSize="11sp" />
+            android:layout_weight="1" android:text="@string/widget_blocked" android:textSize="11sp" />
     </LinearLayout>
     <TextView style="@style/WidgetText.Strong" android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:layout_marginTop="12dp" android:text="Draft the launch email" />
+        android:layout_marginTop="12dp" android:text="@string/widget_sample_launch_email" />
     <TextView style="@style/WidgetText.Second" android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:layout_marginTop="2dp" android:text="In review · Ada" />
+        android:layout_marginTop="2dp" android:text="@string/widget_sample_in_review_by" />
 </LinearLayout>

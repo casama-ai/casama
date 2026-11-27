@@ -1,0 +1,10 @@
+01-real-work.png	실제 업무까지, 알아서 척척
+02-customer-emails.png	고객 이메일 답장도 대신 완료
+03-trips-ok.png	여행 예약도 내 승인 후에만
+04-day-planned.png	일어나기 전에, 하루 일정 완성
+05-window-seat.png	창가 좌석? 다 기억하고 있어요
+06-flight-prices.png	항공권 가격도 계속 지켜봐요
+07-sites-games.png	사이트와 게임까지 뚝딱 제작
+08-inbox.png	수신함 정리도 한 번에
+09-birthday-dinner.png	생일 저녁 식사, 셋이 함께 계획
+10-make-it-yours.png	내 방식대로 맞춤 설정

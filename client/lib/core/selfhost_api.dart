@@ -1,3 +1,4 @@
+import 'package:casama_sdk/casama_sdk.dart' show AcceptLanguageInterceptor;
 import 'package:dio/dio.dart';
 
 /// Self-hosted licenses (docs/SELF-HOSTING-PLAN.md §11.5, §11.6), hand-written in this one place
@@ -41,7 +42,7 @@ class HttpSelfhostApi implements SelfhostApi {
   /// [dio] talks to the server the app is using (its base URL set); [headers] is the current
   /// sign-in there. [cloud] talks to Casama Cloud for personal keys.
   HttpSelfhostApi({required this.dio, required this.headers, Dio? cloud})
-    : cloud = cloud ?? Dio(BaseOptions(baseUrl: casamaCloudApi, connectTimeout: const Duration(seconds: 10), receiveTimeout: const Duration(seconds: 30)));
+    : cloud = cloud ?? (Dio(BaseOptions(baseUrl: casamaCloudApi, connectTimeout: const Duration(seconds: 10), receiveTimeout: const Duration(seconds: 30)))..interceptors.add(const AcceptLanguageInterceptor()));
 
   final Dio dio;
   final Dio cloud;

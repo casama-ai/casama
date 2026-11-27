@@ -453,7 +453,7 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen>
           big: product.price,
           suffix: l10n.paywallPerYearShort,
           billed: storeTrial != null
-              ? l10n.paywallTrialThen(storeTrial, product.price, l10n.paywallPerYearShort)
+              ? l10n.paywallTrialThenYearly(storeTrial, product.price)
               : amount == null ? l10n.paywallBilledYearlyPlain : l10n.paywallWorksOutTo(money(amount / 12, code)),
           monthsFree: monthsFreeOf(t),
           perWeek: perWeek,
@@ -487,7 +487,7 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen>
         big: productFor(plan)?.price ?? (amount == null ? (priceFor(plan) ?? '') : money(amount, code)),
         suffix: productFor(plan) != null || amount != null ? l10n.paywallPerMonthShort : '',
         billed: storeTrial != null
-            ? l10n.paywallTrialThen(storeTrial, product!.price, l10n.paywallPerMonthShort)
+            ? l10n.paywallTrialThenMonthly(storeTrial, product!.price)
             : l10n.paywallBilledMonthly,
         perWeek: perWeek,
       );
@@ -536,7 +536,7 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen>
     } else if (selected != null && isAdmin) {
       final product = webSub ? null : productFor(selected);
       if (elsewhere) {
-        note = l10n.subscribedInStoreNote(paidVia == 'app_store' ? 'the App Store' : 'Google Play');
+        note = l10n.subscribedThroughStoreNote(paidVia ?? '');
       } else if (product != null) {
         buy = () => _store(product);
         // The store decides who gets its intro offer: the button promises a trial only when the

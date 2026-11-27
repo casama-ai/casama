@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:casama_api/casama_api.dart';
 
+import 'accept_language.dart';
 import 'auth.dart';
 import 'signup_proof.dart';
 
@@ -52,6 +53,8 @@ class CasamaClient {
   static Future<CasamaClient> connect(String baseUrl,
       {SessionStore? sessions, PublicConfig? config, String? userAgent}) async {
     final dio = Dio(BaseOptions(baseUrl: baseUrl, connectTimeout: const Duration(seconds: 10), receiveTimeout: const Duration(seconds: 60)));
+    // Before the first call: the server reads the language on every request, the config one too.
+    dio.interceptors.add(const AcceptLanguageInterceptor());
     final api = CasamaApi(dio: dio, interceptors: const []);
     config ??= (await api.getSystemApi().getConfig()).data!;
     final auth = AuthClient(supabaseUrl: config.supabaseUrl, anonKey: config.supabaseAnonKey, userAgent: userAgent);

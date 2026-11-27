@@ -198,7 +198,7 @@ class ReplyUsageSheet extends ConsumerWidget {
               children: [
                 Expanded(
                   child: Text(
-                    l10n.replyUsageCreditsNote,
+                    l10n.replyUsageCreditsValue(oneCreditPrice(l10n.localeName)),
                     style: context.textTheme.bodySmall?.copyWith(
                       color: scheme.onSurfaceVariant,
                     ),

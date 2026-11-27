@@ -25,9 +25,9 @@ final pushPrefsProvider = FutureProvider.autoDispose<PushPrefs?>((ref) async {
 /// "All on", "Replies off", "3 kinds off": what the settings row says under its title.
 String pushPrefsSummary(BuildContext context, PushPrefs p) {
   final l10n = context.l10n;
-  final off = [if (!p.replies) l10n.pushReplies, if (!p.needsYou) l10n.pushNeedsYou, if (!p.routines) l10n.pushRoutines, if (!p.suggestions) l10n.pushSuggestions, if (!p.account) l10n.pushAccount];
+  final off = [if (!p.replies) 'replies', if (!p.needsYou) 'needsYou', if (!p.routines) 'routines', if (!p.suggestions) 'suggestions', if (!p.account) 'account'];
   if (off.isEmpty) return l10n.pushAllOn;
-  if (off.length == 1) return l10n.pushOneOff(off.single);
+  if (off.length == 1) return l10n.pushKindOff(off.single);
   return l10n.pushSomeOff(off.length);
 }
 

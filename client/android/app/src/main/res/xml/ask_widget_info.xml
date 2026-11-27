@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Ask (D-405 §6.1 C): a 4×1 bar, resizable from 2×1 to 5×1, and a 2×2 with two starters. -->
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
-    android:description="@string/widget_ask_description"
+    android:description="@string/widget_desc_ask"
     android:initialLayout="@layout/widget_loading"
     android:previewLayout="@layout/widget_ask_bar"
     android:minWidth="110dp"

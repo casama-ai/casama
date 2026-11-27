@@ -1,3 +1,4 @@
+import 'package:casama_sdk/casama_sdk.dart' show AcceptLanguageInterceptor;
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -279,13 +280,13 @@ class HttpMoveApi implements MoveApi {
     Dio? cloud,
   }) : cloud =
            cloud ??
-           Dio(
+           (Dio(
              BaseOptions(
                baseUrl: casamaCloudApi,
                connectTimeout: const Duration(seconds: 10),
                receiveTimeout: const Duration(seconds: 30),
              ),
-           );
+           )..interceptors.add(const AcceptLanguageInterceptor()));
 
   final Dio dio;
   final Dio cloud;
@@ -411,7 +412,7 @@ final moveApiProvider = Provider<MoveApi>((ref) {
         connectTimeout: const Duration(seconds: 10),
         receiveTimeout: const Duration(seconds: 30),
       ),
-    ),
+    )..interceptors.add(const AcceptLanguageInterceptor()),
     headers: () => backend.authHeaders,
     serverUrl: backend.apiUrl,
   );

@@ -414,7 +414,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String checkpointSaved(String label) {
-    return 'Saved checkpoint: $label';
+    return 'Saved restore point: $label';
   }
 
   @override
@@ -445,10 +445,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get restoreConfirm =>
-      'Restore this checkpoint? Files changed since then will be replaced.';
+      'Go back to this restore point? Files changed since then will be replaced.';
 
   @override
-  String get restored => 'Checkpoint restored.';
+  String get restored => 'Restore point restored.';
 
   @override
   String get noRuns => 'No runs yet.';
@@ -470,9 +470,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get files => 'Files';
-
-  @override
-  String get checkpoints => 'Checkpoints';
 
   @override
   String get noScreen =>
@@ -512,9 +509,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noMemories => 'Nothing remembered yet.';
-
-  @override
-  String get searchMemories => 'Memories';
 
   @override
   String get noMemoriesMatch => 'No memories match.';
@@ -1814,7 +1808,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String deleteComputerConfirm(String name) {
-    return 'Delete $name? Its files, snapshots and checkpoints are deleted too.';
+    return 'Delete $name? Its files, snapshots and restore points are deleted too.';
   }
 
   @override
@@ -2132,7 +2126,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String approvalDontAskAgain(String bot) {
-    return 'Don\'t ask $bot again for this';
+    return 'Let $bot do this without asking';
   }
 
   @override
@@ -2209,10 +2203,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get callGetFreeKey => 'Get a free key from Google';
 
   @override
-  String get unmute => 'Unmute';
+  String get callMicUnmute => 'Unmute mic';
 
   @override
-  String get mute => 'Mute';
+  String get videoUnmute => 'Unmute sound';
+
+  @override
+  String get callMicMute => 'Mute mic';
+
+  @override
+  String get videoMute => 'Mute sound';
 
   @override
   String get hangUp => 'Hang up';
@@ -3280,6 +3280,102 @@ class AppLocalizationsEn extends AppLocalizations {
   String get adminDeviceRemoved => 'Removed';
 
   @override
+  String get adminDeviceAgentScope => 'Agent · reads only';
+
+  @override
+  String get adminAgentTitle => 'Agents';
+
+  @override
+  String get adminAgentHelp =>
+      'Agents on your computers read the admin console with their own key. To change anything, they ask you first.';
+
+  @override
+  String get adminAgentNothing => 'No agent requests yet';
+
+  @override
+  String get adminAgentWaiting => 'Waiting for you';
+
+  @override
+  String adminAgentLive(int minutes) {
+    return 'Can make changes · $minutes min left';
+  }
+
+  @override
+  String get adminAgentStop => 'Stop';
+
+  @override
+  String get adminAgentStopped => 'Agent access stopped';
+
+  @override
+  String get adminAgentReview => 'Review';
+
+  @override
+  String adminAgentRequestTitle(String name) {
+    return '$name wants to change admin settings';
+  }
+
+  @override
+  String adminAgentFor(int minutes) {
+    return 'For $minutes minutes';
+  }
+
+  @override
+  String get adminAgentApproveHelp =>
+      'Until it ends, the agent can change admin settings, but never your PIN, keys or the admin bot\'s approvals. You can stop it any time under Admin → Security.';
+
+  @override
+  String get adminAgentApprove => 'Approve';
+
+  @override
+  String get adminAgentDeny => 'Deny';
+
+  @override
+  String adminAgentApproved(int minutes) {
+    return 'Approved for $minutes minutes';
+  }
+
+  @override
+  String get adminAgentDenied => 'Denied';
+
+  @override
+  String get adminAgentExpired => 'This request expired';
+
+  @override
+  String get adminAgentEnded => 'This access has ended';
+
+  @override
+  String adminAgentChanges(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count changes',
+      one: '1 change',
+      zero: 'No changes',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get adminAgentConfirm => 'Approve agent access';
+
+  @override
+  String get adminAgentLogTitle => 'Recent agent activity';
+
+  @override
+  String adminAgentAction(String action) {
+    String _temp0 = intl.Intl.selectLogic(action, {
+      'read': 'Read',
+      'change': 'Changed',
+      'asked': 'Asked for changes',
+      'approved': 'Approved',
+      'denied': 'Denied',
+      'ended': 'Ended',
+      'other': '$action',
+    });
+    return '$_temp0';
+  }
+
+  @override
   String get adminOverview => 'Overview';
 
   @override
@@ -3751,7 +3847,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get editQuotas => 'Edit quotas';
 
   @override
-  String get maxBots => 'Max bots';
+  String get maxBots => 'Bot limit';
 
   @override
   String get monthlyUsd => 'Monthly spend limit (USD)';
@@ -4196,7 +4292,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String deleteAccountConfirm(String email) {
-    return 'Workspaces where you are the only owner are deleted with your account, including their bots and computers. Type $email to confirm.';
+    return 'Workspaces where you are the only owner are deleted with your account, including their bots and computers. This doesn\'t cancel paid plans. First cancel a plan bought on the web in Billing, and a plan bought in the App Store or Google Play in that store. Type $email to confirm.';
   }
 
   @override
@@ -4391,13 +4487,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notificationsTurnOn => 'Turn On';
-
-  @override
-  String get importAgentHelp =>
-      'Bring a bot over from OpenClaw or Hermes Agent, or paste a setup from Grok Bot, Muse, ChatGPT Dots, Claude Duet, Hark or Instinct: its persona, skills, schedules and memories. You\'ll review everything before it\'s created. Keys and settings files are never read.';
-
-  @override
-  String get checkForUpdates => 'Check for updates';
 
   @override
   String get autoUpdates => 'Update Automatically';
@@ -4653,7 +4742,9 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get tomorrowAt9 => 'Tomorrow 9:00';
+  String routineTomorrowAt(String time) {
+    return 'Tomorrow $time';
+  }
 
   @override
   String get integrationNeedsName => 'Give it a name with at least one letter.';
@@ -5349,13 +5440,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Files your bots make, and files you upload, show up here.';
 
   @override
-  String get noCheckpointsTitle => 'No checkpoints yet';
-
-  @override
-  String get checkpointsHelp =>
-      'A checkpoint saves this computer before a risky change. Restoring puts its files back as they were.';
-
-  @override
   String deleteFileTitle(String name) {
     return 'Delete $name?';
   }
@@ -5651,7 +5735,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get myThemes => 'Your themes';
 
   @override
-  String get saveTheme => 'Save Current Look';
+  String get saveTheme => 'Save Current Theme';
 
   @override
   String get themeName => 'Theme name';
@@ -5811,16 +5895,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get usageClearFilters => 'Clear';
 
   @override
-  String get usageFilterBot => 'Show usage for';
+  String get usageFilterBot => 'Filter by bot';
 
   @override
-  String get usageFilterModel => 'Show usage of';
+  String get usageFilterModel => 'Filter by model';
 
   @override
-  String get usageFilterSource => 'Show usage from';
+  String get usageFilterSource => 'Filter by source';
 
   @override
-  String get usageFilterPerson => 'Show usage started by';
+  String get usageFilterPerson => 'Filter by person';
 
   @override
   String get usageSourceChat => 'Chats';
@@ -5923,13 +6007,14 @@ class AppLocalizationsEn extends AppLocalizations {
       'You\'re out of credits. Add more to keep your bots running.';
 
   @override
-  String creditsExplainer(String amount) {
-    return '1 credit = \$1. Your plan adds $amount every month; unused ones carry over for one more month.';
+  String creditsExplainerPlan(String price, String amount) {
+    return '1 credit = $price. Your plan adds $amount every month; unused credits carry over for one more month.';
   }
 
   @override
-  String get creditsExplainerShort =>
-      '1 credit = \$1. Packs from the App Store or Google Play never expire; web packs last 12 months.';
+  String creditsExplainerPacks(String price) {
+    return '1 credit = $price. Credit packs from the App Store or Google Play never expire; credit packs bought on the web last 12 months.';
+  }
 
   @override
   String get creditsDailyLabel => 'Today\'s limit';
@@ -6624,8 +6709,8 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String passkeyAddedOn(String date) {
-    return 'Added $date';
+  String passkeyAddedWhen(String when) {
+    return 'Added $when';
   }
 
   @override
@@ -7025,6 +7110,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String mcpSignInElsewhereHelp(String device) {
     return 'Open Casama on $device and sign in there.';
   }
+
+  @override
+  String get mcpSignInElsewhereUnknownHelp =>
+      'Open Casama on the computer where this tool runs and sign in there.';
 
   @override
   String mcpQuestionTitle(String connection) {
@@ -7546,8 +7635,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get back => 'Back';
 
   @override
-  String deviceAccessSkippedLine(String what) {
-    return 'Not shared: your $what';
+  String deviceAccessNotShared(String kind) {
+    String _temp0 = intl.Intl.selectLogic(kind, {
+      'calendar': 'Not shared: your calendar',
+      'reminders': 'Not shared: your reminders',
+      'contacts': 'Not shared: your contacts',
+      'places': 'Not shared: your places',
+      'photos': 'Not shared: your photos',
+      'health': 'Not shared: your health data',
+      'notifications': 'Not shared: your notifications',
+      'activity': 'Not shared: your computer activity',
+      'browserTab': 'Not shared: your current browser tab',
+      'browserHistory': 'Not shared: your browser history and bookmarks',
+      'alarm': 'Not shared: your alarms',
+      'home': 'Not shared: your Home accessories',
+      'other': 'Not shared: your device data',
+    });
+    return '$_temp0';
   }
 
   @override
@@ -7642,6 +7746,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get searchScopeAll => 'All';
+
+  @override
+  String get searchMemories => 'Memories';
 
   @override
   String get searchKeepTyping =>
@@ -7747,6 +7854,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get savedByBot => 'Saved by a bot';
+
+  @override
+  String get checkForUpdates => 'Check for updates';
 
   @override
   String get attachSkill => 'Attach a skill';
@@ -8571,11 +8681,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pageCardOpen => 'Page · Tap to open';
 
   @override
-  String pageUpdated(String date) {
-    return 'Updated $date';
-  }
-
-  @override
   String get exportPdf => 'Export PDF';
 
   @override
@@ -8602,9 +8707,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get openPages => 'Open in Pages';
-
-  @override
-  String get skillInstructions => 'Instructions';
 
   @override
   String get discard => 'Discard';
@@ -8878,6 +8980,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get importAgent => 'Import an Agent';
 
   @override
+  String get importAgentHelp =>
+      'Bring a bot over from OpenClaw or Hermes Agent, or paste a setup from Grok Bot, Muse, ChatGPT Dots, Claude Duet, Hark or Instinct: its persona, skills, schedules and memories. You\'ll review everything before it\'s created. Keys and settings files are never read.';
+
+  @override
   String get importAgentPickFolder => 'Pick Its Folder';
 
   @override
@@ -9090,8 +9196,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get gitSyncNeedsToken => 'Needs a GITHUB_TOKEN secret';
 
   @override
-  String gitSyncLast(String date) {
-    return 'Synced $date';
+  String gitSyncedWhen(String when) {
+    return 'Synced $when';
   }
 
   @override
@@ -9305,7 +9411,19 @@ class AppLocalizationsEn extends AppLocalizations {
         intl.NumberFormat.decimalPattern(localeName);
     final String failuresString = failuresNumberFormat.format(failures);
 
-    return 'run $runsString times, $failuresString needed help';
+    String _temp0 = intl.Intl.pluralLogic(
+      runs,
+      locale: localeName,
+      other: 'run $runsString times',
+      one: 'run 1 time',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      failures,
+      locale: localeName,
+      other: '$failuresString needed help',
+      one: '1 needed help',
+    );
+    return '$_temp0, $_temp1';
   }
 
   @override
@@ -9978,7 +10096,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Collect this week\'s newsletters and send one short digest: the headlines worth knowing, nothing more.';
 
   @override
-  String get botEmailTriggerTag => 'Plus tag';
+  String get botEmailTriggerTag => 'Address tag';
 
   @override
   String get botEmailTriggerTagHelp =>
@@ -10052,8 +10170,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get botEmailOlderYear => 'Older than a year';
 
   @override
-  String botEmailDeleteOlderTitle(String age) {
-    return 'Delete all mail $age?';
+  String botEmailDeleteOlderConfirm(String age) {
+    String _temp0 = intl.Intl.selectLogic(age, {
+      'days30': 'Delete all mail older than 30 days?',
+      'months6': 'Delete all mail older than 6 months?',
+      'other': 'Delete all mail older than a year?',
+    });
+    return '$_temp0';
   }
 
   @override
@@ -10340,8 +10463,8 @@ class AppLocalizationsEn extends AppLocalizations {
       'Rewraps the workspace key with the server\'s current key';
 
   @override
-  String encryptionRotated(String date) {
-    return 'Last rotated $date';
+  String encryptionRotatedWhen(String when) {
+    return 'Last rotated $when';
   }
 
   @override
@@ -11015,8 +11138,24 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String deviceAccessTitle(String bot, String what) {
-    return '$bot would like to use your $what';
+  String deviceAccessAsk(String kind, String bot) {
+    String _temp0 = intl.Intl.selectLogic(kind, {
+      'calendar': '$bot would like to use your calendar',
+      'reminders': '$bot would like to use your reminders',
+      'contacts': '$bot would like to use your contacts',
+      'places': '$bot would like to use your places',
+      'photos': '$bot would like to use your photos',
+      'health': '$bot would like to use your health data',
+      'notifications': '$bot would like to use your notifications',
+      'activity': '$bot would like to use your computer activity',
+      'browserTab': '$bot would like to use your current browser tab',
+      'browserHistory':
+          '$bot would like to use your browser history and bookmarks',
+      'alarm': '$bot would like to use your alarms',
+      'home': '$bot would like to use your Home accessories',
+      'other': '$bot would like to use your device data',
+    });
+    return '$_temp0';
   }
 
   @override
@@ -11024,8 +11163,23 @@ class AppLocalizationsEn extends AppLocalizations {
       'Only in your own chats. You can stop it any time in Settings → Device connections.';
 
   @override
-  String deviceAccessAllowed(String what) {
-    return 'Allowed to use your $what';
+  String deviceAccessGranted(String kind) {
+    String _temp0 = intl.Intl.selectLogic(kind, {
+      'calendar': 'Allowed to use your calendar',
+      'reminders': 'Allowed to use your reminders',
+      'contacts': 'Allowed to use your contacts',
+      'places': 'Allowed to use your places',
+      'photos': 'Allowed to use your photos',
+      'health': 'Allowed to use your health data',
+      'notifications': 'Allowed to use your notifications',
+      'activity': 'Allowed to use your computer activity',
+      'browserTab': 'Allowed to use your current browser tab',
+      'browserHistory': 'Allowed to use your browser history and bookmarks',
+      'alarm': 'Allowed to use your alarms',
+      'home': 'Allowed to use your Home accessories',
+      'other': 'Allowed to use your device data',
+    });
+    return '$_temp0';
   }
 
   @override
@@ -11125,8 +11279,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deviceAllowBot => 'Allow a bot';
 
   @override
-  String deviceAllowBotTitle(String kind) {
-    return 'Which bot may read your $kind?';
+  String deviceAllowBotAsk(String kind) {
+    String _temp0 = intl.Intl.selectLogic(kind, {
+      'calendar': 'Which bot may read your calendar?',
+      'reminders': 'Which bot may read your reminders?',
+      'contacts': 'Which bot may read your contacts?',
+      'places': 'Which bot may read your places?',
+      'photos': 'Which bot may read your photos?',
+      'health': 'Which bot may read your health data?',
+      'notifications': 'Which bot may read your notifications?',
+      'activity': 'Which bot may read your computer activity?',
+      'browserTab': 'Which bot may read your current browser tab?',
+      'browserHistory':
+          'Which bot may read your browser history and bookmarks?',
+      'alarm': 'Which bot may read your alarms?',
+      'home': 'Which bot may read your Home accessories?',
+      'other': 'Which bot may read your device data?',
+    });
+    return '$_temp0';
   }
 
   @override
@@ -11409,8 +11579,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get replyUsageNothing => 'Nothing was metered for this reply.';
 
   @override
-  String get replyUsageCreditsNote =>
-      '1 credit = \$1. Your own keys and plans are billed by their provider, not by Casama.';
+  String replyUsageCreditsValue(String price) {
+    return '1 credit = $price. Your own keys and plans are billed by their provider, not by Casama.';
+  }
 
   @override
   String get replyUsageOpenRun => 'Open the run';
@@ -11988,10 +12159,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get undo => 'Undo';
 
   @override
-  String get suggestedLookApplied => 'New look applied';
+  String get suggestedLookApplied => 'New theme applied';
 
   @override
-  String get suggestedLookUnavailable => 'This app doesn\'t have that look';
+  String get suggestedLookUnavailable => 'This app doesn\'t have that theme';
 
   @override
   String get removedFromProfile => 'Removed from your profile';
@@ -12112,6 +12283,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String skillUseHint(String name) {
     return 'Bots load it on their own when a task fits, or type /$name in a chat to use it.';
   }
+
+  @override
+  String get skillInstructions => 'Instructions';
 
   @override
   String get skillAlreadyEverywhere => 'Installed everywhere it can be.';
@@ -12274,11 +12448,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get customizeColors => 'Colors';
 
   @override
-  String get appearanceCustomLook => 'Custom look';
+  String get appearanceCustomLook => 'Custom theme';
 
   @override
   String get appearanceCustomHelp =>
-      'Your own changes. Save them to keep this look.';
+      'Your own changes. Save them as a theme to keep them.';
 
   @override
   String get appearanceFromGallery => 'From the Gallery';
@@ -12441,32 +12615,78 @@ class AppLocalizationsEn extends AppLocalizations {
       'Renews automatically. Cancel anytime from Billing.';
 
   @override
-  String paywallDisclosureStore(String price, String period, String store) {
-    return '$price $period, renewing automatically until you cancel. Payment is charged to your $store. Cancel anytime in your $store settings at least 24 hours before it renews.';
+  String paywallStoreDisclosure(String price, String store) {
+    String _temp0 = intl.Intl.selectLogic(store, {
+      'app_store':
+          '$price, renewing automatically until you cancel. Payment is charged to your Apple Account. Cancel anytime in your Apple Account settings at least 24 hours before it renews.',
+      'google_play':
+          '$price, renewing automatically until you cancel. Payment is charged to your Google Play account. Cancel anytime in your Google Play account settings at least 24 hours before it renews.',
+      'other':
+          '$price, renewing automatically until you cancel. Payment is charged to your store account. Cancel anytime in your store account settings at least 24 hours before it renews.',
+    });
+    return '$_temp0';
   }
 
   @override
-  String paywallDisclosureStoreTrial(
-    int days,
-    String price,
-    String period,
-    String store,
-  ) {
-    return 'Free for $days days, then $price $period, renewing automatically until you cancel. Payment is charged to your $store when the trial ends. Cancel in your $store settings at least 24 hours before the trial ends and you won\'t be charged.';
+  String paywallStoreDisclosureTrial(int days, String price, String store) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other:
+          'Free for $days days, then $price, renewing automatically until you cancel.',
+      one:
+          'Free for 1 day, then $price, renewing automatically until you cancel.',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other:
+          'Free for $days days, then $price, renewing automatically until you cancel.',
+      one:
+          'Free for 1 day, then $price, renewing automatically until you cancel.',
+    );
+    String _temp2 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other:
+          'Free for $days days, then $price, renewing automatically until you cancel.',
+      one:
+          'Free for 1 day, then $price, renewing automatically until you cancel.',
+    );
+    String _temp3 = intl.Intl.selectLogic(store, {
+      'app_store':
+          '$_temp0 Payment is charged to your Apple Account when the trial ends. Cancel in your Apple Account settings at least 24 hours before the trial ends and you won\'t be charged.',
+      'google_play':
+          '$_temp1 Payment is charged to your Google Play account when the trial ends. Cancel in your Google Play account settings at least 24 hours before the trial ends and you won\'t be charged.',
+      'other':
+          '$_temp2 Payment is charged to your store account when the trial ends. Cancel in your store account settings at least 24 hours before the trial ends and you won\'t be charged.',
+    });
+    return '$_temp3';
   }
 
   @override
   String get paywallStartFreeTrial => 'Start free trial';
 
   @override
-  String paywallTrialThen(int days, String price, String period) {
+  String paywallTrialThenYearly(int days, String price) {
     String _temp0 = intl.Intl.pluralLogic(
       days,
       locale: localeName,
-      other: '$days days',
-      one: '1 day',
+      other: '$days days free, then $price/yr',
+      one: '1 day free, then $price/yr',
     );
-    return '$_temp0 free, then $price$period';
+    return '$_temp0';
+  }
+
+  @override
+  String paywallTrialThenMonthly(int days, String price) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days days free, then $price/mo',
+      one: '1 day free, then $price/mo',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -12476,23 +12696,26 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String paywallDisclosureWebTrial(int days, String price) {
-    return 'Free for $days days, then $price, renewing automatically until you cancel. Cancel from Billing before the trial ends and you won\'t be charged.';
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other:
+          'Free for $days days, then $price, renewing automatically until you cancel.',
+      one:
+          'Free for 1 day, then $price, renewing automatically until you cancel.',
+    );
+    return '$_temp0 Cancel from Billing before the trial ends and you won\'t be charged.';
   }
 
   @override
-  String get pricePerWeek => 'per week';
-
-  @override
-  String get pricePerMonth => 'per month';
-
-  @override
-  String get pricePerYear => 'per year';
-
-  @override
-  String get storeAccountApple => 'Apple Account';
-
-  @override
-  String get storeAccountGoogle => 'Google Play account';
+  String paywallPriceWithPeriod(String price, String period) {
+    String _temp0 = intl.Intl.selectLogic(period, {
+      'week': '$price per week',
+      'year': '$price per year',
+      'other': '$price per month',
+    });
+    return '$_temp0';
+  }
 
   @override
   String get termsOfUse => 'Terms of Use';
@@ -12599,8 +12822,13 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String subscribedInStoreNote(String store) {
-    return 'You subscribe through $store. To change plans, use $store on the device you subscribed with.';
+  String subscribedThroughStoreNote(String store) {
+    String _temp0 = intl.Intl.selectLogic(store, {
+      'app_store': 'You subscribe through the App Store. To change plans, use the App Store on the device you subscribed with.',
+      'google_play': 'You subscribe through Google Play. To change plans, use Google Play on the device you subscribed with.',
+      'other': 'You subscribe through an app store. To change plans, use that store on the device you subscribed with.',
+    });
+    return '$_temp0';
   }
 
   @override
@@ -12616,7 +12844,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get outOfCreditsPaidBody =>
-      'Your bots pause until you add credits. Packs from the App Store or Google Play never expire; web packs last 12 months.';
+      'Your bots pause until you add credits. Credit packs from the App Store or Google Play never expire; credit packs bought on the web last 12 months.';
 
   @override
   String get outOfCreditsFreeBody =>
@@ -13229,21 +13457,21 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String paywallStoreEmptyTitle(String store) {
     String _temp0 = intl.Intl.selectLogic(store, {
-      'app_store': 'The App Store',
-      'google_play': 'Google Play',
-      'other': 'The store',
+      'app_store': 'The App Store isn\'t showing plans',
+      'google_play': 'Google Play isn\'t showing plans',
+      'other': 'The store isn\'t showing plans',
     });
-    return '$_temp0 isn\'t showing plans';
+    return '$_temp0';
   }
 
   @override
   String paywallStoreEmptyBody(String store) {
     String _temp0 = intl.Intl.selectLogic(store, {
-      'app_store': 'the App Store',
-      'google_play': 'Google Play',
-      'other': 'the store',
+      'app_store': 'Make sure you\'re signed in to the App Store on this device, then try again.',
+      'google_play': 'Make sure you\'re signed in to Google Play on this device, then try again.',
+      'other': 'Make sure you\'re signed in to the store on this device, then try again.',
     });
-    return 'Make sure you\'re signed in to $_temp0 on this device, then try again.';
+    return '$_temp0';
   }
 
   @override
@@ -13303,7 +13531,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String paywallGetPlan(String plan) {
-    return 'Get $plan';
+    return 'Subscribe to $plan';
   }
 
   @override
@@ -13358,7 +13586,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get adminPackSaveHelp =>
-      'Saving changes the pack for everyone straight away.';
+      'Saving changes the credit pack for everyone straight away.';
 
   @override
   String get adminPlanName => 'Name';
@@ -13596,7 +13824,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String suggestionsTitle(int n) {
-    return 'Found $n things worth a look';
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'Found $n things worth a look',
+      one: 'Found 1 thing worth a look',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -13993,7 +14227,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get linkInvitesHelp =>
-      'Off: nobody can make a new account while this is on. On: people you invite by email can. The server restarts to change it.';
+      'Off: nobody can make a new account. On: people you invite by email can. Changing it restarts the server.';
 
   @override
   String get linkKeepAwake => 'Keep This Mac Awake While Plugged In';
@@ -14597,13 +14831,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get supportWebOff => 'Off';
 
   @override
-  String supportWebToday(int count, String spent, String budget) {
-    return '$count messages today · \$$spent of \$$budget budget';
-  }
-
-  @override
   String supportWebPaused(int count) {
-    return '$count addresses paused';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count IP addresses paused',
+      one: '1 IP address paused',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -14651,7 +14886,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String galleryChatReads(String things) {
-    return 'Reads $things';
+    return 'Reads: $things';
   }
 
   @override
@@ -14662,7 +14897,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String galleryChatNeeds(String apps) {
-    return 'Needs $apps';
+    return 'Needs: $apps';
   }
 
   @override
@@ -15050,7 +15285,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String galleryAccessReads(String things) {
-    return 'Reads your $things';
+    return 'Reads: $things';
   }
 
   @override
@@ -15206,7 +15441,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String galleryUpdateNowReads(String things) {
-    return 'Now reads your $things';
+    return 'Now reads: $things';
   }
 
   @override
@@ -15343,7 +15578,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String galleryWizardDoneMissing(String apps) {
-    return 'It works fully once you connect $apps.';
+    return 'To work fully, it needs these apps connected: $apps';
   }
 
   @override
@@ -15451,8 +15686,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get gallerySubmitMyWallpaper => 'My wallpaper';
 
   @override
-  String gallerySubmitTitle(String kind) {
-    return 'Submit a $kind';
+  String gallerySubmitKindTitle(String kind) {
+    String _temp0 = intl.Intl.selectLogic(kind, {
+      'app': 'Submit an App',
+      'bot': 'Submit a Starter bot',
+      'routine': 'Submit a Routine',
+      'plugin': 'Submit a Plugin',
+      'set': 'Submit a Starter set',
+      'theme': 'Submit a Theme',
+      'scheme': 'Submit a Color scheme',
+      'wallpaper': 'Submit a Wallpaper',
+      'other': 'Submit a Skill',
+    });
+    return '$_temp0';
   }
 
   @override
@@ -15478,6 +15724,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String gallerySubmitRemix(String name) {
     return 'Credits the original: $name';
   }
+
+  @override
+  String get gallerySubmitRemixUnnamed => 'Credits the original gallery item';
 
   @override
   String get gallerySubmitSend => 'Submit';
@@ -16528,7 +16777,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deleteAccountDomainsBody =>
-      'These domains stay registered to their registrant until they expire, stop renewing, and their sites go offline.';
+      'These domains stay registered until they expire. They won\'t renew, and their sites go offline.';
 
   @override
   String get whatsNew010Sites =>
@@ -16548,8 +16797,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pushAllOn => 'All on';
 
   @override
-  String pushOneOff(String kind) {
-    return '$kind off';
+  String pushKindOff(String kind) {
+    String _temp0 = intl.Intl.selectLogic(kind, {
+      'replies': 'Replies off',
+      'needsYou': 'Needs you off',
+      'routines': 'Routines and briefs off',
+      'suggestions': 'Suggestions and check-ins off',
+      'other': 'Account off',
+    });
+    return '$_temp0';
   }
 
   @override
@@ -17111,7 +17367,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sharePackSummary => 'One line about it';
 
   @override
-  String get sharePackLook => 'Include this device\'s look';
+  String get sharePackLook => 'Include this device\'s theme';
 
   @override
   String get sharePackCheck => 'Check and share';
@@ -18368,7 +18624,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get watchReadRepliesAloud => 'Read replies aloud';
 
   @override
-  String get watchAskUses => 'Ask uses';
+  String get watchAskUses => 'Bot for Ask';
 
   @override
   String get watchWorkspace => 'Workspace';
@@ -19478,7 +19734,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get adminSupportWebSpent => 'Spent today';
 
   @override
-  String get adminSupportWebPausedStat => 'Paused addresses';
+  String get adminSupportWebPausedStat => 'Paused IP addresses';
 
   @override
   String adminSupportWebBudget(String spent, String budget) {
@@ -19817,7 +20073,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String savedResetConfirm(String amount) {
-    return 'Refills \$$amount of this period’s included credits. This can’t be undone.';
+    return 'Refills $amount of this period’s included credits. This can’t be undone.';
   }
 
   @override
@@ -20243,13 +20499,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get resetsResume => 'Resume';
 
   @override
-  String resetsCampaignCounts(int given, int used, String credits) {
-    return '$given given · $used used · \$$credits refilled';
-  }
-
-  @override
-  String resetsPreview(int count, String credits, String cost) {
-    return '$count workspaces. Maximum refill: \$$credits. Estimated cost: \$$cost.';
+  String resetsPreviewMessage(int count, String credits, String cost) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count workspaces. Maximum refill: $credits. Estimated cost: $cost.',
+      one: '1 workspace. Maximum refill: $credits. Estimated cost: $cost.',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -21293,7 +21551,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cardCheckoutChange => 'Change';
 
   @override
-  String get cardCheckoutConfirm => 'Confirm';
+  String get cardCheckoutConfirm => 'Confirm and pay';
 
   @override
   String get cardCheckoutCancelLabel => 'Cancel this';
@@ -21304,6 +21562,11 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String cardCheckoutConfirmLabel(String total, String seller) {
     return 'Confirm $total at $seller';
+  }
+
+  @override
+  String cardCheckoutConfirmNoSellerLabel(String total) {
+    return 'Confirm $total';
   }
 
   @override
@@ -22264,8 +22527,17 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String cardPollen(String kind) {
-    return '$kind pollen';
+  String cardPollenKind(String kind) {
+    String _temp0 = intl.Intl.selectLogic(kind, {
+      'alder': 'Alder pollen',
+      'birch': 'Birch pollen',
+      'grass': 'Grass pollen',
+      'mugwort': 'Mugwort pollen',
+      'olive': 'Olive pollen',
+      'ragweed': 'Ragweed pollen',
+      'other': 'Pollen',
+    });
+    return '$_temp0';
   }
 
   @override
@@ -23269,8 +23541,15 @@ class AppLocalizationsEn extends AppLocalizations {
       'On this PC, with your sign-ins. Always lets it open this site from now on.';
 
   @override
-  String appBrowserSiteAskKind(String kind) {
-    return '$kind sites ask every time.';
+  String appBrowserSiteKindAsks(String kind) {
+    String _temp0 = intl.Intl.selectLogic(kind, {
+      'banking': 'Banking and Payments sites ask every time.',
+      'health': 'Health sites ask every time.',
+      'passwords': 'Password Managers sites ask every time.',
+      'government': 'Government ID sites ask every time.',
+      'other': 'These sites ask every time.',
+    });
+    return '$_temp0';
   }
 
   @override
@@ -25750,7 +26029,8 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get testimonialAskSomeone => 'a Casama user';
+  String get testimonialAskConsentAnonymous =>
+      'You can quote this on casama.ai and in the app as a Casama user';
 
   @override
   String get testimonialAskSend => 'Send';
@@ -25832,8 +26112,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get licenseBusinessSave => 'Use This Key';
 
   @override
-  String licenseBusinessContact(String email) {
-    return 'Using Casama at work or with a team? Business is \$29 per active user a month (\$24 billed yearly). Write to $email.';
+  String licenseBusinessPrices(
+    String monthlyPrice,
+    String yearlyMonthlyPrice,
+    String email,
+  ) {
+    return 'Using Casama at work or with a team? Business is $monthlyPrice per active user a month ($yearlyMonthlyPrice billed yearly). Write to $email.';
   }
 
   @override
@@ -26697,7 +26981,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String cloudAccountDeleteConfirm(String email) {
-    return 'Type $email to delete your Casama Cloud account. Cloud workspaces only you own go with it, and Casama Cloud models stop on servers they pay for. Plans bought in a store are cancelled in that store.';
+    return 'Type $email to delete your Casama Cloud account. Cloud workspaces only you own go with it, and Casama Cloud models stop on servers they pay for. This doesn\'t cancel paid plans. First cancel a plan bought on the web in Billing on Casama Cloud, and a plan bought in the App Store or Google Play in that store.';
   }
 
   @override
@@ -27272,4 +27556,1471 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get wsMovedViewOld => 'View the Old Copy';
+
+  @override
+  String get languageDevice => 'Device language';
+
+  @override
+  String get shortcutQuickAsk => 'Quick ask';
+
+  @override
+  String shortcutAskBot(String name) {
+    return 'Ask $name';
+  }
+
+  @override
+  String shortcutRunRoutine(String name) {
+    return 'Run $name';
+  }
+
+  @override
+  String get settingsWordsWorkspace =>
+      'workspace switch change team organization org role';
+
+  @override
+  String get settingsWordsAboutYou =>
+      'profile name photo picture avatar pronouns about me reply style facts memory';
+
+  @override
+  String get settingsWordsPeople =>
+      'members invite team users admins roles invite link code join remove';
+
+  @override
+  String get settingsWordsWorkspaceSettings =>
+      'workspace name icon logo encryption memory payments stripe card password managers bot to bot chrome extension gallery full access permissions approvals ask bypass';
+
+  @override
+  String get settingsWordsSettingsDomains =>
+      'domain website custom dns buy connect sites';
+
+  @override
+  String get settingsWordsUsage =>
+      'cost spend spending money credits tokens limits';
+
+  @override
+  String get settingsWordsBilling =>
+      'plan subscription upgrade pro plus max payment invoice card pricing';
+
+  @override
+  String get settingsWordsInviteFriends => 'referral credit reward share';
+
+  @override
+  String get settingsWordsAdminConsole => 'admin console';
+
+  @override
+  String get settingsWordsAppearance =>
+      'theme dark mode light mode night colors colours fonts font text size background wallpaper look style themes effects motion animations';
+
+  @override
+  String get settingsWordsQuietHours =>
+      'do not disturb dnd sleep mute silence notifications schedule';
+
+  @override
+  String get settingsWordsPushPrefsTitle =>
+      'notifications push alerts replies sounds';
+
+  @override
+  String get settingsWordsCallFullScreenTitle =>
+      'calls phone ring ringing lock screen full screen incoming answer';
+
+  @override
+  String get settingsWordsEmailTips => 'email newsletter tips news unsubscribe';
+
+  @override
+  String get settingsWordsGalleryDigestEmails =>
+      'email gallery digest monthly picks';
+
+  @override
+  String get settingsWordsNewsletterTitle =>
+      'email newsletter monthly news updates subscribe unsubscribe';
+
+  @override
+  String get settingsWordsWakeWord =>
+      'voice hey hands free microphone mic listen';
+
+  @override
+  String get settingsWordsShowBotSteps => 'steps tools details progress';
+
+  @override
+  String get settingsWordsShowReplyUsage => 'cost tokens price usage per reply';
+
+  @override
+  String get settingsWordsCheckForUpdates =>
+      'update updates version upgrade download automatic';
+
+  @override
+  String get settingsWordsOpenAtLogin =>
+      'startup launch login boot start automatically';
+
+  @override
+  String get settingsWordsIslandStartElsewhere =>
+      'live activity dynamic island lock screen other devices';
+
+  @override
+  String get settingsWordsShowBotsInNotch => 'notch menu bar dynamic island';
+
+  @override
+  String get settingsWordsNotchOnHover => 'notch hover mouse';
+
+  @override
+  String get settingsWordsLanguage => 'language locale english translation';
+
+  @override
+  String get settingsWordsIntegrations =>
+      'apps connect connections gmail google slack calendar plugins tools mcp';
+
+  @override
+  String get settingsWordsSkills => 'skills catalog abilities instructions';
+
+  @override
+  String get settingsWordsCasamaLink =>
+      'remote access address tunnel self host phone';
+
+  @override
+  String get settingsWordsServiceKeys => 'api keys search maps data';
+
+  @override
+  String get settingsWordsModelsTitle =>
+      'api keys openai anthropic openrouter gemini models providers ollama local models';
+
+  @override
+  String get settingsWordsModelKeys =>
+      'api keys openai anthropic openrouter gemini models providers ollama local models';
+
+  @override
+  String get settingsWordsAccount =>
+      'email change email password sign out everywhere login';
+
+  @override
+  String get settingsWordsTwoStepSignIn =>
+      '2fa mfa two factor authenticator totp otp security code';
+
+  @override
+  String get settingsWordsPairDevice =>
+      'qr code scan sign in pair phone another device';
+
+  @override
+  String get settingsWordsPasskeys =>
+      'passkey face id touch id fingerprint biometric';
+
+  @override
+  String get settingsWordsWidgetsTitle =>
+      'widgets home screen lock screen controls control center glance pin shortcut';
+
+  @override
+  String get settingsWordsCardsSettingsTitle =>
+      'cards weather units celsius fahrenheit home city location currency stocks red green data sources';
+
+  @override
+  String get settingsWordsAppLock =>
+      'app lock pin passcode face id touch id fingerprint biometric windows hello screenshots privacy lock screen';
+
+  @override
+  String get settingsWordsPrivacy =>
+      'data export download delete account analytics tracking history retention blocked people block';
+
+  @override
+  String get settingsWordsSecrets =>
+      'secrets passwords credentials vault environment variables';
+
+  @override
+  String get settingsWordsComputers =>
+      'computers machines docker sandbox desktop';
+
+  @override
+  String get settingsWordsDeviceConnections =>
+      'devices location health places folders watched apps browsers chrome extension phone permissions';
+
+  @override
+  String get settingsWordsUseThisComputer =>
+      'companion this computer mac local files';
+
+  @override
+  String get settingsWordsHelpAndSupport =>
+      'help support contact ticket bug report feedback docs community github star open source discord ideas board status';
+
+  @override
+  String get settingsWordsSignOut => 'log out logout sign out';
+
+  @override
+  String get notifDoIt => 'Do it';
+
+  @override
+  String get notifNotNow => 'Not now';
+
+  @override
+  String get notifAllow => 'Allow';
+
+  @override
+  String get notifDeny => 'Deny';
+
+  @override
+  String get notifApprove => 'Approve';
+
+  @override
+  String get notifReview => 'Review';
+
+  @override
+  String get notifReply => 'Reply';
+
+  @override
+  String get notifSend => 'Send';
+
+  @override
+  String get notifReplyPlaceholder => 'Reply…';
+
+  @override
+  String get notifChannelReplies => 'Replies';
+
+  @override
+  String get notifChannelRepliesDescription =>
+      'A bot answered something you asked';
+
+  @override
+  String get notifChannelNeedsYou => 'Needs you';
+
+  @override
+  String get notifChannelNeedsYouDescription =>
+      'Approvals, passwords and takeovers your bots wait for';
+
+  @override
+  String get notifChannelRoutines => 'Routines and briefs';
+
+  @override
+  String get notifChannelRoutinesDescription =>
+      'Results of routines and the morning brief';
+
+  @override
+  String get notifChannelSuggestions => 'Suggestions';
+
+  @override
+  String get notifChannelSuggestionsDescription =>
+      'Things your bots offer to do for you';
+
+  @override
+  String get notifChannelAccount => 'Account';
+
+  @override
+  String get notifChannelAccountDescription =>
+      'Credits, projects and your server';
+
+  @override
+  String get notifCallChannel => 'Calls';
+
+  @override
+  String get notifCallLive => 'On a call';
+
+  @override
+  String get notifCallMuted => 'Muted';
+
+  @override
+  String get notifCallReconnecting => 'Reconnecting';
+
+  @override
+  String get notifCallMute => 'Mute';
+
+  @override
+  String get notifCallUnmute => 'Unmute';
+
+  @override
+  String get notifCallEnd => 'End Call';
+
+  @override
+  String get notifFromYourWatch => 'From your watch';
+
+  @override
+  String get notifLiveOpen => 'Open';
+
+  @override
+  String get notifLiveStop => 'Stop';
+
+  @override
+  String get notifLiveReview => 'Review';
+
+  @override
+  String get notifLiveAllow => 'Allow';
+
+  @override
+  String get notifLiveDeny => 'Deny';
+
+  @override
+  String get notifLiveNeedsOk => 'Needs your OK';
+
+  @override
+  String get notifLiveNeedsYou => 'Needs you';
+
+  @override
+  String get notifLiveWorking => 'Working';
+
+  @override
+  String get notifLiveTakeOver => 'Wants you to take over';
+
+  @override
+  String get notifLiveFinished => 'Finished';
+
+  @override
+  String get notifLiveProblem => 'Stopped with a problem';
+
+  @override
+  String get notifLiveBotWorking => 'A bot is working';
+
+  @override
+  String get notifLiveBotsAtWork => 'Bots at work';
+
+  @override
+  String get notifLiveStepOne => '1 step';
+
+  @override
+  String notifLiveSteps(int count) {
+    return '$count steps';
+  }
+
+  @override
+  String get notifAlarmTitle => 'Casama Alarm';
+
+  @override
+  String get notifAlarmStop => 'Stop';
+
+  @override
+  String get widgetIosNeedsYouDescription =>
+      'See which bots are waiting on you, and answer the simple ones.';
+
+  @override
+  String get widgetIosBotDescription =>
+      'Keep an eye on what one of your bots is doing.';
+
+  @override
+  String get widgetIosAskDescription =>
+      'Ask a bot or start a call with one tap, with ideas to try.';
+
+  @override
+  String get widgetIosRoutinesDescription =>
+      'See what runs next, and run a routine now.';
+
+  @override
+  String get widgetIosTodayDescription =>
+      'Get your day in one place: what needs you, what runs next, and your credits.';
+
+  @override
+  String get widgetIosBriefDescription =>
+      'Read what your bot told you this morning.';
+
+  @override
+  String get widgetIosLibraryDescription => 'Open what your bots made lately.';
+
+  @override
+  String get widgetIosTasksDescription =>
+      'See where the board stands, with what waits on you first.';
+
+  @override
+  String get widgetIosCreditsDescription =>
+      'Check how much of your credits you\'ve used.';
+
+  @override
+  String get widgetIosInlineDescription =>
+      'See the one thing that matters most, above the clock.';
+
+  @override
+  String get widgetIosCanvasDescription =>
+      'Show what your bots put here: a verse, a countdown, a streak, a list or a picture.';
+
+  @override
+  String get widgetMacNeedsYouDescription =>
+      'See which bots are waiting on you.';
+
+  @override
+  String get widgetMacRoutinesDescription => 'See what runs next.';
+
+  @override
+  String get widgetAskCasama => 'Ask Casama';
+
+  @override
+  String get widgetControlAskDescription =>
+      'Open quick ask with the keyboard up.';
+
+  @override
+  String get widgetTalkToBot => 'Talk to a bot';
+
+  @override
+  String widgetTalkToName(String name) {
+    return 'Talk to $name';
+  }
+
+  @override
+  String get widgetControlTalkDescription =>
+      'Start a voice call with the bot you pick.';
+
+  @override
+  String get widgetRunRoutine => 'Run a routine';
+
+  @override
+  String get widgetControlRunDescription =>
+      'Run the routine you pick, without opening Casama.';
+
+  @override
+  String widgetFallbackAskBot(String bot) {
+    return 'Ask $bot anything';
+  }
+
+  @override
+  String get widgetFallbackBrief => 'Morning brief';
+
+  @override
+  String widgetFallbackFinished(String bot, String title) {
+    return '$bot finished $title';
+  }
+
+  @override
+  String widgetFallbackAsOf(String time) {
+    return 'As of $time';
+  }
+
+  @override
+  String get widgetFallbackNothingNext => 'Nothing coming up';
+
+  @override
+  String widgetFallbackWantsTakeOver(String bot) {
+    return '$bot wants you to take over';
+  }
+
+  @override
+  String get widgetFallbackDay => 'day';
+
+  @override
+  String get widgetFallbackDays => 'days';
+
+  @override
+  String get widgetSampleVerse => 'Be still, and know that I am God.';
+
+  @override
+  String get widgetSampleVerseRef => 'Ps 46:10';
+
+  @override
+  String get widgetSampleVerseShort =>
+      'Be still, and know that I am God. · Ps 46:10';
+
+  @override
+  String get widgetSampleVerseTiny => 'Be still, and know…';
+
+  @override
+  String get widgetSampleCanvasName => 'Daily verse';
+
+  @override
+  String get widgetSampleNeedFlights => 'Look up flights to Lisbon';
+
+  @override
+  String get widgetSampleNeedDentist => 'Move the dentist to Friday?';
+
+  @override
+  String get widgetSampleBotText =>
+      'Three emails need a reply, and the Acme invoice is two days overdue.';
+
+  @override
+  String get widgetSampleStep => 'Reading your inbox';
+
+  @override
+  String get widgetSampleRoutineInbox => 'Inbox sweep';
+
+  @override
+  String get widgetSampleRoutineBrief => 'Morning brief';
+
+  @override
+  String get widgetSampleRoutineWeekly => 'Weekly report';
+
+  @override
+  String get widgetSampleWeekdays => 'Weekdays';
+
+  @override
+  String get widgetSampleEveryDay => 'Every day';
+
+  @override
+  String get widgetSampleFridays => 'Fridays at 16:00';
+
+  @override
+  String get widgetSampleBrief =>
+      'Three emails need a reply, and the Acme invoice is two days overdue. Rain from 3 pm, so leave early for the 4:30 pickup. Your first meeting is at 10:00 with Dana.';
+
+  @override
+  String get widgetSamplePricing => 'Q4 pricing page';
+
+  @override
+  String get widgetSampleLogoIdeas => 'Logo ideas';
+
+  @override
+  String get widgetSampleTripPlan => 'Trip plan';
+
+  @override
+  String get widgetSampleLaunchPost => 'Draft the launch post';
+
+  @override
+  String get widgetSampleStarterInbox => 'Sum up my inbox';
+
+  @override
+  String get widgetSampleStarterFriday => 'Plan my Friday';
+
+  @override
+  String get widgetSampleWorking => 'Working · 2:14';
+
+  @override
+  String get widgetSampleCreditsLeft => 'US\$5.70 left';
+
+  @override
+  String get widgetSampleSpentToday => 'US\$0.80 today';
+
+  @override
+  String get widgetSampleMorning =>
+      'Good morning. Two meetings today, the first at 10:00 with the design team. Rain after 3, so take a coat. Your flight to Lisbon is confirmed for Friday.';
+
+  @override
+  String get widgetSampleLisbonPlan => 'Lisbon trip plan';
+
+  @override
+  String get widgetSampleAgo => 'Milo · 2 hr ago';
+
+  @override
+  String get widgetSampleLaunchEmail => 'Draft the launch email';
+
+  @override
+  String get widgetSampleInReviewBy => 'In review · Ada';
+
+  @override
+  String get widgetSampleNeedAndroid =>
+      'Milo wants to search flight prices for Lisbon';
+
+  @override
+  String get widgetSampleUpNextAt => 'Up next · 9:00';
+
+  @override
+  String get widgetSampleInMinutes => 'Ada · in 18 min';
+
+  @override
+  String get widgetSampleDate => 'Wednesday, 18 November';
+
+  @override
+  String get widgetSampleNeedsCount => 'Needs you · 1';
+
+  @override
+  String get widgetSampleSearchFlights => 'Search flight prices for Lisbon';
+
+  @override
+  String get widgetSampleAskAda => 'Ask Ada';
+
+  @override
+  String get widgetSampleAskMilo => 'Ask Milo';
+
+  @override
+  String get widgetSamplePlanDay => '☀️ Plan my day';
+
+  @override
+  String get widgetSampleWhatsNew => '✉️ What\'s new in my inbox?';
+
+  @override
+  String get widgetAndroidBotDescription =>
+      'Follow what a bot is doing right now';
+
+  @override
+  String get widgetAndroidTodayDescription =>
+      'Keep your whole day with your bots in one place';
+
+  @override
+  String get widgetAndroidBriefDescription =>
+      'Read your morning brief at a glance';
+
+  @override
+  String get widgetAndroidLibraryDescription =>
+      'Open what your bots made lately';
+
+  @override
+  String get widgetAndroidTasksDescription =>
+      'Track where your task board stands';
+
+  @override
+  String get widgetAndroidCreditsDescription => 'Check how much you have used';
+
+  @override
+  String get widgetAndroidCanvasDescription =>
+      'Show what your bots put here, from a verse to a countdown';
+
+  @override
+  String get widgetConfigBotTitle => 'Choose a bot';
+
+  @override
+  String get widgetConfigRoutinesTitle => 'Choose routines';
+
+  @override
+  String get widgetConfigRoutinesHint =>
+      'Pick up to four, for the ones you start by hand';
+
+  @override
+  String get widgetConfigAutomatic => 'Automatic';
+
+  @override
+  String get widgetConfigAutomaticHint => 'The next runs, across your bots';
+
+  @override
+  String get widgetConfigDone => 'Done';
+
+  @override
+  String get widgetConfigSignedOutTitle => 'Nothing to choose yet';
+
+  @override
+  String get widgetConfigSignedOut =>
+      'Open Casama and sign in, then choose here.';
+
+  @override
+  String get widgetConfigCanvasTitle => 'Choose a canvas';
+
+  @override
+  String get widgetConfigCanvasAutomaticHint =>
+      'The one a bot set most recently';
+
+  @override
+  String get widgetConfigCanvasNone =>
+      'No canvases yet. Ask a bot to put something here.';
+
+  @override
+  String get iosUsageTracking =>
+      'If you allow it, Casama tells Meta when you install, join or subscribe after seeing a Casama ad on Facebook or Instagram, so we can measure which ads work. Casama never shows ads and never shares your chats or files.';
+
+  @override
+  String get iosUsageContacts =>
+      'Your bots can look up people you know, only when you turn on Contacts in Device connections.';
+
+  @override
+  String get iosUsagePhotoLibrary =>
+      'Casama opens your photo library when you choose a photo to send to a bot or for your profile.';
+
+  @override
+  String get iosUsageLocationAlways =>
+      'Tell your bots when you arrive at or leave your named places, even when Casama is closed. Only the place name and time are shared, never your route.';
+
+  @override
+  String get iosUsageLocationWhenInUse =>
+      'Save places you name, such as Home or Work, and let your bots remind you when to leave for your next appointment. Used only if you turn on Places in Device connections.';
+
+  @override
+  String get iosUsageCamera =>
+      'Casama uses the camera when you take a photo to send to a bot or for your profile.';
+
+  @override
+  String get iosUsageCalendars =>
+      'Your bots can answer questions about your schedule and add events, only when you turn on Calendar in Device connections.';
+
+  @override
+  String get iosUsageSpeech =>
+      'When Casama\'s dictation service can\'t be reached, your device\'s own speech recognition turns what you say into text.';
+
+  @override
+  String get iosUsageAlarmKit =>
+      'Your bots can set alarms and timers that ring through silent mode, only when you allow Alarms in Device connections.';
+
+  @override
+  String get iosUsageHomeKit =>
+      'Your bots can check and control your HomeKit home when you allow Home in Device connections; changes always ask for approval first.';
+
+  @override
+  String get iosUsageMicrophone =>
+      'Casama uses the microphone for dictation and live calls with your bots. Only after you agree, your voice goes to AI providers to answer you: Google Gemini for calls, OpenAI to turn dictation into text.';
+
+  @override
+  String get iosUsageHealthUpdate =>
+      'Casama only reads Apple Health data; it never writes to it.';
+
+  @override
+  String get iosUsageFaceId =>
+      'Casama uses Face ID to unlock the app when you turn on the app lock, and to confirm risky actions.';
+
+  @override
+  String get iosUsageHealthShare =>
+      'Your bots can see daily summaries of your sleep, activity, workouts and heart from Apple Health, only when you turn on Apple Health in Device connections. Casama never writes to Apple Health and never uses it for ads.';
+
+  @override
+  String get iosUsageWatchMicrophone =>
+      'Casama records your voice when you ask a bot something and sends it to your Casama server, where an AI provider (OpenAI, on Casama Cloud) turns it into text for your bot.';
+
+  @override
+  String get macUsageContacts =>
+      'Your bots can look up people you know, only when you turn on Contacts in Device connections.';
+
+  @override
+  String get macUsageSpeech =>
+      'When Casama\'s dictation service can\'t be reached, your device\'s own speech recognition turns what you say into text.';
+
+  @override
+  String get macUsageMicrophone =>
+      'Casama uses the microphone for dictation and live calls with your bots. Only after you agree, your voice goes to AI providers to answer you: Google Gemini for calls, OpenAI to turn dictation into text.';
+
+  @override
+  String get macUsageAppleEvents =>
+      'Quick ask reads the front window\'s title and your browser\'s current tab, only when you press the shortcut.';
+
+  @override
+  String get nativeNameFileProvider => 'Casama Computers';
+
+  @override
+  String get nativeNameNotifications => 'Casama Notifications';
+
+  @override
+  String get nativeNameSafari => 'Casama for Safari';
+
+  @override
+  String get nativeNameAskCasama => 'Ask Casama';
+
+  @override
+  String get nativeComputer => 'Computer';
+
+  @override
+  String get nativeSafariSignInIos =>
+      'Open Casama on this device -> Settings -> Sign In on Another Device, or paste a sign-in link below.';
+
+  @override
+  String get nativeSafariSignInMac =>
+      'Open Casama on this Mac -> Settings -> Sign In on Another Device, or paste a sign-in link below.';
+
+  @override
+  String get linuxDesktopComment =>
+      'Bots that do the work, on every screen you own';
+
+  @override
+  String get linuxDesktopKeywords => 'AI;assistant;agent;bot;chat;';
+
+  @override
+  String macMenuAbout(String appName) {
+    return 'About $appName';
+  }
+
+  @override
+  String get macMenuPreferences => 'Preferences…';
+
+  @override
+  String get macMenuServices => 'Services';
+
+  @override
+  String macMenuHide(String appName) {
+    return 'Hide $appName';
+  }
+
+  @override
+  String get macMenuHideOthers => 'Hide Others';
+
+  @override
+  String get macMenuShowAll => 'Show All';
+
+  @override
+  String macMenuQuit(String appName) {
+    return 'Quit $appName';
+  }
+
+  @override
+  String get macMenuEdit => 'Edit';
+
+  @override
+  String get macMenuUndo => 'Undo';
+
+  @override
+  String get macMenuRedo => 'Redo';
+
+  @override
+  String get macMenuCut => 'Cut';
+
+  @override
+  String get macMenuCopy => 'Copy';
+
+  @override
+  String get macMenuPaste => 'Paste';
+
+  @override
+  String get macMenuPasteAndMatchStyle => 'Paste and Match Style';
+
+  @override
+  String get macMenuDelete => 'Delete';
+
+  @override
+  String get macMenuSelectAll => 'Select All';
+
+  @override
+  String get macMenuFind => 'Find';
+
+  @override
+  String get macMenuFindEllipsis => 'Find…';
+
+  @override
+  String get macMenuFindAndReplace => 'Find and Replace…';
+
+  @override
+  String get macMenuFindNext => 'Find Next';
+
+  @override
+  String get macMenuFindPrevious => 'Find Previous';
+
+  @override
+  String get macMenuUseSelectionForFind => 'Use Selection for Find';
+
+  @override
+  String get macMenuJumpToSelection => 'Jump to Selection';
+
+  @override
+  String get macMenuSpellingAndGrammar => 'Spelling and Grammar';
+
+  @override
+  String get macMenuSpelling => 'Spelling';
+
+  @override
+  String get macMenuShowSpelling => 'Show Spelling and Grammar';
+
+  @override
+  String get macMenuCheckDocumentNow => 'Check Document Now';
+
+  @override
+  String get macMenuCheckSpellingWhileTyping => 'Check Spelling While Typing';
+
+  @override
+  String get macMenuCheckGrammar => 'Check Grammar With Spelling';
+
+  @override
+  String get macMenuCorrectSpelling => 'Correct Spelling Automatically';
+
+  @override
+  String get macMenuSubstitutions => 'Substitutions';
+
+  @override
+  String get macMenuShowSubstitutions => 'Show Substitutions';
+
+  @override
+  String get macMenuSmartCopyPaste => 'Smart Copy/Paste';
+
+  @override
+  String get macMenuSmartQuotes => 'Smart Quotes';
+
+  @override
+  String get macMenuSmartDashes => 'Smart Dashes';
+
+  @override
+  String get macMenuSmartLinks => 'Smart Links';
+
+  @override
+  String get macMenuDataDetectors => 'Data Detectors';
+
+  @override
+  String get macMenuTextReplacement => 'Text Replacement';
+
+  @override
+  String get macMenuTransformations => 'Transformations';
+
+  @override
+  String get macMenuMakeUpperCase => 'Make Upper Case';
+
+  @override
+  String get macMenuMakeLowerCase => 'Make Lower Case';
+
+  @override
+  String get macMenuCapitalize => 'Capitalize';
+
+  @override
+  String get macMenuSpeech => 'Speech';
+
+  @override
+  String get macMenuStartSpeaking => 'Start Speaking';
+
+  @override
+  String get macMenuStopSpeaking => 'Stop Speaking';
+
+  @override
+  String get macMenuView => 'View';
+
+  @override
+  String get macMenuEnterFullScreen => 'Enter Full Screen';
+
+  @override
+  String get macMenuWindow => 'Window';
+
+  @override
+  String get macMenuMinimize => 'Minimize';
+
+  @override
+  String get macMenuZoom => 'Zoom';
+
+  @override
+  String get macMenuBringAllToFront => 'Bring All to Front';
+
+  @override
+  String get macMenuHelp => 'Help';
+
+  @override
+  String get macMenuCheckForUpdates => 'Check for Updates…';
+
+  @override
+  String get macMenuSettings => 'Settings…';
+
+  @override
+  String get macMenuFile => 'File';
+
+  @override
+  String get macMenuNewChat => 'New Chat';
+
+  @override
+  String get macMenuNewBot => 'New Bot…';
+
+  @override
+  String get macMenuQuickAsk => 'Quick Ask';
+
+  @override
+  String get macMenuSearch => 'Search…';
+
+  @override
+  String get macMenuCloseWindow => 'Close Window';
+
+  @override
+  String get macMenuGo => 'Go';
+
+  @override
+  String get macMenuBots => 'Bots';
+
+  @override
+  String get macMenuInbox => 'Inbox';
+
+  @override
+  String get macMenuBoard => 'Board';
+
+  @override
+  String get macMenuComputer => 'Computer';
+
+  @override
+  String get macMenuPages => 'Pages';
+
+  @override
+  String get macMenuCasamaHelp => 'Casama Help';
+
+  @override
+  String get macMenuSendFeedback => 'Send Feedback…';
+
+  @override
+  String get siriBot => 'Bot';
+
+  @override
+  String get siriRoutine => 'Routine';
+
+  @override
+  String get siriRoutines => 'Routines';
+
+  @override
+  String get siriCanvas => 'Canvas';
+
+  @override
+  String get siriAutomatic => 'Automatic';
+
+  @override
+  String get siriAutomaticSubtitle => 'What a bot set most recently';
+
+  @override
+  String get siriChooseCanvas => 'Choose a canvas';
+
+  @override
+  String get siriChooseCanvasDescription =>
+      'Show what a bot set most recently, or one canvas.';
+
+  @override
+  String get siriChooseBot => 'Choose a bot';
+
+  @override
+  String get siriChooseBotDescription => 'Pick the bot this widget shows.';
+
+  @override
+  String get siriChooseRoutines => 'Choose routines';
+
+  @override
+  String get siriChooseRoutinesDescription =>
+      'Show the next runs, or up to four routines you pick.';
+
+  @override
+  String get siriOpenCasama => 'Open Casama';
+
+  @override
+  String get siriWhere => 'Where';
+
+  @override
+  String get siriTalkToBot => 'Talk to a bot';
+
+  @override
+  String get siriTalkToBotDescription =>
+      'Starts a voice call with the bot you pick.';
+
+  @override
+  String get siriRunRoutine => 'Run a routine';
+
+  @override
+  String get siriRunRoutineControlDescription =>
+      'Runs the routine you pick, without opening Casama.';
+
+  @override
+  String get siriCallAction => 'Call action';
+
+  @override
+  String get siriAction => 'Action';
+
+  @override
+  String get siriStopBot => 'Stop the bot';
+
+  @override
+  String get siriRun => 'Run';
+
+  @override
+  String get siriAnswerRequest => 'Answer a bot\'s request';
+
+  @override
+  String get siriRequest => 'Request';
+
+  @override
+  String get siriAllow => 'Allow';
+
+  @override
+  String get siriFromWidget => 'From a widget';
+
+  @override
+  String get siriRunRoutineNow => 'Run a routine now';
+
+  @override
+  String get siriAcceptSuggestion => 'Do what a bot suggests';
+
+  @override
+  String get siriSuggestion => 'Suggestion';
+
+  @override
+  String get siriBotStatusDescription =>
+      'Where a bot stands and what it is doing';
+
+  @override
+  String get siriNextRoutineDescription => 'The next routine and when it runs';
+
+  @override
+  String get siriAskCasama => 'Ask Casama';
+
+  @override
+  String get siriAskVoiceDescription => 'Ask a bot something by voice';
+
+  @override
+  String get siriWhatWaiting => 'What is waiting for your OK';
+
+  @override
+  String get siriAsk => 'Ask';
+
+  @override
+  String get siriShortNeedsYou => 'Needs you';
+
+  @override
+  String get siriOpeningToFinish => 'Opening Casama to finish.';
+
+  @override
+  String get siriName => 'Name';
+
+  @override
+  String get siriTitle => 'Title';
+
+  @override
+  String get siriChat => 'Chat';
+
+  @override
+  String get siriBotSubtitle =>
+      'A bot in Casama, an AI assistant you chat with';
+
+  @override
+  String siriRoutineSubtitle(String bot) {
+    return 'A routine $bot runs in Casama';
+  }
+
+  @override
+  String siriChatSubtitle(String bot) {
+    return 'A chat with $bot in Casama';
+  }
+
+  @override
+  String get siriBotInCasama => 'Bot in Casama';
+
+  @override
+  String siriRoutineDot(String bot) {
+    return 'Routine · $bot';
+  }
+
+  @override
+  String siriChatWith(String bot) {
+    return 'Chat with $bot';
+  }
+
+  @override
+  String get siriKeywordBot => 'bot';
+
+  @override
+  String get siriKeywordRoutine => 'routine';
+
+  @override
+  String get siriKeywordChat => 'chat';
+
+  @override
+  String get siriAskBot => 'Ask a bot';
+
+  @override
+  String get siriAskBotDescription =>
+      'Sends a question to one of your Casama bots (AI assistants) in a new chat and reads the reply back. With no bot named, the bot you talked to last answers.';
+
+  @override
+  String get siriCategoryBots => 'Bots';
+
+  @override
+  String get siriAskBotParamDescription =>
+      'Which bot to ask. Leave empty for the bot you talked to last.';
+
+  @override
+  String get siriQuestion => 'Question';
+
+  @override
+  String get siriQuestionDescription =>
+      'What to ask the bot, in your own words.';
+
+  @override
+  String get siriWhatShouldIAsk => 'What should I ask?';
+
+  @override
+  String siriSummaryAskBot(String bot, String question) {
+    return 'Ask $bot $question';
+  }
+
+  @override
+  String get siriRestOnScreen => 'The rest is on screen.';
+
+  @override
+  String get siriRestOnScreenEllipsis => '… The rest is on screen.';
+
+  @override
+  String get siriRunRoutineDescription =>
+      'Runs one of your Casama bots\' routines now. The result arrives in the app and as a notification, as it does when the routine runs on its own.';
+
+  @override
+  String get siriRoutineParamDescription => 'Which routine to run now.';
+
+  @override
+  String siriSummaryRun(String routine) {
+    return 'Run $routine';
+  }
+
+  @override
+  String get siriWhatNeedsMe => 'What needs me';
+
+  @override
+  String get siriWhatNeedsMeDescription =>
+      'Says how many things in Casama are waiting for you: a bot\'s request for your OK, a takeover, a suggestion. Answer them in the app.';
+
+  @override
+  String get siriOpenBot => 'Open a bot';
+
+  @override
+  String get siriOpenBotDescription =>
+      'Opens your chat with one of your Casama bots.';
+
+  @override
+  String get siriOpenBotPersonDescription => 'Opens a Casama bot\'s chat.';
+
+  @override
+  String get siriOpenChat => 'Open a chat';
+
+  @override
+  String get siriOpenChatDescription =>
+      'Opens one of your chats with a Casama bot.';
+
+  @override
+  String get siriOpenRoutine => 'Open a routine\'s bot';
+
+  @override
+  String get siriOpenRoutineDescription =>
+      'Opens the bot that runs one of your Casama routines.';
+
+  @override
+  String get siriTalkDescription =>
+      'Opens voice mode with one of your Casama bots. Available on the Action button.';
+
+  @override
+  String get siriAskGetReply => 'Ask a bot and get the reply';
+
+  @override
+  String get siriAskGetReplyDescription =>
+      'Sends a question to a Casama bot and returns its reply text for chaining in Shortcuts.';
+
+  @override
+  String get siriGetLastReply => 'Get the last reply';
+
+  @override
+  String get siriGetLastReplyDescription =>
+      'Returns the latest reply text from a Casama bot chat.';
+
+  @override
+  String get siriStartComputer => 'Start a computer';
+
+  @override
+  String get siriStartComputerDescription =>
+      'Wakes up a Casama computer after confirmation.';
+
+  @override
+  String get siriComputerName => 'Computer name';
+
+  @override
+  String get siriYourComputer => 'your Casama computer';
+
+  @override
+  String siriStartConfirm(String computer) {
+    return 'Start $computer?';
+  }
+
+  @override
+  String get siriOpenToStartComputer => 'Open Casama to start your computer.';
+
+  @override
+  String get siriFocusTitle => 'Set Casama Focus Filter';
+
+  @override
+  String get siriFocusDescription =>
+      'Show only chosen bots and optionally hold proactive check-ins while this Focus is active.';
+
+  @override
+  String get siriFocusBots => 'Bots to show';
+
+  @override
+  String get siriFocusHold => 'Hold proactive check-ins';
+
+  @override
+  String get siriFocusShowOne => 'Show 1 bot';
+
+  @override
+  String siriFocusShowMany(int count) {
+    return 'Show $count bots';
+  }
+
+  @override
+  String get siriFocusHoldCheckIns => 'Hold check-ins';
+
+  @override
+  String get siriFocusAllowCheckIns => 'Allow check-ins';
+
+  @override
+  String get siriFocusAllBots => 'All bots';
+
+  @override
+  String get siriFocusAllVisible => 'All bots visible';
+
+  @override
+  String get siriToolAsk => 'Ask a Casama bot';
+
+  @override
+  String get siriToolAskDescription =>
+      'Ask one of the person\'s Casama bots a question and return its reply.';
+
+  @override
+  String get siriCategoryAssistants => 'Assistants';
+
+  @override
+  String get siriToolBotDescription => 'Which Casama bot to ask.';
+
+  @override
+  String get siriToolQuestionDescription => 'What to ask the bot.';
+
+  @override
+  String get siriToolRun => 'Run a Casama routine';
+
+  @override
+  String get siriToolRunDescription =>
+      'Run a saved Casama routine after confirming with the person.';
+
+  @override
+  String get siriCategoryAutomation => 'Automation';
+
+  @override
+  String get siriToolRoutineDescription => 'The routine to run.';
+
+  @override
+  String siriRunWithConfirm(String routine, String bot) {
+    return 'Run $routine with $bot?';
+  }
+
+  @override
+  String get siriToolNeeds => 'What needs me in Casama';
+
+  @override
+  String get siriToolNeedsDescription =>
+      'Check how many approvals, takeovers or suggestions are waiting in Casama.';
+
+  @override
+  String get siriOpenToCheck => 'Open Casama to check what needs you.';
+
+  @override
+  String get siriToolStop => 'Stop a Casama bot';
+
+  @override
+  String get siriToolStopDescription =>
+      'Stop a bot that is currently running a task in Casama.';
+
+  @override
+  String get siriToolStopBotDescription => 'The bot to stop.';
+
+  @override
+  String siriStoppedBot(String bot) {
+    return 'Stopped $bot.';
+  }
+
+  @override
+  String get siriToolCall => 'Call a Casama bot';
+
+  @override
+  String get siriToolCallDescription =>
+      'Open Casama and start a live voice call with the chosen bot.';
+
+  @override
+  String get siriCategoryCommunication => 'Communication';
+
+  @override
+  String get siriToolCallBotDescription => 'The bot to call.';
+
+  @override
+  String siriCalling(String bot) {
+    return 'Calling $bot.';
+  }
+
+  @override
+  String siriBotIn(String app) {
+    return 'A bot in $app';
+  }
+
+  @override
+  String get siriMe => 'Me';
+
+  @override
+  String get siriABot => 'a bot';
+
+  @override
+  String get siriFavorited => 'Favorited';
+
+  @override
+  String siriSentTo(String bot) {
+    return 'Sent to $bot';
+  }
+
+  @override
+  String get siriMessage => 'Message';
+
+  @override
+  String get siriNone => 'None';
+
+  @override
+  String get siriErrorOneBot => 'Casama sends to one bot at a time. Which bot?';
+
+  @override
+  String get siriErrorTextOnly =>
+      'Siri can send words to a bot. Add files, pictures and places in Casama.';
+
+  @override
+  String get siriErrorNoBot => 'I couldn\'t find that bot in Casama.';
+
+  @override
+  String get siriWhatShouldISend => 'What should I send?';
+
+  @override
+  String get siriAskCasamaBot => 'Ask Casama Bot';
+
+  @override
+  String siriAskName(String bot) {
+    return 'Ask $bot';
+  }
+
+  @override
+  String get siriAskAboutThis => 'Ask Casama about this';
+
+  @override
+  String siriPhraseAsk(String app) {
+    return 'Ask $app';
+  }
+
+  @override
+  String siriPhraseAskBotIn(String app) {
+    return 'Ask a bot in $app';
+  }
+
+  @override
+  String siriPhraseAskNamed(String bot, String app) {
+    return 'Ask $bot in $app';
+  }
+
+  @override
+  String siriPhraseTalkIn(String app) {
+    return 'Talk to a bot in $app';
+  }
+
+  @override
+  String siriPhraseTalkNamed(String bot, String app) {
+    return 'Talk to $bot in $app';
+  }
+
+  @override
+  String siriPhraseRunIn(String app) {
+    return 'Run a routine in $app';
+  }
+
+  @override
+  String siriPhraseRunNamed(String routine, String app) {
+    return 'Run $routine in $app';
+  }
+
+  @override
+  String siriPhraseNeedsIn(String app) {
+    return 'What needs me in $app';
+  }
+
+  @override
+  String siriPhraseWaitingIn(String app) {
+    return 'What\'s waiting in $app';
+  }
+
+  @override
+  String siriPhraseAskSomething(String app) {
+    return 'Ask $app something';
+  }
+
+  @override
+  String siriPhraseRunMy(String routine, String app) {
+    return 'Run my $routine in $app';
+  }
+
+  @override
+  String get siriABotSubject => 'A bot';
+
+  @override
+  String siriBotNeedsOk(String bot) {
+    return '$bot needs your OK.';
+  }
+
+  @override
+  String siriBotNeedsTakeOver(String bot) {
+    return '$bot needs you to take over.';
+  }
+
+  @override
+  String siriBotHasSuggestion(String bot) {
+    return '$bot has a suggestion.';
+  }
+
+  @override
+  String siriBotNeedsYouLine(String bot) {
+    return '$bot needs you.';
+  }
+
+  @override
+  String get siriOneThingNeedsYou => 'One thing needs you.';
+
+  @override
+  String siriCountThingsNeedYou(int count) {
+    return '$count things need you.';
+  }
+
+  @override
+  String get siriUnlockPhone => 'Unlock your phone and try again.';
+
+  @override
+  String get siriGeminiOff =>
+      'Gemini is turned off for Casama on this phone (Casama → Settings → Privacy).';
 }

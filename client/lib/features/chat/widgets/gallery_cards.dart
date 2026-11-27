@@ -8,6 +8,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/backend.dart';
+import '../../../core/list_format.dart';
 import '../../../core/providers.dart';
 import '../../../core/widgets.dart';
 import '../../../theme/app_colors.dart';
@@ -107,15 +108,15 @@ String galleryAccessLine(
       s.isEmpty ? s : '${s[0].toUpperCase()}${s.substring(1)}';
   return [
     if (access != null && access.reads.isNotEmpty)
-      l10n.galleryChatReads(access.reads.join(', ')),
+      l10n.galleryChatReads(joinList(l10n.localeName, access.reads)),
     if (access != null && access.writes.isNotEmpty)
-      cap(access.writes.join(', ')),
+      cap(joinList(l10n.localeName, access.writes)),
     if (access != null && access.runsCode) l10n.galleryChatRunsCode,
     if (access != null && access.computer && !access.runsCode)
       l10n.galleryChatComputer,
     if (needs != null && needs.apps.isNotEmpty)
       l10n.galleryChatNeeds(
-        [for (final a in needs.apps) appNames[a] ?? a].join(', '),
+        joinList(l10n.localeName, [for (final a in needs.apps) appNames[a] ?? a]),
       ),
   ].join(' · ');
 }

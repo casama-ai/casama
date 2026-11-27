@@ -60,7 +60,7 @@ void main() {
         findsOneWidget,
       );
       expect(
-        find.text(r'1 credit = $1. Packs from the App Store or Google Play never expire; web packs last 12 months.'),
+        find.text(r'1 credit = $1. Credit packs from the App Store or Google Play never expire; credit packs bought on the web last 12 months.'),
         findsOneWidget,
       );
       // Token counts are not on the main view.

@@ -1,0 +1,18 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "Ask Casama" : {
+      "comment" : "Name in the Share menu, Finder Quick Actions and the Services menu on the Mac.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ask Casama"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

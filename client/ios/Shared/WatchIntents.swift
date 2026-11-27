@@ -8,14 +8,14 @@ import WidgetKit
 // in the extension, and an intent that opens the app must exist in the app too. The pickers read
 // the saved glance, so they work offline and need no call.
 //
-// App Intents metadata is read at build time, so the titles and parameter names below must be
-// string literals; they match the WatchL10n words they stand for. Everything the person sees at
-// run time (dialogs, labels, names) comes from WatchL10n.
+// App Intents metadata is read at build time, so each title and parameter name below writes its
+// arb key and English in place (checked by scripts/gen-native-strings.mjs). Everything the person
+// sees at run time (dialogs, labels, names) comes from WatchL10n.
 
 // MARK: Pickers
 
 struct WatchBotEntity: AppEntity {
-  static var typeDisplayRepresentation: TypeDisplayRepresentation = "Bot"
+  static var typeDisplayRepresentation = TypeDisplayRepresentation(name: LocalizedStringResource("siriBot", defaultValue: "Bot", table: "Native"))
   static var defaultQuery = WatchBotQuery()
   let id: String
   let name: String
@@ -43,7 +43,7 @@ struct WatchBotQuery: EntityQuery {
 }
 
 struct WatchRoutineEntity: AppEntity {
-  static var typeDisplayRepresentation: TypeDisplayRepresentation = "Routine"
+  static var typeDisplayRepresentation = TypeDisplayRepresentation(name: LocalizedStringResource("siriRoutine", defaultValue: "Routine", table: "Native"))
   static var defaultQuery = WatchRoutineQuery()
   let id: String
   let botId: String
@@ -79,10 +79,10 @@ struct WatchRoutineQuery: EntityStringQuery {
 
 /// The Ask and Bot complications: which bot. Left empty, the one Ask uses.
 struct ChooseWatchBotIntent: WidgetConfigurationIntent {
-  static var title: LocalizedStringResource = "Bot"
-  static var description = IntentDescription("Where a bot stands and what it is doing")
+  static var title: LocalizedStringResource = LocalizedStringResource("siriBot", defaultValue: "Bot", table: "Native")
+  static var description = IntentDescription(LocalizedStringResource("siriBotStatusDescription", defaultValue: "Where a bot stands and what it is doing", table: "Native"))
 
-  @Parameter(title: "Bot")
+  @Parameter(title: LocalizedStringResource("siriBot", defaultValue: "Bot", table: "Native"))
   var bot: WatchBotEntity?
 
   init() {}
@@ -91,9 +91,9 @@ struct ChooseWatchBotIntent: WidgetConfigurationIntent {
 
 /// Talk control: which bot.
 struct TalkControlConfigIntent: ControlConfigurationIntent {
-  static var title: LocalizedStringResource = "Talk to a bot"
+  static var title: LocalizedStringResource = LocalizedStringResource("siriTalkToBot", defaultValue: "Talk to a bot", table: "Native")
 
-  @Parameter(title: "Bot")
+  @Parameter(title: LocalizedStringResource("siriBot", defaultValue: "Bot", table: "Native"))
   var bot: WatchBotEntity?
 
   init() {}
@@ -101,9 +101,9 @@ struct TalkControlConfigIntent: ControlConfigurationIntent {
 
 /// Run a routine control: which routine.
 struct RunRoutineControlConfigIntent: ControlConfigurationIntent {
-  static var title: LocalizedStringResource = "Run a routine"
+  static var title: LocalizedStringResource = LocalizedStringResource("siriRunRoutine", defaultValue: "Run a routine", table: "Native")
 
-  @Parameter(title: "Routine")
+  @Parameter(title: LocalizedStringResource("siriRoutine", defaultValue: "Routine", table: "Native"))
   var routine: WatchRoutineEntity?
 
   init() {}
@@ -136,12 +136,12 @@ enum WatchOpen {
 
 /// Opens the watch app at a screen (Ask listening, Talk, Needs you).
 struct OpenWatchIntent: AppIntent {
-  static var title: LocalizedStringResource = "Open Casama"
+  static var title: LocalizedStringResource = LocalizedStringResource("siriOpenCasama", defaultValue: "Open Casama", table: "Native")
   static var isDiscoverable: Bool = false
   static var openAppWhenRun: Bool = true
 
   /// A watch route ("/watch/ask?bot=…").
-  @Parameter(title: "Where")
+  @Parameter(title: LocalizedStringResource("siriWhere", defaultValue: "Where", table: "Native"))
   var route: String
 
   init() {}
@@ -160,10 +160,10 @@ struct OpenWatchIntent: AppIntent {
 /// this watch may allow it with a tap, and only on the wrist and unlocked: anything else waits
 /// for the app, where a hold or the phone decides (§6.1 B).
 struct AllowRequestIntent: AppIntent {
-  static var title: LocalizedStringResource = "Allow"
+  static var title: LocalizedStringResource = LocalizedStringResource("siriAllow", defaultValue: "Allow", table: "Native")
   static var isDiscoverable: Bool = false
 
-  @Parameter(title: "Request")
+  @Parameter(title: LocalizedStringResource("siriRequest", defaultValue: "Request", table: "Native"))
   var approvalId: String
 
   init() {}
@@ -194,10 +194,10 @@ struct AllowRequestIntent: AppIntent {
 
 /// Run a routine now: the control, the Up next card and Siri ("Run my morning brief in Casama").
 struct RunRoutineNowIntent: AppIntent {
-  static var title: LocalizedStringResource = "Run a routine"
-  static var description = IntentDescription("The next routine and when it runs")
+  static var title: LocalizedStringResource = LocalizedStringResource("siriRunRoutine", defaultValue: "Run a routine", table: "Native")
+  static var description = IntentDescription(LocalizedStringResource("siriNextRoutineDescription", defaultValue: "The next routine and when it runs", table: "Native"))
 
-  @Parameter(title: "Routine")
+  @Parameter(title: LocalizedStringResource("siriRoutine", defaultValue: "Routine", table: "Native"))
   var routine: WatchRoutineEntity
 
   init() {}
@@ -223,10 +223,10 @@ struct RunRoutineNowIntent: AppIntent {
 
 /// The Run a routine control's button: runs the picked routine, or opens Up next to pick one.
 struct RunControlIntent: AppIntent {
-  static var title: LocalizedStringResource = "Run a routine"
+  static var title: LocalizedStringResource = LocalizedStringResource("siriRunRoutine", defaultValue: "Run a routine", table: "Native")
   static var isDiscoverable: Bool = false
 
-  @Parameter(title: "Routine")
+  @Parameter(title: LocalizedStringResource("siriRoutine", defaultValue: "Routine", table: "Native"))
   var routine: WatchRoutineEntity?
 
   init() {}

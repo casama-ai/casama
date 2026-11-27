@@ -1,0 +1,48 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "Ask ${applicationName}" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Ask ${applicationName}",
+              "Ask ${applicationName} something"
+            ]
+          }
+        }
+      }
+    },
+    "Run my ${routine} in ${applicationName}" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Run my ${routine} in ${applicationName}",
+              "Run ${routine} in ${applicationName}"
+            ]
+          }
+        }
+      }
+    },
+    "What needs me in ${applicationName}" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "What needs me in ${applicationName}",
+              "What's waiting in ${applicationName}"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

@@ -255,6 +255,8 @@ importers:
 
   packages/formats: {}
 
+  packages/l10n: {}
+
   packages/mcp:
     dependencies:
       '@casama/plugin-check':

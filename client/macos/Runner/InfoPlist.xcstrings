@@ -1,0 +1,54 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "NSAppleEventsUsageDescription" : {
+      "comment" : "System permission prompt on the Mac: why Casama asks. Reading other apps' window titles. Quick ask is the app's small ask box.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quick ask reads the front window's title and your browser's current tab, only when you press the shortcut."
+          }
+        }
+      }
+    },
+    "NSContactsUsageDescription" : {
+      "comment" : "System permission prompt on the Mac: why Casama asks. Contacts.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your bots can look up people you know, only when you turn on Contacts in Device connections."
+          }
+        }
+      }
+    },
+    "NSMicrophoneUsageDescription" : {
+      "comment" : "System permission prompt on the Mac: why Casama asks. Microphone.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama uses the microphone for dictation and live calls with your bots. Only after you agree, your voice goes to AI providers to answer you: Google Gemini for calls, OpenAI to turn dictation into text."
+          }
+        }
+      }
+    },
+    "NSSpeechRecognitionUsageDescription" : {
+      "comment" : "System permission prompt on the Mac: why Casama asks. Speech recognition.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "When Casama's dictation service can't be reached, your device's own speech recognition turns what you say into text."
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

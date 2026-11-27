@@ -410,7 +410,7 @@ class _KindAdvanced extends StatelessWidget {
                           onPressed: () async {
                             final picked = await showChoiceSheet<Bot>(
                               context,
-                              title: l10n.deviceAllowBotTitle(deviceKindLabel(l10n, kind)),
+                              title: l10n.deviceAllowBotAsk(kind.name),
                               icon: deviceKindIcon(kind),
                               choices: [
                                 for (final b in bots)

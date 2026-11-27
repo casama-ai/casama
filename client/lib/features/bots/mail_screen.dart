@@ -116,12 +116,13 @@ class _MailScreenState extends ConsumerState<MailScreen> {
   Future<void> _deleteOlder() async {
     final l10n = context.l10n;
     final now = DateTime.now();
-    final choices = <(String, DateTime)>[
-      (l10n.botEmailOlder30Days, now.subtract(const Duration(days: 30))),
-      (l10n.botEmailOlder6Months, DateTime(now.year, now.month - 6, now.day)),
-      (l10n.botEmailOlderYear, DateTime(now.year - 1, now.month, now.day)),
+    // The row's words, the cut-off date, and the age the confirm dialog's title selects on.
+    final choices = <(String, DateTime, String)>[
+      (l10n.botEmailOlder30Days, now.subtract(const Duration(days: 30)), 'days30'),
+      (l10n.botEmailOlder6Months, DateTime(now.year, now.month - 6, now.day), 'months6'),
+      (l10n.botEmailOlderYear, DateTime(now.year - 1, now.month, now.day), 'year'),
     ];
-    final picked = await showAdaptiveSheet<(String, DateTime)>(
+    final picked = await showAdaptiveSheet<(String, DateTime, String)>(
       context: context,
       builder: (ctx) => SafeArea(
         child: Column(
@@ -147,7 +148,7 @@ class _MailScreenState extends ConsumerState<MailScreen> {
     if (picked == null || !mounted) return;
     final ok = await showConfirm(
       context: context,
-      title: l10n.botEmailDeleteOlderTitle(picked.$1.toLowerCase()),
+      title: l10n.botEmailDeleteOlderConfirm(picked.$3),
       message: l10n.botEmailDeleteBody,
       confirmLabel: l10n.botEmailDelete,
       destructive: true,

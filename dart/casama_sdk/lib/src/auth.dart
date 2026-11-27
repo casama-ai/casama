@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
+import 'accept_language.dart';
+
 /// A Supabase Auth session.
 class AuthSession {
   AuthSession({
@@ -71,6 +73,7 @@ class AuthClient {
         'apikey': anonKey,
         'content-type': 'application/json',
         'user-agent': ?userAgent,
+        ...AcceptLanguage.headers,
       };
 
   Future<Map<String, dynamic>> _post(String path, Map<String, dynamic> body,

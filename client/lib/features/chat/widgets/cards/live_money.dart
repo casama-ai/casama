@@ -82,7 +82,7 @@ final quoteComponent = liveCard('Quote', const [
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
                   alignment: Alignment.centerLeft,
-                  child: ChangePill(pct: pct, big: true, label: '${chg >= 0 ? '+' : '−'}${fmtMoney(context, chg.abs(), cur)} (${fmtPct(pct)})'),
+                  child: ChangePill(pct: pct, big: true, label: '${chg >= 0 ? '+' : '−'}${fmtMoney(context, chg.abs(), cur)} (${fmtPct(context, pct)})'),
                 ),
               ),
             ),

@@ -403,55 +403,55 @@ struct GlanceWords: Equatable {
   }
 
   static let english: [String: String] = [
-    "needs_you": "Needs you",
-    "all_clear": "All clear",
-    "allow": "Allow",
-    "deny": "Deny",
-    "review": "Review",
-    "low_risk": "Low risk",
-    "open": "Open",
-    "do_it": "Do it",
-    "run_now": "Run now",
-    "started": "Started",
-    "stop": "Stop",
-    "ask": "Ask",
-    "ask_bot": "Ask {bot} anything",
-    "talk": "Talk",
-    "try": "Try",
-    "up_next": "Up next",
-    "no_routines": "No routines yet",
-    "working": "Working",
-    "waiting": "Waiting for you",
-    "idle": "Idle",
-    "off": "Turned off",
-    "replied_at": "Replied {time}",
-    "brief": "Morning brief",
-    "brief_at": "Brief at {time}",
-    "no_brief": "No brief yet",
-    "today": "Today",
-    "credits": "Credits",
-    "credits_left": "{amount} left",
-    "spent_today": "{amount} today",
-    "this_month": "This month",
-    "used_pct": "{n}% used",
-    "resets_at": "Resets {time}",
-    "finished": "{bot} finished {title}",
-    "library": "Library",
-    "no_creations": "Nothing made yet",
-    "tasks": "Tasks",
-    "todo": "To do",
-    "in_progress": "In progress",
-    "in_review": "In review",
-    "blocked": "Blocked",
-    "sign_in": "Open Casama to sign in",
-    "no_bots": "Meet your first bot",
-    "as_of": "As of {time}",
-    "update_server": "Update your Casama server to use this widget",
-    "needs_ok_from": "{bot} needs your OK",
-    "suggests": "{bot} suggests",
-    "take_over": "{bot} needs you to take over",
-    "next_brief": "Next brief {time}",
-    "nothing_next": "Nothing coming up",
+    "needs_you": NativeL10n.widgetNeedsYou,
+    "all_clear": NativeL10n.widgetAllClear,
+    "allow": NativeL10n.widgetAllow,
+    "deny": NativeL10n.widgetDeny,
+    "review": NativeL10n.widgetReview,
+    "low_risk": NativeL10n.widgetLowRisk,
+    "open": NativeL10n.widgetOpen,
+    "do_it": NativeL10n.widgetDoIt,
+    "run_now": NativeL10n.widgetRunNow,
+    "started": NativeL10n.widgetStarted,
+    "stop": NativeL10n.widgetStop,
+    "ask": NativeL10n.widgetAsk,
+    "ask_bot": NativeL10n.Template.widgetFallbackAskBot,
+    "talk": NativeL10n.widgetTalk,
+    "try": NativeL10n.widgetTry,
+    "up_next": NativeL10n.widgetUpNext,
+    "no_routines": NativeL10n.widgetNoRoutines,
+    "working": NativeL10n.widgetWorking,
+    "waiting": NativeL10n.widgetWaiting,
+    "idle": NativeL10n.widgetIdle,
+    "off": NativeL10n.widgetStatusOff,
+    "replied_at": NativeL10n.Template.widgetRepliedAt,
+    "brief": NativeL10n.widgetFallbackBrief,
+    "brief_at": NativeL10n.Template.widgetBriefAt,
+    "no_brief": NativeL10n.widgetNoBrief,
+    "today": NativeL10n.widgetToday,
+    "credits": NativeL10n.widgetCredits,
+    "credits_left": NativeL10n.Template.widgetCreditsLeft,
+    "spent_today": NativeL10n.Template.widgetSpentToday,
+    "this_month": NativeL10n.widgetThisMonth,
+    "used_pct": NativeL10n.Template.widgetUsedPct,
+    "resets_at": NativeL10n.Template.widgetResetsAt,
+    "finished": NativeL10n.Template.widgetFallbackFinished,
+    "library": NativeL10n.widgetLibrary,
+    "no_creations": NativeL10n.widgetNoCreations,
+    "tasks": NativeL10n.widgetTasks,
+    "todo": NativeL10n.widgetTodo,
+    "in_progress": NativeL10n.widgetInProgress,
+    "in_review": NativeL10n.widgetInReview,
+    "blocked": NativeL10n.widgetBlocked,
+    "sign_in": NativeL10n.widgetSignIn,
+    "no_bots": NativeL10n.widgetNoBots,
+    "as_of": NativeL10n.Template.widgetFallbackAsOf,
+    "update_server": NativeL10n.widgetUpdateServer,
+    "needs_ok_from": NativeL10n.Template.widgetNeedsOkFrom,
+    "suggests": NativeL10n.Template.widgetSuggests,
+    "take_over": NativeL10n.Template.widgetTakeOver,
+    "next_brief": NativeL10n.Template.widgetNextBrief,
+    "nothing_next": NativeL10n.widgetFallbackNothingNext,
   ]
 }
 
@@ -509,34 +509,34 @@ struct GlanceSnapshot: Equatable {
     let milo = "00000000-0000-0000-0000-000000000001", ada = "00000000-0000-0000-0000-000000000002"
     g.needsCount = 2
     g.needs = [
-      Glance.Need(kind: "approval", id: "00000000-0000-0000-0000-0000000000a1", botId: milo, bot: "Milo", botAvatar: "mascot:winky", text: "Look up flights to Lisbon", risk: "low", urgent: false, createdAt: now, link: "/approvals/00000000-0000-0000-0000-0000000000a1"),
-      Glance.Need(kind: "suggestion", id: "00000000-0000-0000-0000-0000000000a2", botId: ada, bot: "Ada", botAvatar: "mascot:focused", text: "Move the dentist to Friday?", risk: nil, urgent: false, createdAt: now, link: "/bots/\(ada)/chat"),
+      Glance.Need(kind: "approval", id: "00000000-0000-0000-0000-0000000000a1", botId: milo, bot: "Milo", botAvatar: "mascot:winky", text: NativeL10n.widgetSampleNeedFlights, risk: "low", urgent: false, createdAt: now, link: "/approvals/00000000-0000-0000-0000-0000000000a1"),
+      Glance.Need(kind: "suggestion", id: "00000000-0000-0000-0000-0000000000a2", botId: ada, bot: "Ada", botAvatar: "mascot:focused", text: NativeL10n.widgetSampleNeedDentist, risk: nil, urgent: false, createdAt: now, link: "/bots/\(ada)/chat"),
     ]
     g.bots = [
-      Glance.Bot(id: milo, name: "Milo", avatar: "mascot:winky", status: "idle", step: nil, lastText: "Three emails need a reply, and the Acme invoice is two days overdue.", lastAt: now.addingTimeInterval(-1200), busyAt: now.addingTimeInterval(-1200), link: "/bots/\(milo)/chat"),
-      Glance.Bot(id: ada, name: "Ada", avatar: "mascot:focused", status: "working", step: "Reading your inbox", lastText: nil, lastAt: nil, busyAt: now, link: "/bots/\(ada)/chat"),
+      Glance.Bot(id: milo, name: "Milo", avatar: "mascot:winky", status: "idle", step: nil, lastText: NativeL10n.widgetSampleBotText, lastAt: now.addingTimeInterval(-1200), busyAt: now.addingTimeInterval(-1200), link: "/bots/\(milo)/chat"),
+      Glance.Bot(id: ada, name: "Ada", avatar: "mascot:focused", status: "working", step: NativeL10n.widgetSampleStep, lastText: nil, lastAt: nil, busyAt: now, link: "/bots/\(ada)/chat"),
     ]
     g.next = [
-      Glance.Routine(id: "00000000-0000-0000-0000-0000000000b1", botId: ada, name: "Inbox sweep", bot: "Ada", botAvatar: "mascot:focused", nextAt: now.addingTimeInterval(18 * 60), every: "Weekdays", enabled: true, link: "/bots/\(ada)/routines"),
-      Glance.Routine(id: "00000000-0000-0000-0000-0000000000b2", botId: milo, name: "Morning brief", bot: "Milo", botAvatar: "mascot:winky", nextAt: now.addingTimeInterval(20 * 3600), every: "Every day", enabled: true, link: "/bots/\(milo)/routines"),
-      Glance.Routine(id: "00000000-0000-0000-0000-0000000000b3", botId: milo, name: "Weekly report", bot: "Milo", botAvatar: "mascot:winky", nextAt: now.addingTimeInterval(2 * 86400), every: "Fridays at 16:00", enabled: true, link: "/bots/\(milo)/routines"),
+      Glance.Routine(id: "00000000-0000-0000-0000-0000000000b1", botId: ada, name: NativeL10n.widgetSampleRoutineInbox, bot: "Ada", botAvatar: "mascot:focused", nextAt: now.addingTimeInterval(18 * 60), every: NativeL10n.widgetSampleWeekdays, enabled: true, link: "/bots/\(ada)/routines"),
+      Glance.Routine(id: "00000000-0000-0000-0000-0000000000b2", botId: milo, name: NativeL10n.widgetSampleRoutineBrief, bot: "Milo", botAvatar: "mascot:winky", nextAt: now.addingTimeInterval(20 * 3600), every: NativeL10n.widgetSampleEveryDay, enabled: true, link: "/bots/\(milo)/routines"),
+      Glance.Routine(id: "00000000-0000-0000-0000-0000000000b3", botId: milo, name: NativeL10n.widgetSampleRoutineWeekly, bot: "Milo", botAvatar: "mascot:winky", nextAt: now.addingTimeInterval(2 * 86400), every: NativeL10n.widgetSampleFridays, enabled: true, link: "/bots/\(milo)/routines"),
     ]
-    g.brief = Glance.Brief(botId: milo, bot: "Milo", botAvatar: "mascot:winky", text: "Three emails need a reply, and the Acme invoice is two days overdue. Rain from 3 pm, so leave early for the 4:30 pickup. Your first meeting is at 10:00 with Dana.", at: now.addingTimeInterval(-3 * 3600), nextAt: now.addingTimeInterval(20 * 3600), link: "/bots/\(milo)/chat")
-    g.lately = [Glance.Done(botId: ada, bot: "Ada", botAvatar: "mascot:focused", title: "Q4 pricing page", at: now.addingTimeInterval(-1800), link: "/bots/\(ada)/chat")]
+    g.brief = Glance.Brief(botId: milo, bot: "Milo", botAvatar: "mascot:winky", text: NativeL10n.widgetSampleBrief, at: now.addingTimeInterval(-3 * 3600), nextAt: now.addingTimeInterval(20 * 3600), link: "/bots/\(milo)/chat")
+    g.lately = [Glance.Done(botId: ada, bot: "Ada", botAvatar: "mascot:focused", title: NativeL10n.widgetSamplePricing, at: now.addingTimeInterval(-1800), link: "/bots/\(ada)/chat")]
     g.recent = [
-      Glance.Creation(id: "00000000-0000-0000-0000-0000000000c1", kind: "image", title: "Logo ideas", bot: "Ada", hasCover: false, version: 1, at: now, link: "/library"),
-      Glance.Creation(id: "00000000-0000-0000-0000-0000000000c2", kind: "page", title: "Q4 pricing page", bot: "Ada", hasCover: false, version: 1, at: now, link: "/library"),
-      Glance.Creation(id: "00000000-0000-0000-0000-0000000000c3", kind: "document", title: "Trip plan", bot: "Milo", hasCover: false, version: 1, at: now, link: "/library"),
+      Glance.Creation(id: "00000000-0000-0000-0000-0000000000c1", kind: "image", title: NativeL10n.widgetSampleLogoIdeas, bot: "Ada", hasCover: false, version: 1, at: now, link: "/library"),
+      Glance.Creation(id: "00000000-0000-0000-0000-0000000000c2", kind: "page", title: NativeL10n.widgetSamplePricing, bot: "Ada", hasCover: false, version: 1, at: now, link: "/library"),
+      Glance.Creation(id: "00000000-0000-0000-0000-0000000000c3", kind: "document", title: NativeL10n.widgetSampleTripPlan, bot: "Milo", hasCover: false, version: 1, at: now, link: "/library"),
     ]
     g.taskCounts.todo = 4
     g.taskCounts.inProgress = 2
     g.taskCounts.inReview = 1
-    g.tasks = [Glance.BoardTask(id: "00000000-0000-0000-0000-0000000000d1", title: "Draft the launch post", status: "in_review", bot: "Ada", link: "/tasks")]
+    g.tasks = [Glance.BoardTask(id: "00000000-0000-0000-0000-0000000000d1", title: NativeL10n.widgetSampleLaunchPost, status: "in_review", bot: "Ada", link: "/tasks")]
     g.credits.billing = true
     g.credits.usedShare = 0.62
     g.credits.leftUsd = 5.70
     g.credits.todayUsd = 0.42
-    g.starters = [Glance.Starter(emoji: "🧾", text: "Sum up my inbox"), Glance.Starter(emoji: "🗓", text: "Plan my Friday")]
+    g.starters = [Glance.Starter(emoji: "🧾", text: NativeL10n.widgetSampleStarterInbox), Glance.Starter(emoji: "🗓", text: NativeL10n.widgetSampleStarterFriday)]
     return GlanceSnapshot(glance: g, words: GlanceWords.load(), signedIn: true, legacy: nil, isPlaceholder: true)
   }
 }

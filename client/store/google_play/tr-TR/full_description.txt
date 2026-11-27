@@ -1,0 +1,37 @@
+Casama size yalnızca konuşmakla kalmayıp işi gerçekten yapan yapay zeka ekip arkadaşları sunar. Her botun kendi bilgisayarı vardır; işleri nasıl istediğinizi hatırlar, siz uzaktayken çalışmaya devam eder ve bir şey ödemeden, göndermeden ya da silmeden önce size sorar.
+
+Günlük dille söyleyin: seyahati ayarlasın, gelen kutusunu düzenlesin, pazar araştırması yapsın, siteyi kursun. İş tamamlanmış olarak geri gelir.
+
+Kendi bilgisayarı
+Her bot; tarayıcısı, dosyaları ve uygulamalarıyla, kendi cihazlarınızdan ayrı tutulan özel bir bilgisayarda çalışır. Çalışmasını canlı izleyin veya istediğiniz an kontrolü devralın.
+
+Kontrol sizde
+Gönderme, rezervasyon, ödeme ve silme işlemleri onayınızı bekler. Bot önce bir kontrol noktası kaydeder; böylece Reddet dediğinizde yapılan işlem geri alınır. Her bot için bütçe belirleyin ve her yanıtın ne kadara mal olduğunu görün.
+
+Siz uzaktayken çalışır
+Botlar kendiliğinden başlar: belirlediğiniz programda, bir e-posta geldiğinde, toplantı öncesinde veya bir web sayfası değiştiğinde. Sizden yanıt bekleyen konuları içeren bir sabah özetiyle uyanın.
+
+Hatırlar
+Bilgiler, tercihler ve geçmiş işler tüm sohbetlere taşınır. Bir bota bir görevi bir kez gösterin, onu bir beceri olarak saklasın. Belgelerden sitelere ve oyunlara kadar ürettiği her şey Kitaplığınızda saklanır.
+
+Tek bir sohbet aracı değil, bir ekip
+Her bota bir rol, araçlar ve bir bütçe verin. Ailenizle veya iş arkadaşlarınızla bir grup sohbetine ekleyin, @everyone diyerek sorun; lider bot işi dağıtsın. Kişisel yardımcıdan araştırmacıya, yazılımcıdan seyahat planlayıcısına kadar 40'tan fazla hazır botla başlayın.
+
+Konuşun, yazın veya arayın
+Mesajınızı sesle yazdırın, yanıtları sesli dinleyin ya da bir botu canlı arayın. Botlar size WhatsApp, Telegram, Slack, Discord ve e-posta üzerinden de yanıt verebilir.
+
+Uygulamalarınızla uyumlu
+Gmail, Google Takvim, Notion, Slack, Drive ve daha fazlasını bağlayın. Parola yöneticinizdeki giriş bilgileri bot için otomatik doldurulur ve yapay zekaya asla gösterilmez.
+
+Açık kaynaklı ve sizin
+Casama açık kaynaklıdır: uygulamalar, SDK'lar, CLI ve bir botun neler yapabileceğini belirleyen güvenlik kuralları herkesin incelemesine açıktır; böylece bir botun tam olarak ne zaman sizden onay istemesi gerektiğini görebilirsiniz. Botlar, yapay zeka modellerinin sizin için seçildiği ve anahtar gerektirmeyen Casama Cloud'da çalışır; dilerseniz kendi sağlayıcı anahtarlarınızı da bağlayabilirsiniz.
+
+Wear OS saatinizde
+Casama'nın bir Wear OS uygulaması vardır. Bileğinizden sesle bir bota sorun, onayları yanıtlayın ve süren işleri takip edin. Saatinize Casama kutucukları ekleyin: Sizden yanıt bekliyor (istekleri onaylayın veya reddedin), Sor (tek dokunuşla bir botla konuşun), Sıradaki (Şimdi çalıştır seçeneğiyle bir sonraki rutininiz) ve istediğiniz tek bir bot için özel kutucuk. Saat kadranınıza Casama komplikasyonları ekleyin: sizden yanıt bekleyen istek sayısı, kullandığınız kredi ve Sor ekranını açan mikrofon düğmesi.
+
+Aynı sohbetler telefonunuzda, bilgisayarınızda, saatinizde ve web'de de elinizin altında.
+
+Casama Cloud'da Ücretsiz plan bulunur. Ücretli planlar, dönem bitiminden en az 24 saat önce iptal edilmediği sürece otomatik olarak yenilenen aboneliklerdir. Planlarınızı Google Play'de Ödemeler ve abonelikler bölümünden yönetebilir veya iptal edebilirsiniz.
+
+Hizmet Koşulları: https://casama.ai/terms
+Gizlilik Politikası: https://casama.ai/privacy

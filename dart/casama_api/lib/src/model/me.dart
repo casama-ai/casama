@@ -81,11 +81,11 @@ class Me {
     
     name: r'locale',
     required: true,
-    includeIfNull: false,
+    includeIfNull: true,
   )
 
 
-  final String locale;
+  final String? locale;
 
 
 
@@ -168,7 +168,7 @@ class Me {
         userId.hashCode +
         (email == null ? 0 : email.hashCode) +
         (displayName == null ? 0 : displayName.hashCode) +
-        locale.hashCode +
+        (locale == null ? 0 : locale.hashCode) +
         timezone.hashCode +
         isInternal.hashCode +
         (accountAgeBand == null ? 0 : accountAgeBand.hashCode) +

@@ -468,7 +468,7 @@ class _IntroFilmPlayerState extends State<IntroFilmPlayer> {
                         if (c != null)
                           round(
                             muted ? LucideIcons.volumeOff : LucideIcons.volume2,
-                            muted ? l10n.unmute : l10n.mute,
+                            muted ? l10n.videoUnmute : l10n.videoMute,
                             _toggleSound,
                             key: const Key('introFilmSound'),
                           ),

@@ -4,14 +4,14 @@ import Foundation
 // MARK: - Siri and Shortcuts on the watch (§6.4)
 //
 // "Ask Casama", "Run my <routine> in Casama", "What needs me in Casama". App Intents titles and
-// phrases must be literals the system can index ahead of time, so they are written in English
-// here and translated through the string catalog when one is added; what Siri says back comes
-// from WatchL10n.
+// phrases must be literals the system can index ahead of time: each title writes its arb key and
+// English in place, each phrase says a siriPhrase* key's English, and the string catalogs carry
+// the other languages. What Siri says back comes from WatchL10n.
 
 /// Opens the watch app listening, to the bot Ask goes to.
 struct AskCasamaIntent: AppIntent {
-  static var title: LocalizedStringResource = "Ask Casama"
-  static var description = IntentDescription("Ask a bot something by voice")
+  static var title: LocalizedStringResource = LocalizedStringResource("siriAskCasama", defaultValue: "Ask Casama", table: "Native")
+  static var description = IntentDescription(LocalizedStringResource("siriAskVoiceDescription", defaultValue: "Ask a bot something by voice", table: "Native"))
   static var openAppWhenRun: Bool = true
 
   @MainActor
@@ -24,8 +24,8 @@ struct AskCasamaIntent: AppIntent {
 
 /// Says how many things wait and the first of them, without opening the app.
 struct WhatNeedsMeIntent: AppIntent {
-  static var title: LocalizedStringResource = "What needs me"
-  static var description = IntentDescription("What is waiting for your OK")
+  static var title: LocalizedStringResource = LocalizedStringResource("siriWhatNeedsMe", defaultValue: "What needs me", table: "Native")
+  static var description = IntentDescription(LocalizedStringResource("siriWhatWaiting", defaultValue: "What is waiting for your OK", table: "Native"))
 
   func perform() async throws -> some IntentResult & ProvidesDialog {
     guard let api = WatchAPI.current() else { return .result(dialog: "\(WatchL10n.openToSignIn)") }
@@ -44,17 +44,17 @@ struct CasamaWatchShortcuts: AppShortcutsProvider {
     AppShortcut(
       intent: AskCasamaIntent(),
       phrases: ["Ask \(.applicationName)", "Ask \(.applicationName) something"],
-      shortTitle: "Ask",
+      shortTitle: LocalizedStringResource("siriAsk", defaultValue: "Ask", table: "Native"),
       systemImageName: "mic.fill")
     AppShortcut(
       intent: RunRoutineNowIntent(),
       phrases: ["Run my \(\.$routine) in \(.applicationName)", "Run \(\.$routine) in \(.applicationName)"],
-      shortTitle: "Run a routine",
+      shortTitle: LocalizedStringResource("siriRunRoutine", defaultValue: "Run a routine", table: "Native"),
       systemImageName: "clock.arrow.circlepath")
     AppShortcut(
       intent: WhatNeedsMeIntent(),
       phrases: ["What needs me in \(.applicationName)", "What's waiting in \(.applicationName)"],
-      shortTitle: "Needs you",
+      shortTitle: LocalizedStringResource("siriShortNeedsYou", defaultValue: "Needs you", table: "Native"),
       systemImageName: "exclamationmark.bubble.fill")
   }
 }

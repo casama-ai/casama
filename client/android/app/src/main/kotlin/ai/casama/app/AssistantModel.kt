@@ -103,31 +103,49 @@ object AssistantModel {
   fun routineRef(r: RoutineRow) = "${r.id}:${r.botId}"
 
   /**
+   * The sentences [needLine] and [needsSummary] are made of, with their `{bot}`, `{count}` and
+   * `{bots}` blanks. The app passes the phone's language from its resources; the English here is
+   * generated from the same keys, so this file stays free of Android.
+   */
+  data class Lines(
+    val aBot: String = NativeEnglish.siriABotSubject,
+    val needsOk: String = NativeEnglish.siriBotNeedsOk,
+    val takeOver: String = NativeEnglish.siriBotNeedsTakeOver,
+    val suggestion: String = NativeEnglish.siriBotHasSuggestion,
+    val needsYou: String = NativeEnglish.siriBotNeedsYouLine,
+    val nothing: String = NativeEnglish.siriNothingNeedsYou,
+    val one: String = NativeEnglish.siriOneThingNeedsYou,
+    val many: String = NativeEnglish.siriCountThingsNeedYou,
+    val waiting: String = NativeEnglish.siriNeedsYouBots,
+  )
+
+  /**
    * One line about something that needs the person. [quiet] (a private workspace, the app lock, a
    * locked phone; plan §4.3): only the kind of thing and the bot, never what it says.
    */
-  fun needLine(need: NeedRow, quiet: Boolean): String {
-    val bot = need.bot.ifBlank { "A bot" }
+  fun needLine(need: NeedRow, quiet: Boolean, lines: Lines = Lines()): String {
+    val bot = need.bot.ifBlank { lines.aBot }
     if (quiet || need.text.isBlank()) {
-      return when (need.kind) {
-        "approval" -> "$bot needs your OK."
-        "takeover" -> "$bot needs you to take over."
-        "suggestion" -> "$bot has a suggestion."
-        else -> "$bot needs you."
+      val line = when (need.kind) {
+        "approval" -> lines.needsOk
+        "takeover" -> lines.takeOver
+        "suggestion" -> lines.suggestion
+        else -> lines.needsYou
       }
+      return line.replace("{bot}", bot)
     }
     return "$bot: ${need.text.trim()}"
   }
 
   /** The sentence Gemini can say for what needs the person. */
-  fun needsSummary(count: Int, needs: List<NeedRow>, quiet: Boolean): String = when {
-    count <= 0 -> "Nothing needs you right now."
-    quiet -> if (count == 1) "One thing needs you." else "$count things need you."
-    else -> {
-      val head = if (count == 1) "One thing needs you." else "$count things need you."
-      val bots = needs.map { it.bot }.filter { it.isNotBlank() }.distinct().take(2)
-      if (bots.isEmpty()) head else "$head Waiting on you: ${bots.joinToString(", ")}."
-    }
+  fun needsSummary(count: Int, needs: List<NeedRow>, quiet: Boolean, lines: Lines = Lines()): String {
+    if (count <= 0) return lines.nothing
+    val head = if (count == 1) lines.one else lines.many.replace("{count}", count.toString())
+    // Quiet: the number only.
+    if (quiet) return head
+    val bots = needs.map { it.bot }.filter { it.isNotBlank() }.distinct().take(2)
+    if (bots.isEmpty()) return head
+    return "$head ${lines.waiting.replace("{bots}", bots.joinToString(", "))}"
   }
 
   /** Whole minutes from [atMs] to [nowMs], never below zero. */

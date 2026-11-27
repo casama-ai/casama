@@ -1,0 +1,1722 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "watchAllClear" : {
+      "comment" : "Shown on the watch app (D-410). Nothing needs the person and nothing is working.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All clear"
+          }
+        }
+      }
+    },
+    "watchAllow" : {
+      "comment" : "Shown on the watch app (D-410). Allow a request.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allow"
+          }
+        }
+      }
+    },
+    "watchAllowed" : {
+      "comment" : "Shown on the watch app (D-410). Shown with a tick after allowing.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allowed"
+          }
+        }
+      }
+    },
+    "watchAlreadyAnswered" : {
+      "comment" : "Shown on the watch app (D-410). Someone answered the request already.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Already answered"
+          }
+        }
+      }
+    },
+    "watchAsOf" : {
+      "comment" : "Shown on the watch app (D-410). How old what is shown is.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "as of {time}"
+          }
+        }
+      }
+    },
+    "watchAsk" : {
+      "comment" : "Shown on the watch app (D-410). The main button: ask a bot by voice.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ask"
+          }
+        }
+      }
+    },
+    "watchAskBot" : {
+      "comment" : "Shown on the watch app (D-410). Title of the Ask screen.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ask {bot}"
+          }
+        }
+      }
+    },
+    "watchAskDropped" : {
+      "comment" : "Shown on the watch app (D-410). A kept ask the server refused, or kept failing on, was given up on.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't send what you asked at {time}"
+          }
+        }
+      }
+    },
+    "watchAskUses" : {
+      "comment" : "Apple Watch settings: label of the picker that chooses which bot answers when the person uses the Ask button. The value beside it is a bot's name. 'Ask' is the button's name (watchAsk); use the same word. Short: it fits on a watch.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bot for Ask"
+          }
+        }
+      }
+    },
+    "watchBots" : {
+      "comment" : "Shown on the watch app (D-410). The list of bots.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bots"
+          }
+        }
+      }
+    },
+    "watchBrief" : {
+      "comment" : "Shown on the watch app (D-410). This morning's brief.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Brief"
+          }
+        }
+      }
+    },
+    "watchBriefAt" : {
+      "comment" : "Shown on the watch app (D-410). When today's brief comes.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Brief at {time}"
+          }
+        }
+      }
+    },
+    "watchBriefTomorrow" : {
+      "comment" : "Shown on the watch app (D-410). When tomorrow's brief comes.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Brief at {time} tomorrow"
+          }
+        }
+      }
+    },
+    "watchChannelOther" : {
+      "comment" : "Shown on the watch app (D-410). Notification channel name (Wear OS): everything else.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Other"
+          }
+        }
+      }
+    },
+    "watchChannelReplies" : {
+      "comment" : "Shown on the watch app (D-410). Notification channel name (Wear OS): replies, briefs, routine results.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Replies"
+          }
+        }
+      }
+    },
+    "watchChannelRequests" : {
+      "comment" : "Shown on the watch app (D-410). Notification channel name (Wear OS): requests and suggestions.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Requests"
+          }
+        }
+      }
+    },
+    "watchChannelRuns" : {
+      "comment" : "Shown on the watch app (D-410). Notification channel name (Wear OS): a bot working right now.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Working bots"
+          }
+        }
+      }
+    },
+    "watchChat" : {
+      "comment" : "Shown on the watch app (D-410). A bot's latest chat.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chat"
+          }
+        }
+      }
+    },
+    "watchChooseBot" : {
+      "comment" : "Shown on the watch app (D-410). Picker title for which bot Ask, a tile or a complication uses.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose a bot"
+          }
+        }
+      }
+    },
+    "watchCodeA11y" : {
+      "comment" : "Shown on the watch app (D-410). Screen reader label for the sign-in code.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign-in code {code}"
+          }
+        }
+      }
+    },
+    "watchCodeHelp" : {
+      "comment" : "Shown on the watch app (D-410). Under the sign-in code.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Type it in Casama on your phone or computer: Settings → Watch"
+          }
+        }
+      }
+    },
+    "watchCodeWaiting" : {
+      "comment" : "Shown on the watch app (D-410). Under the sign-in code while the watch waits for it to be typed.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waiting for the code…"
+          }
+        }
+      }
+    },
+    "watchCompAsk" : {
+      "comment" : "Shown on the watch app (D-410). Complication's name.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ask a bot"
+          }
+        }
+      }
+    },
+    "watchCompBot" : {
+      "comment" : "Shown on the watch app (D-410). Complication's name.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bot"
+          }
+        }
+      }
+    },
+    "watchCompCasama" : {
+      "comment" : "Shown on the watch app (D-410). Inline complication's name.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama"
+          }
+        }
+      }
+    },
+    "watchCompDescAsk" : {
+      "comment" : "Shown on the watch app (D-410). Complication description.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ask a bot by voice in one tap"
+          }
+        }
+      }
+    },
+    "watchCompDescBot" : {
+      "comment" : "Shown on the watch app (D-410). Complication description.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Where a bot stands and what it is doing"
+          }
+        }
+      }
+    },
+    "watchCompDescBrief" : {
+      "comment" : "Shown on the watch app (D-410). Complication description.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This morning's brief"
+          }
+        }
+      }
+    },
+    "watchCompDescCredits" : {
+      "comment" : "Shown on the watch app (D-410). Complication description.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Credits used this period"
+          }
+        }
+      }
+    },
+    "watchCompDescNeedsYou" : {
+      "comment" : "Shown on the watch app (D-410). Complication description.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How many requests wait, and the first one"
+          }
+        }
+      }
+    },
+    "watchCompDescUpNext" : {
+      "comment" : "Shown on the watch app (D-410). Complication description.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The next routine and when it runs"
+          }
+        }
+      }
+    },
+    "watchCompDescWorking" : {
+      "comment" : "Shown on the watch app (D-410). Complication description.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Who is working and what they are doing"
+          }
+        }
+      }
+    },
+    "watchCompNeedsYou" : {
+      "comment" : "Shown on the watch app (D-410). Complication's name in the face editor.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Needs you"
+          }
+        }
+      }
+    },
+    "watchCompUpNext" : {
+      "comment" : "Shown on the watch app (D-410). Complication's name.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Up next"
+          }
+        }
+      }
+    },
+    "watchContinuesOnIphone" : {
+      "comment" : "Shown on the watch app (D-410). A reply too long for the watch (Apple Watch).",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continues on iPhone"
+          }
+        }
+      }
+    },
+    "watchContinuesOnPhone" : {
+      "comment" : "Shown on the watch app (D-410). A reply too long for the watch (Wear OS).",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continues on phone"
+          }
+        }
+      }
+    },
+    "watchControlAsk" : {
+      "comment" : "Shown on the watch app (D-410). Control name.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ask Casama"
+          }
+        }
+      }
+    },
+    "watchControlRun" : {
+      "comment" : "Shown on the watch app (D-410). Control name.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Run a routine"
+          }
+        }
+      }
+    },
+    "watchControlTalk" : {
+      "comment" : "Shown on the watch app (D-410). Control name.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Talk to a bot"
+          }
+        }
+      }
+    },
+    "watchCouldntFinish" : {
+      "comment" : "Shown on the watch app (D-410). A run failed (notification title).",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't finish"
+          }
+        }
+      }
+    },
+    "watchCouldntReach" : {
+      "comment" : "Shown on the watch app (D-410). A request failed.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't reach Casama"
+          }
+        }
+      }
+    },
+    "watchCredits" : {
+      "comment" : "Shown on the watch app (D-410). The credits complication.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Credits"
+          }
+        }
+      }
+    },
+    "watchDenied" : {
+      "comment" : "Shown on the watch app (D-410). Shown after denying.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Denied"
+          }
+        }
+      }
+    },
+    "watchDeny" : {
+      "comment" : "Shown on the watch app (D-410). Deny a request.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deny"
+          }
+        }
+      }
+    },
+    "watchDidntCatch" : {
+      "comment" : "Shown on the watch app (D-410). Nothing was heard.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Didn't catch that. Try again"
+          }
+        }
+      }
+    },
+    "watchDiscard" : {
+      "comment" : "Shown on the watch app (D-410). Throw a kept ask away.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Discard"
+          }
+        }
+      }
+    },
+    "watchDoIt" : {
+      "comment" : "Shown on the watch app (D-410). Accept a suggestion.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Do It"
+          }
+        }
+      }
+    },
+    "watchDone" : {
+      "comment" : "Shown on the watch app (D-410). Shown with a tick after Do It.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Done"
+          }
+        }
+      }
+    },
+    "watchFinished" : {
+      "comment" : "Shown on the watch app (D-410). A run finished.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Finished"
+          }
+        }
+      }
+    },
+    "watchHeard" : {
+      "comment" : "Shown on the watch app (D-410). What the server heard, shown for a moment.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Heard"
+          }
+        }
+      }
+    },
+    "watchHideDetails" : {
+      "comment" : "Shown on the watch app (D-410). Switch.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hide details when my wrist is down"
+          }
+        }
+      }
+    },
+    "watchHighRisk" : {
+      "comment" : "Shown on the watch app (D-410). Marks a high-risk request.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "High risk"
+          }
+        }
+      }
+    },
+    "watchHoldHint" : {
+      "comment" : "Shown on the watch app (D-410). VoiceOver/TalkBack hint replacing the hold.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allow this? Double tap to allow."
+          }
+        }
+      }
+    },
+    "watchHoldToAllow" : {
+      "comment" : "Shown on the watch app (D-410). A medium-risk request: hold the button to allow.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hold to allow"
+          }
+        }
+      }
+    },
+    "watchIdle" : {
+      "comment" : "Shown on the watch app (D-410). A bot is not working.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Idle"
+          }
+        }
+      }
+    },
+    "watchInMinutes" : {
+      "comment" : "Shown on the watch app (D-410). A routine runs soon.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "in {minutes} min"
+          }
+        }
+      }
+    },
+    "watchIsWorking" : {
+      "comment" : "Shown on the watch app (D-410). A bot is working.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "{bot} is working"
+          }
+        }
+      }
+    },
+    "watchKeptOffline" : {
+      "comment" : "Shown on the watch app (D-410). An ask kept while offline.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saved. It sends when you're back online"
+          }
+        }
+      }
+    },
+    "watchKeptOld" : {
+      "comment" : "Shown on the watch app (D-410). A kept ask older than ten minutes.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send what you asked at {time}?"
+          }
+        }
+      }
+    },
+    "watchListening" : {
+      "comment" : "Shown on the watch app (D-410). The microphone is on.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Listening…"
+          }
+        }
+      }
+    },
+    "watchLockToAllow" : {
+      "comment" : "Shown on the watch app (D-410). A watch without a passcode cannot allow.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set a passcode on this watch to allow from it"
+          }
+        }
+      }
+    },
+    "watchLowRisk" : {
+      "comment" : "Shown on the watch app (D-410). Marks a low-risk request.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Low risk"
+          }
+        }
+      }
+    },
+    "watchMediumRisk" : {
+      "comment" : "Shown on the watch app (D-410). Marks a medium-risk request.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Medium risk"
+          }
+        }
+      }
+    },
+    "watchMicDenied" : {
+      "comment" : "Shown on the watch app (D-410). Microphone permission is off.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allow the microphone in Settings to ask by voice"
+          }
+        }
+      }
+    },
+    "watchMoreOnPhone" : {
+      "comment" : "Shown on the watch app (D-410). Under the Needs you list when more things wait than the watch can show (a skill idea, a question).",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "{count} more on your phone"
+          }
+        }
+      }
+    },
+    "watchNeedYouShort" : {
+      "comment" : "Shown on the watch app (D-410). Curved text beside the count on a corner complication.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "need you"
+          }
+        }
+      }
+    },
+    "watchNeedsHttps" : {
+      "comment" : "Shown on the watch app (D-410). The phone signed the watch in to a self-hosted server on plain http that isn't on the local network; the watch can't call it.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This watch can only reach your server over https or on your home network"
+          }
+        }
+      }
+    },
+    "watchNeedsOk" : {
+      "comment" : "Shown on the watch app (D-410). A bot is waiting for an answer.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Needs your OK"
+          }
+        }
+      }
+    },
+    "watchNeedsOkFrom" : {
+      "comment" : "Shown on the watch app (D-410). A request from a bot.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "{bot} needs your OK"
+          }
+        }
+      }
+    },
+    "watchNeedsYou" : {
+      "comment" : "Shown on the watch app (D-410). Section title: requests waiting on the person.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Needs you"
+          }
+        }
+      }
+    },
+    "watchNeedsYouMany" : {
+      "comment" : "Shown on the watch app (D-410). Several requests wait.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "{count} need you"
+          }
+        }
+      }
+    },
+    "watchNeedsYouOne" : {
+      "comment" : "Shown on the watch app (D-410). One request waits.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 needs you"
+          }
+        }
+      }
+    },
+    "watchNewCode" : {
+      "comment" : "Shown on the watch app (D-410). Get another code.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New code"
+          }
+        }
+      }
+    },
+    "watchNoBots" : {
+      "comment" : "Shown on the watch app (D-410). No bots.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No bots yet. Make one on your phone"
+          }
+        }
+      }
+    },
+    "watchNoBrief" : {
+      "comment" : "Shown on the watch app (D-410). No morning brief.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No brief set up"
+          }
+        }
+      }
+    },
+    "watchNoDictation" : {
+      "comment" : "Shown on the watch app (D-410). The server cannot transcribe.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This server has no voice service. Use Type instead"
+          }
+        }
+      }
+    },
+    "watchNoRoutines" : {
+      "comment" : "Shown on the watch app (D-410). Empty Up next.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No routines yet"
+          }
+        }
+      }
+    },
+    "watchNotNow" : {
+      "comment" : "Shown on the watch app (D-410). Dismiss a suggestion.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not now"
+          }
+        }
+      }
+    },
+    "watchNotOnWatch" : {
+      "comment" : "Shown on the watch app (D-410). The server says a request or suggestion isn't in this watch's workspace (or isn't its to answer); it may still be waiting, so never \"Already answered\".",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This watch can't answer this one. Open it on your phone"
+          }
+        }
+      }
+    },
+    "watchNothingWaiting" : {
+      "comment" : "Shown on the watch app (D-410). Empty Needs you list.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nothing needs you"
+          }
+        }
+      }
+    },
+    "watchNow" : {
+      "comment" : "Shown on the watch app (D-410). Title of the watch app's first screen.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Now"
+          }
+        }
+      }
+    },
+    "watchOff" : {
+      "comment" : "Shown on the watch app (D-410). A bot is turned off.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Off"
+          }
+        }
+      }
+    },
+    "watchOffline" : {
+      "comment" : "Shown on the watch app (D-410). No connection.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Offline"
+          }
+        }
+      }
+    },
+    "watchOpenOnIphone" : {
+      "comment" : "Shown on the watch app (D-410). Carry on on the iPhone.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open on iPhone"
+          }
+        }
+      }
+    },
+    "watchOpenOnPhone" : {
+      "comment" : "Shown on the watch app (D-410). Carry on on the phone (Wear OS).",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open on phone"
+          }
+        }
+      }
+    },
+    "watchOpenPhoneToFinish" : {
+      "comment" : "Shown on the watch app (D-410). Waiting for the phone app (Wear OS).",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Casama on your phone to finish"
+          }
+        }
+      }
+    },
+    "watchOpenPhoneToFinishIphone" : {
+      "comment" : "Shown on the watch app (D-410). Waiting for the phone app.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Casama on your iPhone to finish"
+          }
+        }
+      }
+    },
+    "watchOpenToSignIn" : {
+      "comment" : "Shown on the watch app (D-410). Complications and tiles when signed out.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Casama to sign in"
+          }
+        }
+      }
+    },
+    "watchOtherWorkspace" : {
+      "comment" : "Shown on the watch app (D-410). A notification about the person's other workspace (the push says which workspace it is from, and it isn't the one this watch is signed in to): only the phone can answer it.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This is in another workspace. Answer it on your phone"
+          }
+        }
+      }
+    },
+    "watchOutOfCredits" : {
+      "comment" : "Shown on the watch app (D-410). Asking is off; answers still work.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Out of credits"
+          }
+        }
+      }
+    },
+    "watchProblem" : {
+      "comment" : "Shown on the watch app (D-410). A run failed.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stopped with a problem"
+          }
+        }
+      }
+    },
+    "watchQuickNo" : {
+      "comment" : "Shown on the watch app (D-410). Default quick reply.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No"
+          }
+        }
+      }
+    },
+    "watchQuickNotNow" : {
+      "comment" : "Shown on the watch app (D-410). Default quick reply.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not now"
+          }
+        }
+      }
+    },
+    "watchQuickTellMore" : {
+      "comment" : "Shown on the watch app (D-410). Default quick reply.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tell me more"
+          }
+        }
+      }
+    },
+    "watchQuickYes" : {
+      "comment" : "Shown on the watch app (D-410). Default quick reply.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yes"
+          }
+        }
+      }
+    },
+    "watchReadAloud" : {
+      "comment" : "Shown on the watch app (D-410). Hear the reply.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Read aloud"
+          }
+        }
+      }
+    },
+    "watchReadRepliesAloud" : {
+      "comment" : "Shown on the watch app (D-410). Switch.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Read replies aloud"
+          }
+        }
+      }
+    },
+    "watchRepliedAt" : {
+      "comment" : "Shown on the watch app (D-410). When a bot last replied.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Replied {time}"
+          }
+        }
+      }
+    },
+    "watchReply" : {
+      "comment" : "Shown on the watch app (D-410). Answer in the chat by voice.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reply"
+          }
+        }
+      }
+    },
+    "watchReplyNotSent" : {
+      "comment" : "Shown on the watch app (D-410). A reply from a notification that the server didn't take; the chat opens so it can be said again.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't send your reply"
+          }
+        }
+      }
+    },
+    "watchReplyReady" : {
+      "comment" : "Shown on the watch app (D-410). A reply arrived (notification).",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reply ready"
+          }
+        }
+      }
+    },
+    "watchReplySent" : {
+      "comment" : "Shown on the watch app (D-410). The tick after a reply typed or dictated from a notification went to the bot.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sent"
+          }
+        }
+      }
+    },
+    "watchReview" : {
+      "comment" : "Shown on the watch app (D-410). Open a request to look at it.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Review"
+          }
+        }
+      }
+    },
+    "watchReviewOnIphone" : {
+      "comment" : "Shown on the watch app (D-410). A request the watch will not allow (Apple Watch).",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Review on iPhone"
+          }
+        }
+      }
+    },
+    "watchReviewOnPhone" : {
+      "comment" : "Shown on the watch app (D-410). A request the watch will not allow (Wear OS).",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Review on phone"
+          }
+        }
+      }
+    },
+    "watchRunNow" : {
+      "comment" : "Shown on the watch app (D-410). Start a routine now.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Run Now"
+          }
+        }
+      }
+    },
+    "watchSend" : {
+      "comment" : "Shown on the watch app (D-410). Send a kept ask.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send"
+          }
+        }
+      }
+    },
+    "watchSending" : {
+      "comment" : "Shown on the watch app (D-410). An ask is being sent.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sending…"
+          }
+        }
+      }
+    },
+    "watchSentToPhone" : {
+      "comment" : "Shown on the watch app (D-410). After Open on iPhone/phone.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sent to your phone"
+          }
+        }
+      }
+    },
+    "watchServerTooOld" : {
+      "comment" : "Shown on the watch app (D-410). The server is too old.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Update your Casama server to use the watch"
+          }
+        }
+      }
+    },
+    "watchSettings" : {
+      "comment" : "Shown on the watch app (D-410). The watch app's settings.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings"
+          }
+        }
+      }
+    },
+    "watchShareCrashReports" : {
+      "comment" : "Shown on the watch app Settings screen (D-539). Toggle to send scrubbed crash reports.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Share crash reports"
+          }
+        }
+      }
+    },
+    "watchSignIn" : {
+      "comment" : "Shown on the watch app (D-410). Button on a signed-out watch: asks the phone to sign it in again.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign in"
+          }
+        }
+      }
+    },
+    "watchSignOut" : {
+      "comment" : "Shown on the watch app (D-410). Sign out.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign out of this watch"
+          }
+        }
+      }
+    },
+    "watchSignedInAs" : {
+      "comment" : "Shown on the watch app (D-410). After signing in.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Signed in as {name}"
+          }
+        }
+      }
+    },
+    "watchSignedInAsLabel" : {
+      "comment" : "Shown on the watch app (D-410). Label above the person in settings.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Signed in as"
+          }
+        }
+      }
+    },
+    "watchSignedOut" : {
+      "comment" : "Shown on the watch app (D-410), above its Sign in button: the person signed out here, or the watch was removed or signed out from the phone. It stays signed out until they tap Sign in.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This watch is signed out"
+          }
+        }
+      }
+    },
+    "watchSigningIn" : {
+      "comment" : "Shown on the watch app (D-410). The phone is signing the watch in.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Signing you in"
+          }
+        }
+      }
+    },
+    "watchSiriNeeds" : {
+      "comment" : "Shown on the watch app (D-410). Siri says what needs the person.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "{count} need you. First: {text}"
+          }
+        }
+      }
+    },
+    "watchStarted" : {
+      "comment" : "Shown on the watch app (D-410). A routine was started.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Started"
+          }
+        }
+      }
+    },
+    "watchStepCount" : {
+      "comment" : "Shown on the watch app (D-410). How many steps a run has taken.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Step {count}"
+          }
+        }
+      }
+    },
+    "watchStop" : {
+      "comment" : "Shown on the watch app (D-410). Stop a run.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stop"
+          }
+        }
+      }
+    },
+    "watchStopReading" : {
+      "comment" : "Shown on the watch app (D-410). Stop reading aloud.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stop reading"
+          }
+        }
+      }
+    },
+    "watchStopped" : {
+      "comment" : "Shown on the watch app (D-410). A run the person stopped.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stopped"
+          }
+        }
+      }
+    },
+    "watchSuggests" : {
+      "comment" : "Shown on the watch app (D-410). A suggestion from a bot.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "{bot} suggests"
+          }
+        }
+      }
+    },
+    "watchTakeOver" : {
+      "comment" : "Shown on the watch app (D-410). A bot asks the person to take over its computer.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wants you to take over"
+          }
+        }
+      }
+    },
+    "watchTalk" : {
+      "comment" : "Shown on the watch app (D-410). Start a voice call with a bot.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Talk"
+          }
+        }
+      }
+    },
+    "watchTalkOnPhone" : {
+      "comment" : "Shown on the watch app (D-410). Talk starts the call on the phone.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Starting the call on your phone"
+          }
+        }
+      }
+    },
+    "watchTapToStop" : {
+      "comment" : "Shown on the watch app (D-410). Under the microphone while listening.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap to stop"
+          }
+        }
+      }
+    },
+    "watchTryAgain" : {
+      "comment" : "Shown on the watch app (D-410). Retry.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Try again"
+          }
+        }
+      }
+    },
+    "watchTypeInstead" : {
+      "comment" : "Shown on the watch app (D-410). Open the system keyboard, Scribble and dictation.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Type instead"
+          }
+        }
+      }
+    },
+    "watchUndo" : {
+      "comment" : "Shown on the watch app (D-410). Take back an ask just sent.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Undo"
+          }
+        }
+      }
+    },
+    "watchUpNext" : {
+      "comment" : "Shown on the watch app (D-410). Routines in the order they will run.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Up next"
+          }
+        }
+      }
+    },
+    "watchUseCode" : {
+      "comment" : "Shown on the watch app (D-410). Show a code instead.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign in with a code"
+          }
+        }
+      }
+    },
+    "watchWaitingForYou" : {
+      "comment" : "Shown on the watch app (D-410). A bot waits on the person.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waiting for you"
+          }
+        }
+      }
+    },
+    "watchWhyHighRisk" : {
+      "comment" : "Shown on the watch app (D-410). Why a request is phone-only.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "High risk: answer on your phone"
+          }
+        }
+      }
+    },
+    "watchWhyNotYours" : {
+      "comment" : "Shown on the watch app (D-410). Why a request is phone-only.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only the person who started this chat can allow it"
+          }
+        }
+      }
+    },
+    "watchWhyPayment" : {
+      "comment" : "Shown on the watch app (D-410). Why a request is phone-only.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Payments are answered on your phone"
+          }
+        }
+      }
+    },
+    "watchWhySetting" : {
+      "comment" : "Shown on the watch app (D-410). Why a request is phone-only.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your settings keep this on your phone"
+          }
+        }
+      }
+    },
+    "watchWhyWorkspace" : {
+      "comment" : "Shown on the watch app (D-410). Why a request is phone-only.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your workspace keeps this on your phone"
+          }
+        }
+      }
+    },
+    "watchWorking" : {
+      "comment" : "Shown on the watch app (D-410). A bot is working.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Working"
+          }
+        }
+      }
+    },
+    "watchWorkspace" : {
+      "comment" : "Shown on the watch app (D-410). The workspace the watch shows.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Workspace"
+          }
+        }
+      }
+    },
+    "watchYou" : {
+      "comment" : "Shown on the watch app (D-410). Marks the person's own message.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

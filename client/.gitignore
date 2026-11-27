@@ -50,5 +50,9 @@ app.*.map.json
 # Generated sharded test entrypoints (client/tool/test_shards.dart)
 test/.generated/
 
+# The pseudo-locale (en-XA), made on demand for the overflow sweep and debug builds
+# (scripts/gen-pseudo-locale.mjs). Never committed, so no release build carries it.
+lib/l10n/app_en_XA.arb
+
 # Casama Cloud models build switch marker (scripts/cloud-models-switch.sh)
 cloud-models.on

@@ -1,0 +1,10 @@
+01-real-work.png	Việc thật, làm xong cho bạn
+02-customer-emails.png	Email khách hàng, trả lời giúp bạn
+03-trips-ok.png	Đặt chuyến đi, chỉ khi bạn đồng ý
+04-day-planned.png	Ngày của bạn, lên lịch trước khi bạn dậy
+05-window-seat.png	Ghế cửa sổ? Bot luôn nhớ
+06-flight-prices.png	Giá vé máy bay, theo dõi giúp bạn
+07-sites-games.png	Trang web và trò chơi, làm riêng cho bạn
+08-inbox.png	Hộp thư đến, xử lý gọn gàng
+09-birthday-dinner.png	Tiệc sinh nhật, ba bot cùng lo
+10-make-it-yours.png	Tùy chỉnh theo ý bạn

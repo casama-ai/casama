@@ -41,13 +41,13 @@ object CallBridge {
                     bot = call.argument<String>("bot") ?: "Casama",
                     avatar = call.argument<String>("avatar"),
                     labels = CallService.Labels(
-                        live = call.argument<String>("live") ?: "On a call",
-                        muted = call.argument<String>("muted") ?: "Muted",
-                        reconnecting = call.argument<String>("reconnecting") ?: "Reconnecting",
-                        mute = call.argument<String>("mute") ?: "Mute",
-                        unmute = call.argument<String>("unmute") ?: "Unmute",
-                        end = call.argument<String>("end") ?: "End Call",
-                        channel = call.argument<String>("channel") ?: "Calls",
+                        live = call.argument<String>("live") ?: context.getString(R.string.notif_call_live),
+                        muted = call.argument<String>("muted") ?: context.getString(R.string.notif_call_muted),
+                        reconnecting = call.argument<String>("reconnecting") ?: context.getString(R.string.notif_call_reconnecting),
+                        mute = call.argument<String>("mute") ?: context.getString(R.string.notif_call_mute),
+                        unmute = call.argument<String>("unmute") ?: context.getString(R.string.notif_call_unmute),
+                        end = call.argument<String>("end") ?: context.getString(R.string.notif_call_end),
+                        channel = call.argument<String>("channel") ?: context.getString(R.string.notif_call_channel),
                     ),
                 )
                 // A picture of its own is fetched in the background; the card is drawn again with it.

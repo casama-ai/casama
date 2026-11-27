@@ -39,7 +39,6 @@ import '../../../ui/glow_button.dart';
 import '../../../ui/adaptive_modal.dart';
 import '../../../ui/form_sheet.dart';
 import '../../companion/companion_controller.dart';
-import '../../devices/device_labels.dart';
 import '../../inbox/for_you.dart';
 import 'package:casama_sdk/casama_sdk.dart';
 import '../../../ui/effects.dart';
@@ -2623,12 +2622,11 @@ class _DeviceAccessPromptState extends ConsumerState<DeviceAccessPrompt> {
     final l10n = context.l10n;
     final colors = context.appColors;
     final e = widget.entry;
-    final what = deviceKindLabel(l10n, e.kind);
     // Answered: one quiet line, like a decided approval.
     if (_allowed != null) {
       return _Folded(
         key: const Key('chatDeviceAccess'),
-        text: _allowed! ? l10n.deviceAccessAllowed(what) : l10n.deviceAccessSkippedLine(what),
+        text: _allowed! ? l10n.deviceAccessGranted(e.kind.name) : l10n.deviceAccessNotShared(e.kind.name),
         color: _allowed! ? colors.positive : context.colorScheme.onSurfaceVariant,
         icon: _allowed! ? LucideIcons.circleCheck : LucideIcons.circleMinus,
       );
@@ -2638,7 +2636,7 @@ class _DeviceAccessPromptState extends ConsumerState<DeviceAccessPrompt> {
       label: context.l10n.cardDevice,
       accent: colors.working,
       icon: LucideIcons.smartphone,
-      title: l10n.deviceAccessTitle(widget.botName, what),
+      title: l10n.deviceAccessAsk(e.kind.name, widget.botName),
       subtitle: l10n.deviceAccessHelp,
       body: e.reason.isEmpty
           ? const SizedBox.shrink()
@@ -2714,7 +2712,11 @@ class _McpSignInPromptState extends ConsumerState<McpSignInPrompt> {
       accent: colors.warning,
       icon: LucideIcons.logIn,
       title: l10n.mcpSignInTitle(e.label),
-      subtitle: here ? l10n.mcpSignInHereHelp : l10n.mcpSignInElsewhereHelp(device ?? l10n.localMcpServers),
+      subtitle: here
+          ? l10n.mcpSignInHereHelp
+          : device == null
+          ? l10n.mcpSignInElsewhereUnknownHelp
+          : l10n.mcpSignInElsewhereHelp(device),
       body: const SizedBox.shrink(),
       footer: here
           ? ActionButtons(

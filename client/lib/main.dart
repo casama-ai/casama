@@ -39,6 +39,7 @@ import 'theme/appearance.dart';
 import 'theme/bundled_font_loader.dart';
 import 'theme/fonts.dart';
 import 'l10n/generated/app_localizations.dart';
+import 'l10n/delegates.dart';
 import 'ui/bot_avatar.dart';
 import 'ui/brand_splash.dart';
 import 'ui/splash_scene.dart';
@@ -46,6 +47,7 @@ import 'ui/server_unreachable_view.dart';
 import 'ui/text_scale.dart';
 import 'ui/friendly_error_view.dart';
 import 'core/analytics.dart';
+import 'core/app_language.dart';
 import 'core/attribution.dart';
 import 'core/install_tracker.dart';
 import 'core/provider_retry.dart';
@@ -66,6 +68,8 @@ Future<(Widget, SupabaseBackend)> bootstrap(AppConfig config, {VoidCallback? onS
   final setup = GuidedSetup.preload();
   final pendingOpen = PendingOpenLink.preload();
   final linkBrowser = LinkBrowserInApp.preload();
+  // The chosen language, before the first request says which language to answer in.
+  await AppLanguage.preload();
   // The app lock (D-375) is read before the first frame, so a locked app never shows itself.
   final appLock = AppLockSettingsNotifier.preload();
   // Whether this device agreed to AI providers, so an app that agreed never flashes the step.
@@ -374,8 +378,9 @@ class _StartupGateState extends State<StartupGate> {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light(),
       darkTheme: AppTheme.dark(),
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
+      localizationsDelegates: appLocalizationsDelegates,
+      locale: AppLanguage.chosen,
+      supportedLocales: AppLanguage.supported,
       // The splash has its own navigator rather than the app's (no `home`). On the web a root
       // navigator switches the browser to single-entry history, and handing over to the router
       // later rewinds the address to "/", so a reload on /settings landed on /bots.

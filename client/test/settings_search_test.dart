@@ -47,6 +47,13 @@ void main() {
     expect(find.byKey(const Key('settingsSecrets')), findsOneWidget);
   });
 
+  testWidgets('case and accents don\'t count', (tester) async {
+    await _open(tester);
+    await _type(tester, 'QUÍET');
+    expect(find.byKey(const Key('settingsQuietHours')), findsOneWidget);
+    expect(find.byKey(const Key('settingsAppearance')), findsNothing);
+  });
+
   testWidgets('rows folded under Advanced show while searching', (
     tester,
   ) async {

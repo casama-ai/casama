@@ -1,0 +1,8 @@
+KI-Teamkollegen mit eigenen, isolierten Computern: Browser, Dateien und Apps
+Schau einem Bot live bei der Arbeit zu oder übernimm jederzeit die Steuerung
+Senden, Buchen, Zahlen und Löschen warten auf dein OK – „Ablehnen“ macht alles rückgängig
+Bots starten nach Zeitplan, bei eingehender E-Mail oder wenn sich eine Seite ändert
+Gedächtnis und Skills bleiben über jeden Chat hinweg erhalten
+Über 40 fertige Bots sowie Gruppenchats mit Menschen und Bots zusammen
+Bots antworten in WhatsApp, Telegram, Slack, Discord und per E-Mail
+Open-Source-Apps, SDKs, CLI und Sicherheitsregeln

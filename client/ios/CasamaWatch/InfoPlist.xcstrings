@@ -1,0 +1,18 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "NSMicrophoneUsageDescription" : {
+      "comment" : "System permission prompt on Apple Watch: why Casama records the microphone.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama records your voice when you ask a bot something and sends it to your Casama server, where an AI provider (OpenAI, on Casama Cloud) turns it into text for your bot."
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

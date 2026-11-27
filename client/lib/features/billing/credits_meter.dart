@@ -144,14 +144,15 @@ class CreditsMeter extends ConsumerWidget {
         const SizedBox(height: 2),
         Text(
           monthly != null && monthly > 0
-              ? l10n.creditsExplainer(
+              ? l10n.creditsExplainerPlan(
+                  oneCreditPrice(locale),
                   monthly.humanizedCurrency(
                     locale,
                     'USD',
                     decimalDigits: monthly % 1 == 0 ? 0 : 2,
                   ),
                 )
-              : l10n.creditsExplainerShort,
+              : l10n.creditsExplainerPacks(oneCreditPrice(locale)),
           style: muted,
         ),
         if (ref.watch(backendProvider).ownProviders) ...[

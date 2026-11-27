@@ -1,0 +1,8 @@
+Đồng đội AI có máy tính riêng biệt lập với trình duyệt, tệp và ứng dụng
+Theo dõi bot làm việc trực tiếp hoặc tiếp quản điều khiển bất cứ lúc nào
+Gửi tin, đặt chỗ, thanh toán và xóa đều chờ bạn duyệt, còn Từ chối sẽ hoàn tác
+Bot tự chạy theo lịch, khi có email mới hoặc khi trang web thay đổi
+Trí nhớ và kỹ năng được giữ xuyên suốt mọi cuộc trò chuyện
+Hơn 40 bot dựng sẵn và trò chuyện nhóm kết hợp giữa người và bot
+Bot trả lời trên WhatsApp, Telegram, Slack, Discord và email
+Ứng dụng, SDK, CLI và quy tắc an toàn mã nguồn mở

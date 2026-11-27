@@ -33,15 +33,34 @@ object PushNotifications {
     /** Creates the channels once; names show in the system's notification settings. */
     fun ensureChannels(context: Context) {
         val manager = context.getSystemService(NotificationManager::class.java) ?: return
-        fun channel(id: String, name: String, importance: Int, about: String) {
-            if (manager.getNotificationChannel(id) != null) return
+        fun channel(id: String, nameId: Int, importance: Int, aboutId: Int) {
+            val name = context.getString(nameId)
+            val about = context.getString(aboutId)
+            val old = manager.getNotificationChannel(id)
+            // Creating it again renames it (after a language change) and keeps the person's settings.
+            if (old != null && old.name == name && old.description == about) return
             manager.createNotificationChannel(NotificationChannel(id, name, importance).apply { description = about })
         }
-        channel(REPLIES, "Replies", NotificationManager.IMPORTANCE_HIGH, "A bot answered something you asked")
-        channel(NEEDS_YOU, "Needs you", NotificationManager.IMPORTANCE_HIGH, "Approvals, passwords and takeovers your bots wait for")
-        channel(ROUTINES, "Routines and briefs", NotificationManager.IMPORTANCE_DEFAULT, "Results of routines and the morning brief")
-        channel(SUGGESTIONS, "Suggestions", NotificationManager.IMPORTANCE_HIGH, "Things your bots offer to do for you")
-        channel(ACCOUNT, "Account", NotificationManager.IMPORTANCE_LOW, "Credits, projects and your server")
+        channel(
+            REPLIES, R.string.notif_channel_replies, NotificationManager.IMPORTANCE_HIGH,
+            R.string.notif_channel_replies_description,
+        )
+        channel(
+            NEEDS_YOU, R.string.notif_channel_needs_you, NotificationManager.IMPORTANCE_HIGH,
+            R.string.notif_channel_needs_you_description,
+        )
+        channel(
+            ROUTINES, R.string.notif_channel_routines, NotificationManager.IMPORTANCE_DEFAULT,
+            R.string.notif_channel_routines_description,
+        )
+        channel(
+            SUGGESTIONS, R.string.notif_channel_suggestions, NotificationManager.IMPORTANCE_HIGH,
+            R.string.notif_channel_suggestions_description,
+        )
+        channel(
+            ACCOUNT, R.string.notif_channel_account, NotificationManager.IMPORTANCE_LOW,
+            R.string.notif_channel_account_description,
+        )
     }
 
     /**
@@ -86,10 +105,10 @@ object PushNotifications {
             .setAutoCancel(true)
             .setContentIntent(act("open", id))
         if (risk == "high") {
-            builder.addAction(button("Review", act("open", id + 3), unlock = false))
+            builder.addAction(button(context.getString(R.string.notif_review), act("open", id + 3), unlock = false))
         } else {
-            builder.addAction(button("Approve", act("approve", id + 1), unlock = true))
-            builder.addAction(button("Deny", act("deny", id + 2), unlock = true))
+            builder.addAction(button(context.getString(R.string.notif_approve), act("approve", id + 1), unlock = true))
+            builder.addAction(button(context.getString(R.string.notif_deny), act("deny", id + 2), unlock = true))
         }
         return try {
             manager.notify(id, builder.build())

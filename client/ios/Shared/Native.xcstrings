@@ -1,0 +1,3232 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "Ask ${bot} ${question}" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Shortcuts editor summary; {bot} and {question} are blanks the person fills.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ask ${bot} ${question}"
+          }
+        }
+      }
+    },
+    "Run ${routine}" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Shortcuts editor summary.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Run ${routine}"
+          }
+        }
+      }
+    },
+    "canvasEmpty" : {
+      "comment" : "The Canvas widget with nothing on it.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ask a bot to put something here"
+          }
+        }
+      }
+    },
+    "canvasIn" : {
+      "comment" : "Widget countdown: time until the target (in 12 days).",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "in {time}"
+          }
+        }
+      }
+    },
+    "canvasLeft" : {
+      "comment" : "Widget list: how many items are not done yet.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "{n} left"
+          }
+        }
+      }
+    },
+    "canvasLeftUnit" : {
+      "comment" : "Small word under the number of items left on a round Lock Screen widget.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "left"
+          }
+        }
+      }
+    },
+    "canvasNow" : {
+      "comment" : "Widget countdown at its target.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Now"
+          }
+        }
+      }
+    },
+    "canvasSince" : {
+      "comment" : "Widget countdown counting up: time since the moment (3 days since).",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "{time} since"
+          }
+        }
+      }
+    },
+    "canvasTry" : {
+      "comment" : "Example under the empty Canvas widget.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Try: put a daily verse on my Lock Screen"
+          }
+        }
+      }
+    },
+    "macMenuBoard" : {
+      "comment" : "Mac menu bar item. The task board. Use the wording macOS itself uses.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Board"
+          }
+        }
+      }
+    },
+    "macMenuBots" : {
+      "comment" : "Mac menu bar item. Use the wording macOS itself uses.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bots"
+          }
+        }
+      }
+    },
+    "macMenuCasamaHelp" : {
+      "comment" : "Item in the Mac app's Help menu that opens the online help pages, like 'Safari Help' in other apps. Not the name of the support assistant (casamaHelp). Use the wording macOS itself uses for an app's help item.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama Help"
+          }
+        }
+      }
+    },
+    "macMenuCheckForUpdates" : {
+      "comment" : "Mac menu bar item. Use the wording macOS itself uses.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Check for Updates…"
+          }
+        }
+      }
+    },
+    "macMenuCloseWindow" : {
+      "comment" : "Mac menu bar item. Use the wording macOS itself uses.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Close Window"
+          }
+        }
+      }
+    },
+    "macMenuComputer" : {
+      "comment" : "Mac menu bar item. The bots' computer. Use the wording macOS itself uses.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Computer"
+          }
+        }
+      }
+    },
+    "macMenuFile" : {
+      "comment" : "Mac menu bar item. Menu title. Use the wording macOS itself uses.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "File"
+          }
+        }
+      }
+    },
+    "macMenuGo" : {
+      "comment" : "Mac menu bar item. Menu title: places to go. Use the wording macOS itself uses.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Go"
+          }
+        }
+      }
+    },
+    "macMenuHelp" : {
+      "comment" : "Mac menu bar item. Menu title. Use the wording macOS itself uses.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Help"
+          }
+        }
+      }
+    },
+    "macMenuInbox" : {
+      "comment" : "Mac menu bar item. Use the wording macOS itself uses.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inbox"
+          }
+        }
+      }
+    },
+    "macMenuNewBot" : {
+      "comment" : "Mac menu bar item. Use the wording macOS itself uses.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New Bot…"
+          }
+        }
+      }
+    },
+    "macMenuNewChat" : {
+      "comment" : "Mac menu bar item. Use the wording macOS itself uses.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New Chat"
+          }
+        }
+      }
+    },
+    "macMenuPages" : {
+      "comment" : "Mac menu bar item. Pages bots made. Use the wording macOS itself uses.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pages"
+          }
+        }
+      }
+    },
+    "macMenuQuickAsk" : {
+      "comment" : "Mac menu bar item. The app's small ask box. Use the wording macOS itself uses.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quick Ask"
+          }
+        }
+      }
+    },
+    "macMenuSearch" : {
+      "comment" : "Mac menu bar item. Use the wording macOS itself uses.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search…"
+          }
+        }
+      }
+    },
+    "macMenuSendFeedback" : {
+      "comment" : "Mac menu bar item. Use the wording macOS itself uses.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send Feedback…"
+          }
+        }
+      }
+    },
+    "macMenuSettings" : {
+      "comment" : "Mac menu bar item. Use the wording macOS itself uses.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings…"
+          }
+        }
+      }
+    },
+    "macMenuView" : {
+      "comment" : "Mac menu bar item. Menu title. Use the wording macOS itself uses.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "View"
+          }
+        }
+      }
+    },
+    "nativeComputer" : {
+      "comment" : "Fallback name of a bot's computer in Files and Finder.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Computer"
+          }
+        }
+      }
+    },
+    "nativeNameFileProvider" : {
+      "comment" : "Name of the bots' computers in the Files app and Finder. Casama is the brand.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama Computers"
+          }
+        }
+      }
+    },
+    "nativeSafariSignInIos" : {
+      "comment" : "Safari extension on iPhone, shown when it can't sign in by itself. Keep the arrows; use the app's own names for Settings and Sign In on Another Device.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Casama on this device -> Settings -> Sign In on Another Device, or paste a sign-in link below."
+          }
+        }
+      }
+    },
+    "nativeSafariSignInMac" : {
+      "comment" : "Safari extension on the Mac, shown when it can't sign in by itself. Keep the arrows; use the app's own names for Settings and Sign In on Another Device.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Casama on this Mac -> Settings -> Sign In on Another Device, or paste a sign-in link below."
+          }
+        }
+      }
+    },
+    "notifAlarmStop" : {
+      "comment" : "Button that stops a ringing alarm (iPhone).",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stop"
+          }
+        }
+      }
+    },
+    "notifAlarmTitle" : {
+      "comment" : "Title of an alarm a bot set, when it has no name of its own (iPhone).",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama Alarm"
+          }
+        }
+      }
+    },
+    "notifAllow" : {
+      "comment" : "Notification button (phone and desktop). Allow what a bot asks to do (iPhone).",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allow"
+          }
+        }
+      }
+    },
+    "notifApprove" : {
+      "comment" : "Notification button (phone and desktop). Allow what a bot asks to do (Mac and Android).",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Approve"
+          }
+        }
+      }
+    },
+    "notifCallEnd" : {
+      "comment" : "Android notification shown during a voice call. Button: hang up.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "End Call"
+          }
+        }
+      }
+    },
+    "notifCallMute" : {
+      "comment" : "Android notification shown during a voice call. Button: turn the microphone off.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mute"
+          }
+        }
+      }
+    },
+    "notifCallUnmute" : {
+      "comment" : "Android notification shown during a voice call. Button: turn the microphone on.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unmute"
+          }
+        }
+      }
+    },
+    "notifDeny" : {
+      "comment" : "Notification button (phone and desktop). Refuse what a bot asks to do.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deny"
+          }
+        }
+      }
+    },
+    "notifDoIt" : {
+      "comment" : "Notification button (phone and desktop). Accept what a bot suggests.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Do it"
+          }
+        }
+      }
+    },
+    "notifNotNow" : {
+      "comment" : "Notification button (phone and desktop). Dismiss a bot's suggestion.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not now"
+          }
+        }
+      }
+    },
+    "notifReply" : {
+      "comment" : "Notification button (phone and desktop). Type a reply to a bot's message.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reply"
+          }
+        }
+      }
+    },
+    "notifReplyPlaceholder" : {
+      "comment" : "Notification button (phone and desktop). Placeholder in the reply text field.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reply…"
+          }
+        }
+      }
+    },
+    "notifSend" : {
+      "comment" : "Notification button (phone and desktop). Sends the typed reply.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send"
+          }
+        }
+      }
+    },
+    "siriABot" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Used inside a sentence when the bot's name is unknown.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "a bot"
+          }
+        }
+      }
+    },
+    "siriAcceptSuggestion" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Action title.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Do what a bot suggests"
+          }
+        }
+      }
+    },
+    "siriAction" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Parameter name.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Action"
+          }
+        }
+      }
+    },
+    "siriAllow" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Parameter or action name: allow a request.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allow"
+          }
+        }
+      }
+    },
+    "siriAnswerRequest" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Action title.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Answer a bot's request"
+          }
+        }
+      }
+    },
+    "siriAsk" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Short title of the watch's Ask shortcut.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ask"
+          }
+        }
+      }
+    },
+    "siriAskAboutThis" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Visual Intelligence action title.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ask Casama about this"
+          }
+        }
+      }
+    },
+    "siriAskBot" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Action title.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ask a bot"
+          }
+        }
+      }
+    },
+    "siriAskBotDescription" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Action description.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sends a question to one of your Casama bots (AI assistants) in a new chat and reads the reply back. With no bot named, the bot you talked to last answers."
+          }
+        }
+      }
+    },
+    "siriAskBotParamDescription" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Parameter description.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Which bot to ask. Leave empty for the bot you talked to last."
+          }
+        }
+      }
+    },
+    "siriAskCasama" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Watch action title.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ask Casama"
+          }
+        }
+      }
+    },
+    "siriAskCasamaBot" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Visual Intelligence result type.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ask Casama Bot"
+          }
+        }
+      }
+    },
+    "siriAskGetReply" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Action title.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ask a bot and get the reply"
+          }
+        }
+      }
+    },
+    "siriAskGetReplyDescription" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Action description. Shortcuts is Apple's app.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sends a question to a Casama bot and returns its reply text for chaining in Shortcuts."
+          }
+        }
+      }
+    },
+    "siriAskName" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Visual Intelligence choice.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ask %@"
+          }
+        }
+      }
+    },
+    "siriAskVoiceDescription" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Watch action description.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ask a bot something by voice"
+          }
+        }
+      }
+    },
+    "siriAutomatic" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Option: let Casama choose.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatic"
+          }
+        }
+      }
+    },
+    "siriAutomaticSubtitle" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. What Automatic shows.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "What a bot set most recently"
+          }
+        }
+      }
+    },
+    "siriBot" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Type and parameter name.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bot"
+          }
+        }
+      }
+    },
+    "siriBotIn" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Subtitle of a bot; {app} is the app's name.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A bot in %@"
+          }
+        }
+      }
+    },
+    "siriBotInCasama" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Spotlight search result description.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bot in Casama"
+          }
+        }
+      }
+    },
+    "siriBotStatusDescription" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Watch complication setting description.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Where a bot stands and what it is doing"
+          }
+        }
+      }
+    },
+    "siriBotSubtitle" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Subtitle of a bot.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A bot in Casama, an AI assistant you chat with"
+          }
+        }
+      }
+    },
+    "siriCallAction" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Action title: a button pressed during a call.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Call action"
+          }
+        }
+      }
+    },
+    "siriCalling" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Siri says this.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calling %@."
+          }
+        }
+      }
+    },
+    "siriCanvas" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Type and parameter name: something a bot put on a widget.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Canvas"
+          }
+        }
+      }
+    },
+    "siriCategoryAssistants" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Action category.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Assistants"
+          }
+        }
+      }
+    },
+    "siriCategoryAutomation" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Action category.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automation"
+          }
+        }
+      }
+    },
+    "siriCategoryBots" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Action category.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bots"
+          }
+        }
+      }
+    },
+    "siriCategoryCommunication" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Action category.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Communication"
+          }
+        }
+      }
+    },
+    "siriChat" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Type and parameter name: a conversation.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chat"
+          }
+        }
+      }
+    },
+    "siriChatSubtitle" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Subtitle of a chat; {bot} is a name.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A chat with %@ in Casama"
+          }
+        }
+      }
+    },
+    "siriChatWith" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Spotlight search result description.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chat with {bot}"
+          }
+        }
+      }
+    },
+    "siriChooseBot" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Action title.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose a bot"
+          }
+        }
+      }
+    },
+    "siriChooseBotDescription" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Action description.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pick the bot this widget shows."
+          }
+        }
+      }
+    },
+    "siriChooseCanvas" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Action title.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose a canvas"
+          }
+        }
+      }
+    },
+    "siriChooseCanvasDescription" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Action description.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show what a bot set most recently, or one canvas."
+          }
+        }
+      }
+    },
+    "siriChooseRoutines" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Action title.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose routines"
+          }
+        }
+      }
+    },
+    "siriChooseRoutinesDescription" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Action description.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show the next runs, or up to four routines you pick."
+          }
+        }
+      }
+    },
+    "siriComputerName" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Parameter name.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Computer name"
+          }
+        }
+      }
+    },
+    "siriErrorNoBot" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Siri says this.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I couldn't find that bot in Casama."
+          }
+        }
+      }
+    },
+    "siriErrorOneBot" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Siri says this.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama sends to one bot at a time. Which bot?"
+          }
+        }
+      }
+    },
+    "siriErrorTextOnly" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Siri says this.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Siri can send words to a bot. Add files, pictures and places in Casama."
+          }
+        }
+      }
+    },
+    "siriFavorited" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. A message or chat attribute.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Favorited"
+          }
+        }
+      }
+    },
+    "siriFocusAllBots" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Focus filter summary.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All bots"
+          }
+        }
+      }
+    },
+    "siriFocusAllVisible" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Focus filter summary.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All bots visible"
+          }
+        }
+      }
+    },
+    "siriFocusAllowCheckIns" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Focus filter summary.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allow check-ins"
+          }
+        }
+      }
+    },
+    "siriFocusBots" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Parameter name.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bots to show"
+          }
+        }
+      }
+    },
+    "siriFocusDescription" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Focus filter description. Focus is Apple's feature name.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show only chosen bots and optionally hold proactive check-ins while this Focus is active."
+          }
+        }
+      }
+    },
+    "siriFocusHold" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Parameter name: pause messages bots start themselves.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hold proactive check-ins"
+          }
+        }
+      }
+    },
+    "siriFocusHoldCheckIns" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Focus filter summary.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hold check-ins"
+          }
+        }
+      }
+    },
+    "siriFocusShowMany" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Focus filter summary with two or more bots.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show %lld bots"
+          }
+        }
+      }
+    },
+    "siriFocusShowOne" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Focus filter summary with one bot.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show 1 bot"
+          }
+        }
+      }
+    },
+    "siriFocusTitle" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Focus filter setting title.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set Casama Focus Filter"
+          }
+        }
+      }
+    },
+    "siriFromWidget" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Parameter name.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "From a widget"
+          }
+        }
+      }
+    },
+    "siriGetLastReply" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Action title.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Get the last reply"
+          }
+        }
+      }
+    },
+    "siriGetLastReplyDescription" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Action description.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Returns the latest reply text from a Casama bot chat."
+          }
+        }
+      }
+    },
+    "siriKeywordBot" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Spotlight search word, lower case.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "bot"
+          }
+        }
+      }
+    },
+    "siriKeywordChat" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Spotlight search word, lower case.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "chat"
+          }
+        }
+      }
+    },
+    "siriKeywordRoutine" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Spotlight search word, lower case.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "routine"
+          }
+        }
+      }
+    },
+    "siriMe" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. The person themselves, as a message's sender.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Me"
+          }
+        }
+      }
+    },
+    "siriMessage" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. A message type.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Message"
+          }
+        }
+      }
+    },
+    "siriName" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Property name.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name"
+          }
+        }
+      }
+    },
+    "siriNextRoutineDescription" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Watch action description.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The next routine and when it runs"
+          }
+        }
+      }
+    },
+    "siriNone" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. No effect or reaction.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "None"
+          }
+        }
+      }
+    },
+    "siriOpenBot" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Action title.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open a bot"
+          }
+        }
+      }
+    },
+    "siriOpenBotDescription" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Action description.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opens your chat with one of your Casama bots."
+          }
+        }
+      }
+    },
+    "siriOpenBotPersonDescription" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Action description.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opens a Casama bot's chat."
+          }
+        }
+      }
+    },
+    "siriOpenCasama" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Action title.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Casama"
+          }
+        }
+      }
+    },
+    "siriOpenChat" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Action title.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open a chat"
+          }
+        }
+      }
+    },
+    "siriOpenChatDescription" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Action description.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opens one of your chats with a Casama bot."
+          }
+        }
+      }
+    },
+    "siriOpenRoutine" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Action title.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open a routine's bot"
+          }
+        }
+      }
+    },
+    "siriOpenRoutineDescription" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Action description.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opens the bot that runs one of your Casama routines."
+          }
+        }
+      }
+    },
+    "siriOpenToCheck" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Siri says this.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Casama to check what needs you."
+          }
+        }
+      }
+    },
+    "siriOpenToStartComputer" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Siri says this.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Casama to start your computer."
+          }
+        }
+      }
+    },
+    "siriOpeningToFinish" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Siri says this as the app comes forward.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opening Casama to finish."
+          }
+        }
+      }
+    },
+    "siriQuestion" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Parameter name.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Question"
+          }
+        }
+      }
+    },
+    "siriQuestionDescription" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Parameter description.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "What to ask the bot, in your own words."
+          }
+        }
+      }
+    },
+    "siriRequest" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Parameter name.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Request"
+          }
+        }
+      }
+    },
+    "siriRestOnScreen" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Spoken after the first part of a long reply.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The rest is on screen."
+          }
+        }
+      }
+    },
+    "siriRestOnScreenEllipsis" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Spoken after a long reply cut mid-sentence.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "… The rest is on screen."
+          }
+        }
+      }
+    },
+    "siriRoutine" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Type and parameter name: a task a bot repeats.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Routine"
+          }
+        }
+      }
+    },
+    "siriRoutineDot" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Spotlight search result description.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Routine · {bot}"
+          }
+        }
+      }
+    },
+    "siriRoutineParamDescription" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Parameter description.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Which routine to run now."
+          }
+        }
+      }
+    },
+    "siriRoutineStarted" : {
+      "comment" : "Siri: a routine was started; {routine} is its name.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Started {routine}."
+          }
+        }
+      }
+    },
+    "siriRoutineSubtitle" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Subtitle of a routine; {bot} is a name.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A routine %@ runs in Casama"
+          }
+        }
+      }
+    },
+    "siriRoutines" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Parameter and category name.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Routines"
+          }
+        }
+      }
+    },
+    "siriRun" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Parameter name: one run of a bot's work.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Run"
+          }
+        }
+      }
+    },
+    "siriRunRoutine" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Action title.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Run a routine"
+          }
+        }
+      }
+    },
+    "siriRunRoutineControlDescription" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Action description.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Runs the routine you pick, without opening Casama."
+          }
+        }
+      }
+    },
+    "siriRunRoutineDescription" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Action description.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Runs one of your Casama bots' routines now. The result arrives in the app and as a notification, as it does when the routine runs on its own."
+          }
+        }
+      }
+    },
+    "siriRunRoutineNow" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Action title.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Run a routine now"
+          }
+        }
+      }
+    },
+    "siriRunWithConfirm" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Siri asks to confirm.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Run %1$@ with %2$@?"
+          }
+        }
+      }
+    },
+    "siriSentTo" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. A sent message.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sent to %@"
+          }
+        }
+      }
+    },
+    "siriShortNeedsYou" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Short title of the watch's requests shortcut.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Needs you"
+          }
+        }
+      }
+    },
+    "siriStartComputer" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Action title.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start a computer"
+          }
+        }
+      }
+    },
+    "siriStartComputerDescription" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Action description.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wakes up a Casama computer after confirmation."
+          }
+        }
+      }
+    },
+    "siriStartConfirm" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Siri asks to confirm.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start %@?"
+          }
+        }
+      }
+    },
+    "siriStopBot" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Action title.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stop the bot"
+          }
+        }
+      }
+    },
+    "siriStoppedBot" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Siri says this.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stopped {bot}."
+          }
+        }
+      }
+    },
+    "siriSuggestion" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Parameter name.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suggestion"
+          }
+        }
+      }
+    },
+    "siriTalkDescription" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Action description. Action button is the iPhone's hardware button.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opens voice mode with one of your Casama bots. Available on the Action button."
+          }
+        }
+      }
+    },
+    "siriTalkToBot" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Action title: voice call.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Talk to a bot"
+          }
+        }
+      }
+    },
+    "siriTalkToBotDescription" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Action description.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Starts a voice call with the bot you pick."
+          }
+        }
+      }
+    },
+    "siriTitle" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Property name.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Title"
+          }
+        }
+      }
+    },
+    "siriToolAsk" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Siri AI tool title.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ask a Casama bot"
+          }
+        }
+      }
+    },
+    "siriToolAskDescription" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Siri AI tool description.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ask one of the person's Casama bots a question and return its reply."
+          }
+        }
+      }
+    },
+    "siriToolBotDescription" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Parameter description.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Which Casama bot to ask."
+          }
+        }
+      }
+    },
+    "siriToolCall" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Siri AI tool title.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Call a Casama bot"
+          }
+        }
+      }
+    },
+    "siriToolCallBotDescription" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Parameter description.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The bot to call."
+          }
+        }
+      }
+    },
+    "siriToolCallDescription" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Siri AI tool description.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Casama and start a live voice call with the chosen bot."
+          }
+        }
+      }
+    },
+    "siriToolNeeds" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Siri AI tool title.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "What needs me in Casama"
+          }
+        }
+      }
+    },
+    "siriToolNeedsDescription" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Siri AI tool description.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Check how many approvals, takeovers or suggestions are waiting in Casama."
+          }
+        }
+      }
+    },
+    "siriToolQuestionDescription" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Parameter description.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "What to ask the bot."
+          }
+        }
+      }
+    },
+    "siriToolRoutineDescription" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Parameter description.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The routine to run."
+          }
+        }
+      }
+    },
+    "siriToolRun" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Siri AI tool title.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Run a Casama routine"
+          }
+        }
+      }
+    },
+    "siriToolRunDescription" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Siri AI tool description.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Run a saved Casama routine after confirming with the person."
+          }
+        }
+      }
+    },
+    "siriToolStop" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Siri AI tool title.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stop a Casama bot"
+          }
+        }
+      }
+    },
+    "siriToolStopBotDescription" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Parameter description.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The bot to stop."
+          }
+        }
+      }
+    },
+    "siriToolStopDescription" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Siri AI tool description.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stop a bot that is currently running a task in Casama."
+          }
+        }
+      }
+    },
+    "siriWhatNeedsMe" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Action title.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "What needs me"
+          }
+        }
+      }
+    },
+    "siriWhatNeedsMeDescription" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Action description.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Says how many things in Casama are waiting for you: a bot's request for your OK, a takeover, a suggestion. Answer them in the app."
+          }
+        }
+      }
+    },
+    "siriWhatShouldIAsk" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Siri asks for the question.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "What should I ask?"
+          }
+        }
+      }
+    },
+    "siriWhatShouldISend" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Siri asks for the message.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "What should I send?"
+          }
+        }
+      }
+    },
+    "siriWhatWaiting" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Watch action description.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "What is waiting for your OK"
+          }
+        }
+      }
+    },
+    "siriWhere" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Parameter name: which screen to open.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Where"
+          }
+        }
+      }
+    },
+    "siriYourComputer" : {
+      "comment" : "Siri, Shortcuts and App Intents on Apple devices. Used inside \"Start {computer}?\" when no name was given.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "your Casama computer"
+          }
+        }
+      }
+    },
+    "widgetAllClear" : {
+      "comment" : "Shown in a home screen or Lock Screen widget (D-405). Nothing waits on the person.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All clear"
+          }
+        }
+      }
+    },
+    "widgetAllow" : {
+      "comment" : "Shown in a home screen or Lock Screen widget (D-405). Button: allow a low-risk request.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allow"
+          }
+        }
+      }
+    },
+    "widgetAsk" : {
+      "comment" : "Shown in a home screen or Lock Screen widget (D-405). Button: open quick ask.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ask"
+          }
+        }
+      }
+    },
+    "widgetAskCasama" : {
+      "comment" : "Control Center control, Android Quick Settings tile and Ask widget: opens quick ask.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ask Casama"
+          }
+        }
+      }
+    },
+    "widgetBlocked" : {
+      "comment" : "Shown in a home screen or Lock Screen widget (D-405). Task board column.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Blocked"
+          }
+        }
+      }
+    },
+    "widgetBrief" : {
+      "comment" : "Shown in a home screen or Lock Screen widget (D-405). The morning brief.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Brief"
+          }
+        }
+      }
+    },
+    "widgetBriefAt" : {
+      "comment" : "Shown in a home screen or Lock Screen widget (D-405). When today's brief arrives.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Brief at {time}"
+          }
+        }
+      }
+    },
+    "widgetControlAskDescription" : {
+      "comment" : "iPhone control description. Quick ask is the app's small ask box.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open quick ask with the keyboard up."
+          }
+        }
+      }
+    },
+    "widgetControlRunDescription" : {
+      "comment" : "iPhone control description.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Run the routine you pick, without opening Casama."
+          }
+        }
+      }
+    },
+    "widgetControlTalkDescription" : {
+      "comment" : "iPhone control description.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start a voice call with the bot you pick."
+          }
+        }
+      }
+    },
+    "widgetCredits" : {
+      "comment" : "Shown in a home screen or Lock Screen widget (D-405). Title of the credits widget.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Credits"
+          }
+        }
+      }
+    },
+    "widgetCreditsLeft" : {
+      "comment" : "Shown in a home screen or Lock Screen widget (D-405). Credits left this period.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "{amount} left"
+          }
+        }
+      }
+    },
+    "widgetDeny" : {
+      "comment" : "Shown in a home screen or Lock Screen widget (D-405). Button: deny a request.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deny"
+          }
+        }
+      }
+    },
+    "widgetDoIt" : {
+      "comment" : "Shown in a home screen or Lock Screen widget (D-405). Button: accept a bot's suggestion.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Do it"
+          }
+        }
+      }
+    },
+    "widgetFallbackAsOf" : {
+      "comment" : "Home screen widget text, used until the app has sent its own words. How old the data is.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "As of {time}"
+          }
+        }
+      }
+    },
+    "widgetFallbackAskBot" : {
+      "comment" : "Home screen widget text, used until the app has sent its own words. The ask field; {bot} is the bot's name.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ask {bot} anything"
+          }
+        }
+      }
+    },
+    "widgetFallbackBrief" : {
+      "comment" : "Home screen widget text, used until the app has sent its own words. The morning brief.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Morning brief"
+          }
+        }
+      }
+    },
+    "widgetFallbackDay" : {
+      "comment" : "Home screen widget text, used until the app has sent its own words. Unit after the number 1 in a countdown (\"1 day\").",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "day"
+          }
+        }
+      }
+    },
+    "widgetFallbackDays" : {
+      "comment" : "Home screen widget text, used until the app has sent its own words. Unit after a number in a countdown (\"12 days\").",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "days"
+          }
+        }
+      }
+    },
+    "widgetFallbackFinished" : {
+      "comment" : "Home screen widget text, used until the app has sent its own words. What a bot finished last.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "{bot} finished {title}"
+          }
+        }
+      }
+    },
+    "widgetFallbackNothingNext" : {
+      "comment" : "Home screen widget text, used until the app has sent its own words. No routine or brief is coming up.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nothing coming up"
+          }
+        }
+      }
+    },
+    "widgetIdle" : {
+      "comment" : "Shown in a home screen or Lock Screen widget (D-405). A bot is not doing anything.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Idle"
+          }
+        }
+      }
+    },
+    "widgetInProgress" : {
+      "comment" : "Shown in a home screen or Lock Screen widget (D-405). Task board column.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In progress"
+          }
+        }
+      }
+    },
+    "widgetInReview" : {
+      "comment" : "Shown in a home screen or Lock Screen widget (D-405). Task board column.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In review"
+          }
+        }
+      }
+    },
+    "widgetIosAskDescription" : {
+      "comment" : "Widget gallery: what the widget does, shown when adding it; starts with a verb. Ask, iPhone.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ask a bot or start a call with one tap, with ideas to try."
+          }
+        }
+      }
+    },
+    "widgetIosBotDescription" : {
+      "comment" : "Widget gallery: what the widget does, shown when adding it; starts with a verb. Bot, iPhone and Mac.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keep an eye on what one of your bots is doing."
+          }
+        }
+      }
+    },
+    "widgetIosBriefDescription" : {
+      "comment" : "Widget gallery: what the widget does, shown when adding it; starts with a verb. Brief, iPhone and Mac.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Read what your bot told you this morning."
+          }
+        }
+      }
+    },
+    "widgetIosCanvasDescription" : {
+      "comment" : "Widget gallery: what the widget does, shown when adding it; starts with a verb. Canvas, iPhone and Mac. A verse is a line of scripture or poetry.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show what your bots put here: a verse, a countdown, a streak, a list or a picture."
+          }
+        }
+      }
+    },
+    "widgetIosCreditsDescription" : {
+      "comment" : "Widget gallery: what the widget does, shown when adding it; starts with a verb. Credits, iPhone and Mac.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Check how much of your credits you've used."
+          }
+        }
+      }
+    },
+    "widgetIosInlineDescription" : {
+      "comment" : "Widget gallery: what the widget does, shown when adding it; starts with a verb. The one-line Lock Screen widget.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "See the one thing that matters most, above the clock."
+          }
+        }
+      }
+    },
+    "widgetIosLibraryDescription" : {
+      "comment" : "Widget gallery: what the widget does, shown when adding it; starts with a verb. Library, iPhone and Mac.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open what your bots made lately."
+          }
+        }
+      }
+    },
+    "widgetIosNeedsYouDescription" : {
+      "comment" : "Widget gallery: what the widget does, shown when adding it; starts with a verb. Needs you, iPhone.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "See which bots are waiting on you, and answer the simple ones."
+          }
+        }
+      }
+    },
+    "widgetIosRoutinesDescription" : {
+      "comment" : "Widget gallery: what the widget does, shown when adding it; starts with a verb. Routines, iPhone.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "See what runs next, and run a routine now."
+          }
+        }
+      }
+    },
+    "widgetIosTasksDescription" : {
+      "comment" : "Widget gallery: what the widget does, shown when adding it; starts with a verb. Tasks (task board), iPhone and Mac.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "See where the board stands, with what waits on you first."
+          }
+        }
+      }
+    },
+    "widgetIosTodayDescription" : {
+      "comment" : "Widget gallery: what the widget does, shown when adding it; starts with a verb. Today, iPhone and Mac.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Get your day in one place: what needs you, what runs next, and your credits."
+          }
+        }
+      }
+    },
+    "widgetLibrary" : {
+      "comment" : "Shown in a home screen or Lock Screen widget (D-405). Title of the Library widget.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Library"
+          }
+        }
+      }
+    },
+    "widgetLowRisk" : {
+      "comment" : "Shown in a home screen or Lock Screen widget (D-405). Marks a low-risk request that can be allowed from the widget.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Low risk"
+          }
+        }
+      }
+    },
+    "widgetMacNeedsYouDescription" : {
+      "comment" : "Widget gallery: what the widget does, shown when adding it; starts with a verb. Needs you, Mac.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "See which bots are waiting on you."
+          }
+        }
+      }
+    },
+    "widgetMacRoutinesDescription" : {
+      "comment" : "Widget gallery: what the widget does, shown when adding it; starts with a verb. Routines, Mac.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "See what runs next."
+          }
+        }
+      }
+    },
+    "widgetNameBot" : {
+      "comment" : "Name of the widget that follows one bot.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bot"
+          }
+        }
+      }
+    },
+    "widgetNameCanvas" : {
+      "comment" : "Name of the widget bots put things on (bot widgets).",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Canvas"
+          }
+        }
+      }
+    },
+    "widgetNameRoutines" : {
+      "comment" : "Name of the routines widget.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Routines"
+          }
+        }
+      }
+    },
+    "widgetNeedsOkFrom" : {
+      "comment" : "Shown in a home screen or Lock Screen widget (D-405). An approval request from a bot.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "{bot} needs your OK"
+          }
+        }
+      }
+    },
+    "widgetNeedsYou" : {
+      "comment" : "Shown in a home screen or Lock Screen widget (D-405). Title of the list of requests waiting on the person.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Needs you"
+          }
+        }
+      }
+    },
+    "widgetNextBrief" : {
+      "comment" : "Shown in a home screen or Lock Screen widget (D-405). When the next brief is due.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Next brief {time}"
+          }
+        }
+      }
+    },
+    "widgetNoBots" : {
+      "comment" : "Shown in a home screen or Lock Screen widget (D-405). No bots yet.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meet your first bot"
+          }
+        }
+      }
+    },
+    "widgetNoBrief" : {
+      "comment" : "Shown in a home screen or Lock Screen widget (D-405). No morning brief has arrived.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No brief yet"
+          }
+        }
+      }
+    },
+    "widgetNoCreations" : {
+      "comment" : "Shown in a home screen or Lock Screen widget (D-405). The Library widget when empty.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nothing made yet"
+          }
+        }
+      }
+    },
+    "widgetNoRoutines" : {
+      "comment" : "Shown in a home screen or Lock Screen widget (D-405). The Routines widget when there are none.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No routines yet"
+          }
+        }
+      }
+    },
+    "widgetOpen" : {
+      "comment" : "Shown in a home screen or Lock Screen widget (D-405). Button: open a takeover request.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open"
+          }
+        }
+      }
+    },
+    "widgetRepliedAt" : {
+      "comment" : "Shown in a home screen or Lock Screen widget (D-405). When the bot last replied, e.g. \"Replied 9:20\".",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Replied {time}"
+          }
+        }
+      }
+    },
+    "widgetResetsAt" : {
+      "comment" : "Shown in a home screen or Lock Screen widget (D-405). When the daily cap resets.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resets {time}"
+          }
+        }
+      }
+    },
+    "widgetReview" : {
+      "comment" : "Shown in a home screen or Lock Screen widget (D-405). Button: open a request to look at it in the app.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Review"
+          }
+        }
+      }
+    },
+    "widgetRunNow" : {
+      "comment" : "Shown in a home screen or Lock Screen widget (D-405). Button: start a routine by hand.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Run now"
+          }
+        }
+      }
+    },
+    "widgetRunRoutine" : {
+      "comment" : "iPhone control: runs a routine (a task a bot repeats).",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Run a routine"
+          }
+        }
+      }
+    },
+    "widgetSampleBotText" : {
+      "comment" : "Sample content in the widget gallery's preview, not real data. A bot's last message. Acme is a made-up company.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Three emails need a reply, and the Acme invoice is two days overdue."
+          }
+        }
+      }
+    },
+    "widgetSampleBrief" : {
+      "comment" : "Sample content in the widget gallery's preview, not real data. A morning brief. Acme is a made-up company, Dana a person.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Three emails need a reply, and the Acme invoice is two days overdue. Rain from 3 pm, so leave early for the 4:30 pickup. Your first meeting is at 10:00 with Dana."
+          }
+        }
+      }
+    },
+    "widgetSampleCanvasName" : {
+      "comment" : "Sample content in the widget gallery's preview, not real data. Name a bot gave a widget.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daily verse"
+          }
+        }
+      }
+    },
+    "widgetSampleEveryDay" : {
+      "comment" : "Sample content in the widget gallery's preview, not real data. How often a routine runs.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Every day"
+          }
+        }
+      }
+    },
+    "widgetSampleFridays" : {
+      "comment" : "Sample content in the widget gallery's preview, not real data. When a routine runs; use the local time format.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fridays at 16:00"
+          }
+        }
+      }
+    },
+    "widgetSampleLaunchPost" : {
+      "comment" : "Sample content in the widget gallery's preview, not real data. A task on the board.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Draft the launch post"
+          }
+        }
+      }
+    },
+    "widgetSampleLogoIdeas" : {
+      "comment" : "Sample content in the widget gallery's preview, not real data. Title of pictures a bot made.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Logo ideas"
+          }
+        }
+      }
+    },
+    "widgetSampleNeedDentist" : {
+      "comment" : "Sample content in the widget gallery's preview, not real data. A bot's suggestion.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Move the dentist to Friday?"
+          }
+        }
+      }
+    },
+    "widgetSampleNeedFlights" : {
+      "comment" : "Sample content in the widget gallery's preview, not real data. A request waiting for approval.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Look up flights to Lisbon"
+          }
+        }
+      }
+    },
+    "widgetSamplePricing" : {
+      "comment" : "Sample content in the widget gallery's preview, not real data. Title of a page a bot made.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Q4 pricing page"
+          }
+        }
+      }
+    },
+    "widgetSampleRoutineBrief" : {
+      "comment" : "Sample content in the widget gallery's preview, not real data. Name of a routine.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Morning brief"
+          }
+        }
+      }
+    },
+    "widgetSampleRoutineInbox" : {
+      "comment" : "Sample content in the widget gallery's preview, not real data. Name of a routine that tidies the email inbox.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inbox sweep"
+          }
+        }
+      }
+    },
+    "widgetSampleRoutineWeekly" : {
+      "comment" : "Sample content in the widget gallery's preview, not real data. Name of a routine.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weekly report"
+          }
+        }
+      }
+    },
+    "widgetSampleStarterFriday" : {
+      "comment" : "Sample content in the widget gallery's preview, not real data. An example request.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plan my Friday"
+          }
+        }
+      }
+    },
+    "widgetSampleStarterInbox" : {
+      "comment" : "Sample content in the widget gallery's preview, not real data. An example request.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sum up my inbox"
+          }
+        }
+      }
+    },
+    "widgetSampleStep" : {
+      "comment" : "Sample content in the widget gallery's preview, not real data. What a bot is doing right now.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reading your inbox"
+          }
+        }
+      }
+    },
+    "widgetSampleTripPlan" : {
+      "comment" : "Sample content in the widget gallery's preview, not real data. Title of a document a bot made.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trip plan"
+          }
+        }
+      }
+    },
+    "widgetSampleVerse" : {
+      "comment" : "Sample content in the widget gallery's preview, not real data. A Bible verse (Psalm 46:10): use the usual wording of a common translation.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Be still, and know that I am God."
+          }
+        }
+      }
+    },
+    "widgetSampleVerseRef" : {
+      "comment" : "Sample content in the widget gallery's preview, not real data. Short reference to the verse: Psalm 46:10.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ps 46:10"
+          }
+        }
+      }
+    },
+    "widgetSampleVerseShort" : {
+      "comment" : "Sample content in the widget gallery's preview, not real data. Verse and reference on one line.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Be still, and know that I am God. · Ps 46:10"
+          }
+        }
+      }
+    },
+    "widgetSampleVerseTiny" : {
+      "comment" : "Sample content in the widget gallery's preview, not real data. The verse cut short for a tiny widget.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Be still, and know…"
+          }
+        }
+      }
+    },
+    "widgetSampleWeekdays" : {
+      "comment" : "Sample content in the widget gallery's preview, not real data. How often a routine runs.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weekdays"
+          }
+        }
+      }
+    },
+    "widgetSignIn" : {
+      "comment" : "Shown in a home screen or Lock Screen widget (D-405). Signed out.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Casama to sign in"
+          }
+        }
+      }
+    },
+    "widgetSpentToday" : {
+      "comment" : "Shown in a home screen or Lock Screen widget (D-405). Spent today.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "{amount} today"
+          }
+        }
+      }
+    },
+    "widgetStarted" : {
+      "comment" : "Shown in a home screen or Lock Screen widget (D-405). Shown after Run now was pressed.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Started"
+          }
+        }
+      }
+    },
+    "widgetStatusOff" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turned off"
+          }
+        }
+      }
+    },
+    "widgetStatusWorking" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Working…"
+          }
+        }
+      }
+    },
+    "widgetStop" : {
+      "comment" : "Shown in a home screen or Lock Screen widget (D-405). Button: stop a running bot.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stop"
+          }
+        }
+      }
+    },
+    "widgetSuggests" : {
+      "comment" : "Shown in a home screen or Lock Screen widget (D-405). A suggestion from a bot.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "{bot} suggests"
+          }
+        }
+      }
+    },
+    "widgetTakeOver" : {
+      "comment" : "Shown in a home screen or Lock Screen widget (D-405). A takeover request from a bot.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "{bot} needs you to take over"
+          }
+        }
+      }
+    },
+    "widgetTalk" : {
+      "comment" : "Shown in a home screen or Lock Screen widget (D-405). Button: start a voice call with the bot.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Talk"
+          }
+        }
+      }
+    },
+    "widgetTalkToBot" : {
+      "comment" : "iPhone control: starts a voice call.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Talk to a bot"
+          }
+        }
+      }
+    },
+    "widgetTalkToName" : {
+      "comment" : "iPhone control with a bot picked. {name} is the bot's name.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Talk to {name}"
+          }
+        }
+      }
+    },
+    "widgetTasks" : {
+      "comment" : "Shown in a home screen or Lock Screen widget (D-405). Title of the Tasks widget.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tasks"
+          }
+        }
+      }
+    },
+    "widgetThisMonth" : {
+      "comment" : "Shown in a home screen or Lock Screen widget (D-405). This month's spend in the Credits widget.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This month"
+          }
+        }
+      }
+    },
+    "widgetToday" : {
+      "comment" : "Shown in a home screen or Lock Screen widget (D-405). Title of the large Today widget.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today"
+          }
+        }
+      }
+    },
+    "widgetTodo" : {
+      "comment" : "Shown in a home screen or Lock Screen widget (D-405). Task board column.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To do"
+          }
+        }
+      }
+    },
+    "widgetTry" : {
+      "comment" : "Shown in a home screen or Lock Screen widget (D-405). Label above starter requests the person can tap.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Try"
+          }
+        }
+      }
+    },
+    "widgetUpNext" : {
+      "comment" : "Shown in a home screen or Lock Screen widget (D-405). Routines in the order they will run.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Up next"
+          }
+        }
+      }
+    },
+    "widgetUpdateServer" : {
+      "comment" : "Shown in a home screen or Lock Screen widget (D-405). The server is too old for this widget.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Update your Casama server to use this widget"
+          }
+        }
+      }
+    },
+    "widgetUsedPct" : {
+      "comment" : "Shown in a home screen or Lock Screen widget (D-405). Share of this period's credits used.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "{n}% used"
+          }
+        }
+      }
+    },
+    "widgetWaiting" : {
+      "comment" : "Shown in a home screen or Lock Screen widget (D-405). A bot is blocked on the person.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waiting for you"
+          }
+        }
+      }
+    },
+    "widgetWorking" : {
+      "comment" : "Shown in a home screen or Lock Screen widget (D-405). A bot is working on something.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Working"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

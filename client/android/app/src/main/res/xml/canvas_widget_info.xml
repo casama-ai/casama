@@ -2,7 +2,7 @@
 <!-- Canvas (docs/BOT-WIDGET-PLAN.md §10.2): what a bot puts here. Resizable from 2×1 to 5×4, on the
      home screen and the lock screen page; placed without choosing (Automatic), changed later. -->
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
-    android:description="@string/widget_canvas_description"
+    android:description="@string/widget_android_canvas_description"
     android:initialLayout="@layout/widget_loading"
     android:previewLayout="@layout/preview_canvas"
     android:minWidth="250dp"

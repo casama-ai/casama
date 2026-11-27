@@ -57,7 +57,7 @@ class AppBrowserAskCard extends ConsumerWidget {
     final body = <Widget>[
       if (site && ask.siteKind != null)
         Text(
-          l10n.appBrowserSiteAskKind(appBrowserKindLabel(l10n, ask.siteKind!)),
+          l10n.appBrowserSiteKindAsks(ask.siteKind!),
         ),
       if (!site && (ask.reason ?? '').isNotEmpty)
         Text(

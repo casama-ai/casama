@@ -76,11 +76,19 @@ DateTime? placeTime(String? iso) {
 // ---------------------------------------------------------------------------------------------
 
 class CardUnits {
-  const CardUnits({this.temp = 'C', this.wind = 'kph', this.precip = 'mm', this.distance = 'km'});
+  const CardUnits({this.temp = 'C', this.wind = 'kph', this.precip = 'mm', this.distance = 'km', this.locale});
   final String temp;
   final String wind;
   final String precip;
   final String distance;
+
+  /// The language numbers are written in (`context.l10n.localeName`); English when null.
+  final String? locale;
+
+  /// These units, with numbers written the way [locale] writes them.
+  CardUnits writtenIn(String locale) => CardUnits(temp: temp, wind: wind, precip: precip, distance: distance, locale: locale);
+
+  String _number(num v, int digits) => NumberFormat.decimalPatternDigits(locale: locale, decimalDigits: digits).format(v);
 
   static CardUnits forLocale(Locale? l) {
     final c = l?.countryCode;
@@ -94,6 +102,7 @@ class CardUnits {
           wind: m['wind'] as String? ?? wind,
           precip: m['precip'] as String? ?? precip,
           distance: m['distance'] as String? ?? distance,
+          locale: locale,
         );
 
   Map<String, String> toJson() => {'temp': temp, 'wind': wind, 'precip': precip, 'distance': distance};
@@ -107,8 +116,8 @@ class CardUnits {
     'kn' => '${(kph / 1.852).round()} kn',
     _ => '${kph.round()} km/h',
   };
-  String rain(num mm) => precip == 'in' ? '${(mm / 25.4).toStringAsFixed(2)} in' : '${mm >= 10 ? mm.round() : mm.toStringAsFixed(1)} mm';
-  String dist(num km) => distance == 'mi' ? '${NumberFormat.decimalPattern().format((km / 1.609).round())} mi' : '${NumberFormat.decimalPattern().format(km.round())} km';
+  String rain(num mm) => precip == 'in' ? '${_number(mm / 25.4, 2)} in' : '${_number(mm, mm >= 10 ? 0 : 1)} mm';
+  String dist(num km) => distance == 'mi' ? '${_number((km / 1.609).round(), 0)} mi' : '${_number(km.round(), 0)} km';
 }
 
 /// The person's card preferences from the server (home city, units), with the locale's units
@@ -124,7 +133,7 @@ final cardPrefsProvider = FutureProvider<Map<String, Object?>>((ref) async {
 CardUnits cardUnitsOf(BuildContext context, WidgetRef ref) {
   final base = CardUnits.forLocale(Localizations.maybeLocaleOf(context) ?? ui.PlatformDispatcher.instance.locale);
   final saved = ref.watch(cardPrefsProvider).value?['units'];
-  return base.merge(saved is Map ? Map<Object?, Object?>.from(saved) : null);
+  return base.merge(saved is Map ? Map<Object?, Object?>.from(saved) : null).writtenIn(context.l10n.localeName);
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -145,7 +154,7 @@ String fmtMoney(BuildContext context, num v, String? currency, {bool compact = f
 
 String fmtNum(BuildContext context, num v, {int digits = 2}) => NumberFormat.decimalPatternDigits(locale: context.l10n.localeName, decimalDigits: digits).format(v);
 String fmtCompact(BuildContext context, num v) => NumberFormat.compact(locale: context.l10n.localeName).format(v);
-String fmtPct(num v) => '${v >= 0 ? '+' : '−'}${v.abs().toStringAsFixed(2)}%';
+String fmtPct(BuildContext context, num v) => '${v >= 0 ? '+' : '−'}${fmtNum(context, v.abs())}%';
 
 /// "2 min ago", "3 h ago", or the date.
 String cardAgo(BuildContext context, DateTime t) {
@@ -157,8 +166,8 @@ String cardAgo(BuildContext context, DateTime t) {
   return DateFormat.MMMd(l.localeName).add_jm().format(t);
 }
 
-String clockOf(BuildContext context, DateTime t) => MediaQuery.alwaysUse24HourFormatOf(context) ? DateFormat.Hm().format(t) : DateFormat.jm(context.l10n.localeName).format(t);
-String hourOf(BuildContext context, DateTime t) => MediaQuery.alwaysUse24HourFormatOf(context) ? DateFormat.H().format(t) : DateFormat.j(context.l10n.localeName).format(t).replaceAll(' ', '').toLowerCase();
+String clockOf(BuildContext context, DateTime t) => MediaQuery.alwaysUse24HourFormatOf(context) ? DateFormat.Hm(context.l10n.localeName).format(t) : DateFormat.jm(context.l10n.localeName).format(t);
+String hourOf(BuildContext context, DateTime t) => MediaQuery.alwaysUse24HourFormatOf(context) ? DateFormat.H(context.l10n.localeName).format(t) : DateFormat.j(context.l10n.localeName).format(t).replaceAll(' ', '').toLowerCase();
 
 // ---------------------------------------------------------------------------------------------
 // The host: refreshing, views, pinning
@@ -697,7 +706,7 @@ class ChangePill extends StatelessWidget {
         children: [
           Icon(up ? LucideIcons.arrowUpRight : LucideIcons.arrowDownRight, size: big ? 15 : 12, color: c),
           const SizedBox(width: 2),
-          Text(label ?? fmtPct(pct), style: (big ? context.textTheme.labelLarge : context.textTheme.labelSmall)?.copyWith(color: c, fontWeight: FontWeight.w700, fontFeatures: AppText.tabular)),
+          Text(label ?? fmtPct(context, pct), style: (big ? context.textTheme.labelLarge : context.textTheme.labelSmall)?.copyWith(color: c, fontWeight: FontWeight.w700, fontFeatures: AppText.tabular)),
         ],
       ),
     );

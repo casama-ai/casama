@@ -1854,6 +1854,14 @@ abstract class Backend {
   Future<({String id, String challenge})?> adminDeviceChallenge(String keyId);
   /// Sends the signed challenge; the API records the check on this sign-in session. When.
   Future<DateTime> adminDeviceCheck(String challengeId, String signature);
+  /// Agent admin access (D-598): recent requests and what agents did.
+  Future<AdminAgentRequestList> adminAgentRequests();
+  Future<AdminAgentRequest> adminAgentRequest(String id);
+  /// Approving takes the owner's own Face ID, passkey or sign-in, never the PIN.
+  Future<AdminAgentRequest> approveAdminAgentRequest(String id);
+  Future<AdminAgentRequest> denyAdminAgentRequest(String id);
+  /// Ends an approved grant now (Stop).
+  Future<AdminAgentRequest> endAdminAgentRequest(String id);
   Future<void> adminUnsuspendDomain(String id);
   Future<DomainOrder> adminRetryDomainOrder(String id);
   Future<DomainOrder> adminApproveDomainOrder(String id);
@@ -3620,6 +3628,10 @@ abstract class Backend {
 
   /// The signed-in user's profile and workspace list from `/v1/me`.
   Future<Me?> getMe();
+
+  /// Saves the language the person picked to `profiles.locale` (`PATCH /v1/me/about`); null
+  /// ("Device language") clears it. A server from before languages takes it and does nothing.
+  Future<void> setProfileLocale(String? locale);
 
   /// Stores the Apple Declared Age Range band on the user's private record (`PUT /v1/me/age-band`).
   Future<AgeBandResult> setMyAgeBand(AccountAgeBand? ageBand);

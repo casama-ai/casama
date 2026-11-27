@@ -224,7 +224,7 @@ final mediaComponent = liveCard('Media', const ['kind', 'title', 'subtitle', 'im
                 ),
                 Text(title, style: context.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700, height: 1.15)),
                 if (p.s('subtitle') case final s?) Text(s, style: context.cardLabel),
-                if (rating != null) ...[const SizedBox(height: 6), _Stars(value: rating / max * 5, label: '${rating.toStringAsFixed(1)} / ${max.round()}')],
+                if (rating != null) ...[const SizedBox(height: 6), _Stars(value: rating / max * 5, label: '${fmtNum(context, rating, digits: 1)} / ${max.round()}')],
                 const SizedBox(height: 6),
                 for (final f in p.rows('facts').take(4)) Text('${f.s('label')}: ${f.s('value')}', maxLines: 1, overflow: TextOverflow.ellipsis, style: context.cardLabel),
               ],
@@ -301,7 +301,7 @@ class _RecipeState extends State<_Recipe> {
     final part = double.parse((v - whole).toStringAsFixed(2));
     final f = fr[part];
     if (f != null) return whole > 0 ? '$whole$f' : f;
-    return v.toStringAsFixed(1);
+    return fmtNum(context, v, digits: 1);
   }
 
   @override

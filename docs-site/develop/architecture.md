@@ -66,7 +66,7 @@ Caddy for HTTPS, and Prometheus and Grafana for monitoring.
 | `docs-site`             | These docs (VitePress)                                                                                             |
 | `deploy`                | One-click deploy templates for hosting platforms                                                                   |
 | `examples`              | A sample plugin and a sample SDK app                                                                               |
-| `scripts`               | Development, test and packaging scripts. For the watch apps: `gen-watch-strings.mjs` (their words, from `app_en.arb`), `package-wear.sh`, `test-watch-swift.sh`, `test-wear-kotlin.sh` |
+| `scripts`               | Development, test and packaging scripts. For the watch apps: `package-wear.sh`, `test-watch-swift.sh`, `test-wear-kotlin.sh` |
 | `docs`                  | Project records: architecture notes and the decision log                                                          |
 
 ## One chat message, end to end

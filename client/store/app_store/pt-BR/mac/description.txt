@@ -1,0 +1,34 @@
+O Casama traz colegas de IA que fazem o trabalho, em vez de só falar sobre ele. Cada bot tem seu próprio computador, lembra como você gosta das coisas, continua rodando enquanto você está fora e pergunta antes de pagar, enviar ou apagar algo.
+
+Peça com palavras simples: reserve a viagem, organize a caixa de entrada, pesquise o mercado, crie o site. O trabalho volta pronto.
+
+Um computador só dele
+Cada bot trabalha em um computador privado com navegador, arquivos e apps, separado dos seus aparelhos. Acompanhe tudo ao vivo ou assuma o controle quando quiser.
+
+Você no comando
+Enviar, reservar, pagar e apagar esperam o seu OK. O bot salva antes um ponto de controle, assim Recusar desfaz o trabalho. Defina um orçamento para cada bot e veja quanto custou cada resposta.
+
+Trabalha enquanto você está fora
+Os bots começam sozinhos: em um horário marcado, quando chega um e-mail, antes de uma reunião ou quando uma página muda. Acorde com um resumo da manhã do que precisa de você.
+
+Ele lembra
+Fatos, preferências e trabalhos anteriores seguem por todas as conversas. Mostre uma tarefa a um bot uma vez e ele a guarda como habilidade. Tudo o que ele cria, de documentos a sites e jogos, fica salvo na sua Biblioteca.
+
+Um time, não só um chatbot
+Dê a cada bot um papel, ferramentas e um orçamento. Coloque vários em um grupo com família ou colegas, chame @everyone e o bot líder divide o trabalho. Comece com mais de 40 bots prontos, de assistência pessoal a pesquisa, programação e planejamento de viagens.
+
+Fale, digite ou ligue
+Dite uma mensagem, ouça as respostas em voz alta ou ligue para um bot ao vivo. Os bots também podem responder no WhatsApp, Telegram, Slack, Discord e por e-mail.
+
+Funciona com seus apps
+Conecte Gmail, Google Agenda, Notion, Slack, Drive e muitos outros. Os logins do seu gerenciador de senhas são preenchidos para o bot e nunca exibidos à IA.
+
+Código aberto e seu
+O Casama é open source: os apps, SDKs, CLI e as regras de segurança que definem o que um bot pode fazer são públicos, para você ver exatamente quando ele precisa perguntar primeiro. Os bots rodam no Casama Cloud, onde os modelos de IA são escolhidos para você sem precisar de chaves, ou você pode conectar suas próprias chaves de provedor.
+
+As mesmas conversas no seu iPhone, iPad e na web.
+
+O Casama Cloud tem um plano Grátis. Planos pagos são assinaturas com renovação automática: o pagamento é cobrado na sua Conta Apple e o plano renova, a menos que seja cancelado pelo menos 24 horas antes do fim do período. Gerencie ou cancele nas configurações da sua conta na App Store.
+
+Termos de Uso: https://casama.ai/terms
+Política de Privacidade: https://casama.ai/privacy

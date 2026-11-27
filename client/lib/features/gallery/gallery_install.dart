@@ -5,6 +5,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../core/backend.dart';
+import '../../core/list_format.dart';
 import '../../core/providers.dart';
 import '../../core/widgets.dart';
 import '../../theme/app_colors.dart';
@@ -300,7 +301,7 @@ class _GalleryInstallWizardState extends ConsumerState<GalleryInstallWizard> {
                 _Line(
                   icon: LucideIcons.blocks,
                   text: l10n.galleryWizardNeedsApps(
-                    _appNames(needs.apps).join(', '),
+                    joinList(l10n.localeName, _appNames(needs.apps)),
                   ),
                 ),
             ],
@@ -457,7 +458,7 @@ class _GalleryInstallWizardState extends ConsumerState<GalleryInstallWizard> {
           ? l10n.galleryWizardPendingHelp
           : stillMissing.isEmpty
           ? l10n.galleryWizardDoneHelp
-          : l10n.galleryWizardDoneMissing(stillMissing.join(', ')),
+          : l10n.galleryWizardDoneMissing(joinList(l10n.localeName, stillMissing)),
       submitLabel: l10n.doneLabel,
       submitKey: const Key('galleryWizardFinish'),
       showCancel: false,

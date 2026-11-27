@@ -1,0 +1,186 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "NSAlarmKitUsageDescription" : {
+      "comment" : "System permission prompt on iPhone and iPad: why Casama asks. Alarms and timers.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your bots can set alarms and timers that ring through silent mode, only when you allow Alarms in Device connections."
+          }
+        }
+      }
+    },
+    "NSCalendarsFullAccessUsageDescription" : {
+      "comment" : "System permission prompt on iPhone and iPad: why Casama asks. Calendar.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your bots can answer questions about your schedule and add events, only when you turn on Calendar in Device connections."
+          }
+        }
+      }
+    },
+    "NSCalendarsUsageDescription" : {
+      "comment" : "System permission prompt on iPhone and iPad: why Casama asks. Calendar.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your bots can answer questions about your schedule and add events, only when you turn on Calendar in Device connections."
+          }
+        }
+      }
+    },
+    "NSCameraUsageDescription" : {
+      "comment" : "System permission prompt on iPhone and iPad: why Casama asks. Camera.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama uses the camera when you take a photo to send to a bot or for your profile."
+          }
+        }
+      }
+    },
+    "NSContactsUsageDescription" : {
+      "comment" : "System permission prompt on iPhone and iPad: why Casama asks. Contacts. Device connections is a settings screen.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your bots can look up people you know, only when you turn on Contacts in Device connections."
+          }
+        }
+      }
+    },
+    "NSFaceIDUsageDescription" : {
+      "comment" : "System permission prompt on iPhone and iPad: why Casama asks. Face ID.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama uses Face ID to unlock the app when you turn on the app lock, and to confirm risky actions."
+          }
+        }
+      }
+    },
+    "NSHealthShareUsageDescription" : {
+      "comment" : "System permission prompt on iPhone and iPad: why Casama asks. Reading Apple Health data.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your bots can see daily summaries of your sleep, activity, workouts and heart from Apple Health, only when you turn on Apple Health in Device connections. Casama never writes to Apple Health and never uses it for ads."
+          }
+        }
+      }
+    },
+    "NSHealthUpdateUsageDescription" : {
+      "comment" : "System permission prompt on iPhone and iPad: why Casama asks. Writing Apple Health data.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama only reads Apple Health data; it never writes to it."
+          }
+        }
+      }
+    },
+    "NSHomeKitUsageDescription" : {
+      "comment" : "System permission prompt on iPhone and iPad: why Casama asks. Apple Home (HomeKit).",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your bots can check and control your HomeKit home when you allow Home in Device connections; changes always ask for approval first."
+          }
+        }
+      }
+    },
+    "NSLocationAlwaysAndWhenInUseUsageDescription" : {
+      "comment" : "System permission prompt on iPhone and iPad: why Casama asks. Location, also in the background.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tell your bots when you arrive at or leave your named places, even when Casama is closed. Only the place name and time are shared, never your route."
+          }
+        }
+      }
+    },
+    "NSLocationWhenInUseUsageDescription" : {
+      "comment" : "System permission prompt on iPhone and iPad: why Casama asks for location while the app is in use. Two uses: saving the current spot as a named place, and working out travel time so a bot can say it's time to leave for a calendar event. 'Places' is a switch on the Device connections settings screen. Write it the way Apple writes permission prompts.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save places you name, such as Home or Work, and let your bots remind you when to leave for your next appointment. Used only if you turn on Places in Device connections."
+          }
+        }
+      }
+    },
+    "NSMicrophoneUsageDescription" : {
+      "comment" : "System permission prompt on iPhone and iPad: why Casama asks. Microphone. Gemini and OpenAI are company products.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama uses the microphone for dictation and live calls with your bots. Only after you agree, your voice goes to AI providers to answer you: Google Gemini for calls, OpenAI to turn dictation into text."
+          }
+        }
+      }
+    },
+    "NSPhotoLibraryUsageDescription" : {
+      "comment" : "System permission prompt on iPhone and iPad: why Casama asks. Photo library.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama opens your photo library when you choose a photo to send to a bot or for your profile."
+          }
+        }
+      }
+    },
+    "NSSpeechRecognitionUsageDescription" : {
+      "comment" : "System permission prompt on iPhone and iPad: why Casama asks. Speech recognition.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "When Casama's dictation service can't be reached, your device's own speech recognition turns what you say into text."
+          }
+        }
+      }
+    },
+    "NSUserTrackingUsageDescription" : {
+      "comment" : "System permission prompt on iPhone and iPad: why Casama asks. Tracking (ad measurement with Meta).",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "If you allow it, Casama tells Meta when you install, join or subscribe after seeing a Casama ad on Facebook or Instagram, so we can measure which ads work. Casama never shows ads and never shares your chats or files."
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

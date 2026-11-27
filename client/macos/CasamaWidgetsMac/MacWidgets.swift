@@ -34,8 +34,8 @@ struct MacNeedsYouWidget: Widget {
     StaticConfiguration(kind: "NeedsYouWidget", provider: GlanceProvider()) { entry in
       NeedsYouView(entry: entry)
     }
-    .configurationDisplayName("Needs you")
-    .description("See which bots are waiting on you.")
+    .configurationDisplayName(NativeL10n.widgetNeedsYou)
+    .description(NativeL10n.widgetMacNeedsYouDescription)
     .supportedFamilies([.systemSmall, .systemMedium])
   }
 }
@@ -45,8 +45,8 @@ struct MacBotWidget: Widget {
     AppIntentConfiguration(kind: "BotStatusWidget", intent: ChooseBotIntent.self, provider: BotProvider()) { entry in
       BotView(entry: entry)
     }
-    .configurationDisplayName("Bot")
-    .description("Keep an eye on what one of your bots is doing.")
+    .configurationDisplayName(NativeL10n.widgetNameBot)
+    .description(NativeL10n.widgetIosBotDescription)
     .supportedFamilies([.systemSmall, .systemMedium])
   }
 }
@@ -56,8 +56,8 @@ struct MacRoutinesWidget: Widget {
     AppIntentConfiguration(kind: "RoutinesWidget", intent: ChooseRoutinesIntent.self, provider: RoutinesProvider()) { entry in
       RoutinesView(entry: entry)
     }
-    .configurationDisplayName("Routines")
-    .description("See what runs next.")
+    .configurationDisplayName(NativeL10n.widgetNameRoutines)
+    .description(NativeL10n.widgetMacRoutinesDescription)
     .supportedFamilies([.systemSmall, .systemMedium])
   }
 }
@@ -74,8 +74,8 @@ struct MacTodayWidget: Widget {
     StaticConfiguration(kind: "TodayWidget", provider: GlanceProvider(covers: true)) { entry in
       TodayView(entry: entry)
     }
-    .configurationDisplayName("Today")
-    .description("Get your day in one place: what needs you, what runs next, and your credits.")
+    .configurationDisplayName(NativeL10n.widgetToday)
+    .description(NativeL10n.widgetIosTodayDescription)
     .supportedFamilies(families)
   }
 }
@@ -85,8 +85,8 @@ struct MacBriefWidget: Widget {
     StaticConfiguration(kind: "BriefWidget", provider: GlanceProvider()) { entry in
       BriefView(entry: entry)
     }
-    .configurationDisplayName("Brief")
-    .description("Read what your bot told you this morning.")
+    .configurationDisplayName(NativeL10n.widgetBrief)
+    .description(NativeL10n.widgetIosBriefDescription)
     .supportedFamilies([.systemMedium, .systemLarge])
   }
 }
@@ -96,8 +96,8 @@ struct MacLibraryWidget: Widget {
     StaticConfiguration(kind: "LibraryWidget", provider: GlanceProvider(covers: true)) { entry in
       LibraryView(entry: entry)
     }
-    .configurationDisplayName("Library")
-    .description("Open what your bots made lately.")
+    .configurationDisplayName(NativeL10n.widgetLibrary)
+    .description(NativeL10n.widgetIosLibraryDescription)
     .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
   }
 }
@@ -107,8 +107,8 @@ struct MacTasksWidget: Widget {
     StaticConfiguration(kind: "TasksWidget", provider: GlanceProvider()) { entry in
       TasksView(entry: entry)
     }
-    .configurationDisplayName("Tasks")
-    .description("See where the board stands, with what waits on you first.")
+    .configurationDisplayName(NativeL10n.widgetTasks)
+    .description(NativeL10n.widgetIosTasksDescription)
     .supportedFamilies([.systemMedium, .systemLarge])
   }
 }
@@ -118,8 +118,8 @@ struct MacCreditsWidget: Widget {
     StaticConfiguration(kind: "CreditsWidget", provider: GlanceProvider()) { entry in
       CreditsView(entry: entry)
     }
-    .configurationDisplayName("Credits")
-    .description("Check how much of your credits you've used.")
+    .configurationDisplayName(NativeL10n.widgetCredits)
+    .description(NativeL10n.widgetIosCreditsDescription)
     .supportedFamilies([.systemSmall])
   }
 }
@@ -131,8 +131,8 @@ struct MacCanvasWidget: Widget {
     AppIntentConfiguration(kind: CanvasFetch.kind, intent: ChooseCanvasIntent.self, provider: CanvasProvider()) { entry in
       CanvasWidgetView(entry: entry)
     }
-    .configurationDisplayName("Canvas")
-    .description("Show what your bots put here: a verse, a countdown, a streak, a list or a picture.")
+    .configurationDisplayName(NativeL10n.widgetNameCanvas)
+    .description(NativeL10n.widgetIosCanvasDescription)
     .supportedFamilies([.systemSmall, .systemMedium, .systemLarge, .systemExtraLarge])
   }
 }

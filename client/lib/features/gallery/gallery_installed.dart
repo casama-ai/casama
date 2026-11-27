@@ -3,6 +3,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../core/backend.dart';
+import '../../core/list_format.dart';
 import '../../core/providers.dart';
 import '../../core/widgets.dart';
 import '../../l10n/generated/app_localizations.dart';
@@ -75,7 +76,7 @@ List<({IconData icon, String text})> galleryAccessDiffRows(
   if (added.reads.isNotEmpty)
     (
       icon: LucideIcons.eye,
-      text: l10n.galleryUpdateNowReads(added.reads.join(', ')),
+      text: l10n.galleryUpdateNowReads(joinList(l10n.localeName, added.reads)),
     ),
   for (final w in added.writes)
     (icon: LucideIcons.pencil, text: l10n.galleryUpdateNowWrites(w)),

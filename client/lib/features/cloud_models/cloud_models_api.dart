@@ -1,3 +1,4 @@
+import 'package:casama_sdk/casama_sdk.dart' show AcceptLanguageInterceptor;
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -446,6 +447,6 @@ final cloudModelsApiProvider = Provider<CloudModelsApi>((ref) {
       connectTimeout: const Duration(seconds: 10),
       receiveTimeout: const Duration(seconds: 30),
     ),
-  );
+  )..interceptors.add(const AcceptLanguageInterceptor());
   return HttpCloudModelsApi(dio, () => backend.authHeaders);
 });

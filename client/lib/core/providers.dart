@@ -607,6 +607,9 @@ final waitingRefreshProvider = Provider<void>((ref) {
 String formatUsd(num value, String locale) =>
     value > 0 && value < 0.01 ? '< ${0.01.humanizedCurrency(locale, 'USD', decimalDigits: 2)}' : value.humanizedCurrency(locale, 'USD', decimalDigits: 2);
 
+/// What one credit costs, for the "1 credit = $1" notes: "$1" in English, "1 $" in German.
+String oneCreditPrice(String locale) => 1.humanizedCurrency(locale, 'USD', decimalDigits: 0);
+
 /// Per-reply costs (D-307): most replies cost a fraction of a cent, so below a dollar they keep
 /// four decimals instead of all reading "< $0.01".
 String formatUsdFine(num value, String locale) => value.humanizedCurrency(locale, 'USD', decimalDigits: value >= 1 || value == 0 ? 2 : 4);

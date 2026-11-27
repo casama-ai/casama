@@ -188,7 +188,7 @@ void main() {
             ),
           )
           .data!;
-      expect(access, contains('Reads email, calendar'));
+      expect(access, contains('Reads: email, calendar'));
       expect(access, contains('Sends you a message'));
       expect(access, contains('Needs'));
 

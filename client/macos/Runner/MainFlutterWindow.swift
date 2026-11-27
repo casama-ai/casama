@@ -107,8 +107,8 @@ final class NotificationsBridge: NSObject, UNUserNotificationCenterDelegate {
         UNNotificationCategory(
           identifier: "APPROVAL",
           actions: [
-            UNNotificationAction(identifier: "approve", title: "Approve", options: [.foreground, .authenticationRequired]),
-            UNNotificationAction(identifier: "deny", title: "Deny", options: [.foreground, .authenticationRequired, .destructive]),
+            UNNotificationAction(identifier: "approve", title: NativeL10n.notifApprove, options: [.foreground, .authenticationRequired]),
+            UNNotificationAction(identifier: "deny", title: NativeL10n.notifDeny, options: [.foreground, .authenticationRequired, .destructive]),
           ],
           intentIdentifiers: [],
           options: []))
@@ -118,10 +118,10 @@ final class NotificationsBridge: NSObject, UNUserNotificationCenterDelegate {
           actions: [
             UNTextInputNotificationAction(
               identifier: "reply",
-              title: "Reply",
+              title: NativeL10n.notifReply,
               options: [],
-              textInputButtonTitle: "Send",
-              textInputPlaceholder: "Reply…"
+              textInputButtonTitle: NativeL10n.notifSend,
+              textInputPlaceholder: NativeL10n.notifReplyPlaceholder
             ),
           ],
           intentIdentifiers: [],
@@ -376,7 +376,7 @@ final class MacBridge: NSObject {
   }
 
   private func installMenus() {
-    guard let main = NSApp.mainMenu, main.items.first(where: { $0.submenu?.title == "File" }) == nil else { return }
+    guard let main = NSApp.mainMenu, main.items.first(where: { $0.submenu?.title == NativeL10n.macMenuFile }) == nil else { return }
     // The template's "About APP_NAME", "Hide APP_NAME", "Quit APP_NAME" say Casama.
     for menuItem in main.items {
       if menuItem.title.contains("APP_NAME") { menuItem.title = menuItem.title.replacingOccurrences(of: "APP_NAME", with: "Casama") }
@@ -387,41 +387,41 @@ final class MacBridge: NSObject {
     // Direct download only (the Mac App Store updates the app itself): Check for Updates….
     if Bundle.main.object(forInfoDictionaryKey: "CasamaDistribution") as? String != "appstore",
        let appMenu = main.items.first?.submenu, appMenu.items.first(where: { $0.representedObject as? String == "checkUpdates" }) == nil {
-      appMenu.insertItem(item("Check for Updates…", "", [], "checkUpdates"), at: 1)
+      appMenu.insertItem(item(NativeL10n.macMenuCheckForUpdates, "", [], "checkUpdates"), at: 1)
     }
     // "Preferences…" from the template becomes a working Settings… (⌘,).
     if let appMenu = main.items.first?.submenu, let prefs = appMenu.items.first(where: { $0.keyEquivalent == "," }) {
-      prefs.title = "Settings…"
+      prefs.title = NativeL10n.macMenuSettings
       prefs.target = self
       prefs.action = #selector(menuAction(_:))
       prefs.representedObject = "settings"
     }
-    let file = NSMenu(title: "File")
-    file.addItem(item("New Chat", "n", [.command], "newChat"))
-    file.addItem(item("New Bot…", "n", [.command, .shift], "newBot"))
-    file.addItem(item("Quick Ask", "k", [.command, .shift], "quickAsk"))
-    file.addItem(item("Search…", "k", [.command], "search"))
+    let file = NSMenu(title: NativeL10n.macMenuFile)
+    file.addItem(item(NativeL10n.macMenuNewChat, "n", [.command], "newChat"))
+    file.addItem(item(NativeL10n.macMenuNewBot, "n", [.command, .shift], "newBot"))
+    file.addItem(item(NativeL10n.macMenuQuickAsk, "k", [.command, .shift], "quickAsk"))
+    file.addItem(item(NativeL10n.macMenuSearch, "k", [.command], "search"))
     file.addItem(.separator())
-    file.addItem(NSMenuItem(title: "Close Window", action: #selector(NSWindow.performClose(_:)), keyEquivalent: "w"))
-    let fileItem = NSMenuItem(title: "File", action: nil, keyEquivalent: "")
+    file.addItem(NSMenuItem(title: NativeL10n.macMenuCloseWindow, action: #selector(NSWindow.performClose(_:)), keyEquivalent: "w"))
+    let fileItem = NSMenuItem(title: NativeL10n.macMenuFile, action: nil, keyEquivalent: "")
     fileItem.submenu = file
     main.insertItem(fileItem, at: 1)
 
-    let go = NSMenu(title: "Go")
-    go.addItem(item("Bots", "1", [.command], "go:/bots"))
-    go.addItem(item("Inbox", "2", [.command], "go:/inbox?tab=0"))  // Needs you (E2)
-    go.addItem(item("Board", "3", [.command], "go:/tasks"))
-    go.addItem(item("Computer", "4", [.command], "go:/computer"))
-    go.addItem(item("Pages", "5", [.command], "go:/pages"))
-    let goItem = NSMenuItem(title: "Go", action: nil, keyEquivalent: "")
+    let go = NSMenu(title: NativeL10n.macMenuGo)
+    go.addItem(item(NativeL10n.macMenuBots, "1", [.command], "go:/bots"))
+    go.addItem(item(NativeL10n.macMenuInbox, "2", [.command], "go:/inbox?tab=0"))  // Needs you (E2)
+    go.addItem(item(NativeL10n.macMenuBoard, "3", [.command], "go:/tasks"))
+    go.addItem(item(NativeL10n.macMenuComputer, "4", [.command], "go:/computer"))
+    go.addItem(item(NativeL10n.macMenuPages, "5", [.command], "go:/pages"))
+    let goItem = NSMenuItem(title: NativeL10n.macMenuGo, action: nil, keyEquivalent: "")
     goItem.submenu = go
-    let viewIndex = main.items.firstIndex(where: { $0.submenu?.title == "View" }) ?? 3
+    let viewIndex = main.items.firstIndex(where: { $0.submenu?.title == NativeL10n.macMenuView }) ?? 3
     main.insertItem(goItem, at: min(viewIndex + 1, main.items.count))
 
-    if let help = main.items.first(where: { $0.submenu?.title == "Help" })?.submenu {
+    if let help = main.items.first(where: { $0.submenu?.title == NativeL10n.macMenuHelp })?.submenu {
       help.removeAllItems()
-      help.addItem(item("Casama Help", "?", [.command], "help"))
-      help.addItem(item("Send Feedback…", "", [], "feedback"))
+      help.addItem(item(NativeL10n.macMenuCasamaHelp, "?", [.command], "help"))
+      help.addItem(item(NativeL10n.macMenuSendFeedback, "", [], "feedback"))
     }
   }
 }

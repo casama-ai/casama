@@ -57,7 +57,7 @@ final class FileProviderBridge {
 
   private func registerDomain(result: @escaping FlutterResult) {
     if #available(iOS 16.0, macOS 13.0, *) {
-      let domain = NSFileProviderDomain(identifier: Self.domainId, displayName: "Casama Computers")
+      let domain = NSFileProviderDomain(identifier: Self.domainId, displayName: NativeL10n.nativeNameFileProvider)
       NSFileProviderManager.add(domain) { error in
         if let error = error {
           result(FlutterError(code: "domain_add_failed", message: error.localizedDescription, details: nil))
@@ -72,7 +72,7 @@ final class FileProviderBridge {
 
   private func removeDomain(result: @escaping FlutterResult) {
     if #available(iOS 16.0, macOS 13.0, *) {
-      let domain = NSFileProviderDomain(identifier: Self.domainId, displayName: "Casama Computers")
+      let domain = NSFileProviderDomain(identifier: Self.domainId, displayName: NativeL10n.nativeNameFileProvider)
       NSFileProviderManager.remove(domain) { _ in
         result(true)
       }

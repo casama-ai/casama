@@ -40,7 +40,7 @@ class TodayWidget : CasamaWidget() {
 
       // The run the person started, live (only its bot's name on the lock screen, which Today
       // isn't on; the app lock keeps the step out).
-      val live = WidgetKit.live(host.snap.prefs)
+      val live = WidgetKit.live(host.snap.prefs, host.words)
       show(R.id.w_live, live != null)
       if (live != null) {
         setImageViewBitmap(R.id.w_live_mark, WidgetKit.mark(context, live.bot, live.avatar, 28))

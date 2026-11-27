@@ -731,7 +731,7 @@ class _VideoSurfaceState extends State<VideoSurface> {
                               ),
                             ),
                             IconButton(
-                              tooltip: v.volume == 0 ? l10n.unmute : l10n.mute,
+                              tooltip: v.volume == 0 ? l10n.videoUnmute : l10n.videoMute,
                               color: Colors.white,
                               iconSize: 18,
                               onPressed: () =>

@@ -76,7 +76,7 @@ class WorkspaceFilesSection extends ConsumerWidget {
                       '${sync.repo}@${sync.branch}${sync.path.isUsable ? '/${sync.path}' : ''}',
                       if (!sync.hasToken) l10n.gitSyncNeedsToken,
                       if (sync.lastError.isUsable) sync.lastError!,
-                      if (sync.lastSyncedAt != null) l10n.gitSyncLast(relativeTime(sync.lastSyncedAt!, context)),
+                      if (sync.lastSyncedAt != null) l10n.gitSyncedWhen(relativeTime(sync.lastSyncedAt!, context)),
                     ].join(' · '),
               onTap: configure,
             ),

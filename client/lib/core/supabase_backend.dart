@@ -601,7 +601,8 @@ class SupabaseBackend implements Backend {
       RegExp(r'/rest/v1/?$'),
       '/auth/v1',
     );
-    final r = await Dio(BaseOptions(connectTimeout: const Duration(seconds: 10), receiveTimeout: const Duration(seconds: 15))).get<Map<String, dynamic>>(
+    final dio = Dio(BaseOptions(connectTimeout: const Duration(seconds: 10), receiveTimeout: const Duration(seconds: 15)))..interceptors.add(const AcceptLanguageInterceptor());
+    final r = await dio.get<Map<String, dynamic>>(
       '$authUrl/settings',
       options: Options(headers: _directAuthHeaders),
     );
@@ -701,7 +702,7 @@ class SupabaseBackend implements Backend {
   Future<Map<String, dynamic>?> _passkeyCeremony() async {
     final authUrl = supabase.rest.url.replaceFirst(RegExp(r'/rest/v1/?$'), '/auth/v1');
     final headers = _directAuthHeaders;
-    final dio = Dio(BaseOptions(connectTimeout: const Duration(seconds: 10), receiveTimeout: const Duration(seconds: 20)));
+    final dio = Dio(BaseOptions(connectTimeout: const Duration(seconds: 10), receiveTimeout: const Duration(seconds: 20)))..interceptors.add(const AcceptLanguageInterceptor());
     final start = (await dio.post<Map<String, dynamic>>(
       '$authUrl/passkeys/authentication/options',
       data: const <String, Object?>{},
@@ -731,7 +732,7 @@ class SupabaseBackend implements Backend {
     if (token is! String) return;
     final authUrl = supabase.rest.url.replaceFirst(RegExp(r'/rest/v1/?$'), '/auth/v1');
     unawaited(
-      Dio()
+      (Dio()..interceptors.add(const AcceptLanguageInterceptor()))
           .post<void>('$authUrl/logout', queryParameters: const {'scope': 'local'}, options: Options(headers: {..._directAuthHeaders, 'Authorization': 'Bearer $token'}))
           .then((_) {}, onError: (Object _) {}),
     );
@@ -1824,6 +1825,26 @@ class SupabaseBackend implements Backend {
       rethrow;
     }
   }
+
+  @override
+  Future<AdminAgentRequestList> adminAgentRequests() async =>
+      (await api.admin.adminAgentRequests()).data!;
+
+  @override
+  Future<AdminAgentRequest> adminAgentRequest(String id) async =>
+      (await api.admin.adminAgentRequest(id: id)).data!;
+
+  @override
+  Future<AdminAgentRequest> approveAdminAgentRequest(String id) async =>
+      (await api.admin.approveAdminAgentRequest(id: id)).data!;
+
+  @override
+  Future<AdminAgentRequest> denyAdminAgentRequest(String id) async =>
+      (await api.admin.denyAdminAgentRequest(id: id)).data!;
+
+  @override
+  Future<AdminAgentRequest> endAdminAgentRequest(String id) async =>
+      (await api.admin.endAdminAgentRequest(id: id)).data!;
 
   @override
   Future<DateTime> adminDeviceCheck(String challengeId, String signature) async =>
@@ -3273,7 +3294,7 @@ class SupabaseBackend implements Backend {
         connectTimeout: const Duration(seconds: 10),
         receiveTimeout: const Duration(seconds: 20),
       ),
-    );
+    )..interceptors.add(const AcceptLanguageInterceptor());
   }
 
   @override
@@ -7696,6 +7717,16 @@ class SupabaseBackend implements Backend {
 
   @override
   Future<Me?> getMe() async => (await api.workspaces.getMe()).data;
+
+  /// By hand: the generated request leaves a null out, and here null means "follow the device".
+  @override
+  Future<void> setProfileLocale(String? locale) async {
+    await api.api.dio.patch<Object?>(
+      '/v1/me/about',
+      data: {'locale': locale},
+      options: Options(headers: authHeaders, contentType: 'application/json'),
+    );
+  }
 
   @override
   Future<AgeBandResult> setMyAgeBand(AccountAgeBand? ageBand) async =>

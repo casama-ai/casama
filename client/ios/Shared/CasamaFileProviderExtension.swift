@@ -206,7 +206,7 @@ private final class CasamaFileEnumerator: NSObject, NSFileProviderEnumerator {
       }
       let out: [NSFileProviderItem] = items.compactMap { c in
         guard let id = c["id"] as? String else { return nil }
-        let name = (c["name"] as? String) ?? "Computer"
+        let name = (c["name"] as? String) ?? NativeL10n.nativeComputer
         return CasamaFileItem(
           id: NSFileProviderItemIdentifier("comp:\(id)"),
           parentId: .rootContainer,
@@ -308,7 +308,7 @@ private struct CasamaItemId {
     if let p = path, !p.isEmpty {
       return (p as NSString).lastPathComponent
     }
-    return "Computer"
+    return NativeL10n.nativeComputer
   }
 
   var parentIdentifier: NSFileProviderItemIdentifier {
@@ -380,7 +380,7 @@ private final class CasamaFileItem: NSObject, NSFileProviderItem {
     CasamaFileItem(
       id: .rootContainer,
       parentId: .rootContainer,
-      name: "Casama Computers",
+      name: NativeL10n.nativeNameFileProvider,
       isDir: true,
       size: 0,
       modified: nil

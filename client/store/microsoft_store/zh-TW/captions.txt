@@ -1,0 +1,10 @@
+01-real-work.png	真正的工作，替你辦妥
+02-customer-emails.png	客戶來信，幫你回覆妥當
+03-trips-ok.png	旅遊預訂，經你同意才執行
+04-day-planned.png	醒來前，今天行程已排好
+05-window-seat.png	喜歡靠窗座位？它都記得
+06-flight-prices.png	機票價格，隨時替你盯緊
+07-sites-games.png	網站與小遊戲，幫你做好
+08-inbox.png	收件匣雜事，幫你整理好
+09-birthday-dinner.png	生日聚餐，三位隊友聯手規劃
+10-make-it-yours.png	依你的習慣量身打造

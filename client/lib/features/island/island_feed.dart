@@ -1,8 +1,8 @@
 import 'package:casama_sdk/casama_sdk.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart' show basicLocaleListResolution;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/app_language.dart';
 import '../../core/providers.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../ui/tool_words.dart';
@@ -15,15 +15,8 @@ import 'run_tracker.dart';
 /// notch and menu bar panel, the iPhone Live Activity, the Android live notification). Native
 /// code draws; it never decides what a run is doing.
 
-/// The words the island uses, in the device's language (it has no BuildContext).
-final islandL10nProvider = Provider<AppLocalizations>(
-  (ref) => lookupAppLocalizations(
-    basicLocaleListResolution(
-      PlatformDispatcher.instance.locales,
-      AppLocalizations.supportedLocales,
-    ),
-  ),
-);
+/// The words the island uses, in the app's language (it has no BuildContext).
+final islandL10nProvider = Provider<AppLocalizations>((ref) => ref.watch(appStringsProvider));
 
 /// What a row is about. The order is the feed's order: needs an OK, take over, working, ended.
 enum IslandPhase {

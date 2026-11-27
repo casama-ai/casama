@@ -1,0 +1,1 @@
+Çalışma alanınızı Casama Cloud ile kendi sunucunuz arasında taşıyın, hangi hesap ve sunucuya giriş yaptığınızı görün. Windows'ta pencere boyutlandırma artık daha akıcı.

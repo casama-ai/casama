@@ -1146,8 +1146,8 @@ void main() {
       );
       expect(
         find.text(
-          'These domains stay registered to their registrant until they expire, stop renewing, '
-          'and their sites go offline.',
+          'These domains stay registered until they expire. They won\'t renew, and their sites go '
+          'offline.',
         ),
         findsOneWidget,
       );

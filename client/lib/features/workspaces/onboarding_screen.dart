@@ -14,6 +14,7 @@ import '../../ui/casama_mark.dart';
 import '../bots/bots_screen.dart';
 import '../settings/model_keys_screen.dart';
 import '../../ui/glow_button.dart';
+import '../../ui/labeled_divider.dart';
 import '../../ui/mascot.dart';
 import '../../ui/celebration.dart';
 import '../../core/analytics.dart';
@@ -95,16 +96,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: AppSpace.lg),
-              child: Row(
-                children: [
-                  const Expanded(child: Divider()),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: AppSpace.sm),
-                    child: Text(l10n.orJoinWithCode, style: context.textTheme.labelMedium?.copyWith(color: scheme.onSurfaceVariant)),
-                  ),
-                  const Expanded(child: Divider()),
-                ],
-              ),
+              child: LabeledDivider(label: l10n.orJoinWithCode, style: context.textTheme.labelMedium?.copyWith(color: scheme.onSurfaceVariant)),
             ),
             Row(
               children: [

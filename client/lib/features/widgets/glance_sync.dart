@@ -10,6 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_widget/home_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../core/app_language.dart';
 import '../../core/analytics.dart';
 import '../../core/backend.dart';
 import '../../core/mobile_extras.dart' show appGroupId;
@@ -601,8 +602,7 @@ class GlanceSync {
     });
   }
 
-  static AppLocalizations _l10n() =>
-      lookupAppLocalizations(basicLocaleListResolution(PlatformDispatcher.instance.locales, AppLocalizations.supportedLocales));
+  static AppLocalizations _l10n() => AppLanguage.strings();
 }
 
 /// Fetches again soon (at most once in [glanceGap]): for changes the app knows about but this

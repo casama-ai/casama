@@ -1,0 +1,8 @@
+Colegas de IA com computadores isolados próprios: navegador, arquivos e apps
+Veja um bot trabalhar ao vivo ou assuma o controle a qualquer momento
+Enviar, reservar, pagar e apagar esperam o seu OK, e Recusar desfaz o trabalho
+Os bots começam em um horário marcado, quando chega um e-mail ou quando uma página muda
+Memória e habilidades que seguem por todas as conversas
+Mais de 40 bots prontos e chats em grupo com pessoas e bots juntos
+Os bots respondem no WhatsApp, Telegram, Slack, Discord e por e-mail
+Apps, SDKs, CLI e regras de segurança open source

@@ -1,3 +1,4 @@
+import 'package:casama_sdk/casama_sdk.dart' show AcceptLanguageInterceptor;
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
@@ -81,7 +82,7 @@ Future<bool> checkServer(String apiUrl) async {
       connectTimeout: const Duration(seconds: 8),
       receiveTimeout: const Duration(seconds: 8),
     ),
-  );
+  )..interceptors.add(const AcceptLanguageInterceptor());
   try {
     await dio.get<Object?>(
       '${apiUrl.replaceAll(RegExp(r'/+$'), '')}/v1/config',

@@ -6864,6 +6864,7 @@ class FakeBackend implements Backend {
       name: name,
       createdAt: DateTime.now(),
       lastUsedAt: null,
+      scope: AdminDeviceKeyScopeEnum.full,
     );
     adminDeviceKeyList.add(k);
     return k;
@@ -6878,6 +6879,59 @@ class FakeBackend implements Backend {
   @override
   Future<({String id, String challenge})?> adminDeviceChallenge(String keyId) async =>
       adminDeviceKeyList.any((k) => k.id == keyId) ? (id: 'c1', challenge: 'abc') : null;
+
+  /// Agent admin access (D-598): requests by id, the log, and what was answered.
+  final adminAgentRequestMap = <String, AdminAgentRequest>{};
+  final adminAgentLog = <AdminAgentLogEntry>[];
+  final adminAgentAnswers = <String>[];
+  @override
+  Future<AdminAgentRequestList> adminAgentRequests() async => AdminAgentRequestList(
+    items: adminAgentRequestMap.values.toList(),
+    log: List.of(adminAgentLog),
+  );
+  @override
+  Future<AdminAgentRequest> adminAgentRequest(String id) async => adminAgentRequestMap[id]!;
+  AdminAgentRequest _agentAnswer(
+    String id,
+    String answer,
+    AdminAgentRequestStatusEnum status, {
+    DateTime? validUntil,
+  }) {
+    adminAgentAnswers.add('$answer:$id');
+    final r = adminAgentRequestMap[id]!;
+    return adminAgentRequestMap[id] = AdminAgentRequest(
+      id: r.id,
+      keyId: r.keyId,
+      keyName: r.keyName,
+      reason: r.reason,
+      minutes: r.minutes,
+      status: status,
+      createdAt: r.createdAt,
+      expiresAt: r.expiresAt,
+      answeredAt: r.answeredAt ?? DateTime.now(),
+      validUntil: validUntil ?? r.validUntil,
+      endedAt: status == AdminAgentRequestStatusEnum.ended ? DateTime.now() : r.endedAt,
+      changes: r.changes,
+    );
+  }
+
+  @override
+  Future<AdminAgentRequest> approveAdminAgentRequest(String id) async => _agentAnswer(
+    id,
+    'approve',
+    AdminAgentRequestStatusEnum.approved,
+    validUntil: DateTime.now().add(Duration(minutes: adminAgentRequestMap[id]!.minutes)),
+  );
+  @override
+  Future<AdminAgentRequest> denyAdminAgentRequest(String id) async =>
+      _agentAnswer(id, 'deny', AdminAgentRequestStatusEnum.denied);
+  @override
+  Future<AdminAgentRequest> endAdminAgentRequest(String id) async => _agentAnswer(
+    id,
+    'end',
+    AdminAgentRequestStatusEnum.ended,
+    validUntil: DateTime.now(),
+  );
 
   @override
   Future<DateTime> adminDeviceCheck(String challengeId, String signature) async {
@@ -8842,6 +8896,18 @@ class FakeBackend implements Backend {
       throw Exception('offline');
     }
     return fakeMe;
+  }
+
+  /// Languages picked and saved to the profile (`PATCH /v1/me/about`), newest last.
+  final savedLocales = <String?>[];
+
+  /// While true, saving a language fails.
+  bool localeSaveFails = false;
+
+  @override
+  Future<void> setProfileLocale(String? locale) async {
+    if (localeSaveFails) throw Exception('offline');
+    savedLocales.add(locale);
   }
 
   @override

@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show ProviderListenable;
 
 import 'core/age_range.dart';
+import 'core/app_language.dart';
 import 'core/file_provider.dart';
 import 'core/fold/fold.dart';
 import 'core/local_cache.dart';
@@ -48,6 +49,7 @@ import 'theme/appearance.dart';
 import 'theme/wallpaper.dart';
 import 'ui/text_scale.dart';
 import 'l10n/generated/app_localizations.dart';
+import 'l10n/delegates.dart';
 import 'features/devices/device_sync.dart';
 import 'features/voice/call_bubble.dart';
 import 'features/selfhost/guided_setup.dart';
@@ -173,8 +175,10 @@ class CasamaApp extends ConsumerWidget {
       themeMode: appearance.mode,
       themeAnimationDuration: const Duration(milliseconds: 250),
       routerConfig: router,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
+      localizationsDelegates: appLocalizationsDelegates,
+      // The device's language unless Settings → Language picked one (core/app_language.dart).
+      locale: ref.watch(appLocaleProvider),
+      supportedLocales: ref.watch(supportedAppLocalesProvider),
       debugShowCheckedModeBanner: false,
       // Scrollbars on vertical lists on every platform, phones included.
       scrollBehavior: const AppScrollBehavior(),

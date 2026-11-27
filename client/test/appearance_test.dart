@@ -153,12 +153,12 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.byKey(const Key('undoTheme')), findsNothing);
 
-      // A look of one's own: Custom look, with Save.
+      // A look of one's own: Custom theme, with Save.
       await notifier.setFonts(heading: 'Lora');
       await tester.pumpAndSettle();
       expect(
         tester.widget<Text>(find.byKey(const Key('currentLookName'))).data,
-        'Custom look',
+        'Custom theme',
       );
       expect(find.byKey(const Key('saveTheme')), findsOneWidget);
 

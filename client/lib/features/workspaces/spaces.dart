@@ -696,7 +696,7 @@ class EncryptionSection extends ConsumerWidget {
             key: const Key('rotateKey'),
             icon: LucideIcons.rotateCw,
             title: l10n.encryptionRotate,
-            subtitle: s.rotatedAt != null ? l10n.encryptionRotated(relativeTime(s.rotatedAt!, context)) : l10n.encryptionRotateHelp,
+            subtitle: s.rotatedAt != null ? l10n.encryptionRotatedWhen(relativeTime(s.rotatedAt!, context)) : l10n.encryptionRotateHelp,
             onTap: () async {
               final ok = await showConfirm(
                 context: context,

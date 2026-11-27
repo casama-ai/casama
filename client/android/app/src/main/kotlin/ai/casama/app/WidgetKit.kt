@@ -286,7 +286,7 @@ object WidgetKit {
     val stop get() = WidgetAction("stop", runId, botId, "/runs/${Uri.encode(runId)}/stop")
   }
 
-  fun live(p: SharedPreferences): Live? {
+  fun live(p: SharedPreferences, words: Words): Live? {
     val runId = p.getString("live_run_id", null) ?: return null
     return Live(
       runId = runId,
@@ -297,7 +297,7 @@ object WidgetKit {
       phase = p.getString("live_phase", null) ?: "working",
       link = p.getString("live_link", null)?.takeIf { it.startsWith("/") } ?: "/",
       startedAtMs = p.getLong("live_started_at", System.currentTimeMillis()),
-      stopLabel = p.getString("live_stop", null) ?: "Stop",
+      stopLabel = p.getString("live_stop", null) ?: words["stop"],
     )
   }
 

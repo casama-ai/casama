@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/analytics.dart';
 import '../../core/display_text.dart';
+import '../../core/number_format.dart';
 import '../../core/partner_code.dart';
 import '../../core/providers.dart';
 import '../../core/share.dart';
@@ -68,9 +69,7 @@ String referralPath(String code) => '/i/${Uri.encodeComponent(code)}';
 /// A credit amount the way invites show it: "$2" for whole dollars, "$2.50" otherwise.
 String creditLabel(BuildContext context, num value) {
   final whole = value == value.roundToDouble();
-  return whole
-      ? '\$${value.toInt()}'
-      : formatUsd(value, context.l10n.localeName);
+  return value.humanizedCurrency(context.l10n.localeName, 'USD', decimalDigits: whole ? 0 : 2);
 }
 
 /// What to say once a friend's code is accepted.

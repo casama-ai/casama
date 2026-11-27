@@ -79,6 +79,12 @@ void main(List<String> args) {
     }
   }
 
+  // The hard-coded string check reads lib/ as files, so no import leads to it.
+  const literalCheck = 'test/hardcoded_strings_test.dart';
+  if (allTests.contains(literalCheck) && changed.any((c) => c.startsWith('lib/') && c.endsWith('.dart') || c == 'tool/literal_lint.dart' || c.startsWith('test/hardcoded_strings'))) {
+    affectedTests.add(literalCheck);
+  }
+
   final sorted = affectedTests.toList()..sort();
   for (final t in sorted) {
     stdout.writeln(t);

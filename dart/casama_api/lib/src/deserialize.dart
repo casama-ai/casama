@@ -18,6 +18,9 @@ import 'package:casama_api/src/model/add_teach_step_request.dart';
 import 'package:casama_api/src/model/add_user_facts_request.dart';
 import 'package:casama_api/src/model/add_user_facts_request_items_inner.dart';
 import 'package:casama_api/src/model/add_waitlist_entries_request.dart';
+import 'package:casama_api/src/model/admin_agent_log_entry.dart';
+import 'package:casama_api/src/model/admin_agent_request.dart';
+import 'package:casama_api/src/model/admin_agent_request_list.dart';
 import 'package:casama_api/src/model/admin_app_browser.dart';
 import 'package:casama_api/src/model/admin_attention.dart';
 import 'package:casama_api/src/model/admin_bot_setting.dart';
@@ -128,6 +131,7 @@ import 'package:casama_api/src/model/approval_resolved_event.dart';
 import 'package:casama_api/src/model/approval_resolved_event_payload.dart';
 import 'package:casama_api/src/model/approve_link_sign_in_request.dart';
 import 'package:casama_api/src/model/approved_link_sign_in.dart';
+import 'package:casama_api/src/model/ask_admin_agent_request.dart';
 import 'package:casama_api/src/model/ask_device_permission_request.dart';
 import 'package:casama_api/src/model/ask_device_permission_result.dart';
 import 'package:casama_api/src/model/attach_integration_request.dart';
@@ -1257,6 +1261,12 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return AddUserFactsRequestItemsInner.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'AddWaitlistEntriesRequest':
           return AddWaitlistEntriesRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'AdminAgentLogEntry':
+          return AdminAgentLogEntry.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'AdminAgentRequest':
+          return AdminAgentRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'AdminAgentRequestList':
+          return AdminAgentRequestList.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'AdminAppBrowser':
           return AdminAppBrowser.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'AdminAttention':
@@ -1477,6 +1487,8 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return ApproveLinkSignInRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'ApprovedLinkSignIn':
           return ApprovedLinkSignIn.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'AskAdminAgentRequest':
+          return AskAdminAgentRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'AskDevicePermissionRequest':
           return AskDevicePermissionRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'AskDevicePermissionResult':

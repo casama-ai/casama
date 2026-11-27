@@ -12,7 +12,7 @@ import VisualIntelligence
 /// anything a share left there, and opens quick ask with that bot.
 @available(iOS 26.0, *)
 struct AskBotVisualEntity: AppEntity {
-  static var typeDisplayRepresentation: TypeDisplayRepresentation = "Ask Casama Bot"
+  static var typeDisplayRepresentation = TypeDisplayRepresentation(name: LocalizedStringResource("siriAskCasamaBot", defaultValue: "Ask Casama Bot", table: "Native"))
   static var defaultQuery = AskBotVisualQuery()
 
   /// `vi:<bot id>`, or `vi:<bot id>:<capture token>` when offered for a staged image.
@@ -29,7 +29,7 @@ struct AskBotVisualEntity: AppEntity {
   }
 
   var displayRepresentation: DisplayRepresentation {
-    DisplayRepresentation(title: "Ask \(botName)")
+    DisplayRepresentation(title: LocalizedStringResource("siriAskName", defaultValue: "Ask \(botName)", table: "Native"))
   }
 
   /// The bot id and capture token in an entity id, or nil when it isn't one of these.
@@ -66,10 +66,10 @@ struct AskBotVisualQuery: EntityQuery, IntentValueQuery {
 
 @available(iOS 26.0, *)
 struct OpenVisualIntelligenceBotIntent: OpenIntent {
-  static var title: LocalizedStringResource = "Ask Casama about this"
+  static var title: LocalizedStringResource = LocalizedStringResource("siriAskAboutThis", defaultValue: "Ask Casama about this", table: "Native")
   static var openAppWhenRun = true
 
-  @Parameter(title: "Bot")
+  @Parameter(title: LocalizedStringResource("siriBot", defaultValue: "Bot", table: "Native"))
   var target: AskBotVisualEntity
 
   @MainActor

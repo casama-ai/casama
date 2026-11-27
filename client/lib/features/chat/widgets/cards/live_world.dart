@@ -72,7 +72,7 @@ final quakeComponent = liveCard('Quake', const ['near', 'quakes'], (context, p, 
                                 height: 44,
                                 alignment: Alignment.center,
                                 decoration: BoxDecoration(color: _magColor(q.n('magnitude') ?? 0), borderRadius: BorderRadius.circular(12)),
-                                child: Text((q.n('magnitude') ?? 0).toStringAsFixed(1), style: context.textTheme.titleMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.w800)),
+                                child: Text(fmtNum(context, q.n('magnitude') ?? 0, digits: 1),style: context.textTheme.titleMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.w800)),
                               ),
                               const SizedBox(width: 12),
                               Expanded(

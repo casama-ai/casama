@@ -1495,7 +1495,7 @@ class _UsageSection extends StatelessWidget {
                         if (cost > 0)
                           TextSpan(
                             text:
-                                '  ·  ${cost < 0.01 ? '<\$0.01' : '\$${cost.toStringAsFixed(2)}'}',
+                                '  ·  ${cost < 0.01 ? '<${formatUsd(0.01, l10n.localeName)}' : formatUsd(cost, l10n.localeName)}',
                             style: context.textTheme.bodyMedium?.copyWith(
                               color: scheme.onSurfaceVariant,
                               fontWeight: FontWeight.w600,

@@ -879,7 +879,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 100));
     // Medium risk: no warning box. The opt-in names the bot and starts unticked.
     expect(find.byKey(const Key('approvalRisk')), findsNothing);
-    expect(find.text("Don't ask Ada again for this"), findsOneWidget);
+    expect(find.text('Let Ada do this without asking'), findsOneWidget);
     expect(find.descendant(of: find.byKey(const Key('chatApprove')), matching: find.text('Allow')), findsOneWidget);
     await tester.tap(find.byKey(const Key('chatAlwaysAllow')));
     await tester.pump(const Duration(milliseconds: 300));

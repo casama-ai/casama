@@ -796,7 +796,7 @@ class _EditorState extends ConsumerState<_Editor> {
       final confirmed = await adminConfirm(
         context,
         title: words.resetsPreviewSave,
-        message: words.resetsPreview(preview.workspaces, preview.creditsUsd.toStringAsFixed(2), preview.costUsd.toStringAsFixed(2)),
+        message: words.resetsPreviewMessage(preview.workspaces, _usd(preview.creditsUsd, words.localeName), _usd(preview.costUsd, words.localeName)),
         confirmLabel: words.save,
         confirmKey: const Key('resetsConfirmSave'),
       );

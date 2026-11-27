@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../core/app_language.dart';
 import '../../core/config.dart';
 import '../../core/local_cache.dart';
 import '../../core/providers.dart';
@@ -22,6 +23,7 @@ import 'app_functions.dart';
 /// tree, no telemetry, ads or install tracking. The engine is closed by native code when idle.
 Future<ProviderContainer> startAppFunctionsHeadless(AppConfig config) async {
   final selectedOrg = SelectedOrg.preload();
+  await AppLanguage.preload();
   final appLock = AppLockSettingsNotifier.preload();
   final saved = await ServerConfigCache.read(config.apiUrl);
   final server = saved ?? (await CasamaClient.connect(config.apiUrl)).config;

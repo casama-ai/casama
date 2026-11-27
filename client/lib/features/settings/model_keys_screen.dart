@@ -16,6 +16,7 @@ import '../../ui/app_card.dart';
 import '../../ui/form_sheet.dart';
 import '../../ui/page.dart';
 import '../../ui/glow_button.dart';
+import '../../ui/labeled_divider.dart';
 import '../../ui/revealable.dart';
 import '../../core/remote_content.dart';
 import '../bots/model_picker.dart';
@@ -224,21 +225,12 @@ class _AddKeyFormState extends ConsumerState<AddKeyForm> {
       children: [
         if (chatGpt) ...[
           ChatGptConnect(onConnected: widget.onAdded),
-          Row(
-            children: [
-              const Expanded(child: Divider()),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: AppSpace.sm),
-                child: Text(
-                  l10n.orAddApiKey,
-                  style: TextStyle(
-                    color: context.colorScheme.onSurfaceVariant,
-                    fontSize: 13,
-                  ),
-                ),
-              ),
-              const Expanded(child: Divider()),
-            ],
+          LabeledDivider(
+            label: l10n.orAddApiKey,
+            style: TextStyle(
+              color: context.colorScheme.onSurfaceVariant,
+              fontSize: 13,
+            ),
           ),
         ],
         // Chat models first as logo tiles; search, maps and the rest under "More providers" (D-182).

@@ -149,9 +149,15 @@ class AdminSecurity {
   static bool _ownerSetting(String path) =>
       path == '/v1/admin/remote-access' || path.startsWith('/v1/admin/remote-access/');
 
+  /// An agent's requests (D-598): answered from the screen their push opens, outside the console,
+  /// so its lock doesn't hold them back. Approving still asks for Face ID, a passkey or sign-in.
+  static bool _agentRequest(String path) =>
+      path.startsWith('/v1/admin/agent/requests');
+
   static bool protectedPath(String path, {String method = 'GET'}) =>
       path.startsWith('/v1/admin/') &&
       !_ownerSetting(path) &&
+      !_agentRequest(path) &&
       !_openWhileLocked(path, method.toUpperCase());
 }
 

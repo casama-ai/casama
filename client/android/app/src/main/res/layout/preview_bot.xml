@@ -12,14 +12,14 @@
             android:src="@drawable/mascot_focused" />
         <FrameLayout android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="1" />
         <TextView style="@style/WidgetPill" android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-medium" android:text="Working · 2:14" android:textColor="@color/widget_on_green"
+            android:fontFamily="sans-serif-medium" android:text="@string/widget_sample_working" android:textColor="@color/widget_on_green"
             android:textSize="11.5sp" />
     </LinearLayout>
     <FrameLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
     <TextView style="@style/WidgetText.Title" android:layout_width="match_parent" android:layout_height="wrap_content"
         android:text="Ada" android:textSize="16sp" />
     <TextView style="@style/WidgetText.Second" android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:layout_marginTop="3dp" android:text="Reading your inbox" />
+        android:layout_marginTop="3dp" android:text="@string/widget_sample_step" />
     <TextView style="@style/WidgetButton" android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:layout_marginTop="10dp" android:text="Stop" />
+        android:layout_marginTop="10dp" android:text="@string/widget_stop" />
 </LinearLayout>

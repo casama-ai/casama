@@ -1,0 +1,10 @@
+01-real-work.png	Lavoro vero, fatto per te
+02-customer-emails.png	Email ai clienti, gestite per te
+03-trips-ok.png	Viaggi prenotati, solo col tuo OK
+04-day-planned.png	La tua giornata, già pianificata al risveglio
+05-window-seat.png	Posto finestrino? Se lo ricorda
+06-flight-prices.png	Prezzi dei voli, monitorati per te
+07-sites-games.png	Siti e giochi, creati per te
+08-inbox.png	In arrivo, tutto in ordine
+09-birthday-dinner.png	Cena di compleanno, organizzata in tre
+10-make-it-yours.png	Rendilo tuo

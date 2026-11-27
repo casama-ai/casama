@@ -24,7 +24,7 @@ final class SafariWebExtensionHandler: NSObject, NSExtensionRequestHandling {
       } else {
         payload = [
           "ok": false,
-          "error": "Open Casama on this Mac -> Settings -> Sign In on Another Device, or paste a sign-in link below.",
+          "error": NativeL10n.nativeSafariSignInMac,
         ]
       }
     default:

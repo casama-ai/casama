@@ -1,0 +1,10 @@
+01-real-work.png	Echte Arbeit, für dich erledigt
+02-customer-emails.png	Kunden-E-Mails, für dich beantwortet
+03-trips-ok.png	Reisen gebucht – nur mit deinem OK
+04-day-planned.png	Dein Tag, geplant vor dem Aufwachen
+05-window-seat.png	Fensterplatz? Merkt er sich
+06-flight-prices.png	Flugpreise, für dich im Blick
+07-sites-games.png	Websites und Spiele, für dich gemacht
+08-inbox.png	Dein Posteingang, erledigt
+09-birthday-dinner.png	Geburtstagsessen, zu dritt geplant
+10-make-it-yours.png	Mach es zu deinem

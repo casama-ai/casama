@@ -8,7 +8,7 @@ import Foundation
 
 @available(iOS 17.0, macOS 14.0, *)
 struct WidgetCanvasEntity: AppEntity {
-  static var typeDisplayRepresentation: TypeDisplayRepresentation = "Canvas"
+  static var typeDisplayRepresentation = TypeDisplayRepresentation(name: LocalizedStringResource("siriCanvas", defaultValue: "Canvas", table: "Native"))
   static var defaultQuery = WidgetCanvasQuery()
   /// The id that stands for Automatic.
   static let automaticId = "automatic"
@@ -21,7 +21,9 @@ struct WidgetCanvasEntity: AppEntity {
 
   var displayRepresentation: DisplayRepresentation {
     if isAutomatic {
-      return DisplayRepresentation(title: "Automatic", subtitle: "What a bot set most recently")
+      return DisplayRepresentation(
+        title: LocalizedStringResource("siriAutomatic", defaultValue: "Automatic", table: "Native"),
+        subtitle: LocalizedStringResource("siriAutomaticSubtitle", defaultValue: "What a bot set most recently", table: "Native"))
     }
     return DisplayRepresentation(title: "\(bot.isEmpty ? name : "\(name) · \(bot)")")
   }
@@ -34,7 +36,7 @@ struct WidgetCanvasEntity: AppEntity {
 
   init(_ canvas: BotCanvas) { self.init(id: canvas.id, name: canvas.name, bot: canvas.bot) }
 
-  static let automatic = WidgetCanvasEntity(id: automaticId, name: "Automatic", bot: "")
+  static let automatic = WidgetCanvasEntity(id: automaticId, name: NativeL10n.siriAutomatic, bot: "")
 }
 
 @available(iOS 17.0, macOS 14.0, *)
@@ -47,7 +49,7 @@ struct WidgetCanvasQuery: EntityQuery {
   func entities(for identifiers: [String]) async throws -> [WidgetCanvasEntity] {
     let all = canvases
     // A picked canvas that's gone keeps its id: the widget shows "no canvas yet" (plan §6.5).
-    return identifiers.map { id in all.first { $0.id == id } ?? WidgetCanvasEntity(id: id, name: "Canvas", bot: "") }
+    return identifiers.map { id in all.first { $0.id == id } ?? WidgetCanvasEntity(id: id, name: NativeL10n.siriCanvas, bot: "") }
   }
   func suggestedEntities() async throws -> [WidgetCanvasEntity] { canvases }
   /// A new widget shows Automatic.
@@ -57,10 +59,10 @@ struct WidgetCanvasQuery: EntityQuery {
 /// The Canvas widget's setting.
 @available(iOS 17.0, macOS 14.0, *)
 struct ChooseCanvasIntent: WidgetConfigurationIntent {
-  static var title: LocalizedStringResource = "Choose a canvas"
-  static var description = IntentDescription("Show what a bot set most recently, or one canvas.")
+  static var title: LocalizedStringResource = LocalizedStringResource("siriChooseCanvas", defaultValue: "Choose a canvas", table: "Native")
+  static var description = IntentDescription(LocalizedStringResource("siriChooseCanvasDescription", defaultValue: "Show what a bot set most recently, or one canvas.", table: "Native"))
 
-  @Parameter(title: "Canvas")
+  @Parameter(title: LocalizedStringResource("siriCanvas", defaultValue: "Canvas", table: "Native"))
   var canvas: WidgetCanvasEntity?
 
   init() {}

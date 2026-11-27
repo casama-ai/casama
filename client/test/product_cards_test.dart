@@ -530,6 +530,18 @@ void main() {
     await end(tester);
   });
 
+  testWidgets('a checkout with no seller confirms the total alone', (
+    tester,
+  ) async {
+    final backend = await show(tester, {..._checkout}..remove('seller'));
+    expect(find.text('Confirm and pay'), findsOneWidget);
+    await tapKey(tester, 'checkoutConfirm');
+    final sent = backend.sentUiActions.single;
+    expect(sent['name'], 'checkout.confirm');
+    expect(backend.sent.single, 'Confirm ₱4,900');
+    await end(tester);
+  });
+
   for (final (key, event, label) in const [
     ('checkoutConfirm', 'checkout.confirm', 'Confirm ₱4,900 at Lazada'),
     ('checkoutChange', 'checkout.change', 'Change something'),

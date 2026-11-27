@@ -9,6 +9,7 @@ import 'package:notification_listener_service/notification_listener_service.dart
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../core/app_language.dart';
 import '../../core/backend.dart';
 import '../../core/server_address.dart';
 import '../../core/server_config_cache.dart';
@@ -96,6 +97,7 @@ Future<Backend?> backgroundBackend() async {
 /// signed out and kept for later when there's no connection (inline_replies.dart).
 Future<Backend?> connectBackgroundBackend() async {
   final config = await ServerAddress.load();
+  await AppLanguage.preload();
   // The settings the app saved (D-158): a background wake may have little or no network.
   final server = await ServerConfigCache.read(config.apiUrl) ?? (await CasamaClient.connect(config.apiUrl)).config;
   try {

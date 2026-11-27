@@ -16,7 +16,7 @@ class AskTileService : TileService() {
     super.onStartListening()
     qsTile?.apply {
       state = Tile.STATE_INACTIVE
-      label = getString(R.string.tile_ask)
+      label = getString(R.string.widget_ask_casama)
       updateTile()
     }
   }

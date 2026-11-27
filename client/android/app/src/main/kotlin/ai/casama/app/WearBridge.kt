@@ -130,7 +130,7 @@ object WearBridge {
         val notification = Notification.Builder(context, PushNotifications.NEEDS_YOU)
             .setSmallIcon(R.drawable.ic_notification)
             .setContentTitle(title.ifBlank { context.applicationInfo.loadLabel(context.packageManager).toString() })
-            .setContentText("From your watch")
+            .setContentText(context.getString(R.string.notif_from_your_watch))
             .setCategory(Notification.CATEGORY_REMINDER)
             .setAutoCancel(true)
             // Only for this phone: the watch that asked doesn't need it bridged back.

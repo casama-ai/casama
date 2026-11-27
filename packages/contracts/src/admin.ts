@@ -462,6 +462,8 @@ export const AdminDeviceKey = z
     name: z.string(),
     created_at: z.string().datetime({ offset: true }),
     last_used_at: z.string().datetime({ offset: true }).nullable(),
+    /** `full`: a phone, the whole check. `read`: an agent's key, admin reads only (D-598). */
+    scope: z.enum(["full", "read"]),
   })
   .openapi("AdminDeviceKey");
 
@@ -474,6 +476,8 @@ export const AddAdminDeviceKeyRequest = z
     name: z.string().min(1).max(80),
     /** EC P-256 SubjectPublicKeyInfo, DER, base64. */
     public_key: z.string().min(80).max(400),
+    /** `read` for an agent's key (D-598); a phone's is `full`. */
+    scope: z.enum(["full", "read"]).optional(),
   })
   .openapi("AddAdminDeviceKeyRequest");
 
@@ -492,6 +496,55 @@ export const AdminDeviceChallenge = z
 export const AdminDeviceCheckRequest = z
   .object({ challenge_id: Uuid, signature: z.string().min(1).max(512) })
   .openapi("AdminDeviceCheckRequest");
+
+/** An agent's request for admin changes, answered by the owner on the phone (D-598). */
+export const AdminAgentRequest = z
+  .object({
+    id: Uuid,
+    key_id: Uuid,
+    /** The agent key's name, such as "Agent · Oliver's MacBook". */
+    key_name: z.string(),
+    reason: z.string(),
+    /** How long the grant lasts once approved. */
+    minutes: z.number().int(),
+    /** `ended` once a grant's time is up, Stop was pressed or the agent finished. */
+    status: z.enum(["pending", "approved", "denied", "expired", "ended"]),
+    created_at: z.string().datetime({ offset: true }),
+    /** When a pending request stops waiting. */
+    expires_at: z.string().datetime({ offset: true }),
+    answered_at: z.string().datetime({ offset: true }).nullable(),
+    /** When an approved grant ends. */
+    valid_until: z.string().datetime({ offset: true }).nullable(),
+    ended_at: z.string().datetime({ offset: true }).nullable(),
+    /** Admin changes made under this grant. */
+    changes: z.number().int(),
+  })
+  .openapi("AdminAgentRequest");
+
+export const AskAdminAgentRequest = z
+  .object({
+    reason: z.string().min(1).max(300),
+    /** 10 by default, 30 at most. */
+    minutes: z.number().int().min(1).max(30).optional(),
+  })
+  .openapi("AskAdminAgentRequest");
+
+/** One line of what agents did in the admin console (D-598). */
+export const AdminAgentLogEntry = z
+  .object({
+    at: z.string().datetime({ offset: true }),
+    /** `read`, `change`, `asked`, `approved`, `denied` or `ended`. */
+    action: z.string(),
+    key_name: z.string().nullable(),
+    method: z.string().nullable(),
+    path: z.string().nullable(),
+    status: z.number().int().nullable(),
+  })
+  .openapi("AdminAgentLogEntry");
+
+export const AdminAgentRequestList = z
+  .object({ items: z.array(AdminAgentRequest), log: z.array(AdminAgentLogEntry) })
+  .openapi("AdminAgentRequestList");
 
 /** A passkey or PIN check recorded on this sign-in session (D-452). */
 export const AdminCheck = z

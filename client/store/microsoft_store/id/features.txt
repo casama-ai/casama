@@ -1,0 +1,8 @@
+Rekan tim AI dengan komputer terisolasi sendiri: browser, file, dan aplikasi
+Pantau bot bekerja secara langsung, atau ambil alih kendali kapan saja
+Mengirim, memesan, membayar, dan menghapus menunggu izinmu, dan Tolak membatalkannya
+Bot berjalan otomatis sesuai jadwal, saat email masuk, atau saat halaman web berubah
+Memori dan keahlian yang terbawa di setiap chat
+Lebih dari 40 bot siap pakai, serta chat grup bersama orang dan bot sekaligus
+Bot bisa membalas di WhatsApp, Telegram, Slack, Discord, dan email
+Aplikasi, SDK, CLI, dan aturan keamanan yang open source

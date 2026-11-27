@@ -1,0 +1,1 @@
+Déplacez un espace de travail entre Casama Cloud et votre propre serveur, voyez à quel compte et à quel serveur vous vous connectez, et profitez d'un redimensionnement de fenêtre plus fluide sous Windows.

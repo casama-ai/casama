@@ -102,6 +102,9 @@ lib/src/model/add_teach_step_request.dart
 lib/src/model/add_user_facts_request.dart
 lib/src/model/add_user_facts_request_items_inner.dart
 lib/src/model/add_waitlist_entries_request.dart
+lib/src/model/admin_agent_log_entry.dart
+lib/src/model/admin_agent_request.dart
+lib/src/model/admin_agent_request_list.dart
 lib/src/model/admin_app_browser.dart
 lib/src/model/admin_attention.dart
 lib/src/model/admin_bot_setting.dart
@@ -212,6 +215,7 @@ lib/src/model/approval_resolved_event.dart
 lib/src/model/approval_resolved_event_payload.dart
 lib/src/model/approve_link_sign_in_request.dart
 lib/src/model/approved_link_sign_in.dart
+lib/src/model/ask_admin_agent_request.dart
 lib/src/model/ask_device_permission_request.dart
 lib/src/model/ask_device_permission_result.dart
 lib/src/model/attach_integration_request.dart

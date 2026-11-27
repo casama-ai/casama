@@ -163,7 +163,9 @@ class _CheckoutState extends State<_Checkout> {
                   key: const Key('checkoutConfirm'),
                   onPressed: () => _send(
                     'confirm',
-                    l.cardCheckoutConfirmLabel(totalText, seller ?? ''),
+                    seller == null || seller.isEmpty
+                        ? l.cardCheckoutConfirmNoSellerLabel(totalText)
+                        : l.cardCheckoutConfirmLabel(totalText, seller),
                   ),
                   icon: const Icon(LucideIcons.check, size: 16),
                   label: Text(l.cardCheckoutConfirm),

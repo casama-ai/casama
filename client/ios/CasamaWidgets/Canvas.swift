@@ -311,16 +311,16 @@ extension Calendar {
 /// app writes them with the glance's, under `glance_words`).
 extension GlanceWords {
   static let canvasEnglish: [String: String] = [
-    "canvas_empty": "Ask a bot to put something here",
-    "canvas_try": "Try: put a daily verse on my Lock Screen",
+    "canvas_empty": NativeL10n.canvasEmpty,
+    "canvas_try": NativeL10n.canvasTry,
     // The units, as the app writes them (glance_sync.dart, canvasDaysUnit).
-    "canvas_day": "day",
-    "canvas_days": "days",
-    "canvas_in": "in {time}",
-    "canvas_since": "{time} since",
-    "canvas_now": "Now",
-    "canvas_left": "{n} left",
-    "canvas_left_unit": "left",
+    "canvas_day": NativeL10n.widgetFallbackDay,
+    "canvas_days": NativeL10n.widgetFallbackDays,
+    "canvas_in": NativeL10n.Template.canvasIn,
+    "canvas_since": NativeL10n.Template.canvasSince,
+    "canvas_now": NativeL10n.canvasNow,
+    "canvas_left": NativeL10n.Template.canvasLeft,
+    "canvas_left_unit": NativeL10n.canvasLeftUnit,
   ]
 
   func canvas(_ key: String, _ args: [String: String] = [:]) -> String {
@@ -435,10 +435,10 @@ struct CanvasSnapshot: Equatable {
       background: CanvasBackground(kind: "gradient", from: "#0b3a53", to: "#1f7a8c"),
       font: "serif", align: "center", icon: "📖", ink: "light")
     let entry = CanvasEntry(
-      template: "text", text: "Be still, and know that I am God.", footer: "Ps 46:10",
-      short: "Be still, and know that I am God. · Ps 46:10", tiny: "Be still, and know…", look: look)
+      template: "text", text: NativeL10n.widgetSampleVerse, footer: NativeL10n.widgetSampleVerseRef,
+      short: NativeL10n.widgetSampleVerseShort, tiny: NativeL10n.widgetSampleVerseTiny, look: look)
     let canvas = BotCanvas(
-      id: "00000000-0000-0000-0000-0000000000e1", orgId: "00000000-0000-0000-0000-000000000000", name: "Daily verse",
+      id: "00000000-0000-0000-0000-0000000000e1", orgId: "00000000-0000-0000-0000-000000000000", name: NativeL10n.widgetSampleCanvasName,
       botId: "00000000-0000-0000-0000-000000000001", bot: "Milo", botAvatar: "mascot:winky", setAt: now,
       link: "/bots", entries: [entry])
     let list = CanvasList(version: "sample", madeAt: now, items: [canvas])

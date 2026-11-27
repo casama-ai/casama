@@ -23,6 +23,8 @@ class AddAdminDeviceKeyRequest {
     required  this.name,
 
     required  this.publicKey,
+
+     this.scope,
   });
 
   @JsonKey(
@@ -49,17 +51,31 @@ class AddAdminDeviceKeyRequest {
 
 
 
+  @JsonKey(
+    
+    name: r'scope',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final AddAdminDeviceKeyRequestScopeEnum? scope;
+
+
+
 
 
     @override
     bool operator ==(Object other) => identical(this, other) || other is AddAdminDeviceKeyRequest &&
       other.name == name &&
-      other.publicKey == publicKey;
+      other.publicKey == publicKey &&
+      other.scope == scope;
 
     @override
     int get hashCode =>
         name.hashCode +
-        publicKey.hashCode;
+        publicKey.hashCode +
+        scope.hashCode;
 
   factory AddAdminDeviceKeyRequest.fromJson(Map<String, dynamic> json) => _$AddAdminDeviceKeyRequestFromJson(json);
 
@@ -71,4 +87,20 @@ class AddAdminDeviceKeyRequest {
   }
 
 }
+
+
+enum AddAdminDeviceKeyRequestScopeEnum {
+@JsonValue(r'full')
+full(r'full'),
+@JsonValue(r'read')
+read(r'read');
+
+const AddAdminDeviceKeyRequestScopeEnum(this.value);
+
+final String value;
+
+@override
+String toString() => value;
+}
+
 

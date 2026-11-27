@@ -9,6 +9,7 @@ import 'package:quick_actions/quick_actions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../features/siri/siri_index.dart';
+import 'app_language.dart';
 import 'providers.dart';
 import 'router.dart';
 
@@ -94,12 +95,17 @@ final shortcutsProvider = Provider<void>((ref) {
     }
     if (actions != null) {
       final firstRoutine = [for (final b in bots) for (final r in routines[b.id] ?? const <Routine>[]) (r, b)].firstOrNull;
+      final words = ref.read(appStringsProvider);
       try {
         await actions.setShortcutItems([
-          const ShortcutItem(type: 'ask', localizedTitle: 'Quick ask', icon: 'ic_shortcut_ask'),
-          for (final b in bots.take(2)) ShortcutItem(type: 'ask:${b.id}', localizedTitle: 'Ask ${b.name}', icon: 'ic_shortcut_ask'),
+          ShortcutItem(type: 'ask', localizedTitle: words.shortcutQuickAsk, icon: 'ic_shortcut_ask'),
+          for (final b in bots.take(2)) ShortcutItem(type: 'ask:${b.id}', localizedTitle: words.shortcutAskBot(b.name), icon: 'ic_shortcut_ask'),
           if (firstRoutine != null)
-            ShortcutItem(type: 'routine:${firstRoutine.$1.id}:${firstRoutine.$2.id}', localizedTitle: 'Run ${firstRoutine.$1.name}', icon: 'ic_shortcut_routine'),
+            ShortcutItem(
+              type: 'routine:${firstRoutine.$1.id}:${firstRoutine.$2.id}',
+              localizedTitle: words.shortcutRunRoutine(firstRoutine.$1.name),
+              icon: 'ic_shortcut_routine',
+            ),
         ]);
       } catch (_) {}
     }
@@ -109,6 +115,13 @@ final shortcutsProvider = Provider<void>((ref) {
     final bots = next.value;
     if (bots != null) unawaited(sync(bots));
   }, fireImmediately: true);
+  // Android's shortcut titles are written by the app, so a new language writes them again.
+  if (actions != null) {
+    ref.listen(appStringsProvider, (_, _) {
+      final bots = ref.read(botsProvider).value;
+      if (bots != null) unawaited(sync(bots));
+    });
+  }
   // The switch, the app lock or signing out changed what Spotlight may hold.
   if (_apple) {
     ref.listen(siriIndexAllowedProvider, (_, allowed) {

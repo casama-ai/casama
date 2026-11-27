@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ui' show Locale, PlatformDispatcher;
 
 import 'package:audio_session/audio_session.dart';
 import 'package:flutter/foundation.dart';
@@ -7,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_callkit_incoming/entities/entities.dart';
 import 'package:flutter_callkit_incoming/flutter_callkit_incoming.dart';
 
+import '../../core/app_language.dart';
 import '../../l10n/generated/app_localizations.dart';
 
 /// What the phone's own call controls ask of a live call (D-327 §7).
@@ -244,8 +244,8 @@ class AndroidCallService implements CallSystem {
       'live': l10n.callNotificationLive,
       'muted': l10n.callNotificationMuted,
       'reconnecting': l10n.callReconnecting,
-      'mute': l10n.mute,
-      'unmute': l10n.unmute,
+      'mute': l10n.callMicMute,
+      'unmute': l10n.callMicUnmute,
       'end': l10n.callEndCall,
       'channel': l10n.callNotificationChannel,
     };
@@ -302,14 +302,9 @@ class AndroidCallService implements CallSystem {
   }
 }
 
-/// The app's strings outside a widget (the notification's and other native surfaces' words).
-AppLocalizations callStrings() {
-  try {
-    return lookupAppLocalizations(PlatformDispatcher.instance.locale);
-  } catch (_) {
-    return lookupAppLocalizations(const Locale('en'));
-  }
-}
+/// The app's strings outside a widget (the notification's and other native surfaces' words), in
+/// the app's language.
+AppLocalizations callStrings() => AppLanguage.strings();
 
 /// CallKit isn't allowed in mainland China: there the call keeps going on background audio alone,
 /// without the system call UI. Judged by the device's region.

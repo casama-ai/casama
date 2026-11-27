@@ -1,0 +1,71 @@
+# User-facing literals still outside the ARB (test/hardcoded_strings_test.dart).
+# One per line: file, a tab, the literal. Only ever shorter: fix one, then update.
+lib/core/file_provider.dart	Mac Finder
+lib/core/file_provider.dart	iPhone Files
+lib/core/linux_file_dialogs.dart	Audio
+lib/core/linux_file_dialogs.dart	Files
+lib/core/linux_file_dialogs.dart	Images
+lib/core/linux_file_dialogs.dart	Images and videos
+lib/core/linux_file_dialogs.dart	Videos
+lib/features/auth/have_invite_sheet.dart	you@example.com
+lib/features/auth/join_waitlist_sheet.dart	you@example.com
+lib/features/auth/sign_in_screen.dart	you@company.com
+lib/features/billing/billing_screen.dart	home-server
+lib/features/billing/redeem_code_screen.dart	G-XXXXX-XXXXX
+lib/features/bots/action_rules_screen.dart	acme.com
+lib/features/bots/bot_picture.dart	botPicture
+lib/features/bots/knowledge_screen.dart	{} · {} KB
+lib/features/bots/mail_screen.dart	{} KB
+lib/features/chat/media/chat_picture.dart	GIF
+lib/features/chat/widgets/error_details.dart	Run {}
+lib/features/chat/widgets/map_tiles.dart	Google Maps
+lib/features/chat/widgets/map_tiles.dart	Map data ©Google
+lib/features/companion/coding_agents_section.dart	Aider
+lib/features/companion/coding_agents_section.dart	aider
+lib/features/companion/coding_agents_section.dart	aider --message {task} --yes
+lib/features/companion/coding_agents_section.dart	response
+lib/features/companion/companion.dart	Claude Code
+lib/features/companion/companion.dart	Codex
+lib/features/companion/companion.dart	Cursor
+lib/features/companion/companion.dart	Pi
+lib/features/companion/companion.dart	T3 Code
+lib/features/companion/companion_screen.dart	X-API-Key
+lib/features/companion/mcp_import.dart	T3 Code
+lib/features/computer/computer_screen.dart	workspace
+lib/features/devices/device_collector.dart	(no title)
+lib/features/devices/device_connections_screen.dart	com.mybank.app
+lib/features/groups/group_chats.dart	everyone
+lib/features/home/home_shell.dart	chats list
+lib/features/integrations/connect_server_sheet.dart	Authorization
+lib/features/integrations/integrations_screen.dart	Composio
+lib/features/integrations/integrations_screen.dart	Pipedream
+lib/features/link/link_server_screen.dart	K7QM-2XFD
+lib/features/routines/routines_screen.dart	America/Chicago
+lib/features/settings/appearance_screen.dart	casama-theme:…
+lib/features/settings/gallery_previews.dart	Aa
+lib/features/settings/gallery_screen.dart	https://casama.ai/gallery/{}/{}
+lib/features/settings/model_keys_screen.dart	Main
+lib/features/settings/password_managers_screen.dart	1Password
+lib/features/settings/password_managers_screen.dart	Bitwarden
+lib/features/settings/secrets_screen.dart	api.github.com
+lib/features/settings/support_screen.dart	Go to {}
+lib/features/settings/support_screen.dart	To: {}\nSubject: {}\n\n{}
+lib/features/sites/connect_domain_screen.dart	bakery.com
+lib/features/sites/publish_site_sheet.dart	https://{}.{}
+lib/features/skills/skill_library.dart	 (executable)
+lib/features/skills/skill_library.dart	SKILL.md
+lib/features/skills/skills_screen.dart	weekly-report
+lib/features/watch/watch_screen.dart	KQ7M 2XAB
+lib/features/workspaces/join_flow.dart	https://…/join/…  ·  7F3Q-9XWD
+lib/features/workspaces/people_screen.dart	ana@company.com, ben@company.com
+lib/features/workspaces/spaces.dart	Honcho
+lib/features/workspaces/spaces.dart	Infisical · {} · {}
+lib/features/workspaces/spaces.dart	Supermemory
+lib/features/workspaces/spaces.dart	US
+lib/features/workspaces/spaces.dart	prod
+lib/features/workspaces/workspace_files.dart	main
+lib/features/workspaces/workspace_files.dart	owner/repository
+lib/features/workspaces/workspace_picture.dart	workspacePicture
+lib/theme/schemes.dart	From the gallery
+lib/theme/schemes.dart	From the gallery
+lib/ui/avatar_cropper.dart	avatarCropper

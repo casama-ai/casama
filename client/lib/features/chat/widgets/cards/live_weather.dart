@@ -634,7 +634,7 @@ final airQualityComponent = liveCard('AirQuality', const ['place', 'aqi', 'scale
           children: [
             for (final x in p.rows('pollutants')) FactChip(icon: LucideIcons.circleDot, label: pol(x.s('id') ?? ''), value: '${(x.n('value') ?? 0).round()} ${x.s('unit') ?? ''}'),
             if (p.n('uv') != null) FactChip(icon: LucideIcons.sun, label: l.cardUv, value: _uvWords(l, p.n('uv')!)),
-            for (final x in pollen.take(3)) FactChip(icon: LucideIcons.flower2, label: l.cardPollen(x.s('kind') ?? ''), value: '${(x.n('value') ?? 0).round()}'),
+            for (final x in pollen.take(3)) FactChip(icon: LucideIcons.flower2, label: l.cardPollenKind(x.s('kind') ?? ''), value: '${(x.n('value') ?? 0).round()}'),
           ],
         ),
         if (hours.length > 3) ...[
@@ -677,7 +677,7 @@ final sunMoonComponent = liveCard('SunMoon', const ['place', 'date', 'sun', 'moo
               Row(
                 children: [
                   _SunTime(icon: LucideIcons.sunrise, label: l.cardSunrise, value: rise == null ? '—' : clockOf(context, rise)),
-                  _SunTime(icon: LucideIcons.hourglass, label: l.cardDayLength, value: mins == null ? '—' : dur(mins), note: change == null || change == 0 ? null : '${change > 0 ? '+' : '−'}${change.abs().toStringAsFixed(1)} min'),
+                  _SunTime(icon: LucideIcons.hourglass, label: l.cardDayLength, value: mins == null ? '—' : dur(mins), note: change == null || change == 0 ? null : '${change > 0 ? '+' : '−'}${fmtNum(context, change.abs(), digits: 1)} min'),
                   _SunTime(icon: LucideIcons.sunset, label: l.cardSunset, value: set == null ? '—' : clockOf(context, set)),
                 ],
               ),

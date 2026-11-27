@@ -35,10 +35,13 @@ class SuggestionPushReceiver : BroadcastReceiver() {
         val id = suggestionId.hashCode()
 
         val manager = context.getSystemService(NotificationManager::class.java) ?: return
-        if (manager.getNotificationChannel(CHANNEL) == null) {
+        val channelName = context.getString(R.string.notif_channel_suggestions)
+        val channelAbout = context.getString(R.string.notif_channel_suggestions_description)
+        val old = manager.getNotificationChannel(CHANNEL)
+        if (old == null || old.name != channelName || old.description != channelAbout) {
             manager.createNotificationChannel(
-                NotificationChannel(CHANNEL, "Suggestions", NotificationManager.IMPORTANCE_HIGH).apply {
-                    description = "Things your bots offer to do for you"
+                NotificationChannel(CHANNEL, channelName, NotificationManager.IMPORTANCE_HIGH).apply {
+                    description = channelAbout
                 },
             )
         }
@@ -70,8 +73,8 @@ class SuggestionPushReceiver : BroadcastReceiver() {
             .setStyle(Notification.BigTextStyle().bigText(body))
             .setAutoCancel(true)
             .setContentIntent(open("casama://app/inbox", id))
-            .addAction(action("Do it", open(accept, id + 1)))
-            .addAction(action("Not now", later))
+            .addAction(action(context.getString(R.string.notif_do_it), open(accept, id + 1)))
+            .addAction(action(context.getString(R.string.notif_not_now), later))
             .build()
         try {
             manager.notify(id, notification)

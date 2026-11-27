@@ -57,6 +57,7 @@ open.
 | `packages/client`, `dart/casama_api`, `dart/casama_sdk` | TypeScript and Dart SDKs | Apache-2.0 |
 | `dart/cli` | The `casama` command | Apache-2.0 |
 | `packages/mcp`, `packages/plugin-check` | MCP server and plugin checker | Apache-2.0 |
+| `packages/l10n` | `l10n-kit`, the translation pipeline | Apache-2.0 |
 | `packages/contracts`, `packages/formats` | API schemas and builder file formats | Apache-2.0 |
 | `agent-kit/`, `examples/`, `packs/`, `skills/` | Build-on-Casama kit | Apache-2.0 |
 | `docs-site/` | The public docs | Apache-2.0 |

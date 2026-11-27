@@ -11,11 +11,11 @@
         <ImageView android:layout_width="24dp" android:layout_height="24dp" android:layout_marginEnd="8dp"
             android:importantForAccessibility="no" android:src="@drawable/mascot_starry" />
         <TextView style="@style/WidgetText.Title" android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="Brief" />
+            android:text="@string/widget_brief" />
         <TextView style="@style/WidgetText.Second" android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:layout_marginStart="8dp" android:text="Ada · 7:02" />
     </LinearLayout>
     <TextView style="@style/WidgetText" android:layout_width="match_parent" android:layout_height="wrap_content"
         android:layout_marginTop="10dp" android:lineSpacingExtra="2dp" android:maxLines="4"
-        android:text="Good morning. Two meetings today, the first at 10:00 with the design team. Rain after 3, so take a coat. Your flight to Lisbon is confirmed for Friday." />
+        android:text="@string/widget_sample_morning" />
 </LinearLayout>

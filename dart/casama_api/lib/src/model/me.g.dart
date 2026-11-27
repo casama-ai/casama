@@ -13,7 +13,7 @@ abstract class _$MeCWProxy {
 
   Me displayName(String? displayName);
 
-  Me locale(String locale);
+  Me locale(String? locale);
 
   Me timezone(String timezone);
 
@@ -37,7 +37,7 @@ abstract class _$MeCWProxy {
     String userId,
     String? email,
     String? displayName,
-    String locale,
+    String? locale,
     String timezone,
     bool? isInternal,
     AccountAgeBand? accountAgeBand,
@@ -63,7 +63,7 @@ class _$MeCWProxyImpl implements _$MeCWProxy {
   Me displayName(String? displayName) => call(displayName: displayName);
 
   @override
-  Me locale(String locale) => call(locale: locale);
+  Me locale(String? locale) => call(locale: locale);
 
   @override
   Me timezone(String timezone) => call(timezone: timezone);
@@ -116,10 +116,10 @@ class _$MeCWProxyImpl implements _$MeCWProxy {
           ? _value.displayName
           // ignore: cast_nullable_to_non_nullable
           : displayName as String?,
-      locale: locale == const $CopyWithPlaceholder() || locale == null
+      locale: locale == const $CopyWithPlaceholder()
           ? _value.locale
           // ignore: cast_nullable_to_non_nullable
-          : locale as String,
+          : locale as String?,
       timezone: timezone == const $CopyWithPlaceholder() || timezone == null
           ? _value.timezone
           // ignore: cast_nullable_to_non_nullable
@@ -176,7 +176,7 @@ Me _$MeFromJson(Map<String, dynamic> json) => $checkedCreate(
       userId: $checkedConvert('user_id', (v) => v as String),
       email: $checkedConvert('email', (v) => v as String?),
       displayName: $checkedConvert('display_name', (v) => v as String?),
-      locale: $checkedConvert('locale', (v) => v as String),
+      locale: $checkedConvert('locale', (v) => v as String?),
       timezone: $checkedConvert('timezone', (v) => v as String),
       isInternal: $checkedConvert('is_internal', (v) => v as bool?),
       accountAgeBand: $checkedConvert(

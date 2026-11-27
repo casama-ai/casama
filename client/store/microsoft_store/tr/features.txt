@@ -1,0 +1,8 @@
+Tarayıcısı, dosyaları ve uygulamalarıyla kendi yalıtılmış bilgisayarına sahip yapay zeka ekip arkadaşları
+Botun çalışmasını canlı izleyin veya kontrolü istediğiniz an devralın
+Gönderme, rezervasyon, ödeme ve silme işlemleri onayınızı bekler; Reddet işlemi geri alır
+Botlar belirli bir programda, e-posta geldiğinde veya bir web sayfası değiştiğinde başlar
+Her sohbette korunan hafıza ve beceriler
+40'tan fazla hazır bot ile insanları ve botları buluşturan grup sohbetleri
+Botlar WhatsApp, Telegram, Slack, Discord ve e-posta üzerinden yanıt verir
+Açık kaynaklı uygulamalar, SDK'lar, CLI ve güvenlik kuralları

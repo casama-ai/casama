@@ -1,6 +1,15 @@
 import { z } from "@hono/zod-openapi";
 import { Uuid } from "./common.ts";
 
+/**
+ * The languages `profiles.locale` takes: English and the ones docs/LOCALIZATION-PLAN.md plans
+ * (waves 1 to 3), each with an optional script and region ("de", "pt-BR", "zh-Hant-TW").
+ */
+export const ProfileLocale = z
+  .string()
+  .max(16)
+  .regex(/^(en|es|pt|fr|de|ja|ko|zh|it|id|tr|vi|ar|hi)(-[A-Za-z]{4})?(-([A-Za-z]{2}|[0-9]{3}))?$/);
+
 /** About you (D-169): see routes/about-you.ts. */
 export const AboutYou = z
   .object({
@@ -51,6 +60,8 @@ export const UpdateAboutYouRequest = z
     name_asked: z.literal(true).optional(),
     /** Turning it on means the person confirms they're 18 or older (D-522). */
     adult_sites: z.boolean().optional(),
+    /** The language the person picked, saved to the profile; null follows their device again. */
+    locale: ProfileLocale.nullable().optional(),
   })
   .openapi("UpdateAboutYouRequest");
 

@@ -10,7 +10,7 @@
         android:text="2" android:textColor="@color/widget_orange" />
     <FrameLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
     <TextView style="@style/WidgetText.Title" android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:text="Needs you" />
+        android:text="@string/widget_needs_you" />
     <TextView style="@style/WidgetText.Second" android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:layout_marginTop="3dp" android:maxLines="2" android:text="Milo wants to search flight prices for Lisbon" />
+        android:layout_marginTop="3dp" android:maxLines="2" android:text="@string/widget_sample_need_android" />
 </LinearLayout>

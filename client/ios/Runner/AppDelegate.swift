@@ -39,8 +39,8 @@ import WebKit
       UNNotificationCategory(
         identifier: "SUGGESTION",
         actions: [
-          UNNotificationAction(identifier: "accept", title: "Do it", options: [.foreground]),
-          UNNotificationAction(identifier: "later", title: "Not now", options: []),
+          UNNotificationAction(identifier: "accept", title: NativeL10n.notifDoIt, options: [.foreground]),
+          UNNotificationAction(identifier: "later", title: NativeL10n.notifNotNow, options: []),
         ],
         intentIdentifiers: [],
         options: []),
@@ -50,8 +50,8 @@ import WebKit
         identifier: "APPROVAL",
         actions: [
           // "Allow", as the app and the watch say it (D-410); the id stays "approve".
-          UNNotificationAction(identifier: "approve", title: "Allow", options: [.foreground, .authenticationRequired]),
-          UNNotificationAction(identifier: "deny", title: "Deny", options: [.foreground, .authenticationRequired, .destructive]),
+          UNNotificationAction(identifier: "approve", title: NativeL10n.notifAllow, options: [.foreground, .authenticationRequired]),
+          UNNotificationAction(identifier: "deny", title: NativeL10n.notifDeny, options: [.foreground, .authenticationRequired, .destructive]),
         ],
         intentIdentifiers: [],
         options: []),
@@ -62,10 +62,10 @@ import WebKit
         actions: [
           UNTextInputNotificationAction(
             identifier: "reply",
-            title: "Reply",
+            title: NativeL10n.notifReply,
             options: [],
-            textInputButtonTitle: "Send",
-            textInputPlaceholder: "Reply…"
+            textInputButtonTitle: NativeL10n.notifSend,
+            textInputPlaceholder: NativeL10n.notifReplyPlaceholder
           ),
         ],
         intentIdentifiers: [],

@@ -36,7 +36,7 @@ String savedResetReason(AppLocalizations words, String? reason) =>
 /// none to refill, the daily limit or computer hours it clears.
 String savedResetEffect(AppLocalizations words, SavedLimitReset reset) {
   if (reset.refillUsd > 0) {
-    return words.savedResetConfirm(reset.refillUsd.toStringAsFixed(2));
+    return words.savedResetConfirm(formatUsd(reset.refillUsd, words.localeName));
   }
   if (reset.resetDaily) return words.savedResetConfirmDaily;
   return words.savedResetConfirmComputer;
@@ -70,7 +70,7 @@ class _SavedResetsState extends ConsumerState<SavedResets> {
       showToast(
         context,
         refilled > 0
-            ? words.savedResetDone('\$${refilled.toStringAsFixed(2)}')
+            ? words.savedResetDone(formatUsd(refilled, words.localeName))
             : words.savedResetDoneNoCredits,
         kind: ToastKind.success,
       );
@@ -115,7 +115,7 @@ class _ResetCard extends StatelessWidget {
     // The exact time only matters when it's close.
     final when = soon ? expires.formattedExact(context) : expires.formattedWeekdayDate(context);
     final effects = <(IconData, String)>[
-      if (reset.refillUsd > 0) (LucideIcons.wallet, words.savedResetRefills('\$${reset.refillUsd.toStringAsFixed(2)}')),
+      if (reset.refillUsd > 0) (LucideIcons.wallet, words.savedResetRefills(formatUsd(reset.refillUsd, words.localeName))),
       if (reset.resetDaily) (LucideIcons.sunrise, words.savedResetClearsDaily),
       if (reset.resetComputer) (LucideIcons.monitor, words.savedResetGivesHours),
     ];

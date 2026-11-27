@@ -22,7 +22,7 @@ import android.widget.RemoteViews
 class BotStatusWidget : CasamaWidget() {
   override fun build(context: Context, manager: AppWidgetManager, host: WidgetHost): RemoteViews {
     val bot = WidgetConfig.botFor(context, host.id, host.glance)!!
-    val live = WidgetKit.live(host.snap.prefs)?.takeIf { it.botId == bot.id || (it.botId.isEmpty() && it.bot == bot.name) }
+    val live = WidgetKit.live(host.snap.prefs, host.words)?.takeIf { it.botId == bot.id || (it.botId.isEmpty() && it.bot == bot.name) }
     val state = State.of(context, host, bot, live)
     return WidgetKit.sized(
       context, manager, host.id,
@@ -138,7 +138,7 @@ class BotStatusWidget : CasamaWidget() {
     val p = host.snap.prefs
     val name = p.getString("bot_name", null)?.ifEmpty { null }
     if (host.snap.state != GlanceStore.State.UPDATE_SERVER || name == null) return super.stateViews(context, manager, host)
-    val live = WidgetKit.live(p)
+    val live = WidgetKit.live(p, host.words)
     return RemoteViews(context.packageName, R.layout.widget_tile).apply {
       val shown = live?.bot?.ifEmpty { null } ?: name
       setImageViewBitmap(R.id.w_lead_mark, WidgetKit.mark(context, shown, live?.avatar ?: p.getString("bot_avatar", null), 40))

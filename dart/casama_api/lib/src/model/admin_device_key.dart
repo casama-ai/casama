@@ -27,6 +27,8 @@ class AdminDeviceKey {
     required  this.createdAt,
 
     required  this.lastUsedAt,
+
+    required  this.scope,
   });
 
   @JsonKey(
@@ -77,6 +79,18 @@ class AdminDeviceKey {
 
 
 
+  @JsonKey(
+    
+    name: r'scope',
+    required: true,
+    includeIfNull: false,
+  )
+
+
+  final AdminDeviceKeyScopeEnum scope;
+
+
+
 
 
     @override
@@ -84,14 +98,16 @@ class AdminDeviceKey {
       other.id == id &&
       other.name == name &&
       other.createdAt == createdAt &&
-      other.lastUsedAt == lastUsedAt;
+      other.lastUsedAt == lastUsedAt &&
+      other.scope == scope;
 
     @override
     int get hashCode =>
         id.hashCode +
         name.hashCode +
         createdAt.hashCode +
-        (lastUsedAt == null ? 0 : lastUsedAt.hashCode);
+        (lastUsedAt == null ? 0 : lastUsedAt.hashCode) +
+        scope.hashCode;
 
   factory AdminDeviceKey.fromJson(Map<String, dynamic> json) => _$AdminDeviceKeyFromJson(json);
 
@@ -103,4 +119,20 @@ class AdminDeviceKey {
   }
 
 }
+
+
+enum AdminDeviceKeyScopeEnum {
+@JsonValue(r'full')
+full(r'full'),
+@JsonValue(r'read')
+read(r'read');
+
+const AdminDeviceKeyScopeEnum(this.value);
+
+final String value;
+
+@override
+String toString() => value;
+}
+
 

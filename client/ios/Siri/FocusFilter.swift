@@ -6,28 +6,34 @@ import Foundation
 /// and optionally hold proactive check-ins on the server (`quiet_until`).
 @available(iOS 16.0, macOS 13.0, *)
 struct CasamaFocusFilter: SetFocusFilterIntent {
-  static var title: LocalizedStringResource = "Set Casama Focus Filter"
+  static var title: LocalizedStringResource = LocalizedStringResource("siriFocusTitle", defaultValue: "Set Casama Focus Filter", table: "Native")
   static var description = IntentDescription(
-    "Show only chosen bots and optionally hold proactive check-ins while this Focus is active."
+    LocalizedStringResource("siriFocusDescription", defaultValue: "Show only chosen bots and optionally hold proactive check-ins while this Focus is active.", table: "Native")
   )
 
-  @Parameter(title: "Bots to show")
+  @Parameter(title: LocalizedStringResource("siriFocusBots", defaultValue: "Bots to show", table: "Native"))
   var bots: [BotEntity]?
 
-  @Parameter(title: "Hold proactive check-ins", default: false)
+  @Parameter(title: LocalizedStringResource("siriFocusHold", defaultValue: "Hold proactive check-ins", table: "Native"), default: false)
   var holdCheckIns: Bool
 
   var displayRepresentation: DisplayRepresentation {
     let count = bots?.count ?? 0
     if count > 0 {
       return DisplayRepresentation(
-        title: "Show \(count) bot\(count == 1 ? "" : "s")",
-        subtitle: holdCheckIns ? "Hold check-ins" : "Allow check-ins"
+        title: count == 1
+          ? LocalizedStringResource("siriFocusShowOne", defaultValue: "Show 1 bot", table: "Native")
+          : LocalizedStringResource("siriFocusShowMany", defaultValue: "Show \(count) bots", table: "Native"),
+        subtitle: holdCheckIns
+          ? LocalizedStringResource("siriFocusHoldCheckIns", defaultValue: "Hold check-ins", table: "Native")
+          : LocalizedStringResource("siriFocusAllowCheckIns", defaultValue: "Allow check-ins", table: "Native")
       )
     }
     return DisplayRepresentation(
-      title: holdCheckIns ? "Hold check-ins" : "All bots",
-      subtitle: holdCheckIns ? "All bots visible" : nil
+      title: holdCheckIns
+        ? LocalizedStringResource("siriFocusHoldCheckIns", defaultValue: "Hold check-ins", table: "Native")
+        : LocalizedStringResource("siriFocusAllBots", defaultValue: "All bots", table: "Native"),
+      subtitle: holdCheckIns ? LocalizedStringResource("siriFocusAllVisible", defaultValue: "All bots visible", table: "Native") : nil
     )
   }
 

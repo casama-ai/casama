@@ -9,22 +9,26 @@ import SwiftUI
 // on any Siri (iOS 16+, macOS 13+). Phase 2: bots, routines and chats are findable in Spotlight and
 // by Siri AI (iOS 18+, macOS 15+), and a tap opens them.
 //
-// Titles and phrases are literals Apple indexes ahead of time, so they stay here, in English.
-// What Siri says back comes from Dart (app_en.arb); the English lines below are only for when Dart
-// couldn't answer. Every intent asks for the phone to be unlocked first (decision 4).
+// Titles and phrases are literals Apple indexes ahead of time: each title writes its arb key and
+// English in place, each phrase says a siriPhrase* key's English, and the string catalogs carry the
+// other languages (scripts/gen-native-strings.mjs). What Siri says back comes from Dart; the lines
+// here are only for when Dart couldn't answer. Every intent asks for the phone to be unlocked first
+// (decision 4).
 
 /// What Siri says when the app must come forward (Dart didn't come up in time or couldn't act).
 @available(iOS 16.0, macOS 13.0, *)
-private var openToFinish: IntentDialog { "Opening Casama to finish." }
+private var openToFinish: IntentDialog {
+  IntentDialog(LocalizedStringResource("siriOpeningToFinish", defaultValue: "Opening Casama to finish.", table: "Native"))
+}
 
 // MARK: Entities
 
 @available(iOS 16.0, macOS 13.0, *)
 struct BotEntity: AppEntity {
-  static var typeDisplayRepresentation: TypeDisplayRepresentation = "Bot"
+  static var typeDisplayRepresentation = TypeDisplayRepresentation(name: LocalizedStringResource("siriBot", defaultValue: "Bot", table: "Native"))
   static var defaultQuery = BotQuery()
   let id: String
-  @Property(title: "Name") var name: String
+  @Property(title: LocalizedStringResource("siriName", defaultValue: "Name", table: "Native")) var name: String
 
   init(id: String, name: String) {
     self.id = id
@@ -32,7 +36,7 @@ struct BotEntity: AppEntity {
   }
 
   var displayRepresentation: DisplayRepresentation {
-    DisplayRepresentation(title: "\(name)", subtitle: "A bot in Casama, an AI assistant you chat with")
+    DisplayRepresentation(title: "\(name)", subtitle: LocalizedStringResource("siriBotSubtitle", defaultValue: "A bot in Casama, an AI assistant you chat with", table: "Native"))
   }
 }
 
@@ -51,12 +55,12 @@ struct BotQuery: EntityStringQuery {
 
 @available(iOS 16.0, macOS 13.0, *)
 struct RoutineEntity: AppEntity {
-  static var typeDisplayRepresentation: TypeDisplayRepresentation = "Routine"
+  static var typeDisplayRepresentation = TypeDisplayRepresentation(name: LocalizedStringResource("siriRoutine", defaultValue: "Routine", table: "Native"))
   static var defaultQuery = RoutineQuery()
   /// `<routine id>:<bot id>`, as the app's list writes it.
   let id: String
-  @Property(title: "Name") var name: String
-  @Property(title: "Bot") var bot: String
+  @Property(title: LocalizedStringResource("siriName", defaultValue: "Name", table: "Native")) var name: String
+  @Property(title: LocalizedStringResource("siriBot", defaultValue: "Bot", table: "Native")) var bot: String
 
   init(id: String, name: String, bot: String) {
     self.id = id
@@ -65,7 +69,7 @@ struct RoutineEntity: AppEntity {
   }
 
   var displayRepresentation: DisplayRepresentation {
-    DisplayRepresentation(title: "\(name)", subtitle: "A routine \(bot) runs in Casama")
+    DisplayRepresentation(title: "\(name)", subtitle: LocalizedStringResource("siriRoutineSubtitle", defaultValue: "A routine \(bot) runs in Casama", table: "Native"))
   }
 }
 
@@ -84,11 +88,11 @@ struct RoutineQuery: EntityStringQuery {
 /// A chat with a bot: its title and the bot, never what was said in it (§4.4).
 @available(iOS 16.0, macOS 13.0, *)
 struct ChatEntity: AppEntity {
-  static var typeDisplayRepresentation: TypeDisplayRepresentation = "Chat"
+  static var typeDisplayRepresentation = TypeDisplayRepresentation(name: LocalizedStringResource("siriChat", defaultValue: "Chat", table: "Native"))
   static var defaultQuery = ChatQuery()
   let id: String
-  @Property(title: "Title") var name: String
-  @Property(title: "Bot") var bot: String
+  @Property(title: LocalizedStringResource("siriTitle", defaultValue: "Title", table: "Native")) var name: String
+  @Property(title: LocalizedStringResource("siriBot", defaultValue: "Bot", table: "Native")) var bot: String
   let botId: String
 
   init(id: String, name: String, bot: String, botId: String) {
@@ -99,7 +103,7 @@ struct ChatEntity: AppEntity {
   }
 
   var displayRepresentation: DisplayRepresentation {
-    DisplayRepresentation(title: "\(name)", subtitle: "A chat with \(bot) in Casama")
+    DisplayRepresentation(title: "\(name)", subtitle: LocalizedStringResource("siriChatSubtitle", defaultValue: "A chat with \(bot) in Casama", table: "Native"))
   }
 }
 
@@ -121,8 +125,8 @@ extension BotEntity: IndexedEntity {
   var attributeSet: CSSearchableItemAttributeSet {
     let a = defaultAttributeSet
     a.displayName = name
-    a.contentDescription = "Bot in Casama"
-    a.keywords = ["bot", "Casama"]
+    a.contentDescription = NativeL10n.siriBotInCasama
+    a.keywords = [NativeL10n.siriKeywordBot, "Casama"]
     return a
   }
 }
@@ -132,8 +136,8 @@ extension RoutineEntity: IndexedEntity {
   var attributeSet: CSSearchableItemAttributeSet {
     let a = defaultAttributeSet
     a.displayName = name
-    a.contentDescription = "Routine · \(bot)"
-    a.keywords = ["routine", bot]
+    a.contentDescription = NativeL10n.siriRoutineDot(bot)
+    a.keywords = [NativeL10n.siriKeywordRoutine, bot]
     return a
   }
 }
@@ -143,8 +147,8 @@ extension ChatEntity: IndexedEntity {
   var attributeSet: CSSearchableItemAttributeSet {
     let a = defaultAttributeSet
     a.displayName = name
-    a.contentDescription = "Chat with \(bot)"
-    a.keywords = ["chat", bot]
+    a.contentDescription = NativeL10n.siriChatWith(bot)
+    a.keywords = [NativeL10n.siriKeywordChat, bot]
     return a
   }
 }
@@ -153,28 +157,33 @@ extension ChatEntity: IndexedEntity {
 
 @available(iOS 16.0, macOS 13.0, *)
 struct AskBotIntent: AppIntent {
-  static var title: LocalizedStringResource = "Ask a bot"
+  static var title: LocalizedStringResource = LocalizedStringResource("siriAskBot", defaultValue: "Ask a bot", table: "Native")
   static var description = IntentDescription(
-    "Sends a question to one of your Casama bots (AI assistants) in a new chat and reads the reply back. With no bot named, the bot you talked to last answers.",
-    categoryName: "Bots")
+    LocalizedStringResource("siriAskBotDescription", defaultValue: "Sends a question to one of your Casama bots (AI assistants) in a new chat and reads the reply back. With no bot named, the bot you talked to last answers.", table: "Native"),
+    categoryName: LocalizedStringResource("siriCategoryBots", defaultValue: "Bots", table: "Native"))
   static var openAppWhenRun = false
   static var authenticationPolicy: IntentAuthenticationPolicy = .requiresAuthentication
 
-  @Parameter(title: "Bot", description: "Which bot to ask. Leave empty for the bot you talked to last.")
+  @Parameter(
+    title: LocalizedStringResource("siriBot", defaultValue: "Bot", table: "Native"),
+    description: LocalizedStringResource("siriAskBotParamDescription", defaultValue: "Which bot to ask. Leave empty for the bot you talked to last.", table: "Native"))
   var bot: BotEntity?
 
-  @Parameter(title: "Question", description: "What to ask the bot, in your own words.", requestValueDialog: "What should I ask?")
+  @Parameter(
+    title: LocalizedStringResource("siriQuestion", defaultValue: "Question", table: "Native"),
+    description: LocalizedStringResource("siriQuestionDescription", defaultValue: "What to ask the bot, in your own words.", table: "Native"),
+    requestValueDialog: IntentDialog(LocalizedStringResource("siriWhatShouldIAsk", defaultValue: "What should I ask?", table: "Native")))
   var question: String
 
   static var parameterSummary: some ParameterSummary {
-    Summary("Ask \(\.$bot) \(\.$question)")
+    Summary("Ask \(\.$bot) \(\.$question)", table: "Native")
   }
 
   @MainActor
   func perform() async throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
     // Nothing to ask (Shortcuts lets an empty question through): Siri asks for it again.
     if question.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-      throw $question.needsValueError("What should I ask?")
+      throw $question.needsValueError(IntentDialog(LocalizedStringResource("siriWhatShouldIAsk", defaultValue: "What should I ask?", table: "Native")))
     }
     let requestId = UUID().uuidString
     let args: [String: Any] = ["bot_id": bot?.id ?? "", "text": question, "wait_ms": SiriBridge.askWaitMs, "request_id": requestId]
@@ -208,9 +217,9 @@ struct AskBotIntent: AppIntent {
     guard text.count > 400 else { return text }
     let head = String(text.prefix(400))
     if let end = head.range(of: ". ", options: .backwards), head.distance(from: head.startIndex, to: end.lowerBound) > 150 {
-      return String(head[..<end.upperBound]) + "The rest is on screen."
+      return String(head[..<end.upperBound]) + NativeL10n.siriRestOnScreen
     }
-    return head + "… The rest is on screen."
+    return head + NativeL10n.siriRestOnScreenEllipsis
   }
 }
 
@@ -218,18 +227,20 @@ struct AskBotIntent: AppIntent {
 
 @available(iOS 16.0, macOS 13.0, *)
 struct RunRoutineIntent: AppIntent {
-  static var title: LocalizedStringResource = "Run a routine"
+  static var title: LocalizedStringResource = LocalizedStringResource("siriRunRoutine", defaultValue: "Run a routine", table: "Native")
   static var description = IntentDescription(
-    "Runs one of your Casama bots' routines now. The result arrives in the app and as a notification, as it does when the routine runs on its own.",
-    categoryName: "Routines")
+    LocalizedStringResource("siriRunRoutineDescription", defaultValue: "Runs one of your Casama bots' routines now. The result arrives in the app and as a notification, as it does when the routine runs on its own.", table: "Native"),
+    categoryName: LocalizedStringResource("siriRoutines", defaultValue: "Routines", table: "Native"))
   static var openAppWhenRun = false
   static var authenticationPolicy: IntentAuthenticationPolicy = .requiresAuthentication
 
-  @Parameter(title: "Routine", description: "Which routine to run now.")
+  @Parameter(
+    title: LocalizedStringResource("siriRoutine", defaultValue: "Routine", table: "Native"),
+    description: LocalizedStringResource("siriRoutineParamDescription", defaultValue: "Which routine to run now.", table: "Native"))
   var routine: RoutineEntity
 
   static var parameterSummary: some ParameterSummary {
-    Summary("Run \(\.$routine)")
+    Summary("Run \(\.$routine)", table: "Native")
   }
 
   @MainActor
@@ -251,10 +262,10 @@ struct RunRoutineIntent: AppIntent {
 
 @available(iOS 16.0, macOS 13.0, *)
 struct WhatNeedsMeIntent: AppIntent {
-  static var title: LocalizedStringResource = "What needs me"
+  static var title: LocalizedStringResource = LocalizedStringResource("siriWhatNeedsMe", defaultValue: "What needs me", table: "Native")
   static var description = IntentDescription(
-    "Says how many things in Casama are waiting for you: a bot's request for your OK, a takeover, a suggestion. Answer them in the app.",
-    categoryName: "Bots")
+    LocalizedStringResource("siriWhatNeedsMeDescription", defaultValue: "Says how many things in Casama are waiting for you: a bot's request for your OK, a takeover, a suggestion. Answer them in the app.", table: "Native"),
+    categoryName: LocalizedStringResource("siriCategoryBots", defaultValue: "Bots", table: "Native"))
   static var openAppWhenRun = false
   static var authenticationPolicy: IntentAuthenticationPolicy = .requiresAuthentication
 
@@ -272,10 +283,10 @@ struct WhatNeedsMeIntent: AppIntent {
 
 @available(iOS 16.0, macOS 13.0, *)
 struct OpenBotIntent: OpenIntent {
-  static var title: LocalizedStringResource = "Open a bot"
-  static var description = IntentDescription("Opens your chat with one of your Casama bots.")
+  static var title: LocalizedStringResource = LocalizedStringResource("siriOpenBot", defaultValue: "Open a bot", table: "Native")
+  static var description = IntentDescription(LocalizedStringResource("siriOpenBotDescription", defaultValue: "Opens your chat with one of your Casama bots.", table: "Native"))
   static var isDiscoverable = false
-  @Parameter(title: "Bot") var target: BotEntity
+  @Parameter(title: LocalizedStringResource("siriBot", defaultValue: "Bot", table: "Native")) var target: BotEntity
 
   @MainActor
   func perform() async throws -> some IntentResult {
@@ -286,10 +297,10 @@ struct OpenBotIntent: OpenIntent {
 
 @available(iOS 16.0, macOS 13.0, *)
 struct OpenChatIntent: OpenIntent {
-  static var title: LocalizedStringResource = "Open a chat"
-  static var description = IntentDescription("Opens one of your chats with a Casama bot.")
+  static var title: LocalizedStringResource = LocalizedStringResource("siriOpenChat", defaultValue: "Open a chat", table: "Native")
+  static var description = IntentDescription(LocalizedStringResource("siriOpenChatDescription", defaultValue: "Opens one of your chats with a Casama bot.", table: "Native"))
   static var isDiscoverable = false
-  @Parameter(title: "Chat") var target: ChatEntity
+  @Parameter(title: LocalizedStringResource("siriChat", defaultValue: "Chat", table: "Native")) var target: ChatEntity
 
   @MainActor
   func perform() async throws -> some IntentResult {
@@ -300,10 +311,10 @@ struct OpenChatIntent: OpenIntent {
 
 @available(iOS 16.0, macOS 13.0, *)
 struct OpenRoutineIntent: OpenIntent {
-  static var title: LocalizedStringResource = "Open a routine's bot"
-  static var description = IntentDescription("Opens the bot that runs one of your Casama routines.")
+  static var title: LocalizedStringResource = LocalizedStringResource("siriOpenRoutine", defaultValue: "Open a routine's bot", table: "Native")
+  static var description = IntentDescription(LocalizedStringResource("siriOpenRoutineDescription", defaultValue: "Opens the bot that runs one of your Casama routines.", table: "Native"))
   static var isDiscoverable = false
-  @Parameter(title: "Routine") var target: RoutineEntity
+  @Parameter(title: LocalizedStringResource("siriRoutine", defaultValue: "Routine", table: "Native")) var target: RoutineEntity
 
   @MainActor
   func perform() async throws -> some IntentResult {
@@ -317,12 +328,12 @@ struct OpenRoutineIntent: OpenIntent {
 
 @available(iOS 16.0, macOS 13.0, *)
 struct TalkToBotIntent: AppIntent {
-  static var title: LocalizedStringResource = "Talk to a bot"
-  static var description = IntentDescription("Opens voice mode with one of your Casama bots. Available on the Action button.")
+  static var title: LocalizedStringResource = LocalizedStringResource("siriTalkToBot", defaultValue: "Talk to a bot", table: "Native")
+  static var description = IntentDescription(LocalizedStringResource("siriTalkDescription", defaultValue: "Opens voice mode with one of your Casama bots. Available on the Action button.", table: "Native"))
   static var openAppWhenRun = true
   static var authenticationPolicy: IntentAuthenticationPolicy = .requiresAuthentication
 
-  @Parameter(title: "Bot") var bot: BotEntity?
+  @Parameter(title: LocalizedStringResource("siriBot", defaultValue: "Bot", table: "Native")) var bot: BotEntity?
 
   @MainActor
   func perform() async throws -> some IntentResult {
@@ -334,13 +345,13 @@ struct TalkToBotIntent: AppIntent {
 
 @available(iOS 16.0, macOS 13.0, *)
 struct AskBotAndGetReplyIntent: AppIntent {
-  static var title: LocalizedStringResource = "Ask a bot and get the reply"
-  static var description = IntentDescription("Sends a question to a Casama bot and returns its reply text for chaining in Shortcuts.")
+  static var title: LocalizedStringResource = LocalizedStringResource("siriAskGetReply", defaultValue: "Ask a bot and get the reply", table: "Native")
+  static var description = IntentDescription(LocalizedStringResource("siriAskGetReplyDescription", defaultValue: "Sends a question to a Casama bot and returns its reply text for chaining in Shortcuts.", table: "Native"))
   static var openAppWhenRun = false
   static var authenticationPolicy: IntentAuthenticationPolicy = .requiresAuthentication
 
-  @Parameter(title: "Bot") var bot: BotEntity
-  @Parameter(title: "Question") var question: String
+  @Parameter(title: LocalizedStringResource("siriBot", defaultValue: "Bot", table: "Native")) var bot: BotEntity
+  @Parameter(title: LocalizedStringResource("siriQuestion", defaultValue: "Question", table: "Native")) var question: String
 
   @MainActor
   func perform() async throws -> some IntentResult & ReturnsValue<String> {
@@ -360,12 +371,12 @@ struct AskBotAndGetReplyIntent: AppIntent {
 
 @available(iOS 16.0, macOS 13.0, *)
 struct GetLastReplyIntent: AppIntent {
-  static var title: LocalizedStringResource = "Get the last reply"
-  static var description = IntentDescription("Returns the latest reply text from a Casama bot chat.")
+  static var title: LocalizedStringResource = LocalizedStringResource("siriGetLastReply", defaultValue: "Get the last reply", table: "Native")
+  static var description = IntentDescription(LocalizedStringResource("siriGetLastReplyDescription", defaultValue: "Returns the latest reply text from a Casama bot chat.", table: "Native"))
   static var openAppWhenRun = false
   static var authenticationPolicy: IntentAuthenticationPolicy = .requiresAuthentication
 
-  @Parameter(title: "Bot") var bot: BotEntity
+  @Parameter(title: LocalizedStringResource("siriBot", defaultValue: "Bot", table: "Native")) var bot: BotEntity
 
   @MainActor
   func perform() async throws -> some IntentResult & ReturnsValue<String> {
@@ -380,21 +391,21 @@ struct GetLastReplyIntent: AppIntent {
 
 @available(iOS 16.0, macOS 13.0, *)
 struct StartComputerIntent: AppIntent {
-  static var title: LocalizedStringResource = "Start a computer"
-  static var description = IntentDescription("Wakes up a Casama computer after confirmation.")
+  static var title: LocalizedStringResource = LocalizedStringResource("siriStartComputer", defaultValue: "Start a computer", table: "Native")
+  static var description = IntentDescription(LocalizedStringResource("siriStartComputerDescription", defaultValue: "Wakes up a Casama computer after confirmation.", table: "Native"))
   static var openAppWhenRun = false
   static var authenticationPolicy: IntentAuthenticationPolicy = .requiresAuthentication
 
-  @Parameter(title: "Computer name") var computerName: String?
+  @Parameter(title: LocalizedStringResource("siriComputerName", defaultValue: "Computer name", table: "Native")) var computerName: String?
 
   @MainActor
   func perform() async throws -> some IntentResult & ProvidesDialog {
-    let label = (computerName?.isEmpty == false) ? computerName! : "your Casama computer"
-    try await requestConfirmation(result: .result(dialog: "Start \(label)?"))
+    let label = (computerName?.isEmpty == false) ? computerName! : NativeL10n.siriYourComputer
+    try await requestConfirmation(result: .result(dialog: IntentDialog(LocalizedStringResource("siriStartConfirm", defaultValue: "Start \(label)?", table: "Native"))))
     guard let answer = await SiriBridge.shared.call("start_computer", ["name": computerName ?? ""]),
           let say = answer["say"] as? String
     else {
-      return .result(dialog: "Open Casama to start your computer.")
+      return .result(dialog: IntentDialog(LocalizedStringResource("siriOpenToStartComputer", defaultValue: "Open Casama to start your computer.", table: "Native")))
     }
     return .result(dialog: IntentDialog(stringLiteral: say))
   }
@@ -408,19 +419,19 @@ struct CasamaShortcuts: AppShortcutsProvider {
     AppShortcut(
       intent: AskBotIntent(),
       phrases: ["Ask \(.applicationName)", "Ask a bot in \(.applicationName)", "Ask \(\.$bot) in \(.applicationName)"],
-      shortTitle: "Ask a bot", systemImageName: "bubble.left")
+      shortTitle: LocalizedStringResource("siriAskBot", defaultValue: "Ask a bot", table: "Native"), systemImageName: "bubble.left")
     AppShortcut(
       intent: TalkToBotIntent(),
       phrases: ["Talk to a bot in \(.applicationName)", "Talk to \(\.$bot) in \(.applicationName)"],
-      shortTitle: "Talk to a bot", systemImageName: "waveform")
+      shortTitle: LocalizedStringResource("siriTalkToBot", defaultValue: "Talk to a bot", table: "Native"), systemImageName: "waveform")
     AppShortcut(
       intent: RunRoutineIntent(),
       phrases: ["Run a routine in \(.applicationName)", "Run \(\.$routine) in \(.applicationName)"],
-      shortTitle: "Run a routine", systemImageName: "clock")
+      shortTitle: LocalizedStringResource("siriRunRoutine", defaultValue: "Run a routine", table: "Native"), systemImageName: "clock")
     AppShortcut(
       intent: WhatNeedsMeIntent(),
       phrases: ["What needs me in \(.applicationName)", "What's waiting in \(.applicationName)"],
-      shortTitle: "What needs me", systemImageName: "tray")
+      shortTitle: LocalizedStringResource("siriWhatNeedsMe", defaultValue: "What needs me", table: "Native"), systemImageName: "tray")
   }
 }
 

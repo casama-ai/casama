@@ -485,7 +485,7 @@ class _CallScreenState extends ConsumerState<CallScreen>
             _CallButton(
               buttonKey: const Key('muteButton'),
               icon: muted ? LucideIcons.micOff : LucideIcons.mic,
-              label: muted ? l10n.unmute : l10n.mute,
+              label: muted ? l10n.callMicUnmute : l10n.callMicMute,
               selected: muted,
               onPressed: call == null ? null : () => c!.setMuted(!muted),
             ),

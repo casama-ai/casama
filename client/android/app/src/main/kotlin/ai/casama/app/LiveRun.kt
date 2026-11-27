@@ -65,21 +65,21 @@ object LiveRun {
   @Volatile var channel: MethodChannel? = null
 
   private val defaults = mapOf(
-    "open" to "Open",
-    "stop" to "Stop",
-    "review" to "Review",
-    "allow" to "Allow",
-    "deny" to "Deny",
-    "needs_ok" to "Needs your OK",
-    "needs_you" to "Needs you",
-    "working" to "Working",
-    "take_over" to "Wants you to take over",
-    "finished" to "Finished",
-    "problem" to "Stopped with a problem",
-    "bot_working" to "A bot is working",
-    "bots_at_work" to "Bots at work",
-    "steps_one" to "1 step",
-    "steps_other" to "%d steps",
+    "open" to R.string.notif_live_open,
+    "stop" to R.string.notif_live_stop,
+    "review" to R.string.notif_live_review,
+    "allow" to R.string.notif_live_allow,
+    "deny" to R.string.notif_live_deny,
+    "needs_ok" to R.string.notif_live_needs_ok,
+    "needs_you" to R.string.notif_live_needs_you,
+    "working" to R.string.notif_live_working,
+    "take_over" to R.string.notif_live_take_over,
+    "finished" to R.string.notif_live_finished,
+    "problem" to R.string.notif_live_problem,
+    "bot_working" to R.string.notif_live_bot_working,
+    "bots_at_work" to R.string.notif_live_bots_at_work,
+    "steps_one" to R.string.notif_live_step_one,
+    "steps_other" to R.string.notif_live_steps,
   )
 
   /** One run as drawn: the feed item's fields (island_feed.dart, IslandItem.toJson). */
@@ -111,7 +111,11 @@ object LiveRun {
 
   private fun labels(context: Context): Map<String, String> {
     val saved = prefs(context).getString("labels", null)?.let { runCatching { JSONObject(it) }.getOrNull() }
-    return defaults.mapValues { (k, v) -> saved?.optString(k)?.takeIf { it.isNotEmpty() } ?: v }
+    return defaults.mapValues { (k, id) ->
+      saved?.optString(k)?.takeIf { it.isNotEmpty() }
+        // The count goes where the app's own words have `%d`.
+        ?: context.getString(id).replace("{count}", "%d")
+    }
   }
 
   private fun manager(context: Context) = context.getSystemService(NotificationManager::class.java)

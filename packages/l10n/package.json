@@ -1,0 +1,57 @@
+{
+  "name": "@casama/l10n",
+  "version": "0.1.0",
+  "description": "l10n-kit: the bookkeeping half of an AI translation pipeline. It finds new and changed strings, writes self-contained work packets for an agent to translate, checks the results (ICU, plurals, placeholders, tags, lengths, glossary) and merges them back, with a lock file and a translation memory.",
+  "type": "module",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/casama-ai/casama/tree/main/packages/l10n",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/casama-ai/casama.git",
+    "directory": "packages/l10n"
+  },
+  "bugs": {
+    "email": "support@casama.ai"
+  },
+  "keywords": [
+    "l10n",
+    "i18n",
+    "translation",
+    "arb",
+    "icu",
+    "xcstrings",
+    "android",
+    "ai-agents"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "bin": {
+    "l10n-kit": "./src/main.ts"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "build": "rm -rf dist && tsc -p tsconfig.build.json && chmod +x dist/main.js",
+    "prepublishOnly": "pnpm run build"
+  },
+  "publishConfig": {
+    "access": "public",
+    "bin": {
+      "l10n-kit": "./dist/main.js"
+    },
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    }
+  }
+}

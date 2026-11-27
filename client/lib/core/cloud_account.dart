@@ -331,6 +331,7 @@ class HttpCloudApi implements CloudApi {
               receiveTimeout: const Duration(seconds: 30),
             ),
           ) {
+    _dio.interceptors.add(const AcceptLanguageInterceptor());
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {

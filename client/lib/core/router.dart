@@ -79,6 +79,7 @@ import '../features/skills/skill_catalog_screen.dart';
 import '../features/skills/skills_screen.dart';
 import '../features/timeline/timeline_screen.dart';
 import '../features/admin/admin_screen.dart';
+import '../features/admin/agent_access.dart' show AdminAgentApproveScreen;
 import '../features/owner_live/owner_live_screen.dart';
 import '../features/billing/billing_screen.dart';
 import '../features/billing/redeem_code_screen.dart';
@@ -517,6 +518,13 @@ final routerProvider = Provider<GoRouter>((ref) {
         ).toString(),
       ),
       GoRoute(path: '/admin/domains', redirect: (_, _) => '/settings/admin?tab=domains'),
+      // An agent's request for admin changes (D-598), opened from its push.
+      GoRoute(
+        path: '/admin/approve/:id',
+        pageBuilder: _outside(
+          (_, s) => AdminAgentApproveScreen(id: s.pathParameters['id']!),
+        ),
+      ),
       // Older servers' notification links: the gallery and your submissions (no screens of their own).
       GoRoute(path: '/gallery', redirect: (_, _) => '/settings/gallery'),
       GoRoute(

@@ -3,6 +3,7 @@ library;
 
 export 'package:casama_api/casama_api.dart';
 
+export 'src/accept_language.dart';
 export 'src/auth.dart';
 export 'src/client.dart';
 export 'src/event_buffer.dart';

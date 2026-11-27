@@ -6,6 +6,7 @@ packages:
   - packages/client
   - packages/contracts
   - packages/formats
+  - packages/l10n
   - packages/mcp
   - packages/plugin-check
   - packages/safety

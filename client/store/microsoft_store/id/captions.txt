@@ -1,0 +1,10 @@
+01-real-work.png	Pekerjaan nyata, beres untukmu
+02-customer-emails.png	Email pelanggan, dijawab untukmu
+03-trips-ok.png	Perjalanan dipesan, hanya dengan izinmu
+04-day-planned.png	Harimu sudah tertata sebelum bangun
+05-window-seat.png	Kursi jendela? Bot ingat
+06-flight-prices.png	Harga tiket pesawat, dipantau untukmu
+07-sites-games.png	Situs dan game, dibuat untukmu
+08-inbox.png	Kotak masukmu, tertangani
+09-birthday-dinner.png	Makan malam ulang tahun, dirancang bertiga
+10-make-it-yours.png	Sesuaikan sesukamu

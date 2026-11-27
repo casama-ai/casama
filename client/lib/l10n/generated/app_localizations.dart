@@ -5,7 +5,18 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
+import 'app_localizations_de.dart';
 import 'app_localizations_en.dart';
+import 'app_localizations_es.dart';
+import 'app_localizations_fr.dart';
+import 'app_localizations_id.dart';
+import 'app_localizations_it.dart';
+import 'app_localizations_ja.dart';
+import 'app_localizations_ko.dart';
+import 'app_localizations_pt.dart';
+import 'app_localizations_tr.dart';
+import 'app_localizations_vi.dart';
+import 'app_localizations_zh.dart';
 
 // ignore_for_file: type=lint
 
@@ -92,7 +103,21 @@ abstract class AppLocalizations {
       ];
 
   /// A list of this localizations delegate's supported locales.
-  static const List<Locale> supportedLocales = <Locale>[Locale('en')];
+  static const List<Locale> supportedLocales = <Locale>[
+    Locale('de'),
+    Locale('en'),
+    Locale('es'),
+    Locale('fr'),
+    Locale('id'),
+    Locale('it'),
+    Locale('ja'),
+    Locale('ko'),
+    Locale('pt'),
+    Locale('tr'),
+    Locale('vi'),
+    Locale('zh'),
+    Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant'),
+  ];
 
   /// No description provided for @appTitle.
   ///
@@ -712,7 +737,7 @@ abstract class AppLocalizations {
   /// **'You can mention up to 3 apps per message.'**
   String get mentionMaxApps;
 
-  /// No description provided for @mentionRemovedApp.
+  /// Read by screen readers after a greyed-out @mention in chat, in parentheses: the connected app (such as Gmail) that was mentioned has since been removed from the workspace. It means 'this app was removed', not a command to remove an app.
   ///
   /// In en, this message translates to:
   /// **'Removed app'**
@@ -802,10 +827,10 @@ abstract class AppLocalizations {
   /// **'Loaded skill {name}'**
   String skillLoaded(String name);
 
-  /// No description provided for @checkpointSaved.
+  /// Line in chat when a bot saved its computer's files before a risky change, so they can be put back. {label} is the restore point's name.
   ///
   /// In en, this message translates to:
-  /// **'Saved checkpoint: {label}'**
+  /// **'Saved restore point: {label}'**
   String checkpointSaved(String label);
 
   /// No description provided for @computerState.
@@ -856,16 +881,16 @@ abstract class AppLocalizations {
   /// **'Restore'**
   String get restore;
 
-  /// No description provided for @restoreConfirm.
+  /// Confirm dialog before putting a computer's files back as they were at a restore point (a saved state).
   ///
   /// In en, this message translates to:
-  /// **'Restore this checkpoint? Files changed since then will be replaced.'**
+  /// **'Go back to this restore point? Files changed since then will be replaced.'**
   String get restoreConfirm;
 
-  /// No description provided for @restored.
+  /// Success message after a computer's files were put back from a restore point.
   ///
   /// In en, this message translates to:
-  /// **'Checkpoint restored.'**
+  /// **'Restore point restored.'**
   String get restored;
 
   /// No description provided for @noRuns.
@@ -909,12 +934,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Files'**
   String get files;
-
-  /// No description provided for @checkpoints.
-  ///
-  /// In en, this message translates to:
-  /// **'Checkpoints'**
-  String get checkpoints;
 
   /// No description provided for @noScreen.
   ///
@@ -987,12 +1006,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Nothing remembered yet.'**
   String get noMemories;
-
-  /// No description provided for @searchMemories.
-  ///
-  /// In en, this message translates to:
-  /// **'Memories'**
-  String get searchMemories;
 
   /// No description provided for @noMemoriesMatch.
   ///
@@ -2818,7 +2831,7 @@ abstract class AppLocalizations {
   /// **'Turn your phone sideways for a bigger screen'**
   String get liveRotateHint;
 
-  /// No description provided for @liveWatching.
+  /// Status on the live view of a bot's computer: the person is only watching and nobody has taken control.
   ///
   /// In en, this message translates to:
   /// **'Watching'**
@@ -3094,10 +3107,10 @@ abstract class AppLocalizations {
   /// **'{bot} needs your help'**
   String botNeedsHelp(String bot);
 
-  /// No description provided for @deleteComputerConfirm.
+  /// Confirm dialog before deleting a computer. {name} is the computer's name.
   ///
   /// In en, this message translates to:
-  /// **'Delete {name}? Its files, snapshots and checkpoints are deleted too.'**
+  /// **'Delete {name}? Its files, snapshots and restore points are deleted too.'**
   String deleteComputerConfirm(String name);
 
   /// No description provided for @latencyMs.
@@ -3340,10 +3353,10 @@ abstract class AppLocalizations {
   /// **'Start using {app}, already connected in this workspace'**
   String approvalAttachConnection(String app);
 
-  /// No description provided for @approvalDontAskAgain.
+  /// Checkbox on an approval card in chat, above Approve: if ticked, the bot does this kind of action from now on without asking first. {bot} is the bot's name.
   ///
   /// In en, this message translates to:
-  /// **'Don\'t ask {bot} again for this'**
+  /// **'Let {bot} do this without asking'**
   String approvalDontAskAgain(String bot);
 
   /// No description provided for @pageShareToPublic.
@@ -3460,17 +3473,29 @@ abstract class AppLocalizations {
   /// **'Get a free key from Google'**
   String get callGetFreeKey;
 
-  /// No description provided for @unmute.
+  /// Voice call button: turn the person's own microphone back on. 'Mic' is the microphone, not the call's sound. Also on the call's system controls and Live Activity. It sits under a small round button: keep it about 12 characters.
   ///
   /// In en, this message translates to:
-  /// **'Unmute'**
-  String get unmute;
+  /// **'Unmute mic'**
+  String get callMicUnmute;
 
-  /// No description provided for @mute.
+  /// Tooltip of the speaker button on a video in chat and on the intro film: turn the video's sound back on. This is what the person hears, not their microphone.
   ///
   /// In en, this message translates to:
-  /// **'Mute'**
-  String get mute;
+  /// **'Unmute sound'**
+  String get videoUnmute;
+
+  /// Voice call button: turn off the person's own microphone so the bot can't hear them. 'Mic' is the microphone, not the call's sound. Also on the call's system controls and Live Activity. It sits under a small round button: keep it about 12 characters.
+  ///
+  /// In en, this message translates to:
+  /// **'Mute mic'**
+  String get callMicMute;
+
+  /// Tooltip of the speaker button on a video in chat and on the intro film: turn the video's sound off. This is what the person hears, not their microphone.
+  ///
+  /// In en, this message translates to:
+  /// **'Mute sound'**
+  String get videoMute;
 
   /// No description provided for @hangUp.
   ///
@@ -5128,6 +5153,138 @@ abstract class AppLocalizations {
   /// **'Removed'**
   String get adminDeviceRemoved;
 
+  /// No description provided for @adminDeviceAgentScope.
+  ///
+  /// In en, this message translates to:
+  /// **'Agent · reads only'**
+  String get adminDeviceAgentScope;
+
+  /// No description provided for @adminAgentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Agents'**
+  String get adminAgentTitle;
+
+  /// No description provided for @adminAgentHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Agents on your computers read the admin console with their own key. To change anything, they ask you first.'**
+  String get adminAgentHelp;
+
+  /// No description provided for @adminAgentNothing.
+  ///
+  /// In en, this message translates to:
+  /// **'No agent requests yet'**
+  String get adminAgentNothing;
+
+  /// No description provided for @adminAgentWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for you'**
+  String get adminAgentWaiting;
+
+  /// No description provided for @adminAgentLive.
+  ///
+  /// In en, this message translates to:
+  /// **'Can make changes · {minutes} min left'**
+  String adminAgentLive(int minutes);
+
+  /// No description provided for @adminAgentStop.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop'**
+  String get adminAgentStop;
+
+  /// No description provided for @adminAgentStopped.
+  ///
+  /// In en, this message translates to:
+  /// **'Agent access stopped'**
+  String get adminAgentStopped;
+
+  /// No description provided for @adminAgentReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Review'**
+  String get adminAgentReview;
+
+  /// No description provided for @adminAgentRequestTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} wants to change admin settings'**
+  String adminAgentRequestTitle(String name);
+
+  /// No description provided for @adminAgentFor.
+  ///
+  /// In en, this message translates to:
+  /// **'For {minutes} minutes'**
+  String adminAgentFor(int minutes);
+
+  /// No description provided for @adminAgentApproveHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Until it ends, the agent can change admin settings, but never your PIN, keys or the admin bot\'s approvals. You can stop it any time under Admin → Security.'**
+  String get adminAgentApproveHelp;
+
+  /// No description provided for @adminAgentApprove.
+  ///
+  /// In en, this message translates to:
+  /// **'Approve'**
+  String get adminAgentApprove;
+
+  /// No description provided for @adminAgentDeny.
+  ///
+  /// In en, this message translates to:
+  /// **'Deny'**
+  String get adminAgentDeny;
+
+  /// No description provided for @adminAgentApproved.
+  ///
+  /// In en, this message translates to:
+  /// **'Approved for {minutes} minutes'**
+  String adminAgentApproved(int minutes);
+
+  /// No description provided for @adminAgentDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Denied'**
+  String get adminAgentDenied;
+
+  /// No description provided for @adminAgentExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'This request expired'**
+  String get adminAgentExpired;
+
+  /// No description provided for @adminAgentEnded.
+  ///
+  /// In en, this message translates to:
+  /// **'This access has ended'**
+  String get adminAgentEnded;
+
+  /// No description provided for @adminAgentChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No changes} =1{1 change} other{{count} changes}}'**
+  String adminAgentChanges(int count);
+
+  /// No description provided for @adminAgentConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Approve agent access'**
+  String get adminAgentConfirm;
+
+  /// No description provided for @adminAgentLogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent agent activity'**
+  String get adminAgentLogTitle;
+
+  /// No description provided for @adminAgentAction.
+  ///
+  /// In en, this message translates to:
+  /// **'{action, select, read{Read} change{Changed} asked{Asked for changes} approved{Approved} denied{Denied} ended{Ended} other{{action}}}'**
+  String adminAgentAction(String action);
+
   /// No description provided for @adminOverview.
   ///
   /// In en, this message translates to:
@@ -5905,7 +6062,7 @@ abstract class AppLocalizations {
   /// No description provided for @maxBots.
   ///
   /// In en, this message translates to:
-  /// **'Max bots'**
+  /// **'Bot limit'**
   String get maxBots;
 
   /// No description provided for @monthlyUsd.
@@ -6514,10 +6671,10 @@ abstract class AppLocalizations {
   /// **'Delete your account?'**
   String get deleteAccountQuestion;
 
-  /// No description provided for @deleteAccountConfirm.
+  /// Text of the sheet that deletes the account, above the field where the person types their email. Deleting the account does not cancel any subscription, on the web or in a store; the person has to. 'Billing' is the app's billing screen. {email} is their email address.
   ///
   /// In en, this message translates to:
-  /// **'Workspaces where you are the only owner are deleted with your account, including their bots and computers. Type {email} to confirm.'**
+  /// **'Workspaces where you are the only owner are deleted with your account, including their bots and computers. This doesn\'t cancel paid plans. First cancel a plan bought on the web in Billing, and a plan bought in the App Store or Google Play in that store. Type {email} to confirm.'**
   String deleteAccountConfirm(String email);
 
   /// No description provided for @accountDeleted.
@@ -6801,18 +6958,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Turn On'**
   String get notificationsTurnOn;
-
-  /// No description provided for @importAgentHelp.
-  ///
-  /// In en, this message translates to:
-  /// **'Bring a bot over from OpenClaw or Hermes Agent, or paste a setup from Grok Bot, Muse, ChatGPT Dots, Claude Duet, Hark or Instinct: its persona, skills, schedules and memories. You\'ll review everything before it\'s created. Keys and settings files are never read.'**
-  String get importAgentHelp;
-
-  /// No description provided for @checkForUpdates.
-  ///
-  /// In en, this message translates to:
-  /// **'Check for updates'**
-  String get checkForUpdates;
 
   /// No description provided for @autoUpdates.
   ///
@@ -7186,11 +7331,11 @@ abstract class AppLocalizations {
   /// **'{n, plural, =1{In 1 hour} other{In {n} hours}}'**
   String inHours(int n);
 
-  /// No description provided for @tomorrowAt9.
+  /// Quick choice when setting when a one-time routine runs: tomorrow at the given time. {time} is a clock time already formatted for the language. Short.
   ///
   /// In en, this message translates to:
-  /// **'Tomorrow 9:00'**
-  String get tomorrowAt9;
+  /// **'Tomorrow {time}'**
+  String routineTomorrowAt(String time);
 
   /// No description provided for @integrationNeedsName.
   ///
@@ -8272,7 +8417,7 @@ abstract class AppLocalizations {
   /// **'A shell on this computer. Bots use the same one, so you can see and fix what they did.'**
   String get terminalHelp;
 
-  /// No description provided for @up.
+  /// Tooltip of the up-arrow button in a computer's file browser: go to the parent folder.
   ///
   /// In en, this message translates to:
   /// **'Up'**
@@ -8283,18 +8428,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Files your bots make, and files you upload, show up here.'**
   String get emptyFolderHelp;
-
-  /// No description provided for @noCheckpointsTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'No checkpoints yet'**
-  String get noCheckpointsTitle;
-
-  /// No description provided for @checkpointsHelp.
-  ///
-  /// In en, this message translates to:
-  /// **'A checkpoint saves this computer before a risky change. Restoring puts its files back as they were.'**
-  String get checkpointsHelp;
 
   /// No description provided for @deleteFileTitle.
   ///
@@ -8584,7 +8717,7 @@ abstract class AppLocalizations {
   /// **'Edit'**
   String get draftEdit;
 
-  /// No description provided for @draftDoneEditing.
+  /// Button on a draft card in chat that finishes editing it.
   ///
   /// In en, this message translates to:
   /// **'Done'**
@@ -8758,7 +8891,7 @@ abstract class AppLocalizations {
   /// **'Watching'**
   String get botCardWatcher;
 
-  /// No description provided for @botCardScheduled.
+  /// Small green status badge on a card in chat that shows a routine, reminder or watcher a bot just set up: it is saved and scheduled. Past participle ('has been set'), not the verb 'to set' and not 'a set'.
   ///
   /// In en, this message translates to:
   /// **'Set'**
@@ -8824,10 +8957,10 @@ abstract class AppLocalizations {
   /// **'Your themes'**
   String get myThemes;
 
-  /// No description provided for @saveTheme.
+  /// Title of the sheet where the person names and saves how the app looks now. A 'theme' is the app's colors, fonts and wallpaper together.
   ///
   /// In en, this message translates to:
-  /// **'Save Current Look'**
+  /// **'Save Current Theme'**
   String get saveTheme;
 
   /// No description provided for @themeName.
@@ -9124,28 +9257,28 @@ abstract class AppLocalizations {
   /// **'Clear'**
   String get usageClearFilters;
 
-  /// No description provided for @usageFilterBot.
+  /// Title of the picker sheet on the Usage screen where the person chooses which bot to show usage for. A complete title: nothing follows it.
   ///
   /// In en, this message translates to:
-  /// **'Show usage for'**
+  /// **'Filter by bot'**
   String get usageFilterBot;
 
-  /// No description provided for @usageFilterModel.
+  /// Title of the picker sheet on the Usage screen where the person chooses which AI model to show usage for. A complete title: nothing follows it.
   ///
   /// In en, this message translates to:
-  /// **'Show usage of'**
+  /// **'Filter by model'**
   String get usageFilterModel;
 
-  /// No description provided for @usageFilterSource.
+  /// Title of the picker sheet on the Usage screen where the person chooses which source of usage to show (chat, routines, calls and so on). A complete title: nothing follows it.
   ///
   /// In en, this message translates to:
-  /// **'Show usage from'**
+  /// **'Filter by source'**
   String get usageFilterSource;
 
-  /// No description provided for @usageFilterPerson.
+  /// Title of the picker sheet on the Usage screen where the person chooses whose usage to show: the person in the workspace who started it. A complete title: nothing follows it.
   ///
   /// In en, this message translates to:
-  /// **'Show usage started by'**
+  /// **'Filter by person'**
   String get usageFilterPerson;
 
   /// No description provided for @usageSourceChat.
@@ -9292,17 +9425,17 @@ abstract class AppLocalizations {
   /// **'You\'re out of credits. Add more to keep your bots running.'**
   String get creditsOut;
 
-  /// No description provided for @creditsExplainer.
+  /// Note under the credits meter in Billing, for a workspace whose plan includes monthly credits. {price} is one US dollar, already formatted for the language. {amount} is the plan's monthly credits as money.
   ///
   /// In en, this message translates to:
-  /// **'1 credit = \$1. Your plan adds {amount} every month; unused ones carry over for one more month.'**
-  String creditsExplainer(String amount);
+  /// **'1 credit = {price}. Your plan adds {amount} every month; unused credits carry over for one more month.'**
+  String creditsExplainerPlan(String price, String amount);
 
-  /// No description provided for @creditsExplainerShort.
+  /// Note under the credits meter in Billing, when the plan includes no monthly credits. A credit pack is a one-off purchase of extra credits, not a bundle of features. {price} is one US dollar, already formatted for the language.
   ///
   /// In en, this message translates to:
-  /// **'1 credit = \$1. Packs from the App Store or Google Play never expire; web packs last 12 months.'**
-  String get creditsExplainerShort;
+  /// **'1 credit = {price}. Credit packs from the App Store or Google Play never expire; credit packs bought on the web last 12 months.'**
+  String creditsExplainerPacks(String price);
 
   /// No description provided for @creditsDailyLabel.
   ///
@@ -10444,11 +10577,11 @@ abstract class AppLocalizations {
   /// **'Remove \"{name}\"? You won\'t be able to sign in with it any more.'**
   String passkeyRemoveConfirm(String name);
 
-  /// No description provided for @passkeyAddedOn.
+  /// Line under a passkey in the list: when it was added. {when} is a relative time such as '3 days ago' or 'just now', or, after a week, a date such as 'Nov 3, 2026': word the sentence so both fit.
   ///
   /// In en, this message translates to:
-  /// **'Added {date}'**
-  String passkeyAddedOn(String date);
+  /// **'Added {when}'**
+  String passkeyAddedWhen(String when);
 
   /// No description provided for @passkeyLastUsed.
   ///
@@ -11056,11 +11189,17 @@ abstract class AppLocalizations {
   /// **'{name} needs you to sign in'**
   String mcpSignInTitle(String name);
 
-  /// No description provided for @mcpSignInElsewhereHelp.
+  /// Card in chat asking the person to sign in to a local tool (an MCP server) that runs on another of their computers. {device} is that computer's name.
   ///
   /// In en, this message translates to:
   /// **'Open Casama on {device} and sign in there.'**
   String mcpSignInElsewhereHelp(String device);
+
+  /// Card in chat asking the person to sign in to a local tool (an MCP server) that runs on another of their computers, when the app doesn't know that computer's name.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Casama on the computer where this tool runs and sign in there.'**
+  String get mcpSignInElsewhereUnknownHelp;
 
   /// No description provided for @mcpQuestionTitle.
   ///
@@ -11386,7 +11525,7 @@ abstract class AppLocalizations {
   /// **'All'**
   String get filterAll;
 
-  /// No description provided for @filterMine.
+  /// Filter chip on the task board, next to 'All' and 'Bots': only tasks that belong to the person.
   ///
   /// In en, this message translates to:
   /// **'Mine'**
@@ -11950,11 +12089,11 @@ abstract class AppLocalizations {
   /// **'Back'**
   String get back;
 
-  /// No description provided for @deviceAccessSkippedLine.
+  /// One quiet line in chat after the person tapped Not Now on a bot's request to use data from their device. {kind} is a code for the kind of data (never shown): translate every branch as a whole sentence. 'home' means the accessories in Apple's Home app (HomeKit).
   ///
   /// In en, this message translates to:
-  /// **'Not shared: your {what}'**
-  String deviceAccessSkippedLine(String what);
+  /// **'{kind, select, calendar{Not shared: your calendar} reminders{Not shared: your reminders} contacts{Not shared: your contacts} places{Not shared: your places} photos{Not shared: your photos} health{Not shared: your health data} notifications{Not shared: your notifications} activity{Not shared: your computer activity} browserTab{Not shared: your current browser tab} browserHistory{Not shared: your browser history and bookmarks} alarm{Not shared: your alarms} home{Not shared: your Home accessories} other{Not shared: your device data}}'**
+  String deviceAccessNotShared(String kind);
 
   /// No description provided for @decline.
   ///
@@ -12111,6 +12250,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'All'**
   String get searchScopeAll;
+
+  /// No description provided for @searchMemories.
+  ///
+  /// In en, this message translates to:
+  /// **'Memories'**
+  String get searchMemories;
 
   /// No description provided for @searchKeepTyping.
   ///
@@ -12279,6 +12424,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Saved by a bot'**
   String get savedByBot;
+
+  /// No description provided for @checkForUpdates.
+  ///
+  /// In en, this message translates to:
+  /// **'Check for updates'**
+  String get checkForUpdates;
 
   /// No description provided for @attachSkill.
   ///
@@ -12652,7 +12803,7 @@ abstract class AppLocalizations {
   /// **'needs your sign-off'**
   String get needsSignoff;
 
-  /// No description provided for @signOff.
+  /// Button on a project milestone that waits for approval: approve it as finished. Not 'sign out'.
   ///
   /// In en, this message translates to:
   /// **'Sign Off'**
@@ -13036,7 +13187,7 @@ abstract class AppLocalizations {
   /// **'Look every'**
   String get scanEvery;
 
-  /// No description provided for @hours.
+  /// A length of time: the value of the 'Look every' setting for check-ins, and its menu choices.
   ///
   /// In en, this message translates to:
   /// **'{count, plural, =1{1 hour} other{{count} hours}}'**
@@ -13138,19 +13289,19 @@ abstract class AppLocalizations {
   /// **'Signing in'**
   String get catSignIn;
 
-  /// No description provided for @whenTheBot.
+  /// Label of the first menu in an approval rule. It is followed by the chosen kind of action (catSend, catPay, catDelete, catPublish, catShare, catSignIn), read as 'When the bot is: Sending messages'.
   ///
   /// In en, this message translates to:
   /// **'When the bot is'**
   String get whenTheBot;
 
-  /// No description provided for @itShould.
+  /// Label of the dropdown on the approval rule form that follows 'When the bot…': what the bot should do then. 'It' is the bot. The choices include allow, ask first and hand over.
   ///
   /// In en, this message translates to:
   /// **'It should'**
   String get itShould;
 
-  /// No description provided for @ruleAllow.
+  /// Choice in the 'It should' menu of an approval rule: the bot does the action without asking the person first. It completes 'It should…' (itShould).
   ///
   /// In en, this message translates to:
   /// **'Go ahead'**
@@ -13516,7 +13667,7 @@ abstract class AppLocalizations {
   /// **'Leads the group'**
   String get groupLead;
 
-  /// No description provided for @mentionEveryone.
+  /// Never translate: the group chip inserts @everyone, and the app and server only read @everyone, @all or @team.
   ///
   /// In en, this message translates to:
   /// **'everyone'**
@@ -13576,12 +13727,6 @@ abstract class AppLocalizations {
   /// **'Page · Tap to open'**
   String get pageCardOpen;
 
-  /// No description provided for @pageUpdated.
-  ///
-  /// In en, this message translates to:
-  /// **'Updated {date}'**
-  String pageUpdated(String date);
-
   /// No description provided for @exportPdf.
   ///
   /// In en, this message translates to:
@@ -13629,12 +13774,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Open in Pages'**
   String get openPages;
-
-  /// No description provided for @skillInstructions.
-  ///
-  /// In en, this message translates to:
-  /// **'Instructions'**
-  String get skillInstructions;
 
   /// No description provided for @discard.
   ///
@@ -14032,6 +14171,12 @@ abstract class AppLocalizations {
   /// **'Import an Agent'**
   String get importAgent;
 
+  /// No description provided for @importAgentHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Bring a bot over from OpenClaw or Hermes Agent, or paste a setup from Grok Bot, Muse, ChatGPT Dots, Claude Duet, Hark or Instinct: its persona, skills, schedules and memories. You\'ll review everything before it\'s created. Keys and settings files are never read.'**
+  String get importAgentHelp;
+
   /// No description provided for @importAgentPickFolder.
   ///
   /// In en, this message translates to:
@@ -14260,11 +14405,11 @@ abstract class AppLocalizations {
   /// **'Needs a GITHUB_TOKEN secret'**
   String get gitSyncNeedsToken;
 
-  /// No description provided for @gitSyncLast.
+  /// Line on a Git-connected folder in workspace files: when it last synced. {when} is a relative time such as '3 days ago' or 'just now', or, after a week, a date such as 'Nov 3, 2026': word the sentence so both fit.
   ///
   /// In en, this message translates to:
-  /// **'Synced {date}'**
-  String gitSyncLast(String date);
+  /// **'Synced {when}'**
+  String gitSyncedWhen(String when);
 
   /// No description provided for @gitSyncPr.
   ///
@@ -14542,10 +14687,10 @@ abstract class AppLocalizations {
   /// **'{count, plural, =1{1 step} other{{count} steps}}'**
   String replaySteps(int count);
 
-  /// No description provided for @replayRuns.
+  /// Under a saved replay (a recorded set of steps a bot repeats): how often it ran and how many of those runs needed the person's help. Follows other details on the same line, so it starts in lower case.
   ///
   /// In en, this message translates to:
-  /// **'run {runs} times, {failures} needed help'**
+  /// **'{runs, plural, =1{run 1 time} other{run {runs} times}}, {failures, plural, =1{1 needed help} other{{failures} needed help}}'**
   String replayRuns(int runs, int failures);
 
   /// No description provided for @runReplay.
@@ -14812,7 +14957,7 @@ abstract class AppLocalizations {
   /// **'Free Usage Earned'**
   String get inviteFriendsEarned;
 
-  /// No description provided for @inviteFriendsLeft.
+  /// On the Invite Friends screen, under the free usage earned: how many more friends can still earn the person a reward before the limit is reached. {count} is that number.
   ///
   /// In en, this message translates to:
   /// **'{count, plural, =1{1 more friend can earn you a reward} other{{count} more friends can earn you a reward}}'**
@@ -14836,7 +14981,7 @@ abstract class AppLocalizations {
   /// **'Share your link or code with a friend'**
   String get inviteFriendsStep1;
 
-  /// No description provided for @inviteFriendsStep2.
+  /// Second step under 'How It Works' on Invite Friends: the friend makes an account and types the person's invite code within seven days of signing up.
   ///
   /// In en, this message translates to:
   /// **'They sign up and enter your code within a week'**
@@ -15565,7 +15710,7 @@ abstract class AppLocalizations {
   /// No description provided for @botEmailTriggerTag.
   ///
   /// In en, this message translates to:
-  /// **'Plus tag'**
+  /// **'Address tag'**
   String get botEmailTriggerTag;
 
   /// No description provided for @botEmailTriggerTagHelp.
@@ -15610,7 +15755,7 @@ abstract class AppLocalizations {
   /// **'Select'**
   String get botEmailSelect;
 
-  /// No description provided for @botEmailSelectDone.
+  /// Button in a bot's mail list that leaves selection mode.
   ///
   /// In en, this message translates to:
   /// **'Done'**
@@ -15664,11 +15809,11 @@ abstract class AppLocalizations {
   /// **'Older than a year'**
   String get botEmailOlderYear;
 
-  /// No description provided for @botEmailDeleteOlderTitle.
+  /// Title of the confirm dialog before deleting a bot's old email. {age} is a code (never shown); 'other' means one year.
   ///
   /// In en, this message translates to:
-  /// **'Delete all mail {age}?'**
-  String botEmailDeleteOlderTitle(String age);
+  /// **'{age, select, days30{Delete all mail older than 30 days?} months6{Delete all mail older than 6 months?} other{Delete all mail older than a year?}}'**
+  String botEmailDeleteOlderConfirm(String age);
 
   /// No description provided for @botEmailDeleted.
   ///
@@ -16126,11 +16271,11 @@ abstract class AppLocalizations {
   /// **'Rewraps the workspace key with the server\'s current key'**
   String get encryptionRotateHelp;
 
-  /// No description provided for @encryptionRotated.
+  /// Line under the workspace's encryption key: when the key was last replaced with a new one. {when} is a relative time such as '3 days ago' or 'just now', or, after a week, a date such as 'Nov 3, 2026': word the sentence so both fit.
   ///
   /// In en, this message translates to:
-  /// **'Last rotated {date}'**
-  String encryptionRotated(String date);
+  /// **'Last rotated {when}'**
+  String encryptionRotatedWhen(String when);
 
   /// No description provided for @memoryBackend.
   ///
@@ -17050,7 +17195,7 @@ abstract class AppLocalizations {
   /// **'Everything it needs is already on this computer, so it starts in a minute or two.'**
   String get setupServerBodyNothing;
 
-  /// No description provided for @setupServerStart.
+  /// Button in desktop setup that starts downloading and running a Casama server on this computer. A verb.
   ///
   /// In en, this message translates to:
   /// **'Start'**
@@ -17320,11 +17465,11 @@ abstract class AppLocalizations {
   /// **'{count, plural, =1{1 bot} other{{count} bots}}'**
   String desktopUsersCount(int count);
 
-  /// No description provided for @deviceAccessTitle.
+  /// Title of the card in chat where a bot asks to use data from the person's device, with Allow and Not Now buttons. {bot} is the bot's name. {kind} is a code for the kind of data (never shown): translate every branch as a whole sentence. 'home' means the accessories in Apple's Home app (HomeKit).
   ///
   /// In en, this message translates to:
-  /// **'{bot} would like to use your {what}'**
-  String deviceAccessTitle(String bot, String what);
+  /// **'{kind, select, calendar{{bot} would like to use your calendar} reminders{{bot} would like to use your reminders} contacts{{bot} would like to use your contacts} places{{bot} would like to use your places} photos{{bot} would like to use your photos} health{{bot} would like to use your health data} notifications{{bot} would like to use your notifications} activity{{bot} would like to use your computer activity} browserTab{{bot} would like to use your current browser tab} browserHistory{{bot} would like to use your browser history and bookmarks} alarm{{bot} would like to use your alarms} home{{bot} would like to use your Home accessories} other{{bot} would like to use your device data}}'**
+  String deviceAccessAsk(String kind, String bot);
 
   /// No description provided for @deviceAccessHelp.
   ///
@@ -17332,11 +17477,11 @@ abstract class AppLocalizations {
   /// **'Only in your own chats. You can stop it any time in Settings → Device connections.'**
   String get deviceAccessHelp;
 
-  /// No description provided for @deviceAccessAllowed.
+  /// One quiet line in chat after the person allowed a bot's request to use data from their device. {kind} is a code for the kind of data (never shown): translate every branch as a whole sentence. 'home' means the accessories in Apple's Home app (HomeKit).
   ///
   /// In en, this message translates to:
-  /// **'Allowed to use your {what}'**
-  String deviceAccessAllowed(String what);
+  /// **'{kind, select, calendar{Allowed to use your calendar} reminders{Allowed to use your reminders} contacts{Allowed to use your contacts} places{Allowed to use your places} photos{Allowed to use your photos} health{Allowed to use your health data} notifications{Allowed to use your notifications} activity{Allowed to use your computer activity} browserTab{Allowed to use your current browser tab} browserHistory{Allowed to use your browser history and bookmarks} alarm{Allowed to use your alarms} home{Allowed to use your Home accessories} other{Allowed to use your device data}}'**
+  String deviceAccessGranted(String kind);
 
   /// No description provided for @deviceAccessSkipped.
   ///
@@ -17344,73 +17489,73 @@ abstract class AppLocalizations {
   /// **'Not shared'**
   String get deviceAccessSkipped;
 
-  /// No description provided for @deviceKindCalendar.
+  /// Name of a kind of device data in Settings, Device connections: a switch title (the app capitalizes the first letter) and an item in a comma-separated list. Never put inside a sentence.
   ///
   /// In en, this message translates to:
   /// **'calendar'**
   String get deviceKindCalendar;
 
-  /// No description provided for @deviceKindReminders.
+  /// Name of a kind of device data in Settings, Device connections: a switch title (the app capitalizes the first letter) and an item in a comma-separated list. Never put inside a sentence.
   ///
   /// In en, this message translates to:
   /// **'reminders'**
   String get deviceKindReminders;
 
-  /// No description provided for @deviceKindContacts.
+  /// Name of a kind of device data in Settings, Device connections: a switch title (the app capitalizes the first letter) and an item in a comma-separated list. Never put inside a sentence.
   ///
   /// In en, this message translates to:
   /// **'contacts'**
   String get deviceKindContacts;
 
-  /// No description provided for @deviceKindPlaces.
+  /// Name of a kind of device data in Settings, Device connections: a switch title (the app capitalizes the first letter) and an item in a comma-separated list. Never put inside a sentence.
   ///
   /// In en, this message translates to:
   /// **'places'**
   String get deviceKindPlaces;
 
-  /// No description provided for @deviceKindPhotos.
+  /// Name of a kind of device data in Settings, Device connections: a switch title (the app capitalizes the first letter) and an item in a comma-separated list. Never put inside a sentence.
   ///
   /// In en, this message translates to:
   /// **'photos'**
   String get deviceKindPhotos;
 
-  /// No description provided for @deviceKindHealth.
+  /// Name of a kind of device data in Settings, Device connections: a switch title (the app capitalizes the first letter) and an item in a comma-separated list. Never put inside a sentence.
   ///
   /// In en, this message translates to:
   /// **'health data'**
   String get deviceKindHealth;
 
-  /// No description provided for @deviceKindNotifications.
+  /// Name of a kind of device data in Settings, Device connections: a switch title (the app capitalizes the first letter) and an item in a comma-separated list. Never put inside a sentence.
   ///
   /// In en, this message translates to:
   /// **'notifications'**
   String get deviceKindNotifications;
 
-  /// No description provided for @deviceKindActivity.
+  /// Name of a kind of device data in Settings, Device connections: a switch title (the app capitalizes the first letter) and an item in a comma-separated list. Never put inside a sentence.
   ///
   /// In en, this message translates to:
   /// **'computer activity'**
   String get deviceKindActivity;
 
-  /// No description provided for @deviceKindBrowserTab.
+  /// Name of a kind of device data in Settings, Device connections: a switch title (the app capitalizes the first letter) and an item in a comma-separated list. Never put inside a sentence.
   ///
   /// In en, this message translates to:
   /// **'current browser tab'**
   String get deviceKindBrowserTab;
 
-  /// No description provided for @deviceKindBrowserHistory.
+  /// Name of a kind of device data in Settings, Device connections: a switch title (the app capitalizes the first letter) and an item in a comma-separated list. Never put inside a sentence.
   ///
   /// In en, this message translates to:
   /// **'browser history and bookmarks'**
   String get deviceKindBrowserHistory;
 
-  /// Alarms and timers on an iPhone (AlarmKit), lowercase: it follows "your" in a sentence.
+  /// Name of a kind of device data in Settings, Device connections: a switch title (the app capitalizes the first letter) and an item in a comma-separated list. Never put inside a sentence. Means alarms and timers on an iPhone (AlarmKit).
   ///
   /// In en, this message translates to:
   /// **'alarms'**
   String get deviceKindAlarm;
 
-  /// Accessories in Apple's Home app (HomeKit): lights, plugs, locks. Follows "your" in a sentence; Home is the app's name.
+  /// Name of a kind of device data in Settings, Device connections: a switch title (the app capitalizes the first letter) and an item in a comma-separated list. Never put inside a sentence. Means accessories in Apple's Home app (HomeKit): lights, plugs, locks. Home is the app's name.
   ///
   /// In en, this message translates to:
   /// **'Home accessories'**
@@ -17494,11 +17639,11 @@ abstract class AppLocalizations {
   /// **'Allow a bot'**
   String get deviceAllowBot;
 
-  /// No description provided for @deviceAllowBotTitle.
+  /// Title of the sheet in Settings, Device connections, where the person picks a bot to allow. {kind} is a code for the kind of data (never shown): translate every branch as a whole sentence. 'home' means the accessories in Apple's Home app (HomeKit).
   ///
   /// In en, this message translates to:
-  /// **'Which bot may read your {kind}?'**
-  String deviceAllowBotTitle(String kind);
+  /// **'{kind, select, calendar{Which bot may read your calendar?} reminders{Which bot may read your reminders?} contacts{Which bot may read your contacts?} places{Which bot may read your places?} photos{Which bot may read your photos?} health{Which bot may read your health data?} notifications{Which bot may read your notifications?} activity{Which bot may read your computer activity?} browserTab{Which bot may read your current browser tab?} browserHistory{Which bot may read your browser history and bookmarks?} alarm{Which bot may read your alarms?} home{Which bot may read your Home accessories?} other{Which bot may read your device data?}}'**
+  String deviceAllowBotAsk(String kind);
 
   /// No description provided for @devicePermissionDenied.
   ///
@@ -17962,11 +18107,11 @@ abstract class AppLocalizations {
   /// **'Nothing was metered for this reply.'**
   String get replyUsageNothing;
 
-  /// No description provided for @replyUsageCreditsNote.
+  /// Note at the bottom of the sheet that shows what one reply cost. {price} is one US dollar, already formatted for the language. 'Keys and plans' are the person's own AI provider keys and subscriptions.
   ///
   /// In en, this message translates to:
-  /// **'1 credit = \$1. Your own keys and plans are billed by their provider, not by Casama.'**
-  String get replyUsageCreditsNote;
+  /// **'1 credit = {price}. Your own keys and plans are billed by their provider, not by Casama.'**
+  String replyUsageCreditsValue(String price);
 
   /// No description provided for @replyUsageOpenRun.
   ///
@@ -18904,16 +19049,16 @@ abstract class AppLocalizations {
   /// **'Undo'**
   String get undo;
 
-  /// No description provided for @suggestedLookApplied.
+  /// Message after the person accepts an appearance change a bot suggested in chat, with an Undo button.
   ///
   /// In en, this message translates to:
-  /// **'New look applied'**
+  /// **'New theme applied'**
   String get suggestedLookApplied;
 
-  /// No description provided for @suggestedLookUnavailable.
+  /// Warning when a bot suggested an appearance the app on this device doesn't have.
   ///
   /// In en, this message translates to:
-  /// **'This app doesn\'t have that look'**
+  /// **'This app doesn\'t have that theme'**
   String get suggestedLookUnavailable;
 
   /// No description provided for @removedFromProfile.
@@ -19089,6 +19234,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Bots load it on their own when a task fits, or type /{name} in a chat to use it.'**
   String skillUseHint(String name);
+
+  /// No description provided for @skillInstructions.
+  ///
+  /// In en, this message translates to:
+  /// **'Instructions'**
+  String get skillInstructions;
 
   /// No description provided for @skillAlreadyEverywhere.
   ///
@@ -19282,7 +19433,7 @@ abstract class AppLocalizations {
   /// **'Made a look you like? Share it, and everyone on Casama can find it here.'**
   String get galleryContribute;
 
-  /// No description provided for @galleryTypeTheme.
+  /// Kind label on a gallery item or one of the person's own items: a theme, meaning the app's colors, fonts and wallpaper together. A noun.
   ///
   /// In en, this message translates to:
   /// **'Theme'**
@@ -19372,16 +19523,16 @@ abstract class AppLocalizations {
   /// **'Colors'**
   String get customizeColors;
 
-  /// No description provided for @appearanceCustomLook.
+  /// Name shown in Appearance and in Settings when the app's colors, fonts and wallpaper don't match any named theme.
   ///
   /// In en, this message translates to:
-  /// **'Custom look'**
+  /// **'Custom theme'**
   String get appearanceCustomLook;
 
-  /// No description provided for @appearanceCustomHelp.
+  /// Under 'Custom theme' on the Appearance screen.
   ///
   /// In en, this message translates to:
-  /// **'Your own changes. Save them to keep this look.'**
+  /// **'Your own changes. Save them as a theme to keep them.'**
   String get appearanceCustomHelp;
 
   /// No description provided for @appearanceFromGallery.
@@ -19648,22 +19799,17 @@ abstract class AppLocalizations {
   /// **'Renews automatically. Cancel anytime from Billing.'**
   String get paywallFineWeb;
 
-  /// No description provided for @paywallDisclosureStore.
+  /// Fine print under the subscribe button on the paywall for a purchase billed by a phone store. Legal fine print the app stores require: keep every fact (price, automatic renewal, who charges, the 24 hours). In each branch use the store's own official name for the account ('Apple Account', 'Google Play account'). {store} is 'app_store' or 'google_play' (a code, never shown); translate every branch as a whole sentence. {price} is the whole price phrase from paywallPriceWithPeriod, for example '$14.99 per month'.
   ///
   /// In en, this message translates to:
-  /// **'{price} {period}, renewing automatically until you cancel. Payment is charged to your {store}. Cancel anytime in your {store} settings at least 24 hours before it renews.'**
-  String paywallDisclosureStore(String price, String period, String store);
+  /// **'{store, select, app_store{{price}, renewing automatically until you cancel. Payment is charged to your Apple Account. Cancel anytime in your Apple Account settings at least 24 hours before it renews.} google_play{{price}, renewing automatically until you cancel. Payment is charged to your Google Play account. Cancel anytime in your Google Play account settings at least 24 hours before it renews.} other{{price}, renewing automatically until you cancel. Payment is charged to your store account. Cancel anytime in your store account settings at least 24 hours before it renews.}}'**
+  String paywallStoreDisclosure(String price, String store);
 
-  /// No description provided for @paywallDisclosureStoreTrial.
+  /// Fine print under the subscribe button on the paywall when a store purchase starts with a free trial. Legal fine print the app stores require: keep every fact (price, automatic renewal, who charges, the 24 hours). In each branch use the store's own official name for the account ('Apple Account', 'Google Play account'). {store} is 'app_store' or 'google_play' (a code, never shown); translate every branch as a whole sentence. {days} is the trial length, for example 7. {price} is the whole price phrase from paywallPriceWithPeriod, for example '$14.99 per month'.
   ///
   /// In en, this message translates to:
-  /// **'Free for {days} days, then {price} {period}, renewing automatically until you cancel. Payment is charged to your {store} when the trial ends. Cancel in your {store} settings at least 24 hours before the trial ends and you won\'t be charged.'**
-  String paywallDisclosureStoreTrial(
-    int days,
-    String price,
-    String period,
-    String store,
-  );
+  /// **'{store, select, app_store{{days, plural, =1{Free for 1 day, then {price}, renewing automatically until you cancel.} other{Free for {days} days, then {price}, renewing automatically until you cancel.}} Payment is charged to your Apple Account when the trial ends. Cancel in your Apple Account settings at least 24 hours before the trial ends and you won\'t be charged.} google_play{{days, plural, =1{Free for 1 day, then {price}, renewing automatically until you cancel.} other{Free for {days} days, then {price}, renewing automatically until you cancel.}} Payment is charged to your Google Play account when the trial ends. Cancel in your Google Play account settings at least 24 hours before the trial ends and you won\'t be charged.} other{{days, plural, =1{Free for 1 day, then {price}, renewing automatically until you cancel.} other{Free for {days} days, then {price}, renewing automatically until you cancel.}} Payment is charged to your store account when the trial ends. Cancel in your store account settings at least 24 hours before the trial ends and you won\'t be charged.}}'**
+  String paywallStoreDisclosureTrial(int days, String price, String store);
 
   /// No description provided for @paywallStartFreeTrial.
   ///
@@ -19671,11 +19817,17 @@ abstract class AppLocalizations {
   /// **'Start free trial'**
   String get paywallStartFreeTrial;
 
-  /// No description provided for @paywallTrialThen.
+  /// Short line on a paywall plan card billed yearly that starts with a free trial. {days} is the trial length, {price} the yearly price with its currency. '/yr' means per year (as paywallPerYearShort). Short.
   ///
   /// In en, this message translates to:
-  /// **'{days, plural, =1{1 day} other{{days} days}} free, then {price}{period}'**
-  String paywallTrialThen(int days, String price, String period);
+  /// **'{days, plural, =1{1 day free, then {price}/yr} other{{days} days free, then {price}/yr}}'**
+  String paywallTrialThenYearly(int days, String price);
+
+  /// Short line on a paywall plan card billed monthly that starts with a free trial. {days} is the trial length, {price} the monthly price with its currency. '/mo' means per month (as paywallPerMonthShort). Short.
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, =1{1 day free, then {price}/mo} other{{days} days free, then {price}/mo}}'**
+  String paywallTrialThenMonthly(int days, String price);
 
   /// No description provided for @paywallDisclosureWeb.
   ///
@@ -19683,41 +19835,17 @@ abstract class AppLocalizations {
   /// **'{price}, renewing automatically until you cancel. Cancel anytime from Billing; you keep the plan until the period ends.'**
   String paywallDisclosureWeb(String price);
 
-  /// No description provided for @paywallDisclosureWebTrial.
+  /// Fine print under the subscribe button on the paywall when a web checkout starts with a free trial. Legal fine print: keep every fact (price, automatic renewal, how to cancel). {days} is the trial length. {price} is the whole price phrase, for example '$14.99 per month'. 'Billing' is the app's billing screen.
   ///
   /// In en, this message translates to:
-  /// **'Free for {days} days, then {price}, renewing automatically until you cancel. Cancel from Billing before the trial ends and you won\'t be charged.'**
+  /// **'{days, plural, =1{Free for 1 day, then {price}, renewing automatically until you cancel.} other{Free for {days} days, then {price}, renewing automatically until you cancel.}} Cancel from Billing before the trial ends and you won\'t be charged.'**
   String paywallDisclosureWebTrial(int days, String price);
 
-  /// No description provided for @pricePerWeek.
+  /// A subscription's price with how often it is charged, put into the paywall's fine print (paywallStoreDisclosure, paywallDisclosureWeb and their trial versions), often at the start of the sentence. {period} is 'week', 'month' or 'year' (a code, never shown). {price} is the price with its currency, for example '$14.99'.
   ///
   /// In en, this message translates to:
-  /// **'per week'**
-  String get pricePerWeek;
-
-  /// No description provided for @pricePerMonth.
-  ///
-  /// In en, this message translates to:
-  /// **'per month'**
-  String get pricePerMonth;
-
-  /// No description provided for @pricePerYear.
-  ///
-  /// In en, this message translates to:
-  /// **'per year'**
-  String get pricePerYear;
-
-  /// No description provided for @storeAccountApple.
-  ///
-  /// In en, this message translates to:
-  /// **'Apple Account'**
-  String get storeAccountApple;
-
-  /// No description provided for @storeAccountGoogle.
-  ///
-  /// In en, this message translates to:
-  /// **'Google Play account'**
-  String get storeAccountGoogle;
+  /// **'{period, select, week{{price} per week} year{{price} per year} other{{price} per month}}'**
+  String paywallPriceWithPeriod(String price, String period);
 
   /// No description provided for @termsOfUse.
   ///
@@ -19881,11 +20009,11 @@ abstract class AppLocalizations {
   /// **'Switch to {plan}'**
   String paywallSwitchTo(String plan);
 
-  /// No description provided for @subscribedInStoreNote.
+  /// Note under the plans on the billing screen and paywall, for someone whose subscription is billed by a phone store this device can't change. {store} is 'app_store' or 'google_play' (a code, never shown); translate every branch as a whole sentence.
   ///
   /// In en, this message translates to:
-  /// **'You subscribe through {store}. To change plans, use {store} on the device you subscribed with.'**
-  String subscribedInStoreNote(String store);
+  /// **'{store, select, app_store{You subscribe through the App Store. To change plans, use the App Store on the device you subscribed with.} google_play{You subscribe through Google Play. To change plans, use Google Play on the device you subscribed with.} other{You subscribe through an app store. To change plans, use that store on the device you subscribed with.}}'**
+  String subscribedThroughStoreNote(String store);
 
   /// No description provided for @subscribedOnWebNote.
   ///
@@ -19905,10 +20033,10 @@ abstract class AppLocalizations {
   /// **'You\'re out of credits'**
   String get outOfCreditsTitle;
 
-  /// No description provided for @outOfCreditsPaidBody.
+  /// Text of the out-of-credits screen for a workspace on a paid plan. A credit pack is a one-off purchase of extra credits, not a bundle of features (those are 'packs' in the gallery).
   ///
   /// In en, this message translates to:
-  /// **'Your bots pause until you add credits. Packs from the App Store or Google Play never expire; web packs last 12 months.'**
+  /// **'Your bots pause until you add credits. Credit packs from the App Store or Google Play never expire; credit packs bought on the web last 12 months.'**
   String get outOfCreditsPaidBody;
 
   /// No description provided for @outOfCreditsFreeBody.
@@ -20157,7 +20285,7 @@ abstract class AppLocalizations {
   /// **'Back to a brand-new computer.'**
   String get resetOptionEraseHelp;
 
-  /// No description provided for @resetKept.
+  /// Heading of the column that lists what stays on a bot's computer after a reset, next to 'Removed' (resetRemoved). Means 'these things are kept'.
   ///
   /// In en, this message translates to:
   /// **'Kept'**
@@ -20169,7 +20297,7 @@ abstract class AppLocalizations {
   /// **'Removed'**
   String get resetRemoved;
 
-  /// No description provided for @resetKeptFiles.
+  /// Item in the 'Kept' list on the computer reset sheet: the person's files in the computer's folder named 'workspace' (a folder name, not a Casama workspace).
   ///
   /// In en, this message translates to:
   /// **'Your files in workspace'**
@@ -20895,16 +21023,16 @@ abstract class AppLocalizations {
   /// **'Check your connection, then try again.'**
   String get paywallPlansFailedBody;
 
-  /// No description provided for @paywallStoreEmptyTitle.
+  /// Title on the paywall when the phone's store returned no subscription plans. {store} is 'app_store' or 'google_play' (a code, never shown); translate every branch as a whole sentence.
   ///
   /// In en, this message translates to:
-  /// **'{store, select, app_store{The App Store} google_play{Google Play} other{The store}} isn\'t showing plans'**
+  /// **'{store, select, app_store{The App Store isn\'t showing plans} google_play{Google Play isn\'t showing plans} other{The store isn\'t showing plans}}'**
   String paywallStoreEmptyTitle(String store);
 
-  /// No description provided for @paywallStoreEmptyBody.
+  /// Body text under paywallStoreEmptyTitle on the paywall. {store} is 'app_store' or 'google_play' (a code, never shown); translate every branch as a whole sentence.
   ///
   /// In en, this message translates to:
-  /// **'Make sure you\'re signed in to {store, select, app_store{the App Store} google_play{Google Play} other{the store}} on this device, then try again.'**
+  /// **'{store, select, app_store{Make sure you\'re signed in to the App Store on this device, then try again.} google_play{Make sure you\'re signed in to Google Play on this device, then try again.} other{Make sure you\'re signed in to the store on this device, then try again.}}'**
   String paywallStoreEmptyBody(String store);
 
   /// No description provided for @paywallSaveUpTo.
@@ -20997,10 +21125,10 @@ abstract class AppLocalizations {
   /// **'Start {n}-day free trial'**
   String paywallStartTrial(int n);
 
-  /// No description provided for @paywallGetPlan.
+  /// Main button on the paywall: starts a paid subscription through web checkout (no free trial). {plan} is the plan's name (Plus, Pro, Max), never translated.
   ///
   /// In en, this message translates to:
-  /// **'Get {plan}'**
+  /// **'Subscribe to {plan}'**
   String paywallGetPlan(String plan);
 
   /// No description provided for @paywallPeople.
@@ -21072,7 +21200,7 @@ abstract class AppLocalizations {
   /// No description provided for @adminPackSaveHelp.
   ///
   /// In en, this message translates to:
-  /// **'Saving changes the pack for everyone straight away.'**
+  /// **'Saving changes the credit pack for everyone straight away.'**
   String get adminPackSaveHelp;
 
   /// No description provided for @adminPlanName.
@@ -21489,10 +21617,10 @@ abstract class AppLocalizations {
   /// **'Suggestions'**
   String get cardSuggestions;
 
-  /// No description provided for @suggestionsTitle.
+  /// Title of the card in chat that lists a bot's suggestions. {n} is how many it found.
   ///
   /// In en, this message translates to:
-  /// **'Found {n} things worth a look'**
+  /// **'{n, plural, =1{Found 1 thing worth a look} other{Found {n} things worth a look}}'**
   String suggestionsTitle(int n);
 
   /// No description provided for @suggestionStarted.
@@ -22086,7 +22214,7 @@ abstract class AppLocalizations {
   /// No description provided for @linkInvitesHelp.
   ///
   /// In en, this message translates to:
-  /// **'Off: nobody can make a new account while this is on. On: people you invite by email can. The server restarts to change it.'**
+  /// **'Off: nobody can make a new account. On: people you invite by email can. Changing it restarts the server.'**
   String get linkInvitesHelp;
 
   /// No description provided for @linkKeepAwake.
@@ -22263,7 +22391,7 @@ abstract class AppLocalizations {
   /// **'Ask Casama Help, contact us, guides'**
   String get helpAndSupportRow;
 
-  /// No description provided for @casamaHelp.
+  /// The name of Casama's AI support assistant, shown as the title of its chat. Not the Mac menu item (macMenuCasamaHelp).
   ///
   /// In en, this message translates to:
   /// **'Casama Help'**
@@ -22701,7 +22829,7 @@ abstract class AppLocalizations {
   /// **'Watch on YouTube'**
   String get introVideoOnYoutube;
 
-  /// No description provided for @introVideoReplay.
+  /// Button shown when the intro film ends: play the video again.
   ///
   /// In en, this message translates to:
   /// **'Replay'**
@@ -22911,7 +23039,7 @@ abstract class AppLocalizations {
   /// **'Report gallery item'**
   String get reportGalleryItem;
 
-  /// No description provided for @reportGalleryRequest.
+  /// Tooltip of the flag button on a request in the gallery, and title of the sheet it opens: report that request as a problem. 'Report' is a verb.
   ///
   /// In en, this message translates to:
   /// **'Report request'**
@@ -23163,16 +23291,10 @@ abstract class AppLocalizations {
   /// **'Off'**
   String get supportWebOff;
 
-  /// No description provided for @supportWebToday.
+  /// How many visitors' IP addresses are blocked for a while from the help chat on casama.ai after misuse. Network addresses, not postal or email addresses.
   ///
   /// In en, this message translates to:
-  /// **'{count} messages today · \${spent} of \${budget} budget'**
-  String supportWebToday(int count, String spent, String budget);
-
-  /// No description provided for @supportWebPaused.
-  ///
-  /// In en, this message translates to:
-  /// **'{count} addresses paused'**
+  /// **'{count, plural, =1{1 IP address paused} other{{count} IP addresses paused}}'**
   String supportWebPaused(int count);
 
   /// No description provided for @supportWebGaps.
@@ -23253,10 +23375,10 @@ abstract class AppLocalizations {
   /// **'Added {name}'**
   String galleryChatAdded(String name);
 
-  /// No description provided for @galleryChatReads.
+  /// One part of the line on a gallery card in chat that says what an item can touch, joined with others by ' · '. {things} is a comma-separated list from the gallery, for example 'email, calendar' or 'files you share'. Keep the list after a colon so no word has to agree with it.
   ///
   /// In en, this message translates to:
-  /// **'Reads {things}'**
+  /// **'Reads: {things}'**
   String galleryChatReads(String things);
 
   /// No description provided for @galleryChatRunsCode.
@@ -23271,10 +23393,10 @@ abstract class AppLocalizations {
   /// **'Uses a computer'**
   String get galleryChatComputer;
 
-  /// No description provided for @galleryChatNeeds.
+  /// One part of the line on a gallery card in chat: apps the item needs connected, joined with others by ' · '. {apps} is a list from the gallery, already joined for the language, for example 'Gmail, Slack'. Keep it after a colon so no word has to agree with it.
   ///
   /// In en, this message translates to:
-  /// **'Needs {apps}'**
+  /// **'Needs: {apps}'**
   String galleryChatNeeds(String apps);
 
   /// No description provided for @galleryChatDraftLabel.
@@ -23817,7 +23939,7 @@ abstract class AppLocalizations {
   /// **'In season'**
   String get galleryRowSeasonal;
 
-  /// No description provided for @galleryFilterFree.
+  /// Price filter chip in the gallery: only items that cost nothing. An adjective, not the plan named Free.
   ///
   /// In en, this message translates to:
   /// **'Free'**
@@ -23877,10 +23999,10 @@ abstract class AppLocalizations {
   /// **'What it can access'**
   String get galleryAccessTitle;
 
-  /// No description provided for @galleryAccessReads.
+  /// Row under 'What it can access' on a gallery item. {things} is a comma-separated list from the gallery, for example 'email, calendar' or 'files you share'. Keep the list after a colon so no word has to agree with it.
   ///
   /// In en, this message translates to:
-  /// **'Reads your {things}'**
+  /// **'Reads: {things}'**
   String galleryAccessReads(String things);
 
   /// No description provided for @galleryAccessRunsCode.
@@ -24027,7 +24149,7 @@ abstract class AppLocalizations {
   /// **'In this workspace'**
   String get galleryInstalledWorkspace;
 
-  /// No description provided for @galleryInstalledDevice.
+  /// Section heading on the installed gallery items screen: what was added on this device only. 'Looks' is the gallery's group name for themes, color schemes and wallpapers.
   ///
   /// In en, this message translates to:
   /// **'Looks on this device'**
@@ -24093,10 +24215,10 @@ abstract class AppLocalizations {
   /// **'The new version works differently, so check it after updating.'**
   String get galleryUpdateBreakingHelp;
 
-  /// No description provided for @galleryUpdateNowReads.
+  /// Row in the dialog before updating a gallery item: what the new version reads that the old one didn't. {things} is a comma-separated list, for example 'contacts'. Keep the list after a colon so no word has to agree with it.
   ///
   /// In en, this message translates to:
-  /// **'Now reads your {things}'**
+  /// **'Now reads: {things}'**
   String galleryUpdateNowReads(String things);
 
   /// No description provided for @galleryUpdateNowWrites.
@@ -24201,7 +24323,7 @@ abstract class AppLocalizations {
   /// **'{count, plural, =1{1 skill, added for you} other{{count} skills, added for you}}'**
   String galleryWizardNeedsSkills(int count);
 
-  /// No description provided for @galleryWizardNeedsApps.
+  /// Row under 'What it needs' when adding a gallery item. {apps} is a list from the gallery, already joined for the language, for example 'Gmail, Slack'. Keep it after a colon so no word has to agree with it.
   ///
   /// In en, this message translates to:
   /// **'Apps to connect: {apps}'**
@@ -24291,10 +24413,10 @@ abstract class AppLocalizations {
   /// **'You\'ll find it with the rest of your things.'**
   String get galleryWizardDoneHelp;
 
-  /// No description provided for @galleryWizardDoneMissing.
+  /// Subtitle after adding a gallery item, when some apps it uses aren't connected yet. {apps} is a list from the gallery, already joined for the language, for example 'Gmail, Slack'. Keep it after a colon so no word has to agree with it.
   ///
   /// In en, this message translates to:
-  /// **'It works fully once you connect {apps}.'**
+  /// **'To work fully, it needs these apps connected: {apps}'**
   String galleryWizardDoneMissing(String apps);
 
   /// No description provided for @galleryWizardPendingTitle.
@@ -24465,7 +24587,7 @@ abstract class AppLocalizations {
   /// **'Pick something you made. It\'s reviewed before it\'s in the gallery.'**
   String get gallerySubmitPickHelp;
 
-  /// No description provided for @galleryLooksMine.
+  /// Group heading in the list of the person's own items they can send to the gallery. 'Looks' is the gallery's group name for themes, color schemes and wallpapers.
   ///
   /// In en, this message translates to:
   /// **'Your looks'**
@@ -24489,11 +24611,11 @@ abstract class AppLocalizations {
   /// **'My wallpaper'**
   String get gallerySubmitMyWallpaper;
 
-  /// No description provided for @gallerySubmitTitle.
+  /// Title of the sheet that sends the person's own item to the public gallery. {kind} is a code for what is being sent (never shown); 'other' is a skill.
   ///
   /// In en, this message translates to:
-  /// **'Submit a {kind}'**
-  String gallerySubmitTitle(String kind);
+  /// **'{kind, select, app{Submit an App} bot{Submit a Starter bot} routine{Submit a Routine} plugin{Submit a Plugin} set{Submit a Starter set} theme{Submit a Theme} scheme{Submit a Color scheme} wallpaper{Submit a Wallpaper} other{Submit a Skill}}'**
+  String gallerySubmitKindTitle(String kind);
 
   /// No description provided for @gallerySubmitHelp.
   ///
@@ -24531,11 +24653,17 @@ abstract class AppLocalizations {
   /// **'License'**
   String get gallerySubmitLicense;
 
-  /// No description provided for @gallerySubmitRemix.
+  /// Line on the form that sends the person's item to the gallery, when the item is based on someone else's gallery item: what they send will give credit to that original. {name} is the original item's name.
   ///
   /// In en, this message translates to:
   /// **'Credits the original: {name}'**
   String gallerySubmitRemix(String name);
+
+  /// Same line as gallerySubmitRemix (the gallery submit form), when the original's name isn't known.
+  ///
+  /// In en, this message translates to:
+  /// **'Credits the original gallery item'**
+  String get gallerySubmitRemixUnnamed;
 
   /// No description provided for @gallerySubmitSend.
   ///
@@ -24747,13 +24875,13 @@ abstract class AppLocalizations {
   /// **'Drop to ask a bot'**
   String get islandDropHere;
 
-  /// No description provided for @siriSignedOut.
+  /// Android: what Gemini says or shows about Casama (App Functions). Signed out.
   ///
   /// In en, this message translates to:
   /// **'Sign in to Casama first.'**
   String get siriSignedOut;
 
-  /// No description provided for @siriOpenToFinish.
+  /// Android: what Gemini says or shows about Casama (App Functions). The app must come forward to finish.
   ///
   /// In en, this message translates to:
   /// **'Open Casama to finish.'**
@@ -24807,13 +24935,13 @@ abstract class AppLocalizations {
   /// **'{bot} answered.'**
   String siriAnsweredBy(String bot);
 
-  /// No description provided for @siriRoutineStarted.
+  /// Siri: a routine was started; {routine} is its name.
   ///
   /// In en, this message translates to:
   /// **'Started {routine}.'**
   String siriRoutineStarted(String routine);
 
-  /// No description provided for @siriNothingNeedsYou.
+  /// Android: what Gemini says or shows about Casama (App Functions). No request waits.
   ///
   /// In en, this message translates to:
   /// **'Nothing needs you right now.'**
@@ -24825,7 +24953,7 @@ abstract class AppLocalizations {
   /// **'{count, plural, =1{One thing needs you.} other{{count} things need you.}}'**
   String siriThingsNeedYou(int count);
 
-  /// No description provided for @siriNeedsYouBots.
+  /// Android: what Gemini says or shows about Casama (App Functions). Which bots wait; {bots} is a list of names.
   ///
   /// In en, this message translates to:
   /// **'Waiting on you: {bots}.'**
@@ -25503,7 +25631,7 @@ abstract class AppLocalizations {
   /// **'Name or a few words'**
   String get domainFindField;
 
-  /// No description provided for @domainFindHint.
+  /// Greyed-out example in the domain search field: a kind of business someone might want a web address for. Use an everyday example word in your language, lower case, with no accents or spaces if possible.
   ///
   /// In en, this message translates to:
   /// **'bakery'**
@@ -26319,10 +26447,10 @@ abstract class AppLocalizations {
   /// **'Bought domains in your workspaces'**
   String get deleteAccountDomains;
 
-  /// No description provided for @deleteAccountDomainsBody.
+  /// Warning on the delete-account screen, above the list of domains bought in workspaces that will be deleted. The person keeps each domain until its expiry date; automatic renewal stops and the website on it stops working.
   ///
   /// In en, this message translates to:
-  /// **'These domains stay registered to their registrant until they expire, stop renewing, and their sites go offline.'**
+  /// **'These domains stay registered until they expire. They won\'t renew, and their sites go offline.'**
   String get deleteAccountDomainsBody;
 
   /// No description provided for @whatsNew010Sites.
@@ -26355,11 +26483,11 @@ abstract class AppLocalizations {
   /// **'All on'**
   String get pushAllOn;
 
-  /// No description provided for @pushOneOff.
+  /// Under the Notifications row in Settings when exactly one kind of push is turned off. {kind} is a code (never shown): each branch names that kind as its switch does (pushReplies, pushNeedsYou, pushRoutines, pushSuggestions, pushAccount) and says it is off. 'other' is the account kind.
   ///
   /// In en, this message translates to:
-  /// **'{kind} off'**
-  String pushOneOff(String kind);
+  /// **'{kind, select, replies{Replies off} needsYou{Needs you off} routines{Routines and briefs off} suggestions{Suggestions and check-ins off} other{Account off}}'**
+  String pushKindOff(String kind);
 
   /// No description provided for @pushSomeOff.
   ///
@@ -26715,7 +26843,7 @@ abstract class AppLocalizations {
   /// **'Apps'**
   String get packSectionApps;
 
-  /// No description provided for @packSectionLooks.
+  /// Section heading in a pack's contents. 'Looks' is the gallery's group name for themes, color schemes and wallpapers.
   ///
   /// In en, this message translates to:
   /// **'Looks'**
@@ -27165,10 +27293,10 @@ abstract class AppLocalizations {
   /// **'One line about it'**
   String get sharePackSummary;
 
-  /// No description provided for @sharePackLook.
+  /// Switch on the form that shares bots and skills as a pack: also include how the app looks on this device (colors, fonts, wallpaper).
   ///
   /// In en, this message translates to:
-  /// **'Include this device\'s look'**
+  /// **'Include this device\'s theme'**
   String get sharePackLook;
 
   /// No description provided for @sharePackCheck.
@@ -27897,7 +28025,7 @@ abstract class AppLocalizations {
   /// **'Continue'**
   String get permContinue;
 
-  /// No description provided for @permContinueMessage.
+  /// Sent into the chat as the person's own message after they turned on the permissions the bot asked for. 'They' means those permissions.
   ///
   /// In en, this message translates to:
   /// **'They\'re on, go ahead.'**
@@ -29343,10 +29471,10 @@ abstract class AppLocalizations {
   /// **'Read replies aloud'**
   String get watchReadRepliesAloud;
 
-  /// Shown on the watch app (D-410). Which bot Ask goes to.
+  /// Apple Watch settings: label of the picker that chooses which bot answers when the person uses the Ask button. The value beside it is a bot's name. 'Ask' is the button's name (watchAsk); use the same word. Short: it fits on a watch.
   ///
   /// In en, this message translates to:
-  /// **'Ask uses'**
+  /// **'Bot for Ask'**
   String get watchAskUses;
 
   /// Shown on the watch app (D-410). The workspace the watch shows.
@@ -29913,7 +30041,7 @@ abstract class AppLocalizations {
   /// **'How this device is held and where its fold is, as Casama sees it now. Open, close or fold the device and the numbers follow. Copy them if a screen looks wrong.'**
   String get foldScreenHelp;
 
-  /// No description provided for @foldPose.
+  /// Row label on a technical screen for foldable devices: the device's posture (how far it is folded, for example flat or half open). The value after it is an untranslated technical word.
   ///
   /// In en, this message translates to:
   /// **'Pose'**
@@ -31182,7 +31310,7 @@ abstract class AppLocalizations {
   /// No description provided for @adminSupportWebPausedStat.
   ///
   /// In en, this message translates to:
-  /// **'Paused addresses'**
+  /// **'Paused IP addresses'**
   String get adminSupportWebPausedStat;
 
   /// No description provided for @adminSupportWebBudget.
@@ -31745,7 +31873,7 @@ abstract class AppLocalizations {
   /// No description provided for @savedResetConfirm.
   ///
   /// In en, this message translates to:
-  /// **'Refills \${amount} of this period’s included credits. This can’t be undone.'**
+  /// **'Refills {amount} of this period’s included credits. This can’t be undone.'**
   String savedResetConfirm(String amount);
 
   /// No description provided for @adminResets.
@@ -31766,13 +31894,13 @@ abstract class AppLocalizations {
   /// **'Off: nobody gets saved resets.'**
   String get resetsOffNote;
 
-  /// No description provided for @resetsDecrease.
+  /// Instance owner's console: tooltip on the minus button of a number stepper. It lowers the number by one (a verb in effect: 'decrease').
   ///
   /// In en, this message translates to:
   /// **'Fewer'**
   String get resetsDecrease;
 
-  /// No description provided for @resetsIncrease.
+  /// Instance owner's console: tooltip on the plus button of a number stepper. It raises the number by one (a verb in effect: 'increase').
   ///
   /// In en, this message translates to:
   /// **'More'**
@@ -32504,17 +32632,11 @@ abstract class AppLocalizations {
   /// **'Resume'**
   String get resetsResume;
 
-  /// No description provided for @resetsCampaignCounts.
+  /// Instance owner's console, confirm dialog before saving a saved-reset campaign: how many workspaces it reaches and what it can cost. {credits} and {cost} are amounts with their currency, for example '$12.00'.
   ///
   /// In en, this message translates to:
-  /// **'{given} given · {used} used · \${credits} refilled'**
-  String resetsCampaignCounts(int given, int used, String credits);
-
-  /// No description provided for @resetsPreview.
-  ///
-  /// In en, this message translates to:
-  /// **'{count} workspaces. Maximum refill: \${credits}. Estimated cost: \${cost}.'**
-  String resetsPreview(int count, String credits, String cost);
+  /// **'{count, plural, =1{1 workspace. Maximum refill: {credits}. Estimated cost: {cost}.} other{{count} workspaces. Maximum refill: {credits}. Estimated cost: {cost}.}}'**
+  String resetsPreviewMessage(int count, String credits, String cost);
 
   /// No description provided for @resetsWorkspace.
   ///
@@ -33272,7 +33394,7 @@ abstract class AppLocalizations {
   /// **'Value'**
   String get cardCalcValue;
 
-  /// No description provided for @cardCalcVat.
+  /// Title of the calculator card that adds or removes sales tax or VAT; its fields are 'Before tax', 'Tax rate', 'Tax' and 'With tax'. Use the everyday word for that tax.
   ///
   /// In en, this message translates to:
   /// **'Tax'**
@@ -33812,7 +33934,7 @@ abstract class AppLocalizations {
   /// **'Amenities'**
   String get cardStaysAmenities;
 
-  /// No description provided for @cardStaysCheckIn.
+  /// On a hotel or rental details card: the time from which guests can check in. {time} is that time.
   ///
   /// In en, this message translates to:
   /// **'Check-in {time}'**
@@ -34238,10 +34360,10 @@ abstract class AppLocalizations {
   /// **'Change'**
   String get cardCheckoutChange;
 
-  /// No description provided for @cardCheckoutConfirm.
+  /// Main button on the checkout card in chat: the person agrees to the total and the bot pays. Short.
   ///
   /// In en, this message translates to:
-  /// **'Confirm'**
+  /// **'Confirm and pay'**
   String get cardCheckoutConfirm;
 
   /// No description provided for @cardCheckoutCancelLabel.
@@ -34256,11 +34378,17 @@ abstract class AppLocalizations {
   /// **'Change something'**
   String get cardCheckoutChangeLabel;
 
-  /// No description provided for @cardCheckoutConfirmLabel.
+  /// Shown in chat as the person's own reply after they tap Confirm on a checkout card: they agree to pay {total} to {seller}. {total} is the amount with its currency, {seller} the shop's name.
   ///
   /// In en, this message translates to:
   /// **'Confirm {total} at {seller}'**
   String cardCheckoutConfirmLabel(String total, String seller);
+
+  /// Message sent in the chat for the person when they tap 'Confirm and pay' on a checkout card that names no seller. {total} is the amount with its currency, for example '$42.10'.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm {total}'**
+  String cardCheckoutConfirmNoSellerLabel(String total);
 
   /// No description provided for @cardCheckoutConfirmed.
   ///
@@ -35156,13 +35284,13 @@ abstract class AppLocalizations {
   /// **'Gate'**
   String get cardGate;
 
-  /// No description provided for @cardGo.
+  /// Button on a card in chat that flips a coin, rolls dice, draws a number or picks one option: do it now. After the first time the button reads 'Again'.
   ///
   /// In en, this message translates to:
   /// **'Go'**
   String get cardGo;
 
-  /// No description provided for @cardHeads.
+  /// Result of a coin flip: the coin landed heads side up.
   ///
   /// In en, this message translates to:
   /// **'Heads'**
@@ -35648,7 +35776,7 @@ abstract class AppLocalizations {
   /// **'Similar:'**
   String get cardSynonyms;
 
-  /// No description provided for @cardTails.
+  /// Result of a coin flip: the coin landed tails side up.
   ///
   /// In en, this message translates to:
   /// **'Tails'**
@@ -35660,7 +35788,7 @@ abstract class AppLocalizations {
   /// **'Team'**
   String get cardTeam;
 
-  /// No description provided for @cardTerminal.
+  /// Label on a flight card styled like a boarding pass, above a value such as '2E': the airport terminal. Not a computer terminal.
   ///
   /// In en, this message translates to:
   /// **'Terminal'**
@@ -35876,11 +36004,11 @@ abstract class AppLocalizations {
   /// **'Mostly {pollutant}'**
   String cardAqiMainPollutant(String pollutant);
 
-  /// No description provided for @cardPollen.
+  /// Label of a small chip on the air quality card, next to the pollen level. {kind} is a code for the plant (never shown); translate each branch as a whole label. 'other' is any other pollen.
   ///
   /// In en, this message translates to:
-  /// **'{kind} pollen'**
-  String cardPollen(String kind);
+  /// **'{kind, select, alder{Alder pollen} birch{Birch pollen} grass{Grass pollen} mugwort{Mugwort pollen} olive{Olive pollen} ragweed{Ragweed pollen} other{Pollen}}'**
+  String cardPollenKind(String kind);
 
   /// No description provided for @cardDuration.
   ///
@@ -36038,7 +36166,7 @@ abstract class AppLocalizations {
   /// **'{passed} of {total} checks passed'**
   String cardChecksPassed(int passed, int total);
 
-  /// No description provided for @cardTotal.
+  /// Under a roll of two or more dice: the sum of the numbers rolled. {n} is that sum.
   ///
   /// In en, this message translates to:
   /// **'Total {n}'**
@@ -37286,7 +37414,7 @@ abstract class AppLocalizations {
   /// **'Password Managers'**
   String get appBrowserKindPasswords;
 
-  /// No description provided for @appBrowserKindGovernment.
+  /// Name of a kind of sensitive website, in a list with banking, health and passwords: government sites tied to a person's identity (ID, tax, immigration).
   ///
   /// In en, this message translates to:
   /// **'Government ID'**
@@ -37466,11 +37594,11 @@ abstract class AppLocalizations {
   /// **'On this PC, with your sign-ins. Always lets it open this site from now on.'**
   String get appBrowserSiteAskHelpWindows;
 
-  /// No description provided for @appBrowserSiteAskKind.
+  /// On the card where a bot asks to use a website in the app's browser, for a sensitive kind of site: the bot asks permission on each visit. {kind} is a code (never shown).
   ///
   /// In en, this message translates to:
-  /// **'{kind} sites ask every time.'**
-  String appBrowserSiteAskKind(String kind);
+  /// **'{kind, select, banking{Banking and Payments sites ask every time.} health{Health sites ask every time.} passwords{Password Managers sites ask every time.} government{Government ID sites ask every time.} other{These sites ask every time.}}'**
+  String appBrowserSiteKindAsks(String kind);
 
   /// No description provided for @appBrowserOnce.
   ///
@@ -37922,7 +38050,7 @@ abstract class AppLocalizations {
   /// **'down {amount}'**
   String costChangeDown(String amount);
 
-  /// No description provided for @costPoints.
+  /// Instance owner's cost report: how much a percentage (the margin) changed, in percentage points. {count} is the number. Use your language's short form of 'points'.
   ///
   /// In en, this message translates to:
   /// **'{count} pts'**
@@ -39080,7 +39208,7 @@ abstract class AppLocalizations {
   /// **'Accounts'**
   String get liveGroupAccounts;
 
-  /// No description provided for @liveGroupMoney.
+  /// Group heading for the owner's live alerts about money: subscriptions, purchases, renewals, refunds and disputes.
   ///
   /// In en, this message translates to:
   /// **'Money'**
@@ -40394,7 +40522,7 @@ abstract class AppLocalizations {
   /// **'Includes {tax} tax'**
   String planChangeTaxIncluded(String tax);
 
-  /// No description provided for @planChangeCredit.
+  /// Row in the summary of a plan change: money taken off what is charged now for the unused time on the current plan. A noun phrase, not a button.
   ///
   /// In en, this message translates to:
   /// **'Credit for unused time'**
@@ -41444,11 +41572,11 @@ abstract class AppLocalizations {
   /// **'You can quote this on casama.ai and in the app as {name}'**
   String testimonialAskConsent(String name);
 
-  /// No description provided for @testimonialAskSomeone.
+  /// Checkbox on the sheet asking for a short testimonial, when the person has no display name: they agree to be quoted without a name.
   ///
   /// In en, this message translates to:
-  /// **'a Casama user'**
-  String get testimonialAskSomeone;
+  /// **'You can quote this on casama.ai and in the app as a Casama user'**
+  String get testimonialAskConsentAnonymous;
 
   /// No description provided for @testimonialAskSend.
   ///
@@ -41594,11 +41722,15 @@ abstract class AppLocalizations {
   /// **'Use This Key'**
   String get licenseBusinessSave;
 
-  /// No description provided for @licenseBusinessContact.
+  /// Link under the license key field on a self-hosted server: how to buy the Business edition. {monthlyPrice} is the price per active user paying monthly, {yearlyMonthlyPrice} the lower per-month price when paying yearly, both in US dollars and already formatted. {email} is Casama's sales address.
   ///
   /// In en, this message translates to:
-  /// **'Using Casama at work or with a team? Business is \$29 per active user a month (\$24 billed yearly). Write to {email}.'**
-  String licenseBusinessContact(String email);
+  /// **'Using Casama at work or with a team? Business is {monthlyPrice} per active user a month ({yearlyMonthlyPrice} billed yearly). Write to {email}.'**
+  String licenseBusinessPrices(
+    String monthlyPrice,
+    String yearlyMonthlyPrice,
+    String email,
+  );
 
   /// No description provided for @licenseActivated.
   ///
@@ -41660,7 +41792,7 @@ abstract class AppLocalizations {
   /// **'This server\'s license has expired, so new bot runs are paused. Your data is safe. Renew the license to start bots again.'**
   String get licenseErrorExpired;
 
-  /// No description provided for @licenseEditionPersonal.
+  /// Name of the free edition of a self-hosted Casama server, shown as the server's license type.
   ///
   /// In en, this message translates to:
   /// **'Personal'**
@@ -41672,7 +41804,7 @@ abstract class AppLocalizations {
   /// **'Trial'**
   String get licenseEditionTrial;
 
-  /// No description provided for @licenseEditionBusiness.
+  /// Name of the paid edition of a self-hosted Casama server, shown as the server's license type.
   ///
   /// In en, this message translates to:
   /// **'Business'**
@@ -42902,10 +43034,10 @@ abstract class AppLocalizations {
   /// **'Deletes your account on Casama Cloud. This server and its data stay.'**
   String get cloudAccountDeleteHelp;
 
-  /// No description provided for @cloudAccountDeleteConfirm.
+  /// Text of the sheet that deletes the Casama Cloud account, above the field where the person types their email. Deleting the account does not cancel any subscription, on the web or in a store; the person has to. 'Billing' is the billing screen. {email} is their email address.
   ///
   /// In en, this message translates to:
-  /// **'Type {email} to delete your Casama Cloud account. Cloud workspaces only you own go with it, and Casama Cloud models stop on servers they pay for. Plans bought in a store are cancelled in that store.'**
+  /// **'Type {email} to delete your Casama Cloud account. Cloud workspaces only you own go with it, and Casama Cloud models stop on servers they pay for. This doesn\'t cancel paid plans. First cancel a plan bought on the web in Billing on Casama Cloud, and a plan bought in the App Store or Google Play in that store.'**
   String cloudAccountDeleteConfirm(String email);
 
   /// No description provided for @cloudAccountDeleted.
@@ -43016,7 +43148,7 @@ abstract class AppLocalizations {
   /// **'Starts empty on Casama Cloud, named {name}.'**
   String wsMoveCloudNewHelp(String name);
 
-  /// No description provided for @wsMoveCloudExistingHelp.
+  /// The server adds the suffix (moved) in English to clashing names, whatever the app language: keep “(moved)” exactly, in English.
   ///
   /// In en, this message translates to:
   /// **'Moved items go next to what\'s there. Names that clash get “(moved)”.'**
@@ -43430,7 +43562,7 @@ abstract class AppLocalizations {
   /// **'Add your model keys there'**
   String get wsMoveAfterKeys;
 
-  /// No description provided for @wsMoveAfterRenamed.
+  /// The server adds the suffix (moved) in English to clashing names, whatever the app language: keep “(moved)” exactly, in English.
   ///
   /// In en, this message translates to:
   /// **'{n, plural, =1{1 item was} other{{n} items were}} renamed “(moved)”'**
@@ -43507,6 +43639,2544 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'View the Old Copy'**
   String get wsMovedViewOld;
+
+  /// Settings → Language picker: follow the language the phone or computer uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Device language'**
+  String get languageDevice;
+
+  /// Home screen shortcut (long-press the app icon, Android): opens a box to ask a bot something. Keep it short.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick ask'**
+  String get shortcutQuickAsk;
+
+  /// Home screen shortcut that opens a question to one bot. {name} is the bot's name. Keep it short.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask {name}'**
+  String shortcutAskBot(String name);
+
+  /// Home screen shortcut that runs one routine now. {name} is the routine's name. Keep it short.
+  ///
+  /// In en, this message translates to:
+  /// **'Run {name}'**
+  String shortcutRunRoutine(String name);
+
+  /// Settings search: extra words that find the row titled by the 'workspace' string. Not shown on screen. Space-separated, lower case; translate the words people would type and keep brand names and common English terms.
+  ///
+  /// In en, this message translates to:
+  /// **'workspace switch change team organization org role'**
+  String get settingsWordsWorkspace;
+
+  /// Settings search: extra words that find the row titled by the 'aboutYou' string. Not shown on screen. Space-separated, lower case; translate the words people would type and keep brand names and common English terms.
+  ///
+  /// In en, this message translates to:
+  /// **'profile name photo picture avatar pronouns about me reply style facts memory'**
+  String get settingsWordsAboutYou;
+
+  /// Settings search: extra words that find the row titled by the 'people' string. Not shown on screen. Space-separated, lower case; translate the words people would type and keep brand names and common English terms.
+  ///
+  /// In en, this message translates to:
+  /// **'members invite team users admins roles invite link code join remove'**
+  String get settingsWordsPeople;
+
+  /// Settings search: extra words that find the row titled by the 'workspaceSettings' string. Not shown on screen. Space-separated, lower case; translate the words people would type and keep brand names and common English terms.
+  ///
+  /// In en, this message translates to:
+  /// **'workspace name icon logo encryption memory payments stripe card password managers bot to bot chrome extension gallery full access permissions approvals ask bypass'**
+  String get settingsWordsWorkspaceSettings;
+
+  /// Settings search: extra words that find the row titled by the 'settingsDomains' string. Not shown on screen. Space-separated, lower case; translate the words people would type and keep brand names and common English terms.
+  ///
+  /// In en, this message translates to:
+  /// **'domain website custom dns buy connect sites'**
+  String get settingsWordsSettingsDomains;
+
+  /// Settings search: extra words that find the row titled by the 'usage' string. Not shown on screen. Space-separated, lower case; translate the words people would type and keep brand names and common English terms.
+  ///
+  /// In en, this message translates to:
+  /// **'cost spend spending money credits tokens limits'**
+  String get settingsWordsUsage;
+
+  /// Settings search: extra words that find the row titled by the 'billing' string. Not shown on screen. Space-separated, lower case; translate the words people would type and keep brand names and common English terms.
+  ///
+  /// In en, this message translates to:
+  /// **'plan subscription upgrade pro plus max payment invoice card pricing'**
+  String get settingsWordsBilling;
+
+  /// Settings search: extra words that find the row titled by the 'inviteFriends' string. Not shown on screen. Space-separated, lower case; translate the words people would type and keep brand names and common English terms.
+  ///
+  /// In en, this message translates to:
+  /// **'referral credit reward share'**
+  String get settingsWordsInviteFriends;
+
+  /// Settings search: extra words that find the row titled by the 'adminConsole' string. Not shown on screen. Space-separated, lower case; translate the words people would type and keep brand names and common English terms.
+  ///
+  /// In en, this message translates to:
+  /// **'admin console'**
+  String get settingsWordsAdminConsole;
+
+  /// Settings search: extra words that find the row titled by the 'appearance' string. Not shown on screen. Space-separated, lower case; translate the words people would type and keep brand names and common English terms.
+  ///
+  /// In en, this message translates to:
+  /// **'theme dark mode light mode night colors colours fonts font text size background wallpaper look style themes effects motion animations'**
+  String get settingsWordsAppearance;
+
+  /// Settings search: extra words that find the row titled by the 'quietHours' string. Not shown on screen. Space-separated, lower case; translate the words people would type and keep brand names and common English terms.
+  ///
+  /// In en, this message translates to:
+  /// **'do not disturb dnd sleep mute silence notifications schedule'**
+  String get settingsWordsQuietHours;
+
+  /// Settings search: extra words that find the row titled by the 'pushPrefsTitle' string. Not shown on screen. Space-separated, lower case; translate the words people would type and keep brand names and common English terms.
+  ///
+  /// In en, this message translates to:
+  /// **'notifications push alerts replies sounds'**
+  String get settingsWordsPushPrefsTitle;
+
+  /// Settings search: extra words that find the row titled by the 'callFullScreenTitle' string. Not shown on screen. Space-separated, lower case; translate the words people would type and keep brand names and common English terms.
+  ///
+  /// In en, this message translates to:
+  /// **'calls phone ring ringing lock screen full screen incoming answer'**
+  String get settingsWordsCallFullScreenTitle;
+
+  /// Settings search: extra words that find the row titled by the 'emailTips' string. Not shown on screen. Space-separated, lower case; translate the words people would type and keep brand names and common English terms.
+  ///
+  /// In en, this message translates to:
+  /// **'email newsletter tips news unsubscribe'**
+  String get settingsWordsEmailTips;
+
+  /// Settings search: extra words that find the row titled by the 'galleryDigestEmails' string. Not shown on screen. Space-separated, lower case; translate the words people would type and keep brand names and common English terms.
+  ///
+  /// In en, this message translates to:
+  /// **'email gallery digest monthly picks'**
+  String get settingsWordsGalleryDigestEmails;
+
+  /// Settings search: extra words that find the row titled by the 'newsletterTitle' string. Not shown on screen. Space-separated, lower case; translate the words people would type and keep brand names and common English terms.
+  ///
+  /// In en, this message translates to:
+  /// **'email newsletter monthly news updates subscribe unsubscribe'**
+  String get settingsWordsNewsletterTitle;
+
+  /// Settings search: extra words that find the row titled by the 'wakeWord' string. Not shown on screen. Space-separated, lower case; translate the words people would type and keep brand names and common English terms.
+  ///
+  /// In en, this message translates to:
+  /// **'voice hey hands free microphone mic listen'**
+  String get settingsWordsWakeWord;
+
+  /// Settings search: extra words that find the row titled by the 'showBotSteps' string. Not shown on screen. Space-separated, lower case; translate the words people would type and keep brand names and common English terms.
+  ///
+  /// In en, this message translates to:
+  /// **'steps tools details progress'**
+  String get settingsWordsShowBotSteps;
+
+  /// Settings search: extra words that find the row titled by the 'showReplyUsage' string. Not shown on screen. Space-separated, lower case; translate the words people would type and keep brand names and common English terms.
+  ///
+  /// In en, this message translates to:
+  /// **'cost tokens price usage per reply'**
+  String get settingsWordsShowReplyUsage;
+
+  /// Settings search: extra words that find the row titled by the 'checkForUpdates' string. Not shown on screen. Space-separated, lower case; translate the words people would type and keep brand names and common English terms.
+  ///
+  /// In en, this message translates to:
+  /// **'update updates version upgrade download automatic'**
+  String get settingsWordsCheckForUpdates;
+
+  /// Settings search: extra words that find the row titled by the 'openAtLogin' string. Not shown on screen. Space-separated, lower case; translate the words people would type and keep brand names and common English terms.
+  ///
+  /// In en, this message translates to:
+  /// **'startup launch login boot start automatically'**
+  String get settingsWordsOpenAtLogin;
+
+  /// Settings search: extra words that find the row titled by the 'islandStartElsewhere' string. Not shown on screen. Space-separated, lower case; translate the words people would type and keep brand names and common English terms.
+  ///
+  /// In en, this message translates to:
+  /// **'live activity dynamic island lock screen other devices'**
+  String get settingsWordsIslandStartElsewhere;
+
+  /// Settings search: extra words that find the row titled by the 'showBotsInNotch' string. Not shown on screen. Space-separated, lower case; translate the words people would type and keep brand names and common English terms.
+  ///
+  /// In en, this message translates to:
+  /// **'notch menu bar dynamic island'**
+  String get settingsWordsShowBotsInNotch;
+
+  /// Settings search: extra words that find the row titled by the 'notchOnHover' string. Not shown on screen. Space-separated, lower case; translate the words people would type and keep brand names and common English terms.
+  ///
+  /// In en, this message translates to:
+  /// **'notch hover mouse'**
+  String get settingsWordsNotchOnHover;
+
+  /// Settings search: extra words that find the row titled by the 'language' string. Not shown on screen. Space-separated, lower case; translate the words people would type and keep brand names and common English terms.
+  ///
+  /// In en, this message translates to:
+  /// **'language locale english translation'**
+  String get settingsWordsLanguage;
+
+  /// Settings search: extra words that find the row titled by the 'integrations' string. Not shown on screen. Space-separated, lower case; translate the words people would type and keep brand names and common English terms.
+  ///
+  /// In en, this message translates to:
+  /// **'apps connect connections gmail google slack calendar plugins tools mcp'**
+  String get settingsWordsIntegrations;
+
+  /// Settings search: extra words that find the row titled by the 'skills' string. Not shown on screen. Space-separated, lower case; translate the words people would type and keep brand names and common English terms.
+  ///
+  /// In en, this message translates to:
+  /// **'skills catalog abilities instructions'**
+  String get settingsWordsSkills;
+
+  /// Settings search: extra words that find the row titled by the 'casamaLink' string. Not shown on screen. Space-separated, lower case; translate the words people would type and keep brand names and common English terms.
+  ///
+  /// In en, this message translates to:
+  /// **'remote access address tunnel self host phone'**
+  String get settingsWordsCasamaLink;
+
+  /// Settings search: extra words that find the row titled by the 'serviceKeys' string. Not shown on screen. Space-separated, lower case; translate the words people would type and keep brand names and common English terms.
+  ///
+  /// In en, this message translates to:
+  /// **'api keys search maps data'**
+  String get settingsWordsServiceKeys;
+
+  /// Settings search: extra words that find the row titled by the 'modelsTitle' string. Not shown on screen. Space-separated, lower case; translate the words people would type and keep brand names and common English terms.
+  ///
+  /// In en, this message translates to:
+  /// **'api keys openai anthropic openrouter gemini models providers ollama local models'**
+  String get settingsWordsModelsTitle;
+
+  /// Settings search: extra words that find the row titled by the 'modelKeys' string. Not shown on screen. Space-separated, lower case; translate the words people would type and keep brand names and common English terms.
+  ///
+  /// In en, this message translates to:
+  /// **'api keys openai anthropic openrouter gemini models providers ollama local models'**
+  String get settingsWordsModelKeys;
+
+  /// Settings search: extra words that find the row titled by the 'account' string. Not shown on screen. Space-separated, lower case; translate the words people would type and keep brand names and common English terms.
+  ///
+  /// In en, this message translates to:
+  /// **'email change email password sign out everywhere login'**
+  String get settingsWordsAccount;
+
+  /// Settings search: extra words that find the row titled by the 'twoStepSignIn' string. Not shown on screen. Space-separated, lower case; translate the words people would type and keep brand names and common English terms.
+  ///
+  /// In en, this message translates to:
+  /// **'2fa mfa two factor authenticator totp otp security code'**
+  String get settingsWordsTwoStepSignIn;
+
+  /// Settings search: extra words that find the row titled by the 'pairDevice' string. Not shown on screen. Space-separated, lower case; translate the words people would type and keep brand names and common English terms.
+  ///
+  /// In en, this message translates to:
+  /// **'qr code scan sign in pair phone another device'**
+  String get settingsWordsPairDevice;
+
+  /// Settings search: extra words that find the row titled by the 'passkeys' string. Not shown on screen. Space-separated, lower case; translate the words people would type and keep brand names and common English terms.
+  ///
+  /// In en, this message translates to:
+  /// **'passkey face id touch id fingerprint biometric'**
+  String get settingsWordsPasskeys;
+
+  /// Settings search: extra words that find the row titled by the 'widgetsTitle' string. Not shown on screen. Space-separated, lower case; translate the words people would type and keep brand names and common English terms.
+  ///
+  /// In en, this message translates to:
+  /// **'widgets home screen lock screen controls control center glance pin shortcut'**
+  String get settingsWordsWidgetsTitle;
+
+  /// Settings search: extra words that find the row titled by the 'cardsSettingsTitle' string. Not shown on screen. Space-separated, lower case; translate the words people would type and keep brand names and common English terms.
+  ///
+  /// In en, this message translates to:
+  /// **'cards weather units celsius fahrenheit home city location currency stocks red green data sources'**
+  String get settingsWordsCardsSettingsTitle;
+
+  /// Settings search: extra words that find the row titled by the 'appLock' string. Not shown on screen. Space-separated, lower case; translate the words people would type and keep brand names and common English terms.
+  ///
+  /// In en, this message translates to:
+  /// **'app lock pin passcode face id touch id fingerprint biometric windows hello screenshots privacy lock screen'**
+  String get settingsWordsAppLock;
+
+  /// Settings search: extra words that find the row titled by the 'privacy' string. Not shown on screen. Space-separated, lower case; translate the words people would type and keep brand names and common English terms.
+  ///
+  /// In en, this message translates to:
+  /// **'data export download delete account analytics tracking history retention blocked people block'**
+  String get settingsWordsPrivacy;
+
+  /// Settings search: extra words that find the row titled by the 'secrets' string. Not shown on screen. Space-separated, lower case; translate the words people would type and keep brand names and common English terms.
+  ///
+  /// In en, this message translates to:
+  /// **'secrets passwords credentials vault environment variables'**
+  String get settingsWordsSecrets;
+
+  /// Settings search: extra words that find the row titled by the 'computers' string. Not shown on screen. Space-separated, lower case; translate the words people would type and keep brand names and common English terms.
+  ///
+  /// In en, this message translates to:
+  /// **'computers machines docker sandbox desktop'**
+  String get settingsWordsComputers;
+
+  /// Settings search: extra words that find the row titled by the 'deviceConnections' string. Not shown on screen. Space-separated, lower case; translate the words people would type and keep brand names and common English terms.
+  ///
+  /// In en, this message translates to:
+  /// **'devices location health places folders watched apps browsers chrome extension phone permissions'**
+  String get settingsWordsDeviceConnections;
+
+  /// Settings search: extra words that find the row titled by the 'useThisComputer' string. Not shown on screen. Space-separated, lower case; translate the words people would type and keep brand names and common English terms.
+  ///
+  /// In en, this message translates to:
+  /// **'companion this computer mac local files'**
+  String get settingsWordsUseThisComputer;
+
+  /// Settings search: extra words that find the row titled by the 'helpAndSupport' string. Not shown on screen. Space-separated, lower case; translate the words people would type and keep brand names and common English terms.
+  ///
+  /// In en, this message translates to:
+  /// **'help support contact ticket bug report feedback docs community github star open source discord ideas board status'**
+  String get settingsWordsHelpAndSupport;
+
+  /// Settings search: extra words that find the row titled by the 'signOut' string. Not shown on screen. Space-separated, lower case; translate the words people would type and keep brand names and common English terms.
+  ///
+  /// In en, this message translates to:
+  /// **'log out logout sign out'**
+  String get settingsWordsSignOut;
+
+  /// Notification button (phone and desktop). Accept what a bot suggests.
+  ///
+  /// In en, this message translates to:
+  /// **'Do it'**
+  String get notifDoIt;
+
+  /// Notification button (phone and desktop). Dismiss a bot's suggestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get notifNotNow;
+
+  /// Notification button (phone and desktop). Allow what a bot asks to do (iPhone).
+  ///
+  /// In en, this message translates to:
+  /// **'Allow'**
+  String get notifAllow;
+
+  /// Notification button (phone and desktop). Refuse what a bot asks to do.
+  ///
+  /// In en, this message translates to:
+  /// **'Deny'**
+  String get notifDeny;
+
+  /// Notification button (phone and desktop). Allow what a bot asks to do (Mac and Android).
+  ///
+  /// In en, this message translates to:
+  /// **'Approve'**
+  String get notifApprove;
+
+  /// Notification button (phone and desktop). Open a high-risk request to look at it in the app.
+  ///
+  /// In en, this message translates to:
+  /// **'Review'**
+  String get notifReview;
+
+  /// Notification button (phone and desktop). Type a reply to a bot's message.
+  ///
+  /// In en, this message translates to:
+  /// **'Reply'**
+  String get notifReply;
+
+  /// Notification button (phone and desktop). Sends the typed reply.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get notifSend;
+
+  /// Notification button (phone and desktop). Placeholder in the reply text field.
+  ///
+  /// In en, this message translates to:
+  /// **'Reply…'**
+  String get notifReplyPlaceholder;
+
+  /// Android notification category, listed in the phone's system settings. Name.
+  ///
+  /// In en, this message translates to:
+  /// **'Replies'**
+  String get notifChannelReplies;
+
+  /// Android notification category, listed in the phone's system settings. Description of Replies.
+  ///
+  /// In en, this message translates to:
+  /// **'A bot answered something you asked'**
+  String get notifChannelRepliesDescription;
+
+  /// Android notification category, listed in the phone's system settings. Name: requests waiting on the person.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs you'**
+  String get notifChannelNeedsYou;
+
+  /// Android notification category, listed in the phone's system settings. Description of Needs you.
+  ///
+  /// In en, this message translates to:
+  /// **'Approvals, passwords and takeovers your bots wait for'**
+  String get notifChannelNeedsYouDescription;
+
+  /// Android notification category, listed in the phone's system settings. Name.
+  ///
+  /// In en, this message translates to:
+  /// **'Routines and briefs'**
+  String get notifChannelRoutines;
+
+  /// Android notification category, listed in the phone's system settings. Description of Routines and briefs.
+  ///
+  /// In en, this message translates to:
+  /// **'Results of routines and the morning brief'**
+  String get notifChannelRoutinesDescription;
+
+  /// Android notification category, listed in the phone's system settings. Name.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggestions'**
+  String get notifChannelSuggestions;
+
+  /// Android notification category, listed in the phone's system settings. Description of Suggestions.
+  ///
+  /// In en, this message translates to:
+  /// **'Things your bots offer to do for you'**
+  String get notifChannelSuggestionsDescription;
+
+  /// Android notification category, listed in the phone's system settings. Name.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get notifChannelAccount;
+
+  /// Android notification category, listed in the phone's system settings. Description of Account.
+  ///
+  /// In en, this message translates to:
+  /// **'Credits, projects and your server'**
+  String get notifChannelAccountDescription;
+
+  /// Android notification category, listed in the phone's system settings. Name: voice calls with bots.
+  ///
+  /// In en, this message translates to:
+  /// **'Calls'**
+  String get notifCallChannel;
+
+  /// Android notification shown during a voice call. The call is connected.
+  ///
+  /// In en, this message translates to:
+  /// **'On a call'**
+  String get notifCallLive;
+
+  /// Android notification shown during a voice call. The microphone is off.
+  ///
+  /// In en, this message translates to:
+  /// **'Muted'**
+  String get notifCallMuted;
+
+  /// Android notification shown during a voice call. The connection dropped and is coming back.
+  ///
+  /// In en, this message translates to:
+  /// **'Reconnecting'**
+  String get notifCallReconnecting;
+
+  /// Android notification shown during a voice call. Button: turn the microphone off.
+  ///
+  /// In en, this message translates to:
+  /// **'Mute'**
+  String get notifCallMute;
+
+  /// Android notification shown during a voice call. Button: turn the microphone on.
+  ///
+  /// In en, this message translates to:
+  /// **'Unmute'**
+  String get notifCallUnmute;
+
+  /// Android notification shown during a voice call. Button: hang up.
+  ///
+  /// In en, this message translates to:
+  /// **'End Call'**
+  String get notifCallEnd;
+
+  /// Android notification posted when the watch asks the phone to open something.
+  ///
+  /// In en, this message translates to:
+  /// **'From your watch'**
+  String get notifFromYourWatch;
+
+  /// Android live notification while a bot works. Button: open the bot's chat.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get notifLiveOpen;
+
+  /// Android live notification while a bot works. Button: stop the bot.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop'**
+  String get notifLiveStop;
+
+  /// Android live notification while a bot works. Button: open the request.
+  ///
+  /// In en, this message translates to:
+  /// **'Review'**
+  String get notifLiveReview;
+
+  /// Android live notification while a bot works. Button: allow the request.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow'**
+  String get notifLiveAllow;
+
+  /// Android live notification while a bot works. Button: deny the request.
+  ///
+  /// In en, this message translates to:
+  /// **'Deny'**
+  String get notifLiveDeny;
+
+  /// Android live notification while a bot works. State: the bot waits for approval.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs your OK'**
+  String get notifLiveNeedsOk;
+
+  /// Android live notification while a bot works. State: the bot waits for the person.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs you'**
+  String get notifLiveNeedsYou;
+
+  /// Android live notification while a bot works. State: the bot is working.
+  ///
+  /// In en, this message translates to:
+  /// **'Working'**
+  String get notifLiveWorking;
+
+  /// Android live notification while a bot works. State: the bot asks the person to take over.
+  ///
+  /// In en, this message translates to:
+  /// **'Wants you to take over'**
+  String get notifLiveTakeOver;
+
+  /// Android live notification while a bot works. State: the bot is done.
+  ///
+  /// In en, this message translates to:
+  /// **'Finished'**
+  String get notifLiveFinished;
+
+  /// Android live notification while a bot works. State: the bot failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Stopped with a problem'**
+  String get notifLiveProblem;
+
+  /// Android live notification while a bot works. Line shown on the lock screen.
+  ///
+  /// In en, this message translates to:
+  /// **'A bot is working'**
+  String get notifLiveBotWorking;
+
+  /// Android live notification while a bot works. Name of the notification category in system settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Bots at work'**
+  String get notifLiveBotsAtWork;
+
+  /// Android live notification while a bot works. Exactly one step done so far.
+  ///
+  /// In en, this message translates to:
+  /// **'1 step'**
+  String get notifLiveStepOne;
+
+  /// Android live notification while a bot works. Number of steps done, two or more.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} steps'**
+  String notifLiveSteps(int count);
+
+  /// Title of an alarm a bot set, when it has no name of its own (iPhone).
+  ///
+  /// In en, this message translates to:
+  /// **'Casama Alarm'**
+  String get notifAlarmTitle;
+
+  /// Button that stops a ringing alarm (iPhone).
+  ///
+  /// In en, this message translates to:
+  /// **'Stop'**
+  String get notifAlarmStop;
+
+  /// Widget gallery: what the widget does, shown when adding it; starts with a verb. Needs you, iPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'See which bots are waiting on you, and answer the simple ones.'**
+  String get widgetIosNeedsYouDescription;
+
+  /// Widget gallery: what the widget does, shown when adding it; starts with a verb. Bot, iPhone and Mac.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep an eye on what one of your bots is doing.'**
+  String get widgetIosBotDescription;
+
+  /// Widget gallery: what the widget does, shown when adding it; starts with a verb. Ask, iPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask a bot or start a call with one tap, with ideas to try.'**
+  String get widgetIosAskDescription;
+
+  /// Widget gallery: what the widget does, shown when adding it; starts with a verb. Routines, iPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'See what runs next, and run a routine now.'**
+  String get widgetIosRoutinesDescription;
+
+  /// Widget gallery: what the widget does, shown when adding it; starts with a verb. Today, iPhone and Mac.
+  ///
+  /// In en, this message translates to:
+  /// **'Get your day in one place: what needs you, what runs next, and your credits.'**
+  String get widgetIosTodayDescription;
+
+  /// Widget gallery: what the widget does, shown when adding it; starts with a verb. Brief, iPhone and Mac.
+  ///
+  /// In en, this message translates to:
+  /// **'Read what your bot told you this morning.'**
+  String get widgetIosBriefDescription;
+
+  /// Widget gallery: what the widget does, shown when adding it; starts with a verb. Library, iPhone and Mac.
+  ///
+  /// In en, this message translates to:
+  /// **'Open what your bots made lately.'**
+  String get widgetIosLibraryDescription;
+
+  /// Widget gallery: what the widget does, shown when adding it; starts with a verb. Tasks (task board), iPhone and Mac.
+  ///
+  /// In en, this message translates to:
+  /// **'See where the board stands, with what waits on you first.'**
+  String get widgetIosTasksDescription;
+
+  /// Widget gallery: what the widget does, shown when adding it; starts with a verb. Credits, iPhone and Mac.
+  ///
+  /// In en, this message translates to:
+  /// **'Check how much of your credits you\'ve used.'**
+  String get widgetIosCreditsDescription;
+
+  /// Widget gallery: what the widget does, shown when adding it; starts with a verb. The one-line Lock Screen widget.
+  ///
+  /// In en, this message translates to:
+  /// **'See the one thing that matters most, above the clock.'**
+  String get widgetIosInlineDescription;
+
+  /// Widget gallery: what the widget does, shown when adding it; starts with a verb. Canvas, iPhone and Mac. A verse is a line of scripture or poetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Show what your bots put here: a verse, a countdown, a streak, a list or a picture.'**
+  String get widgetIosCanvasDescription;
+
+  /// Widget gallery: what the widget does, shown when adding it; starts with a verb. Needs you, Mac.
+  ///
+  /// In en, this message translates to:
+  /// **'See which bots are waiting on you.'**
+  String get widgetMacNeedsYouDescription;
+
+  /// Widget gallery: what the widget does, shown when adding it; starts with a verb. Routines, Mac.
+  ///
+  /// In en, this message translates to:
+  /// **'See what runs next.'**
+  String get widgetMacRoutinesDescription;
+
+  /// Control Center control, Android Quick Settings tile and Ask widget: opens quick ask.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask Casama'**
+  String get widgetAskCasama;
+
+  /// iPhone control description. Quick ask is the app's small ask box.
+  ///
+  /// In en, this message translates to:
+  /// **'Open quick ask with the keyboard up.'**
+  String get widgetControlAskDescription;
+
+  /// iPhone control: starts a voice call.
+  ///
+  /// In en, this message translates to:
+  /// **'Talk to a bot'**
+  String get widgetTalkToBot;
+
+  /// iPhone control with a bot picked. {name} is the bot's name.
+  ///
+  /// In en, this message translates to:
+  /// **'Talk to {name}'**
+  String widgetTalkToName(String name);
+
+  /// iPhone control description.
+  ///
+  /// In en, this message translates to:
+  /// **'Start a voice call with the bot you pick.'**
+  String get widgetControlTalkDescription;
+
+  /// iPhone control: runs a routine (a task a bot repeats).
+  ///
+  /// In en, this message translates to:
+  /// **'Run a routine'**
+  String get widgetRunRoutine;
+
+  /// iPhone control description.
+  ///
+  /// In en, this message translates to:
+  /// **'Run the routine you pick, without opening Casama.'**
+  String get widgetControlRunDescription;
+
+  /// Home screen widget text, used until the app has sent its own words. The ask field; {bot} is the bot's name.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask {bot} anything'**
+  String widgetFallbackAskBot(String bot);
+
+  /// Home screen widget text, used until the app has sent its own words. The morning brief.
+  ///
+  /// In en, this message translates to:
+  /// **'Morning brief'**
+  String get widgetFallbackBrief;
+
+  /// Home screen widget text, used until the app has sent its own words. What a bot finished last.
+  ///
+  /// In en, this message translates to:
+  /// **'{bot} finished {title}'**
+  String widgetFallbackFinished(String bot, String title);
+
+  /// Home screen widget text, used until the app has sent its own words. How old the data is.
+  ///
+  /// In en, this message translates to:
+  /// **'As of {time}'**
+  String widgetFallbackAsOf(String time);
+
+  /// Home screen widget text, used until the app has sent its own words. No routine or brief is coming up.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing coming up'**
+  String get widgetFallbackNothingNext;
+
+  /// Home screen widget text, used until the app has sent its own words. A takeover request (Android).
+  ///
+  /// In en, this message translates to:
+  /// **'{bot} wants you to take over'**
+  String widgetFallbackWantsTakeOver(String bot);
+
+  /// Home screen widget text, used until the app has sent its own words. Unit after the number 1 in a countdown ("1 day").
+  ///
+  /// In en, this message translates to:
+  /// **'day'**
+  String get widgetFallbackDay;
+
+  /// Home screen widget text, used until the app has sent its own words. Unit after a number in a countdown ("12 days").
+  ///
+  /// In en, this message translates to:
+  /// **'days'**
+  String get widgetFallbackDays;
+
+  /// Sample content in the widget gallery's preview, not real data. A Bible verse (Psalm 46:10): use the usual wording of a common translation.
+  ///
+  /// In en, this message translates to:
+  /// **'Be still, and know that I am God.'**
+  String get widgetSampleVerse;
+
+  /// Sample content in the widget gallery's preview, not real data. Short reference to the verse: Psalm 46:10.
+  ///
+  /// In en, this message translates to:
+  /// **'Ps 46:10'**
+  String get widgetSampleVerseRef;
+
+  /// Sample content in the widget gallery's preview, not real data. Verse and reference on one line.
+  ///
+  /// In en, this message translates to:
+  /// **'Be still, and know that I am God. · Ps 46:10'**
+  String get widgetSampleVerseShort;
+
+  /// Sample content in the widget gallery's preview, not real data. The verse cut short for a tiny widget.
+  ///
+  /// In en, this message translates to:
+  /// **'Be still, and know…'**
+  String get widgetSampleVerseTiny;
+
+  /// Sample content in the widget gallery's preview, not real data. Name a bot gave a widget.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily verse'**
+  String get widgetSampleCanvasName;
+
+  /// Sample content in the widget gallery's preview, not real data. A request waiting for approval.
+  ///
+  /// In en, this message translates to:
+  /// **'Look up flights to Lisbon'**
+  String get widgetSampleNeedFlights;
+
+  /// Sample content in the widget gallery's preview, not real data. A bot's suggestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Move the dentist to Friday?'**
+  String get widgetSampleNeedDentist;
+
+  /// Sample content in the widget gallery's preview, not real data. A bot's last message. Acme is a made-up company.
+  ///
+  /// In en, this message translates to:
+  /// **'Three emails need a reply, and the Acme invoice is two days overdue.'**
+  String get widgetSampleBotText;
+
+  /// Sample content in the widget gallery's preview, not real data. What a bot is doing right now.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading your inbox'**
+  String get widgetSampleStep;
+
+  /// Sample content in the widget gallery's preview, not real data. Name of a routine that tidies the email inbox.
+  ///
+  /// In en, this message translates to:
+  /// **'Inbox sweep'**
+  String get widgetSampleRoutineInbox;
+
+  /// Sample content in the widget gallery's preview, not real data. Name of a routine.
+  ///
+  /// In en, this message translates to:
+  /// **'Morning brief'**
+  String get widgetSampleRoutineBrief;
+
+  /// Sample content in the widget gallery's preview, not real data. Name of a routine.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly report'**
+  String get widgetSampleRoutineWeekly;
+
+  /// Sample content in the widget gallery's preview, not real data. How often a routine runs.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekdays'**
+  String get widgetSampleWeekdays;
+
+  /// Sample content in the widget gallery's preview, not real data. How often a routine runs.
+  ///
+  /// In en, this message translates to:
+  /// **'Every day'**
+  String get widgetSampleEveryDay;
+
+  /// Sample content in the widget gallery's preview, not real data. When a routine runs; use the local time format.
+  ///
+  /// In en, this message translates to:
+  /// **'Fridays at 16:00'**
+  String get widgetSampleFridays;
+
+  /// Sample content in the widget gallery's preview, not real data. A morning brief. Acme is a made-up company, Dana a person.
+  ///
+  /// In en, this message translates to:
+  /// **'Three emails need a reply, and the Acme invoice is two days overdue. Rain from 3 pm, so leave early for the 4:30 pickup. Your first meeting is at 10:00 with Dana.'**
+  String get widgetSampleBrief;
+
+  /// Sample content in the widget gallery's preview, not real data. Title of a page a bot made.
+  ///
+  /// In en, this message translates to:
+  /// **'Q4 pricing page'**
+  String get widgetSamplePricing;
+
+  /// Sample content in the widget gallery's preview, not real data. Title of pictures a bot made.
+  ///
+  /// In en, this message translates to:
+  /// **'Logo ideas'**
+  String get widgetSampleLogoIdeas;
+
+  /// Sample content in the widget gallery's preview, not real data. Title of a document a bot made.
+  ///
+  /// In en, this message translates to:
+  /// **'Trip plan'**
+  String get widgetSampleTripPlan;
+
+  /// Sample content in the widget gallery's preview, not real data. A task on the board.
+  ///
+  /// In en, this message translates to:
+  /// **'Draft the launch post'**
+  String get widgetSampleLaunchPost;
+
+  /// Sample content in the widget gallery's preview, not real data. An example request.
+  ///
+  /// In en, this message translates to:
+  /// **'Sum up my inbox'**
+  String get widgetSampleStarterInbox;
+
+  /// Sample content in the widget gallery's preview, not real data. An example request.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan my Friday'**
+  String get widgetSampleStarterFriday;
+
+  /// Sample content in the widget gallery's preview, not real data. State and how long it has run.
+  ///
+  /// In en, this message translates to:
+  /// **'Working · 2:14'**
+  String get widgetSampleWorking;
+
+  /// Sample content in the widget gallery's preview, not real data. Credits left, as an amount in US dollars: write the amount and the currency as your language usually does.
+  ///
+  /// In en, this message translates to:
+  /// **'US\$5.70 left'**
+  String get widgetSampleCreditsLeft;
+
+  /// Sample content in the widget gallery's preview, not real data. Amount spent today, in US dollars: write the amount and the currency as your language usually does.
+  ///
+  /// In en, this message translates to:
+  /// **'US\$0.80 today'**
+  String get widgetSampleSpentToday;
+
+  /// Sample content in the widget gallery's preview, not real data. A morning brief.
+  ///
+  /// In en, this message translates to:
+  /// **'Good morning. Two meetings today, the first at 10:00 with the design team. Rain after 3, so take a coat. Your flight to Lisbon is confirmed for Friday.'**
+  String get widgetSampleMorning;
+
+  /// Sample content in the widget gallery's preview, not real data. Title of a document a bot made.
+  ///
+  /// In en, this message translates to:
+  /// **'Lisbon trip plan'**
+  String get widgetSampleLisbonPlan;
+
+  /// Sample content in the widget gallery's preview, not real data. A bot's name and how long ago. Milo is a name.
+  ///
+  /// In en, this message translates to:
+  /// **'Milo · 2 hr ago'**
+  String get widgetSampleAgo;
+
+  /// Sample content in the widget gallery's preview, not real data. A task on the board.
+  ///
+  /// In en, this message translates to:
+  /// **'Draft the launch email'**
+  String get widgetSampleLaunchEmail;
+
+  /// Sample content in the widget gallery's preview, not real data. Task state and the bot's name. Ada is a name.
+  ///
+  /// In en, this message translates to:
+  /// **'In review · Ada'**
+  String get widgetSampleInReviewBy;
+
+  /// Sample content in the widget gallery's preview, not real data. A request waiting for approval. Milo is a name.
+  ///
+  /// In en, this message translates to:
+  /// **'Milo wants to search flight prices for Lisbon'**
+  String get widgetSampleNeedAndroid;
+
+  /// Sample content in the widget gallery's preview, not real data. The next routine and its time.
+  ///
+  /// In en, this message translates to:
+  /// **'Up next · 9:00'**
+  String get widgetSampleUpNextAt;
+
+  /// Sample content in the widget gallery's preview, not real data. A bot's name and when its routine runs. Ada is a name.
+  ///
+  /// In en, this message translates to:
+  /// **'Ada · in 18 min'**
+  String get widgetSampleInMinutes;
+
+  /// Sample content in the widget gallery's preview, not real data. A date; use the local format.
+  ///
+  /// In en, this message translates to:
+  /// **'Wednesday, 18 November'**
+  String get widgetSampleDate;
+
+  /// Sample content in the widget gallery's preview, not real data. Section title with the number of requests.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs you · 1'**
+  String get widgetSampleNeedsCount;
+
+  /// Sample content in the widget gallery's preview, not real data. A request waiting for approval.
+  ///
+  /// In en, this message translates to:
+  /// **'Search flight prices for Lisbon'**
+  String get widgetSampleSearchFlights;
+
+  /// Sample content in the widget gallery's preview, not real data. The ask field. Ada is a bot's name.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask Ada'**
+  String get widgetSampleAskAda;
+
+  /// Sample content in the widget gallery's preview, not real data. The ask field. Milo is a bot's name.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask Milo'**
+  String get widgetSampleAskMilo;
+
+  /// Sample content in the widget gallery's preview, not real data. An example request; keep the emoji.
+  ///
+  /// In en, this message translates to:
+  /// **'☀️ Plan my day'**
+  String get widgetSamplePlanDay;
+
+  /// Sample content in the widget gallery's preview, not real data. An example request; keep the emoji.
+  ///
+  /// In en, this message translates to:
+  /// **'✉️ What\'s new in my inbox?'**
+  String get widgetSampleWhatsNew;
+
+  /// Android widget picker description; starts with a verb. Bot widget.
+  ///
+  /// In en, this message translates to:
+  /// **'Follow what a bot is doing right now'**
+  String get widgetAndroidBotDescription;
+
+  /// Android widget picker description; starts with a verb. Today widget.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep your whole day with your bots in one place'**
+  String get widgetAndroidTodayDescription;
+
+  /// Android widget picker description; starts with a verb. Brief widget.
+  ///
+  /// In en, this message translates to:
+  /// **'Read your morning brief at a glance'**
+  String get widgetAndroidBriefDescription;
+
+  /// Android widget picker description; starts with a verb. Library widget.
+  ///
+  /// In en, this message translates to:
+  /// **'Open what your bots made lately'**
+  String get widgetAndroidLibraryDescription;
+
+  /// Android widget picker description; starts with a verb. Tasks widget.
+  ///
+  /// In en, this message translates to:
+  /// **'Track where your task board stands'**
+  String get widgetAndroidTasksDescription;
+
+  /// Android widget picker description; starts with a verb. Credits widget.
+  ///
+  /// In en, this message translates to:
+  /// **'Check how much you have used'**
+  String get widgetAndroidCreditsDescription;
+
+  /// Android widget picker description; starts with a verb. Canvas widget.
+  ///
+  /// In en, this message translates to:
+  /// **'Show what your bots put here, from a verse to a countdown'**
+  String get widgetAndroidCanvasDescription;
+
+  /// Android dialog for choosing what a widget shows. Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a bot'**
+  String get widgetConfigBotTitle;
+
+  /// Android dialog for choosing what a widget shows. Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose routines'**
+  String get widgetConfigRoutinesTitle;
+
+  /// Android dialog for choosing what a widget shows. Hint under the title.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick up to four, for the ones you start by hand'**
+  String get widgetConfigRoutinesHint;
+
+  /// Android dialog for choosing what a widget shows. Option: let Casama choose.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic'**
+  String get widgetConfigAutomatic;
+
+  /// Android dialog for choosing what a widget shows. What Automatic shows for routines.
+  ///
+  /// In en, this message translates to:
+  /// **'The next runs, across your bots'**
+  String get widgetConfigAutomaticHint;
+
+  /// Android dialog for choosing what a widget shows. Button that closes the dialog.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get widgetConfigDone;
+
+  /// Android dialog for choosing what a widget shows. Title while signed out.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing to choose yet'**
+  String get widgetConfigSignedOutTitle;
+
+  /// Android dialog for choosing what a widget shows. Shown while signed out.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Casama and sign in, then choose here.'**
+  String get widgetConfigSignedOut;
+
+  /// Android dialog for choosing what a widget shows. Title. A canvas is something a bot put on a widget.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a canvas'**
+  String get widgetConfigCanvasTitle;
+
+  /// Android dialog for choosing what a widget shows. What Automatic shows for canvases.
+  ///
+  /// In en, this message translates to:
+  /// **'The one a bot set most recently'**
+  String get widgetConfigCanvasAutomaticHint;
+
+  /// Android dialog for choosing what a widget shows. No canvas exists.
+  ///
+  /// In en, this message translates to:
+  /// **'No canvases yet. Ask a bot to put something here.'**
+  String get widgetConfigCanvasNone;
+
+  /// System permission prompt on iPhone and iPad: why Casama asks. Tracking (ad measurement with Meta).
+  ///
+  /// In en, this message translates to:
+  /// **'If you allow it, Casama tells Meta when you install, join or subscribe after seeing a Casama ad on Facebook or Instagram, so we can measure which ads work. Casama never shows ads and never shares your chats or files.'**
+  String get iosUsageTracking;
+
+  /// System permission prompt on iPhone and iPad: why Casama asks. Contacts. Device connections is a settings screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Your bots can look up people you know, only when you turn on Contacts in Device connections.'**
+  String get iosUsageContacts;
+
+  /// System permission prompt on iPhone and iPad: why Casama asks. Photo library.
+  ///
+  /// In en, this message translates to:
+  /// **'Casama opens your photo library when you choose a photo to send to a bot or for your profile.'**
+  String get iosUsagePhotoLibrary;
+
+  /// System permission prompt on iPhone and iPad: why Casama asks. Location, also in the background.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell your bots when you arrive at or leave your named places, even when Casama is closed. Only the place name and time are shared, never your route.'**
+  String get iosUsageLocationAlways;
+
+  /// System permission prompt on iPhone and iPad: why Casama asks for location while the app is in use. Two uses: saving the current spot as a named place, and working out travel time so a bot can say it's time to leave for a calendar event. 'Places' is a switch on the Device connections settings screen. Write it the way Apple writes permission prompts.
+  ///
+  /// In en, this message translates to:
+  /// **'Save places you name, such as Home or Work, and let your bots remind you when to leave for your next appointment. Used only if you turn on Places in Device connections.'**
+  String get iosUsageLocationWhenInUse;
+
+  /// System permission prompt on iPhone and iPad: why Casama asks. Camera.
+  ///
+  /// In en, this message translates to:
+  /// **'Casama uses the camera when you take a photo to send to a bot or for your profile.'**
+  String get iosUsageCamera;
+
+  /// System permission prompt on iPhone and iPad: why Casama asks. Calendar.
+  ///
+  /// In en, this message translates to:
+  /// **'Your bots can answer questions about your schedule and add events, only when you turn on Calendar in Device connections.'**
+  String get iosUsageCalendars;
+
+  /// System permission prompt on iPhone and iPad: why Casama asks. Speech recognition.
+  ///
+  /// In en, this message translates to:
+  /// **'When Casama\'s dictation service can\'t be reached, your device\'s own speech recognition turns what you say into text.'**
+  String get iosUsageSpeech;
+
+  /// System permission prompt on iPhone and iPad: why Casama asks. Alarms and timers.
+  ///
+  /// In en, this message translates to:
+  /// **'Your bots can set alarms and timers that ring through silent mode, only when you allow Alarms in Device connections.'**
+  String get iosUsageAlarmKit;
+
+  /// System permission prompt on iPhone and iPad: why Casama asks. Apple Home (HomeKit).
+  ///
+  /// In en, this message translates to:
+  /// **'Your bots can check and control your HomeKit home when you allow Home in Device connections; changes always ask for approval first.'**
+  String get iosUsageHomeKit;
+
+  /// System permission prompt on iPhone and iPad: why Casama asks. Microphone. Gemini and OpenAI are company products.
+  ///
+  /// In en, this message translates to:
+  /// **'Casama uses the microphone for dictation and live calls with your bots. Only after you agree, your voice goes to AI providers to answer you: Google Gemini for calls, OpenAI to turn dictation into text.'**
+  String get iosUsageMicrophone;
+
+  /// System permission prompt on iPhone and iPad: why Casama asks. Writing Apple Health data.
+  ///
+  /// In en, this message translates to:
+  /// **'Casama only reads Apple Health data; it never writes to it.'**
+  String get iosUsageHealthUpdate;
+
+  /// System permission prompt on iPhone and iPad: why Casama asks. Face ID.
+  ///
+  /// In en, this message translates to:
+  /// **'Casama uses Face ID to unlock the app when you turn on the app lock, and to confirm risky actions.'**
+  String get iosUsageFaceId;
+
+  /// System permission prompt on iPhone and iPad: why Casama asks. Reading Apple Health data.
+  ///
+  /// In en, this message translates to:
+  /// **'Your bots can see daily summaries of your sleep, activity, workouts and heart from Apple Health, only when you turn on Apple Health in Device connections. Casama never writes to Apple Health and never uses it for ads.'**
+  String get iosUsageHealthShare;
+
+  /// System permission prompt on Apple Watch: why Casama records the microphone.
+  ///
+  /// In en, this message translates to:
+  /// **'Casama records your voice when you ask a bot something and sends it to your Casama server, where an AI provider (OpenAI, on Casama Cloud) turns it into text for your bot.'**
+  String get iosUsageWatchMicrophone;
+
+  /// System permission prompt on the Mac: why Casama asks. Contacts.
+  ///
+  /// In en, this message translates to:
+  /// **'Your bots can look up people you know, only when you turn on Contacts in Device connections.'**
+  String get macUsageContacts;
+
+  /// System permission prompt on the Mac: why Casama asks. Speech recognition.
+  ///
+  /// In en, this message translates to:
+  /// **'When Casama\'s dictation service can\'t be reached, your device\'s own speech recognition turns what you say into text.'**
+  String get macUsageSpeech;
+
+  /// System permission prompt on the Mac: why Casama asks. Microphone.
+  ///
+  /// In en, this message translates to:
+  /// **'Casama uses the microphone for dictation and live calls with your bots. Only after you agree, your voice goes to AI providers to answer you: Google Gemini for calls, OpenAI to turn dictation into text.'**
+  String get macUsageMicrophone;
+
+  /// System permission prompt on the Mac: why Casama asks. Reading other apps' window titles. Quick ask is the app's small ask box.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick ask reads the front window\'s title and your browser\'s current tab, only when you press the shortcut.'**
+  String get macUsageAppleEvents;
+
+  /// Name of the bots' computers in the Files app and Finder. Casama is the brand.
+  ///
+  /// In en, this message translates to:
+  /// **'Casama Computers'**
+  String get nativeNameFileProvider;
+
+  /// Name of the notification extension on iPhone. Casama is the brand.
+  ///
+  /// In en, this message translates to:
+  /// **'Casama Notifications'**
+  String get nativeNameNotifications;
+
+  /// Name of the Safari extension. Casama and Safari are brands.
+  ///
+  /// In en, this message translates to:
+  /// **'Casama for Safari'**
+  String get nativeNameSafari;
+
+  /// Name in the Share menu, Finder Quick Actions and the Services menu on the Mac.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask Casama'**
+  String get nativeNameAskCasama;
+
+  /// Fallback name of a bot's computer in Files and Finder.
+  ///
+  /// In en, this message translates to:
+  /// **'Computer'**
+  String get nativeComputer;
+
+  /// Safari extension on iPhone, shown when it can't sign in by itself. Keep the arrows; use the app's own names for Settings and Sign In on Another Device.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Casama on this device -> Settings -> Sign In on Another Device, or paste a sign-in link below.'**
+  String get nativeSafariSignInIos;
+
+  /// Safari extension on the Mac, shown when it can't sign in by itself. Keep the arrows; use the app's own names for Settings and Sign In on Another Device.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Casama on this Mac -> Settings -> Sign In on Another Device, or paste a sign-in link below.'**
+  String get nativeSafariSignInMac;
+
+  /// Linux app launcher: one-line description of Casama.
+  ///
+  /// In en, this message translates to:
+  /// **'Bots that do the work, on every screen you own'**
+  String get linuxDesktopComment;
+
+  /// Linux app launcher search words, separated by semicolons; keep the semicolon at the end.
+  ///
+  /// In en, this message translates to:
+  /// **'AI;assistant;agent;bot;chat;'**
+  String get linuxDesktopKeywords;
+
+  /// Mac menu bar item. {appName} is the app's name. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'About {appName}'**
+  String macMenuAbout(String appName);
+
+  /// Mac menu bar item. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Preferences…'**
+  String get macMenuPreferences;
+
+  /// Mac menu bar item. The standard Services submenu. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Services'**
+  String get macMenuServices;
+
+  /// Mac menu bar item. {appName} is the app's name. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide {appName}'**
+  String macMenuHide(String appName);
+
+  /// Mac menu bar item. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide Others'**
+  String get macMenuHideOthers;
+
+  /// Mac menu bar item. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Show All'**
+  String get macMenuShowAll;
+
+  /// Mac menu bar item. {appName} is the app's name. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Quit {appName}'**
+  String macMenuQuit(String appName);
+
+  /// Mac menu bar item. Menu title. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get macMenuEdit;
+
+  /// Mac menu bar item. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get macMenuUndo;
+
+  /// Mac menu bar item. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Redo'**
+  String get macMenuRedo;
+
+  /// Mac menu bar item. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Cut'**
+  String get macMenuCut;
+
+  /// Mac menu bar item. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy'**
+  String get macMenuCopy;
+
+  /// Mac menu bar item. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste'**
+  String get macMenuPaste;
+
+  /// Mac menu bar item. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste and Match Style'**
+  String get macMenuPasteAndMatchStyle;
+
+  /// Mac menu bar item. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get macMenuDelete;
+
+  /// Mac menu bar item. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Select All'**
+  String get macMenuSelectAll;
+
+  /// Mac menu bar item. Submenu title. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Find'**
+  String get macMenuFind;
+
+  /// Mac menu bar item. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Find…'**
+  String get macMenuFindEllipsis;
+
+  /// Mac menu bar item. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Find and Replace…'**
+  String get macMenuFindAndReplace;
+
+  /// Mac menu bar item. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Find Next'**
+  String get macMenuFindNext;
+
+  /// Mac menu bar item. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Find Previous'**
+  String get macMenuFindPrevious;
+
+  /// Mac menu bar item. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Use Selection for Find'**
+  String get macMenuUseSelectionForFind;
+
+  /// Mac menu bar item. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Jump to Selection'**
+  String get macMenuJumpToSelection;
+
+  /// Mac menu bar item. Submenu title. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Spelling and Grammar'**
+  String get macMenuSpellingAndGrammar;
+
+  /// Mac menu bar item. Submenu title. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Spelling'**
+  String get macMenuSpelling;
+
+  /// Mac menu bar item. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Show Spelling and Grammar'**
+  String get macMenuShowSpelling;
+
+  /// Mac menu bar item. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Check Document Now'**
+  String get macMenuCheckDocumentNow;
+
+  /// Mac menu bar item. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Check Spelling While Typing'**
+  String get macMenuCheckSpellingWhileTyping;
+
+  /// Mac menu bar item. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Check Grammar With Spelling'**
+  String get macMenuCheckGrammar;
+
+  /// Mac menu bar item. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Correct Spelling Automatically'**
+  String get macMenuCorrectSpelling;
+
+  /// Mac menu bar item. Submenu title. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Substitutions'**
+  String get macMenuSubstitutions;
+
+  /// Mac menu bar item. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Show Substitutions'**
+  String get macMenuShowSubstitutions;
+
+  /// Mac menu bar item. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart Copy/Paste'**
+  String get macMenuSmartCopyPaste;
+
+  /// Mac menu bar item. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart Quotes'**
+  String get macMenuSmartQuotes;
+
+  /// Mac menu bar item. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart Dashes'**
+  String get macMenuSmartDashes;
+
+  /// Mac menu bar item. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart Links'**
+  String get macMenuSmartLinks;
+
+  /// Mac menu bar item. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Data Detectors'**
+  String get macMenuDataDetectors;
+
+  /// Mac menu bar item. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Text Replacement'**
+  String get macMenuTextReplacement;
+
+  /// Mac menu bar item. Submenu title. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Transformations'**
+  String get macMenuTransformations;
+
+  /// Mac menu bar item. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Make Upper Case'**
+  String get macMenuMakeUpperCase;
+
+  /// Mac menu bar item. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Make Lower Case'**
+  String get macMenuMakeLowerCase;
+
+  /// Mac menu bar item. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Capitalize'**
+  String get macMenuCapitalize;
+
+  /// Mac menu bar item. Submenu title: reading text aloud. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Speech'**
+  String get macMenuSpeech;
+
+  /// Mac menu bar item. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Speaking'**
+  String get macMenuStartSpeaking;
+
+  /// Mac menu bar item. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop Speaking'**
+  String get macMenuStopSpeaking;
+
+  /// Mac menu bar item. Menu title. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'View'**
+  String get macMenuView;
+
+  /// Mac menu bar item. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Full Screen'**
+  String get macMenuEnterFullScreen;
+
+  /// Mac menu bar item. Menu title. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Window'**
+  String get macMenuWindow;
+
+  /// Mac menu bar item. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Minimize'**
+  String get macMenuMinimize;
+
+  /// Mac menu bar item. Window menu: enlarge the window. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Zoom'**
+  String get macMenuZoom;
+
+  /// Mac menu bar item. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Bring All to Front'**
+  String get macMenuBringAllToFront;
+
+  /// Mac menu bar item. Menu title. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Help'**
+  String get macMenuHelp;
+
+  /// Mac menu bar item. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Check for Updates…'**
+  String get macMenuCheckForUpdates;
+
+  /// Mac menu bar item. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings…'**
+  String get macMenuSettings;
+
+  /// Mac menu bar item. Menu title. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'File'**
+  String get macMenuFile;
+
+  /// Mac menu bar item. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'New Chat'**
+  String get macMenuNewChat;
+
+  /// Mac menu bar item. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'New Bot…'**
+  String get macMenuNewBot;
+
+  /// Mac menu bar item. The app's small ask box. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Ask'**
+  String get macMenuQuickAsk;
+
+  /// Mac menu bar item. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Search…'**
+  String get macMenuSearch;
+
+  /// Mac menu bar item. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Close Window'**
+  String get macMenuCloseWindow;
+
+  /// Mac menu bar item. Menu title: places to go. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Go'**
+  String get macMenuGo;
+
+  /// Mac menu bar item. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Bots'**
+  String get macMenuBots;
+
+  /// Mac menu bar item. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Inbox'**
+  String get macMenuInbox;
+
+  /// Mac menu bar item. The task board. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Board'**
+  String get macMenuBoard;
+
+  /// Mac menu bar item. The bots' computer. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Computer'**
+  String get macMenuComputer;
+
+  /// Mac menu bar item. Pages bots made. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Pages'**
+  String get macMenuPages;
+
+  /// Item in the Mac app's Help menu that opens the online help pages, like 'Safari Help' in other apps. Not the name of the support assistant (casamaHelp). Use the wording macOS itself uses for an app's help item.
+  ///
+  /// In en, this message translates to:
+  /// **'Casama Help'**
+  String get macMenuCasamaHelp;
+
+  /// Mac menu bar item. Use the wording macOS itself uses.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Feedback…'**
+  String get macMenuSendFeedback;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Type and parameter name.
+  ///
+  /// In en, this message translates to:
+  /// **'Bot'**
+  String get siriBot;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Type and parameter name: a task a bot repeats.
+  ///
+  /// In en, this message translates to:
+  /// **'Routine'**
+  String get siriRoutine;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Parameter and category name.
+  ///
+  /// In en, this message translates to:
+  /// **'Routines'**
+  String get siriRoutines;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Type and parameter name: something a bot put on a widget.
+  ///
+  /// In en, this message translates to:
+  /// **'Canvas'**
+  String get siriCanvas;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Option: let Casama choose.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic'**
+  String get siriAutomatic;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. What Automatic shows.
+  ///
+  /// In en, this message translates to:
+  /// **'What a bot set most recently'**
+  String get siriAutomaticSubtitle;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Action title.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a canvas'**
+  String get siriChooseCanvas;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Action description.
+  ///
+  /// In en, this message translates to:
+  /// **'Show what a bot set most recently, or one canvas.'**
+  String get siriChooseCanvasDescription;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Action title.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a bot'**
+  String get siriChooseBot;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Action description.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick the bot this widget shows.'**
+  String get siriChooseBotDescription;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Action title.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose routines'**
+  String get siriChooseRoutines;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Action description.
+  ///
+  /// In en, this message translates to:
+  /// **'Show the next runs, or up to four routines you pick.'**
+  String get siriChooseRoutinesDescription;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Action title.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Casama'**
+  String get siriOpenCasama;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Parameter name: which screen to open.
+  ///
+  /// In en, this message translates to:
+  /// **'Where'**
+  String get siriWhere;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Action title: voice call.
+  ///
+  /// In en, this message translates to:
+  /// **'Talk to a bot'**
+  String get siriTalkToBot;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Action description.
+  ///
+  /// In en, this message translates to:
+  /// **'Starts a voice call with the bot you pick.'**
+  String get siriTalkToBotDescription;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Action title.
+  ///
+  /// In en, this message translates to:
+  /// **'Run a routine'**
+  String get siriRunRoutine;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Action description.
+  ///
+  /// In en, this message translates to:
+  /// **'Runs the routine you pick, without opening Casama.'**
+  String get siriRunRoutineControlDescription;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Action title: a button pressed during a call.
+  ///
+  /// In en, this message translates to:
+  /// **'Call action'**
+  String get siriCallAction;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Parameter name.
+  ///
+  /// In en, this message translates to:
+  /// **'Action'**
+  String get siriAction;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Action title.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop the bot'**
+  String get siriStopBot;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Parameter name: one run of a bot's work.
+  ///
+  /// In en, this message translates to:
+  /// **'Run'**
+  String get siriRun;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Action title.
+  ///
+  /// In en, this message translates to:
+  /// **'Answer a bot\'s request'**
+  String get siriAnswerRequest;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Parameter name.
+  ///
+  /// In en, this message translates to:
+  /// **'Request'**
+  String get siriRequest;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Parameter or action name: allow a request.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow'**
+  String get siriAllow;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Parameter name.
+  ///
+  /// In en, this message translates to:
+  /// **'From a widget'**
+  String get siriFromWidget;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Action title.
+  ///
+  /// In en, this message translates to:
+  /// **'Run a routine now'**
+  String get siriRunRoutineNow;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Action title.
+  ///
+  /// In en, this message translates to:
+  /// **'Do what a bot suggests'**
+  String get siriAcceptSuggestion;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Parameter name.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggestion'**
+  String get siriSuggestion;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Watch complication setting description.
+  ///
+  /// In en, this message translates to:
+  /// **'Where a bot stands and what it is doing'**
+  String get siriBotStatusDescription;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Watch action description.
+  ///
+  /// In en, this message translates to:
+  /// **'The next routine and when it runs'**
+  String get siriNextRoutineDescription;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Watch action title.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask Casama'**
+  String get siriAskCasama;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Watch action description.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask a bot something by voice'**
+  String get siriAskVoiceDescription;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Watch action description.
+  ///
+  /// In en, this message translates to:
+  /// **'What is waiting for your OK'**
+  String get siriWhatWaiting;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Short title of the watch's Ask shortcut.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask'**
+  String get siriAsk;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Short title of the watch's requests shortcut.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs you'**
+  String get siriShortNeedsYou;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Siri says this as the app comes forward.
+  ///
+  /// In en, this message translates to:
+  /// **'Opening Casama to finish.'**
+  String get siriOpeningToFinish;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Property name.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get siriName;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Property name.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get siriTitle;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Type and parameter name: a conversation.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat'**
+  String get siriChat;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Subtitle of a bot.
+  ///
+  /// In en, this message translates to:
+  /// **'A bot in Casama, an AI assistant you chat with'**
+  String get siriBotSubtitle;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Subtitle of a routine; {bot} is a name.
+  ///
+  /// In en, this message translates to:
+  /// **'A routine {bot} runs in Casama'**
+  String siriRoutineSubtitle(String bot);
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Subtitle of a chat; {bot} is a name.
+  ///
+  /// In en, this message translates to:
+  /// **'A chat with {bot} in Casama'**
+  String siriChatSubtitle(String bot);
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Spotlight search result description.
+  ///
+  /// In en, this message translates to:
+  /// **'Bot in Casama'**
+  String get siriBotInCasama;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Spotlight search result description.
+  ///
+  /// In en, this message translates to:
+  /// **'Routine · {bot}'**
+  String siriRoutineDot(String bot);
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Spotlight search result description.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat with {bot}'**
+  String siriChatWith(String bot);
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Spotlight search word, lower case.
+  ///
+  /// In en, this message translates to:
+  /// **'bot'**
+  String get siriKeywordBot;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Spotlight search word, lower case.
+  ///
+  /// In en, this message translates to:
+  /// **'routine'**
+  String get siriKeywordRoutine;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Spotlight search word, lower case.
+  ///
+  /// In en, this message translates to:
+  /// **'chat'**
+  String get siriKeywordChat;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Action title.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask a bot'**
+  String get siriAskBot;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Action description.
+  ///
+  /// In en, this message translates to:
+  /// **'Sends a question to one of your Casama bots (AI assistants) in a new chat and reads the reply back. With no bot named, the bot you talked to last answers.'**
+  String get siriAskBotDescription;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Action category.
+  ///
+  /// In en, this message translates to:
+  /// **'Bots'**
+  String get siriCategoryBots;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Parameter description.
+  ///
+  /// In en, this message translates to:
+  /// **'Which bot to ask. Leave empty for the bot you talked to last.'**
+  String get siriAskBotParamDescription;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Parameter name.
+  ///
+  /// In en, this message translates to:
+  /// **'Question'**
+  String get siriQuestion;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Parameter description.
+  ///
+  /// In en, this message translates to:
+  /// **'What to ask the bot, in your own words.'**
+  String get siriQuestionDescription;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Siri asks for the question.
+  ///
+  /// In en, this message translates to:
+  /// **'What should I ask?'**
+  String get siriWhatShouldIAsk;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Shortcuts editor summary; {bot} and {question} are blanks the person fills.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask {bot} {question}'**
+  String siriSummaryAskBot(String bot, String question);
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Spoken after the first part of a long reply.
+  ///
+  /// In en, this message translates to:
+  /// **'The rest is on screen.'**
+  String get siriRestOnScreen;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Spoken after a long reply cut mid-sentence.
+  ///
+  /// In en, this message translates to:
+  /// **'… The rest is on screen.'**
+  String get siriRestOnScreenEllipsis;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Action description.
+  ///
+  /// In en, this message translates to:
+  /// **'Runs one of your Casama bots\' routines now. The result arrives in the app and as a notification, as it does when the routine runs on its own.'**
+  String get siriRunRoutineDescription;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Parameter description.
+  ///
+  /// In en, this message translates to:
+  /// **'Which routine to run now.'**
+  String get siriRoutineParamDescription;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Shortcuts editor summary.
+  ///
+  /// In en, this message translates to:
+  /// **'Run {routine}'**
+  String siriSummaryRun(String routine);
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Action title.
+  ///
+  /// In en, this message translates to:
+  /// **'What needs me'**
+  String get siriWhatNeedsMe;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Action description.
+  ///
+  /// In en, this message translates to:
+  /// **'Says how many things in Casama are waiting for you: a bot\'s request for your OK, a takeover, a suggestion. Answer them in the app.'**
+  String get siriWhatNeedsMeDescription;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Action title.
+  ///
+  /// In en, this message translates to:
+  /// **'Open a bot'**
+  String get siriOpenBot;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Action description.
+  ///
+  /// In en, this message translates to:
+  /// **'Opens your chat with one of your Casama bots.'**
+  String get siriOpenBotDescription;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Action description.
+  ///
+  /// In en, this message translates to:
+  /// **'Opens a Casama bot\'s chat.'**
+  String get siriOpenBotPersonDescription;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Action title.
+  ///
+  /// In en, this message translates to:
+  /// **'Open a chat'**
+  String get siriOpenChat;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Action description.
+  ///
+  /// In en, this message translates to:
+  /// **'Opens one of your chats with a Casama bot.'**
+  String get siriOpenChatDescription;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Action title.
+  ///
+  /// In en, this message translates to:
+  /// **'Open a routine\'s bot'**
+  String get siriOpenRoutine;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Action description.
+  ///
+  /// In en, this message translates to:
+  /// **'Opens the bot that runs one of your Casama routines.'**
+  String get siriOpenRoutineDescription;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Action description. Action button is the iPhone's hardware button.
+  ///
+  /// In en, this message translates to:
+  /// **'Opens voice mode with one of your Casama bots. Available on the Action button.'**
+  String get siriTalkDescription;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Action title.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask a bot and get the reply'**
+  String get siriAskGetReply;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Action description. Shortcuts is Apple's app.
+  ///
+  /// In en, this message translates to:
+  /// **'Sends a question to a Casama bot and returns its reply text for chaining in Shortcuts.'**
+  String get siriAskGetReplyDescription;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Action title.
+  ///
+  /// In en, this message translates to:
+  /// **'Get the last reply'**
+  String get siriGetLastReply;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Action description.
+  ///
+  /// In en, this message translates to:
+  /// **'Returns the latest reply text from a Casama bot chat.'**
+  String get siriGetLastReplyDescription;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Action title.
+  ///
+  /// In en, this message translates to:
+  /// **'Start a computer'**
+  String get siriStartComputer;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Action description.
+  ///
+  /// In en, this message translates to:
+  /// **'Wakes up a Casama computer after confirmation.'**
+  String get siriStartComputerDescription;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Parameter name.
+  ///
+  /// In en, this message translates to:
+  /// **'Computer name'**
+  String get siriComputerName;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Used inside "Start {computer}?" when no name was given.
+  ///
+  /// In en, this message translates to:
+  /// **'your Casama computer'**
+  String get siriYourComputer;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Siri asks to confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Start {computer}?'**
+  String siriStartConfirm(String computer);
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Siri says this.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Casama to start your computer.'**
+  String get siriOpenToStartComputer;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Focus filter setting title.
+  ///
+  /// In en, this message translates to:
+  /// **'Set Casama Focus Filter'**
+  String get siriFocusTitle;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Focus filter description. Focus is Apple's feature name.
+  ///
+  /// In en, this message translates to:
+  /// **'Show only chosen bots and optionally hold proactive check-ins while this Focus is active.'**
+  String get siriFocusDescription;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Parameter name.
+  ///
+  /// In en, this message translates to:
+  /// **'Bots to show'**
+  String get siriFocusBots;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Parameter name: pause messages bots start themselves.
+  ///
+  /// In en, this message translates to:
+  /// **'Hold proactive check-ins'**
+  String get siriFocusHold;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Focus filter summary with one bot.
+  ///
+  /// In en, this message translates to:
+  /// **'Show 1 bot'**
+  String get siriFocusShowOne;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Focus filter summary with two or more bots.
+  ///
+  /// In en, this message translates to:
+  /// **'Show {count} bots'**
+  String siriFocusShowMany(int count);
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Focus filter summary.
+  ///
+  /// In en, this message translates to:
+  /// **'Hold check-ins'**
+  String get siriFocusHoldCheckIns;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Focus filter summary.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow check-ins'**
+  String get siriFocusAllowCheckIns;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Focus filter summary.
+  ///
+  /// In en, this message translates to:
+  /// **'All bots'**
+  String get siriFocusAllBots;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Focus filter summary.
+  ///
+  /// In en, this message translates to:
+  /// **'All bots visible'**
+  String get siriFocusAllVisible;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Siri AI tool title.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask a Casama bot'**
+  String get siriToolAsk;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Siri AI tool description.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask one of the person\'s Casama bots a question and return its reply.'**
+  String get siriToolAskDescription;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Action category.
+  ///
+  /// In en, this message translates to:
+  /// **'Assistants'**
+  String get siriCategoryAssistants;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Parameter description.
+  ///
+  /// In en, this message translates to:
+  /// **'Which Casama bot to ask.'**
+  String get siriToolBotDescription;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Parameter description.
+  ///
+  /// In en, this message translates to:
+  /// **'What to ask the bot.'**
+  String get siriToolQuestionDescription;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Siri AI tool title.
+  ///
+  /// In en, this message translates to:
+  /// **'Run a Casama routine'**
+  String get siriToolRun;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Siri AI tool description.
+  ///
+  /// In en, this message translates to:
+  /// **'Run a saved Casama routine after confirming with the person.'**
+  String get siriToolRunDescription;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Action category.
+  ///
+  /// In en, this message translates to:
+  /// **'Automation'**
+  String get siriCategoryAutomation;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Parameter description.
+  ///
+  /// In en, this message translates to:
+  /// **'The routine to run.'**
+  String get siriToolRoutineDescription;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Siri asks to confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Run {routine} with {bot}?'**
+  String siriRunWithConfirm(String routine, String bot);
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Siri AI tool title.
+  ///
+  /// In en, this message translates to:
+  /// **'What needs me in Casama'**
+  String get siriToolNeeds;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Siri AI tool description.
+  ///
+  /// In en, this message translates to:
+  /// **'Check how many approvals, takeovers or suggestions are waiting in Casama.'**
+  String get siriToolNeedsDescription;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Siri says this.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Casama to check what needs you.'**
+  String get siriOpenToCheck;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Siri AI tool title.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop a Casama bot'**
+  String get siriToolStop;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Siri AI tool description.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop a bot that is currently running a task in Casama.'**
+  String get siriToolStopDescription;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Parameter description.
+  ///
+  /// In en, this message translates to:
+  /// **'The bot to stop.'**
+  String get siriToolStopBotDescription;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Siri says this.
+  ///
+  /// In en, this message translates to:
+  /// **'Stopped {bot}.'**
+  String siriStoppedBot(String bot);
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Siri AI tool title.
+  ///
+  /// In en, this message translates to:
+  /// **'Call a Casama bot'**
+  String get siriToolCall;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Siri AI tool description.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Casama and start a live voice call with the chosen bot.'**
+  String get siriToolCallDescription;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Action category.
+  ///
+  /// In en, this message translates to:
+  /// **'Communication'**
+  String get siriCategoryCommunication;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Parameter description.
+  ///
+  /// In en, this message translates to:
+  /// **'The bot to call.'**
+  String get siriToolCallBotDescription;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Siri says this.
+  ///
+  /// In en, this message translates to:
+  /// **'Calling {bot}.'**
+  String siriCalling(String bot);
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Subtitle of a bot; {app} is the app's name.
+  ///
+  /// In en, this message translates to:
+  /// **'A bot in {app}'**
+  String siriBotIn(String app);
+
+  /// Siri, Shortcuts and App Intents on Apple devices. The person themselves, as a message's sender.
+  ///
+  /// In en, this message translates to:
+  /// **'Me'**
+  String get siriMe;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Used inside a sentence when the bot's name is unknown.
+  ///
+  /// In en, this message translates to:
+  /// **'a bot'**
+  String get siriABot;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. A message or chat attribute.
+  ///
+  /// In en, this message translates to:
+  /// **'Favorited'**
+  String get siriFavorited;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. A sent message.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent to {bot}'**
+  String siriSentTo(String bot);
+
+  /// Siri, Shortcuts and App Intents on Apple devices. A message type.
+  ///
+  /// In en, this message translates to:
+  /// **'Message'**
+  String get siriMessage;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. No effect or reaction.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get siriNone;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Siri says this.
+  ///
+  /// In en, this message translates to:
+  /// **'Casama sends to one bot at a time. Which bot?'**
+  String get siriErrorOneBot;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Siri says this.
+  ///
+  /// In en, this message translates to:
+  /// **'Siri can send words to a bot. Add files, pictures and places in Casama.'**
+  String get siriErrorTextOnly;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Siri says this.
+  ///
+  /// In en, this message translates to:
+  /// **'I couldn\'t find that bot in Casama.'**
+  String get siriErrorNoBot;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Siri asks for the message.
+  ///
+  /// In en, this message translates to:
+  /// **'What should I send?'**
+  String get siriWhatShouldISend;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Visual Intelligence result type.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask Casama Bot'**
+  String get siriAskCasamaBot;
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Visual Intelligence choice.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask {bot}'**
+  String siriAskName(String bot);
+
+  /// Siri, Shortcuts and App Intents on Apple devices. Visual Intelligence action title.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask Casama about this'**
+  String get siriAskAboutThis;
+
+  /// Siri phrase the person says; must be natural spoken language. {app} is the app's name.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask {app}'**
+  String siriPhraseAsk(String app);
+
+  /// Siri phrase the person says; must be natural spoken language. {app} is the app's name.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask a bot in {app}'**
+  String siriPhraseAskBotIn(String app);
+
+  /// Siri phrase the person says; must be natural spoken language. {app} is the app's name.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask {bot} in {app}'**
+  String siriPhraseAskNamed(String bot, String app);
+
+  /// Siri phrase the person says; must be natural spoken language. {app} is the app's name.
+  ///
+  /// In en, this message translates to:
+  /// **'Talk to a bot in {app}'**
+  String siriPhraseTalkIn(String app);
+
+  /// Siri phrase the person says; must be natural spoken language. {app} is the app's name.
+  ///
+  /// In en, this message translates to:
+  /// **'Talk to {bot} in {app}'**
+  String siriPhraseTalkNamed(String bot, String app);
+
+  /// Siri phrase the person says; must be natural spoken language. {app} is the app's name.
+  ///
+  /// In en, this message translates to:
+  /// **'Run a routine in {app}'**
+  String siriPhraseRunIn(String app);
+
+  /// Siri phrase the person says; must be natural spoken language. {app} is the app's name.
+  ///
+  /// In en, this message translates to:
+  /// **'Run {routine} in {app}'**
+  String siriPhraseRunNamed(String routine, String app);
+
+  /// Siri phrase the person says; must be natural spoken language. {app} is the app's name.
+  ///
+  /// In en, this message translates to:
+  /// **'What needs me in {app}'**
+  String siriPhraseNeedsIn(String app);
+
+  /// Siri phrase the person says; must be natural spoken language. {app} is the app's name.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s waiting in {app}'**
+  String siriPhraseWaitingIn(String app);
+
+  /// Siri phrase the person says; must be natural spoken language. {app} is the app's name.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask {app} something'**
+  String siriPhraseAskSomething(String app);
+
+  /// Siri phrase the person says; must be natural spoken language. {app} is the app's name.
+  ///
+  /// In en, this message translates to:
+  /// **'Run my {routine} in {app}'**
+  String siriPhraseRunMy(String routine, String app);
+
+  /// Android: what Gemini says or shows about Casama (App Functions). Used at the start of a sentence when the bot's name is unknown.
+  ///
+  /// In en, this message translates to:
+  /// **'A bot'**
+  String get siriABotSubject;
+
+  /// Android: what Gemini says or shows about Casama (App Functions). A request waits.
+  ///
+  /// In en, this message translates to:
+  /// **'{bot} needs your OK.'**
+  String siriBotNeedsOk(String bot);
+
+  /// Android: what Gemini says or shows about Casama (App Functions). A takeover waits.
+  ///
+  /// In en, this message translates to:
+  /// **'{bot} needs you to take over.'**
+  String siriBotNeedsTakeOver(String bot);
+
+  /// Android: what Gemini says or shows about Casama (App Functions). A suggestion waits.
+  ///
+  /// In en, this message translates to:
+  /// **'{bot} has a suggestion.'**
+  String siriBotHasSuggestion(String bot);
+
+  /// Android: what Gemini says or shows about Casama (App Functions). Something else waits.
+  ///
+  /// In en, this message translates to:
+  /// **'{bot} needs you.'**
+  String siriBotNeedsYouLine(String bot);
+
+  /// Android: what Gemini says or shows about Casama (App Functions). Exactly one request waits.
+  ///
+  /// In en, this message translates to:
+  /// **'One thing needs you.'**
+  String get siriOneThingNeedsYou;
+
+  /// Android: what Gemini says or shows about Casama (App Functions). Two or more requests wait.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} things need you.'**
+  String siriCountThingsNeedYou(int count);
+
+  /// Android: what Gemini says or shows about Casama (App Functions). The phone is locked.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock your phone and try again.'**
+  String get siriUnlockPhone;
+
+  /// Android: what Gemini says or shows about Casama (App Functions). The person turned Gemini access off. Gemini is Google's product.
+  ///
+  /// In en, this message translates to:
+  /// **'Gemini is turned off for Casama on this phone (Casama → Settings → Privacy).'**
+  String get siriGeminiOff;
 }
 
 class _AppLocalizationsDelegate
@@ -43519,18 +46189,64 @@ class _AppLocalizationsDelegate
   }
 
   @override
-  bool isSupported(Locale locale) =>
-      <String>['en'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>[
+    'de',
+    'en',
+    'es',
+    'fr',
+    'id',
+    'it',
+    'ja',
+    'ko',
+    'pt',
+    'tr',
+    'vi',
+    'zh',
+  ].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
+  // Lookup logic when language+script codes are specified.
+  switch (locale.languageCode) {
+    case 'zh':
+      {
+        switch (locale.scriptCode) {
+          case 'Hant':
+            return AppLocalizationsZhHant();
+        }
+        break;
+      }
+  }
+
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
+    case 'de':
+      return AppLocalizationsDe();
     case 'en':
       return AppLocalizationsEn();
+    case 'es':
+      return AppLocalizationsEs();
+    case 'fr':
+      return AppLocalizationsFr();
+    case 'id':
+      return AppLocalizationsId();
+    case 'it':
+      return AppLocalizationsIt();
+    case 'ja':
+      return AppLocalizationsJa();
+    case 'ko':
+      return AppLocalizationsKo();
+    case 'pt':
+      return AppLocalizationsPt();
+    case 'tr':
+      return AppLocalizationsTr();
+    case 'vi':
+      return AppLocalizationsVi();
+    case 'zh':
+      return AppLocalizationsZh();
   }
 
   throw FlutterError(

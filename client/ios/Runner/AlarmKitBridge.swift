@@ -77,14 +77,14 @@ final class AlarmKitBridge {
           }
           let id = UUID()
           let label = (args["label"] as? String)?.trimmingCharacters(in: .whitespacesAndNewlines)
-          let title = (label?.isEmpty == false ? label! : "Casama Alarm")
+          let title = (label?.isEmpty == false ? label! : NativeL10n.notifAlarmTitle)
           let alert: AlarmPresentation.Alert
           if #available(iOS 26.1, *) {
             alert = AlarmPresentation.Alert(title: LocalizedStringResource(stringLiteral: title))
           } else {
             alert = AlarmPresentation.Alert(
               title: LocalizedStringResource(stringLiteral: title),
-              stopButton: AlarmButton(text: "Stop", textColor: .white, systemImageName: "stop.circle")
+              stopButton: AlarmButton(text: LocalizedStringResource("notifAlarmStop", defaultValue: "Stop", table: "Native"), textColor: .white, systemImageName: "stop.circle")
             )
           }
           let presentation = AlarmPresentation(alert: alert)

@@ -412,12 +412,18 @@ class _BotCard extends StatelessWidget {
                     ),
                     if (bot.lastMessage case final m?) ...[
                       const SizedBox(width: AppSpace.xs),
-                      Text(
-                        chatListTime(context, m.at),
-                        key: Key('bot-time-${bot.id}'),
-                        style: context.textTheme.labelSmall?.copyWith(
-                          color: scheme.onSurfaceVariant,
-                          fontFeatures: AppText.tabular,
+                      // Flexible: a long time label (Portuguese at large text) gives way
+                      // instead of pushing the row past its edge.
+                      Flexible(
+                        child: Text(
+                          chatListTime(context, m.at),
+                          key: Key('bot-time-${bot.id}'),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: context.textTheme.labelSmall?.copyWith(
+                            color: scheme.onSurfaceVariant,
+                            fontFeatures: AppText.tabular,
+                          ),
                         ),
                       ),
                     ],

@@ -244,8 +244,8 @@ class LiveActivityCallGlance implements CallGlanceSurface {
         : (g.since!.millisecondsSinceEpoch / 1000).toStringAsFixed(0),
     'muted': g.muted ? '1' : '0',
     'link': 'casama://app${g.link}',
-    'mute': l10n.mute,
-    'unmute': l10n.unmute,
+    'mute': l10n.callMicMute,
+    'unmute': l10n.callMicUnmute,
     'end': l10n.callEndCall,
   };
 
@@ -337,9 +337,9 @@ CallMenu callMenu(CallGlance g, AppLocalizations l10n) => CallMenu(
   status: '${g.botName} · ${g.status(l10n)}',
   items: [
     if (g.muted)
-      (l10n.unmute, CallSystemAction.unmute)
+      (l10n.callMicUnmute, CallSystemAction.unmute)
     else
-      (l10n.mute, CallSystemAction.mute),
+      (l10n.callMicMute, CallSystemAction.mute),
     (l10n.callEndCall, CallSystemAction.end),
     (l10n.callMenuShow, CallSystemAction.open),
   ],

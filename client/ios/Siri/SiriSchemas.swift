@@ -36,7 +36,7 @@ struct BotPersonEntity: IndexedEntity {
   var name: String
 
   var displayRepresentation: DisplayRepresentation {
-    DisplayRepresentation(title: "\(name)", subtitle: "A bot in \(BotPersonEntity.appName)")
+    DisplayRepresentation(title: "\(name)", subtitle: LocalizedStringResource("siriBotIn", defaultValue: "A bot in \(BotPersonEntity.appName)", table: "Native"))
   }
 
   init(id: String, name: String, isMe: Bool = false) {
@@ -49,7 +49,7 @@ struct BotPersonEntity: IndexedEntity {
   /// "Casama" (a test build's own name, such as "Casama Dev", so Siri can tell them apart).
   static let appName: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? "Casama"
 
-  static let me = BotPersonEntity(id: "me", name: "Me", isMe: true)
+  static let me = BotPersonEntity(id: "me", name: NativeL10n.siriMe, isMe: true)
 
   static func bots() -> [BotPersonEntity] {
     ShortcutStore.items("bots").map { BotPersonEntity(id: $0.id, name: $0.name) }
@@ -149,7 +149,7 @@ struct BotConversationEntity: IndexedEntity {
   var dateLastActive: Date?
 
   var displayRepresentation: DisplayRepresentation {
-    DisplayRepresentation(title: "\(displayName)", subtitle: "A chat with \(recipients.first?.name ?? "a bot") in Casama")
+    DisplayRepresentation(title: "\(displayName)", subtitle: LocalizedStringResource("siriChatSubtitle", defaultValue: "A chat with \(recipients.first?.name ?? NativeL10n.siriABot) in Casama", table: "Native"))
   }
 
   init(item: ShortcutItem) {
@@ -189,7 +189,7 @@ struct BotConversationQuery: EntityStringQuery {
 @AppEnum(schema: .messages.conversationAttribute)
 enum BotConversationAttribute: String, AppEnum {
   case favorited
-  static let caseDisplayRepresentations: [BotConversationAttribute: DisplayRepresentation] = [.favorited: "Favorited"]
+  static let caseDisplayRepresentations: [BotConversationAttribute: DisplayRepresentation] = [.favorited: DisplayRepresentation(title: LocalizedStringResource("siriFavorited", defaultValue: "Favorited", table: "Native"))]
 }
 
 /// A message Siri sent. It carries no words back (§4.4); only who it went to and when.
@@ -218,7 +218,9 @@ struct BotMessageEntity: AppEntity {
   var notificationIdentifier: String?
 
   var displayRepresentation: DisplayRepresentation {
-    DisplayRepresentation(title: "Sent to \(conversation.recipients.first?.name ?? "a bot")", subtitle: "\(conversation.displayName)")
+    DisplayRepresentation(
+      title: LocalizedStringResource("siriSentTo", defaultValue: "Sent to \(conversation.recipients.first?.name ?? NativeL10n.siriABot)", table: "Native"),
+      subtitle: "\(conversation.displayName)")
   }
 
   init(id: String, conversation: BotConversationEntity) {
@@ -261,21 +263,21 @@ struct BotCustomAttachment: AppEntity {
 @AppEnum(schema: .messages.messageType)
 enum BotMessageType: String, AppEnum {
   case unspecified
-  static let caseDisplayRepresentations: [BotMessageType: DisplayRepresentation] = [.unspecified: "Message"]
+  static let caseDisplayRepresentations: [BotMessageType: DisplayRepresentation] = [.unspecified: DisplayRepresentation(title: LocalizedStringResource("siriMessage", defaultValue: "Message", table: "Native"))]
 }
 
 @available(iOS 27.0, macOS 27.0, *)
 @AppEnum(schema: .messages.messageAttribute)
 enum BotMessageAttribute: String, AppEnum {
   case favorited
-  static let caseDisplayRepresentations: [BotMessageAttribute: DisplayRepresentation] = [.favorited: "Favorited"]
+  static let caseDisplayRepresentations: [BotMessageAttribute: DisplayRepresentation] = [.favorited: DisplayRepresentation(title: LocalizedStringResource("siriFavorited", defaultValue: "Favorited", table: "Native"))]
 }
 
 @available(iOS 27.0, macOS 27.0, *)
 @AppEnum(schema: .messages.messageEffect)
 enum BotMessageEffect: String, AppEnum {
   case none
-  static let caseDisplayRepresentations: [BotMessageEffect: DisplayRepresentation] = [.none: "None"]
+  static let caseDisplayRepresentations: [BotMessageEffect: DisplayRepresentation] = [.none: DisplayRepresentation(title: LocalizedStringResource("siriNone", defaultValue: "None", table: "Native"))]
 }
 
 @available(iOS 27.0, macOS 27.0, *)
@@ -288,7 +290,7 @@ enum BotMessageReaction: Sendable {
 @AppEnum(schema: .messages.customReaction)
 enum BotCustomReaction: String, AppEnum {
   case none
-  static let caseDisplayRepresentations: [BotCustomReaction: DisplayRepresentation] = [.none: "None"]
+  static let caseDisplayRepresentations: [BotCustomReaction: DisplayRepresentation] = [.none: DisplayRepresentation(title: LocalizedStringResource("siriNone", defaultValue: "None", table: "Native"))]
 }
 
 // MARK: Where a message goes
@@ -318,9 +320,9 @@ enum SiriMessageError: Error, CustomLocalizedStringResourceConvertible {
 
   var localizedStringResource: LocalizedStringResource {
     switch self {
-    case .oneBot: return "Casama sends to one bot at a time. Which bot?"
-    case .textOnly: return "Siri can send words to a bot. Add files, pictures and places in Casama."
-    case .noBot: return "I couldn't find that bot in Casama."
+    case .oneBot: return LocalizedStringResource("siriErrorOneBot", defaultValue: "Casama sends to one bot at a time. Which bot?", table: "Native")
+    case .textOnly: return LocalizedStringResource("siriErrorTextOnly", defaultValue: "Siri can send words to a bot. Add files, pictures and places in Casama.", table: "Native")
+    case .noBot: return LocalizedStringResource("siriErrorNoBot", defaultValue: "I couldn't find that bot in Casama.", table: "Native")
     case let .notSent(say): return "\(say)"
     }
   }
@@ -350,18 +352,18 @@ struct SendMessageIntent: AppIntent {
     guard attachments.isEmpty, audioMessage == nil, locations.isEmpty, scheduledDate == nil else { throw SiriMessageError.textOnly }
     guard BotPersonEntity.bots().contains(where: { $0.id == bot.id }) else { throw SiriMessageError.noBot }
     let text = SiriMessageText.join(subject: subject, content: content, links: links)
-    guard !text.isEmpty else { throw $content.needsValueError("What should I send?") }
+    guard !text.isEmpty else { throw $content.needsValueError(IntentDialog(LocalizedStringResource("siriWhatShouldISend", defaultValue: "What should I send?", table: "Native"))) }
 
     let answer = await SiriBridge.shared.call("send", ["bot_id": bot.id, "text": text, "request_id": UUID().uuidString])
     SiriProbeLog.add("send answered \(answer?["status"] as? String ?? "nil")")
     guard let answer = answer, let status = answer["status"] as? String else {
       ShortcutBridge.shared.open(askLink(bot: bot.id, text: text))
-      throw SiriMessageError.notSent("Opening Casama to finish.")
+      throw SiriMessageError.notSent(NativeL10n.siriOpeningToFinish)
     }
     if status == "sent" { SiriMessageText.sent(text) }
     if status != "sent" {
       if let link = answer["open"] as? String { ShortcutBridge.shared.open(link) }
-      throw SiriMessageError.notSent(answer["say"] as? String ?? "Opening Casama to finish.")
+      throw SiriMessageError.notSent(answer["say"] as? String ?? NativeL10n.siriOpeningToFinish)
     }
     let conversationId = answer["conversation_id"] as? String ?? ""
     let chat = BotConversationEntity(item: ShortcutItem(id: conversationId, name: answer["title"] as? String ?? bot.name, detail: bot.name, bot_id: bot.id))
@@ -440,8 +442,8 @@ struct SearchCasamaIntent: AppIntent {
 @available(iOS 27.0, macOS 27.0, *)
 @AppIntent(schema: .system.open)
 struct OpenBotConversationIntent: OpenIntent {
-  static let title: LocalizedStringResource = "Open a chat"
-  static let description: IntentDescription = "Opens one of your chats with a Casama bot."
+  static let title: LocalizedStringResource = LocalizedStringResource("siriOpenChat", defaultValue: "Open a chat", table: "Native")
+  static let description: IntentDescription = IntentDescription(LocalizedStringResource("siriOpenChatDescription", defaultValue: "Opens one of your chats with a Casama bot.", table: "Native"))
 
   @Parameter var target: BotConversationEntity
 
@@ -456,8 +458,8 @@ struct OpenBotConversationIntent: OpenIntent {
 /// Messages people, so this is the bot result there).
 @available(iOS 27.0, macOS 27.0, *)
 struct OpenBotPersonIntent: OpenIntent {
-  static let title: LocalizedStringResource = "Open a bot"
-  static let description: IntentDescription = "Opens a Casama bot's chat."
+  static let title: LocalizedStringResource = LocalizedStringResource("siriOpenBot", defaultValue: "Open a bot", table: "Native")
+  static let description: IntentDescription = IntentDescription(LocalizedStringResource("siriOpenBotPersonDescription", defaultValue: "Opens a Casama bot's chat.", table: "Native"))
   static var isDiscoverable = false
 
   @Parameter var target: BotPersonEntity

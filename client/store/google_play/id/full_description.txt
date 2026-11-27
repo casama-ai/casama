@@ -1,0 +1,37 @@
+Casama memberimu rekan tim AI yang benar-benar mengerjakan tugas, bukan sekadar membicarakannya. Setiap bot punya komputernya sendiri, mengingat caramu bekerja, tetap berjalan saat kamu pergi, dan meminta izinmu sebelum membayar, mengirim, atau menghapus apa pun.
+
+Minta dengan bahasa sehari-hari: pesan perjalanan, rapikan Kotak masuk, riset pasar, bangun situs. Hasilnya kembali sudah beres.
+
+Komputer khusus miliknya
+Setiap bot bekerja di komputer pribadi berisi browser, file, dan aplikasi yang terpisah dari perangkatmu sendiri. Tonton bot bekerja secara langsung, atau ambil alih kendali kapan saja.
+
+Kamu tetap pegang kendali
+Mengirim, memesan, membayar, dan menghapus menunggu izinmu. Bot menyimpan titik simpan lebih dulu, jadi Tolak akan membatalkan pekerjaannya. Atur anggaran untuk setiap bot dan lihat biaya tiap balasan.
+
+Bekerja saat kamu tidak di tempat
+Bot berjalan sendiri: sesuai jadwal, saat email masuk, sebelum rapat, atau saat halaman web berubah. Bangun tidur langsung disambut ringkasan pagi tentang hal yang perlu kamu tangani.
+
+Selalu ingat
+Fakta, preferensi, dan hasil kerja sebelumnya terbawa di setiap chat. Tunjukkan satu tugas sekali saja ke bot, maka itu tersimpan sebagai keahlian. Semua yang dibuatnya, mulai dari dokumen hingga situs dan game, tersimpan di Pustaka.
+
+Satu tim, bukan sekadar satu bot chat
+Beri setiap bot peran, alat, dan anggaran. Masukkan ke dalam chat grup bersama keluarga atau rekan kerja, tanya @everyone, dan bot utama akan membagi tugasnya. Mulai dengan lebih dari 40 bot siap pakai, dari asisten pribadi hingga periset, programmer, dan perencana perjalanan.
+
+Bicara, ketik, atau telepon
+Diktekan pesan, minta balasan dibacakan, atau telepon bot secara langsung. Bot juga bisa membalasmu di WhatsApp, Telegram, Slack, Discord, dan email.
+
+Terhubung dengan aplikasimu
+Hubungkan Gmail, Google Calendar, Notion, Slack, Drive, dan banyak lagi. Info login dari pengelola kata sandimu diisikan untuk bot dan tidak pernah diperlihatkan ke AI.
+
+Open source, dan milikmu
+Casama bersifat open source: aplikasi, SDK, CLI, dan aturan keamanan yang menentukan apa yang boleh dilakukan bot terbuka untuk publik, jadi kamu bisa melihat persis kapan bot harus meminta izinmu dulu. Bot berjalan di Casama Cloud, tempat model AI dipilih untukmu tanpa perlu kunci API, atau kamu bisa menghubungkan kunci penyediamu sendiri.
+
+Di jam tangan Wear OS-mu
+Casama punya aplikasi Wear OS. Tanya bot lewat suara, jawab persetujuan, dan ikuti pekerjaan yang sedang berjalan dari pergelangan tanganmu. Tambahkan kartu Casama ke jam tanganmu: Perlu kamu (setujui atau tolak permintaan), Tanya (satu ketukan untuk bicara dengan bot), Berikutnya (rutinitasmu berikutnya, dengan Jalankan sekarang), serta kartu khusus untuk satu bot. Tambahkan komplikasi Casama ke tampilan jam: berapa permintaan yang Perlu kamu tangani, kredit yang dipakai, dan tombol mikrofon untuk membuka Tanya.
+
+Chat yang sama di ponsel, komputer, jam tangan, dan web.
+
+Casama Cloud punya paket Gratis. Paket berbayar adalah langganan perpanjangan otomatis yang akan diperpanjang kecuali dibatalkan setidaknya 24 jam sebelum akhir periode berjalan. Kelola atau batalkan di Google Play, pada bagian Pembayaran & langganan.
+
+Ketentuan Layanan: https://casama.ai/terms
+Kebijakan Privasi: https://casama.ai/privacy

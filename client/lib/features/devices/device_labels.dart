@@ -4,7 +4,8 @@ import 'package:flutter/widgets.dart';
 
 import '../../l10n/generated/app_localizations.dart';
 
-/// The words for each kind of device data (D-149).
+/// The name of each kind of device data (D-149), for titles and lists. Sentences about a kind
+/// have their own messages that take [DeviceKind.name], so they can be translated whole.
 String deviceKindLabel(AppLocalizations l10n, DeviceKind kind) => switch (kind) {
   DeviceKind.calendar => l10n.deviceKindCalendar,
   DeviceKind.reminders => l10n.deviceKindReminders,

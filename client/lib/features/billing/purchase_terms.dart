@@ -37,18 +37,25 @@ class PurchaseTerms extends ConsumerWidget {
     final l10n = context.l10n;
     final scheme = context.colorScheme;
     final small = context.textTheme.labelSmall?.copyWith(color: scheme.onSurfaceVariant, height: 1.35);
-    final period = yearly ? l10n.pricePerYear : weekly ? l10n.pricePerWeek : l10n.pricePerMonth;
     final price = this.price;
     final trial = trialDays ?? 0;
-    final String? disclosure = price == null
+    final store = this.store;
+    final period = yearly ? 'year' : weekly ? 'week' : 'month';
+    // Store prices come without the period; web price labels may already carry it.
+    final String? priced = price == null
+        ? null
+        : store == null && priceHasPeriod
+        ? price
+        : l10n.paywallPriceWithPeriod(price, period);
+    final String? disclosure = priced == null
         ? null
         : store != null
         ? trial > 0
-              ? l10n.paywallDisclosureStoreTrial(trial, price, period, store == 'app_store' ? l10n.storeAccountApple : l10n.storeAccountGoogle)
-              : l10n.paywallDisclosureStore(price, period, store == 'app_store' ? l10n.storeAccountApple : l10n.storeAccountGoogle)
+              ? l10n.paywallStoreDisclosureTrial(trial, priced, store)
+              : l10n.paywallStoreDisclosure(priced, store)
         : trial > 0
-        ? l10n.paywallDisclosureWebTrial(trial, priceHasPeriod ? price : '$price $period')
-        : l10n.paywallDisclosureWeb(priceHasPeriod ? price : '$price $period');
+        ? l10n.paywallDisclosureWebTrial(trial, priced)
+        : l10n.paywallDisclosureWeb(priced);
     final platform = ref.watch(platformProvider);
     final apple = !kIsWeb && (platform == TargetPlatform.iOS || platform == TargetPlatform.macOS);
     final open = ref.read(openUrlProvider);

@@ -85,6 +85,21 @@
 		F6EB834961B85C9D38B46D8C /* FileProviderKeyStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7209E672F6B422550C7FB513 /* FileProviderKeyStore.swift */; };
 		F9A1210E148AC52E15E952F2 /* FileProviderKeyStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7209E672F6B422550C7FB513 /* FileProviderKeyStore.swift */; };
 		FAE950290F54E14CC30EAB46 /* Glance.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4C11A0D2F00000000000001 /* Glance.swift */; };
+		5712EF88848827F129C0D767 /* Native.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 571236207F34673C2C762324 /* Native.xcstrings */; };
+		5712A2A81D522E31A988B5CB /* Native.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 571236207F34673C2C762324 /* Native.xcstrings */; };
+		5712D759A5F7489EC55A9378 /* Native.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 571236207F34673C2C762324 /* Native.xcstrings */; };
+		571253156CB7DAAB1678D5E9 /* Native.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 571236207F34673C2C762324 /* Native.xcstrings */; };
+		57120FD5E375887D8DE495D0 /* NativeStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5712B5E4AF8BF1521AA39593 /* NativeStrings.swift */; };
+		571217830F35386F166815BD /* NativeStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5712B5E4AF8BF1521AA39593 /* NativeStrings.swift */; };
+		5712EAFE6D1FB7AB7BFED457 /* NativeStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5712B5E4AF8BF1521AA39593 /* NativeStrings.swift */; };
+		5712C3E30F2477A26A133D92 /* NativeStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5712B5E4AF8BF1521AA39593 /* NativeStrings.swift */; };
+		571286DBF3F0715A6E30C348 /* AppShortcuts.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 571254491F95ED364FD227BA /* AppShortcuts.xcstrings */; };
+		57122299AF7967E6444052F6 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 571221F345A4F558DC15C559 /* InfoPlist.xcstrings */; };
+		57121A57A3EBBDAC7DCB0E19 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 5712847EAF91DB1B2D97096D /* InfoPlist.xcstrings */; };
+		57129C19862B53DAE644AA82 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 5712A1647FF580F851C393CF /* InfoPlist.xcstrings */; };
+		571260AA515AC3386A4599A9 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 571218D411B095FDD7EEC56F /* InfoPlist.xcstrings */; };
+		5712DB86C4F59FBAD921307D /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 5712BA9A32DDAA5435A1CB26 /* InfoPlist.xcstrings */; };
+		5712FB416A923BC888A88730 /* ServicesMenu.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 5712717E80147C04FDFC1F6D /* ServicesMenu.xcstrings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -248,6 +263,15 @@
 		EF481AB70B160BE962982AB6 /* Pods-RunnerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.release.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.release.xcconfig"; sourceTree = "<group>"; };
 		F3E09FE745865C748F4DB625 /* ControlIntents.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ControlIntents.swift; path = ../../ios/CasamaWidgets/ControlIntents.swift; sourceTree = "<group>"; };
 		F7B9E3C0CFC1DD064C2A3775 /* CasamaSafariExtension.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = CasamaSafariExtension.entitlements; sourceTree = "<group>"; };
+		571236207F34673C2C762324 /* Native.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = Native.xcstrings; path = ../ios/Shared/Native.xcstrings; sourceTree = SOURCE_ROOT; };
+		5712B5E4AF8BF1521AA39593 /* NativeStrings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NativeStrings.swift; path = ../ios/Shared/NativeStrings.swift; sourceTree = SOURCE_ROOT; };
+		571254491F95ED364FD227BA /* AppShortcuts.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = AppShortcuts.xcstrings; path = ../ios/Siri/AppShortcuts.xcstrings; sourceTree = SOURCE_ROOT; };
+		571221F345A4F558DC15C559 /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = InfoPlist.xcstrings; path = CasamaAction/InfoPlist.xcstrings; sourceTree = SOURCE_ROOT; };
+		5712847EAF91DB1B2D97096D /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = InfoPlist.xcstrings; path = CasamaFileProvider/InfoPlist.xcstrings; sourceTree = SOURCE_ROOT; };
+		5712A1647FF580F851C393CF /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = InfoPlist.xcstrings; path = CasamaSafariExtension/InfoPlist.xcstrings; sourceTree = SOURCE_ROOT; };
+		571218D411B095FDD7EEC56F /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = InfoPlist.xcstrings; path = CasamaShare/InfoPlist.xcstrings; sourceTree = SOURCE_ROOT; };
+		5712BA9A32DDAA5435A1CB26 /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = InfoPlist.xcstrings; path = Runner/InfoPlist.xcstrings; sourceTree = SOURCE_ROOT; };
+		5712717E80147C04FDFC1F6D /* ServicesMenu.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = ServicesMenu.xcstrings; path = Runner/ServicesMenu.xcstrings; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -390,6 +414,8 @@
 		33FAB671232836740065AC1E /* Runner */ = {
 			isa = PBXGroup;
 			children = (
+				5712717E80147C04FDFC1F6D /* ServicesMenu.xcstrings */,
+				5712BA9A32DDAA5435A1CB26 /* InfoPlist.xcstrings */,
 				33CC10F02044A3C60003C045 /* AppDelegate.swift */,
 				33CC11122044BFA00003C045 /* MainFlutterWindow.swift */,
 				C0A11A0D2F00000000000002 /* Island.swift */,
@@ -417,6 +443,7 @@
 		453C3A5BAF054374D27C5F02 /* Siri */ = {
 			isa = PBXGroup;
 			children = (
+				571254491F95ED364FD227BA /* AppShortcuts.xcstrings */,
 				58B43BFD9080409C244FB9EB /* FocusFilter.swift */,
 				179622128F2CEF889C965783 /* SiriToolsPhase4.swift */,
 				4F9EF30D946DC58B341A876A /* Skills.skillsbundle */,
@@ -427,6 +454,7 @@
 		499B07EF071424C48E4F46C6 /* CasamaFileProvider */ = {
 			isa = PBXGroup;
 			children = (
+				5712847EAF91DB1B2D97096D /* InfoPlist.xcstrings */,
 				B528C8F928C3D4A46198EC46 /* CasamaFileProviderExtension.swift */,
 				C5A2F1D0E2B3000000000001 /* PrivacyInfo.xcprivacy */,
 			);
@@ -436,6 +464,7 @@
 		87B7446F3D4D6C50E3B0B885 /* CasamaShare */ = {
 			isa = PBXGroup;
 			children = (
+				571218D411B095FDD7EEC56F /* InfoPlist.xcstrings */,
 				E30B76141DE5F62FA26B9D6A /* ShareViewController.swift */,
 			);
 			name = CasamaShare;
@@ -458,6 +487,7 @@
 		AE10C802212F66199CF5BAEF /* CasamaAction */ = {
 			isa = PBXGroup;
 			children = (
+				571221F345A4F558DC15C559 /* InfoPlist.xcstrings */,
 				A23F38867622185AE55D865F /* ActionRequestHandler.swift */,
 			);
 			name = CasamaAction;
@@ -466,6 +496,8 @@
 		C9AA1A7F99C64C396526BF4A /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				5712B5E4AF8BF1521AA39593 /* NativeStrings.swift */,
+				571236207F34673C2C762324 /* Native.xcstrings */,
 				2C1C876ED1C755C88B803303 /* SpeechAnalyzerBridge.swift */,
 				269519FF7073B448BC2D4ECF /* OnDeviceModel.swift */,
 				7209E672F6B422550C7FB513 /* FileProviderKeyStore.swift */,
@@ -488,6 +520,7 @@
 		DDCE9A63BF1EB87E896A59C7 /* CasamaSafariExtension */ = {
 			isa = PBXGroup;
 			children = (
+				5712A1647FF580F851C393CF /* InfoPlist.xcstrings */,
 				A1A3C188000C30EE9F6665E2 /* SafariWebExtensionHandler.swift */,
 				0D08837D15CD95A71420A7F1 /* Info.plist */,
 				F7B9E3C0CFC1DD064C2A3775 /* CasamaSafariExtension.entitlements */,
@@ -751,6 +784,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				57122299AF7967E6444052F6 /* InfoPlist.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -758,6 +792,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				57121A57A3EBBDAC7DCB0E19 /* InfoPlist.xcstrings in Resources */,
+				571253156CB7DAAB1678D5E9 /* Native.xcstrings in Resources */,
 				C5A2F1D0E2B3000000000002 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -773,6 +809,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5712FB416A923BC888A88730 /* ServicesMenu.xcstrings in Resources */,
+				5712DB86C4F59FBAD921307D /* InfoPlist.xcstrings in Resources */,
+				571286DBF3F0715A6E30C348 /* AppShortcuts.xcstrings in Resources */,
+				5712EF88848827F129C0D767 /* Native.xcstrings in Resources */,
 				33CC10F32044A3C60003C045 /* Assets.xcassets in Resources */,
 				4B5A0F1C2D3E4F5061728395 /* PrivacyInfo.xcprivacy in Resources */,
 				33CC10F62044A3C60003C045 /* MainMenu.xib in Resources */,
@@ -785,6 +825,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				57129C19862B53DAE644AA82 /* InfoPlist.xcstrings in Resources */,
+				5712D759A5F7489EC55A9378 /* Native.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -792,6 +834,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5712A2A81D522E31A988B5CB /* Native.xcstrings in Resources */,
 				E4C11A0D2F0000000000002E /* Assets.xcassets in Resources */,
 				E4C11A0D2F0000000000002F /* PrivacyInfo.xcprivacy in Resources */,
 			);
@@ -801,6 +844,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				571260AA515AC3386A4599A9 /* InfoPlist.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -948,6 +992,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				57120FD5E375887D8DE495D0 /* NativeStrings.swift in Sources */,
 				33CC11132044BFA00003C045 /* MainFlutterWindow.swift in Sources */,
 				C0A11A0D2F00000000000001 /* Island.swift in Sources */,
 				51A11A0D2F00000000000002 /* SiriBridge.swift in Sources */,
@@ -981,6 +1026,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5712EAFE6D1FB7AB7BFED457 /* NativeStrings.swift in Sources */,
 				BF132B5D827A71499D1EE5F2 /* SafariWebExtensionHandler.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -989,6 +1035,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5712C3E30F2477A26A133D92 /* NativeStrings.swift in Sources */,
 				6DC447956784C823EDA5E630 /* CasamaFileProviderExtension.swift in Sources */,
 				F9A1210E148AC52E15E952F2 /* FileProviderKeyStore.swift in Sources */,
 			);
@@ -998,6 +1045,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				571217830F35386F166815BD /* NativeStrings.swift in Sources */,
 				E4C11A0D2F00000000000022 /* Glance.swift in Sources */,
 				E4C11A0D2F00000000000023 /* WidgetKey.swift in Sources */,
 				E4C11A0D2F00000000000024 /* GlanceIntents.swift in Sources */,

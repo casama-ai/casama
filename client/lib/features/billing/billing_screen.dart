@@ -379,7 +379,7 @@ class _BillingScreenState extends ConsumerState<BillingScreen> {
         Padding(
           padding: const EdgeInsets.only(top: AppSpace.xs),
           child: FormNote(
-            l10n.subscribedInStoreNote(paidVia == 'app_store' ? 'the App Store' : 'Google Play'),
+            l10n.subscribedThroughStoreNote(paidVia),
             key: const Key('billingChannelNote'),
           ),
         ),

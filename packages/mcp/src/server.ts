@@ -182,6 +182,22 @@ function countToolCalls(server: McpServer, report: (tool: string, outcome: ToolO
   (server as unknown as { registerTool: Register }).registerTool = wrapped;
 }
 
+/**
+ * Copies each tool's title into `annotations.title` too. Claude's connector directory reads the
+ * title from the annotations, other clients from the tool itself, so every tool carries both.
+ */
+function titleInAnnotations(server: McpServer) {
+  type Register = (name: string, config: unknown, cb: (...a: unknown[]) => unknown) => unknown;
+  const register = server.registerTool.bind(server) as unknown as Register;
+  const wrapped: Register = (name, config, cb) => {
+    const c = config as { title?: string; annotations?: Record<string, unknown> };
+    const annotations =
+      c.title && !c.annotations?.title ? { title: c.title, ...c.annotations } : c.annotations;
+    return register(name, annotations ? { ...c, annotations } : c, cb);
+  };
+  (server as unknown as { registerTool: Register }).registerTool = wrapped;
+}
+
 /** run_routine's request_id memory: a second start with the same id within a minute is the first. */
 const recentStarts = new Map<string, { at: number; result: string }>();
 const START_MEMORY_MS = 60_000;
@@ -229,6 +245,7 @@ export function createCasamaMcpServer(
   } = {},
 ) {
   const server = new McpServer({ name: "casama", version: VERSION });
+  titleInAnnotations(server);
   const openLink = opts.openLink ?? ((route: string) => route);
   if (opts.onToolCall) countToolCalls(server, opts.onToolCall);
   if (opts.docs) registerDocsTools(server, opts.docs, { checkPlugin: opts.checkPlugin });
@@ -917,6 +934,7 @@ export function createCasamaDocsMcpServer(
   } = {},
 ) {
   const server = new McpServer({ name: "casama-docs", version: VERSION });
+  titleInAnnotations(server);
   registerDocsTools(server, docs, opts);
   if (opts.gallery) registerGalleryTools(server, opts.gallery);
   return server;

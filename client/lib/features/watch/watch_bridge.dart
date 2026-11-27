@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../../core/app_language.dart';
 import '../../core/backend.dart';
 import '../../core/providers.dart';
 import '../../core/router.dart';
@@ -612,12 +613,7 @@ class WatchBridge {
     return null;
   }
 
-  static AppLocalizations _l10n() => lookupAppLocalizations(
-    basicLocaleListResolution(
-      PlatformDispatcher.instance.locales,
-      AppLocalizations.supportedLocales,
-    ),
-  );
+  static AppLocalizations _l10n() => AppLanguage.strings();
 }
 
 /// The bridge, on iPhone and Android; null elsewhere. Watched by the app root.

@@ -1,0 +1,32 @@
+Casama te da colegas de IA que hacen el trabajo, no solo hablan de él. Cada bot tiene su propia computadora, recuerda cómo te gusta hacer las cosas, sigue trabajando mientras no estás y te pregunta antes de pagar, enviar o borrar algo.
+
+Pídelo con palabras normales: reserva el viaje, ordena la bandeja de entrada, investiga el mercado, crea el sitio. El trabajo vuelve terminado.
+
+Una computadora propia
+Cada bot trabaja en una computadora privada con navegador, archivos y apps, separada de tu PC. Míralo trabajar en vivo o toma el control cuando quieras.
+
+Tú mantienes el control
+Enviar, reservar, pagar y borrar esperan tu OK. El bot guarda primero un punto de control, así que Denegar deshace el trabajo. Fija un presupuesto para cada bot y mira cuánto costó cada respuesta.
+
+Trabaja mientras no estás
+Los bots arrancan por su cuenta: según un horario, cuando llega un correo, antes de una reunión o cuando cambia una página web. Despierta con un resumen de la mañana con lo que te necesita.
+
+Recuerda
+Los datos, preferencias y trabajos anteriores pasan de un chat a otro. Muéstrale una tarea a un bot una vez y la guarda como una habilidad. Todo lo que crea, desde documentos hasta sitios y juegos, se guarda en tu Biblioteca.
+
+Un equipo, no un solo chatbot
+Dale a cada bot un rol, herramientas y un presupuesto. Ponlos en un chat grupal con familiares o colegas, menciona a @everyone y el bot principal reparte el trabajo. Empieza con más de 40 bots listos para usar: desde asistencia personal hasta investigación, programación y planificación de viajes.
+
+Habla, escribe o llama
+Dicta un mensaje, escucha las respuestas en voz alta o llama a un bot en vivo. Los bots también pueden responderte por WhatsApp, Telegram, Slack, Discord y correo.
+
+Funciona con tus apps
+Conecta Gmail, Google Calendar, Notion, Slack, Drive y muchas más. Los inicios de sesión de tu administrador de contraseñas se rellenan para el bot sin mostrarse nunca a la IA.
+
+Código abierto, y tuyo
+Casama es de código abierto: las apps, los SDK, la CLI y las reglas de seguridad que deciden qué puede hacer un bot son públicos, así que puedes leer exactamente cuándo debe preguntarte primero. Los bots funcionan en Casama Cloud, donde los modelos de IA se eligen por ti y no hacen falta claves, o puedes conectar tus propias claves de proveedor.
+
+Los mismos chats en tu teléfono, tu Mac y en la web. Casama Cloud tiene un plan Gratis.
+
+Términos de uso: https://casama.ai/terms
+Política de privacidad: https://casama.ai/privacy

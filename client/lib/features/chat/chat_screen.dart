@@ -215,8 +215,11 @@ class ChatThreadSkeleton extends StatelessWidget {
     );
     return SkeletonScope(
       child: ClipRect(
-        child: Align(
+        // Cut off where the room ends (a keyboard, large text) rather than overflowing it.
+        child: OverflowBox(
           alignment: Alignment.topCenter,
+          minHeight: 0,
+          maxHeight: double.infinity,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,

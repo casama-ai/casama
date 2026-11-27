@@ -1,0 +1,10 @@
+01-real-work.png	面倒な作業を、代わりに完了
+02-customer-emails.png	顧客メールの返信も、おまかせ
+03-trips-ok.png	旅行の予約は、あなたのOK後に
+04-day-planned.png	起きる前に、今日の予定を整理
+05-window-seat.png	窓側の席？ちゃんと覚えています
+06-flight-prices.png	航空券の価格を、ずっと見守り
+07-sites-games.png	サイトやゲームも、あなたのために
+08-inbox.png	受信トレイを、すっきり整理
+09-birthday-dinner.png	誕生日ディナーを、3体で計画
+10-make-it-yours.png	自分好みにカスタマイズ

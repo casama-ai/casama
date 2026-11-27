@@ -1,0 +1,1 @@
+Di chuyển không gian làm việc giữa Casama Cloud và máy chủ riêng của bạn, xem rõ tài khoản và máy chủ đang đăng nhập, cùng thao tác đổi kích thước cửa sổ mượt mà hơn trên Windows.

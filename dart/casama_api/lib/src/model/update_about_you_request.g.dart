@@ -21,6 +21,8 @@ abstract class _$UpdateAboutYouRequestCWProxy {
 
   UpdateAboutYouRequest adultSites(bool? adultSites);
 
+  UpdateAboutYouRequest locale(String? locale);
+
   /// Creates a new instance with the provided field values.
   /// Omitted fields keep their values; explicit `null` clears nullable fields.
   /// The public API rejects `null` for non-nullable fields. To update a single field use `UpdateAboutYouRequest(...).copyWith.fieldName(value)`.
@@ -37,6 +39,7 @@ abstract class _$UpdateAboutYouRequestCWProxy {
     bool? learn,
     bool? nameAsked,
     bool? adultSites,
+    String? locale,
   });
 }
 
@@ -73,6 +76,9 @@ class _$UpdateAboutYouRequestCWProxyImpl
   UpdateAboutYouRequest adultSites(bool? adultSites) =>
       call(adultSites: adultSites);
 
+  @override
+  UpdateAboutYouRequest locale(String? locale) => call(locale: locale);
+
   /// Creates a new instance with the provided field values.
   /// Omitted fields keep their values; explicit `null` clears nullable fields.
   /// The public API rejects `null` for non-nullable fields. To update a single field use `UpdateAboutYouRequest(...).copyWith.fieldName(value)`.
@@ -90,6 +96,7 @@ class _$UpdateAboutYouRequestCWProxyImpl
     Object? learn = const $CopyWithPlaceholder(),
     Object? nameAsked = const $CopyWithPlaceholder(),
     Object? adultSites = const $CopyWithPlaceholder(),
+    Object? locale = const $CopyWithPlaceholder(),
   }) {
     return UpdateAboutYouRequest(
       preferredName: preferredName == const $CopyWithPlaceholder()
@@ -120,6 +127,10 @@ class _$UpdateAboutYouRequestCWProxyImpl
           ? _value.adultSites
           // ignore: cast_nullable_to_non_nullable
           : adultSites as bool?,
+      locale: locale == const $CopyWithPlaceholder()
+          ? _value.locale
+          // ignore: cast_nullable_to_non_nullable
+          : locale as String?,
     );
   }
 }
@@ -150,6 +161,7 @@ UpdateAboutYouRequest _$UpdateAboutYouRequestFromJson(
       learn: $checkedConvert('learn', (v) => v as bool?),
       nameAsked: $checkedConvert('name_asked', (v) => v as bool?),
       adultSites: $checkedConvert('adult_sites', (v) => v as bool?),
+      locale: $checkedConvert('locale', (v) => v as String?),
     );
     return val;
   },
@@ -171,4 +183,5 @@ Map<String, dynamic> _$UpdateAboutYouRequestToJson(
   'learn': ?instance.learn,
   'name_asked': ?instance.nameAsked,
   'adult_sites': ?instance.adultSites,
+  'locale': ?instance.locale,
 };

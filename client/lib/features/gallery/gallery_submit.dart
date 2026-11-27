@@ -23,6 +23,7 @@ import '../../ui/app_card.dart';
 import '../../ui/form_sheet.dart';
 import '../../ui/page.dart';
 import 'gallery_cards.dart';
+import 'gallery_data.dart' show galleryCatalogProvider;
 import 'gallery_detail_parts.dart' show galleryStatsText;
 
 /// Something ready to send to the gallery: its kind, a name, the folder's files (besides
@@ -251,10 +252,15 @@ class _SubmitSheetState extends ConsumerState<_SubmitSheet> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final draft = widget.draft;
+    final remix = draft.remixOf;
+    // The original's name, never its id; the line goes without one when the gallery doesn't say.
+    final original = remix == null
+        ? null
+        : ref.watch(galleryCatalogProvider).value?.find(remix.type, remix.id)?.name;
     return FormSheet(
       key: const Key('gallerySubmitSheet'),
       icon: LucideIcons.send,
-      title: l10n.gallerySubmitTitle(galleryKindName(l10n, draft.type)),
+      title: l10n.gallerySubmitKindTitle(draft.type),
       subtitle: l10n.gallerySubmitHelp,
       submitLabel: l10n.gallerySubmitSend,
       submitKey: const Key('gallerySubmitSend'),
@@ -301,7 +307,9 @@ class _SubmitSheetState extends ConsumerState<_SubmitSheet> {
               const SizedBox(width: AppSpace.xs),
               Expanded(
                 child: Text(
-                  l10n.gallerySubmitRemix(draft.remixOf!.id),
+                  original == null
+                      ? l10n.gallerySubmitRemixUnnamed
+                      : l10n.gallerySubmitRemix(original),
                   key: const Key('gallerySubmitRemix'),
                   style: context.textTheme.bodySmall?.copyWith(
                     color: context.colorScheme.onSurfaceVariant,

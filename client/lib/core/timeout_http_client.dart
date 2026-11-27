@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:casama_sdk/casama_sdk.dart' show AcceptLanguage;
 import 'package:http/http.dart' as http;
 
 /// An HTTP client that gives up on a server that stops answering.
@@ -16,6 +17,8 @@ class TimeoutHttpClient extends http.BaseClient {
 
   @override
   Future<http.StreamedResponse> send(http.BaseRequest request) async {
+    // The app's language, unless the request names one.
+    if (!request.headers.keys.any((k) => k.toLowerCase() == 'accept-language')) request.headers.addAll(AcceptLanguage.headers);
     final res = await _inner.send(request).timeout(headers, onTimeout: () => throw TimeoutException('No answer from ${request.url.host} in ${headers.inSeconds} s', headers));
     return http.StreamedResponse(
       res.stream.timeout(

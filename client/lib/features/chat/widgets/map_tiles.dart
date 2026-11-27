@@ -36,6 +36,13 @@ MapTileSource mapTileSourceFor({
   return MapTileSource.osm;
 }
 
+/// The language Google writes the map's labels in: the app's. Plain English asks for US English,
+/// as before the app had other languages.
+String mapLanguage(Locale app) {
+  final tag = app.toLanguageTag();
+  return tag == 'en' ? 'en-US' : tag;
+}
+
 /// A Google 2D tiles session: every tile request carries its token.
 class GoogleTileSession {
   const GoogleTileSession({required this.token, required this.expires});
@@ -43,15 +50,15 @@ class GoogleTileSession {
   final DateTime expires;
 }
 
-/// Talks to Google's Map Tiles API: creates sessions (one per light/dark style, reused until close
-/// to expiry, as Google asks) and reads the data credit line for what's on screen.
+/// Talks to Google's Map Tiles API: creates sessions (one per light/dark style and language,
+/// reused until close to expiry, as Google asks) and reads the data credit line for what's on screen.
 class GoogleTilesClient {
   GoogleTilesClient({required this.apiKey, http.Client? client})
     : _client = client ?? http.Client();
 
   final String apiKey;
   final http.Client _client;
-  final Map<bool, Future<GoogleTileSession?>> _sessions = {};
+  final Map<(bool, String), Future<GoogleTileSession?>> _sessions = {};
   final Map<String, String> _credits = {};
 
   static const _base = 'https://tile.googleapis.com';
@@ -62,30 +69,31 @@ class GoogleTilesClient {
 
   /// A live session for the light or dark style; null when Google refuses (bad key, quota, outage),
   /// which moves the card on to the next source.
-  Future<GoogleTileSession?> session({required bool dark}) {
-    final cached = _sessions[dark];
+  Future<GoogleTileSession?> session({required bool dark, String language = 'en-US'}) {
+    final key = (dark, language);
+    final cached = _sessions[key];
     if (cached != null) {
       return cached.then((s) {
         if (s != null &&
             s.expires.isAfter(DateTime.now().add(const Duration(hours: 1)))) {
           return s;
         }
-        _sessions.remove(dark);
-        return session(dark: dark);
+        _sessions.remove(key);
+        return session(dark: dark, language: language);
       });
     }
-    final created = _create(dark);
-    _sessions[dark] = created;
+    final created = _create(dark, language);
+    _sessions[key] = created;
     // A failed create isn't cached, so a later card (after the session fallback is reset) retries.
     created.then((s) {
-      if (s == null && identical(_sessions[dark], created)) {
-        _sessions.remove(dark);
+      if (s == null && identical(_sessions[key], created)) {
+        _sessions.remove(key);
       }
     });
     return created;
   }
 
-  Future<GoogleTileSession?> _create(bool dark) async {
+  Future<GoogleTileSession?> _create(bool dark, String language) async {
     try {
       final res = await _client
           .post(
@@ -93,7 +101,7 @@ class GoogleTilesClient {
             headers: {'Content-Type': 'application/json'},
             body: jsonEncode({
               'mapType': 'roadmap',
-              'language': 'en-US',
+              'language': language,
               'region': 'US',
               // 512px tiles with labels sized for a 256-point tile: sharp on dense screens, billed
               // the same as plain tiles.

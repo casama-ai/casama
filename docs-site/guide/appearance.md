@@ -27,8 +27,8 @@ gallery, one tap away under **Themes**.
 Trying themes never loses work. If tapping a theme replaces changes you hadn't saved, a message
 offers **Undo**.
 
-At the top, a small chat shows the look in use, with its name, or **Custom look** once you've
-changed it. Tap **Save** there to keep a custom look as one of your themes.
+At the top, a small chat shows the look in use, with its name, or **Custom theme** once you've
+changed it. Tap **Save** there to keep it as one of your themes.
 
 ## Customize a look
 

@@ -434,8 +434,8 @@ struct CallActivityWidget: Widget {
 struct LegacyRunActivityView: View {
   let attributes: LiveActivitiesAppAttributes
   var body: some View {
-    let bot = activityValue(attributes, "bot") ?? "Bot"
-    let step = activityValue(attributes, "step") ?? "Working…"
+    let bot = activityValue(attributes, "bot") ?? NativeL10n.widgetNameBot
+    let step = activityValue(attributes, "step") ?? NativeL10n.widgetStatusWorking
     HStack {
       BotMarkView(art: BotArt(name: bot, avatar: nil), size: 32)
       VStack(alignment: .leading) {
@@ -449,8 +449,8 @@ struct LegacyRunActivityView: View {
 }
 
 private func legacyRunIsland(_ attributes: LiveActivitiesAppAttributes) -> DynamicIsland {
-  let bot = activityValue(attributes, "bot") ?? "Bot"
-  let step = activityValue(attributes, "step") ?? "Working…"
+  let bot = activityValue(attributes, "bot") ?? NativeL10n.widgetNameBot
+  let step = activityValue(attributes, "step") ?? NativeL10n.widgetStatusWorking
   return DynamicIsland {
     DynamicIslandExpandedRegion(.leading) { Text(bot).font(.headline) }
     DynamicIslandExpandedRegion(.bottom) { Text(step).lineLimit(2) }
@@ -486,9 +486,9 @@ struct CallActivityData {
     since = Double(activityValue(attributes, "since") ?? "").map { Date(timeIntervalSince1970: $0) }
     muted = activityValue(attributes, "muted") == "1"
     link = URL(string: activityValue(attributes, "link") ?? "")
-    muteLabel = activityValue(attributes, "mute") ?? "Mute"
-    unmuteLabel = activityValue(attributes, "unmute") ?? "Unmute"
-    endLabel = activityValue(attributes, "end") ?? "End Call"
+    muteLabel = activityValue(attributes, "mute") ?? NativeL10n.notifCallMute
+    unmuteLabel = activityValue(attributes, "unmute") ?? NativeL10n.notifCallUnmute
+    endLabel = activityValue(attributes, "end") ?? NativeL10n.notifCallEnd
   }
 }
 
@@ -628,11 +628,11 @@ private func callIsland(_ call: CallActivityData) -> DynamicIsland {
 /// so it tells the app with a Darwin notification (`CallGlanceBridge` in AppDelegate.swift
 /// passes it to Flutter); the app redraws the activity.
 struct CallActionIntent: AppIntent {
-  static var title: LocalizedStringResource = "Call action"
+  static var title: LocalizedStringResource = LocalizedStringResource("siriCallAction", defaultValue: "Call action", table: "Native")
   static var isDiscoverable = false
   static var openAppWhenRun = false
 
-  @Parameter(title: "Action") var action: String
+  @Parameter(title: LocalizedStringResource("siriAction", defaultValue: "Action", table: "Native")) var action: String
 
   init() {}
   init(action: String) { self.action = action }

@@ -11,6 +11,8 @@ abstract class _$AddAdminDeviceKeyRequestCWProxy {
 
   AddAdminDeviceKeyRequest publicKey(String publicKey);
 
+  AddAdminDeviceKeyRequest scope(AddAdminDeviceKeyRequestScopeEnum? scope);
+
   /// Creates a new instance with the provided field values.
   /// Omitted fields keep their values; explicit `null` clears nullable fields.
   /// The public API rejects `null` for non-nullable fields. To update a single field use `AddAdminDeviceKeyRequest(...).copyWith.fieldName(value)`.
@@ -19,7 +21,11 @@ abstract class _$AddAdminDeviceKeyRequestCWProxy {
   /// ```dart
   /// AddAdminDeviceKeyRequest(...).copyWith(id: 12, name: "My name")
   /// ```
-  AddAdminDeviceKeyRequest call({String name, String publicKey});
+  AddAdminDeviceKeyRequest call({
+    String name,
+    String publicKey,
+    AddAdminDeviceKeyRequestScopeEnum? scope,
+  });
 }
 
 /// Callable proxy for `copyWith` functionality.
@@ -37,6 +43,10 @@ class _$AddAdminDeviceKeyRequestCWProxyImpl
   AddAdminDeviceKeyRequest publicKey(String publicKey) =>
       call(publicKey: publicKey);
 
+  @override
+  AddAdminDeviceKeyRequest scope(AddAdminDeviceKeyRequestScopeEnum? scope) =>
+      call(scope: scope);
+
   /// Creates a new instance with the provided field values.
   /// Omitted fields keep their values; explicit `null` clears nullable fields.
   /// The public API rejects `null` for non-nullable fields. To update a single field use `AddAdminDeviceKeyRequest(...).copyWith.fieldName(value)`.
@@ -49,6 +59,7 @@ class _$AddAdminDeviceKeyRequestCWProxyImpl
   AddAdminDeviceKeyRequest call({
     Object? name = const $CopyWithPlaceholder(),
     Object? publicKey = const $CopyWithPlaceholder(),
+    Object? scope = const $CopyWithPlaceholder(),
   }) {
     return AddAdminDeviceKeyRequest(
       name: name == const $CopyWithPlaceholder() || name == null
@@ -59,6 +70,10 @@ class _$AddAdminDeviceKeyRequestCWProxyImpl
           ? _value.publicKey
           // ignore: cast_nullable_to_non_nullable
           : publicKey as String,
+      scope: scope == const $CopyWithPlaceholder()
+          ? _value.scope
+          // ignore: cast_nullable_to_non_nullable
+          : scope as AddAdminDeviceKeyRequestScopeEnum?,
     );
   }
 }
@@ -82,10 +97,23 @@ AddAdminDeviceKeyRequest _$AddAdminDeviceKeyRequestFromJson(
   final val = AddAdminDeviceKeyRequest(
     name: $checkedConvert('name', (v) => v as String),
     publicKey: $checkedConvert('public_key', (v) => v as String),
+    scope: $checkedConvert(
+      'scope',
+      (v) => $enumDecodeNullable(_$AddAdminDeviceKeyRequestScopeEnumEnumMap, v),
+    ),
   );
   return val;
 }, fieldKeyMap: const {'publicKey': 'public_key'});
 
 Map<String, dynamic> _$AddAdminDeviceKeyRequestToJson(
   AddAdminDeviceKeyRequest instance,
-) => <String, dynamic>{'name': instance.name, 'public_key': instance.publicKey};
+) => <String, dynamic>{
+  'name': instance.name,
+  'public_key': instance.publicKey,
+  'scope': ?_$AddAdminDeviceKeyRequestScopeEnumEnumMap[instance.scope],
+};
+
+const _$AddAdminDeviceKeyRequestScopeEnumEnumMap = {
+  AddAdminDeviceKeyRequestScopeEnum.full: 'full',
+  AddAdminDeviceKeyRequestScopeEnum.read: 'read',
+};

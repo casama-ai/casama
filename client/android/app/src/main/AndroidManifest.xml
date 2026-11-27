@@ -154,7 +154,7 @@
             </intent-filter>
             <meta-data android:name="android.appwidget.provider" android:resource="@xml/needs_you_widget_info" />
         </receiver>
-        <receiver android:name=".BotStatusWidget" android:exported="true" android:label="@string/widget_bot">
+        <receiver android:name=".BotStatusWidget" android:exported="true" android:label="@string/widget_name_bot">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -166,7 +166,7 @@
             </intent-filter>
             <meta-data android:name="android.appwidget.provider" android:resource="@xml/ask_widget_info" />
         </receiver>
-        <receiver android:name=".RoutinesWidget" android:exported="true" android:label="@string/widget_routines">
+        <receiver android:name=".RoutinesWidget" android:exported="true" android:label="@string/widget_name_routines">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -203,7 +203,7 @@
             <meta-data android:name="android.appwidget.provider" android:resource="@xml/credits_widget_info" />
         </receiver>
         <!-- Canvas (docs/BOT-WIDGET-PLAN.md §10.2): what bots put on it, from /v1/canvases. -->
-        <receiver android:name=".CanvasWidget" android:exported="true" android:label="@string/widget_canvas">
+        <receiver android:name=".CanvasWidget" android:exported="true" android:label="@string/widget_name_canvas">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -240,7 +240,7 @@
             android:name=".AskTileService"
             android:exported="true"
             android:icon="@drawable/ic_shortcut_ask"
-            android:label="@string/tile_ask"
+            android:label="@string/widget_ask_casama"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />

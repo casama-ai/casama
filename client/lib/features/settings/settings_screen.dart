@@ -10,6 +10,7 @@ import '../voice/call_tools_sheet.dart';
 import '../chat/chat_detail.dart';
 import '../../core/fold/fold.dart';
 import '../../core/age_range.dart';
+import '../../core/app_language.dart';
 import '../../core/analytics.dart';
 import '../../core/billing.dart';
 import '../../l10n/generated/app_localizations.dart';
@@ -17,6 +18,7 @@ import '../../core/mac_bridge.dart';
 import '../island/island_settings.dart';
 import '../../core/updater.dart';
 import '../../core/display_text.dart';
+import '../../core/text_fold.dart';
 import '../../core/providers.dart';
 import '../../core/widgets.dart';
 import '../../core/haptics.dart';
@@ -49,6 +51,7 @@ import '../companion/companion.dart';
 import '../referrals/invite_friends.dart';
 import '../sites/domains_providers.dart';
 import '../cloud_models/cloud_account_section.dart';
+import 'language_sheet.dart';
 import '../move/move_switch.dart';
 import '../../core/selfhost_api.dart' show isCasamaCloud;
 
@@ -99,12 +102,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     }
 
     // Search settings: every word typed must appear in a row's title, subtitle, section name or its
-    // extra search words (what its page holds), so "dark mode" finds Appearance.
-    final tokens = _search.text.trim().toLowerCase().split(RegExp(r'\s+')).where((t) => t.isNotEmpty).toList();
+    // extra search words (what its page holds), so "dark mode" finds Appearance. Case and accents
+    // don't count, on either side.
+    final tokens = foldForSearch(_search.text.trim()).split(RegExp(r'\s+')).where((t) => t.isNotEmpty).toList();
     final searching = tokens.isNotEmpty;
     final words = _settingsSearchWords(l10n, orgName: org?.name);
     bool hit(String text) {
-      final haystack = text.toLowerCase();
+      final haystack = foldForSearch(text);
       return tokens.every(haystack.contains);
     }
 
@@ -471,9 +475,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       ),
                   ],
                   GroupedTile(
+                    key: const Key('settingsLanguage'),
                     icon: LucideIcons.languages,
                     title: l10n.language,
-                    trailing: Text(_languageName(Localizations.localeOf(context)), style: context.textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant)),
+                    trailing: Text(AppLanguage.nameOf(Localizations.localeOf(context)), style: context.textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant)),
+                    // The picker, once there's more than one language to pick (and in debug builds).
+                    onTap: ref.watch(languagePickerShownProvider) ? () => chooseLanguage(context, ref) : null,
                   ),
               ]),
           ];
@@ -711,58 +718,53 @@ class _Find extends StatelessWidget {
 }
 
 /// Extra words the settings search matches for each row, keyed by the row's title: what its page
-/// holds and the other names people use for it. English, like the app (v1).
+/// holds and the other names people use for it, in the app's language.
 Map<String, String> _settingsSearchWords(AppLocalizations l10n, {String? orgName}) => {
-  orgName ?? l10n.workspace: 'workspace switch change team organization org role',
-  l10n.aboutYou: 'profile name photo picture avatar pronouns about me reply style facts memory',
-  l10n.people: 'members invite team users admins roles invite link code join remove',
-  l10n.workspaceSettings: 'workspace name icon logo encryption memory payments stripe card password managers bot to bot chrome extension gallery full access permissions approvals ask bypass',
-  l10n.settingsDomains: 'domain website custom dns buy connect sites',
-  l10n.usage: 'cost spend spending money credits tokens limits',
-  l10n.billing: 'plan subscription upgrade pro plus max payment invoice card pricing',
-  l10n.inviteFriends: 'referral credit reward share',
-  l10n.adminConsole: 'admin console',
-  l10n.appearance: 'theme dark mode light mode night colors colours fonts font text size background wallpaper look style themes effects motion animations',
-  l10n.quietHours: 'do not disturb dnd sleep mute silence notifications schedule',
-  l10n.pushPrefsTitle: 'notifications push alerts replies sounds',
-  l10n.callFullScreenTitle: 'calls phone ring ringing lock screen full screen incoming answer',
-  l10n.emailTips: 'email newsletter tips news unsubscribe',
-  l10n.galleryDigestEmails: 'email gallery digest monthly picks',
-  l10n.newsletterTitle: 'email newsletter monthly news updates subscribe unsubscribe',
-  l10n.wakeWord: 'voice hey hands free microphone mic listen',
-  l10n.showBotSteps: 'steps tools details progress',
-  l10n.showReplyUsage: 'cost tokens price usage per reply',
-  l10n.checkForUpdates: 'update updates version upgrade download automatic',
-  l10n.openAtLogin: 'startup launch login boot start automatically',
-  l10n.islandStartElsewhere: 'live activity dynamic island lock screen other devices',
-  l10n.showBotsInNotch: 'notch menu bar dynamic island',
-  l10n.notchOnHover: 'notch hover mouse',
-  l10n.language: 'language locale english translation',
-  l10n.integrations: 'apps connect connections gmail google slack calendar plugins tools mcp',
-  l10n.skills: 'skills catalog abilities instructions',
-  l10n.casamaLink: 'remote access address tunnel self host phone',
-  l10n.serviceKeys: 'api keys search maps data',
-  l10n.modelsTitle: 'api keys openai anthropic openrouter gemini models providers ollama local models',
-  l10n.modelKeys: 'api keys openai anthropic openrouter gemini models providers ollama local models',
-  l10n.account: 'email change email password sign out everywhere login',
-  l10n.twoStepSignIn: '2fa mfa two factor authenticator totp otp security code',
-  l10n.pairDevice: 'qr code scan sign in pair phone another device',
-  l10n.passkeys: 'passkey face id touch id fingerprint biometric',
-  l10n.widgetsTitle: 'widgets home screen lock screen controls control center glance pin shortcut',
-  l10n.cardsSettingsTitle: 'cards weather units celsius fahrenheit home city location currency stocks red green data sources',
-  l10n.appLock: 'app lock pin passcode face id touch id fingerprint biometric windows hello screenshots privacy lock screen',
-  l10n.privacy: 'data export download delete account analytics tracking history retention blocked people block',
-  l10n.secrets: 'secrets passwords credentials vault environment variables',
-  l10n.computers: 'computers machines docker sandbox desktop',
-  l10n.deviceConnections: 'devices location health places folders watched apps browsers chrome extension phone permissions',
-  l10n.useThisComputer: 'companion this computer mac local files',
-  l10n.helpAndSupport: 'help support contact ticket bug report feedback docs community github star open source discord ideas board status',
-  l10n.signOut: 'log out logout sign out',
-};
-
-String _languageName(Locale locale) => switch (locale.languageCode) {
-  'en' => 'English',
-  _ => locale.toLanguageTag(),
+  orgName ?? l10n.workspace: l10n.settingsWordsWorkspace,
+  l10n.aboutYou: l10n.settingsWordsAboutYou,
+  l10n.people: l10n.settingsWordsPeople,
+  l10n.workspaceSettings: l10n.settingsWordsWorkspaceSettings,
+  l10n.settingsDomains: l10n.settingsWordsSettingsDomains,
+  l10n.usage: l10n.settingsWordsUsage,
+  l10n.billing: l10n.settingsWordsBilling,
+  l10n.inviteFriends: l10n.settingsWordsInviteFriends,
+  l10n.adminConsole: l10n.settingsWordsAdminConsole,
+  l10n.appearance: l10n.settingsWordsAppearance,
+  l10n.quietHours: l10n.settingsWordsQuietHours,
+  l10n.pushPrefsTitle: l10n.settingsWordsPushPrefsTitle,
+  l10n.callFullScreenTitle: l10n.settingsWordsCallFullScreenTitle,
+  l10n.emailTips: l10n.settingsWordsEmailTips,
+  l10n.galleryDigestEmails: l10n.settingsWordsGalleryDigestEmails,
+  l10n.newsletterTitle: l10n.settingsWordsNewsletterTitle,
+  l10n.wakeWord: l10n.settingsWordsWakeWord,
+  l10n.showBotSteps: l10n.settingsWordsShowBotSteps,
+  l10n.showReplyUsage: l10n.settingsWordsShowReplyUsage,
+  l10n.checkForUpdates: l10n.settingsWordsCheckForUpdates,
+  l10n.openAtLogin: l10n.settingsWordsOpenAtLogin,
+  l10n.islandStartElsewhere: l10n.settingsWordsIslandStartElsewhere,
+  l10n.showBotsInNotch: l10n.settingsWordsShowBotsInNotch,
+  l10n.notchOnHover: l10n.settingsWordsNotchOnHover,
+  l10n.language: l10n.settingsWordsLanguage,
+  l10n.integrations: l10n.settingsWordsIntegrations,
+  l10n.skills: l10n.settingsWordsSkills,
+  l10n.casamaLink: l10n.settingsWordsCasamaLink,
+  l10n.serviceKeys: l10n.settingsWordsServiceKeys,
+  l10n.modelsTitle: l10n.settingsWordsModelsTitle,
+  l10n.modelKeys: l10n.settingsWordsModelKeys,
+  l10n.account: l10n.settingsWordsAccount,
+  l10n.twoStepSignIn: l10n.settingsWordsTwoStepSignIn,
+  l10n.pairDevice: l10n.settingsWordsPairDevice,
+  l10n.passkeys: l10n.settingsWordsPasskeys,
+  l10n.widgetsTitle: l10n.settingsWordsWidgetsTitle,
+  l10n.cardsSettingsTitle: l10n.settingsWordsCardsSettingsTitle,
+  l10n.appLock: l10n.settingsWordsAppLock,
+  l10n.privacy: l10n.settingsWordsPrivacy,
+  l10n.secrets: l10n.settingsWordsSecrets,
+  l10n.computers: l10n.settingsWordsComputers,
+  l10n.deviceConnections: l10n.settingsWordsDeviceConnections,
+  l10n.useThisComputer: l10n.settingsWordsUseThisComputer,
+  l10n.helpAndSupport: l10n.settingsWordsHelpAndSupport,
+  l10n.signOut: l10n.settingsWordsSignOut,
 };
 
 String _roleLabel(BuildContext context, OrgRole role) => switch (role) {

@@ -1,6 +1,7 @@
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../../../core/number_format.dart';
 import '../../../core/widgets.dart';
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_tokens.dart';
@@ -403,7 +404,7 @@ class _ResultMeta extends StatelessWidget {
           Icon(LucideIcons.star, size: 13, color: context.appColors.warning),
           const SizedBox(width: 3),
           Text(
-            item.rating!.toStringAsFixed(1),
+            item.rating!.humanizedCount(context.l10n.localeName, decimalDigits: 1),
             style: tt.labelMedium?.copyWith(fontWeight: FontWeight.w600),
           ),
           if (item.reviews != null)

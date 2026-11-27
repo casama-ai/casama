@@ -14,12 +14,12 @@ enum WidgetOpen {
 
 @available(iOS 17.0, macOS 14.0, *)
 struct OpenCasamaIntent: AppIntent {
-  static var title: LocalizedStringResource = "Open Casama"
+  static var title: LocalizedStringResource = LocalizedStringResource("siriOpenCasama", defaultValue: "Open Casama", table: "Native")
   static var isDiscoverable: Bool = false
   static var openAppWhenRun: Bool = true
 
   /// An app route ("/quick-ask", "/bots/<id>/call").
-  @Parameter(title: "Where")
+  @Parameter(title: LocalizedStringResource("siriWhere", defaultValue: "Where", table: "Native"))
   var path: String
 
   init() {}
@@ -35,10 +35,10 @@ struct OpenCasamaIntent: AppIntent {
 /// Talk to a bot: which bot. Left empty, quick ask opens instead.
 @available(iOS 18.0, macOS 26.0, *)
 struct TalkToBotControlIntent: ControlConfigurationIntent {
-  static var title: LocalizedStringResource = "Talk to a bot"
-  static var description = IntentDescription("Starts a voice call with the bot you pick.")
+  static var title: LocalizedStringResource = LocalizedStringResource("siriTalkToBot", defaultValue: "Talk to a bot", table: "Native")
+  static var description = IntentDescription(LocalizedStringResource("siriTalkToBotDescription", defaultValue: "Starts a voice call with the bot you pick.", table: "Native"))
 
-  @Parameter(title: "Bot")
+  @Parameter(title: LocalizedStringResource("siriBot", defaultValue: "Bot", table: "Native"))
   var bot: WidgetBotEntity?
 
   init() {}
@@ -47,10 +47,10 @@ struct TalkToBotControlIntent: ControlConfigurationIntent {
 /// Run a routine: which routine.
 @available(iOS 18.0, macOS 26.0, *)
 struct RunRoutineControlIntent: ControlConfigurationIntent {
-  static var title: LocalizedStringResource = "Run a routine"
-  static var description = IntentDescription("Runs the routine you pick, without opening Casama.")
+  static var title: LocalizedStringResource = LocalizedStringResource("siriRunRoutine", defaultValue: "Run a routine", table: "Native")
+  static var description = IntentDescription(LocalizedStringResource("siriRunRoutineControlDescription", defaultValue: "Runs the routine you pick, without opening Casama.", table: "Native"))
 
-  @Parameter(title: "Routine")
+  @Parameter(title: LocalizedStringResource("siriRoutine", defaultValue: "Routine", table: "Native"))
   var routine: WidgetRoutineEntity?
 
   init() {}

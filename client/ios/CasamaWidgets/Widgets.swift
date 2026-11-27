@@ -20,8 +20,8 @@ struct NeedsYouWidget: Widget {
     StaticConfiguration(kind: "NeedsYouWidget", provider: GlanceProvider()) { entry in
       NeedsYouFamilyView(entry: entry)
     }
-    .configurationDisplayName("Needs you")
-    .description("See which bots are waiting on you, and answer the simple ones.")
+    .configurationDisplayName(NativeL10n.widgetNeedsYou)
+    .description(NativeL10n.widgetIosNeedsYouDescription)
     .supportedFamilies([.systemSmall, .systemMedium, .accessoryCircular, .accessoryRectangular])
     .glanceDefaults()
   }
@@ -44,8 +44,8 @@ struct BotWidget: Widget {
     AppIntentConfiguration(kind: "BotStatusWidget", intent: ChooseBotIntent.self, provider: BotProvider()) { entry in
       BotFamilyView(entry: entry)
     }
-    .configurationDisplayName("Bot")
-    .description("Keep an eye on what one of your bots is doing.")
+    .configurationDisplayName(NativeL10n.widgetNameBot)
+    .description(NativeL10n.widgetIosBotDescription)
     .supportedFamilies([.systemSmall, .systemMedium, .accessoryCircular, .accessoryRectangular])
     .glanceDefaults()
   }
@@ -67,8 +67,8 @@ struct AskWidget: Widget {
     AppIntentConfiguration(kind: "AskWidget", intent: ChooseBotIntent.self, provider: BotProvider()) { entry in
       AskView(entry: entry)
     }
-    .configurationDisplayName("Ask")
-    .description("Ask a bot or start a call with one tap, with ideas to try.")
+    .configurationDisplayName(NativeL10n.widgetAsk)
+    .description(NativeL10n.widgetIosAskDescription)
     .supportedFamilies([.systemSmall, .systemMedium])
     .glanceDefaults()
   }
@@ -79,8 +79,8 @@ struct RoutinesWidget: Widget {
     AppIntentConfiguration(kind: "RoutinesWidget", intent: ChooseRoutinesIntent.self, provider: RoutinesProvider()) { entry in
       RoutinesFamilyView(entry: entry)
     }
-    .configurationDisplayName("Routines")
-    .description("See what runs next, and run a routine now.")
+    .configurationDisplayName(NativeL10n.widgetNameRoutines)
+    .description(NativeL10n.widgetIosRoutinesDescription)
     .supportedFamilies([.systemSmall, .systemMedium, .accessoryRectangular])
     .glanceDefaults()
   }
@@ -109,8 +109,8 @@ struct TodayWidget: Widget {
     StaticConfiguration(kind: "TodayWidget", provider: GlanceProvider(covers: true)) { entry in
       TodayView(entry: entry)
     }
-    .configurationDisplayName("Today")
-    .description("Get your day in one place: what needs you, what runs next, and your credits.")
+    .configurationDisplayName(NativeL10n.widgetToday)
+    .description(NativeL10n.widgetIosTodayDescription)
     .supportedFamilies(families)
     .glanceDefaults()
   }
@@ -123,8 +123,8 @@ struct BriefWidget: Widget {
     StaticConfiguration(kind: "BriefWidget", provider: GlanceProvider()) { entry in
       BriefView(entry: entry)
     }
-    .configurationDisplayName("Brief")
-    .description("Read what your bot told you this morning.")
+    .configurationDisplayName(NativeL10n.widgetBrief)
+    .description(NativeL10n.widgetIosBriefDescription)
     .supportedFamilies([.systemMedium, .systemLarge])
     .glanceDefaults()
   }
@@ -135,8 +135,8 @@ struct LibraryWidget: Widget {
     StaticConfiguration(kind: "LibraryWidget", provider: GlanceProvider(covers: true)) { entry in
       LibraryView(entry: entry)
     }
-    .configurationDisplayName("Library")
-    .description("Open what your bots made lately.")
+    .configurationDisplayName(NativeL10n.widgetLibrary)
+    .description(NativeL10n.widgetIosLibraryDescription)
     .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
     // A cover is the whole small widget: keep it in StandBy and on tinted Home Screens.
     .containerBackgroundRemovable(false)
@@ -148,8 +148,8 @@ struct TasksWidget: Widget {
     StaticConfiguration(kind: "TasksWidget", provider: GlanceProvider()) { entry in
       TasksView(entry: entry)
     }
-    .configurationDisplayName("Tasks")
-    .description("See where the board stands, with what waits on you first.")
+    .configurationDisplayName(NativeL10n.widgetTasks)
+    .description(NativeL10n.widgetIosTasksDescription)
     .supportedFamilies([.systemMedium, .systemLarge])
     .glanceDefaults()
   }
@@ -160,8 +160,8 @@ struct CreditsWidget: Widget {
     StaticConfiguration(kind: "CreditsWidget", provider: GlanceProvider()) { entry in
       CreditsFamilyView(entry: entry)
     }
-    .configurationDisplayName("Credits")
-    .description("Check how much of your credits you've used.")
+    .configurationDisplayName(NativeL10n.widgetCredits)
+    .description(NativeL10n.widgetIosCreditsDescription)
     .supportedFamilies([.systemSmall, .accessoryCircular])
     .glanceDefaults()
   }
@@ -185,7 +185,7 @@ struct CasamaInlineWidget: Widget {
       CasamaInlineView(entry: entry)
     }
     .configurationDisplayName("Casama")
-    .description("See the one thing that matters most, above the clock.")
+    .description(NativeL10n.widgetIosInlineDescription)
     .supportedFamilies([.accessoryInline])
   }
 }
@@ -197,8 +197,8 @@ struct CanvasWidget: Widget {
     AppIntentConfiguration(kind: CanvasFetch.kind, intent: ChooseCanvasIntent.self, provider: CanvasProvider()) { entry in
       CanvasWidgetView(entry: entry)
     }
-    .configurationDisplayName("Canvas")
-    .description("Show what your bots put here: a verse, a countdown, a streak, a list or a picture.")
+    .configurationDisplayName(NativeL10n.widgetNameCanvas)
+    .description(NativeL10n.widgetIosCanvasDescription)
     .supportedFamilies([
       .systemSmall, .systemMedium, .systemLarge, .systemExtraLarge,
       .accessoryRectangular, .accessoryInline, .accessoryCircular,

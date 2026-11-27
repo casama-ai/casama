@@ -10,18 +10,22 @@ import SwiftUI
 @available(iOS 27.3, macOS 27.3, *)
 @AppIntent(.tool)
 struct AskBotToolIntent: AppIntent {
-  static var title: LocalizedStringResource = "Ask a Casama bot"
+  static var title: LocalizedStringResource = LocalizedStringResource("siriToolAsk", defaultValue: "Ask a Casama bot", table: "Native")
   static var description = IntentDescription(
-    "Ask one of the person's Casama bots a question and return its reply.",
-    categoryName: "Assistants"
+    LocalizedStringResource("siriToolAskDescription", defaultValue: "Ask one of the person's Casama bots a question and return its reply.", table: "Native"),
+    categoryName: LocalizedStringResource("siriCategoryAssistants", defaultValue: "Assistants", table: "Native")
   )
   static var openAppWhenRun = false
   static var authenticationPolicy: IntentAuthenticationPolicy = .requiresAuthentication
 
-  @Parameter(title: "Bot", description: "Which Casama bot to ask.")
+  @Parameter(
+    title: LocalizedStringResource("siriBot", defaultValue: "Bot", table: "Native"),
+    description: LocalizedStringResource("siriToolBotDescription", defaultValue: "Which Casama bot to ask.", table: "Native"))
   var bot: BotEntity
 
-  @Parameter(title: "Question", description: "What to ask the bot.")
+  @Parameter(
+    title: LocalizedStringResource("siriQuestion", defaultValue: "Question", table: "Native"),
+    description: LocalizedStringResource("siriToolQuestionDescription", defaultValue: "What to ask the bot.", table: "Native"))
   var question: String
 
   @MainActor
@@ -33,7 +37,7 @@ struct AskBotToolIntent: AppIntent {
       "request_id": UUID().uuidString,
     ]
     let answer = await SiriBridge.shared.call("ask", args)
-    let say = (answer?["say"] as? String) ?? "Opening Casama to finish."
+    let say = (answer?["say"] as? String) ?? NativeL10n.siriOpeningToFinish
     let text = (answer?["text"] as? String) ?? say
     return .result(
       dialog: IntentDialog(stringLiteral: say),
@@ -45,28 +49,31 @@ struct AskBotToolIntent: AppIntent {
 @available(iOS 27.3, macOS 27.3, *)
 @AppIntent(.tool)
 struct RunRoutineToolIntent: AppIntent {
-  static var title: LocalizedStringResource = "Run a Casama routine"
+  static var title: LocalizedStringResource = LocalizedStringResource("siriToolRun", defaultValue: "Run a Casama routine", table: "Native")
   static var description = IntentDescription(
-    "Run a saved Casama routine after confirming with the person.",
-    categoryName: "Automation"
+    LocalizedStringResource("siriToolRunDescription", defaultValue: "Run a saved Casama routine after confirming with the person.", table: "Native"),
+    categoryName: LocalizedStringResource("siriCategoryAutomation", defaultValue: "Automation", table: "Native")
   )
   static var openAppWhenRun = false
   static var authenticationPolicy: IntentAuthenticationPolicy = .requiresAuthentication
 
-  @Parameter(title: "Routine", description: "The routine to run.")
+  @Parameter(
+    title: LocalizedStringResource("siriRoutine", defaultValue: "Routine", table: "Native"),
+    description: LocalizedStringResource("siriToolRoutineDescription", defaultValue: "The routine to run.", table: "Native"))
   var routine: RoutineEntity
 
   @MainActor
   func perform() async throws -> some IntentResult & ProvidesDialog & ShowsSnippetView {
     try await requestConfirmation(
-      result: .result(dialog: "Run \(routine.name) with \(routine.bot)?")
+      result: .result(
+        dialog: IntentDialog(LocalizedStringResource("siriRunWithConfirm", defaultValue: "Run \(routine.name) with \(routine.bot)?", table: "Native")))
     )
     let answer = await SiriBridge.shared.call("run", [
       "routine_id": routine.id,
       "name": routine.name,
       "request_id": UUID().uuidString,
     ])
-    let say = (answer?["say"] as? String) ?? "Started \(routine.name)."
+    let say = (answer?["say"] as? String) ?? NativeL10n.siriRoutineStarted(routine.name)
     return .result(
       dialog: IntentDialog(stringLiteral: say),
       view: RoutineCardSnippet(routineName: routine.name, botName: routine.bot, status: say)
@@ -77,10 +84,10 @@ struct RunRoutineToolIntent: AppIntent {
 @available(iOS 27.3, macOS 27.3, *)
 @AppIntent(.tool)
 struct WhatNeedsMeToolIntent: AppIntent {
-  static var title: LocalizedStringResource = "What needs me in Casama"
+  static var title: LocalizedStringResource = LocalizedStringResource("siriToolNeeds", defaultValue: "What needs me in Casama", table: "Native")
   static var description = IntentDescription(
-    "Check how many approvals, takeovers or suggestions are waiting in Casama.",
-    categoryName: "Assistants"
+    LocalizedStringResource("siriToolNeedsDescription", defaultValue: "Check how many approvals, takeovers or suggestions are waiting in Casama.", table: "Native"),
+    categoryName: LocalizedStringResource("siriCategoryAssistants", defaultValue: "Assistants", table: "Native")
   )
   static var openAppWhenRun = false
   static var authenticationPolicy: IntentAuthenticationPolicy = .requiresAuthentication
@@ -88,7 +95,7 @@ struct WhatNeedsMeToolIntent: AppIntent {
   @MainActor
   func perform() async throws -> some IntentResult & ProvidesDialog {
     let answer = await SiriBridge.shared.call("needs")
-    let say = (answer?["say"] as? String) ?? "Open Casama to check what needs you."
+    let say = (answer?["say"] as? String) ?? NativeL10n.siriOpenToCheck
     return .result(dialog: IntentDialog(stringLiteral: say))
   }
 }
@@ -96,21 +103,23 @@ struct WhatNeedsMeToolIntent: AppIntent {
 @available(iOS 27.3, macOS 27.3, *)
 @AppIntent(.tool)
 struct StopBotToolIntent: AppIntent {
-  static var title: LocalizedStringResource = "Stop a Casama bot"
+  static var title: LocalizedStringResource = LocalizedStringResource("siriToolStop", defaultValue: "Stop a Casama bot", table: "Native")
   static var description = IntentDescription(
-    "Stop a bot that is currently running a task in Casama.",
-    categoryName: "Assistants"
+    LocalizedStringResource("siriToolStopDescription", defaultValue: "Stop a bot that is currently running a task in Casama.", table: "Native"),
+    categoryName: LocalizedStringResource("siriCategoryAssistants", defaultValue: "Assistants", table: "Native")
   )
   static var openAppWhenRun = false
   static var authenticationPolicy: IntentAuthenticationPolicy = .requiresAuthentication
 
-  @Parameter(title: "Bot", description: "The bot to stop.")
+  @Parameter(
+    title: LocalizedStringResource("siriBot", defaultValue: "Bot", table: "Native"),
+    description: LocalizedStringResource("siriToolStopBotDescription", defaultValue: "The bot to stop.", table: "Native"))
   var bot: BotEntity
 
   @MainActor
   func perform() async throws -> some IntentResult & ProvidesDialog {
     let answer = await SiriBridge.shared.call("stop_bot", ["bot_id": bot.id])
-    let say = (answer?["say"] as? String) ?? "Stopped \(bot.name)."
+    let say = (answer?["say"] as? String) ?? NativeL10n.siriStoppedBot(bot.name)
     return .result(dialog: IntentDialog(stringLiteral: say))
   }
 }
@@ -118,21 +127,23 @@ struct StopBotToolIntent: AppIntent {
 @available(iOS 27.3, macOS 27.3, *)
 @AppIntent(.tool)
 struct CallBotToolIntent: AppIntent {
-  static var title: LocalizedStringResource = "Call a Casama bot"
+  static var title: LocalizedStringResource = LocalizedStringResource("siriToolCall", defaultValue: "Call a Casama bot", table: "Native")
   static var description = IntentDescription(
-    "Open Casama and start a live voice call with the chosen bot.",
-    categoryName: "Communication"
+    LocalizedStringResource("siriToolCallDescription", defaultValue: "Open Casama and start a live voice call with the chosen bot.", table: "Native"),
+    categoryName: LocalizedStringResource("siriCategoryCommunication", defaultValue: "Communication", table: "Native")
   )
   static var openAppWhenRun = true
   static var authenticationPolicy: IntentAuthenticationPolicy = .requiresAuthentication
 
-  @Parameter(title: "Bot", description: "The bot to call.")
+  @Parameter(
+    title: LocalizedStringResource("siriBot", defaultValue: "Bot", table: "Native"),
+    description: LocalizedStringResource("siriToolCallBotDescription", defaultValue: "The bot to call.", table: "Native"))
   var bot: BotEntity
 
   @MainActor
   func perform() async throws -> some IntentResult & ProvidesDialog {
     ShortcutBridge.shared.open("/bots/\(bot.id)/chat?call=1")
-    return .result(dialog: "Calling \(bot.name).")
+    return .result(dialog: IntentDialog(LocalizedStringResource("siriCalling", defaultValue: "Calling \(bot.name).", table: "Native")))
   }
 }
 

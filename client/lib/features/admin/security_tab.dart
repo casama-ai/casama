@@ -1,4 +1,5 @@
-import 'package:casama_sdk/casama_sdk.dart' show AdminDeviceKey, AdminPinState;
+import 'package:casama_sdk/casama_sdk.dart'
+    show AdminDeviceKey, AdminDeviceKeyScopeEnum, AdminPinState;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:material_ui/material_ui.dart';
@@ -14,6 +15,7 @@ import '../app_lock/confirm_identity.dart' show showPinSetup;
 import 'admin_nav.dart';
 import 'admin_search.dart';
 import 'admin_security_gate.dart';
+import 'agent_access.dart';
 import 'ui/admin_ui.dart';
 
 final adminPinProvider = FutureProvider.autoDispose<AdminPinState>(
@@ -207,6 +209,7 @@ class AdminSecurityTab extends ConsumerWidget {
       onRefresh: () async {
         ref.invalidate(adminPinProvider);
         ref.invalidate(adminDevicesProvider);
+        ref.invalidate(adminAgentRequestsProvider);
         try {
           await ref.read(adminPinProvider.future);
         } catch (_) {
@@ -216,6 +219,7 @@ class AdminSecurityTab extends ConsumerWidget {
       children: [
         const AdminSectionHeader(section: AdminSection.security),
         ..._devices(context, ref),
+        ...adminAgentSection(context, ref),
         if (pin.value case final state?)
           ..._pin(context, ref, state)
         else if (pin.hasError)
@@ -256,6 +260,8 @@ class _DeviceRow extends StatelessWidget {
       color: scheme.onSurfaceVariant,
     );
     final lastUsed = device.lastUsedAt;
+    // An agent's key (D-598): admin reads only, changes by the owner's approval.
+    final agent = device.scope == AdminDeviceKeyScopeEnum.read;
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpace.md,
@@ -271,7 +277,9 @@ class _DeviceRow extends StatelessWidget {
               borderRadius: BorderRadius.circular(AppRadius.icon),
             ),
             child: Icon(
-              device.name.startsWith('Mac')
+              agent
+                  ? LucideIcons.bot
+                  : device.name.startsWith('Mac')
                   ? LucideIcons.laptop
                   : LucideIcons.smartphone,
               size: 18,
@@ -300,6 +308,7 @@ class _DeviceRow extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 2),
+                if (agent) Text(l10n.adminDeviceAgentScope, style: muted),
                 if (lastUsed != null)
                   TimeAgo(
                     lastUsed,
@@ -311,7 +320,7 @@ class _DeviceRow extends StatelessWidget {
                 TimeAgo(
                   device.createdAt,
                   style: muted,
-                  label: (when) => l10n.passkeyAddedOn(when),
+                  label: (when) => l10n.passkeyAddedWhen(when),
                 ),
               ],
             ),
