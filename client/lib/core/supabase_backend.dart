@@ -2480,6 +2480,30 @@ class SupabaseBackend implements Backend {
   static bool _keepGoing(Object? content) =>
       content is List && content.any((p) => p is Map && p['type'] == 'keep_going');
 
+  static SuggestionKind _parseSuggestionKind(Object? raw) => switch (raw) {
+    'answer' => SuggestionKind.answer,
+    'turn_on' => SuggestionKind.turnOn,
+    'remind' => SuggestionKind.remind,
+    'look' => SuggestionKind.look,
+    _ => SuggestionKind.do_,
+  };
+
+  static MessageSuggestion _messageSuggestion(Map<dynamic, dynamic> m, String id, String title) {
+    final rawChoices = m['choices'];
+    final choices = rawChoices is List ? [for (final c in rawChoices) if (c is String) c] : null;
+    final rawRemind = m['remind_at'];
+    return MessageSuggestion(
+      id: id,
+      title: title,
+      body: m['body'] as String? ?? '',
+      kind: _parseSuggestionKind(m['kind']),
+      label: m['label'] as String?,
+      choices: choices != null && choices.isNotEmpty ? choices : null,
+      url: m['url'] as String?,
+      remindAt: rawRemind is String ? DateTime.tryParse(rawRemind) : null,
+    );
+  }
+
   /// General and topics (D-253): a suggestion card or a topic's result in the message's parts.
   static List<MessageSuggestion> _suggestionList(Object? content) {
     if (content is! List) return const [];
@@ -2488,7 +2512,7 @@ class SupabaseBackend implements Backend {
         return [
           for (final i in items)
             if (i case {'suggestion_id': final String id, 'title': final String title})
-              MessageSuggestion(id: id, title: title, body: (i as Map)['body'] as String? ?? ''),
+              _messageSuggestion(i as Map, id, title),
         ];
       }
     }
@@ -2499,7 +2523,7 @@ class SupabaseBackend implements Backend {
     if (content is! List) return null;
     for (final p in content) {
       if (p case {'type': 'suggestion', 'suggestion_id': final String id, 'title': final String title}) {
-        return MessageSuggestion(id: id, title: title, body: p['body'] as String? ?? '');
+        return _messageSuggestion(p, id, title);
       }
     }
     return null;
@@ -5211,8 +5235,51 @@ class SupabaseBackend implements Backend {
       (await api.checkins.getForYou(orgId: orgId)).data!;
 
   @override
-  Future<AcceptedSuggestion> acceptSuggestion(String id) async =>
-      (await api.checkins.acceptSuggestion(id: id)).data!;
+  Future<AcceptedSuggestion> acceptSuggestion(
+    String id, {
+    String? said,
+    String? choice,
+    DateTime? remindAt,
+  }) async {
+    final req = (said != null || choice != null || remindAt != null)
+        ? AcceptSuggestionRequest(
+            said: said,
+            choice: choice,
+            remindAt: remindAt?.toUtc(),
+          )
+        : null;
+    return (await api.checkins.acceptSuggestion(id: id, acceptSuggestionRequest: req)).data!;
+  }
+
+  @override
+  Future<SnoozedSuggestion> snoozeSuggestion(String id, {DateTime? until}) async =>
+      (await api.checkins.snoozeSuggestion(
+        id: id,
+        snoozeSuggestionRequest: until != null ? SnoozeSuggestionRequest(until: until.toUtc()) : null,
+      )).data!;
+
+  @override
+  Future<void> doneSuggestion(String id) async {
+    await api.checkins.doneSuggestion(id: id);
+  }
+
+  @override
+  Future<int> putAwaySuggestions(List<String> ids) async =>
+      (await api.checkins.putAwaySuggestions(
+        putAwaySuggestionsRequest: PutAwaySuggestionsRequest(ids: ids),
+      )).data?.count ?? 0;
+
+  @override
+  Future<void> markInboxSeen(String itemKind, String itemId) async {
+    final kind = switch (itemKind) {
+      'brief' => InboxSeenRequestItemKindEnum.brief,
+      'notification' => InboxSeenRequestItemKindEnum.notification,
+      _ => InboxSeenRequestItemKindEnum.page,
+    };
+    await api.checkins.markInboxSeen(
+      inboxSeenRequest: InboxSeenRequest(itemKind: kind, itemId: itemId),
+    );
+  }
 
   // Widgets (D-405). Raw JSON: the glance passes through to native code untouched, and these
   // routes may be newer than the generated client.

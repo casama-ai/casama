@@ -145,15 +145,80 @@ bool _waitingAbove(NotificationView n, Set<String> approvalIds, Set<String> take
 }
 
 /// The All, Needs you and Briefs filters of the Inbox.
-class _InboxFeed extends ConsumerWidget {
+class _InboxFeed extends ConsumerStatefulWidget {
   const _InboxFeed({required this.filter});
   final InboxFilter filter;
 
-  /// How far back published pages show among the updates (the Library lists them all).
-  static const _recentPages = Duration(days: 7);
+  /// How far back published pages show among the updates (INBOX-TIDY-PLAN §6.3: 3 days at most,
+  /// and gone once opened).
+  static const _recentPages = Duration(days: 3);
+
+  /// Max ideas shown at once in Needs you (§5.1); the rest wait their turn and stay in the badge.
+  static const _maxVisibleIdeas = 8;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_InboxFeed> createState() => _InboxFeedState();
+}
+
+class _InboxFeedState extends ConsumerState<_InboxFeed> {
+  /// Suggestion ids hidden by "Put away all" while the Undo snackbar is open.
+  final _pendingPutAway = <String>{};
+  Timer? _putAwayTimer;
+
+  /// Page ids marked seen in this session before [forYouProvider] reloads.
+  final _localSeenPages = <String>{};
+
+  @override
+  void dispose() {
+    _putAwayTimer?.cancel();
+    super.dispose();
+  }
+
+  void _startPutAwayAll(BuildContext context, List<String> ids) {
+    if (ids.isEmpty) return;
+    final l10n = context.l10n;
+    _putAwayTimer?.cancel();
+    setState(() => _pendingPutAway.addAll(ids));
+    final messenger = ScaffoldMessenger.maybeOf(context);
+    messenger?.hideCurrentSnackBar();
+    var undone = false;
+    messenger?.showSnackBar(
+      SnackBar(
+        content: Text(l10n.suggestionPutAwayCount(ids.length)),
+        duration: const Duration(seconds: 4),
+        action: SnackBarAction(
+          label: l10n.suggestionUndo,
+          onPressed: () {
+            undone = true;
+            _putAwayTimer?.cancel();
+            if (mounted) setState(() => _pendingPutAway.removeAll(ids));
+          },
+        ),
+      ),
+    );
+    _putAwayTimer = Timer(const Duration(seconds: 4), () async {
+      if (undone || !mounted) return;
+      try {
+        await ref.read(backendProvider).putAwaySuggestions(ids);
+        ref.invalidate(forYouProvider);
+      } catch (_) {
+        if (mounted) setState(() => _pendingPutAway.removeAll(ids));
+      }
+    });
+  }
+
+  void _markPageSeen(String pageId) {
+    setState(() => _localSeenPages.add(pageId));
+    unawaited(
+      ref.read(backendProvider).markInboxSeen('page', pageId).then((_) {
+        ref.invalidate(forYouProvider);
+      }).catchError((_) {}),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final filter = widget.filter;
     final l10n = context.l10n;
     final all = filter == InboxFilter.all;
     // The Updates row (D-253): notices and pages that aren't already in a bot's chat; no decisions.
@@ -169,7 +234,8 @@ class _InboxFeed extends ConsumerWidget {
     final proposals = proposalsValue.value ?? const <SkillProposal>[];
     final pages = pagesValue.value ?? const <BotPage>[];
     final bots = ref.watch(botsProvider).value ?? const <Bot>[];
-    String botName(String id) => bots.where((b) => b.id == id).firstOrNull?.name ?? '';
+    Bot? botById(String id) => bots.where((b) => b.id == id).firstOrNull;
+    String botName(String id) => botById(id)?.name ?? '';
 
     // The lists this filter is made of; the rest fill in when they arrive.
     final sources = <AsyncValue<Object?>>[
@@ -207,7 +273,97 @@ class _InboxFeed extends ConsumerWidget {
       loading: _InboxSkeleton(filter: filter),
       data: (_) {
         final pending = approvals.value ?? const <Approval>[];
-        final suggestions = forYou.value?.suggestions ?? const <Suggestion>[];
+        final allSuggestions = forYou.value?.suggestions ?? const <Suggestion>[];
+        // `look` suggestions move to Updates (§4.1); the rest wait in Needs you.
+        final lookSuggestions = [for (final s in allSuggestions) if (s.kind == SuggestionKind.look) s];
+        final activeSuggestions = [
+          for (final s in allSuggestions)
+            if (s.kind != SuggestionKind.look && !_pendingPutAway.contains(s.id)) s,
+        ];
+
+        // Order ideas (§5.4): answer cards, urgent or timed (remind), then the rest, newest first.
+        int ideaRank(Suggestion s) {
+          if (s.kind == SuggestionKind.answer) return 0;
+          if (s.urgency == SuggestionUrgencyEnum.urgent || s.kind == SuggestionKind.remind) return 1;
+          return 2;
+        }
+
+        final sortedSuggestions = [...activeSuggestions]
+          ..sort((a, b) {
+            final cmp = ideaRank(a).compareTo(ideaRank(b));
+            return cmp != 0 ? cmp : b.createdAt.compareTo(a.createdAt);
+          });
+
+        // Combine suggestions + skill ideas up to the 8-idea cap (§5.1).
+        final allIdeas = <({String botId, Widget widget, String? suggestionId})>[
+          for (final s in sortedSuggestions)
+            (
+              botId: s.botId,
+              widget: SuggestionCard(key: ValueKey(('suggestion', s.id)), s: s, botName: botName(s.botId)),
+              suggestionId: s.id,
+            ),
+          for (final p in proposals)
+            (
+              botId: p.botId,
+              widget: SkillProposalCard(key: ValueKey(('proposal', p.id)), proposal: p, botName: botName(p.botId)),
+              suggestionId: null,
+            ),
+        ];
+        final visibleIdeas = allIdeas.take(_InboxFeed._maxVisibleIdeas).toList();
+        final hiddenIdeasCount = allIdeas.length - visibleIdeas.length;
+
+        // Group > 2 visible ideas from the same bot into one expandable card (§5.4).
+        final countsByBot = <String, int>{};
+        for (final idea in visibleIdeas) {
+          countsByBot[idea.botId] = (countsByBot[idea.botId] ?? 0) + 1;
+        }
+        final groupedBotWidgets = <String, List<Widget>>{};
+        for (final idea in visibleIdeas) {
+          if ((countsByBot[idea.botId] ?? 0) > 2) {
+            groupedBotWidgets.putIfAbsent(idea.botId, () => []).add(idea.widget);
+          }
+        }
+        final emittedGroupedBots = <String>{};
+        final ideaWidgets = <Widget>[];
+        for (final idea in visibleIdeas) {
+          if ((countsByBot[idea.botId] ?? 0) > 2) {
+            if (emittedGroupedBots.add(idea.botId)) {
+              final b = botById(idea.botId);
+              ideaWidgets.add(
+                BotIdeasGroupCard(
+                  key: ValueKey(('botIdeasGroup', idea.botId)),
+                  botId: idea.botId,
+                  botName: b?.name ?? '',
+                  avatarUrl: b?.avatarUrl,
+                  children: groupedBotWidgets[idea.botId]!,
+                ),
+              );
+            }
+          } else {
+            ideaWidgets.add(idea.widget);
+          }
+        }
+        if (hiddenIdeasCount > 0) {
+          ideaWidgets.add(
+            Padding(
+              padding: const EdgeInsets.only(bottom: AppSpace.sm),
+              child: Center(
+                child: Text(
+                  l10n.suggestionMoreWaiting(hiddenIdeasCount),
+                  key: const Key('moreIdeasWaiting'),
+                  style: context.textTheme.bodySmall?.copyWith(color: context.colorScheme.onSurfaceVariant),
+                ),
+              ),
+            ),
+          );
+        }
+
+        final visibleSuggestionIds = [
+          for (final idea in visibleIdeas)
+            if (idea.suggestionId != null) idea.suggestionId!,
+        ];
+        final showPutAwayAll = visibleIdeas.length > 5 && visibleSuggestionIds.isNotEmpty;
+
         final decisions = filter == InboxFilter.briefs || updatesOnly
             ? const <Widget>[]
             : <Widget>[
@@ -223,11 +379,24 @@ class _InboxFeed extends ConsumerWidget {
                     padding: const EdgeInsets.only(bottom: AppSpace.sm),
                     child: ApprovalCard(approval: a).appListItemEntrance(i),
                   ),
-                for (final s in suggestions) SuggestionCard(key: ValueKey(('suggestion', s.id)), s: s, botName: botName(s.botId)),
-                for (final p in proposals) SkillProposalCard(key: ValueKey(('proposal', p.id)), proposal: p, botName: botName(p.botId)),
+                if (showPutAwayAll)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: AppSpace.xs),
+                    child: Align(
+                      alignment: AlignmentDirectional.centerEnd,
+                      child: TextButton.icon(
+                        key: const Key('putAwayAll'),
+                        onPressed: () => _startPutAwayAll(context, visibleSuggestionIds),
+                        icon: const Icon(LucideIcons.archive, size: 16),
+                        label: Text(l10n.suggestionActionPutAwayAll),
+                      ),
+                    ),
+                  ),
+                ...ideaWidgets,
               ];
 
-        // Updates: briefs, notifications and new pages, newest first.
+        // Updates: briefs, `look` suggestions, notifications (grouped by bot+kind+day) and unseen
+        // pages (up to 3 days), newest first.
         final approvalIds = {for (final a in pending) a.id};
         final takeoverIds = {for (final t in takeovers) t.id};
         final notes = withNotes
@@ -237,15 +406,61 @@ class _InboxFeed extends ConsumerWidget {
                   if (!n.isReply && !_waitingAbove(n, approvalIds, takeoverIds) && (!updatesOnly || isUpdateRowNotification(n))) n,
               ]
             : const <NotificationView>[];
-        final since = DateTime.now().subtract(_recentPages);
+        final seenPageIds = {
+          ...?forYou.value?.seenPageIds,
+          ..._localSeenPages,
+        };
+        final sincePages = DateTime.now().subtract(_InboxFeed._recentPages);
+        final visiblePages = [
+          for (final p in pages)
+            if (p.createdAt.isAfter(sincePages) && !seenPageIds.contains(p.id)) p,
+        ];
+
+        // Group notifications by (botId, kind, localYMD) when >= 2 on the same day (§6.1).
+        String dayKey(DateTime dt) {
+          final l = dt.toLocal();
+          return '${l.year}-${l.month}-${l.day}';
+        }
+
+        final noteBuckets = <String, List<NotificationView>>{};
+        for (final n in notes) {
+          final k = '${n.botId ?? ''}|${n.kind}|${dayKey(n.createdAt)}';
+          noteBuckets.putIfAbsent(k, () => []).add(n);
+        }
+
         final updates = <(DateTime, Object)>[
           if (filter != InboxFilter.needsYou && !updatesOnly)
             for (final b in forYou.value?.briefs ?? const <ForYouBrief>[]) (b.createdAt, b),
-          for (final n in notes) (n.createdAt, n),
-          for (final p in pages)
-            if (p.createdAt.isAfter(since)) (p.createdAt, p),
+          if (filter != InboxFilter.needsYou && filter != InboxFilter.briefs)
+            for (final s in lookSuggestions) (s.createdAt, s),
+          for (final bucket in noteBuckets.values)
+            if (bucket.length >= 2)
+              (bucket.first.createdAt, _NotificationGroup(items: bucket))
+            else
+              (bucket.first.createdAt, bucket.first),
+          for (final p in visiblePages) (p.createdAt, p),
         ]..sort((a, b) => b.$1.compareTo(a.$1));
-        // Rows in a row share one card; a brief breaks the run with its own card.
+
+        // Build "Since yesterday" summary for each brief (§6.4).
+        final yesterdayCutoff = DateTime.now().subtract(const Duration(hours: 24));
+        (String? summary, List<String> unreadIds) briefSummary(ForYouBrief b) {
+          final botPages = visiblePages.where((p) => p.botId == b.botId && p.createdAt.isAfter(yesterdayCutoff)).length;
+          final botNotes = [
+            for (final n in notes)
+              if (n.botId == b.botId && n.createdAt.isAfter(yesterdayCutoff)) n,
+          ];
+          final routineCount = botNotes.where((n) => n.kind == 'routine' || n.kind == 'routine_result').length;
+          final otherCount = botNotes.length - routineCount;
+          final parts = <String>[
+            if (botPages > 0) l10n.briefSincePages(botPages),
+            if (routineCount > 0) l10n.briefSinceRoutines(routineCount),
+            if (otherCount > 0) l10n.briefSinceUpdates(otherCount),
+          ];
+          final unreadIds = [for (final n in botNotes) if (n.readAt == null) n.id];
+          return (parts.isEmpty ? null : parts.join(', '), unreadIds);
+        }
+
+        // Rows in a row share one card; a brief or look card breaks the run with its own card.
         final updateWidgets = <Widget>[];
         var rows = <Widget>[];
         void flushRows() {
@@ -258,11 +473,34 @@ class _InboxFeed extends ConsumerWidget {
           switch (item) {
             case ForYouBrief b:
               flushRows();
-              updateWidgets.add(Padding(key: ValueKey(('brief', b.botId)), padding: const EdgeInsets.only(bottom: AppSpace.sm), child: BriefCard(brief: b)));
+              final (summary, unreadIds) = briefSummary(b);
+              updateWidgets.add(
+                Padding(
+                  key: ValueKey(('brief', b.botId)),
+                  padding: const EdgeInsets.only(bottom: AppSpace.sm),
+                  child: BriefCard(
+                    brief: b,
+                    sinceYesterdaySummary: summary,
+                    onOpened: unreadIds.isEmpty
+                        ? null
+                        : () {
+                            final notifier = ref.read(notificationsProvider.notifier);
+                            for (final id in unreadIds) {
+                              unawaited(notifier.markRead(id).catchError((_) {}));
+                            }
+                          },
+                  ),
+                ),
+              );
+            case Suggestion s:
+              flushRows();
+              updateWidgets.add(SuggestionCard(key: ValueKey(('look', s.id)), s: s, botName: botName(s.botId)));
+            case _NotificationGroup g:
+              rows.add(_GroupedNotificationRow(group: g, botName: g.botId != null ? botName(g.botId!) : ''));
             case NotificationView n:
               rows.add(_NotificationRow(notification: n));
             case BotPage p:
-              rows.add(_PageUpdateRow(page: p, botName: botName(p.botId)));
+              rows.add(_PageUpdateRow(page: p, botName: botName(p.botId), onSeen: () => _markPageSeen(p.id)));
           }
         }
         flushRows();
@@ -278,7 +516,7 @@ class _InboxFeed extends ConsumerWidget {
             : null;
         final children = <Widget>[
           if (failed.isNotEmpty) Padding(padding: const EdgeInsets.only(bottom: AppSpace.sm), child: InlineError(error: failed.first.error!, onRetry: refresh)),
-          if (all && decisions.isNotEmpty) SectionHeader(title: l10n.inboxNeedsYou, count: decisions.length.humanizedCount(context.l10n.localeName), padding: const EdgeInsets.fromLTRB(AppSpace.xxs, AppSpace.xs, AppSpace.xxs, AppSpace.xs)),
+          if (all && decisions.isNotEmpty) SectionHeader(title: l10n.inboxNeedsYou, count: (pending.length + takeovers.length + allIdeas.length).humanizedCount(context.l10n.localeName), padding: const EdgeInsets.fromLTRB(AppSpace.xxs, AppSpace.xs, AppSpace.xxs, AppSpace.xs)),
           ...decisions,
           if (all && updateWidgets.isNotEmpty)
             SectionHeader(
@@ -302,10 +540,7 @@ class _InboxFeed extends ConsumerWidget {
           };
         }
         return RefreshIndicator(
-          onRefresh: () {
-            HapticsHelper.medium();
-            return refresh();
-          },
+          onRefresh: refresh,
           child: LayoutBuilder(
             builder: (context, constraints) {
               final side = pageSide(constraints.maxWidth);
@@ -322,12 +557,98 @@ class _InboxFeed extends ConsumerWidget {
   }
 }
 
+class _NotificationGroup {
+  const _NotificationGroup({required this.items});
+  final List<NotificationView> items;
+  String? get botId => items.first.botId;
+  String get kind => items.first.kind;
+  DateTime get createdAt => items.first.createdAt;
+}
+
+/// Groups multiple same-day notifications of the same kind from one bot (§6.1). Expands in place.
+class _GroupedNotificationRow extends StatefulWidget {
+  const _GroupedNotificationRow({required this.group, required this.botName});
+  final _NotificationGroup group;
+  final String botName;
+
+  @override
+  State<_GroupedNotificationRow> createState() => _GroupedNotificationRowState();
+}
+
+class _GroupedNotificationRowState extends State<_GroupedNotificationRow> {
+  var _expanded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final scheme = context.colorScheme;
+    final colors = context.appColors;
+    final g = widget.group;
+    final isRoutine = g.kind == 'routine' || g.kind == 'routine_result';
+    final name = widget.botName.trim();
+    final title = isRoutine
+        ? (name.isNotEmpty
+            ? l10n.updatesGroupedRoutine(name, g.items.length)
+            : l10n.updatesGroupedRoutinePlain(g.items.length))
+        : (name.isNotEmpty
+            ? l10n.updatesGroupedNotice(name, g.items.length)
+            : l10n.updatesGroupedNoticePlain(g.items.length));
+    final hasUnread = g.items.any((n) => n.readAt == null);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        InkWell(
+          key: Key('groupedNotif-${g.botId ?? 'none'}-${g.kind}'),
+          onTap: () => setState(() => _expanded = !_expanded),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(AppSpace.md, 12, AppSpace.md, 12),
+            child: Row(
+              children: [
+                _RowIcon(
+                  icon: isRoutine ? LucideIcons.clock : LucideIcons.bell,
+                  color: isRoutine ? colors.info : scheme.primary,
+                ),
+                const SizedBox(width: AppSpace.sm),
+                Expanded(
+                  child: Text(
+                    title,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: context.textTheme.bodyLarge?.copyWith(
+                      fontWeight: hasUnread ? FontWeight.w700 : FontWeight.w500,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: AppSpace.xs),
+                TimeAgo(g.createdAt, style: context.textTheme.labelSmall?.copyWith(color: scheme.onSurfaceVariant)),
+                const SizedBox(width: AppSpace.xs),
+                Icon(
+                  _expanded ? LucideIcons.chevronUp : LucideIcons.chevronDown,
+                  size: 16,
+                  color: scheme.onSurfaceVariant,
+                ),
+              ],
+            ),
+          ),
+        ),
+        if (_expanded)
+          for (final n in g.items)
+            Padding(
+              padding: const EdgeInsetsDirectional.only(start: AppSpace.md),
+              child: _NotificationRow(notification: n),
+            ),
+      ],
+    );
+  }
+}
+
 /// "Ada published Weekly sales" among the updates; opens it in the Library (D-274), or in the
-/// browser when the Library can't find it.
+/// browser when the Library can't find it, and marks it seen so it leaves Updates (§6.3).
 class _PageUpdateRow extends ConsumerWidget {
-  const _PageUpdateRow({required this.page, required this.botName});
+  const _PageUpdateRow({required this.page, required this.botName, required this.onSeen});
   final BotPage page;
   final String botName;
+  final VoidCallback onSeen;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -337,6 +658,7 @@ class _PageUpdateRow extends ConsumerWidget {
     return InkWell(
       key: Key('pageUpdate-${p.id}'),
       onTap: () async {
+        onSeen();
         final c = await findCreation(ref, pageId: p.id, title: p.title);
         if (!context.mounted) return;
         if (c != null) {

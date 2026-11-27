@@ -297,11 +297,15 @@ Class | Method | HTTP request | Description
 [*ChatApi*](doc/ChatApi.md) | [**switchBranch**](doc/ChatApi.md#switchbranch) | **POST** /v1/conversations/{id}/branch | Show another branch of the conversation (its newest message under the given one)
 [*ChatApi*](doc/ChatApi.md) | [**updateConversation**](doc/ChatApi.md#updateconversation) | **PATCH** /v1/conversations/{id} | Rename or pin a conversation
 [*ChatApi*](doc/ChatApi.md) | [**uploadMedia**](doc/ChatApi.md#uploadmedia) | **POST** /v1/media | Upload a picture or file for a message (media:&lt;id&gt;), or save one to the Library; the body is the raw bytes
-[*CheckinsApi*](doc/CheckinsApi.md) | [**acceptSuggestion**](doc/CheckinsApi.md#acceptsuggestion) | **POST** /v1/suggestions/{id}/accept | Have the bot do it, through normal approvals
+[*CheckinsApi*](doc/CheckinsApi.md) | [**acceptSuggestion**](doc/CheckinsApi.md#acceptsuggestion) | **POST** /v1/suggestions/{id}/accept | Have the bot do it, answer it, turn it on, or set a reminder
 [*CheckinsApi*](doc/CheckinsApi.md) | [**dismissSuggestion**](doc/CheckinsApi.md#dismisssuggestion) | **POST** /v1/suggestions/{id}/dismiss | 
+[*CheckinsApi*](doc/CheckinsApi.md) | [**doneSuggestion**](doc/CheckinsApi.md#donesuggestion) | **POST** /v1/suggestions/{id}/done | Mark a look suggestion as seen/done (Got it / Open) without starting a run
 [*CheckinsApi*](doc/CheckinsApi.md) | [**getBotCheckins**](doc/CheckinsApi.md#getbotcheckins) | **GET** /v1/bots/{id}/checkins | 
 [*CheckinsApi*](doc/CheckinsApi.md) | [**getForYou**](doc/CheckinsApi.md#getforyou) | **GET** /v1/for-you | Your feed in a workspace: the latest briefs, pending suggestions and approvals
+[*CheckinsApi*](doc/CheckinsApi.md) | [**markInboxSeen**](doc/CheckinsApi.md#markinboxseen) | **POST** /v1/inbox/seen | Mark an Updates item (e.g. a page) as seen by this user across devices
+[*CheckinsApi*](doc/CheckinsApi.md) | [**putAwaySuggestions**](doc/CheckinsApi.md#putawaysuggestions) | **POST** /v1/suggestions/put-away | Put away multiple pending suggestions at once (counts as Not now, not Don&#39;t suggest again)
 [*CheckinsApi*](doc/CheckinsApi.md) | [**setBotCheckins**](doc/CheckinsApi.md#setbotcheckins) | **PUT** /v1/bots/{id}/checkins | Turn a bot&#39;s morning brief and scans on or off, and set their times and daily cap
+[*CheckinsApi*](doc/CheckinsApi.md) | [**snoozeSuggestion**](doc/CheckinsApi.md#snoozesuggestion) | **POST** /v1/suggestions/{id}/snooze | Hide a suggestion until the next morning brief or a picked time (expires on 2nd snooze)
 [*CommunityApi*](doc/CommunityApi.md) | [**getStarAsk**](doc/CommunityApi.md#getstarask) | **GET** /v1/me/star-ask | Whether the app may ask you once to star Casama on GitHub, and whether you&#39;re a developer
 [*CompsApi*](doc/CompsApi.md) | [**adminCompSettings**](doc/CompsApi.md#admincompsettings) | **GET** /v1/admin/comp-settings | Free plan settings (instance owner)
 [*CompsApi*](doc/CompsApi.md) | [**createAdminCompCode**](doc/CompsApi.md#createadmincompcode) | **POST** /v1/admin/comp-codes | Make a gift code for one plan and length; the code is shown only once (instance owner)
@@ -805,6 +809,7 @@ Class | Method | HTTP request | Description
  - [AbuseEventList](doc/AbuseEventList.md)
  - [AcceptBotLinkRequest](doc/AcceptBotLinkRequest.md)
  - [AcceptSkillProposalRequest](doc/AcceptSkillProposalRequest.md)
+ - [AcceptSuggestionRequest](doc/AcceptSuggestionRequest.md)
  - [Accepted](doc/Accepted.md)
  - [AcceptedSuggestion](doc/AcceptedSuggestion.md)
  - [AccountAgeBand](doc/AccountAgeBand.md)
@@ -1369,6 +1374,7 @@ Class | Method | HTTP request | Description
  - [InactivityReport](doc/InactivityReport.md)
  - [InactivitySettings](doc/InactivitySettings.md)
  - [InactivityStepMode](doc/InactivityStepMode.md)
+ - [InboxSeenRequest](doc/InboxSeenRequest.md)
  - [InstallCatalogSkillRequest](doc/InstallCatalogSkillRequest.md)
  - [InstallEventRequest](doc/InstallEventRequest.md)
  - [InstallGitHubSkillRequest](doc/InstallGitHubSkillRequest.md)
@@ -1642,6 +1648,8 @@ Class | Method | HTTP request | Description
  - [PublishFeedbackRequest](doc/PublishFeedbackRequest.md)
  - [PublishSiteRequest](doc/PublishSiteRequest.md)
  - [PurchaseRequest](doc/PurchaseRequest.md)
+ - [PutAwaySuggestionsRequest](doc/PutAwaySuggestionsRequest.md)
+ - [PutAwaySuggestionsResponse](doc/PutAwaySuggestionsResponse.md)
  - [ReactionSummary](doc/ReactionSummary.md)
  - [ReasoningEffort](doc/ReasoningEffort.md)
  - [RedeemCompRequest](doc/RedeemCompRequest.md)
@@ -1830,6 +1838,8 @@ Class | Method | HTTP request | Description
  - [SnoozeCapacityAlarmRequest](doc/SnoozeCapacityAlarmRequest.md)
  - [SnoozeDevicePermissions200Response](doc/SnoozeDevicePermissions200Response.md)
  - [SnoozeDevicePermissionsRequest](doc/SnoozeDevicePermissionsRequest.md)
+ - [SnoozeSuggestionRequest](doc/SnoozeSuggestionRequest.md)
+ - [SnoozedSuggestion](doc/SnoozedSuggestion.md)
  - [StarAsk](doc/StarAsk.md)
  - [StartAgentImportRequest](doc/StartAgentImportRequest.md)
  - [StartAgentImportRequestFilesInner](doc/StartAgentImportRequestFilesInner.md)
@@ -1851,6 +1861,7 @@ Class | Method | HTTP request | Description
  - [SubrunStartedEventPayload](doc/SubrunStartedEventPayload.md)
  - [Subscription](doc/Subscription.md)
  - [Suggestion](doc/Suggestion.md)
+ - [SuggestionKind](doc/SuggestionKind.md)
  - [SuggestionProposedAction](doc/SuggestionProposedAction.md)
  - [SupportChatReply](doc/SupportChatReply.md)
  - [SupportChatReplyHandoff](doc/SupportChatReplyHandoff.md)

@@ -33,13 +33,43 @@ import WebKit
     registry.delegate = self
     registry.desiredPushTypes = [.voIP]
     voipRegistry = registry
-    // Suggestion pushes (D-247): "Do it" opens the app and accepts; "Not now" just clears it.
-    // The server sends them with aps.category = SUGGESTION.
+    // Suggestion pushes (D-247, INBOX-TIDY-PLAN §4.4): one category per kind with fixed localized words.
     UNUserNotificationCenter.current().setNotificationCategories([
       UNNotificationCategory(
         identifier: "SUGGESTION",
         actions: [
           UNNotificationAction(identifier: "accept", title: NativeL10n.notifDoIt, options: [.foreground]),
+          UNNotificationAction(identifier: "later", title: NativeL10n.notifNotNow, options: []),
+        ],
+        intentIdentifiers: [],
+        options: []),
+      UNNotificationCategory(
+        identifier: "SUGGESTION_TURN_ON",
+        actions: [
+          UNNotificationAction(identifier: "accept", title: NativeL10n.notifTurnOn, options: [.foreground]),
+          UNNotificationAction(identifier: "later", title: NativeL10n.notifNotNow, options: []),
+        ],
+        intentIdentifiers: [],
+        options: []),
+      UNNotificationCategory(
+        identifier: "SUGGESTION_REMIND",
+        actions: [
+          UNNotificationAction(identifier: "accept", title: NativeL10n.notifRemindMe, options: [.foreground]),
+          UNNotificationAction(identifier: "later", title: NativeL10n.notifNotNow, options: []),
+        ],
+        intentIdentifiers: [],
+        options: []),
+      UNNotificationCategory(
+        identifier: "SUGGESTION_LOOK",
+        actions: [
+          UNNotificationAction(identifier: "accept", title: NativeL10n.notifOpen, options: [.foreground]),
+          UNNotificationAction(identifier: "later", title: NativeL10n.notifGotIt, options: []),
+        ],
+        intentIdentifiers: [],
+        options: []),
+      UNNotificationCategory(
+        identifier: "SUGGESTION_ANSWER",
+        actions: [
           UNNotificationAction(identifier: "later", title: NativeL10n.notifNotNow, options: []),
         ],
         intentIdentifiers: [],

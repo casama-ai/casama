@@ -740,8 +740,12 @@ class FakeBackend implements Backend {
     String botId,
     BotCheckins settings,
   ) async => checkins = settings;
+  ForYou? forYouOverride;
+
   @override
-  Future<ForYou> forYou(String orgId) async => ForYou(
+  Future<ForYou> forYou(String orgId) async =>
+      forYouOverride ??
+      ForYou(
     briefs: [
       ForYouBrief(
         botId: botId,
@@ -766,12 +770,52 @@ class FakeBackend implements Backend {
     ],
     approvals: const [],
   );
+  final seenInboxItems = <String>[];
+
   @override
-  Future<AcceptedSuggestion> acceptSuggestion(String id) async {
+  Future<AcceptedSuggestion> acceptSuggestion(
+    String id, {
+    String? said,
+    String? choice,
+    DateTime? remindAt,
+  }) async {
     final error = acceptError;
     if (error != null) throw error;
-    suggestionActions.add('accept:$id');
+    final tag = choice != null
+        ? 'accept:$id:choice=$choice'
+        : remindAt != null
+            ? 'accept:$id:remind'
+            : 'accept:$id';
+    suggestionActions.add(tag);
     return AcceptedSuggestion(conversationId: convId, runId: 'r-s');
+  }
+
+  @override
+  Future<SnoozedSuggestion> snoozeSuggestion(String id, {DateTime? until}) async {
+    suggestionActions.add('snooze:$id');
+    return SnoozedSuggestion(
+      ok: true,
+      snoozedUntil: until ?? DateTime.now().add(const Duration(hours: 12)),
+      expired: false,
+    );
+  }
+
+  @override
+  Future<void> doneSuggestion(String id) async {
+    suggestionActions.add('done:$id');
+  }
+
+  @override
+  Future<int> putAwaySuggestions(List<String> ids) async {
+    for (final id in ids) {
+      suggestionActions.add('putAway:$id');
+    }
+    return ids.length;
+  }
+
+  @override
+  Future<void> markInboxSeen(String itemKind, String itemId) async {
+    seenInboxItems.add('$itemKind:$itemId');
   }
 
   // Widgets (D-405)

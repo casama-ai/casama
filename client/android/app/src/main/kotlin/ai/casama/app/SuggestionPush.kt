@@ -27,8 +27,11 @@ class SuggestionPushReceiver : BroadcastReceiver() {
             PushNotifications.drawApproval(context, extras)
             return
         }
-        if (extras.getString("kind") != "suggestion" || extras.getString("category") != "SUGGESTION") return
+        val category = extras.getString("category") ?: ""
+        if (extras.getString("kind") != "suggestion" || !category.startsWith("SUGGESTION")) return
         val suggestionId = extras.getString("suggestion_id") ?: return
+        val suggestionKind = extras.getString("suggestion_kind") ?: "do"
+        val customLabel = extras.getString("suggestion_label")?.trim()?.takeIf { it.isNotEmpty() }
         val title = extras.getString("title") ?: return
         val body = extras.getString("body") ?: ""
         val botId = extras.getString("bot_id") ?: ""
@@ -66,15 +69,30 @@ class SuggestionPushReceiver : BroadcastReceiver() {
         val action = { label: String, intent: PendingIntent ->
             Notification.Action.Builder(null, label, intent).build()
         }
-        val notification = Notification.Builder(context, CHANNEL)
+        val primaryLabel = when (suggestionKind) {
+            "turn_on" -> context.getString(R.string.notif_turn_on)
+            "remind" -> context.getString(R.string.notif_remind_me)
+            "look" -> context.getString(R.string.notif_open)
+            "answer" -> null
+            else -> customLabel ?: context.getString(R.string.notif_do_it)
+        }
+        val dismissLabel = if (suggestionKind == "look") {
+            context.getString(R.string.notif_got_it)
+        } else {
+            context.getString(R.string.notif_not_now)
+        }
+        val builder = Notification.Builder(context, CHANNEL)
             .setSmallIcon(R.drawable.ic_notification)
             .setContentTitle(title)
             .setContentText(body)
             .setStyle(Notification.BigTextStyle().bigText(body))
             .setAutoCancel(true)
             .setContentIntent(open("casama://app/inbox", id))
-            .addAction(action(context.getString(R.string.notif_do_it), open(accept, id + 1)))
-            .addAction(action(context.getString(R.string.notif_not_now), later))
+        if (primaryLabel != null) {
+            builder.addAction(action(primaryLabel, open(accept, id + 1)))
+        }
+        val notification = builder
+            .addAction(action(dismissLabel, later))
             .build()
         try {
             manager.notify(id, notification)

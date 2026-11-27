@@ -4,6 +4,7 @@
 
 // ignore_for_file: unused_element
 import 'package:casama_api/src/model/suggestion_proposed_action.dart';
+import 'package:casama_api/src/model/suggestion_kind.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -30,6 +31,20 @@ class Suggestion {
     required  this.bodyMd,
 
      this.pushText,
+
+     this.kind,
+
+     this.label,
+
+     this.choices,
+
+     this.url,
+
+     this.remindAt,
+
+     this.snoozedUntil,
+
+     this.snoozeCount = 0,
 
     required  this.proposedAction,
 
@@ -104,6 +119,91 @@ class Suggestion {
 
   @JsonKey(
     
+    name: r'kind',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final SuggestionKind? kind;
+
+
+
+  @JsonKey(
+    
+    name: r'label',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final String? label;
+
+
+
+  @JsonKey(
+    
+    name: r'choices',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final List<String>? choices;
+
+
+
+  @JsonKey(
+    
+    name: r'url',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final String? url;
+
+
+
+  @JsonKey(
+    
+    name: r'remind_at',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final DateTime? remindAt;
+
+
+
+  @JsonKey(
+    
+    name: r'snoozed_until',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final DateTime? snoozedUntil;
+
+
+
+          // minimum: 0
+  @JsonKey(
+    defaultValue: 0,
+    name: r'snooze_count',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final int? snoozeCount;
+
+
+
+  @JsonKey(
+    
     name: r'proposed_action',
     required: true,
     includeIfNull: true,
@@ -171,6 +271,13 @@ class Suggestion {
       other.title == title &&
       other.bodyMd == bodyMd &&
       other.pushText == pushText &&
+      other.kind == kind &&
+      other.label == label &&
+      other.choices == choices &&
+      other.url == url &&
+      other.remindAt == remindAt &&
+      other.snoozedUntil == snoozedUntil &&
+      other.snoozeCount == snoozeCount &&
       other.proposedAction == proposedAction &&
       other.sources == sources &&
       other.urgency == urgency &&
@@ -184,6 +291,13 @@ class Suggestion {
         title.hashCode +
         bodyMd.hashCode +
         (pushText == null ? 0 : pushText.hashCode) +
+        kind.hashCode +
+        (label == null ? 0 : label.hashCode) +
+        (choices == null ? 0 : choices.hashCode) +
+        (url == null ? 0 : url.hashCode) +
+        (remindAt == null ? 0 : remindAt.hashCode) +
+        (snoozedUntil == null ? 0 : snoozedUntil.hashCode) +
+        snoozeCount.hashCode +
         (proposedAction == null ? 0 : proposedAction.hashCode) +
         sources.hashCode +
         urgency.hashCode +

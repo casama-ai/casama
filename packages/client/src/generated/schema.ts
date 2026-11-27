@@ -5362,7 +5362,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Have the bot do it, through normal approvals */
+        /** Have the bot do it, answer it, turn it on, or set a reminder */
         post: operations["acceptSuggestion"];
         delete?: never;
         options?: never;
@@ -5380,6 +5380,23 @@ export interface paths {
         get?: never;
         put?: never;
         post: operations["dismissSuggestion"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/suggestions/{id}/done": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Mark a look suggestion as seen/done (Got it / Open) without starting a run */
+        post: operations["doneSuggestion"];
         delete?: never;
         options?: never;
         head?: never;
@@ -5414,6 +5431,57 @@ export interface paths {
         get: operations["getForYou"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/inbox/seen": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Mark an Updates item (e.g. a page) as seen by this user across devices */
+        post: operations["markInboxSeen"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/suggestions/put-away": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Put away multiple pending suggestions at once (counts as Not now, not Don't suggest again) */
+        post: operations["putAwaySuggestions"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/suggestions/{id}/snooze": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Hide a suggestion until the next morning brief or a picked time (expires on 2nd snooze) */
+        post: operations["snoozeSuggestion"];
         delete?: never;
         options?: never;
         head?: never;
@@ -16046,9 +16114,18 @@ export interface components {
         };
         AcceptedSuggestion: {
             /** Format: uuid */
-            conversation_id: string;
+            conversation_id?: string | null;
             /** Format: uuid */
-            run_id: string;
+            run_id?: string | null;
+            /** Format: uuid */
+            routine_id?: string | null;
+            direct?: boolean;
+        };
+        AcceptSuggestionRequest: {
+            said?: string;
+            choice?: string;
+            /** Format: date-time */
+            remind_at?: string;
         };
         DismissSuggestionRequest: {
             /** @default false */
@@ -16065,6 +16142,7 @@ export interface components {
             briefs: components["schemas"]["ForYouBrief"][];
             suggestions: components["schemas"]["Suggestion"][];
             approvals: components["schemas"]["ForYouApproval"][];
+            seen_page_ids?: string[];
         };
         ForYouBrief: {
             /** Format: uuid */
@@ -16083,6 +16161,16 @@ export interface components {
             title: string;
             body_md: string;
             push_text?: string | null;
+            kind?: components["schemas"]["SuggestionKind"];
+            label?: string | null;
+            choices?: string[] | null;
+            url?: string | null;
+            /** Format: date-time */
+            remind_at?: string | null;
+            /** Format: date-time */
+            snoozed_until?: string | null;
+            /** @default 0 */
+            snooze_count: number;
             proposed_action: {
                 tool: string;
                 args?: {
@@ -16097,6 +16185,11 @@ export interface components {
             /** Format: date-time */
             created_at: string;
         };
+        /**
+         * @default do
+         * @enum {string}
+         */
+        SuggestionKind: "do" | "answer" | "turn_on" | "remind" | "look";
         ForYouApproval: {
             /** Format: uuid */
             id: string;
@@ -16106,6 +16199,30 @@ export interface components {
             risk: string;
             /** Format: date-time */
             created_at: string;
+        };
+        InboxSeenRequest: {
+            /** @enum {string} */
+            item_kind: "page" | "brief" | "notification";
+            /** Format: uuid */
+            item_id: string;
+        };
+        PutAwaySuggestionsResponse: {
+            ok: boolean;
+            count: number;
+        };
+        PutAwaySuggestionsRequest: {
+            ids: string[];
+        };
+        SnoozedSuggestion: {
+            ok: boolean;
+            /** Format: date-time */
+            snoozed_until: string | null;
+            /** @default false */
+            expired: boolean;
+        };
+        SnoozeSuggestionRequest: {
+            /** Format: date-time */
+            until?: string;
         };
         StarAsk: {
             ask: boolean;
@@ -39891,7 +40008,11 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["AcceptSuggestionRequest"];
+            };
+        };
         responses: {
             /** @description Started */
             202: {
@@ -39947,6 +40068,55 @@ export interface operations {
         };
         responses: {
             /** @description Dismissed */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Ok"];
+                };
+            };
+            /** @description Not authenticated */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    doneSuggestion: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Done */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -40108,6 +40278,143 @@ export interface operations {
             };
             /** @description Not authenticated */
             401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    markInboxSeen: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["InboxSeenRequest"];
+            };
+        };
+        responses: {
+            /** @description Seen */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Ok"];
+                };
+            };
+            /** @description Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not authenticated */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    putAwaySuggestions: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PutAwaySuggestionsRequest"];
+            };
+        };
+        responses: {
+            /** @description Put away */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PutAwaySuggestionsResponse"];
+                };
+            };
+            /** @description Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not authenticated */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    snoozeSuggestion: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["SnoozeSuggestionRequest"];
+            };
+        };
+        responses: {
+            /** @description Snoozed */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SnoozedSuggestion"];
+                };
+            };
+            /** @description Not authenticated */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Conflict */
+            409: {
                 headers: {
                     [name: string]: unknown;
                 };

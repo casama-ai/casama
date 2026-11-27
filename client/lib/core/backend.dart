@@ -709,12 +709,26 @@ const keepOpenUiEvents = {
   'order.track',
 };
 
-/// A suggestion posted in General (D-253).
+/// A suggestion posted in General (D-253, INBOX-TIDY-PLAN §4).
 class MessageSuggestion {
-  const MessageSuggestion({required this.id, required this.title, this.body = ''});
+  const MessageSuggestion({
+    required this.id,
+    required this.title,
+    this.body = '',
+    this.kind = SuggestionKind.do_,
+    this.label,
+    this.choices,
+    this.url,
+    this.remindAt,
+  });
   final String id;
   final String title;
   final String body;
+  final SuggestionKind kind;
+  final String? label;
+  final List<String>? choices;
+  final String? url;
+  final DateTime? remindAt;
 }
 
 /// Where a suggestion stands (D-247): still open, done, put away, or past its time.
@@ -2764,7 +2778,16 @@ abstract class Backend {
   Future<BotCheckins> botCheckins(String botId);
   Future<BotCheckins> setBotCheckins(String botId, BotCheckins settings);
   Future<ForYou> forYou(String orgId);
-  Future<AcceptedSuggestion> acceptSuggestion(String id);
+  Future<AcceptedSuggestion> acceptSuggestion(
+    String id, {
+    String? said,
+    String? choice,
+    DateTime? remindAt,
+  });
+  Future<SnoozedSuggestion> snoozeSuggestion(String id, {DateTime? until});
+  Future<void> doneSuggestion(String id);
+  Future<int> putAwaySuggestions(List<String> ids);
+  Future<void> markInboxSeen(String itemKind, String itemId);
 
   // Widgets (D-405)
   /// What the person's widgets show in [orgId]. With [ifNoneMatch] (the last answer's ETag) an

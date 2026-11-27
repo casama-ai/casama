@@ -17,6 +17,20 @@ abstract class _$SuggestionCWProxy {
 
   Suggestion pushText(String? pushText);
 
+  Suggestion kind(SuggestionKind? kind);
+
+  Suggestion label(String? label);
+
+  Suggestion choices(List<String>? choices);
+
+  Suggestion url(String? url);
+
+  Suggestion remindAt(DateTime? remindAt);
+
+  Suggestion snoozedUntil(DateTime? snoozedUntil);
+
+  Suggestion snoozeCount(int? snoozeCount);
+
   Suggestion proposedAction(SuggestionProposedAction? proposedAction);
 
   Suggestion sources(List<String> sources);
@@ -41,6 +55,13 @@ abstract class _$SuggestionCWProxy {
     String title,
     String bodyMd,
     String? pushText,
+    SuggestionKind? kind,
+    String? label,
+    List<String>? choices,
+    String? url,
+    DateTime? remindAt,
+    DateTime? snoozedUntil,
+    int? snoozeCount,
     SuggestionProposedAction? proposedAction,
     List<String> sources,
     SuggestionUrgencyEnum urgency,
@@ -70,6 +91,28 @@ class _$SuggestionCWProxyImpl implements _$SuggestionCWProxy {
 
   @override
   Suggestion pushText(String? pushText) => call(pushText: pushText);
+
+  @override
+  Suggestion kind(SuggestionKind? kind) => call(kind: kind);
+
+  @override
+  Suggestion label(String? label) => call(label: label);
+
+  @override
+  Suggestion choices(List<String>? choices) => call(choices: choices);
+
+  @override
+  Suggestion url(String? url) => call(url: url);
+
+  @override
+  Suggestion remindAt(DateTime? remindAt) => call(remindAt: remindAt);
+
+  @override
+  Suggestion snoozedUntil(DateTime? snoozedUntil) =>
+      call(snoozedUntil: snoozedUntil);
+
+  @override
+  Suggestion snoozeCount(int? snoozeCount) => call(snoozeCount: snoozeCount);
 
   @override
   Suggestion proposedAction(SuggestionProposedAction? proposedAction) =>
@@ -102,6 +145,13 @@ class _$SuggestionCWProxyImpl implements _$SuggestionCWProxy {
     Object? title = const $CopyWithPlaceholder(),
     Object? bodyMd = const $CopyWithPlaceholder(),
     Object? pushText = const $CopyWithPlaceholder(),
+    Object? kind = const $CopyWithPlaceholder(),
+    Object? label = const $CopyWithPlaceholder(),
+    Object? choices = const $CopyWithPlaceholder(),
+    Object? url = const $CopyWithPlaceholder(),
+    Object? remindAt = const $CopyWithPlaceholder(),
+    Object? snoozedUntil = const $CopyWithPlaceholder(),
+    Object? snoozeCount = const $CopyWithPlaceholder(),
     Object? proposedAction = const $CopyWithPlaceholder(),
     Object? sources = const $CopyWithPlaceholder(),
     Object? urgency = const $CopyWithPlaceholder(),
@@ -129,6 +179,34 @@ class _$SuggestionCWProxyImpl implements _$SuggestionCWProxy {
           ? _value.pushText
           // ignore: cast_nullable_to_non_nullable
           : pushText as String?,
+      kind: kind == const $CopyWithPlaceholder()
+          ? _value.kind
+          // ignore: cast_nullable_to_non_nullable
+          : kind as SuggestionKind?,
+      label: label == const $CopyWithPlaceholder()
+          ? _value.label
+          // ignore: cast_nullable_to_non_nullable
+          : label as String?,
+      choices: choices == const $CopyWithPlaceholder()
+          ? _value.choices
+          // ignore: cast_nullable_to_non_nullable
+          : choices as List<String>?,
+      url: url == const $CopyWithPlaceholder()
+          ? _value.url
+          // ignore: cast_nullable_to_non_nullable
+          : url as String?,
+      remindAt: remindAt == const $CopyWithPlaceholder()
+          ? _value.remindAt
+          // ignore: cast_nullable_to_non_nullable
+          : remindAt as DateTime?,
+      snoozedUntil: snoozedUntil == const $CopyWithPlaceholder()
+          ? _value.snoozedUntil
+          // ignore: cast_nullable_to_non_nullable
+          : snoozedUntil as DateTime?,
+      snoozeCount: snoozeCount == const $CopyWithPlaceholder()
+          ? _value.snoozeCount
+          // ignore: cast_nullable_to_non_nullable
+          : snoozeCount as int?,
       proposedAction: proposedAction == const $CopyWithPlaceholder()
           ? _value.proposedAction
           // ignore: cast_nullable_to_non_nullable
@@ -188,6 +266,28 @@ Suggestion _$SuggestionFromJson(Map<String, dynamic> json) => $checkedCreate(
       title: $checkedConvert('title', (v) => v as String),
       bodyMd: $checkedConvert('body_md', (v) => v as String),
       pushText: $checkedConvert('push_text', (v) => v as String?),
+      kind: $checkedConvert(
+        'kind',
+        (v) => $enumDecodeNullable(_$SuggestionKindEnumMap, v),
+      ),
+      label: $checkedConvert('label', (v) => v as String?),
+      choices: $checkedConvert(
+        'choices',
+        (v) => (v as List<dynamic>?)?.map((e) => e as String).toList(),
+      ),
+      url: $checkedConvert('url', (v) => v as String?),
+      remindAt: $checkedConvert(
+        'remind_at',
+        (v) => v == null ? null : DateTime.parse(v as String),
+      ),
+      snoozedUntil: $checkedConvert(
+        'snoozed_until',
+        (v) => v == null ? null : DateTime.parse(v as String),
+      ),
+      snoozeCount: $checkedConvert(
+        'snooze_count',
+        (v) => (v as num?)?.toInt() ?? 0,
+      ),
       proposedAction: $checkedConvert(
         'proposed_action',
         (v) => v == null
@@ -217,6 +317,9 @@ Suggestion _$SuggestionFromJson(Map<String, dynamic> json) => $checkedCreate(
     'botId': 'bot_id',
     'bodyMd': 'body_md',
     'pushText': 'push_text',
+    'remindAt': 'remind_at',
+    'snoozedUntil': 'snoozed_until',
+    'snoozeCount': 'snooze_count',
     'proposedAction': 'proposed_action',
     'expiresAt': 'expires_at',
     'createdAt': 'created_at',
@@ -230,12 +333,27 @@ Map<String, dynamic> _$SuggestionToJson(Suggestion instance) =>
       'title': instance.title,
       'body_md': instance.bodyMd,
       'push_text': ?instance.pushText,
+      'kind': ?_$SuggestionKindEnumMap[instance.kind],
+      'label': ?instance.label,
+      'choices': ?instance.choices,
+      'url': ?instance.url,
+      'remind_at': ?instance.remindAt?.toIso8601String(),
+      'snoozed_until': ?instance.snoozedUntil?.toIso8601String(),
+      'snooze_count': ?instance.snoozeCount,
       'proposed_action': instance.proposedAction?.toJson(),
       'sources': instance.sources,
       'urgency': _$SuggestionUrgencyEnumEnumMap[instance.urgency]!,
       'expires_at': instance.expiresAt.toIso8601String(),
       'created_at': instance.createdAt.toIso8601String(),
     };
+
+const _$SuggestionKindEnumMap = {
+  SuggestionKind.do_: 'do',
+  SuggestionKind.answer: 'answer',
+  SuggestionKind.turnOn: 'turn_on',
+  SuggestionKind.remind: 'remind',
+  SuggestionKind.look: 'look',
+};
 
 const _$SuggestionUrgencyEnumEnumMap = {
   SuggestionUrgencyEnum.low: 'low',

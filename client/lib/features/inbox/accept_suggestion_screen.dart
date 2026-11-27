@@ -32,7 +32,10 @@ class _AcceptSuggestionScreenState extends ConsumerState<AcceptSuggestionScreen>
     try {
       final r = await ref.read(backendProvider).acceptSuggestion(widget.suggestionId);
       final bot = widget.botId;
-      if (bot != null && bot.isNotEmpty) target = '/bots/$bot/chat?c=${r.conversationId}';
+      final convId = r.conversationId;
+      if (bot != null && bot.isNotEmpty && convId != null && convId.isNotEmpty) {
+        target = '/bots/$bot/chat?c=$convId';
+      }
     } catch (_) {
       // Already accepted or dismissed, or offline: the inbox has the rest.
     }

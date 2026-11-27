@@ -13,6 +13,8 @@ abstract class _$ForYouCWProxy {
 
   ForYou approvals(List<ForYouApproval> approvals);
 
+  ForYou seenPageIds(List<String>? seenPageIds);
+
   /// Creates a new instance with the provided field values.
   /// Omitted fields keep their values; explicit `null` clears nullable fields.
   /// The public API rejects `null` for non-nullable fields. To update a single field use `ForYou(...).copyWith.fieldName(value)`.
@@ -25,6 +27,7 @@ abstract class _$ForYouCWProxy {
     List<ForYouBrief> briefs,
     List<Suggestion> suggestions,
     List<ForYouApproval> approvals,
+    List<String>? seenPageIds,
   });
 }
 
@@ -46,6 +49,10 @@ class _$ForYouCWProxyImpl implements _$ForYouCWProxy {
   ForYou approvals(List<ForYouApproval> approvals) =>
       call(approvals: approvals);
 
+  @override
+  ForYou seenPageIds(List<String>? seenPageIds) =>
+      call(seenPageIds: seenPageIds);
+
   /// Creates a new instance with the provided field values.
   /// Omitted fields keep their values; explicit `null` clears nullable fields.
   /// The public API rejects `null` for non-nullable fields. To update a single field use `ForYou(...).copyWith.fieldName(value)`.
@@ -59,6 +66,7 @@ class _$ForYouCWProxyImpl implements _$ForYouCWProxy {
     Object? briefs = const $CopyWithPlaceholder(),
     Object? suggestions = const $CopyWithPlaceholder(),
     Object? approvals = const $CopyWithPlaceholder(),
+    Object? seenPageIds = const $CopyWithPlaceholder(),
   }) {
     return ForYou(
       briefs: briefs == const $CopyWithPlaceholder() || briefs == null
@@ -74,6 +82,10 @@ class _$ForYouCWProxyImpl implements _$ForYouCWProxy {
           ? _value.approvals
           // ignore: cast_nullable_to_non_nullable
           : approvals as List<ForYouApproval>,
+      seenPageIds: seenPageIds == const $CopyWithPlaceholder()
+          ? _value.seenPageIds
+          // ignore: cast_nullable_to_non_nullable
+          : seenPageIds as List<String>?,
     );
   }
 }
@@ -114,12 +126,17 @@ ForYou _$ForYouFromJson(Map<String, dynamic> json) =>
               .map((e) => ForYouApproval.fromJson(e as Map<String, dynamic>))
               .toList(),
         ),
+        seenPageIds: $checkedConvert(
+          'seen_page_ids',
+          (v) => (v as List<dynamic>?)?.map((e) => e as String).toList(),
+        ),
       );
       return val;
-    });
+    }, fieldKeyMap: const {'seenPageIds': 'seen_page_ids'});
 
 Map<String, dynamic> _$ForYouToJson(ForYou instance) => <String, dynamic>{
   'briefs': instance.briefs.map((e) => e.toJson()).toList(),
   'suggestions': instance.suggestions.map((e) => e.toJson()).toList(),
   'approvals': instance.approvals.map((e) => e.toJson()).toList(),
+  'seen_page_ids': ?instance.seenPageIds,
 };

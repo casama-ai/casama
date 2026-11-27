@@ -20758,18 +20758,47 @@
         "type": "object",
         "properties": {
           "conversation_id": {
-            "type": "string",
+            "type": [
+              "string",
+              "null"
+            ],
             "format": "uuid"
           },
           "run_id": {
-            "type": "string",
+            "type": [
+              "string",
+              "null"
+            ],
             "format": "uuid"
+          },
+          "routine_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "direct": {
+            "type": "boolean"
           }
-        },
-        "required": [
-          "conversation_id",
-          "run_id"
-        ]
+        }
+      },
+      "AcceptSuggestionRequest": {
+        "type": "object",
+        "properties": {
+          "said": {
+            "type": "string",
+            "maxLength": 400
+          },
+          "choice": {
+            "type": "string",
+            "maxLength": 400
+          },
+          "remind_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
       },
       "DismissSuggestionRequest": {
         "type": "object",
@@ -20829,6 +20858,13 @@
             "items": {
               "$ref": "#/components/schemas/ForYouApproval"
             }
+          },
+          "seen_page_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         },
         "required": [
@@ -20886,6 +20922,49 @@
               "null"
             ]
           },
+          "kind": {
+            "$ref": "#/components/schemas/SuggestionKind"
+          },
+          "label": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "choices": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "string"
+            }
+          },
+          "url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "remind_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "snoozed_until": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "snooze_count": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 0
+          },
           "proposed_action": {
             "type": [
               "object",
@@ -20939,6 +21018,17 @@
           "created_at"
         ]
       },
+      "SuggestionKind": {
+        "type": "string",
+        "enum": [
+          "do",
+          "answer",
+          "turn_on",
+          "remind",
+          "look"
+        ],
+        "default": "do"
+      },
       "ForYouApproval": {
         "type": "object",
         "properties": {
@@ -20968,6 +21058,92 @@
           "risk",
           "created_at"
         ]
+      },
+      "InboxSeenRequest": {
+        "type": "object",
+        "properties": {
+          "item_kind": {
+            "type": "string",
+            "enum": [
+              "page",
+              "brief",
+              "notification"
+            ]
+          },
+          "item_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "item_kind",
+          "item_id"
+        ]
+      },
+      "PutAwaySuggestionsResponse": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "ok",
+          "count"
+        ]
+      },
+      "PutAwaySuggestionsRequest": {
+        "type": "object",
+        "properties": {
+          "ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "minItems": 1,
+            "maxItems": 100
+          }
+        },
+        "required": [
+          "ids"
+        ]
+      },
+      "SnoozedSuggestion": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "snoozed_until": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "expired": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "required": [
+          "ok",
+          "snoozed_until"
+        ]
+      },
+      "SnoozeSuggestionRequest": {
+        "type": "object",
+        "properties": {
+          "until": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
       },
       "StarAsk": {
         "type": "object",
@@ -65894,7 +66070,7 @@
             "bearerAuth": []
           }
         ],
-        "summary": "Have the bot do it, through normal approvals",
+        "summary": "Have the bot do it, answer it, turn it on, or set a reminder",
         "parameters": [
           {
             "schema": {
@@ -65906,6 +66082,16 @@
             "in": "path"
           }
         ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AcceptSuggestionRequest"
+              }
+            }
+          }
+        },
         "responses": {
           "202": {
             "description": "Started",
@@ -65985,6 +66171,73 @@
         "responses": {
           "200": {
             "description": "Dismissed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ok"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/suggestions/{id}/done": {
+      "post": {
+        "operationId": "doneSuggestion",
+        "tags": [
+          "checkins"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Mark a look suggestion as seen/done (Got it / Open) without starting a run",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Done",
             "content": {
               "application/json": {
                 "schema": {
@@ -66203,6 +66456,195 @@
           },
           "401": {
             "description": "Not authenticated",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inbox/seen": {
+      "post": {
+        "operationId": "markInboxSeen",
+        "tags": [
+          "checkins"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Mark an Updates item (e.g. a page) as seen by this user across devices",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InboxSeenRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Seen",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ok"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/suggestions/put-away": {
+      "post": {
+        "operationId": "putAwaySuggestions",
+        "tags": [
+          "checkins"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Put away multiple pending suggestions at once (counts as Not now, not Don't suggest again)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PutAwaySuggestionsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Put away",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PutAwaySuggestionsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/suggestions/{id}/snooze": {
+      "post": {
+        "operationId": "snoozeSuggestion",
+        "tags": [
+          "checkins"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Hide a suggestion until the next morning brief or a picked time (expires on 2nd snooze)",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SnoozeSuggestionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Snoozed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SnoozedSuggestion"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
             "content": {
               "application/problem+json": {
                 "schema": {

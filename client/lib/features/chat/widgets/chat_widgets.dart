@@ -3257,9 +3257,26 @@ class _SuggestionPromptState extends ConsumerState<SuggestionPrompt> {
   /// The topic Do it started here.
   String? _topic;
 
-  Future<void> _accept() async {
+  Future<void> _accept({String? said, String? choice}) async {
     setState(() => _busy = true);
-    final r = await runGuarded(context, () => ref.read(backendProvider).acceptSuggestion(widget.entry.suggestion.id));
+    final s = widget.entry.suggestion;
+    if (s.kind == SuggestionKind.look) {
+      final ok = await runGuarded(context, () async {
+        await ref.read(backendProvider).doneSuggestion(s.id);
+        return true;
+      });
+      if (!mounted) return;
+      setState(() {
+        _busy = false;
+        if (ok == true) _accepted = true;
+      });
+      ref.invalidate(forYouProvider);
+      return;
+    }
+    final r = await runGuarded(
+      context,
+      () => ref.read(backendProvider).acceptSuggestion(s.id, said: said, choice: choice),
+    );
     if (!mounted) return;
     setState(() {
       _busy = false;
@@ -3270,7 +3287,8 @@ class _SuggestionPromptState extends ConsumerState<SuggestionPrompt> {
     });
     ref.invalidate(forYouProvider);
     ref.invalidate(conversationsProvider(widget.botId));
-    if (r != null) widget.onOpenTopic(r.conversationId);
+    final convId = r?.conversationId;
+    if (convId != null && convId.isNotEmpty) widget.onOpenTopic(convId);
   }
 
   Future<void> _dismiss() async {
@@ -3350,21 +3368,72 @@ class _SuggestionPromptState extends ConsumerState<SuggestionPrompt> {
                   : () => showSuggestionDetail(context, s, onDoIt: _accept, onNotNow: _dismiss),
               child: Text(s.body.trim(), maxLines: 2, overflow: TextOverflow.ellipsis, style: context.textTheme.bodyMedium?.copyWith(height: 1.4)),
             ),
-      footer: ActionButtons(
-        actions: [
-          OutlinedButton(
-            key: Key('suggestionNotNow-${s.id}'),
-            onPressed: _busy ? null : _dismiss,
-            child: Text(l10n.notNow),
+      footer: _promptFooter(context, s),
+    );
+  }
+
+  Widget _promptFooter(BuildContext context, MessageSuggestion s) {
+    final l10n = context.l10n;
+    if (s.kind == SuggestionKind.answer && (s.choices?.isNotEmpty ?? false)) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        spacing: AppSpace.xs,
+        children: [
+          Wrap(
+            spacing: AppSpace.xs,
+            runSpacing: AppSpace.xs,
+            children: [
+              for (final (i, c) in s.choices!.indexed)
+                FilledButton.tonal(
+                  key: Key('suggestionChoice-${s.id}-$i'),
+                  onPressed: _busy ? null : () => _accept(choice: c, said: c),
+                  child: Text(c),
+                ),
+            ],
           ),
-          GlowButton.icon(
-            key: Key('suggestionDoIt-${s.id}'),
-            onPressed: _busy ? null : _accept,
-            icon: const Icon(LucideIcons.check, size: 18),
-            label: Text(l10n.doIt),
+          Align(
+            alignment: AlignmentDirectional.centerEnd,
+            child: TextButton(
+              key: Key('suggestionNotNow-${s.id}'),
+              onPressed: _busy ? null : _dismiss,
+              child: Text(l10n.notNow),
+            ),
           ),
         ],
-      ),
+      );
+    }
+    if (s.kind == SuggestionKind.look) {
+      return ActionButtons(
+        actions: [
+          OutlinedButton(
+            key: Key('suggestionGotIt-${s.id}'),
+            onPressed: _busy ? null : _accept,
+            child: Text(l10n.suggestionActionGotIt),
+          ),
+        ],
+      );
+    }
+    final primaryText = switch (s.kind) {
+      SuggestionKind.turnOn => l10n.suggestionActionTurnOn,
+      SuggestionKind.remind => s.remindAt != null
+          ? l10n.suggestionActionRemindMe(s.remindAt!.toLocal().formattedDate(context))
+          : l10n.suggestionActionPickTime,
+      _ => (s.label?.trim().isNotEmpty ?? false) ? s.label!.trim() : l10n.doIt,
+    };
+    return ActionButtons(
+      actions: [
+        OutlinedButton(
+          key: Key('suggestionNotNow-${s.id}'),
+          onPressed: _busy ? null : _dismiss,
+          child: Text(l10n.notNow),
+        ),
+        GlowButton.icon(
+          key: Key('suggestionDoIt-${s.id}'),
+          onPressed: _busy ? null : () => _accept(said: primaryText),
+          icon: const Icon(LucideIcons.check, size: 18),
+          label: Text(primaryText),
+        ),
+      ],
     );
   }
 }
@@ -3412,9 +3481,27 @@ class _SuggestionListPromptState extends ConsumerState<SuggestionListPrompt> {
   /// The suggestion being started, or '*' while the rest are put away.
   String? _busy;
 
-  Future<void> _accept(MessageSuggestion s) async {
+  Future<void> _accept(MessageSuggestion s, {String? said}) async {
     setState(() => _busy = s.id);
-    final r = await runGuarded(context, () => ref.read(backendProvider).acceptSuggestion(s.id));
+    if (s.kind == SuggestionKind.look) {
+      final ok = await runGuarded(context, () async {
+        await ref.read(backendProvider).doneSuggestion(s.id);
+        return true;
+      });
+      if (!mounted) return;
+      setState(() {
+        _busy = null;
+        if (ok == true) {
+          _local[s.id] = SuggestionState(status: SuggestionStatus.accepted, resolvedAt: DateTime.now());
+        }
+      });
+      ref.invalidate(forYouProvider);
+      return;
+    }
+    final r = await runGuarded(
+      context,
+      () => ref.read(backendProvider).acceptSuggestion(s.id, said: said),
+    );
     if (!mounted) return;
     setState(() {
       _busy = null;
@@ -3424,7 +3511,8 @@ class _SuggestionListPromptState extends ConsumerState<SuggestionListPrompt> {
     });
     ref.invalidate(forYouProvider);
     ref.invalidate(conversationsProvider(widget.botId));
-    if (r != null) widget.onOpenTopic(r.conversationId);
+    final convId = r?.conversationId;
+    if (convId != null && convId.isNotEmpty) widget.onOpenTopic(convId);
   }
 
   Future<void> _dismiss(List<MessageSuggestion> items) async {
@@ -3577,14 +3665,27 @@ class _SuggestionListPromptState extends ConsumerState<SuggestionListPrompt> {
               if (open)
                 FilledButton.tonal(
                   key: Key('suggestionRowDoIt-${s.id}'),
-                  onPressed: _busy == null ? () => _accept(s) : null,
+                  onPressed: _busy == null
+                      ? () {
+                          final btn = switch (s.kind) {
+                            SuggestionKind.turnOn => l10n.suggestionActionTurnOn,
+                            SuggestionKind.look => l10n.suggestionActionGotIt,
+                            _ => (s.label?.trim().isNotEmpty ?? false) ? s.label!.trim() : l10n.doIt,
+                          };
+                          _accept(s, said: btn);
+                        }
+                      : null,
                   style: FilledButton.styleFrom(
                     visualDensity: VisualDensity.compact,
                     padding: const EdgeInsets.symmetric(horizontal: AppSpace.md),
                   ),
                   child: _busy == s.id
                       ? const SizedBox.square(dimension: 16, child: CircularProgressIndicator(strokeWidth: 2))
-                      : Text(l10n.doIt),
+                      : Text(switch (s.kind) {
+                          SuggestionKind.turnOn => l10n.suggestionActionTurnOn,
+                          SuggestionKind.look => l10n.suggestionActionGotIt,
+                          _ => (s.label?.trim().isNotEmpty ?? false) ? s.label!.trim() : l10n.doIt,
+                        }),
                 )
               else if (topic != null)
                 Padding(

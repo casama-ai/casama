@@ -20,32 +20,60 @@ class AcceptedSuggestion {
   /// Returns a new [AcceptedSuggestion] instance.
   AcceptedSuggestion({
 
-    required  this.conversationId,
+     this.conversationId,
 
-    required  this.runId,
+     this.runId,
+
+     this.routineId,
+
+     this.direct,
   });
 
   @JsonKey(
     
     name: r'conversation_id',
-    required: true,
+    required: false,
     includeIfNull: false,
   )
 
 
-  final String conversationId;
+  final String? conversationId;
 
 
 
   @JsonKey(
     
     name: r'run_id',
-    required: true,
+    required: false,
     includeIfNull: false,
   )
 
 
-  final String runId;
+  final String? runId;
+
+
+
+  @JsonKey(
+    
+    name: r'routine_id',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final String? routineId;
+
+
+
+  @JsonKey(
+    
+    name: r'direct',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final bool? direct;
 
 
 
@@ -54,12 +82,16 @@ class AcceptedSuggestion {
     @override
     bool operator ==(Object other) => identical(this, other) || other is AcceptedSuggestion &&
       other.conversationId == conversationId &&
-      other.runId == runId;
+      other.runId == runId &&
+      other.routineId == routineId &&
+      other.direct == direct;
 
     @override
     int get hashCode =>
-        conversationId.hashCode +
-        runId.hashCode;
+        (conversationId == null ? 0 : conversationId.hashCode) +
+        (runId == null ? 0 : runId.hashCode) +
+        (routineId == null ? 0 : routineId.hashCode) +
+        direct.hashCode;
 
   factory AcceptedSuggestion.fromJson(Map<String, dynamic> json) => _$AcceptedSuggestionFromJson(json);
 

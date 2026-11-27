@@ -7,9 +7,13 @@ part of 'accepted_suggestion.dart';
 // **************************************************************************
 
 abstract class _$AcceptedSuggestionCWProxy {
-  AcceptedSuggestion conversationId(String conversationId);
+  AcceptedSuggestion conversationId(String? conversationId);
 
-  AcceptedSuggestion runId(String runId);
+  AcceptedSuggestion runId(String? runId);
+
+  AcceptedSuggestion routineId(String? routineId);
+
+  AcceptedSuggestion direct(bool? direct);
 
   /// Creates a new instance with the provided field values.
   /// Omitted fields keep their values; explicit `null` clears nullable fields.
@@ -19,7 +23,12 @@ abstract class _$AcceptedSuggestionCWProxy {
   /// ```dart
   /// AcceptedSuggestion(...).copyWith(id: 12, name: "My name")
   /// ```
-  AcceptedSuggestion call({String conversationId, String runId});
+  AcceptedSuggestion call({
+    String? conversationId,
+    String? runId,
+    String? routineId,
+    bool? direct,
+  });
 }
 
 /// Callable proxy for `copyWith` functionality.
@@ -30,11 +39,17 @@ class _$AcceptedSuggestionCWProxyImpl implements _$AcceptedSuggestionCWProxy {
   final AcceptedSuggestion _value;
 
   @override
-  AcceptedSuggestion conversationId(String conversationId) =>
+  AcceptedSuggestion conversationId(String? conversationId) =>
       call(conversationId: conversationId);
 
   @override
-  AcceptedSuggestion runId(String runId) => call(runId: runId);
+  AcceptedSuggestion runId(String? runId) => call(runId: runId);
+
+  @override
+  AcceptedSuggestion routineId(String? routineId) => call(routineId: routineId);
+
+  @override
+  AcceptedSuggestion direct(bool? direct) => call(direct: direct);
 
   /// Creates a new instance with the provided field values.
   /// Omitted fields keep their values; explicit `null` clears nullable fields.
@@ -48,18 +63,26 @@ class _$AcceptedSuggestionCWProxyImpl implements _$AcceptedSuggestionCWProxy {
   AcceptedSuggestion call({
     Object? conversationId = const $CopyWithPlaceholder(),
     Object? runId = const $CopyWithPlaceholder(),
+    Object? routineId = const $CopyWithPlaceholder(),
+    Object? direct = const $CopyWithPlaceholder(),
   }) {
     return AcceptedSuggestion(
-      conversationId:
-          conversationId == const $CopyWithPlaceholder() ||
-              conversationId == null
+      conversationId: conversationId == const $CopyWithPlaceholder()
           ? _value.conversationId
           // ignore: cast_nullable_to_non_nullable
-          : conversationId as String,
-      runId: runId == const $CopyWithPlaceholder() || runId == null
+          : conversationId as String?,
+      runId: runId == const $CopyWithPlaceholder()
           ? _value.runId
           // ignore: cast_nullable_to_non_nullable
-          : runId as String,
+          : runId as String?,
+      routineId: routineId == const $CopyWithPlaceholder()
+          ? _value.routineId
+          // ignore: cast_nullable_to_non_nullable
+          : routineId as String?,
+      direct: direct == const $CopyWithPlaceholder()
+          ? _value.direct
+          // ignore: cast_nullable_to_non_nullable
+          : direct as bool?,
     );
   }
 }
@@ -76,19 +99,33 @@ extension $AcceptedSuggestionCopyWith on AcceptedSuggestion {
 // JsonSerializableGenerator
 // **************************************************************************
 
-AcceptedSuggestion _$AcceptedSuggestionFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate('AcceptedSuggestion', json, ($checkedConvert) {
-  $checkKeys(json, requiredKeys: const ['conversation_id', 'run_id']);
-  final val = AcceptedSuggestion(
-    conversationId: $checkedConvert('conversation_id', (v) => v as String),
-    runId: $checkedConvert('run_id', (v) => v as String),
-  );
-  return val;
-}, fieldKeyMap: const {'conversationId': 'conversation_id', 'runId': 'run_id'});
+AcceptedSuggestion _$AcceptedSuggestionFromJson(Map<String, dynamic> json) =>
+    $checkedCreate(
+      'AcceptedSuggestion',
+      json,
+      ($checkedConvert) {
+        final val = AcceptedSuggestion(
+          conversationId: $checkedConvert(
+            'conversation_id',
+            (v) => v as String?,
+          ),
+          runId: $checkedConvert('run_id', (v) => v as String?),
+          routineId: $checkedConvert('routine_id', (v) => v as String?),
+          direct: $checkedConvert('direct', (v) => v as bool?),
+        );
+        return val;
+      },
+      fieldKeyMap: const {
+        'conversationId': 'conversation_id',
+        'runId': 'run_id',
+        'routineId': 'routine_id',
+      },
+    );
 
 Map<String, dynamic> _$AcceptedSuggestionToJson(AcceptedSuggestion instance) =>
     <String, dynamic>{
-      'conversation_id': instance.conversationId,
-      'run_id': instance.runId,
+      'conversation_id': ?instance.conversationId,
+      'run_id': ?instance.runId,
+      'routine_id': ?instance.routineId,
+      'direct': ?instance.direct,
     };

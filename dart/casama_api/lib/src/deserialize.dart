@@ -3,6 +3,7 @@ import 'package:casama_api/src/model/abuse_event.dart';
 import 'package:casama_api/src/model/abuse_event_list.dart';
 import 'package:casama_api/src/model/accept_bot_link_request.dart';
 import 'package:casama_api/src/model/accept_skill_proposal_request.dart';
+import 'package:casama_api/src/model/accept_suggestion_request.dart';
 import 'package:casama_api/src/model/accepted.dart';
 import 'package:casama_api/src/model/accepted_suggestion.dart';
 import 'package:casama_api/src/model/account_deletion.dart';
@@ -545,6 +546,7 @@ import 'package:casama_api/src/model/import_workspace_files_request.dart';
 import 'package:casama_api/src/model/imported_memory_item.dart';
 import 'package:casama_api/src/model/inactivity_report.dart';
 import 'package:casama_api/src/model/inactivity_settings.dart';
+import 'package:casama_api/src/model/inbox_seen_request.dart';
 import 'package:casama_api/src/model/install_catalog_skill_request.dart';
 import 'package:casama_api/src/model/install_event_request.dart';
 import 'package:casama_api/src/model/install_git_hub_skill_request.dart';
@@ -805,6 +807,8 @@ import 'package:casama_api/src/model/public_testimonials.dart';
 import 'package:casama_api/src/model/publish_feedback_request.dart';
 import 'package:casama_api/src/model/publish_site_request.dart';
 import 'package:casama_api/src/model/purchase_request.dart';
+import 'package:casama_api/src/model/put_away_suggestions_request.dart';
+import 'package:casama_api/src/model/put_away_suggestions_response.dart';
 import 'package:casama_api/src/model/reaction_summary.dart';
 import 'package:casama_api/src/model/redeem_comp_request.dart';
 import 'package:casama_api/src/model/redeem_invite_request.dart';
@@ -983,6 +987,8 @@ import 'package:casama_api/src/model/slack_install_link.dart';
 import 'package:casama_api/src/model/snooze_capacity_alarm_request.dart';
 import 'package:casama_api/src/model/snooze_device_permissions200_response.dart';
 import 'package:casama_api/src/model/snooze_device_permissions_request.dart';
+import 'package:casama_api/src/model/snooze_suggestion_request.dart';
+import 'package:casama_api/src/model/snoozed_suggestion.dart';
 import 'package:casama_api/src/model/star_ask.dart';
 import 'package:casama_api/src/model/start_agent_import_request.dart';
 import 'package:casama_api/src/model/start_agent_import_request_files_inner.dart';
@@ -1231,6 +1237,8 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return AcceptBotLinkRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'AcceptSkillProposalRequest':
           return AcceptSkillProposalRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'AcceptSuggestionRequest':
+          return AcceptSuggestionRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'Accepted':
           return Accepted.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'AcceptedSuggestion':
@@ -2381,6 +2389,8 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
         case 'InactivityStepMode':
           
           
+        case 'InboxSeenRequest':
+          return InboxSeenRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'InstallCatalogSkillRequest':
           return InstallCatalogSkillRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'InstallEventRequest':
@@ -2940,6 +2950,10 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return PublishSiteRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'PurchaseRequest':
           return PurchaseRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'PutAwaySuggestionsRequest':
+          return PutAwaySuggestionsRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'PutAwaySuggestionsResponse':
+          return PutAwaySuggestionsResponse.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'ReactionSummary':
           return ReactionSummary.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'ReasoningEffort':
@@ -3326,6 +3340,10 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return SnoozeDevicePermissions200Response.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'SnoozeDevicePermissionsRequest':
           return SnoozeDevicePermissionsRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'SnoozeSuggestionRequest':
+          return SnoozeSuggestionRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'SnoozedSuggestion':
+          return SnoozedSuggestion.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'StarAsk':
           return StarAsk.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'StartAgentImportRequest':
@@ -3369,6 +3387,9 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return Subscription.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'Suggestion':
           return Suggestion.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'SuggestionKind':
+          
+          
         case 'SuggestionProposedAction':
           return SuggestionProposedAction.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'SupportChatReply':

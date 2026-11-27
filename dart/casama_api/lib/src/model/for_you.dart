@@ -28,6 +28,8 @@ class ForYou {
     required  this.suggestions,
 
     required  this.approvals,
+
+     this.seenPageIds,
   });
 
   @JsonKey(
@@ -66,19 +68,33 @@ class ForYou {
 
 
 
+  @JsonKey(
+    
+    name: r'seen_page_ids',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final List<String>? seenPageIds;
+
+
+
 
 
     @override
     bool operator ==(Object other) => identical(this, other) || other is ForYou &&
       other.briefs == briefs &&
       other.suggestions == suggestions &&
-      other.approvals == approvals;
+      other.approvals == approvals &&
+      other.seenPageIds == seenPageIds;
 
     @override
     int get hashCode =>
         briefs.hashCode +
         suggestions.hashCode +
-        approvals.hashCode;
+        approvals.hashCode +
+        seenPageIds.hashCode;
 
   factory ForYou.fromJson(Map<String, dynamic> json) => _$ForYouFromJson(json);
 
