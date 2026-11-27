@@ -1,6 +1,7 @@
 // The casama-app Worker in front of app.casama.ai (D-316).
 //
-// Everything is served from static assets except build files of 25 MiB or more (Cloudflare's
+// Everything is served from static assets except the app's main files (main.dart.wasm and
+// main.dart.js, precompressed at Brotli 11) and any build file of 25 MiB or more (Cloudflare's
 // per-asset limit), which live in the R2 bucket bound as LARGE. cloudflare/prepare.mjs lists them in
 // large-files.json and uploads a plain, a Brotli and a gzip copy of each under a content-named key.
 // Only paths in wrangler.jsonc's assets.run_worker_first reach this code at all.

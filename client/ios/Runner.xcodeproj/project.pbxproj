@@ -162,7 +162,6 @@
 		5712B545137B93E5E31D3C83 /* NativeStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 571293859B3B9A996A3AE7DB /* NativeStrings.swift */; };
 		5712AE29AB305E45EE530DF1 /* Watch.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 571246CD0610928EE6B1DD4F /* Watch.xcstrings */; };
 		571225B2D19425ED3FE58E8A /* Watch.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 571246CD0610928EE6B1DD4F /* Watch.xcstrings */; };
-		571234FB0391D6D675470467 /* AppShortcuts.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 5712CD4E1D1AAEC52AFA06DC /* AppShortcuts.xcstrings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1065,7 +1064,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				571234FB0391D6D675470467 /* AppShortcuts.xcstrings in Resources */,
 				571248383292C6142B614D4C /* Native.xcstrings in Resources */,
 				5712C9C2C66B518E5E7D1318 /* InfoPlist.xcstrings in Resources */,
 				97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */,

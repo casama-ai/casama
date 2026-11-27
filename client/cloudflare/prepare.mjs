@@ -2,7 +2,10 @@
 //
 // Cloudflare static assets take files up to 25 MiB each. Any build file at or past that size goes
 // to the R2 bucket instead, under a key named after its content, with Brotli and gzip copies made
-// here so the Worker sends compressed bytes without compressing on the fly. Source maps are never
+// here so the Worker sends compressed bytes without compressing on the fly. The app's main files
+// (every path in wrangler.jsonc's run_worker_first) go that way at any size: Cloudflare's own
+// on-the-fly Brotli is far lighter than quality 11 (main.dart.wasm: 7.1 MB against 5.3 MB, build
+// 113), and they are most of the first load. Source maps are never
 // published (scripts/upload-symbols.sh sends them to error tracking).
 //
 // Writes, all under build/ (gitignored):
@@ -57,7 +60,7 @@ for (const file of walk(web)) {
   const path = "/" + relative(web, file).split("\\").join("/");
   if (path.endsWith(".map") || path === "/.assetsignore") continue;
   const size = statSync(file).size;
-  if (size < LIMIT) continue;
+  if (size < LIMIT && !workerFirst.has(path)) continue;
   if (!workerFirst.has(path)) missing.push(path);
 
   const body = readFileSync(file);
@@ -96,4 +99,4 @@ if (missing.length) {
 writeFileSync(join(web, ".assetsignore"), ignore.join("\n") + "\n");
 writeFileSync(join(out, "large-files.json"), JSON.stringify(large, null, 2) + "\n");
 writeFileSync(join(out, "uploads.tsv"), uploads.length ? uploads.join("\n") + "\n" : "");
-if (!uploads.length) console.log("No file is over 25 MiB; everything goes out as static assets.");
+if (!uploads.length) console.log("No file goes to R2; everything goes out as static assets.");
