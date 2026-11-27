@@ -19,6 +19,8 @@ abstract class _$ServerCapacityCWProxy {
 
   ServerCapacity alerts(List<ServerCapacityAlertsInner> alerts);
 
+  ServerCapacity alarm(CapacityAlarm? alarm);
+
   /// Creates a new instance with the provided field values.
   /// Omitted fields keep their values; explicit `null` clears nullable fields.
   /// The public API rejects `null` for non-nullable fields. To update a single field use `ServerCapacity(...).copyWith.fieldName(value)`.
@@ -34,6 +36,7 @@ abstract class _$ServerCapacityCWProxy {
     int refusals30d,
     num? fullInWeeks,
     List<ServerCapacityAlertsInner> alerts,
+    CapacityAlarm? alarm,
   });
 }
 
@@ -64,6 +67,9 @@ class _$ServerCapacityCWProxyImpl implements _$ServerCapacityCWProxy {
   ServerCapacity alerts(List<ServerCapacityAlertsInner> alerts) =>
       call(alerts: alerts);
 
+  @override
+  ServerCapacity alarm(CapacityAlarm? alarm) => call(alarm: alarm);
+
   /// Creates a new instance with the provided field values.
   /// Omitted fields keep their values; explicit `null` clears nullable fields.
   /// The public API rejects `null` for non-nullable fields. To update a single field use `ServerCapacity(...).copyWith.fieldName(value)`.
@@ -80,6 +86,7 @@ class _$ServerCapacityCWProxyImpl implements _$ServerCapacityCWProxy {
     Object? refusals30d = const $CopyWithPlaceholder(),
     Object? fullInWeeks = const $CopyWithPlaceholder(),
     Object? alerts = const $CopyWithPlaceholder(),
+    Object? alarm = const $CopyWithPlaceholder(),
   }) {
     return ServerCapacity(
       budgetMb: budgetMb == const $CopyWithPlaceholder() || budgetMb == null
@@ -107,6 +114,10 @@ class _$ServerCapacityCWProxyImpl implements _$ServerCapacityCWProxy {
           ? _value.alerts
           // ignore: cast_nullable_to_non_nullable
           : alerts as List<ServerCapacityAlertsInner>,
+      alarm: alarm == const $CopyWithPlaceholder()
+          ? _value.alarm
+          // ignore: cast_nullable_to_non_nullable
+          : alarm as CapacityAlarm?,
     );
   }
 }
@@ -167,6 +178,12 @@ ServerCapacity _$ServerCapacityFromJson(
             )
             .toList(),
       ),
+      alarm: $checkedConvert(
+        'alarm',
+        (v) => v == null
+            ? null
+            : CapacityAlarm.fromJson(v as Map<String, dynamic>),
+      ),
     );
     return val;
   },
@@ -185,4 +202,5 @@ Map<String, dynamic> _$ServerCapacityToJson(ServerCapacity instance) =>
       'refusals_30d': instance.refusals30d,
       'full_in_weeks': instance.fullInWeeks,
       'alerts': instance.alerts.map((e) => e.toJson()).toList(),
+      'alarm': ?instance.alarm?.toJson(),
     };

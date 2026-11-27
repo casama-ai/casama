@@ -5920,6 +5920,10 @@ class SupabaseBackend implements Backend {
   @override
   Future<ServerCapacity> adminCapacity() async => (await api.admin.adminCapacity()).data!;
   @override
+  Future<CapacityAlarm> snoozeCapacityAlarm(int minutes) async => (await api.admin.snoozeCapacityAlarm(
+    snoozeCapacityAlarmRequest: SnoozeCapacityAlarmRequest(minutes: minutes),
+  )).data!;
+  @override
   Future<CloudModels> setAdminCloudModels(CloudModels models) async =>
       (await api.admin.setAdminCloudModels(cloudModels: models)).data!;
   @override

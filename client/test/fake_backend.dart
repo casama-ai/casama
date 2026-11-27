@@ -6515,6 +6515,16 @@ class FakeBackend implements Backend {
   ServerCapacity capacity = ServerCapacity(budgetMb: 9216, latest: null, days: const [], refusals30d: 0, fullInWeeks: null, alerts: const []);
   @override
   Future<ServerCapacity> adminCapacity() async => capacity;
+  /// Snooze lengths asked for, newest last (D-601).
+  final List<int> capacitySnoozes = [];
+  @override
+  Future<CapacityAlarm> snoozeCapacityAlarm(int minutes) async {
+    capacitySnoozes.add(minutes);
+    final a = capacity.alarm ?? CapacityAlarm(level: 0, startedAt: null, levelSince: null, lastPushAt: null, snoozedUntil: null, endedAt: null);
+    final snoozed = a.copyWith(snoozedUntil: DateTime.now().add(Duration(minutes: minutes)).toUtc().toIso8601String());
+    capacity = capacity.copyWith(alarm: snoozed);
+    return snoozed;
+  }
   @override
   Future<CloudModels> setAdminCloudModels(CloudModels models) async =>
       cloudModels = models;

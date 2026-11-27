@@ -32,6 +32,7 @@ import {
   AdminUser,
   AskAdminAgentRequest,
   BillingSettings,
+  CapacityAlarm,
   CloudModels,
   ConnectionSettings,
   DecisionResults,
@@ -49,6 +50,7 @@ import {
   SetOrgLimitsRequest,
   SetUserKeepRequest,
   SetUserTeamRequest,
+  SnoozeCapacityAlarmRequest,
   SuspendOrgRequest,
   UpdateNotice,
 } from "../admin.ts";
@@ -388,6 +390,18 @@ export const adminCapacity = get(
   "Server capacity: host memory, computers' share of their budget, 30-day peaks and a forecast (owner only)",
   ServerCapacity,
 );
+
+export const snoozeCapacityAlarm = createRoute({
+  operationId: "snoozeCapacityAlarm",
+  method: "post",
+  path: "/v1/admin/capacity/alarm/snooze",
+  tags: ["admin"],
+  security,
+  summary:
+    "Snooze the capacity alarm's repeat pushes for an hour, or two for \"I'm upgrading\" (owner only, D-601)",
+  request: { body: jsonBody(SnoozeCapacityAlarmRequest) },
+  responses: { 200: jsonResponse("Snoozed", CapacityAlarm), 401: e401, 403: e403 },
+});
 
 export const adminPricing = get(
   "adminPricing",

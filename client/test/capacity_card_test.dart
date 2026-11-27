@@ -56,6 +56,83 @@ void main() {
     },
   );
 
+  testWidgets(
+    'the alarm shows its level and snoozes for an hour or while upgrading (D-601)',
+    (tester) async {
+      await setSize(tester, const Size(900, 1600));
+      final backend = FakeBackend()
+        ..capacity = ServerCapacity(
+          budgetMb: 9216,
+          latest: ServerCapacityLatest(
+            at: '2026-11-27T10:00:00Z',
+            memTotalMb: 11960,
+            memAvailableMb: 2500,
+            load1: 2.1,
+            cpus: 6,
+            diskUsedPct: 41,
+            computersRunning: 2,
+            computersMemMb: 8300,
+          ),
+          days: const [],
+          refusals30d: 0,
+          fullInWeeks: null,
+          alerts: const [],
+          alarm: CapacityAlarm(
+            level: 90,
+            startedAt: '2026-11-27T09:50:00Z',
+            levelSince: '2026-11-27T09:50:00Z',
+            lastPushAt: '2026-11-27T09:50:00Z',
+            snoozedUntil: null,
+            endedAt: null,
+          ),
+        );
+      await tester.pumpWidget(harness(backend, const AdminScreen()));
+      await tester.pumpAndSettle();
+      await unlockAdmin(tester);
+      await tester.ensureVisible(find.byKey(const Key('capacityAlarm')));
+      await tester.pumpAndSettle();
+      expect(find.text('Alarm: 90% full. Upgrade today'), findsOneWidget);
+      expect(find.text('A push every 15 minutes until it drops back'), findsOneWidget);
+
+      await tester.tap(find.byKey(const Key('capacityUpgrading')));
+      await tester.pumpAndSettle();
+      expect(backend.capacitySnoozes, [120]);
+      expect(find.textContaining('Snoozed until'), findsOneWidget);
+
+      await tester.ensureVisible(find.byKey(const Key('capacitySnoozeHour')));
+      await tester.tap(find.byKey(const Key('capacitySnoozeHour')));
+      await tester.pumpAndSettle();
+      expect(backend.capacitySnoozes, [120, 60]);
+    },
+  );
+
+  testWidgets('no alarm, no banner', (tester) async {
+    await setSize(tester, const Size(900, 1600));
+    final backend = FakeBackend()
+      ..capacity = ServerCapacity(
+        budgetMb: 9216,
+        latest: null,
+        days: const [],
+        refusals30d: 0,
+        fullInWeeks: null,
+        alerts: const [],
+        alarm: CapacityAlarm(
+          level: 0,
+          startedAt: null,
+          levelSince: null,
+          lastPushAt: null,
+          snoozedUntil: null,
+          endedAt: null,
+        ),
+      );
+    await tester.pumpWidget(harness(backend, const AdminScreen()));
+    await tester.pumpAndSettle();
+    await unlockAdmin(tester);
+    await tester.ensureVisible(find.byKey(const Key('capacityCard')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('capacityAlarm')), findsNothing);
+  });
+
   testWidgets('before the first sample, the card says when one arrives', (tester) async {
     await setSize(tester, const Size(900, 1600));
     final backend = FakeBackend();

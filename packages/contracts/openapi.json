@@ -13511,6 +13511,9 @@
                 "body"
               ]
             }
+          },
+          "alarm": {
+            "$ref": "#/components/schemas/CapacityAlarm"
           }
         },
         "required": [
@@ -13521,6 +13524,54 @@
           "full_in_weeks",
           "alerts"
         ]
+      },
+      "CapacityAlarm": {
+        "type": "object",
+        "properties": {
+          "level": {
+            "type": "integer",
+            "description": "0 = no alarm; 70, 80, 90 or 95 = percent of the memory budget; 100 = full (a start refused or the host low on memory)"
+          },
+          "started_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "level_since": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "last_push_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "snoozed_until": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "ended_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "level",
+          "started_at",
+          "level_since",
+          "last_push_at",
+          "snoozed_until",
+          "ended_at"
+        ],
+        "description": "Missing on servers before D-601"
       },
       "CloudModels": {
         "type": "object",
@@ -16437,6 +16488,31 @@
         },
         "required": [
           "team"
+        ]
+      },
+      "SnoozeCapacityAlarmRequest": {
+        "type": "object",
+        "properties": {
+          "minutes": {
+            "anyOf": [
+              {
+                "type": "number",
+                "enum": [
+                  60
+                ]
+              },
+              {
+                "type": "number",
+                "enum": [
+                  120
+                ]
+              }
+            ],
+            "description": "60 = snooze an hour; 120 = \"I'm upgrading\""
+          }
+        },
+        "required": [
+          "minutes"
         ]
       },
       "SuspendOrgRequest": {
@@ -58722,6 +58798,62 @@
           },
           "404": {
             "description": "Not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/capacity/alarm/snooze": {
+      "post": {
+        "operationId": "snoozeCapacityAlarm",
+        "tags": [
+          "admin"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Snooze the capacity alarm's repeat pushes for an hour, or two for \"I'm upgrading\" (owner only, D-601)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SnoozeCapacityAlarmRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Snoozed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CapacityAlarm"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
             "content": {
               "application/problem+json": {
                 "schema": {

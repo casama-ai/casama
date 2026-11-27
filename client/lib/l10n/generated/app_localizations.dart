@@ -10816,6 +10816,72 @@ abstract class AppLocalizations {
   /// **'{count, plural, =0{No computer starts refused in 30 days} =1{1 computer start refused in 30 days} other{{count} computer starts refused in 30 days}}'**
   String adminCapacityRefusals(int count);
 
+  /// No description provided for @adminCapacityAlarm70.
+  ///
+  /// In en, this message translates to:
+  /// **'Alarm: 70% full'**
+  String get adminCapacityAlarm70;
+
+  /// No description provided for @adminCapacityAlarm80.
+  ///
+  /// In en, this message translates to:
+  /// **'Alarm: 80% full. Plan the upgrade'**
+  String get adminCapacityAlarm80;
+
+  /// No description provided for @adminCapacityAlarm90.
+  ///
+  /// In en, this message translates to:
+  /// **'Alarm: 90% full. Upgrade today'**
+  String get adminCapacityAlarm90;
+
+  /// No description provided for @adminCapacityAlarm95.
+  ///
+  /// In en, this message translates to:
+  /// **'Alarm: 95% full. Upgrade now'**
+  String get adminCapacityAlarm95;
+
+  /// No description provided for @adminCapacityAlarmFull.
+  ///
+  /// In en, this message translates to:
+  /// **'Alarm: full. Computers are refused or memory is low. Upgrade now'**
+  String get adminCapacityAlarmFull;
+
+  /// No description provided for @adminCapacityAlarmRepeats.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes, plural, =1{A push every minute until it drops back} other{A push every {minutes} minutes until it drops back}}'**
+  String adminCapacityAlarmRepeats(int minutes);
+
+  /// No description provided for @adminCapacityAlarmOnce.
+  ///
+  /// In en, this message translates to:
+  /// **'One push. It repeats from 80%'**
+  String get adminCapacityAlarmOnce;
+
+  /// No description provided for @adminCapacityAlarmSnoozed.
+  ///
+  /// In en, this message translates to:
+  /// **'Snoozed until {time}'**
+  String adminCapacityAlarmSnoozed(String time);
+
+  /// No description provided for @adminCapacitySnoozeHour.
+  ///
+  /// In en, this message translates to:
+  /// **'Snooze 1 hour'**
+  String get adminCapacitySnoozeHour;
+
+  /// No description provided for @adminCapacityUpgrading.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'m upgrading'**
+  String get adminCapacityUpgrading;
+
+  /// No description provided for @adminCapacitySnoozedDone.
+  ///
+  /// In en, this message translates to:
+  /// **'No alarm pushes until {time}, unless it gets fuller'**
+  String adminCapacitySnoozedDone(String time);
+
   /// No description provided for @adminNoAbuse.
   ///
   /// In en, this message translates to:

@@ -204,6 +204,7 @@ import 'package:casama_api/src/model/canvas_preview_event.dart';
 import 'package:casama_api/src/model/canvas_preview_event_payload.dart';
 import 'package:casama_api/src/model/canvas_rotation.dart';
 import 'package:casama_api/src/model/canvas_update.dart';
+import 'package:casama_api/src/model/capacity_alarm.dart';
 import 'package:casama_api/src/model/card_prefs.dart';
 import 'package:casama_api/src/model/card_prefs_home_place.dart';
 import 'package:casama_api/src/model/card_prefs_units.dart';
@@ -979,6 +980,7 @@ import 'package:casama_api/src/model/skill_stats.dart';
 import 'package:casama_api/src/model/skill_stats_revisions_inner.dart';
 import 'package:casama_api/src/model/skill_update_check.dart';
 import 'package:casama_api/src/model/slack_install_link.dart';
+import 'package:casama_api/src/model/snooze_capacity_alarm_request.dart';
 import 'package:casama_api/src/model/snooze_device_permissions200_response.dart';
 import 'package:casama_api/src/model/snooze_device_permissions_request.dart';
 import 'package:casama_api/src/model/star_ask.dart';
@@ -1646,6 +1648,8 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return CanvasRotation.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'CanvasUpdate':
           return CanvasUpdate.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'CapacityAlarm':
+          return CapacityAlarm.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'CardPrefs':
           return CardPrefs.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'CardPrefsHomePlace':
@@ -3316,6 +3320,8 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return SkillUpdateCheck.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'SlackInstallLink':
           return SlackInstallLink.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'SnoozeCapacityAlarmRequest':
+          return SnoozeCapacityAlarmRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'SnoozeDevicePermissions200Response':
           return SnoozeDevicePermissions200Response.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'SnoozeDevicePermissionsRequest':

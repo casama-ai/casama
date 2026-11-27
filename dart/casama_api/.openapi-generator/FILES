@@ -292,6 +292,7 @@ lib/src/model/canvas_preview_event.dart
 lib/src/model/canvas_preview_event_payload.dart
 lib/src/model/canvas_rotation.dart
 lib/src/model/canvas_update.dart
+lib/src/model/capacity_alarm.dart
 lib/src/model/card_prefs.dart
 lib/src/model/card_prefs_home_place.dart
 lib/src/model/card_prefs_units.dart
@@ -1107,6 +1108,7 @@ lib/src/model/skill_stats.dart
 lib/src/model/skill_stats_revisions_inner.dart
 lib/src/model/skill_update_check.dart
 lib/src/model/slack_install_link.dart
+lib/src/model/snooze_capacity_alarm_request.dart
 lib/src/model/snooze_device_permissions200_response.dart
 lib/src/model/snooze_device_permissions_request.dart
 lib/src/model/star_ask.dart

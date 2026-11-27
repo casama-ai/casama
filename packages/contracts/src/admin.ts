@@ -791,6 +791,29 @@ export const SaveCreditPackRequest = z
 
 const AlertKind = z.enum(["early_warning", "capacity_full", "low_memory", "disk"]);
 
+/** The capacity alarm (D-601): repeat pushes to the owners while computers are close to full. */
+export const CapacityAlarm = z
+  .object({
+    level: z.number().int().openapi({
+      description:
+        "0 = no alarm; 70, 80, 90 or 95 = percent of the memory budget; 100 = full (a start refused or the host low on memory)",
+    }),
+    started_at: z.string().nullable(),
+    level_since: z.string().nullable(),
+    last_push_at: z.string().nullable(),
+    snoozed_until: z.string().nullable(),
+    ended_at: z.string().nullable(),
+  })
+  .openapi("CapacityAlarm");
+
+export const SnoozeCapacityAlarmRequest = z
+  .object({
+    minutes: z
+      .union([z.literal(60), z.literal(120)])
+      .openapi({ description: '60 = snooze an hour; 120 = "I\'m upgrading"' }),
+  })
+  .openapi("SnoozeCapacityAlarmRequest");
+
 /** How full the server is and when it runs out of room for computers (D-252). */
 export const ServerCapacity = z
   .object({
@@ -824,6 +847,7 @@ export const ServerCapacity = z
       .nullable()
       .openapi({ description: "Weeks until daily peaks reach the budget at the 30-day trend" }),
     alerts: z.array(z.object({ kind: AlertKind, day: z.string(), body: z.string() })),
+    alarm: CapacityAlarm.optional().openapi({ description: "Missing on servers before D-601" }),
   })
   .openapi("ServerCapacity");
 

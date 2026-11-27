@@ -3993,6 +3993,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/admin/capacity/alarm/snooze": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Snooze the capacity alarm's repeat pushes for an hour, or two for "I'm upgrading" (owner only, D-601) */
+        post: operations["snoozeCapacityAlarm"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/admin/orgs/{id}/suspend": {
         parameters: {
             query?: never;
@@ -14051,6 +14068,17 @@ export interface components {
                 day: string;
                 body: string;
             }[];
+            alarm?: components["schemas"]["CapacityAlarm"];
+        };
+        /** @description Missing on servers before D-601 */
+        CapacityAlarm: {
+            /** @description 0 = no alarm; 70, 80, 90 or 95 = percent of the memory budget; 100 = full (a start refused or the host low on memory) */
+            level: number;
+            started_at: string | null;
+            level_since: string | null;
+            last_push_at: string | null;
+            snoozed_until: string | null;
+            ended_at: string | null;
         };
         CloudModels: {
             /** @description OpenRouter model for chat on Casama's key. */
@@ -14785,6 +14813,10 @@ export interface components {
         };
         SetUserTeamRequest: {
             team: boolean;
+        };
+        SnoozeCapacityAlarmRequest: {
+            /** @description 60 = snooze an hour; 120 = "I'm upgrading" */
+            minutes: 60 | 120;
         };
         SuspendOrgRequest: {
             reason: string;
@@ -34610,6 +34642,48 @@ export interface operations {
             };
             /** @description Not found */
             404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    snoozeCapacityAlarm: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SnoozeCapacityAlarmRequest"];
+            };
+        };
+        responses: {
+            /** @description Snoozed */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CapacityAlarm"];
+                };
+            };
+            /** @description Not authenticated */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };

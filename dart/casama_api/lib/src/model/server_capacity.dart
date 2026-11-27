@@ -5,6 +5,7 @@
 // ignore_for_file: unused_element
 import 'package:casama_api/src/model/server_capacity_latest.dart';
 import 'package:casama_api/src/model/server_capacity_days_inner.dart';
+import 'package:casama_api/src/model/capacity_alarm.dart';
 import 'package:casama_api/src/model/server_capacity_alerts_inner.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -34,6 +35,8 @@ class ServerCapacity {
     required  this.fullInWeeks,
 
     required  this.alerts,
+
+     this.alarm,
   });
 
       /// Memory hosted computers may use (COMPUTER_HOST_MEMORY_GB); 0 = none set
@@ -110,6 +113,18 @@ class ServerCapacity {
 
 
 
+  @JsonKey(
+    
+    name: r'alarm',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final CapacityAlarm? alarm;
+
+
+
 
 
     @override
@@ -119,7 +134,8 @@ class ServerCapacity {
       other.days == days &&
       other.refusals30d == refusals30d &&
       other.fullInWeeks == fullInWeeks &&
-      other.alerts == alerts;
+      other.alerts == alerts &&
+      other.alarm == alarm;
 
     @override
     int get hashCode =>
@@ -128,7 +144,8 @@ class ServerCapacity {
         days.hashCode +
         refusals30d.hashCode +
         (fullInWeeks == null ? 0 : fullInWeeks.hashCode) +
-        alerts.hashCode;
+        alerts.hashCode +
+        alarm.hashCode;
 
   factory ServerCapacity.fromJson(Map<String, dynamic> json) => _$ServerCapacityFromJson(json);
 

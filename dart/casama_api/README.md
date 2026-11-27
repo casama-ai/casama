@@ -194,6 +194,7 @@ Class | Method | HTTP request | Description
 [*AdminApi*](doc/AdminApi.md) | [**setSupportTicketStatus**](doc/AdminApi.md#setsupportticketstatus) | **POST** /v1/admin/support-tickets/{reference} | Mark a support message closed or open again
 [*AdminApi*](doc/AdminApi.md) | [**setUserKeep**](doc/AdminApi.md#setuserkeep) | **PUT** /v1/admin/users/{id}/keep | Keep an account whatever the inactive-account steps say (owner only)
 [*AdminApi*](doc/AdminApi.md) | [**setUserTeam**](doc/AdminApi.md#setuserteam) | **PUT** /v1/admin/users/{id}/team | Count an account as team, leaving it out of Growth (owner only)
+[*AdminApi*](doc/AdminApi.md) | [**snoozeCapacityAlarm**](doc/AdminApi.md#snoozecapacityalarm) | **POST** /v1/admin/capacity/alarm/snooze | Snooze the capacity alarm&#39;s repeat pushes for an hour, or two for \&quot;I&#39;m upgrading\&quot; (owner only, D-601)
 [*AdminApi*](doc/AdminApi.md) | [**suspendLinkServer**](doc/AdminApi.md#suspendlinkserver) | **POST** /v1/admin/link/servers/{id}/suspend | Take a server&#39;s address down until the suspension is lifted (owner only)
 [*AdminApi*](doc/AdminApi.md) | [**suspendOrg**](doc/AdminApi.md#suspendorg) | **POST** /v1/admin/orgs/{id}/suspend | Suspend a workspace: stops its computers and runs, keeps its data
 [*AdminApi*](doc/AdminApi.md) | [**takeDownCreation**](doc/AdminApi.md#takedowncreation) | **POST** /v1/admin/creations/{id}/takedown | Stop a creation&#39;s public link at once, or lift that (owner only; D-281)
@@ -1010,6 +1011,7 @@ Class | Method | HTTP request | Description
  - [CanvasPreviewEventPayload](doc/CanvasPreviewEventPayload.md)
  - [CanvasRotation](doc/CanvasRotation.md)
  - [CanvasUpdate](doc/CanvasUpdate.md)
+ - [CapacityAlarm](doc/CapacityAlarm.md)
  - [CardPrefs](doc/CardPrefs.md)
  - [CardPrefsHomePlace](doc/CardPrefsHomePlace.md)
  - [CardPrefsUnits](doc/CardPrefsUnits.md)
@@ -1825,6 +1827,7 @@ Class | Method | HTTP request | Description
  - [SkillStatsRevisionsInner](doc/SkillStatsRevisionsInner.md)
  - [SkillUpdateCheck](doc/SkillUpdateCheck.md)
  - [SlackInstallLink](doc/SlackInstallLink.md)
+ - [SnoozeCapacityAlarmRequest](doc/SnoozeCapacityAlarmRequest.md)
  - [SnoozeDevicePermissions200Response](doc/SnoozeDevicePermissions200Response.md)
  - [SnoozeDevicePermissionsRequest](doc/SnoozeDevicePermissionsRequest.md)
  - [StarAsk](doc/StarAsk.md)

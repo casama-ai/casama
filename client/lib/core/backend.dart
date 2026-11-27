@@ -3029,6 +3029,9 @@ abstract class Backend {
 
   /// Server capacity for the Admin screen (D-252): memory, computers' share of the budget, 30-day peaks.
   Future<ServerCapacity> adminCapacity();
+
+  /// Snoozes the capacity alarm's repeat pushes for [minutes]: 60, or 120 for "I'm upgrading" (D-601).
+  Future<CapacityAlarm> snoozeCapacityAlarm(int minutes);
   Future<CloudModels> setAdminCloudModels(CloudModels models);
 
   /// Model access switch (docs/OWN-KEYS-PLAN.md §3.3): own providers on Cloud, and Casama's models

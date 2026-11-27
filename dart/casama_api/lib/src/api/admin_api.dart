@@ -61,6 +61,7 @@ import 'package:casama_api/src/model/ask_admin_agent_request.dart';
 import 'package:casama_api/src/model/billing_settings.dart';
 import 'package:casama_api/src/model/browser_guard_sites.dart';
 import 'package:casama_api/src/model/business_license_created.dart';
+import 'package:casama_api/src/model/capacity_alarm.dart';
 import 'package:casama_api/src/model/cloud_models.dart';
 import 'package:casama_api/src/model/connection_settings.dart';
 import 'package:casama_api/src/model/content_report.dart';
@@ -108,6 +109,7 @@ import 'package:casama_api/src/model/set_support_ticket_status.dart';
 import 'package:casama_api/src/model/set_user_keep_request.dart';
 import 'package:casama_api/src/model/set_user_team_request.dart';
 import 'package:casama_api/src/model/signup_gate_state.dart';
+import 'package:casama_api/src/model/snooze_capacity_alarm_request.dart';
 import 'package:casama_api/src/model/support_ticket_list.dart';
 import 'package:casama_api/src/model/support_ticket_row.dart';
 import 'package:casama_api/src/model/support_web_stats.dart';
@@ -9214,6 +9216,102 @@ _responseData = rawData == null ? null : deserialize<AdminUser, AdminUser>(rawDa
     }
 
     return Response<AdminUser>(
+      data: _responseData,
+      headers: _response.headers,
+      isRedirect: _response.isRedirect,
+      requestOptions: _response.requestOptions,
+      redirects: _response.redirects,
+      statusCode: _response.statusCode,
+      statusMessage: _response.statusMessage,
+      extra: _response.extra,
+    );
+  }
+
+  /// Snooze the capacity alarm&#39;s repeat pushes for an hour, or two for \&quot;I&#39;m upgrading\&quot; (owner only, D-601)
+  /// 
+  ///
+  /// Parameters:
+  /// * [snoozeCapacityAlarmRequest] 
+  /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
+  /// * [headers] - Can be used to add additional headers to the request
+  /// * [extras] - Can be used to add flags to the request
+  /// * [validateStatus] - A [ValidateStatus] callback that can be used to determine request success based on the HTTP status of the response
+  /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
+  /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
+  ///
+  /// Returns a [Future] containing a [Response] with a [CapacityAlarm] as data
+  /// Throws [DioException] if API call or serialization fails
+  Future<Response<CapacityAlarm>> snoozeCapacityAlarm({ 
+    required SnoozeCapacityAlarmRequest snoozeCapacityAlarmRequest,
+    CancelToken? cancelToken,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? extra,
+    ValidateStatus? validateStatus,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    final _path = r'/v1/admin/capacity/alarm/snooze';
+    final _options = Options(
+      method: r'POST',
+      headers: <String, dynamic>{
+        ...?headers,
+      },
+      extra: <String, dynamic>{
+        'secure': <Map<String, String>>[
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearerAuth',
+          },
+        ],
+        ...?extra,
+      },
+      contentType: 'application/json',
+      validateStatus: validateStatus,
+    );
+
+    dynamic _bodyData;
+
+    try {
+_bodyData=jsonEncode(snoozeCapacityAlarmRequest);
+    } catch(error, stackTrace) {
+      throw DioException(
+         requestOptions: _options.compose(
+          _dio.options,
+          _path,
+        ),
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    final _response = await _dio.request<Object>(
+      _path,
+      data: _bodyData,
+      options: _options,
+      cancelToken: cancelToken,
+      onSendProgress: onSendProgress,
+      onReceiveProgress: onReceiveProgress,
+    );
+
+    CapacityAlarm? _responseData;
+
+    try {
+final rawData = _response.data;
+_responseData = rawData == null ? null : deserialize<CapacityAlarm, CapacityAlarm>(rawData, 'CapacityAlarm', growable: true);
+
+    } catch (error, stackTrace) {
+      throw DioException(
+        requestOptions: _response.requestOptions,
+        response: _response,
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    return Response<CapacityAlarm>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,

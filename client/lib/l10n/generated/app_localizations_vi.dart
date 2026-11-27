@@ -6879,6 +6879,52 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
+  String get adminCapacityAlarm70 => 'Alarm: 70% full';
+
+  @override
+  String get adminCapacityAlarm80 => 'Alarm: 80% full. Plan the upgrade';
+
+  @override
+  String get adminCapacityAlarm90 => 'Alarm: 90% full. Upgrade today';
+
+  @override
+  String get adminCapacityAlarm95 => 'Alarm: 95% full. Upgrade now';
+
+  @override
+  String get adminCapacityAlarmFull =>
+      'Alarm: full. Computers are refused or memory is low. Upgrade now';
+
+  @override
+  String adminCapacityAlarmRepeats(int minutes) {
+    String _temp0 = intl.Intl.pluralLogic(
+      minutes,
+      locale: localeName,
+      other: 'A push every $minutes minutes until it drops back',
+      one: 'A push every minute until it drops back',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get adminCapacityAlarmOnce => 'One push. It repeats from 80%';
+
+  @override
+  String adminCapacityAlarmSnoozed(String time) {
+    return 'Snoozed until $time';
+  }
+
+  @override
+  String get adminCapacitySnoozeHour => 'Snooze 1 hour';
+
+  @override
+  String get adminCapacityUpgrading => 'I\'m upgrading';
+
+  @override
+  String adminCapacitySnoozedDone(String time) {
+    return 'No alarm pushes until $time, unless it gets fuller';
+  }
+
+  @override
   String get adminNoAbuse => 'Nothing suspicious so far.';
 
   @override

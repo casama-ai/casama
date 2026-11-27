@@ -66,6 +66,10 @@ class CapacityCard extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              if ((c.alarm?.level ?? 0) > 0) ...[
+                _AlarmBanner(alarm: c.alarm!),
+                const SizedBox(height: AppSpace.md),
+              ],
               if (latest == null)
                 FormNote(
                   l10n.adminCapacityNoData,
@@ -189,6 +193,121 @@ class CapacityCard extends ConsumerWidget {
         ),
         const SizedBox(height: AppSpace.lg),
       ],
+    );
+  }
+}
+
+/// How often each alarm level pushes, in minutes; null = once (D-601, matches the server).
+const _alarmRepeatMin = {70: null, 80: 30, 90: 15, 95: 5, 100: 5};
+
+/// The capacity alarm (D-601): its level, how often it pushes, and Snooze 1 hour / I'm upgrading.
+class _AlarmBanner extends ConsumerStatefulWidget {
+  const _AlarmBanner({required this.alarm});
+  final CapacityAlarm alarm;
+
+  @override
+  ConsumerState<_AlarmBanner> createState() => _AlarmBannerState();
+}
+
+class _AlarmBannerState extends ConsumerState<_AlarmBanner> {
+  bool _busy = false;
+
+  String _time(String iso) =>
+      TimeOfDay.fromDateTime(DateTime.parse(iso).toLocal()).format(context);
+
+  Future<void> _snooze(int minutes) async {
+    setState(() => _busy = true);
+    final a = await runGuarded(
+      context,
+      () => ref.read(backendProvider).snoozeCapacityAlarm(minutes),
+    );
+    if (!mounted) return;
+    setState(() => _busy = false);
+    final until = a?.snoozedUntil;
+    if (until != null) {
+      showSuccess(context, context.l10n.adminCapacitySnoozedDone(_time(until)));
+    }
+    ref.invalidate(adminCapacityProvider);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final level = widget.alarm.level;
+    final tone = level >= 90 ? AdminTone.negative : AdminTone.warning;
+    final color = adminToneColor(context, tone);
+    final title = switch (level) {
+      >= 100 => l10n.adminCapacityAlarmFull,
+      >= 95 => l10n.adminCapacityAlarm95,
+      >= 90 => l10n.adminCapacityAlarm90,
+      >= 80 => l10n.adminCapacityAlarm80,
+      _ => l10n.adminCapacityAlarm70,
+    };
+    final every = _alarmRepeatMin[level];
+    final until = widget.alarm.snoozedUntil;
+    final snoozed = until != null && DateTime.parse(until).isAfter(DateTime.now());
+    final muted = context.textTheme.bodySmall?.copyWith(
+      color: context.colorScheme.onSurfaceVariant,
+    );
+    return Container(
+      key: const Key('capacityAlarm'),
+      padding: const EdgeInsets.all(AppSpace.sm),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.10),
+        borderRadius: AppRadius.rowAll,
+        border: Border.all(color: color.withValues(alpha: 0.35)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(LucideIcons.siren, size: 18, color: color),
+              const SizedBox(width: AppSpace.xs),
+              Expanded(
+                child: Text(
+                  title,
+                  style: context.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpace.xs),
+          Text(
+            snoozed
+                ? l10n.adminCapacityAlarmSnoozed(_time(until))
+                : every == null
+                ? l10n.adminCapacityAlarmOnce
+                : l10n.adminCapacityAlarmRepeats(every),
+            key: const Key('capacityAlarmNote'),
+            style: muted,
+          ),
+          if (every != null) ...[
+            const SizedBox(height: AppSpace.sm),
+            Wrap(
+              spacing: AppSpace.sm,
+              runSpacing: AppSpace.xs,
+              children: [
+                OutlinedButton.icon(
+                  key: const Key('capacitySnoozeHour'),
+                  onPressed: _busy ? null : () => _snooze(60),
+                  icon: const Icon(LucideIcons.bellOff, size: 16),
+                  label: Text(l10n.adminCapacitySnoozeHour),
+                ),
+                FilledButton.tonalIcon(
+                  key: const Key('capacityUpgrading'),
+                  onPressed: _busy ? null : () => _snooze(120),
+                  icon: const Icon(LucideIcons.serverCog, size: 16),
+                  label: Text(l10n.adminCapacityUpgrading),
+                ),
+              ],
+            ),
+          ],
+        ],
+      ),
     );
   }
 }
