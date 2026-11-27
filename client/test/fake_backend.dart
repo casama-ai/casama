@@ -2135,6 +2135,123 @@ class FakeBackend implements Backend {
     adminCompList[i] = next;
     return next;
   }
+
+  // ---- Admin → Discount Codes (docs/DISCOUNT-ADMIN-PLAN.md)
+  List<AdminDiscountPlan> adminDiscountPlans = [
+    AdminDiscountPlan(code: 'plus', name: 'Plus', interval: AdminDiscountPlanIntervalEnum.month, priceLabel: '\$15/mo'),
+    AdminDiscountPlan(code: 'pro', name: 'Pro', interval: AdminDiscountPlanIntervalEnum.month, priceLabel: '\$49/mo'),
+    AdminDiscountPlan(code: 'max', name: 'Max', interval: AdminDiscountPlanIntervalEnum.month, priceLabel: '\$99/mo'),
+    AdminDiscountPlan(code: 'plus_yearly', name: 'Plus', interval: AdminDiscountPlanIntervalEnum.year, priceLabel: '\$150/yr'),
+    AdminDiscountPlan(code: 'max_weekly', name: 'Max', interval: AdminDiscountPlanIntervalEnum.week, priceLabel: '\$39.99/wk'),
+  ];
+  List<AdminDiscount> adminDiscountList = [
+    AdminDiscount(
+      id: 'dsc-1',
+      code: 'CASAMA-PH',
+      percent: 50,
+      cycles: 1,
+      maxUses: 100,
+      used: 12,
+      perPerson: 1,
+      plans: const ['plus', 'pro', 'max'],
+      startsAt: null,
+      endsAt: DateTime.utc(2027, 1, 31, 23, 59, 59),
+      who: 'any',
+      keepOnPlanChange: false,
+      state: AdminDiscountState.live,
+      note: 'Product Hunt launch',
+      channel: 'Product Hunt',
+      madeBy: null,
+      madeInCasama: false,
+      createdAt: DateTime.utc(2026, 11, 20),
+      link: null,
+    ),
+    AdminDiscount(
+      id: 'dsc-2',
+      code: 'CASAMA-UNUSED',
+      percent: 50,
+      cycles: 1,
+      maxUses: 100,
+      used: 0,
+      perPerson: 1,
+      plans: const ['plus', 'pro', 'max'],
+      startsAt: null,
+      endsAt: DateTime.utc(2027, 1, 31, 23, 59, 59),
+      who: 'any',
+      keepOnPlanChange: false,
+      state: AdminDiscountState.live,
+      note: null,
+      channel: 'X',
+      madeBy: 'ol••••@casama.ai',
+      madeInCasama: true,
+      createdAt: DateTime.utc(2026, 11, 25),
+      link: null,
+    ),
+  ];
+  CreateAdminDiscountRequest? lastCreateDiscountRequest;
+  UpdateAdminDiscountRequest? lastUpdateDiscountRequest;
+  final List<String> deletedDiscountIds = [];
+
+  @override
+  Future<AdminDiscountsResponse> adminDiscounts() async =>
+      AdminDiscountsResponse(discounts: List.of(adminDiscountList), plans: List.of(adminDiscountPlans));
+
+  @override
+  Future<AdminDiscount> adminCreateDiscount(CreateAdminDiscountRequest request) async {
+    lastCreateDiscountRequest = request;
+    final made = AdminDiscount(
+      id: 'dsc-${adminDiscountList.length + 1}',
+      code: request.code.trim().toUpperCase(),
+      percent: request.percent,
+      cycles: request.cycles,
+      maxUses: request.maxUses,
+      used: 0,
+      perPerson: request.perPerson ?? 1,
+      plans: request.plans,
+      startsAt: request.startsAt,
+      endsAt: request.endsAt,
+      who: request.who?.value ?? 'any',
+      keepOnPlanChange: false,
+      state: AdminDiscountState.live,
+      note: request.note,
+      channel: request.channel,
+      madeBy: 'ol••••@casama.ai',
+      madeInCasama: true,
+      createdAt: DateTime.now().toUtc(),
+      link: null,
+    );
+    adminDiscountList.insert(0, made);
+    return made;
+  }
+
+  @override
+  Future<AdminDiscount> adminUpdateDiscount(String id, UpdateAdminDiscountRequest request) async {
+    lastUpdateDiscountRequest = request;
+    final i = adminDiscountList.indexWhere((d) => d.id == id);
+    final d = adminDiscountList[i];
+    final nextState = request.off == true
+        ? AdminDiscountState.off
+        : request.off == false
+            ? AdminDiscountState.live
+            : d.state;
+    final next = d.copyWith(
+      maxUses: request.maxUses ?? d.maxUses,
+      perPerson: request.perPerson ?? d.perPerson,
+      endsAt: request.endsAt ?? d.endsAt,
+      plans: request.plans ?? d.plans,
+      note: request.note ?? d.note,
+      channel: request.channel ?? d.channel,
+      state: nextState,
+    );
+    adminDiscountList[i] = next;
+    return next;
+  }
+
+  @override
+  Future<void> adminDeleteDiscount(String id) async {
+    deletedDiscountIds.add(id);
+    adminDiscountList.removeWhere((d) => d.id == id);
+  }
   @override
   Future<ReferralPreview> previewReferral(String code) async {
     if (code.toUpperCase() != 'ANA234') {

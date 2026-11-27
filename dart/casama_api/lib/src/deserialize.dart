@@ -41,6 +41,9 @@ import 'package:casama_api/src/model/admin_device_challenge_request.dart';
 import 'package:casama_api/src/model/admin_device_check_request.dart';
 import 'package:casama_api/src/model/admin_device_key.dart';
 import 'package:casama_api/src/model/admin_device_key_list.dart';
+import 'package:casama_api/src/model/admin_discount.dart';
+import 'package:casama_api/src/model/admin_discount_plan.dart';
+import 'package:casama_api/src/model/admin_discounts_response.dart';
 import 'package:casama_api/src/model/admin_domain.dart';
 import 'package:casama_api/src/model/admin_domain_order.dart';
 import 'package:casama_api/src/model/admin_domains.dart';
@@ -305,6 +308,7 @@ import 'package:casama_api/src/model/conversation.dart';
 import 'package:casama_api/src/model/conversation_list.dart';
 import 'package:casama_api/src/model/conversation_thread.dart';
 import 'package:casama_api/src/model/create_action_rule_request.dart';
+import 'package:casama_api/src/model/create_admin_discount_request.dart';
 import 'package:casama_api/src/model/create_admin_partner_code_request.dart';
 import 'package:casama_api/src/model/create_admin_partner_request.dart';
 import 'package:casama_api/src/model/create_admin_testimonial_request.dart';
@@ -1080,6 +1084,7 @@ import 'package:casama_api/src/model/ui_action_part.dart';
 import 'package:casama_api/src/model/ui_shown_event.dart';
 import 'package:casama_api/src/model/ui_shown_event_payload.dart';
 import 'package:casama_api/src/model/update_about_you_request.dart';
+import 'package:casama_api/src/model/update_admin_discount_request.dart';
 import 'package:casama_api/src/model/update_admin_partner_code_request.dart';
 import 'package:casama_api/src/model/update_admin_partner_commission_request.dart';
 import 'package:casama_api/src/model/update_admin_partner_request.dart';
@@ -1317,6 +1322,15 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return AdminDeviceKey.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'AdminDeviceKeyList':
           return AdminDeviceKeyList.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'AdminDiscount':
+          return AdminDiscount.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'AdminDiscountPlan':
+          return AdminDiscountPlan.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'AdminDiscountState':
+          
+          
+        case 'AdminDiscountsResponse':
+          return AdminDiscountsResponse.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'AdminDomain':
           return AdminDomain.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'AdminDomainOrder':
@@ -1872,6 +1886,8 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           
         case 'CreateActionRuleRequest':
           return CreateActionRuleRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'CreateAdminDiscountRequest':
+          return CreateAdminDiscountRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'CreateAdminPartnerCodeRequest':
           return CreateAdminPartnerCodeRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'CreateAdminPartnerRequest':
@@ -3551,6 +3567,8 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return UiShownEventPayload.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'UpdateAboutYouRequest':
           return UpdateAboutYouRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'UpdateAdminDiscountRequest':
+          return UpdateAdminDiscountRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'UpdateAdminPartnerCodeRequest':
           return UpdateAdminPartnerCodeRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'UpdateAdminPartnerCommissionRequest':

@@ -4045,6 +4045,51 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/admin/discounts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Every Dodo discount code and the active plans (instance owner) */
+        get: operations["listAdminDiscounts"];
+        put?: never;
+        /**
+         * Make a Dodo discount code (instance owner)
+         * @description Errors: 404 not_found (billing off), 400 invalid_plan, 400 invalid_dates, 400 discount_forever_free, 409 discount_exists, 409 discount_large.
+         */
+        post: operations["createAdminDiscount"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/discounts/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Delete an unused Dodo discount code (instance owner)
+         * @description Errors: 404 not_found, 409 discount_used.
+         */
+        delete: operations["deleteAdminDiscount"];
+        options?: never;
+        head?: never;
+        /**
+         * Edit a Dodo discount code or turn it off/on (instance owner)
+         * @description Errors: 404 not_found, 400 invalid_plan, 400 invalid_dates, 409 discount_large.
+         */
+        patch: operations["updateAdminDiscount"];
+        trace?: never;
+    };
     "/v1/orgs/{id}/billing/portal": {
         parameters: {
             query?: never;
@@ -14901,6 +14946,79 @@ export interface components {
         };
         TakeDownRequest: {
             down: boolean;
+        };
+        AdminDiscount: {
+            id: string;
+            code: string;
+            /** @description Percentage off (from basis points, e.g. 50 or 12.5); null for flat codes */
+            percent: number | null;
+            /** @description Subscription renewals covered; null means every renewal */
+            cycles: number | null;
+            max_uses: number | null;
+            used: number;
+            per_person: number | null;
+            /** @description Plan codes; Dodo product ids unknown to this server appear as 'other' */
+            plans: string[];
+            /** Format: date-time */
+            starts_at: string | null;
+            /** Format: date-time */
+            ends_at: string | null;
+            /** @description any, first_time, existing or specific */
+            who: string;
+            keep_on_plan_change: boolean;
+            state: components["schemas"]["AdminDiscountState"];
+            note: string | null;
+            channel: string | null;
+            /** @description Masked email of the owner who made the code, or null if made in Dodo */
+            made_by: string | null;
+            made_in_casama: boolean;
+            /** Format: date-time */
+            created_at: string | null;
+            /** @description Share link when pricing page reads ?code=; null in v1 */
+            link: string | null;
+        };
+        /** @enum {string} */
+        AdminDiscountState: "live" | "scheduled" | "used_up" | "ended" | "off";
+        CreateAdminDiscountRequest: {
+            code: string;
+            percent: number;
+            plans: string[];
+            cycles?: number | null;
+            max_uses?: number | null;
+            per_person?: number | null;
+            /** Format: date-time */
+            starts_at?: string | null;
+            /** Format: date-time */
+            ends_at?: string | null;
+            /** @enum {string} */
+            who?: "any" | "first_time";
+            note?: string | null;
+            channel?: string | null;
+            /** @default false */
+            confirm_large: boolean;
+        };
+        AdminDiscountsResponse: {
+            discounts: components["schemas"]["AdminDiscount"][];
+            plans: components["schemas"]["AdminDiscountPlan"][];
+        };
+        AdminDiscountPlan: {
+            code: string;
+            name: string;
+            /** @enum {string} */
+            interval: "month" | "year" | "week";
+            price_label: string | null;
+        };
+        UpdateAdminDiscountRequest: {
+            max_uses?: number | null;
+            per_person?: number | null;
+            /** Format: date-time */
+            ends_at?: string | null;
+            plans?: string[];
+            note?: string | null;
+            channel?: string | null;
+            off?: boolean;
+            /** @default false */
+            confirm_large: boolean;
         };
         RedirectUrl: {
             /** Format: uri */
@@ -34966,6 +35084,312 @@ export interface operations {
             };
             /** @description Not found */
             404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    listAdminDiscounts: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Discount codes and plans */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminDiscountsResponse"];
+                };
+            };
+            /** @description Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not authenticated */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Rate limited */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    createAdminDiscount: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateAdminDiscountRequest"];
+            };
+        };
+        responses: {
+            /** @description Discount code */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminDiscount"];
+                };
+            };
+            /** @description Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not authenticated */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Rate limited */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    deleteAdminDiscount: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Deleted */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not authenticated */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Rate limited */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    updateAdminDiscount: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateAdminDiscountRequest"];
+            };
+        };
+        responses: {
+            /** @description Discount code */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminDiscount"];
+                };
+            };
+            /** @description Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not authenticated */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Rate limited */
+            429: {
                 headers: {
                     [name: string]: unknown;
                 };

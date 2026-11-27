@@ -1,6 +1,7 @@
 export * from "./about-you.ts";
 export * from "./action-rules.ts";
 export * from "./admin.ts";
+export * from "./admin-discounts.ts";
 export * from "./agent-import.ts";
 export * from "./appearance.ts";
 export * from "./apple-integrations.ts";

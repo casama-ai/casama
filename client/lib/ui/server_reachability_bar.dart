@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:material_ui/material_ui.dart';
@@ -125,6 +126,11 @@ class _ServerReachabilityBarState extends ConsumerState<ServerReachabilityBar> {
     final l10n = AppLocalizations.of(context);
     final scheme = Theme.of(context).colorScheme;
     final text = Theme.of(context).textTheme;
+    final barBrightness = ThemeData.estimateBrightnessForColor(scheme.inverseSurface);
+    final statusBarStyle = SystemUiOverlayStyle(
+      statusBarBrightness: barBrightness,
+      statusBarIconBrightness: barBrightness == Brightness.light ? Brightness.dark : Brightness.light,
+    );
     // The same two children always, so the app below is never rebuilt from scratch when the bar
     // comes and goes; only the top padding moves from the app to the bar.
     return Column(
@@ -135,75 +141,78 @@ class _ServerReachabilityBarState extends ConsumerState<ServerReachabilityBar> {
           alignment: Alignment.topCenter,
           child: !shown
               ? const SizedBox(width: double.infinity)
-              : Material(
-                  key: const Key('serverReachabilityBar'),
-                  color: scheme.inverseSurface,
-                  child: SafeArea(
-                    bottom: false,
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(
-                        AppSpace.md,
-                        AppSpace.xxs,
-                        AppSpace.xs,
-                        AppSpace.xxs,
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(
-                            state == Reachability.serverOffline
-                                ? LucideIcons.serverOff
-                                : LucideIcons.wifiOff,
-                            size: 18,
-                            color: scheme.onInverseSurface,
-                          ),
-                          const SizedBox(width: AppSpace.sm),
-                          Expanded(
-                            child: Text(
-                              _dockerDown
-                                  ? l10n.localDockerStopped
-                                  : state == Reachability.serverOffline
-                                  ? l10n.serverOfflineTitle
-                                  : l10n.cannotReachServer,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: text.bodyMedium?.copyWith(
-                                color: scheme.onInverseSurface,
-                                fontWeight: FontWeight.w600,
+              : AnnotatedRegion<SystemUiOverlayStyle>(
+                  value: statusBarStyle,
+                  child: Material(
+                    key: const Key('serverReachabilityBar'),
+                    color: scheme.inverseSurface,
+                    child: SafeArea(
+                      bottom: false,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(
+                          AppSpace.md,
+                          AppSpace.xxs,
+                          AppSpace.xs,
+                          AppSpace.xxs,
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              state == Reachability.serverOffline
+                                  ? LucideIcons.serverOff
+                                  : LucideIcons.wifiOff,
+                              size: 18,
+                              color: scheme.onInverseSurface,
+                            ),
+                            const SizedBox(width: AppSpace.sm),
+                            Expanded(
+                              child: Text(
+                                _dockerDown
+                                    ? l10n.localDockerStopped
+                                    : state == Reachability.serverOffline
+                                    ? l10n.serverOfflineTitle
+                                    : l10n.cannotReachServer,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: text.bodyMedium?.copyWith(
+                                  color: scheme.onInverseSurface,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                             ),
-                          ),
-                          // Casama Cloud's public status page (D-304): is it us or them?
-                          if (Uri.tryParse(ref.watch(backendProvider).apiUrl)?.host == 'api.casama.ai')
+                            // Casama Cloud's public status page (D-304): is it us or them?
+                            if (Uri.tryParse(ref.watch(backendProvider).apiUrl)?.host == 'api.casama.ai')
+                              TextButton(
+                                key: const Key('serverReachabilityStatus'),
+                                onPressed: () => openWebLink(remoteUri('status', 'https://status.casama.ai')),
+                                style: TextButton.styleFrom(foregroundColor: scheme.inversePrimary),
+                                child: Text(l10n.serviceStatus),
+                              ),
+                            if (_dockerDown && canOpenDocker())
+                              TextButton(
+                                key: const Key('serverReachabilityOpenDocker'),
+                                onPressed: _checking ? null : _openDocker,
+                                style: TextButton.styleFrom(foregroundColor: scheme.inversePrimary),
+                                child: Text(l10n.setupDockerOpen),
+                              ),
                             TextButton(
-                              key: const Key('serverReachabilityStatus'),
-                              onPressed: () => openWebLink(remoteUri('status', 'https://status.casama.ai')),
-                              style: TextButton.styleFrom(foregroundColor: scheme.inversePrimary),
-                              child: Text(l10n.serviceStatus),
+                              key: const Key('serverReachabilityRetry'),
+                              onPressed: _checking ? null : _check,
+                              style: TextButton.styleFrom(
+                                foregroundColor: scheme.inversePrimary,
+                              ),
+                              child: _checking
+                                  ? SizedBox.square(
+                                      dimension: 16,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        color: scheme.inversePrimary,
+                                      ),
+                                    )
+                                  : Text(l10n.retry),
                             ),
-                          if (_dockerDown && canOpenDocker())
-                            TextButton(
-                              key: const Key('serverReachabilityOpenDocker'),
-                              onPressed: _checking ? null : _openDocker,
-                              style: TextButton.styleFrom(foregroundColor: scheme.inversePrimary),
-                              child: Text(l10n.setupDockerOpen),
-                            ),
-                          TextButton(
-                            key: const Key('serverReachabilityRetry'),
-                            onPressed: _checking ? null : _check,
-                            style: TextButton.styleFrom(
-                              foregroundColor: scheme.inversePrimary,
-                            ),
-                            child: _checking
-                                ? SizedBox.square(
-                                    dimension: 16,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                      color: scheme.inversePrimary,
-                                    ),
-                                  )
-                                : Text(l10n.retry),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),

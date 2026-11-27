@@ -377,6 +377,7 @@ List<AdminPlace> adminPlaces(BuildContext context, List<AdminSection> sections) 
     AdminSection.resets: 'saved resets limits campaign grant gift',
     AdminSection.partners: 'affiliates referrals commissions payouts codes tolt',
     AdminSection.freePlans: 'gift codes comps free plan plus pro friends grant redeem extend',
+    AdminSection.discounts: 'discount codes promo coupon dodo launch deal percent off channel',
     AdminSection.selfhost: 'self-hosted licenses keys business personal trial servers revoke',
     AdminSection.users: 'accounts people email suspend ban search',
     AdminSection.workspaces: 'organizations orgs teams quotas limits suspend',

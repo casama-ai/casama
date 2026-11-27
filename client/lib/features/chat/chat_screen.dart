@@ -1649,20 +1649,26 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                     onJump: _jumpToMessage,
                     onClose: () => setState(() => _findOpen = false),
                   ),
-                ShowHide(
-                  child: !chat.offline
-                      ? null
-                      : Padding(
-                    key: const Key('offlineNote'),
-                    padding: EdgeInsets.fromLTRB(side, AppSpace.xs, side, 0),
-                    child: Row(
-                      children: [
-                        Icon(LucideIcons.wifiOff, size: 16, color: context.colorScheme.onSurfaceVariant),
-                        const SizedBox(width: 6),
-                        Expanded(child: Text(l10n.offlineSaved, style: context.textTheme.labelMedium?.copyWith(color: context.colorScheme.onSurfaceVariant))),
-                        TextButton(onPressed: () => runGuarded(context, () => controller.open(chat.conversationId)), child: Text(l10n.retry)),
-                      ],
-                    ),
+                // When the app-wide reachability bar is already up (D-296), don't stack a second
+                // offline bar below the app bar; this note only covers a single chat falling back
+                // to its saved copy while the server itself is reachable.
+                ValueListenableBuilder<Reachability>(
+                  valueListenable: serverReachability,
+                  builder: (context, reachability, _) => ShowHide(
+                    child: !chat.offline || reachability != Reachability.ok
+                        ? null
+                        : Padding(
+                            key: const Key('offlineNote'),
+                            padding: EdgeInsets.fromLTRB(side, AppSpace.xs, side, 0),
+                            child: Row(
+                              children: [
+                                Icon(LucideIcons.wifiOff, size: 16, color: context.colorScheme.onSurfaceVariant),
+                                const SizedBox(width: 6),
+                                Expanded(child: Text(l10n.offlineSaved, style: context.textTheme.labelMedium?.copyWith(color: context.colorScheme.onSurfaceVariant))),
+                                TextButton(onPressed: () => runGuarded(context, () => controller.open(chat.conversationId)), child: Text(l10n.retry)),
+                              ],
+                            ),
+                          ),
                   ),
                 ),
                 // General and topics (D-253): what's going on in other topics, or the way back to General.

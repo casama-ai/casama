@@ -1844,6 +1844,11 @@ abstract class Backend {
   Future<List<Comp>> adminComps({bool running = true, int? limit});
   Future<Comp> adminGrantComp(GrantCompRequest request);
   Future<Comp> adminUpdateComp(String id, UpdateCompRequest request);
+  // Dodo discount codes (Admin → Discount Codes, docs/DISCOUNT-ADMIN-PLAN.md).
+  Future<AdminDiscountsResponse> adminDiscounts();
+  Future<AdminDiscount> adminCreateDiscount(CreateAdminDiscountRequest request);
+  Future<AdminDiscount> adminUpdateDiscount(String id, UpdateAdminDiscountRequest request);
+  Future<void> adminDeleteDiscount(String id);
   // Reports and blocks (D-301)
   Future<void> report(ReportTarget kind, String targetId, ReportReason reason, {String? note});
   Future<List<BlockedPerson>> blockedPeople();

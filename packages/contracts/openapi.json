@@ -16572,6 +16572,349 @@
           "down"
         ]
       },
+      "AdminDiscount": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "percent": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "description": "Percentage off (from basis points, e.g. 50 or 12.5); null for flat codes"
+          },
+          "cycles": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "description": "Subscription renewals covered; null means every renewal"
+          },
+          "max_uses": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "used": {
+            "type": "integer"
+          },
+          "per_person": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "plans": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Plan codes; Dodo product ids unknown to this server appear as 'other'"
+          },
+          "starts_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "ends_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "who": {
+            "type": "string",
+            "description": "any, first_time, existing or specific"
+          },
+          "keep_on_plan_change": {
+            "type": "boolean"
+          },
+          "state": {
+            "$ref": "#/components/schemas/AdminDiscountState"
+          },
+          "note": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "channel": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "made_by": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Masked email of the owner who made the code, or null if made in Dodo"
+          },
+          "made_in_casama": {
+            "type": "boolean"
+          },
+          "created_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "link": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Share link when pricing page reads ?code=; null in v1"
+          }
+        },
+        "required": [
+          "id",
+          "code",
+          "percent",
+          "cycles",
+          "max_uses",
+          "used",
+          "per_person",
+          "plans",
+          "starts_at",
+          "ends_at",
+          "who",
+          "keep_on_plan_change",
+          "state",
+          "note",
+          "channel",
+          "made_by",
+          "made_in_casama",
+          "created_at",
+          "link"
+        ]
+      },
+      "AdminDiscountState": {
+        "type": "string",
+        "enum": [
+          "live",
+          "scheduled",
+          "used_up",
+          "ended",
+          "off"
+        ]
+      },
+      "CreateAdminDiscountRequest": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 16,
+            "pattern": "^[A-Za-z0-9-]+$"
+          },
+          "percent": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "plans": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 80
+            },
+            "minItems": 1,
+            "maxItems": 30
+          },
+          "cycles": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1,
+            "maximum": 36
+          },
+          "max_uses": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1,
+            "maximum": 100000
+          },
+          "per_person": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1,
+            "maximum": 100
+          },
+          "starts_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "ends_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "who": {
+            "type": "string",
+            "enum": [
+              "any",
+              "first_time"
+            ]
+          },
+          "note": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200
+          },
+          "channel": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 120
+          },
+          "confirm_large": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "required": [
+          "code",
+          "percent",
+          "plans"
+        ]
+      },
+      "AdminDiscountsResponse": {
+        "type": "object",
+        "properties": {
+          "discounts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdminDiscount"
+            }
+          },
+          "plans": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdminDiscountPlan"
+            }
+          }
+        },
+        "required": [
+          "discounts",
+          "plans"
+        ]
+      },
+      "AdminDiscountPlan": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "interval": {
+            "type": "string",
+            "enum": [
+              "month",
+              "year",
+              "week"
+            ]
+          },
+          "price_label": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "code",
+          "name",
+          "interval",
+          "price_label"
+        ]
+      },
+      "UpdateAdminDiscountRequest": {
+        "type": "object",
+        "properties": {
+          "max_uses": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1,
+            "maximum": 100000
+          },
+          "per_person": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1,
+            "maximum": 100
+          },
+          "ends_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "plans": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 80
+            },
+            "minItems": 1,
+            "maxItems": 30
+          },
+          "note": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 200
+          },
+          "channel": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 120
+          },
+          "off": {
+            "type": "boolean"
+          },
+          "confirm_large": {
+            "type": "boolean",
+            "default": false
+          }
+        }
+      },
       "RedirectUrl": {
         "type": "object",
         "properties": {
@@ -59282,6 +59625,386 @@
           },
           "404": {
             "description": "Not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/discounts": {
+      "post": {
+        "operationId": "createAdminDiscount",
+        "tags": [
+          "admin-discounts"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Make a Dodo discount code (instance owner)",
+        "description": "Errors: 404 not_found (billing off), 400 invalid_plan, 400 invalid_dates, 400 discount_forever_free, 409 discount_exists, 409 discount_large.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAdminDiscountRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Discount code",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminDiscount"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "listAdminDiscounts",
+        "tags": [
+          "admin-discounts"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Every Dodo discount code and the active plans (instance owner)",
+        "responses": {
+          "200": {
+            "description": "Discount codes and plans",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminDiscountsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/discounts/{id}": {
+      "delete": {
+        "operationId": "deleteAdminDiscount",
+        "tags": [
+          "admin-discounts"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Delete an unused Dodo discount code (instance owner)",
+        "description": "Errors: 404 not_found, 409 discount_used.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deleted"
+          },
+          "400": {
+            "description": "Validation failed",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateAdminDiscount",
+        "tags": [
+          "admin-discounts"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Edit a Dodo discount code or turn it off/on (instance owner)",
+        "description": "Errors: 404 not_found, 400 invalid_plan, 400 invalid_dates, 409 discount_large.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAdminDiscountRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Discount code",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminDiscount"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited",
             "content": {
               "application/problem+json": {
                 "schema": {

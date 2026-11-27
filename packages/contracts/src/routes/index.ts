@@ -1,6 +1,7 @@
 import * as aboutYou from "./about-you.ts";
 import * as actionRules from "./action-rules.ts";
 import * as admin from "./admin.ts";
+import * as adminDiscounts from "./admin-discounts.ts";
 import * as agentImport from "./agent-import.ts";
 import * as appearance from "./appearance.ts";
 import * as appleIntegrations from "./apple-integrations.ts";
@@ -94,6 +95,7 @@ export const routes = {
   ...voice,
   ...local,
   ...admin,
+  ...adminDiscounts,
   ...billing,
   ...limitResets,
   ...comps,
@@ -159,6 +161,7 @@ export {
   aboutYou,
   actionRules,
   admin,
+  adminDiscounts,
   agentImport,
   appearance,
   appleIntegrations,

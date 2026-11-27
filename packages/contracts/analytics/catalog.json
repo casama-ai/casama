@@ -476,6 +476,18 @@
       "funnels": []
     },
     {
+      "name": "discount_code_created",
+      "by": ["server"],
+      "description": "An instance owner created a Dodo discount code in Admin → Discount Codes (DISCOUNT-ADMIN-PLAN).",
+      "properties": {
+        "percent": { "type": "number" },
+        "cycles": { "type": "number" },
+        "plans": { "type": "number" },
+        "large": { "type": "boolean" }
+      },
+      "funnels": []
+    },
+    {
       "name": "comp_redeemed",
       "by": ["server"],
       "description": "A workspace owner redeemed a gift code for a free plan (COMP-PLANS-PLAN).",

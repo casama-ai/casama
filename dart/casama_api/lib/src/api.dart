@@ -12,6 +12,7 @@ import 'package:casama_api/src/api/about_you_api.dart';
 import 'package:casama_api/src/api/account_api.dart';
 import 'package:casama_api/src/api/action_rules_api.dart';
 import 'package:casama_api/src/api/admin_api.dart';
+import 'package:casama_api/src/api/admin_discounts_api.dart';
 import 'package:casama_api/src/api/appearance_api.dart';
 import 'package:casama_api/src/api/approvals_api.dart';
 import 'package:casama_api/src/api/attribution_api.dart';
@@ -158,6 +159,12 @@ class CasamaApi {
   /// by doing that all interceptors will not be executed
   AdminApi getAdminApi() {
     return AdminApi(dio);
+  }
+
+  /// Get AdminDiscountsApi instance, base route and serializer can be overridden by a given but be careful,
+  /// by doing that all interceptors will not be executed
+  AdminDiscountsApi getAdminDiscountsApi() {
+    return AdminDiscountsApi(dio);
   }
 
   /// Get AppearanceApi instance, base route and serializer can be overridden by a given but be careful,

@@ -1744,6 +1744,19 @@ class SupabaseBackend implements Backend {
       (await api.comps.updateAdminComp(id: id, updateCompRequest: request)).data!;
 
   @override
+  Future<AdminDiscountsResponse> adminDiscounts() async => (await api.adminDiscounts.listAdminDiscounts()).data!;
+  @override
+  Future<AdminDiscount> adminCreateDiscount(CreateAdminDiscountRequest request) async =>
+      (await api.adminDiscounts.createAdminDiscount(createAdminDiscountRequest: request)).data!;
+  @override
+  Future<AdminDiscount> adminUpdateDiscount(String id, UpdateAdminDiscountRequest request) async =>
+      (await api.adminDiscounts.updateAdminDiscount(id: id, updateAdminDiscountRequest: request)).data!;
+  @override
+  Future<void> adminDeleteDiscount(String id) async {
+    await api.adminDiscounts.deleteAdminDiscount(id: id);
+  }
+
+  @override
   Future<void> report(ReportTarget kind, String targetId, ReportReason reason, {String? note}) async {
     await api.moderation.createReport(
       createReportRequest: CreateReportRequest(targetKind: kind, targetId: targetId, reason: reason, note: note),

@@ -1314,6 +1314,10 @@ class ChatController extends Notifier<ChatState> {
     _park();
     if (!keepCurrent) {
       state = const ChatState(loading: true);
+    } else if (!quiet && state.offline) {
+      // Clear offline while re-fetching so the per-chat note doesn't flash when the server comes
+      // back and the top reachability bar hides; a failed read sets it back below.
+      state = state.copyWith(offline: false);
     }
     final cache = ref.read(localCacheProvider);
     var id = conversationId;

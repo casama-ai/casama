@@ -118,6 +118,8 @@ class CasamaClient {
 
   /// Free plans for friends (docs/COMP-PLANS-PLAN.md): gift codes, and the owner's grants.
   CompsApi get comps => api.getCompsApi();
+  /// Dodo discount codes (docs/DISCOUNT-ADMIN-PLAN.md).
+  AdminDiscountsApi get adminDiscounts => api.getAdminDiscountsApi();
   AdminApi get admin => api.getAdminApi();
 
   /// Scan to sign in (D-296): one-time codes that sign another device in to this account.

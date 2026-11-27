@@ -200,6 +200,10 @@ Class | Method | HTTP request | Description
 [*AdminApi*](doc/AdminApi.md) | [**takeDownCreation**](doc/AdminApi.md#takedowncreation) | **POST** /v1/admin/creations/{id}/takedown | Stop a creation&#39;s public link at once, or lift that (owner only; D-281)
 [*AdminApi*](doc/AdminApi.md) | [**unsuspendLinkServer**](doc/AdminApi.md#unsuspendlinkserver) | **DELETE** /v1/admin/link/servers/{id}/suspend | Lift a server&#39;s suspension; it gets its tunnel back when it next checks in
 [*AdminApi*](doc/AdminApi.md) | [**unsuspendOrg**](doc/AdminApi.md#unsuspendorg) | **DELETE** /v1/admin/orgs/{id}/suspend | Lift a workspace&#39;s suspension
+[*AdminDiscountsApi*](doc/AdminDiscountsApi.md) | [**createAdminDiscount**](doc/AdminDiscountsApi.md#createadmindiscount) | **POST** /v1/admin/discounts | Make a Dodo discount code (instance owner)
+[*AdminDiscountsApi*](doc/AdminDiscountsApi.md) | [**deleteAdminDiscount**](doc/AdminDiscountsApi.md#deleteadmindiscount) | **DELETE** /v1/admin/discounts/{id} | Delete an unused Dodo discount code (instance owner)
+[*AdminDiscountsApi*](doc/AdminDiscountsApi.md) | [**listAdminDiscounts**](doc/AdminDiscountsApi.md#listadmindiscounts) | **GET** /v1/admin/discounts | Every Dodo discount code and the active plans (instance owner)
+[*AdminDiscountsApi*](doc/AdminDiscountsApi.md) | [**updateAdminDiscount**](doc/AdminDiscountsApi.md#updateadmindiscount) | **PATCH** /v1/admin/discounts/{id} | Edit a Dodo discount code or turn it off/on (instance owner)
 [*AppearanceApi*](doc/AppearanceApi.md) | [**searchWallpapers**](doc/AppearanceApi.md#searchwallpapers) | **GET** /v1/wallpapers | Search wallpaper photos. Only when the server has a photo source configured (config.wallpapers_enabled); 404 otherwise
 [*AppearanceApi*](doc/AppearanceApi.md) | [**trackWallpaperDownload**](doc/AppearanceApi.md#trackwallpaperdownload) | **POST** /v1/wallpapers/download | Tell the photo source a photo was chosen (Unsplash requires this)
 [*ApprovalsApi*](doc/ApprovalsApi.md) | [**decideApproval**](doc/ApprovalsApi.md#decideapproval) | **POST** /v1/approvals/{id}/decision | Approve or deny; denying cancels that step only. A watch key is refused an allow it may not give (403 watch_allow_refused, watch_always_allow) and is held to its minute (429)
@@ -848,6 +852,10 @@ Class | Method | HTTP request | Description
  - [AdminDeviceCheckRequest](doc/AdminDeviceCheckRequest.md)
  - [AdminDeviceKey](doc/AdminDeviceKey.md)
  - [AdminDeviceKeyList](doc/AdminDeviceKeyList.md)
+ - [AdminDiscount](doc/AdminDiscount.md)
+ - [AdminDiscountPlan](doc/AdminDiscountPlan.md)
+ - [AdminDiscountState](doc/AdminDiscountState.md)
+ - [AdminDiscountsResponse](doc/AdminDiscountsResponse.md)
  - [AdminDomain](doc/AdminDomain.md)
  - [AdminDomainOrder](doc/AdminDomainOrder.md)
  - [AdminDomains](doc/AdminDomains.md)
@@ -1121,6 +1129,7 @@ Class | Method | HTTP request | Description
  - [CostGroup](doc/CostGroup.md)
  - [CostSource](doc/CostSource.md)
  - [CreateActionRuleRequest](doc/CreateActionRuleRequest.md)
+ - [CreateAdminDiscountRequest](doc/CreateAdminDiscountRequest.md)
  - [CreateAdminPartnerCodeRequest](doc/CreateAdminPartnerCodeRequest.md)
  - [CreateAdminPartnerRequest](doc/CreateAdminPartnerRequest.md)
  - [CreateAdminTestimonialRequest](doc/CreateAdminTestimonialRequest.md)
@@ -1939,6 +1948,7 @@ Class | Method | HTTP request | Description
  - [UiShownEvent](doc/UiShownEvent.md)
  - [UiShownEventPayload](doc/UiShownEventPayload.md)
  - [UpdateAboutYouRequest](doc/UpdateAboutYouRequest.md)
+ - [UpdateAdminDiscountRequest](doc/UpdateAdminDiscountRequest.md)
  - [UpdateAdminPartnerCodeRequest](doc/UpdateAdminPartnerCodeRequest.md)
  - [UpdateAdminPartnerCommissionRequest](doc/UpdateAdminPartnerCommissionRequest.md)
  - [UpdateAdminPartnerRequest](doc/UpdateAdminPartnerRequest.md)

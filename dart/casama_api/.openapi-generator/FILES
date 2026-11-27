@@ -9,6 +9,7 @@ lib/src/api/about_you_api.dart
 lib/src/api/account_api.dart
 lib/src/api/action_rules_api.dart
 lib/src/api/admin_api.dart
+lib/src/api/admin_discounts_api.dart
 lib/src/api/appearance_api.dart
 lib/src/api/approvals_api.dart
 lib/src/api/attribution_api.dart
@@ -125,6 +126,10 @@ lib/src/model/admin_device_challenge_request.dart
 lib/src/model/admin_device_check_request.dart
 lib/src/model/admin_device_key.dart
 lib/src/model/admin_device_key_list.dart
+lib/src/model/admin_discount.dart
+lib/src/model/admin_discount_plan.dart
+lib/src/model/admin_discount_state.dart
+lib/src/model/admin_discounts_response.dart
 lib/src/model/admin_domain.dart
 lib/src/model/admin_domain_order.dart
 lib/src/model/admin_domains.dart
@@ -398,6 +403,7 @@ lib/src/model/conversation_thread.dart
 lib/src/model/cost_group.dart
 lib/src/model/cost_source.dart
 lib/src/model/create_action_rule_request.dart
+lib/src/model/create_admin_discount_request.dart
 lib/src/model/create_admin_partner_code_request.dart
 lib/src/model/create_admin_partner_request.dart
 lib/src/model/create_admin_testimonial_request.dart
@@ -1216,6 +1222,7 @@ lib/src/model/ui_action_part.dart
 lib/src/model/ui_shown_event.dart
 lib/src/model/ui_shown_event_payload.dart
 lib/src/model/update_about_you_request.dart
+lib/src/model/update_admin_discount_request.dart
 lib/src/model/update_admin_partner_code_request.dart
 lib/src/model/update_admin_partner_commission_request.dart
 lib/src/model/update_admin_partner_request.dart

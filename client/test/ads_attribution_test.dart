@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:casama/core/ads_attribution.dart';
 import 'package:casama/core/analytics.dart';
 import 'package:casama/core/backend.dart';
@@ -453,11 +455,27 @@ void main() {
       return backend;
     }
 
-    testWidgets('a tap sends the answer', (tester) async {
+    testWidgets('a pick sends nothing until Continue, and can be changed', (tester) async {
       final backend = await pump(tester);
+      final continueButton = find.byKey(const Key('heardFromContinue'));
+      expect(tester.widget<FilledButton>(continueButton).onPressed, isNull);
+      await tester.tap(find.byKey(const Key('heardFrom_friend')));
+      await tester.pumpAndSettle();
+      expect(backend.heardFromAnswers, isEmpty);
       await tester.tap(find.byKey(const Key('heardFrom_ai_assistant')));
       await tester.pumpAndSettle();
+      expect(backend.heardFromAnswers, isEmpty);
+      await tester.tap(continueButton);
+      await tester.pumpAndSettle();
       expect(backend.heardFromAnswers, [HeardFrom.aiAssistant]);
+    });
+
+    test('the choices are shuffled with Other always last', () {
+      for (var seed = 0; seed < 20; seed++) {
+        final order = shuffledHeardFromChoices(math.Random(seed));
+        expect(order.toSet(), heardFromChoices.toSet());
+        expect(order.last, HeardFrom.other);
+      }
     });
 
     testWidgets('Skip sends a null answer', (tester) async {
