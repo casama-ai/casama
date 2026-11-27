@@ -12,7 +12,7 @@ apps on every platform, the terminal, chat apps or your AI coding tools.
 
 This page explains the main ideas. To try it, go to the [Quick start](/quick-start).
 
-<figure class="casama-video"><div class="casama-video-frame"><iframe src="https://www.youtube-nocookie.com/embed/TmOAjwF3cYI?rel=0" title="Casama walkthrough" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div></figure>
+<figure class="casama-video"><div class="casama-video-frame"><iframe src="https://www.youtube-nocookie.com/embed/QCdp2VIByDs?rel=0" title="Casama walkthrough" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div></figure>
 
 ## The main ideas
 

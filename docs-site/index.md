@@ -68,7 +68,7 @@ features:
 ---
 
 <div class="home-shots">
-  <figure class="casama-video"><div class="casama-video-frame"><iframe src="https://www.youtube-nocookie.com/embed/TmOAjwF3cYI?rel=0" title="Casama walkthrough" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div></figure>
+  <figure class="casama-video"><div class="casama-video-frame"><iframe src="https://www.youtube-nocookie.com/embed/QCdp2VIByDs?rel=0" title="Casama walkthrough" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div></figure>
   <div class="casama-shot-pair">
     <figure class="casama-shot"><img class="shot-light" src="/screens/casama-team-v2-light.webp" alt="A group chat: you ask everyone to plan Sam's 30th, and Oliver, Max and Kelly each take a part: a restaurant map, an RSVP page and a head count"><img class="shot-dark" src="/screens/casama-team-v2-dark.webp" alt=""><figcaption>Group chats: ask @everyone and the bots split the work.</figcaption></figure>
     <figure class="casama-shot"><img class="shot-light" src="/screens/casama-computer-v2-light.webp" alt="Anna compares flights and books a hotel on her own computer while you watch the live screen, with a Take Control button"><img class="shot-dark" src="/screens/casama-computer-v2-dark.webp" alt=""><figcaption>Every bot has its own computer. Watch it, or take over.</figcaption></figure>
