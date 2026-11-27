@@ -1294,7 +1294,7 @@
   "creditsUsedPercent": "已用 {percent}%",
   "creditsRunsLeft": "{n, plural, =0{按通常花费已不足以再执行一次} other{按通常花费大约还可再执行 {n} 次}}",
   "creditsOut": "你的额度已用完。请补充额度，让机器人继续运行。",
-  "creditsExplainerPlan": "1 额度 = {price}。你的方案每月会增加 {amount}；未用完的额度可结转至下个月。",
+  "creditsExplainerPlan": "1 额度 = {price}。你的方案每月会增加 {amount}；未用完的额度可顺延至下个月。",
   "creditsExplainerPacks": "1 额度 = {price}。通过 App Store 或 Google Play 购买的额度包永不过期；网页端购买的额度包有效期为 12 个月。",
   "creditsDailyLabel": "今日限额",
   "creditsDailyOf": "{used} / {cap}",

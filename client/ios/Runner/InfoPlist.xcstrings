@@ -908,7 +908,7 @@
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lưu các địa điểm bạn đặt tên, như Nhà hay Nơi làm việc, và để bot nhắc bạn khi đến giờ đi cho lịch hẹn tiếp theo. Chỉ dùng khi bạn bật Địa điểm trong Kết nối thiết bị."
+            "value" : "Lưu các địa điểm bạn đặt tên, như Nhà hay Nơi làm việc, và để bot nhắc bạn lúc nên xuất phát để kịp lịch hẹn tiếp theo. Chỉ dùng khi bạn bật Địa điểm trong Kết nối thiết bị."
           }
         },
         "zh-Hans" : {
@@ -920,7 +920,7 @@
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "儲存你命名的地點（例如家或公司），並讓機器人提醒你何時該出門前往下一個約會。僅當你在「裝置連線」中開啟「地點」時才會使用。"
+            "value" : "儲存你命名的地點（例如家或公司），並讓機器人提醒你何時該出門前往下一個行程。僅當你在「裝置連線」中開啟「地點」時才會使用。"
           }
         }
       }

@@ -6196,7 +6196,7 @@
   "cloudAccountSignOutBody": "Perangkat ini melupakan sesi masuk Casama Cloud-mu. Server ini, lisensinya, dan model Casama Cloud tetap bekerja.",
   "cloudAccountDelete": "Hapus akun Casama Cloud",
   "cloudAccountDeleteHelp": "Menghapus akunmu di Casama Cloud. Server ini dan datanya tetap ada.",
-  "cloudAccountDeleteConfirm": "Ketik {email} untuk menghapus akun Casama Cloud-mu. Ruang kerja cloud yang hanya kamu miliki ikut terhapus, dan model Casama Cloud berhenti di server yang dibayarinya. Paket yang kamu beli di web dibatalkan otomatis. Paket yang dibeli di App Store atau Google Play tidak dibatalkan: batalkan di toko tersebut.",
+  "cloudAccountDeleteConfirm": "Ketik {email} untuk menghapus akun Casama Cloud-mu. Ruang kerja cloud yang hanya kamu miliki ikut terhapus, dan model Casama Cloud berhenti di server yang dibayarnya. Paket yang kamu beli di web dibatalkan otomatis. Paket yang dibeli di App Store atau Google Play tidak dibatalkan: batalkan di toko tersebut.",
   "cloudAccountDeleted": "Akun Casama Cloud-mu dihapus. Datanya dihapus permanen pada {date}.",
   "wsMoveSettingsToCloud": "Pindahkan ke Casama Cloud",
   "wsMoveSettingsToServer": "Pindahkan ke server saya sendiri",

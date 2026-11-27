@@ -3038,7 +3038,7 @@
   "paywallWelcomePlan": "¡Te damos la bienvenida a {plan}!",
   "paywallMonthsFree": "{n, plural, =1{1 mes gratis} one{{n} mes gratis} other{{n} meses gratis}}",
   "paywallSwitchTo": "Cambiar a {plan}",
-  "subscribedThroughStoreNote": "{store, select, app_store{Tu suscripción es a través del App Store. Para cambiar de plan, usa el App Store en el dispositivo con el que te suscribiste.} google_play{Tu suscripción es a través de Google Play. Para cambiar de plan, usa Google Play en el dispositivo con el que te suscribiste.} other{Tu suscripción es a través de una tienda de apps. Para cambiar de plan, usa esa tienda en el dispositivo con el que te suscribiste.}}",
+  "subscribedThroughStoreNote": "{store, select, app_store{Te suscribiste mediante el App Store. Para cambiar de plan, usa el App Store en el dispositivo desde el que te suscribiste.} google_play{Te suscribiste mediante Google Play. Para cambiar de plan, usa Google Play en el dispositivo desde el que te suscribiste.} other{Te suscribiste mediante una tienda de apps. Para cambiar de plan, usa esa tienda en el dispositivo desde el que te suscribiste.}}",
   "subscribedOnWebNote": "Estás suscrito en la web. Cambia de plan aquí con el pago web o administra tu suscripción.",
   "subscribedOutsideAppNote": "Tu suscripción se factura fuera de esta app, así que no se puede cambiar aquí.",
   "outOfCreditsTitle": "Te quedaste sin créditos",

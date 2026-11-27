@@ -4,6 +4,16 @@
     "Ask ${applicationName}" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Frag ${applicationName}",
+              "Frag einen Bot in ${applicationName}",
+              "Frag ${bot} in ${applicationName}"
+            ]
+          }
+        },
         "en" : {
           "stringSet" : {
             "state" : "translated",
@@ -13,12 +23,131 @@
               "Ask ${bot} in ${applicationName}"
             ]
           }
+        },
+        "es" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Pregunta a ${applicationName}",
+              "Pregunta a un bot en ${applicationName}",
+              "Pregunta a ${bot} en ${applicationName}"
+            ]
+          }
+        },
+        "fr" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Demander à ${applicationName}",
+              "Demander à un bot dans ${applicationName}",
+              "Demander à ${bot} dans ${applicationName}"
+            ]
+          }
+        },
+        "id" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Tanya ${applicationName}",
+              "Tanya bot di ${applicationName}",
+              "Tanya ${bot} di ${applicationName}"
+            ]
+          }
+        },
+        "it" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Chiedi a ${applicationName}",
+              "Chiedi a un bot su ${applicationName}",
+              "Chiedi a ${bot} su ${applicationName}"
+            ]
+          }
+        },
+        "ja" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "${applicationName}に聞く",
+              "${applicationName}のボットに聞く",
+              "${applicationName}の${bot}に聞く"
+            ]
+          }
+        },
+        "ko" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "${applicationName}에 물어봐",
+              "${applicationName} 봇에게 물어봐",
+              "${applicationName}의 ${bot} 봇에게 물어봐"
+            ]
+          }
+        },
+        "pt-BR" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Perguntar ao ${applicationName}",
+              "Perguntar a um bot no ${applicationName}",
+              "Perguntar para ${bot} no ${applicationName}"
+            ]
+          }
+        },
+        "tr" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "${applicationName} uygulamasına sor",
+              "${applicationName} uygulamasındaki bir bota sor",
+              "${applicationName} uygulamasında ${bot} botuna sor"
+            ]
+          }
+        },
+        "vi" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Hỏi ${applicationName}",
+              "Hỏi một bot trong ${applicationName}",
+              "Hỏi ${bot} trong ${applicationName}"
+            ]
+          }
+        },
+        "zh-Hans" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "向 ${applicationName} 提问",
+              "向 ${applicationName} 里的机器人提问",
+              "向 ${applicationName} 里的 ${bot} 提问"
+            ]
+          }
+        },
+        "zh-Hant" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "詢問 ${applicationName}",
+              "詢問 ${applicationName} 中的機器人",
+              "在 ${applicationName} 中詢問 ${bot}"
+            ]
+          }
         }
       }
     },
     "Run a routine in ${applicationName}" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Starte eine Routine in ${applicationName}",
+              "Starte ${routine} in ${applicationName}"
+            ]
+          }
+        },
         "en" : {
           "stringSet" : {
             "state" : "translated",
@@ -27,12 +156,120 @@
               "Run ${routine} in ${applicationName}"
             ]
           }
+        },
+        "es" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Ejecuta una rutina en ${applicationName}",
+              "Ejecuta ${routine} en ${applicationName}"
+            ]
+          }
+        },
+        "fr" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Lancer une routine dans ${applicationName}",
+              "Lancer ${routine} dans ${applicationName}"
+            ]
+          }
+        },
+        "id" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Jalankan rutinitas di ${applicationName}",
+              "Jalankan ${routine} di ${applicationName}"
+            ]
+          }
+        },
+        "it" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Esegui una routine su ${applicationName}",
+              "Esegui ${routine} su ${applicationName}"
+            ]
+          }
+        },
+        "ja" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "${applicationName}でルーティンを実行",
+              "${applicationName}で${routine}を実行"
+            ]
+          }
+        },
+        "ko" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "${applicationName} 루틴 실행해",
+              "${applicationName}에서 ${routine} 루틴 실행해"
+            ]
+          }
+        },
+        "pt-BR" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Executar uma rotina no ${applicationName}",
+              "Executar ${routine} no ${applicationName}"
+            ]
+          }
+        },
+        "tr" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "${applicationName} uygulamasında bir rutin çalıştır",
+              "${applicationName} uygulamasında ${routine} rutinini çalıştır"
+            ]
+          }
+        },
+        "vi" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Chạy một quy trình trong ${applicationName}",
+              "Chạy ${routine} trong ${applicationName}"
+            ]
+          }
+        },
+        "zh-Hans" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "在 ${applicationName} 中运行例行任务",
+              "在 ${applicationName} 中运行 ${routine}"
+            ]
+          }
+        },
+        "zh-Hant" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "在 ${applicationName} 中執行例行任務",
+              "在 ${applicationName} 中執行 ${routine}"
+            ]
+          }
         }
       }
     },
     "Talk to a bot in ${applicationName}" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Sprich mit einem Bot in ${applicationName}",
+              "Sprich mit ${bot} in ${applicationName}"
+            ]
+          }
+        },
         "en" : {
           "stringSet" : {
             "state" : "translated",
@@ -41,18 +278,225 @@
               "Talk to ${bot} in ${applicationName}"
             ]
           }
+        },
+        "es" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Habla con un bot en ${applicationName}",
+              "Habla con ${bot} en ${applicationName}"
+            ]
+          }
+        },
+        "fr" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Parler à un bot dans ${applicationName}",
+              "Parler à ${bot} dans ${applicationName}"
+            ]
+          }
+        },
+        "id" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Bicara dengan bot di ${applicationName}",
+              "Bicara dengan ${bot} di ${applicationName}"
+            ]
+          }
+        },
+        "it" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Parla con un bot su ${applicationName}",
+              "Parla con ${bot} su ${applicationName}"
+            ]
+          }
+        },
+        "ja" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "${applicationName}のボットと話す",
+              "${applicationName}の${bot}と話す"
+            ]
+          }
+        },
+        "ko" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "${applicationName} 봇과 통화해",
+              "${applicationName}의 ${bot} 봇과 통화해"
+            ]
+          }
+        },
+        "pt-BR" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Falar com um bot no ${applicationName}",
+              "Falar com ${bot} no ${applicationName}"
+            ]
+          }
+        },
+        "tr" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "${applicationName} uygulamasındaki bir botla konuş",
+              "${applicationName} uygulamasında ${bot} ile konuş"
+            ]
+          }
+        },
+        "vi" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Nói chuyện với bot trong ${applicationName}",
+              "Nói chuyện với ${bot} trong ${applicationName}"
+            ]
+          }
+        },
+        "zh-Hans" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "跟 ${applicationName} 里的机器人通话",
+              "跟 ${applicationName} 里的 ${bot} 通话"
+            ]
+          }
+        },
+        "zh-Hant" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "與 ${applicationName} 中的機器人通話",
+              "在 ${applicationName} 中與 ${bot} 通話"
+            ]
+          }
         }
       }
     },
     "What needs me in ${applicationName}" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Wo werde ich in ${applicationName} gebraucht",
+              "Was wartet in ${applicationName} auf mich"
+            ]
+          }
+        },
         "en" : {
           "stringSet" : {
             "state" : "translated",
             "values" : [
               "What needs me in ${applicationName}",
               "What's waiting in ${applicationName}"
+            ]
+          }
+        },
+        "es" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Qué necesita mi atención en ${applicationName}",
+              "Qué tengo pendiente en ${applicationName}"
+            ]
+          }
+        },
+        "fr" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Qu'est-ce qui m'attend dans ${applicationName}",
+              "Qu'est-ce qui attend dans ${applicationName}"
+            ]
+          }
+        },
+        "id" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Apa yang perlu saya tangani di ${applicationName}",
+              "Apa yang menunggu di ${applicationName}"
+            ]
+          }
+        },
+        "it" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Cosa è in attesa su ${applicationName}",
+              "Cosa aspetta su ${applicationName}"
+            ]
+          }
+        },
+        "ja" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "${applicationName}の確認待ちを教えて",
+              "${applicationName}で待っているものを教えて"
+            ]
+          }
+        },
+        "ko" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "${applicationName}에서 내가 확인할 거 뭐 있어",
+              "${applicationName}에 기다리는 거 뭐 있어"
+            ]
+          }
+        },
+        "pt-BR" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "O que precisa de mim no ${applicationName}",
+              "O que está pendente no ${applicationName}"
+            ]
+          }
+        },
+        "tr" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "${applicationName} uygulamasında benden yanıt bekleyen ne var",
+              "${applicationName} uygulamasında bekleyen ne var"
+            ]
+          }
+        },
+        "vi" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "Có việc gì cần tôi trong ${applicationName}",
+              "Có gì đang chờ trong ${applicationName}"
+            ]
+          }
+        },
+        "zh-Hans" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "看看 ${applicationName} 里有什么需要我处理",
+              "看看 ${applicationName} 里有什么在等我"
+            ]
+          }
+        },
+        "zh-Hant" : {
+          "stringSet" : {
+            "state" : "translated",
+            "values" : [
+              "看看 ${applicationName} 有什麼待我處理的事項",
+              "看看 ${applicationName} 有什麼正在等我"
             ]
           }
         }

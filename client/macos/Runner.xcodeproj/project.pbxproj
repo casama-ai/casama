@@ -93,7 +93,6 @@
 		571217830F35386F166815BD /* NativeStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5712B5E4AF8BF1521AA39593 /* NativeStrings.swift */; };
 		5712EAFE6D1FB7AB7BFED457 /* NativeStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5712B5E4AF8BF1521AA39593 /* NativeStrings.swift */; };
 		5712C3E30F2477A26A133D92 /* NativeStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5712B5E4AF8BF1521AA39593 /* NativeStrings.swift */; };
-		571286DBF3F0715A6E30C348 /* AppShortcuts.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 571254491F95ED364FD227BA /* AppShortcuts.xcstrings */; };
 		57122299AF7967E6444052F6 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 571221F345A4F558DC15C559 /* InfoPlist.xcstrings */; };
 		57121A57A3EBBDAC7DCB0E19 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 5712847EAF91DB1B2D97096D /* InfoPlist.xcstrings */; };
 		57129C19862B53DAE644AA82 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 5712A1647FF580F851C393CF /* InfoPlist.xcstrings */; };
@@ -835,7 +834,6 @@
 			files = (
 				5712FB416A923BC888A88730 /* ServicesMenu.xcstrings in Resources */,
 				5712DB86C4F59FBAD921307D /* InfoPlist.xcstrings in Resources */,
-				571286DBF3F0715A6E30C348 /* AppShortcuts.xcstrings in Resources */,
 				5712EF88848827F129C0D767 /* Native.xcstrings in Resources */,
 				33CC10F32044A3C60003C045 /* Assets.xcassets in Resources */,
 				4B5A0F1C2D3E4F5061728395 /* PrivacyInfo.xcprivacy in Resources */,
