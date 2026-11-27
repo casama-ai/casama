@@ -4317,7 +4317,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String deleteAccountConfirm(String email) {
-    return 'Gli spazi di lavoro di cui sei l\'unico proprietario vengono eliminati con il tuo account, inclusi i relativi bot e computer. Questo non annulla i piani a pagamento. Annulla prima un piano acquistato sul web in Fatturazione e, se acquistato nell\'App Store o su Google Play, in quello store. Scrivi $email per confermare.';
+    return 'Gli spazi di lavoro di cui sei l\'unico proprietario vengono eliminati con il tuo account, inclusi i relativi bot e computer. Un piano acquistato sul web viene annullato automaticamente. Un piano acquistato nell\'App Store o su Google Play no: annullalo in quello store. Scrivi $email per confermare.';
   }
 
   @override
@@ -24882,6 +24882,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get liveKindDisputeOpened => 'Contestazione aperta';
 
   @override
+  String get liveKindPlanCancelFailed => 'Piano non annullato';
+
+  @override
   String get liveKindStoreReview => 'Recensione nello store';
 
   @override
@@ -27150,7 +27153,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String cloudAccountDeleteConfirm(String email) {
-    return 'Digita $email per eliminare il tuo account Casama Cloud. Gli spazi di lavoro cloud di cui sei l\'unico proprietario verranno eliminati insieme all\'account e i modelli di Casama Cloud smetteranno di funzionare sui server pagati da quegli spazi. Questo non annulla i piani a pagamento. Annulla prima un piano acquistato sul web in Fatturazione su Casama Cloud e, se acquistato nell\'App Store o su Google Play, in quello store.';
+    return 'Digita $email per eliminare il tuo account Casama Cloud. Gli spazi di lavoro cloud di cui sei l\'unico proprietario verranno eliminati insieme all\'account e i modelli di Casama Cloud smetteranno di funzionare sui server pagati da quegli spazi. Un piano acquistato sul web viene annullato automaticamente. Un piano acquistato nell\'App Store o su Google Play no: annullalo in quello store.';
   }
 
   @override

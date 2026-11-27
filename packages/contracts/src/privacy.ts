@@ -6,12 +6,28 @@ export const DeleteAccountRequest = z
   })
   .openapi("DeleteAccountRequest");
 
+export const StoreSubscriptionNotice = z
+  .object({
+    source: z.enum(["app_store", "google_play"]),
+    plan_name: z.string(),
+    manage_url: z.string().openapi({ description: "The store's page to cancel it" }),
+    notice: z.string().openapi({
+      description: "In the person's language: this must be cancelled in the store, with the link",
+    }),
+  })
+  .openapi("StoreSubscriptionNotice");
+
 export const AccountDeletion = z
   .object({
     purge_after: z.iso.datetime({ offset: true }),
     workspaces_deleted: z
       .array(z.string())
       .openapi({ description: "Workspaces you are the only owner of; they are deleted with you" }),
+    // Optional so a client still reads an older server's answer.
+    store_subscriptions: z.array(StoreSubscriptionNotice).optional().openapi({
+      description:
+        "App Store and Google Play subscriptions of those workspaces that still renew. Deleting the account doesn't cancel them: only the buyer can, in the store",
+    }),
   })
   .openapi("AccountDeletion");
 

@@ -28,6 +28,7 @@ export const OwnerEventKind = z
     "renewal",
     "refund",
     "dispute_opened",
+    "plan_cancel_failed",
     "store_review",
     "store_crashes",
     "day2_return",

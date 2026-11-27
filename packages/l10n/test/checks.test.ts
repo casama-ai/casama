@@ -417,3 +417,26 @@ describe("glossary avoid list and format", () => {
     expect(() => parseGlossary([])).toThrow(GlossaryError);
   });
 });
+
+describe("web addresses in glossary checks", () => {
+  it("a link's address ends at its quote: the brand name in the link text still counts", () => {
+    const keep = parseGlossary({
+      version: 1,
+      sourceLocale: "en",
+      locales: ["ja"],
+      terms: [
+        {
+          id: "casama",
+          term: "Casama",
+          variants: [],
+          rule: "keep",
+          caseSensitive: true,
+          translations: {},
+        },
+      ],
+    });
+    const en = icu('<a href="https://docs.casama.ai/guide/chrome">Casama for Chrome</a>');
+    const ja = '<a href="https://docs.casama.ai/guide/chrome">Chrome用Casama</a>';
+    expect(hasErrors(checkTranslation(en, ja, { locale: "ja", glossary: keep }))).toBe(false);
+  });
+});

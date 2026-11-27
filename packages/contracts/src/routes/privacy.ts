@@ -40,7 +40,7 @@ export const deleteMyAccount = createRoute({
   tags,
   security,
   summary:
-    "Delete your account: you are signed out now, and your data, workspaces you solely own and their computer snapshots are purged after the grace period",
+    "Delete your account: you are signed out now, web plans you pay for are cancelled, and your data, workspaces you solely own and their computer snapshots are purged after the grace period. App Store and Google Play subscriptions must be cancelled in the store",
   request: { body: jsonBody(DeleteAccountRequest) },
   responses: { 200: jsonResponse("Scheduled", AccountDeletion), 400: e400, 401: e401 },
 });

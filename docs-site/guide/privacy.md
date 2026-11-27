@@ -71,6 +71,7 @@ casama account delete --confirm ana@example.com
 | What | When |
 | --- | --- |
 | Your sessions, push devices and shared device data | Right away |
+| Renewals of plans you pay for on the web | Right away (see [Paid plans](#paid-plans)) |
 | Workspaces where you're the only owner, with their bots, chats and computers (including computer snapshots) | After the grace period |
 | Your account | After the grace period |
 | Your membership in workspaces that have another owner | After the grace period; the workspace and its data stay |
@@ -83,6 +84,22 @@ A workspace where you're the only owner is deleted with your account, even if ot
 There's no screen for making someone else an owner yet, so ask for help first if the workspace
 should stay.
 :::
+
+### Paid plans
+
+- **Plans bought on the web are cancelled for you.** This covers the workspaces only you own and
+  any other plan billed to your email address. The plan won't renew, and a free trial won't turn
+  into a charge. Payments already made aren't refunded. A payment that is still failing or on hold
+  is cancelled at once.
+- **Plans bought in the App Store or Google Play keep charging until you cancel them there.** Only
+  you can cancel them. Deleting your account tells you which ones still renew, with a link, and the
+  confirmation email repeats it:
+  [App Store subscriptions](https://apps.apple.com/account/subscriptions) or
+  [Google Play subscriptions](https://play.google.com/store/account/subscriptions?package=ai.casama.app).
+  This list covers the workspaces only you own, so if you bought a plan for a shared workspace,
+  check your store too.
+
+You get an email confirming the deletion, with the date your data will be erased.
 
 ## Pictures
 

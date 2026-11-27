@@ -29,7 +29,7 @@ class PrivacyApi {
 
   const PrivacyApi(this._dio);
 
-  /// Delete your account: you are signed out now, and your data, workspaces you solely own and their computer snapshots are purged after the grace period
+  /// Delete your account: you are signed out now, web plans you pay for are cancelled, and your data, workspaces you solely own and their computer snapshots are purged after the grace period. App Store and Google Play subscriptions must be cancelled in the store
   /// 
   ///
   /// Parameters:

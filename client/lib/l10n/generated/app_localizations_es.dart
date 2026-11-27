@@ -4309,7 +4309,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String deleteAccountConfirm(String email) {
-    return 'Los espacios de trabajo donde eres la única persona propietaria se eliminan con tu cuenta, incluidos sus bots y computadoras. Esto no cancela los planes de pago. Primero cancela un plan comprado en la web en Facturación, y un plan comprado en el App Store o Google Play en esa tienda. Escribe $email para confirmar.';
+    return 'Los espacios de trabajo donde eres la única persona propietaria se eliminan con tu cuenta, incluidos sus bots y computadoras. Un plan que compraste en la web se cancela automáticamente. Un plan comprado en el App Store o Google Play no: cancélalo en esa tienda. Escribe $email para confirmar.';
   }
 
   @override
@@ -24904,6 +24904,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get liveKindDisputeOpened => 'Disputa abierta';
 
   @override
+  String get liveKindPlanCancelFailed => 'Plan no cancelado';
+
+  @override
   String get liveKindStoreReview => 'Reseña en la tienda';
 
   @override
@@ -27176,7 +27179,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String cloudAccountDeleteConfirm(String email) {
-    return 'Escribe $email para eliminar tu cuenta de Casama Cloud. Los espacios de trabajo en la nube que solo te pertenecen a ti se eliminan con ella, y los modelos de Casama Cloud dejan de funcionar en los servidores que esos espacios pagan. Esto no cancela los planes de pago. Primero cancela un plan comprado en la web en Facturación en Casama Cloud, y un plan comprado en el App Store o Google Play en esa tienda.';
+    return 'Escribe $email para eliminar tu cuenta de Casama Cloud. Los espacios de trabajo en la nube que solo te pertenecen a ti se eliminan con ella, y los modelos de Casama Cloud dejan de funcionar en los servidores que esos espacios pagan. Un plan que compraste en la web se cancela automáticamente. Un plan comprado en el App Store o Google Play no: cancélalo en esa tienda.';
   }
 
   @override

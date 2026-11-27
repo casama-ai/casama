@@ -4295,7 +4295,7 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String deleteAccountConfirm(String email) {
-    return 'Các không gian làm việc chỉ có bạn làm chủ sở hữu sẽ bị xóa cùng tài khoản, bao gồm bot và máy tính. Thao tác này không hủy các gói trả phí. Trước tiên, hãy hủy gói mua trên web trong mục Thanh toán, còn gói mua trên App Store hoặc Google Play thì hủy tại cửa hàng đó. Nhập $email để xác nhận.';
+    return 'Các không gian làm việc chỉ có bạn làm chủ sở hữu sẽ bị xóa cùng tài khoản, bao gồm bot và máy tính. Gói bạn mua trên web sẽ tự động hủy. Gói mua trên App Store hoặc Google Play không tự hủy: hãy hủy tại cửa hàng đó. Nhập $email để xác nhận.';
   }
 
   @override
@@ -24819,6 +24819,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get liveKindDisputeOpened => 'Mở tranh chấp';
 
   @override
+  String get liveKindPlanCancelFailed => 'Chưa hủy được gói';
+
+  @override
   String get liveKindStoreReview => 'Đánh giá trên cửa hàng';
 
   @override
@@ -27087,7 +27090,7 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String cloudAccountDeleteConfirm(String email) {
-    return 'Nhập $email để xóa tài khoản Casama Cloud của bạn. Các không gian làm việc Cloud chỉ do mình bạn sở hữu sẽ bị xóa theo, và mô hình Casama Cloud sẽ ngừng trên các máy chủ do chúng thanh toán. Thao tác này không hủy các gói trả phí. Trước tiên, hãy hủy gói mua trên web trong mục Thanh toán trên Casama Cloud, còn gói mua trên App Store hoặc Google Play thì hủy tại cửa hàng đó.';
+    return 'Nhập $email để xóa tài khoản Casama Cloud của bạn. Các không gian làm việc Cloud chỉ do mình bạn sở hữu sẽ bị xóa theo, và mô hình Casama Cloud sẽ ngừng trên các máy chủ do chúng thanh toán. Gói bạn mua trên web sẽ tự động hủy. Gói mua trên App Store hoặc Google Play không tự hủy: hãy hủy tại cửa hàng đó.';
   }
 
   @override

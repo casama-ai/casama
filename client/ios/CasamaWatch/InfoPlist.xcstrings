@@ -5,10 +5,82 @@
       "comment" : "System permission prompt on Apple Watch: why Casama records the microphone.",
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama nimmt deine Stimme auf, wenn du einen Bot etwas fragst, und sendet sie an deinen Casama-Server, wo ein KI-Anbieter (OpenAI, auf Casama Cloud) sie für deinen Bot in Text umwandelt."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Casama records your voice when you ask a bot something and sends it to your Casama server, where an AI provider (OpenAI, on Casama Cloud) turns it into text for your bot."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama graba tu voz cuando le preguntas algo a un bot y la envía a tu servidor de Casama, donde un proveedor de IA (OpenAI, en Casama Cloud) la convierte en texto para tu bot."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama enregistre votre voix lorsque vous posez une question à un bot et l'envoie à votre serveur Casama, où un fournisseur d'IA (OpenAI, sur Casama Cloud) la transcrit en texte pour votre bot."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama merekam suaramu saat kamu menanyakan sesuatu ke bot dan mengirimkannya ke server Casama-mu, tempat penyedia AI (OpenAI, di Casama Cloud) mengubahnya menjadi teks untuk botmu."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama registra la tua voce quando chiedi qualcosa a un bot e la invia al tuo server Casama, dove un fornitore IA (OpenAI, su Casama Cloud) la trasforma in testo per il tuo bot."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ボットに質問すると、Casamaは音声を録音してお使いのCasamaサーバーに送信します。サーバー側でAIプロバイダー（Casama CloudではOpenAI）がボット向けのテキストに変換します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "봇에게 질문할 때 음성을 녹음해 Casama 서버로 보내며, AI 제공업체(Casama Cloud의 OpenAI)가 이를 봇을 위한 텍스트로 변환해요."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Casama grava sua voz quando você pergunta algo a um bot e a envia ao seu servidor do Casama, onde um provedor de IA (OpenAI, no Casama Cloud) a transforma em texto para o bot."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bir bota bir şey sorduğunuzda Casama sesinizi kaydeder ve Casama sunucunuza gönderir; burada bir yapay zeka sağlayıcısı (Casama Cloud'da OpenAI) bunu botunuz için metne dönüştürür."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama ghi âm giọng nói khi bạn hỏi bot điều gì đó và gửi tới máy chủ Casama của bạn, nơi nhà cung cấp AI (OpenAI, trên Casama Cloud) chuyển thành văn bản cho bot."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "当你用语音向机器人提问时，Casama 会录下你的声音并发送到你的 Casama 服务器，由 AI 提供商（在 Casama Cloud 上为 OpenAI）将其转换成文字供你的机器人使用。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "當你向機器人提問時，Casama 會錄製你的語音並傳送至你的 Casama 伺服器，再由 AI 供應商（於 Casama Cloud 使用 OpenAI）將其轉為文字交給你的機器人。"
           }
         }
       }

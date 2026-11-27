@@ -4292,7 +4292,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String deleteAccountConfirm(String email) {
-    return 'Workspaces where you are the only owner are deleted with your account, including their bots and computers. This doesn\'t cancel paid plans. First cancel a plan bought on the web in Billing, and a plan bought in the App Store or Google Play in that store. Type $email to confirm.';
+    return 'Workspaces where you are the only owner are deleted with your account, including their bots and computers. A plan you bought on the web is cancelled automatically. A plan bought in the App Store or Google Play isn\'t: cancel it in that store. Type $email to confirm.';
   }
 
   @override
@@ -24719,6 +24719,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get liveKindDisputeOpened => 'Dispute opened';
 
   @override
+  String get liveKindPlanCancelFailed => 'Plan not cancelled';
+
+  @override
   String get liveKindStoreReview => 'Store review';
 
   @override
@@ -26981,7 +26984,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String cloudAccountDeleteConfirm(String email) {
-    return 'Type $email to delete your Casama Cloud account. Cloud workspaces only you own go with it, and Casama Cloud models stop on servers they pay for. This doesn\'t cancel paid plans. First cancel a plan bought on the web in Billing on Casama Cloud, and a plan bought in the App Store or Google Play in that store.';
+    return 'Type $email to delete your Casama Cloud account. Cloud workspaces only you own go with it, and Casama Cloud models stop on servers they pay for. A plan you bought on the web is cancelled automatically. A plan bought in the App Store or Google Play isn\'t: cancel it in that store.';
   }
 
   @override

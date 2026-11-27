@@ -4311,7 +4311,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String deleteAccountConfirm(String email) {
-    return 'Workspaces, bei denen du alleiniger Inhaber bist, werden mit deinem Konto gelöscht, einschließlich ihrer Bots und Computer. Bezahlte Abos werden dadurch nicht gekündigt. Kündige ein im Web gekauftes Abo zuerst unter „Abrechnung“ und ein im App Store oder bei Google Play gekauftes Abo im jeweiligen Store. Gib $email zur Bestätigung ein.';
+    return 'Workspaces, bei denen du alleiniger Inhaber bist, werden mit deinem Konto gelöscht, einschließlich ihrer Bots und Computer. Ein im Web gekauftes Abo wird automatisch gekündigt. Ein im App Store oder bei Google Play gekauftes Abo nicht: Kündige es im jeweiligen Store. Gib $email zur Bestätigung ein.';
   }
 
   @override
@@ -24919,6 +24919,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get liveKindDisputeOpened => 'Streitfall eröffnet';
 
   @override
+  String get liveKindPlanCancelFailed => 'Abo nicht gekündigt';
+
+  @override
   String get liveKindStoreReview => 'Store-Bewertung';
 
   @override
@@ -27192,7 +27195,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String cloudAccountDeleteConfirm(String email) {
-    return 'Gib $email ein, um dein Casama Cloud-Konto zu löschen. Cloud-Workspaces, die nur dir gehören, werden mitgelöscht, und auf den Servern, für die sie bezahlen, funktionieren die Modelle von Casama Cloud nicht mehr. Bezahlte Abos werden dadurch nicht gekündigt. Kündige ein im Web gekauftes Abo zuerst unter „Abrechnung“ auf Casama Cloud und ein im App Store oder bei Google Play gekauftes Abo im jeweiligen Store.';
+    return 'Gib $email ein, um dein Casama Cloud-Konto zu löschen. Cloud-Workspaces, die nur dir gehören, werden mitgelöscht, und auf den Servern, für die sie bezahlen, funktionieren die Modelle von Casama Cloud nicht mehr. Ein im Web gekauftes Abo wird automatisch gekündigt. Ein im App Store oder bei Google Play gekauftes Abo nicht: Kündige es im jeweiligen Store.';
   }
 
   @override

@@ -5,10 +5,82 @@
       "comment" : "System permission prompt on iPhone and iPad: why Casama asks. Alarms and timers.",
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deine Bots können Wecker und Timer stellen, die auch im Stummmodus klingeln – nur wenn du Wecker unter Geräteverbindungen erlaubst."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Your bots can set alarms and timers that ring through silent mode, only when you allow Alarms in Device connections."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tus bots pueden configurar alarmas y temporizadores que suenan incluso en modo silencio, pero solo si permites Alarmas en Conexiones del dispositivo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vos bots peuvent programmer des alarmes et minuteurs qui sonnent même en mode silencieux, uniquement lorsque vous autorisez Alarmes dans Connexions de l'appareil."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Botmu dapat menyetel alarm dan timer yang berbunyi meski dalam mode hening, hanya saat kamu mengizinkan Alarm di Koneksi perangkat."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I tuoi bot possono impostare sveglie e timer che suonano anche in modalità silenziosa, solo quando consenti Sveglie in Connessioni del dispositivo."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "「デバイス接続」で「アラーム」を許可した場合のみ、ボットが消音モードでも鳴るアラームやタイマーを設定できます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "기기 연결에서 알람을 허용한 경우에만 봇이 무음 모드에서도 울리는 알람과 타이머를 설정할 수 있어요."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seus bots podem definir alarmes e timers que tocam mesmo no modo silencioso, somente quando você permitir Alarmes em Conexões de dispositivos."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Botlarınız yalnızca Cihaz bağlantıları bölümünde Alarmlar'a izin verdiğinizde sessiz modda bile çalan alarmlar ve zamanlayıcılar kurabilir."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bot chỉ đặt được báo thức và hẹn giờ đổ chuông cả ở chế độ im lặng khi bạn cho phép Báo thức trong Kết nối thiết bị."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "仅当你在“设备连接”中允许“闹钟”时，你的机器人才可以设置在静音模式下仍会响铃的闹钟和计时器。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "只有當你在「裝置連線」中允許「鬧鐘」時，你的機器人才能設定在靜音模式下仍會響鈴的鬧鐘與計時器。"
           }
         }
       }
@@ -17,10 +89,82 @@
       "comment" : "System permission prompt on iPhone and iPad: why Casama asks. Calendar.",
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deine Bots können Fragen zu deinen Terminen beantworten und Ereignisse hinzufügen – nur wenn du Kalender unter Geräteverbindungen aktivierst."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Your bots can answer questions about your schedule and add events, only when you turn on Calendar in Device connections."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tus bots pueden responder preguntas sobre tu agenda y agregar eventos, solo cuando activas Calendario en Conexiones del dispositivo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vos bots peuvent répondre aux questions sur votre emploi du temps et ajouter des événements, uniquement lorsque vous activez Calendrier dans Connexions de l'appareil."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Botmu dapat menjawab pertanyaan tentang jadwalmu dan menambahkan acara, hanya saat kamu mengaktifkan Kalender di Koneksi perangkat."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I tuoi bot possono rispondere a domande sui tuoi impegni e aggiungere eventi, solo quando attivi Calendario in Connessioni del dispositivo."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "「デバイス接続」で「カレンダー」をオンにした場合のみ、ボットが予定に関する質問に答えたり予定を追加したりできます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "기기 연결에서 캘린더를 켠 경우에만 봇이 일정 질문에 답하고 이벤트를 추가할 수 있어요."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seus bots podem responder perguntas sobre sua agenda e adicionar eventos, somente quando você ativar Calendário em Conexões de dispositivos."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Botlarınız programınızla ilgili soruları yanıtlayabilir ve etkinlik ekleyebilir; bunu yalnızca Cihaz bağlantıları bölümünde Takvim'i açtığınızda yapar."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bot của bạn chỉ có thể trả lời câu hỏi về lịch trình và thêm sự kiện khi bạn bật Lịch trong Kết nối thiết bị."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "仅当你在“设备连接”中开启“日历”时，你的机器人才可以回答有关你日程的问题并添加日程事件。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "只有當你在「裝置連線」中開啟「行事曆」時，你的機器人才能回答日程問題並新增活動。"
           }
         }
       }
@@ -29,10 +173,82 @@
       "comment" : "System permission prompt on iPhone and iPad: why Casama asks. Calendar.",
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deine Bots können Fragen zu deinen Terminen beantworten und Ereignisse hinzufügen – nur wenn du Kalender unter Geräteverbindungen aktivierst."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Your bots can answer questions about your schedule and add events, only when you turn on Calendar in Device connections."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tus bots pueden responder preguntas sobre tu agenda y agregar eventos, solo cuando activas Calendario en Conexiones del dispositivo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vos bots peuvent répondre aux questions sur votre emploi du temps et ajouter des événements, uniquement lorsque vous activez Calendrier dans Connexions de l'appareil."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Botmu dapat menjawab pertanyaan tentang jadwalmu dan menambahkan acara, hanya saat kamu mengaktifkan Kalender di Koneksi perangkat."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I tuoi bot possono rispondere a domande sui tuoi impegni e aggiungere eventi, solo quando attivi Calendario in Connessioni del dispositivo."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "「デバイス接続」で「カレンダー」をオンにした場合のみ、ボットが予定に関する質問に答えたり予定を追加したりできます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "기기 연결에서 캘린더를 켠 경우에만 봇이 일정 질문에 답하고 이벤트를 추가할 수 있어요."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seus bots podem responder perguntas sobre sua agenda e adicionar eventos, somente quando você ativar Calendário em Conexões de dispositivos."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Botlarınız programınızla ilgili soruları yanıtlayabilir ve etkinlik ekleyebilir; bunu yalnızca Cihaz bağlantıları bölümünde Takvim'i açtığınızda yapar."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bot của bạn chỉ có thể trả lời câu hỏi về lịch trình và thêm sự kiện khi bạn bật Lịch trong Kết nối thiết bị."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "仅当你在“设备连接”中开启“日历”时，你的机器人才可以回答有关你日程的问题并添加日程事件。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "只有當你在「裝置連線」中開啟「行事曆」時，你的機器人才能回答日程問題並新增活動。"
           }
         }
       }
@@ -41,10 +257,82 @@
       "comment" : "System permission prompt on iPhone and iPad: why Casama asks. Camera.",
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama verwendet die Kamera, wenn du ein Foto für einen Bot oder dein Profil aufnimmst."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Casama uses the camera when you take a photo to send to a bot or for your profile."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama usa la cámara cuando tomas una foto para enviar a un bot o para tu perfil."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama utilise l'appareil photo lorsque vous prenez une photo à envoyer à un bot ou pour votre profil."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama menggunakan kamera saat kamu mengambil foto untuk dikirim ke bot atau untuk profilmu."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama usa la fotocamera quando scatti una foto da inviare a un bot o per il tuo profilo."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ボットに送る写真やプロフィール用の写真を撮影するときに、Casamaがカメラを使用します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "봇에게 보내거나 프로필에 사용할 사진을 찍을 때 Casama가 카메라를 사용해요."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Casama usa a câmera quando você tira uma foto para enviar a um bot ou usar no seu perfil."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bir bota göndermek veya profiliniz için fotoğraf çektiğinizde Casama kamerayı kullanır."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama dùng camera khi bạn chụp ảnh gửi cho bot hoặc đặt ảnh hồ sơ."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "当你拍照发送给机器人或用于个人资料时，Casama 会使用相机。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "當你拍攝照片以傳送給機器人或用於個人檔案時，Casama 會使用相機。"
           }
         }
       }
@@ -53,10 +341,82 @@
       "comment" : "System permission prompt on iPhone and iPad: why Casama asks. Contacts. Device connections is a settings screen.",
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deine Bots können Personen nachschlagen, die du kennst – nur wenn du Kontakte unter Geräteverbindungen aktivierst."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Your bots can look up people you know, only when you turn on Contacts in Device connections."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tus bots pueden buscar personas que conoces, solo cuando activas Contactos en Conexiones del dispositivo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vos bots peuvent rechercher des personnes que vous connaissez, uniquement lorsque vous activez Contacts dans Connexions de l'appareil."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Botmu dapat mencari orang yang kamu kenal, hanya saat kamu mengaktifkan Kontak di Koneksi perangkat."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I tuoi bot possono cercare le persone che conosci, solo quando attivi Contatti in Connessioni del dispositivo."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "「デバイス接続」で「連絡先」をオンにした場合のみ、ボットが知人を検索できます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "기기 연결에서 연락처를 켠 경우에만 봇이 지인을 찾아볼 수 있어요."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seus bots podem consultar pessoas que você conhece, somente quando você ativar Contatos em Conexões de dispositivos."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Botlarınız, yalnızca Cihaz bağlantıları bölümünde Kişiler'i açtığınızda tanıdığınız kişilerin bilgilerine bakabilir."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bot của bạn chỉ có thể tra cứu người quen của bạn khi bạn bật Danh bạ trong Kết nối thiết bị."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "仅当你在“设备连接”中开启“通讯录”时，你的机器人才可以查找你认识的人。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "只有當你在「裝置連線」中開啟「聯絡人」時，你的機器人才能查詢你認識的人。"
           }
         }
       }
@@ -65,10 +425,82 @@
       "comment" : "System permission prompt on iPhone and iPad: why Casama asks. Face ID.",
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama nutzt Face ID zum Entsperren der App bei aktivierter App-Sperre sowie zur Bestätigung riskanter Aktionen."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Casama uses Face ID to unlock the app when you turn on the app lock, and to confirm risky actions."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama usa Face ID para desbloquear la app cuando activas el bloqueo de la app y para confirmar acciones riesgosas."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama utilise Face ID pour déverrouiller l'app lorsque vous activez le verrouillage de l'app et pour confirmer les actions risquées."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama menggunakan Face ID untuk membuka kunci aplikasi saat kamu mengaktifkan kunci aplikasi, dan untuk mengonfirmasi tindakan berisiko."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama usa Face ID per sbloccare l’app quando attivi il blocco app e per confermare le azioni rischiose."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "アプリロックをオンにした際のロック解除や、重要な操作の本人確認のためにCasamaがFace IDを使用します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama는 앱 잠금을 켰을 때 앱 잠금을 해제하고 민감한 작업을 확인하기 위해 Face ID를 사용해요."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Casama usa o Face ID para desbloquear o app quando o bloqueio do app está ativado e para confirmar ações arriscadas."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama, uygulama kilidini açtığınızda uygulamanın kilidini açmak ve riskli eylemleri onaylamak için Face ID kullanır."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama dùng Face ID để mở khóa ứng dụng khi bạn bật khóa ứng dụng và để xác nhận các thao tác rủi ro."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "当你开启应用锁时，Casama 会使用面容 ID 解锁应用，并在确认高风险操作时进行验证。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "當你開啟應用程式鎖定時，Casama 會使用 Face ID 解鎖應用程式，以及確認高風險操作。"
           }
         }
       }
@@ -77,10 +509,82 @@
       "comment" : "System permission prompt on iPhone and iPad: why Casama asks. Reading Apple Health data.",
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deine Bots können tägliche Zusammenfassungen zu Schlaf, Aktivität, Trainings und Herzwerten aus Apple Health sehen – nur wenn du Apple Health unter Geräteverbindungen aktivierst. Casama schreibt niemals in Apple Health und nutzt die Daten niemals für Werbung."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Your bots can see daily summaries of your sleep, activity, workouts and heart from Apple Health, only when you turn on Apple Health in Device connections. Casama never writes to Apple Health and never uses it for ads."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tus bots pueden ver resúmenes diarios de tu sueño, actividad, entrenamientos y frecuencia cardíaca en Apple Salud, solo cuando activas Apple Salud en Conexiones del dispositivo. Casama nunca escribe en Apple Salud y nunca usa esos datos para anuncios."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vos bots peuvent voir des résumés quotidiens de votre sommeil, activité, entraînements et rythme cardiaque depuis Apple Santé, uniquement lorsque vous activez Apple Santé dans Connexions de l'appareil. Casama n'écrit jamais dans Apple Santé et ne l'utilise jamais pour des publicités."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Botmu dapat melihat ringkasan harian tidur, aktivitas, olahraga, dan jantungmu dari Apple Health, hanya saat kamu mengaktifkan Apple Health di Koneksi perangkat. Casama tidak pernah menulis ke Apple Health dan tidak pernah menggunakannya untuk iklan."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I tuoi bot possono vedere riepiloghi giornalieri di sonno, attività, allenamenti e battito da Apple Salute, solo quando attivi Apple Salute in Connessioni del dispositivo. Casama non scrive mai su Apple Salute e non lo usa mai per la pubblicità."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "「デバイス接続」で「Appleヘルスケア」をオンにした場合のみ、ボットがヘルスケアから睡眠、アクティビティ、ワークアウト、心臓の1日ごとの概要を参照できます。Casamaがヘルスケアに書き込んだり広告に利用したりすることはありません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "기기 연결에서 Apple 건강을 켠 경우에만 봇이 수면, 활동, 운동, 심박수 일일 요약을 볼 수 있어요. Casama는 Apple 건강에 절대 기록하지 않으며 이 데이터를 광고에 사용하지도 않아요."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seus bots podem ver resumos diários do seu sono, atividade, treinos e coração no Apple Saúde, somente quando você ativar o Apple Saúde em Conexões de dispositivos. O Casama nunca grava no Apple Saúde e nunca usa esses dados para anúncios."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Botlarınız yalnızca Cihaz bağlantıları bölümünde Apple Sağlık'ı açtığınızda Apple Sağlık'taki uyku, aktivite, antrenman ve kalp verilerinizin günlük özetlerini görebilir. Casama asla Apple Sağlık'a veri yazmaz ve bunları asla reklamlar için kullanmaz."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bot của bạn chỉ có thể xem tóm tắt hằng ngày về giấc ngủ, vận động, tập luyện và nhịp tim từ Apple Health khi bạn bật Apple Health trong Kết nối thiết bị. Casama không bao giờ ghi vào Apple Health và không dùng dữ liệu này cho quảng cáo."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "仅当你在“设备连接”中开启“Apple 健康”时，你的机器人才可以查看来自 Apple 健康的睡眠、活动、体能训练和心脏每日摘要。Casama 绝不会向 Apple 健康写入数据，也绝不会将其用于广告。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "只有當你在「裝置連線」中開啟「Apple 健康」時，你的機器人才能查看你來自 Apple「健康」的睡眠、活動、體能訓練與心率每日摘要。Casama 絕不會寫入 Apple「健康」，也絕不會將其用於廣告。"
           }
         }
       }
@@ -89,10 +593,82 @@
       "comment" : "System permission prompt on iPhone and iPad: why Casama asks. Writing Apple Health data.",
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama liest nur Daten aus Apple Health und schreibt niemals dorthin."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Casama only reads Apple Health data; it never writes to it."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama solo lee datos de Apple Salud; nunca escribe en ella."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama lit uniquement les données Apple Santé ; il n'y écrit jamais."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama hanya membaca data Apple Health; tidak pernah menulis ke dalamnya."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama legge soltanto i dati di Apple Salute; non vi scrive mai."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CasamaはAppleヘルスケアのデータの読み取りのみを行い、書き込みは一切行いません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama는 Apple 건강 데이터를 읽기만 하며 절대 기록하지 않아요."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Casama apenas lê dados do Apple Saúde; nunca escreve neles."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama yalnızca Apple Sağlık verilerini okur; oraya asla veri yazmaz."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama chỉ đọc dữ liệu Apple Health và không bao giờ ghi vào đó."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama 仅读取 Apple 健康数据，绝不会写入任何数据。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama 僅讀取 Apple「健康」資料，絕不會寫入任何資料。"
           }
         }
       }
@@ -101,10 +677,82 @@
       "comment" : "System permission prompt on iPhone and iPad: why Casama asks. Apple Home (HomeKit).",
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deine Bots können dein HomeKit-Zuhause prüfen und steuern, wenn du Home unter Geräteverbindungen erlaubst; vor Änderungen fragen sie immer nach deiner Freigabe."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Your bots can check and control your HomeKit home when you allow Home in Device connections; changes always ask for approval first."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cuando permites Casa en Conexiones del dispositivo, tus bots pueden consultar y controlar tu hogar en HomeKit; los cambios siempre piden aprobación primero."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vos bots peuvent consulter et contrôler votre maison HomeKit lorsque vous autorisez Maison dans Connexions de l'appareil ; toute modification demande toujours votre approbation au préalable."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Botmu dapat memeriksa dan mengontrol rumah HomeKit milikmu saat kamu mengizinkan Rumah di Koneksi perangkat; perubahan selalu meminta persetujuan lebih dulu."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I tuoi bot possono verificare e comandare la tua casa HomeKit quando consenti Casa in Connessioni del dispositivo; le modifiche richiedono sempre prima la tua approvazione."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "「デバイス接続」で「ホーム」を許可した場合のみ、ボットがHomeKitの住まいを確認・操作できます。変更には常に事前の承認が必要です。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "기기 연결에서 홈을 허용하면 봇이 HomeKit 홈을 확인하고 제어할 수 있으며, 변경 시 항상 먼저 승인을 요청해요."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seus bots podem verificar e controlar sua casa do HomeKit quando você permitir Casa em Conexões de dispositivos; alterações sempre pedem aprovação antes."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cihaz bağlantıları bölümünde Ev'e izin verdiğinizde botlarınız HomeKit evinizin durumuna bakabilir ve onu kontrol edebilir; değişiklikler için her zaman önce onayınız istenir."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bot của bạn có thể kiểm tra và điều khiển nhà HomeKit khi bạn cho phép Nhà trong Kết nối thiết bị; mọi thay đổi luôn hỏi phê duyệt trước."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "当你在“设备连接”中允许“家庭”时，你的机器人可以查看并控制你的 HomeKit 智能家居；任何更改都会先请求你的批准。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "當你在「裝置連線」中允許「家庭」時，你的機器人可以查看並控制你的 HomeKit 家庭裝置；任何變更都會先請求你的核准。"
           }
         }
       }
@@ -113,10 +761,82 @@
       "comment" : "System permission prompt on iPhone and iPad: why Casama asks. Location, also in the background.",
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teile deinen Bots mit, wann du an deinen benannten Orten ankommst oder sie verlässt – auch wenn Casama geschlossen ist. Nur der Ortsname und die Uhrzeit werden geteilt, niemals deine Route."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tell your bots when you arrive at or leave your named places, even when Casama is closed. Only the place name and time are shared, never your route."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avisa a tus bots cuando llegas a tus lugares guardados o sales de ellos, incluso con Casama cerrado. Solo se comparten el nombre del lugar y la hora, nunca tu ruta."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Informez vos bots lorsque vous arrivez à vos lieux nommés ou les quittez, même lorsque Casama est fermé. Seuls le nom du lieu et l'heure sont partagés, jamais votre itinéraire."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beri tahu botmu saat kamu tiba di atau meninggalkan tempat yang kamu beri nama, bahkan saat Casama ditutup. Hanya nama tempat dan waktunya yang dibagikan, tidak pernah rutemu."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avvisa i tuoi bot quando arrivi nei tuoi luoghi salvati o li lasci, anche quando Casama è chiuso. Vengono condivisi solo il nome del luogo e l’orario, mai il tuo percorso."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casamaを閉じていても、登録した場所への到着や出発をボットに知らせることができます。共有されるのは場所の名前と時刻のみで、移動経路は共有されません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama가 닫혀 있을 때도 지정한 장소에 도착하거나 떠날 때 봇에게 알려 줘요. 장소 이름과 시간만 공유되며 이동 경로는 절대 공유되지 않아요."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avise seus bots quando você chegar ou sair dos seus lugares salvos, mesmo com o Casama fechado. Apenas o nome do lugar e o horário são compartilhados, nunca seu trajeto."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adlandırdığınız yerlere vardığınızda veya oradan ayrıldığınızda Casama kapalıyken bile botlarınıza haber verin. Yalnızca yer adı ve saat paylaşılır, rotanız asla paylaşılmaz."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Báo cho bot biết khi bạn đến hoặc rời khỏi các địa điểm đã đặt tên, ngay cả khi Casama đã đóng. Chỉ tên địa điểm và thời gian được chia sẻ, không bao giờ gửi lộ trình của bạn."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "即使 Casama 已关闭，也能在你到达或离开已命名的地点时通知你的机器人。系统只会共享地点名称和时间，绝不会共享你的行踪路线。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "即使 Casama 已關閉，也能在你抵達或離開命名地點時通知機器人。系統只會分享地點名稱與時間，絕不會分享你的移動路線。"
           }
         }
       }
@@ -125,10 +845,82 @@
       "comment" : "System permission prompt on iPhone and iPad: why Casama asks for location while the app is in use. Two uses: saving the current spot as a named place, and working out travel time so a bot can say it's time to leave for a calendar event. 'Places' is a switch on the Device connections settings screen. Write it the way Apple writes permission prompts.",
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speichere eigene Orte wie Zuhause oder Arbeit und lass dich von deinen Bots erinnern, wann du zum nächsten Termin aufbrechen solltest. Wird nur verwendet, wenn du „Orte“ unter „Geräteverbindungen“ einschaltest."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Save places you name, such as Home or Work, and let your bots remind you when to leave for your next appointment. Used only if you turn on Places in Device connections."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guarda los lugares que nombres, como Casa o Trabajo, y deja que tus bots te recuerden cuándo salir para tu próxima cita. Solo se usa si activas Lugares en Conexiones del dispositivo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enregistrez des lieux nommés, comme Maison ou Travail, et laissez vos bots vous rappeler quand partir pour votre prochain rendez-vous. Utilisé uniquement si vous activez Lieux dans Connexions de l'appareil."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simpan tempat yang kamu beri nama, seperti Rumah atau Kantor, dan biarkan botmu mengingatkan kapan harus berangkat ke janji berikutnya. Hanya digunakan jika kamu menyalakan Tempat di Koneksi perangkat."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Salva i luoghi a cui dai un nome, come Casa o Lavoro, e lascia che i tuoi bot ti ricordino quando partire per il tuo prossimo appuntamento. Utilizzato solo se attivi Luoghi in Connessioni del dispositivo."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自宅や職場などの場所を登録し、次の予定に合わせて出発時刻をボットからお知らせできます。「デバイス接続」で「場所」をオンにした場合のみ使用されます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "집이나 직장처럼 직접 이름을 붙인 장소를 저장하고, 다음 일정에 맞춰 언제 출발해야 할지 봇이 알려 줘요. ‘기기 연결’에서 ‘장소’를 켠 경우에만 사용돼요."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Salve lugares que você nomear, como Casa ou Trabalho, e deixe seus bots lembrarem quando sair para seu próximo compromisso. Usado somente se você ativar Lugares em Conexões de dispositivos."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ev veya İş gibi adlandırdığınız yerleri kaydedin ve bir sonraki randevunuz için ne zaman yola çıkmanız gerektiğini botlarınızın size hatırlatmasını sağlayın. Yalnızca Cihaz bağlantıları bölümünde Yerler'i açtığınızda kullanılır."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lưu các địa điểm bạn đặt tên, như Nhà hay Nơi làm việc, và để bot nhắc bạn khi đến giờ đi cho lịch hẹn tiếp theo. Chỉ dùng khi bạn bật Địa điểm trong Kết nối thiết bị."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保存你命名的地点（例如家或公司），并让机器人提醒你何时出发前往下一个日程。仅当你在“设备连接”中开启“地点”后才会使用。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "儲存你命名的地點（例如家或公司），並讓機器人提醒你何時該出門前往下一個約會。僅當你在「裝置連線」中開啟「地點」時才會使用。"
           }
         }
       }
@@ -137,10 +929,82 @@
       "comment" : "System permission prompt on iPhone and iPad: why Casama asks. Microphone. Gemini and OpenAI are company products.",
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama nutzt das Mikrofon für Diktate und Live-Anrufe mit deinen Bots. Erst nach deiner Zustimmung geht deine Stimme an KI-Anbieter, um dir zu antworten: Google Gemini für Anrufe, OpenAI für die Umwandlung von Diktaten in Text."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Casama uses the microphone for dictation and live calls with your bots. Only after you agree, your voice goes to AI providers to answer you: Google Gemini for calls, OpenAI to turn dictation into text."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama usa el micrófono para dictado y llamadas en vivo con tus bots. Solo después de que aceptes, tu voz va a proveedores de IA para responderte: Google Gemini para llamadas, OpenAI para convertir el dictado en texto."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama utilise le micro pour la dictée et les appels en direct avec vos bots. Uniquement après votre accord, votre voix est envoyée aux fournisseurs d'IA pour vous répondre : Google Gemini pour les appels, OpenAI pour transcrire la dictée en texte."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama menggunakan mikrofon untuk dikte dan panggilan langsung dengan botmu. Hanya setelah kamu setuju, suaramu dikirim ke penyedia AI untuk menjawabmu: Google Gemini untuk panggilan, OpenAI untuk mengubah dikte menjadi teks."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama usa il microfono per la dettatura e le chiamate dal vivo con i tuoi bot. Solo dopo il tuo consenso, la tua voce viene inviata a fornitori IA per risponderti: Google Gemini per le chiamate, OpenAI per trasformare la dettatura in testo."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "音声入力やボットとのライブ通話のためにCasamaがマイクを使用します。同意した場合にのみ、音声が回答のためにAIプロバイダー（通話はGoogle Gemini、音声入力のテキスト変換はOpenAI）へ送信されます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama는 봇과의 받아쓰기와 실시간 통화를 위해 마이크를 사용해요. 동의하신 후에만 음성이 AI 제공업체로 전송돼요(통화는 Google Gemini, 받아쓰기 텍스트 변환은 OpenAI)."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Casama usa o microfone para ditado e chamadas ao vivo com seus bots. Só depois que você concordar, sua voz é enviada a provedores de IA para responder a você: Google Gemini nas chamadas e OpenAI para transformar ditado em texto."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama mikrofonu dikte ve botlarınızla canlı sesli aramalar için kullanır. Sesiniz, yalnızca siz kabul ettikten sonra, size yanıt vermek üzere yapay zeka sağlayıcılarına gider: sesli aramalar için Google Gemini'ye, dikteyi metne dönüştürmek için OpenAI'a."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama dùng micrô cho đọc chính tả và gọi trực tiếp với bot. Chỉ sau khi bạn đồng ý, giọng nói mới được gửi tới các nhà cung cấp AI để phản hồi bạn: Google Gemini cho cuộc gọi, OpenAI để chuyển lời đọc chính tả thành văn bản."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama 使用麦克风进行听写以及与你的机器人进行实时语音通话。只有在你同意之后，你的语音才会发送给 AI 提供商以响应你：通话使用 Google Gemini，听写转文字使用 OpenAI。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama 會使用麥克風進行語音聽寫及與機器人的即時語音通話。僅在你同意後，你的語音才會傳送給 AI 供應商以回應你：Google Gemini 用於語音通話，OpenAI 用於將語音轉為文字。"
           }
         }
       }
@@ -149,10 +1013,82 @@
       "comment" : "System permission prompt on iPhone and iPad: why Casama asks. Photo library.",
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama öffnet deine Fotobibliothek, wenn du ein Foto für einen Bot oder für dein Profil auswählst."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Casama opens your photo library when you choose a photo to send to a bot or for your profile."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama abre tu fototeca cuando eliges una foto para enviar a un bot o para tu perfil."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama ouvre votre photothèque lorsque vous choisissez une photo à envoyer à un bot ou pour votre profil."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama membuka galeri fotomu saat kamu memilih foto untuk dikirim ke bot atau untuk profilmu."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama apre la tua libreria foto quando scegli una foto da inviare a un bot o per il tuo profilo."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ボットに送る写真やプロフィール用の写真を選ぶときに、Casamaが写真ライブラリを開きます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "봇에게 보내거나 프로필에 사용할 사진을 고를 때 Casama가 사진 라이브러리를 열어요."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Casama abre sua biblioteca de fotos quando você escolhe uma foto para enviar a um bot ou usar no seu perfil."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bir bota göndermek veya profiliniz için fotoğraf seçtiğinizde Casama fotoğraf kitaplığınızı açar."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama mở Thư viện ảnh của bạn khi bạn chọn ảnh để gửi cho bot hoặc đặt ảnh hồ sơ."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "当你选择照片发送给机器人或用于个人资料时，Casama 会打开你的照片图库。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "當你選擇要傳送給機器人或用於個人檔案的照片時，Casama 會開啟你的照片圖庫。"
           }
         }
       }
@@ -161,10 +1097,82 @@
       "comment" : "System permission prompt on iPhone and iPad: why Casama asks. Speech recognition.",
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wenn der Diktierdienst von Casama nicht erreichbar ist, wandelt die Spracherkennung deines Geräts Gesprochenes in Text um."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "When Casama's dictation service can't be reached, your device's own speech recognition turns what you say into text."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cuando no se puede acceder al servicio de dictado de Casama, el reconocimiento de voz de tu dispositivo convierte lo que dices en texto."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lorsque le service de dictée de Casama est inaccessible, la reconnaissance vocale intégrée à votre appareil transforme vos paroles en texte."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saat layanan dikte Casama tidak dapat dijangkau, pengenalan suara bawaan perangkatmu mengubah ucapanmu menjadi teks."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quando il servizio di dettatura di Casama non è raggiungibile, il riconoscimento vocale del tuo dispositivo trasforma ciò che dici in testo."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casamaの音声入力サービスに接続できないとき、デバイス標準の音声認識で話した内容をテキストに変換します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama 받아쓰기 서비스에 연결할 수 없을 때 기기 자체 음성 인식으로 말한 내용을 텍스트로 변환해요."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quando o serviço de ditado do Casama não estiver acessível, o reconhecimento de voz do próprio dispositivo transforma o que você fala em texto."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casama'nın dikte hizmetine ulaşılamadığında cihazınızın kendi konuşma tanıma özelliği söylediklerinizi metne dönüştürür."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Khi không kết nối được dịch vụ đọc chính tả của Casama, tính năng nhận dạng giọng nói ngay trên thiết bị sẽ chuyển lời nói của bạn thành văn bản."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "当无法连接到 Casama 的听写服务时，将由你设备自身的语音识别功能把你说的话转换成文字。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "當無法連線至 Casama 的語音聽寫服務時，裝置內建的語音辨識功能會將你的語音轉換為文字。"
           }
         }
       }
@@ -173,10 +1181,82 @@
       "comment" : "System permission prompt on iPhone and iPad: why Casama asks. Tracking (ad measurement with Meta).",
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wenn du es erlaubst, teilt Casama Meta mit, wenn du nach einer Casama-Anzeige auf Facebook oder Instagram die App installierst, beitrittst oder ein Abo abschließt, damit wir messen können, welche Anzeigen wirken. Casama zeigt niemals Werbung und teilt niemals deine Chats oder Dateien."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "If you allow it, Casama tells Meta when you install, join or subscribe after seeing a Casama ad on Facebook or Instagram, so we can measure which ads work. Casama never shows ads and never shares your chats or files."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si lo permites, Casama avisa a Meta cuando instalas la app, te registras o te suscribes después de ver un anuncio de Casama en Facebook o Instagram, para medir qué anuncios funcionan. Casama nunca muestra anuncios ni comparte tus chats o archivos."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si vous l'autorisez, Casama informe Meta lorsque vous installez l'app, rejoignez Casama ou vous abonnez après avoir vu une publicité Casama sur Facebook ou Instagram, afin que nous puissions mesurer quelles publicités fonctionnent. Casama n'affiche jamais de publicités et ne partage jamais vos discussions ni vos fichiers."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jika kamu mengizinkannya, Casama memberi tahu Meta saat kamu menginstal, bergabung, atau berlangganan setelah melihat iklan Casama di Facebook atau Instagram, agar kami bisa mengukur iklan mana yang berhasil. Casama tidak pernah menampilkan iklan dan tidak pernah membagikan chat atau filemu."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se lo consenti, Casama comunica a Meta quando installi l’app, ti iscrivi o ti abboni dopo aver visto un annuncio di Casama su Facebook o Instagram, così possiamo misurare quali annunci funzionano. Casama non mostra mai annunci e non condivide mai le tue chat o i tuoi file."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "許可すると、FacebookやInstagramでCasamaの広告を見たあとにインストール、登録、定期購入を行ったことをMetaに通知し、広告効果の測定に役立てます。Casamaに広告が表示されることはなく、チャットやファイルが共有されることもありません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "허용하면 Facebook이나 Instagram에서 Casama 광고를 본 뒤 앱을 설치하거나 가입, 구독할 때 Casama가 Meta에 알려 어떤 광고가 효과적인지 측정해요. Casama는 광고를 절대 표시하지 않으며 대화나 파일도 절대 공유하지 않아요."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se você permitir, o Casama avisa a Meta quando você instalar, se cadastrar ou assinar após ver um anúncio do Casama no Facebook ou Instagram, para medirmos quais anúncios funcionam. O Casama nunca exibe anúncios e nunca compartilha seus chats ou arquivos."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İzin verirseniz Casama, Facebook veya Instagram'da bir Casama reklamı gördükten sonra uygulamayı yüklediğinizde, katıldığınızda veya abone olduğunuzda hangi reklamların işe yaradığını ölçebilmemiz için bunu Meta'ya bildirir. Casama asla reklam göstermez ve sohbetlerinizi veya dosyalarınızı asla paylaşmaz."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nếu bạn cho phép, Casama sẽ thông báo cho Meta khi bạn cài đặt, tham gia hoặc đăng ký trả phí sau khi xem quảng cáo Casama trên Facebook hay Instagram để chúng tôi đo lường hiệu quả quảng cáo. Casama không bao giờ hiển thị quảng cáo và không chia sẻ cuộc trò chuyện hay tệp của bạn."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "如果你允许，当你在 Facebook 或 Instagram 上看到 Casama 广告后安装、注册或订阅时，Casama 会通知 Meta，以便我们衡量哪些广告有效。Casama 从不展示广告，也绝不会分享你的聊天内容或文件。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "如果你允許，當你在 Facebook 或 Instagram 看到 Casama 廣告後安裝、註冊或訂閱時，Casama 會通知 Meta，以便我們評估哪些廣告有效。Casama 絕不會顯示廣告，也絕不會分享你的對話或檔案。"
           }
         }
       }

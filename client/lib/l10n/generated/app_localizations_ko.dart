@@ -4231,7 +4231,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String deleteAccountConfirm(String email) {
-    return '나만 소유자인 워크스페이스는 봇과 컴퓨터를 포함해 계정과 함께 삭제돼요. 유료 플랜은 계정을 삭제해도 해지되지 않아요. 웹에서 구입한 플랜은 ‘결제’에서, App Store나 Google Play에서 구입한 플랜은 해당 스토어에서 먼저 해지해 주세요. 확인하려면 $email 주소를 입력하세요.';
+    return '나만 소유자인 워크스페이스는 봇과 컴퓨터를 포함해 계정과 함께 삭제돼요. 웹에서 구입한 플랜은 자동으로 해지돼요. App Store나 Google Play에서 구입한 플랜은 해지되지 않아요. 해당 스토어에서 해지해 주세요. 확인하려면 $email 주소를 입력하세요.';
   }
 
   @override
@@ -11898,21 +11898,21 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get adultSitesHelp =>
-      '요청할 때 봇이 성인 웹사이트를 열 수 있어요. 만 18세 이상만 사용할 수 있어요.';
+      '요청할 때 봇이 성인 웹사이트를 열 수 있어요. 만 19세 이상만 사용할 수 있어요.';
 
   @override
   String get adultSitesConfirmTitle => '성인 사이트를 켤까요?';
 
   @override
   String get adultSitesConfirmBody =>
-      '만 18세 이상임을 확인해요. 요청하면 봇이 성인 웹사이트를 열어 내용을 텍스트로 정리해 줄 수 있어요. 웹이나 데스크톱 앱의 Casama에서 요청할 때만 작동하며, 공유 채팅에서는 절대 작동하지 않아요.';
+      '만 19세 이상임을 확인해요. 요청하면 봇이 성인 웹사이트를 열어 내용을 텍스트로 정리해 줄 수 있어요. 웹이나 데스크톱 앱의 Casama에서 요청할 때만 작동하며, 공유 채팅에서는 절대 작동하지 않아요.';
 
   @override
-  String get adultSitesConfirm => '만 18세 이상이에요';
+  String get adultSitesConfirm => '만 19세 이상이에요';
 
   @override
   String get adultSitesApprovalDetail =>
-      '‘허용’을 누르면 만 18세 이상임을 확인하고, 내 계정에서 성인 사이트를 켜게 돼요. ‘내 정보’에서 언제든 끌 수 있어요.';
+      '‘허용’을 누르면 만 19세 이상임을 확인하고, 내 계정에서 성인 사이트를 켜게 돼요. ‘내 정보’에서 언제든 끌 수 있어요.';
 
   @override
   String useInThisSpace(String workspace) {
@@ -24298,6 +24298,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get liveKindDisputeOpened => '결제 이의제기 발생';
 
   @override
+  String get liveKindPlanCancelFailed => '플랜 해지 안 됨';
+
+  @override
   String get liveKindStoreReview => '스토어 리뷰';
 
   @override
@@ -26531,7 +26534,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String cloudAccountDeleteConfirm(String email) {
-    return 'Casama Cloud 계정을 삭제하려면 $email 주소를 입력하세요. 본인만 소유한 Cloud 워크스페이스도 함께 삭제되며, 해당 워크스페이스가 결제하던 서버의 Casama Cloud 모델이 중지돼요. 유료 플랜은 계정을 삭제해도 해지되지 않아요. 웹에서 구입한 플랜은 Casama Cloud의 ‘결제’에서, App Store나 Google Play에서 구입한 플랜은 해당 스토어에서 먼저 해지해 주세요.';
+    return 'Casama Cloud 계정을 삭제하려면 $email 주소를 입력하세요. 본인만 소유한 Cloud 워크스페이스도 함께 삭제되며, 해당 워크스페이스가 결제하던 서버의 Casama Cloud 모델이 중지돼요. 웹에서 구입한 플랜은 자동으로 해지돼요. App Store나 Google Play에서 구입한 플랜은 해지되지 않아요. 해당 스토어에서 해지해 주세요.';
   }
 
   @override

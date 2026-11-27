@@ -28,6 +28,7 @@
     <!-- Live Updates (Android 16, D-324): a running bot as a promoted notification with a chip. -->
     <uses-permission android:name="android.permission.POST_PROMOTED_NOTIFICATIONS" />
     <application
+        android:localeConfig="@xml/locales_config"
         android:label="Casama"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">

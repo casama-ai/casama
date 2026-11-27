@@ -6671,10 +6671,10 @@ abstract class AppLocalizations {
   /// **'Delete your account?'**
   String get deleteAccountQuestion;
 
-  /// Text of the sheet that deletes the account, above the field where the person types their email. Deleting the account does not cancel any subscription, on the web or in a store; the person has to. 'Billing' is the app's billing screen. {email} is their email address.
+  /// Text of the sheet that deletes the account, above the field where the person types their email. Deleting the account cancels a subscription bought on the web by itself, but not one bought in the App Store or Google Play: the person cancels that in the store. {email} is their email address.
   ///
   /// In en, this message translates to:
-  /// **'Workspaces where you are the only owner are deleted with your account, including their bots and computers. This doesn\'t cancel paid plans. First cancel a plan bought on the web in Billing, and a plan bought in the App Store or Google Play in that store. Type {email} to confirm.'**
+  /// **'Workspaces where you are the only owner are deleted with your account, including their bots and computers. A plan you bought on the web is cancelled automatically. A plan bought in the App Store or Google Play isn\'t: cancel it in that store. Type {email} to confirm.'**
   String deleteAccountConfirm(String email);
 
   /// No description provided for @accountDeleted.
@@ -39490,6 +39490,12 @@ abstract class AppLocalizations {
   /// **'Dispute opened'**
   String get liveKindDisputeOpened;
 
+  /// No description provided for @liveKindPlanCancelFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan not cancelled'**
+  String get liveKindPlanCancelFailed;
+
   /// No description provided for @liveKindStoreReview.
   ///
   /// In en, this message translates to:
@@ -43034,10 +43040,10 @@ abstract class AppLocalizations {
   /// **'Deletes your account on Casama Cloud. This server and its data stay.'**
   String get cloudAccountDeleteHelp;
 
-  /// Text of the sheet that deletes the Casama Cloud account, above the field where the person types their email. Deleting the account does not cancel any subscription, on the web or in a store; the person has to. 'Billing' is the billing screen. {email} is their email address.
+  /// Text of the sheet that deletes the Casama Cloud account, above the field where the person types their email. Deleting the account cancels a subscription bought on the web by itself, but not one bought in the App Store or Google Play: the person cancels that in the store. {email} is their email address.
   ///
   /// In en, this message translates to:
-  /// **'Type {email} to delete your Casama Cloud account. Cloud workspaces only you own go with it, and Casama Cloud models stop on servers they pay for. This doesn\'t cancel paid plans. First cancel a plan bought on the web in Billing on Casama Cloud, and a plan bought in the App Store or Google Play in that store.'**
+  /// **'Type {email} to delete your Casama Cloud account. Cloud workspaces only you own go with it, and Casama Cloud models stop on servers they pay for. A plan you bought on the web is cancelled automatically. A plan bought in the App Store or Google Play isn\'t: cancel it in that store.'**
   String cloudAccountDeleteConfirm(String email);
 
   /// No description provided for @cloudAccountDeleted.

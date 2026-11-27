@@ -541,7 +541,7 @@ function checkGlossary(
 function forTerms(text: string): string {
   return withoutPlaceholders(text)
     .replace(/[\w.+-]+@[\w-]+(?:\.[\w-]+)+/g, " ")
-    .replace(/(?:https?:\/\/)?[\w-]+(?:\.[\w-]+)*\.[A-Za-z]{2,}\b(?:\/\S*)?/g, " ");
+    .replace(/(?:https?:\/\/)?[\w-]+(?:\.[\w-]+)*\.[A-Za-z]{2,}\b(?:\/[^\s"'<>]*)?/g, " ");
 }
 
 /** Case-insensitive; Latin words must start at a word boundary, other scripts match anywhere. */

@@ -1118,6 +1118,7 @@ lib/src/model/start_teach_request.dart
 lib/src/model/start_welcome_request.dart
 lib/src/model/stopped_process.dart
 lib/src/model/storage_category.dart
+lib/src/model/store_subscription_notice.dart
 lib/src/model/stream_mode.dart
 lib/src/model/stream_session.dart
 lib/src/model/stream_session_request.dart

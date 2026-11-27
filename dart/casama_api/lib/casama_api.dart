@@ -1118,6 +1118,7 @@ export 'package:casama_api/src/model/start_teach_request.dart';
 export 'package:casama_api/src/model/start_welcome_request.dart';
 export 'package:casama_api/src/model/stopped_process.dart';
 export 'package:casama_api/src/model/storage_category.dart';
+export 'package:casama_api/src/model/store_subscription_notice.dart';
 export 'package:casama_api/src/model/stream_mode.dart';
 export 'package:casama_api/src/model/stream_session.dart';
 export 'package:casama_api/src/model/stream_session_request.dart';

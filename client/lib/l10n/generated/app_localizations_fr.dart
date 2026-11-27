@@ -4318,7 +4318,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String deleteAccountConfirm(String email) {
-    return 'Les espaces de travail dont vous êtes l\'unique propriétaire sont supprimés avec votre compte, y compris leurs bots et ordinateurs. Cela ne résilie pas les forfaits payants. Résiliez d\'abord un forfait acheté sur le web dans Facturation, et un forfait acheté dans l\'App Store ou sur Google Play dans la boutique correspondante. Saisissez $email pour confirmer.';
+    return 'Les espaces de travail dont vous êtes l\'unique propriétaire sont supprimés avec votre compte, y compris leurs bots et ordinateurs. Un forfait acheté sur le web est résilié automatiquement. Un forfait acheté dans l\'App Store ou sur Google Play ne l\'est pas : résiliez-le dans la boutique correspondante. Saisissez $email pour confirmer.';
   }
 
   @override
@@ -24957,6 +24957,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get liveKindDisputeOpened => 'Litige ouvert';
 
   @override
+  String get liveKindPlanCancelFailed => 'Forfait non résilié';
+
+  @override
   String get liveKindStoreReview => 'Avis sur la boutique';
 
   @override
@@ -27232,7 +27235,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String cloudAccountDeleteConfirm(String email) {
-    return 'Saisissez $email pour supprimer votre compte Casama Cloud. Les espaces de travail Cloud dont vous êtes l\'unique propriétaire sont supprimés avec lui, et les modèles Casama Cloud s\'arrêtent sur les serveurs qu\'ils paient. Cela ne résilie pas les forfaits payants. Résiliez d\'abord un forfait acheté sur le web dans Facturation sur Casama Cloud, et un forfait acheté dans l\'App Store ou sur Google Play dans la boutique correspondante.';
+    return 'Saisissez $email pour supprimer votre compte Casama Cloud. Les espaces de travail Cloud dont vous êtes l\'unique propriétaire sont supprimés avec lui, et les modèles Casama Cloud s\'arrêtent sur les serveurs qu\'ils paient. Un forfait acheté sur le web est résilié automatiquement. Un forfait acheté dans l\'App Store ou sur Google Play ne l\'est pas : résiliez-le dans la boutique correspondante.';
   }
 
   @override

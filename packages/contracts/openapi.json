@@ -18501,11 +18501,47 @@
               "type": "string"
             },
             "description": "Workspaces you are the only owner of; they are deleted with you"
+          },
+          "store_subscriptions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StoreSubscriptionNotice"
+            },
+            "description": "App Store and Google Play subscriptions of those workspaces that still renew. Deleting the account doesn't cancel them: only the buyer can, in the store"
           }
         },
         "required": [
           "purge_after",
           "workspaces_deleted"
+        ]
+      },
+      "StoreSubscriptionNotice": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string",
+            "enum": [
+              "app_store",
+              "google_play"
+            ]
+          },
+          "plan_name": {
+            "type": "string"
+          },
+          "manage_url": {
+            "type": "string",
+            "description": "The store's page to cancel it"
+          },
+          "notice": {
+            "type": "string",
+            "description": "In the person's language: this must be cancelled in the store, with the link"
+          }
+        },
+        "required": [
+          "source",
+          "plan_name",
+          "manage_url",
+          "notice"
         ]
       },
       "DeleteAccountRequest": {
@@ -41352,7 +41388,7 @@
             "bearerAuth": []
           }
         ],
-        "summary": "Delete your account: you are signed out now, and your data, workspaces you solely own and their computer snapshots are purged after the grace period",
+        "summary": "Delete your account: you are signed out now, web plans you pay for are cancelled, and your data, workspaces you solely own and their computer snapshots are purged after the grace period. App Store and Google Play subscriptions must be cancelled in the store",
         "requestBody": {
           "required": true,
           "content": {

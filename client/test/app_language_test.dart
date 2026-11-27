@@ -64,8 +64,10 @@ void main() {
       expect(AppLanguage.resolve(device: const [Locale('th')], supported: all), _en);
     });
 
-    test('this build is English only', () {
-      expect(enabledLocaleCodes, ['en']);
+    test('this build offers English first, then the shipped languages', () {
+      // The full list is checked against l10n/locales.json by packages/domain/test/i18n.test.ts.
+      expect(enabledLocaleCodes.first, 'en');
+      expect(enabledLocaleCodes.toSet().length, enabledLocaleCodes.length);
     });
 
     test('a pick wins over the device only while the build offers it', () {

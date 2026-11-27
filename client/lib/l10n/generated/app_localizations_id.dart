@@ -4310,7 +4310,7 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String deleteAccountConfirm(String email) {
-    return 'Ruang kerja yang hanya kamu pemiliknya akan dihapus bersama akunmu, termasuk bot dan komputernya. Ini tidak membatalkan paket berbayar. Batalkan dulu paket yang dibeli di web melalui Tagihan, dan paket yang dibeli di App Store atau Google Play di toko masing-masing. Ketik $email untuk mengonfirmasi.';
+    return 'Ruang kerja yang hanya kamu pemiliknya akan dihapus bersama akunmu, termasuk bot dan komputernya. Paket yang kamu beli di web dibatalkan otomatis. Paket yang dibeli di App Store atau Google Play tidak dibatalkan: batalkan di toko tersebut. Ketik $email untuk mengonfirmasi.';
   }
 
   @override
@@ -24845,6 +24845,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get liveKindDisputeOpened => 'Sengketa dibuka';
 
   @override
+  String get liveKindPlanCancelFailed => 'Paket tidak dibatalkan';
+
+  @override
   String get liveKindStoreReview => 'Ulasan toko';
 
   @override
@@ -27113,7 +27116,7 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String cloudAccountDeleteConfirm(String email) {
-    return 'Ketik $email untuk menghapus akun Casama Cloud-mu. Ruang kerja cloud yang hanya kamu miliki ikut terhapus, dan model Casama Cloud berhenti di server yang dibayarinya. Ini tidak membatalkan paket berbayar. Batalkan dulu paket yang dibeli di web melalui Tagihan di Casama Cloud, dan paket yang dibeli di App Store atau Google Play di toko masing-masing.';
+    return 'Ketik $email untuk menghapus akun Casama Cloud-mu. Ruang kerja cloud yang hanya kamu miliki ikut terhapus, dan model Casama Cloud berhenti di server yang dibayarinya. Paket yang kamu beli di web dibatalkan otomatis. Paket yang dibeli di App Store atau Google Play tidak dibatalkan: batalkan di toko tersebut.';
   }
 
   @override

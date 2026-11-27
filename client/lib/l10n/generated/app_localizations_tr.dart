@@ -4311,7 +4311,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String deleteAccountConfirm(String email) {
-    return 'Tek sahibi olduğunuz çalışma alanları, botları ve bilgisayarları dahil hesabınızla birlikte silinir. Bu işlem ücretli planları iptal etmez. Önce web üzerinden alınan bir planı Faturalandırma bölümünden, App Store veya Google Play\'den alınan bir planı ise ilgili mağazadan iptal edin. Onaylamak için $email yazın.';
+    return 'Tek sahibi olduğunuz çalışma alanları, botları ve bilgisayarları dahil hesabınızla birlikte silinir. Web üzerinden alınan bir plan otomatik olarak iptal edilir. App Store veya Google Play\'den alınan bir plan ise iptal edilmez: İlgili mağazadan iptal edin. Onaylamak için $email yazın.';
   }
 
   @override
@@ -24862,6 +24862,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get liveKindDisputeOpened => 'İtiraz açıldı';
 
   @override
+  String get liveKindPlanCancelFailed => 'Plan iptal edilmedi';
+
+  @override
   String get liveKindStoreReview => 'Mağaza değerlendirmesi';
 
   @override
@@ -27134,7 +27137,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String cloudAccountDeleteConfirm(String email) {
-    return 'Casama Cloud hesabınızı silmek için $email yazın. Yalnızca size ait olan Cloud çalışma alanları da silinir ve Casama Cloud modelleri bunların ödediği sunucularda durur. Bu işlem ücretli planları iptal etmez. Önce web üzerinden alınan bir planı Casama Cloud\'daki Faturalandırma bölümünden, App Store veya Google Play\'den alınan bir planı ise ilgili mağazadan iptal edin.';
+    return 'Casama Cloud hesabınızı silmek için $email yazın. Yalnızca size ait olan Cloud çalışma alanları da silinir ve Casama Cloud modelleri bunların ödediği sunucularda durur. Web üzerinden alınan bir plan otomatik olarak iptal edilir. App Store veya Google Play\'den alınan bir plan ise iptal edilmez: İlgili mağazadan iptal edin.';
   }
 
   @override

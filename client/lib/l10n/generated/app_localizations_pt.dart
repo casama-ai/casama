@@ -4306,7 +4306,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String deleteAccountConfirm(String email) {
-    return 'Os espaços de trabalho em que você é a única pessoa proprietária são excluídos com sua conta, incluindo os bots e computadores deles. Isso não cancela planos pagos. Primeiro, cancele um plano comprado na web em Cobrança e um plano comprado na App Store ou no Google Play nessa loja. Digite $email para confirmar.';
+    return 'Os espaços de trabalho em que você é a única pessoa proprietária são excluídos com sua conta, incluindo os bots e computadores deles. Um plano que você comprou na web é cancelado automaticamente. Um plano comprado na App Store ou no Google Play não é: cancele-o nessa loja. Digite $email para confirmar.';
   }
 
   @override
@@ -24874,6 +24874,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get liveKindDisputeOpened => 'Disputa aberta';
 
   @override
+  String get liveKindPlanCancelFailed => 'Plano não cancelado';
+
+  @override
   String get liveKindStoreReview => 'Avaliação na loja';
 
   @override
@@ -27143,7 +27146,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String cloudAccountDeleteConfirm(String email) {
-    return 'Digite $email para excluir sua conta do Casama Cloud. Os espaços de trabalho do Casama Cloud que só você possui são excluídos junto, e os modelos do Casama Cloud param nos servidores pagos por eles. Isso não cancela planos pagos. Primeiro, cancele um plano comprado na web em Cobrança no Casama Cloud e um plano comprado na App Store ou no Google Play nessa loja.';
+    return 'Digite $email para excluir sua conta do Casama Cloud. Os espaços de trabalho do Casama Cloud que só você possui são excluídos junto, e os modelos do Casama Cloud param nos servidores pagos por eles. Um plano que você comprou na web é cancelado automaticamente. Um plano comprado na App Store ou no Google Play não é: cancele-o nessa loja.';
   }
 
   @override

@@ -595,7 +595,7 @@ Class | Method | HTTP request | Description
 [*PluginsApi*](doc/PluginsApi.md) | [**uninstallPlugin**](doc/PluginsApi.md#uninstallplugin) | **DELETE** /v1/plugins/{id} | Remove the plugin and everything it added
 [*PluginsApi*](doc/PluginsApi.md) | [**updatePlugin**](doc/PluginsApi.md#updateplugin) | **POST** /v1/plugins/{id}/update | 
 [*PluginsApi*](doc/PluginsApi.md) | [**updatePluginSettings**](doc/PluginsApi.md#updatepluginsettings) | **PATCH** /v1/plugins/{id}/settings | Change a plugin&#39;s plain settings (not its secrets)
-[*PrivacyApi*](doc/PrivacyApi.md) | [**deleteMyAccount**](doc/PrivacyApi.md#deletemyaccount) | **DELETE** /v1/me | Delete your account: you are signed out now, and your data, workspaces you solely own and their computer snapshots are purged after the grace period
+[*PrivacyApi*](doc/PrivacyApi.md) | [**deleteMyAccount**](doc/PrivacyApi.md#deletemyaccount) | **DELETE** /v1/me | Delete your account: you are signed out now, web plans you pay for are cancelled, and your data, workspaces you solely own and their computer snapshots are purged after the grace period. App Store and Google Play subscriptions must be cancelled in the store
 [*PrivacyApi*](doc/PrivacyApi.md) | [**exportMyData**](doc/PrivacyApi.md#exportmydata) | **GET** /v1/me/export | Download everything you can see as a ZIP of JSON files
 [*PrivacyApi*](doc/PrivacyApi.md) | [**getOrgSettings**](doc/PrivacyApi.md#getorgsettings) | **GET** /v1/orgs/{id}/settings | 
 [*PrivacyApi*](doc/PrivacyApi.md) | [**relayAnalytics**](doc/PrivacyApi.md#relayanalytics) | **POST** /v1/analytics/events | Relay desktop or extension product events to Google Analytics 4
@@ -1836,6 +1836,7 @@ Class | Method | HTTP request | Description
  - [StartWelcomeRequest](doc/StartWelcomeRequest.md)
  - [StoppedProcess](doc/StoppedProcess.md)
  - [StorageCategory](doc/StorageCategory.md)
+ - [StoreSubscriptionNotice](doc/StoreSubscriptionNotice.md)
  - [StreamMode](doc/StreamMode.md)
  - [StreamSession](doc/StreamSession.md)
  - [StreamSessionRequest](doc/StreamSessionRequest.md)

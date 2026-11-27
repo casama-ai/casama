@@ -594,7 +594,7 @@ export interface paths {
         get: operations["getMe"];
         put?: never;
         post?: never;
-        /** Delete your account: you are signed out now, and your data, workspaces you solely own and their computer snapshots are purged after the grace period */
+        /** Delete your account: you are signed out now, web plans you pay for are cancelled, and your data, workspaces you solely own and their computer snapshots are purged after the grace period. App Store and Google Play subscriptions must be cancelled in the store */
         delete: operations["deleteMyAccount"];
         options?: never;
         head?: never;
@@ -15400,6 +15400,17 @@ export interface components {
             purge_after: string;
             /** @description Workspaces you are the only owner of; they are deleted with you */
             workspaces_deleted: string[];
+            /** @description App Store and Google Play subscriptions of those workspaces that still renew. Deleting the account doesn't cancel them: only the buyer can, in the store */
+            store_subscriptions?: components["schemas"]["StoreSubscriptionNotice"][];
+        };
+        StoreSubscriptionNotice: {
+            /** @enum {string} */
+            source: "app_store" | "google_play";
+            plan_name: string;
+            /** @description The store's page to cancel it */
+            manage_url: string;
+            /** @description In the person's language: this must be cancelled in the store, with the link */
+            notice: string;
         };
         DeleteAccountRequest: {
             /**

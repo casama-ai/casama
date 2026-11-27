@@ -990,6 +990,7 @@ import 'package:casama_api/src/model/start_teach_request.dart';
 import 'package:casama_api/src/model/start_welcome_request.dart';
 import 'package:casama_api/src/model/stopped_process.dart';
 import 'package:casama_api/src/model/storage_category.dart';
+import 'package:casama_api/src/model/store_subscription_notice.dart';
 import 'package:casama_api/src/model/stream_session.dart';
 import 'package:casama_api/src/model/stream_session_request.dart';
 import 'package:casama_api/src/model/submit_testimonial_request.dart';
@@ -3337,6 +3338,8 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return StoppedProcess.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'StorageCategory':
           return StorageCategory.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'StoreSubscriptionNotice':
+          return StoreSubscriptionNotice.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'StreamMode':
           
           

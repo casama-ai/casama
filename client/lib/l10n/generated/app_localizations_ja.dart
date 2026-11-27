@@ -4224,7 +4224,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String deleteAccountConfirm(String email) {
-    return 'あなたが唯一のオーナーであるワークスペースは、ボットやコンピューターを含めアカウントと一緒に削除されます。有料プランはこれによって解約されません。Webで購入したプランは「請求」で、App StoreまたはGoogle Playで購入したプランは購入元のストアで先に解約してください。確認のため$emailを入力してください。';
+    return 'あなたが唯一のオーナーであるワークスペースは、ボットやコンピューターを含めアカウントと一緒に削除されます。Webで購入したプランは自動で解約されます。App StoreまたはGoogle Playで購入したプランは解約されません。購入元のストアで解約してください。確認のため$emailを入力してください。';
   }
 
   @override
@@ -24254,6 +24254,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get liveKindDisputeOpened => '異議申し立て発生';
 
   @override
+  String get liveKindPlanCancelFailed => 'プラン未解約';
+
+  @override
   String get liveKindStoreReview => 'ストアレビュー';
 
   @override
@@ -26484,7 +26487,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String cloudAccountDeleteConfirm(String email) {
-    return 'Casama Cloudアカウントを削除するには$emailと入力してください。あなただけが所有するクラウドワークスペースも一緒に削除され、それらのワークスペースが支払っているサーバーではCasama Cloudモデルが停止します。有料プランはこれによって解約されません。Webで購入したプランはCasama Cloudの「請求」で、App StoreまたはGoogle Playで購入したプランは購入元のストアで先に解約してください。';
+    return 'Casama Cloudアカウントを削除するには$emailと入力してください。あなただけが所有するクラウドワークスペースも一緒に削除され、それらのワークスペースが支払っているサーバーではCasama Cloudモデルが停止します。Webで購入したプランは自動で解約されます。App StoreまたはGoogle Playで購入したプランは解約されません。購入元のストアで解約してください。';
   }
 
   @override

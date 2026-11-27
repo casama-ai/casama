@@ -102,8 +102,7 @@ const searchTitles: Record<string, string> = {
   "self-hosting/server.md": "Install a self-hosted Casama server with Docker",
   "self-hosting/licenses.md": "Self-hosting licenses: personal, trial, business",
   "self-hosting/updates.md": "Update a Casama server, with rollback",
-  "self-hosting/casama-link-cloud.md":
-    "Casama Cloud for self-hosters: models, credits",
+  "self-hosting/casama-link-cloud.md": "Casama Cloud for self-hosters: models, credits",
   "self-hosting/move-to-cloud.md": "Move a self-hosted workspace to Cloud and back",
   "self-hosting/what-goes-home.md": "What a self-hosted Casama server sends home",
   "self-hosting/configuration.md": "Self-hosting configuration: all settings",

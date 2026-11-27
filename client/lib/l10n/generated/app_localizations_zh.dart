@@ -4184,7 +4184,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String deleteAccountConfirm(String email) {
-    return '由你担任唯一所有者的工作区会随你的账号一并删除，其中的机器人和电脑也会一同删除。这不会取消付费方案。在网页端购买的方案请先到“账单”中取消，在 App Store 或 Google Play 购买的方案请前往对应商店取消。请输入 $email 以确认。';
+    return '由你担任唯一所有者的工作区会随你的账号一并删除，其中的机器人和电脑也会一同删除。在网页端购买的方案会自动取消。在 App Store 或 Google Play 购买的方案则不会自动取消：请前往对应商店取消。请输入 $email 以确认。';
   }
 
   @override
@@ -23875,6 +23875,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get liveKindDisputeOpened => '发起争议拒付';
 
   @override
+  String get liveKindPlanCancelFailed => '方案未取消';
+
+  @override
   String get liveKindStoreReview => '商店评价';
 
   @override
@@ -26086,7 +26089,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String cloudAccountDeleteConfirm(String email) {
-    return '请输入 $email 以删除你的 Casama Cloud 账号。仅由你担任所有者的云端工作区将一并删除，由这些工作区付费的服务器上的 Casama Cloud 模型也将停止服务。这不会取消付费方案。在网页端购买的方案请先到 Casama Cloud 上的“账单”中取消，在 App Store 或 Google Play 购买的方案请前往对应商店取消。';
+    return '请输入 $email 以删除你的 Casama Cloud 账号。仅由你担任所有者的云端工作区将一并删除，由这些工作区付费的服务器上的 Casama Cloud 模型也将停止服务。在网页端购买的方案会自动取消。在 App Store 或 Google Play 购买的方案则不会自动取消：请前往对应商店取消。';
   }
 
   @override
@@ -31227,7 +31230,7 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String deleteAccountConfirm(String email) {
-    return '由你擔任唯一擁有者的工作區會連同帳號一起刪除，包括其中的機器人與電腦。這不會取消付費方案。請先在「帳單」中取消網頁上購買的方案，在 App Store 或 Google Play 購買的方案則請前往該商店取消。請輸入 $email 以確認。';
+    return '由你擔任唯一擁有者的工作區會連同帳號一起刪除，包括其中的機器人與電腦。在網頁上購買的方案會自動取消。在 App Store 或 Google Play 購買的方案則不會自動取消：請前往該商店取消。請輸入 $email 以確認。';
   }
 
   @override
@@ -49396,6 +49399,9 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get liveKindDisputeOpened => '收到爭議款項申請';
 
   @override
+  String get liveKindPlanCancelFailed => '方案未取消';
+
+  @override
   String get liveKindStoreReview => '商店評論';
 
   @override
@@ -50571,7 +50577,7 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String cloudAccountDeleteConfirm(String email) {
-    return '請輸入 $email 以刪除你的 Casama Cloud 帳號。僅由你擔任擁有者的雲端工作區也會隨之一併刪除，且由這些工作區付款的伺服器將無法再使用 Casama Cloud 模型。這不會取消付費方案。請先在 Casama Cloud 的「帳單」中取消網頁上購買的方案，在 App Store 或 Google Play 購買的方案則請前往該商店取消。';
+    return '請輸入 $email 以刪除你的 Casama Cloud 帳號。僅由你擔任擁有者的雲端工作區也會隨之一併刪除，且由這些工作區付款的伺服器將無法再使用 Casama Cloud 模型。在網頁上購買的方案會自動取消。在 App Store 或 Google Play 購買的方案則不會自動取消：請前往該商店取消。';
   }
 
   @override

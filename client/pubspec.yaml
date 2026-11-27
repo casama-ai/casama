@@ -2,7 +2,7 @@ name: casama
 description: "Casama: persistent AI teammates."
 publish_to: none
 # The build number (+N) is shared by every platform and only goes up: raise it for each release.
-version: 0.1.0+110
+version: 0.1.0+112
 
 environment:
   sdk: ^3.13.0
@@ -191,6 +191,8 @@ dependency_overrides:
 # from the signing certificate (MSIX_CERT), so it isn't set here. Updates come from WinSparkle (D-159),
 # not the Microsoft Store.
 msix_config:
+  # gen-native-strings: languages
+  languages: en-us, de, es, fr, id, it, ja, ko, pt-br, tr, vi, zh-hans, zh-hant
   display_name: Casama
   publisher_display_name: Casama
   identity_name: ai.casama.app
