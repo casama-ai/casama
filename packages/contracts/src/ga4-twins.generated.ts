@@ -121,6 +121,10 @@ export const ANALYTICS_CLIENT_EVENTS: Record<string, string[]> = {
     "reconnect",
     "reason"
   ],
+  "attachment_too_large": [
+    "source",
+    "size_mb"
+  ],
   "live_view_failed": [
     "fallback"
   ],

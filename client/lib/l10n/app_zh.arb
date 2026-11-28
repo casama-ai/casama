@@ -1019,7 +1019,7 @@
   "messageNotSent": "文件未能上传，因此消息未发送，已放回输入框。",
   "chatSendsWhenDone": "当前回复完成后发送",
   "noComputerForFiles": "此机器人没有可存放文件的电脑。",
-  "fileTooLarge": "{name} 超过了 25 MB，太大无法作为附件发送。",
+  "fileTooLarge": "{name} 超过了 25 MB，太大无法作为附件发送。请改用 Google Drive、Dropbox、iCloud 或任意云存储发送链接。",
   "secretsHelp": "机器人会在请求中按名称引用密钥。密钥只会发送到你允许的主机，模型永远看不到它。",
   "deleteSecretTitle": "要删除 {name} 吗？",
   "deleteSecretBody": "使用该密钥的机器人将无法再访问该服务。",

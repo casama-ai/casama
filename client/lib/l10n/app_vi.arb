@@ -1019,7 +1019,7 @@
   "messageNotSent": "Tệp chưa tải lên được nên tin nhắn chưa gửi. Tin đã được đưa lại vào ô nhập.",
   "chatSendsWhenDone": "Gửi khi câu trả lời này xong",
   "noComputerForFiles": "Bot này không có máy tính để lưu tệp.",
-  "fileTooLarge": "{name} vượt quá 25 MB, quá lớn để đính kèm.",
+  "fileTooLarge": "{name} vượt quá 25 MB, quá lớn để đính kèm. Thay vào đó, hãy gửi liên kết từ Google Drive, Dropbox, iCloud hoặc bất kỳ dịch vụ lưu trữ đám mây nào.",
   "secretsHelp": "Bot đưa bí mật vào yêu cầu bằng tên bí mật. Bí mật chỉ được gửi tới máy chủ bạn cho phép và mô hình không bao giờ nhìn thấy.",
   "deleteSecretTitle": "Xóa {name}?",
   "deleteSecretBody": "Các bot dùng bí mật này sẽ không thể truy cập dịch vụ đó nữa.",

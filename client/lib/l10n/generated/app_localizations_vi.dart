@@ -5056,7 +5056,7 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String fileTooLarge(String name) {
-    return '$name vượt quá 25 MB, quá lớn để đính kèm.';
+    return '$name vượt quá 25 MB, quá lớn để đính kèm. Thay vào đó, hãy gửi liên kết từ Google Drive, Dropbox, iCloud hoặc bất kỳ dịch vụ lưu trữ đám mây nào.';
   }
 
   @override

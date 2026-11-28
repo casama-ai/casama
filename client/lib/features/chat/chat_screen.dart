@@ -440,6 +440,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   final _pickedSkills = <String>[];
   var _dragging = false;
 
+  static const _maxFileBytes = 25 * 1024 * 1024;
+
   /// File links found in each reply (by entry: a changed reply is a new entry).
   final _sharedFiles = Expando<List<AttachmentRef>>();
 
@@ -467,7 +469,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       return;
     }
     for (final (name, bytes, mime) in files) {
-      if (bytes.length > maxMediaUploadBytes((mime == null || mime.isEmpty) ? mimeFor(name) : mime)) {
+      if (bytes.length > _maxFileBytes) {
+        Analytics.log('attachment_too_large', {'source': 'chat', 'size_mb': (bytes.length / (1024 * 1024)).ceil()});
         showWarning(context, context.l10n.fileTooLarge(name));
         continue;
       }

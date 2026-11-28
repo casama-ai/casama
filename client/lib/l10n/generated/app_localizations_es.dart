@@ -5076,7 +5076,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String fileTooLarge(String name) {
-    return '$name supera los 25 MB, es demasiado grande para adjuntar.';
+    return '$name supera los 25 MB, es demasiado grande para adjuntar. Envía en su lugar un enlace desde Google Drive, Dropbox, iCloud o cualquier almacenamiento en la nube.';
   }
 
   @override

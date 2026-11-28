@@ -188,7 +188,9 @@ export default defineConfig({
     const cardPath = `cards/${pageData.relativePath.replace(/\.md$/, ".jpg")}`;
     const hasCard = !home && existsSync(new URL(`../public/${cardPath}`, import.meta.url));
     const image = `${site}/${hasCard ? cardPath : "og-card.jpg"}`;
-    const imageAlt = hasCard ? `${pageData.title} · Casama docs` : "Casama docs: guides for using, hosting and building on Casama.";
+    const imageAlt = hasCard
+      ? `${pageData.title} · Casama docs`
+      : "Casama docs: guides for using, hosting and building on Casama.";
     const crumbs = cleanPath(pageData.relativePath).split("/").filter(Boolean);
     const data: Record<string, unknown>[] = [
       {

@@ -1145,28 +1145,6 @@
         },
         "size_bytes": {
           "type": "number"
-        },
-        "parts": {
-          "type": "number"
-        }
-      },
-      "funnels": []
-    },
-    {
-      "name": "media_upload_failed",
-      "by": ["server"],
-      "description": "A big file sent in parts (over 48 MB, up to 500 MB for video and audio) didn't finish. reason: too_large, storage_full, rate_limited, expired (the upload was gone, often after a server restart), bad_part (a part of the wrong size) or incomplete (finished before every part arrived). stage: start, part or complete.",
-      "properties": {
-        "reason": {
-          "type": "string",
-          "values": ["too_large", "storage_full", "rate_limited", "expired", "bad_part", "incomplete"]
-        },
-        "stage": {
-          "type": "string",
-          "values": ["start", "part", "complete"]
-        },
-        "size_bytes": {
-          "type": "number"
         }
       },
       "funnels": []
@@ -1364,6 +1342,21 @@
         }
       },
       "funnels": ["F5"]
+    },
+    {
+      "name": "attachment_too_large",
+      "by": ["client"],
+      "description": "The app turned away a file over the 25 MB attachment limit and suggested sending a link instead (D-634). source: chat or quick_ask. size_mb: the file's size, rounded up to whole MB.",
+      "properties": {
+        "source": {
+          "type": "string",
+          "values": ["chat", "quick_ask"]
+        },
+        "size_mb": {
+          "type": "number"
+        }
+      },
+      "funnels": []
     },
     {
       "name": "live_view_failed",

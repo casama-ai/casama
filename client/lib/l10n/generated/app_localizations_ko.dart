@@ -4969,7 +4969,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String fileTooLarge(String name) {
-    return '$name 파일 크기가 25 MB를 초과해 첨부할 수 없어요.';
+    return '$name 파일 크기가 25 MB를 초과해 첨부할 수 없어요. 대신 Google Drive, Dropbox, iCloud 또는 다른 클라우드 저장소의 링크를 보내 주세요.';
   }
 
   @override

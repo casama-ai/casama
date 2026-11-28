@@ -1019,7 +1019,7 @@
   "messageNotSent": "Vos fichiers n'ont pas pu être importés, le message n'a donc pas été envoyé. Il est resté dans le champ de saisie.",
   "chatSendsWhenDone": "Envoi dès la fin de cette réponse",
   "noComputerForFiles": "Ce bot n'a pas d'ordinateur pour conserver des fichiers.",
-  "fileTooLarge": "{name} dépasse 25 Mo, trop volumineux pour être joint.",
+  "fileTooLarge": "{name} dépasse 25 MB, trop volumineux pour être joint. Envoyez plutôt un lien vers le fichier depuis Google Drive, Dropbox, iCloud ou tout autre stockage cloud.",
   "secretsHelp": "Les bots insèrent un secret dans les requêtes par son nom. Il n'est envoyé qu'aux hôtes autorisés et le modèle ne le voit jamais.",
   "deleteSecretTitle": "Supprimer {name} ?",
   "deleteSecretBody": "Les bots qui l'utilisent ne pourront plus joindre ce service.",

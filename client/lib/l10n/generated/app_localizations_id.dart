@@ -5077,7 +5077,7 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String fileTooLarge(String name) {
-    return '$name melebihi 25 MB, terlalu besar untuk dilampirkan.';
+    return '$name melebihi 25 MB, terlalu besar untuk dilampirkan. Kirim tautannya saja dari Google Drive, Dropbox, iCloud, atau penyimpanan cloud lainnya.';
   }
 
   @override

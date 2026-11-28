@@ -1019,7 +1019,7 @@
   "messageNotSent": "你的檔案未能上傳，因此訊息沒有送出，已退回輸入框。",
   "chatSendsWhenDone": "此回覆完成時將自動送出",
   "noComputerForFiles": "這個機器人沒有可用來保存檔案的電腦。",
-  "fileTooLarge": "「{name}」超過 25 MB，檔案過大無法附加。",
+  "fileTooLarge": "「{name}」超過 25 MB，檔案過大無法附加。請改為傳送 Google Drive、Dropbox、iCloud 或任何雲端儲存空間的連結。",
   "secretsHelp": "機器人會在請求中依名稱帶入機密資料。它只會傳送給你允許的主機，模型本身永遠不會看到。",
   "deleteSecretTitle": "要刪除「{name}」嗎？",
   "deleteSecretBody": "使用它的機器人將無法再連線至該服務。",

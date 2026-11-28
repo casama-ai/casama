@@ -20,13 +20,10 @@ const CostTotals = z
     spent_usd: z
       .number()
       .openapi({ description: "Estimated usage cost at list prices, plus fixed bills when asked" }),
-    paid_usd: z
-      .number()
-      .optional()
-      .openapi({
-        description:
-          "Money that actually leaves the account (free plans and own-server shares are $0; included credits subtracted; fixed bills included when asked)",
-      }),
+    paid_usd: z.number().optional().openapi({
+      description:
+        "Money that actually leaves the account (free plans and own-server shares are $0; included credits subtracted; fixed bills included when asked)",
+    }),
     charged_usd: z.number().openapi({ description: "Taken from credits for usage" }),
     charged_tracked_usd: z
       .number()
@@ -34,11 +31,9 @@ const CostTotals = z
     own_usd: z
       .number()
       .openapi({ description: "Paid by workspaces on their own keys: not the server's money" }),
-    fixed_usd: z
-      .number()
-      .openapi({
-        description: "Fixed bills in the period; inside spent_usd and paid_usd only when asked for",
-      }),
+    fixed_usd: z.number().openapi({
+      description: "Fixed bills in the period; inside spent_usd and paid_usd only when asked for",
+    }),
     not_recorded_usd: z
       .number()
       .openapi({ description: "What vendors report above what the server recorded" }),

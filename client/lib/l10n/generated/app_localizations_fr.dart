@@ -5089,7 +5089,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String fileTooLarge(String name) {
-    return '$name dépasse 25 Mo, trop volumineux pour être joint.';
+    return '$name dépasse 25 MB, trop volumineux pour être joint. Envoyez plutôt un lien vers le fichier depuis Google Drive, Dropbox, iCloud ou tout autre stockage cloud.';
   }
 
   @override

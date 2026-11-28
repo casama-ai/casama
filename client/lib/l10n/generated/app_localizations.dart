@@ -7771,7 +7771,7 @@ abstract class AppLocalizations {
   /// No description provided for @fileTooLarge.
   ///
   /// In en, this message translates to:
-  /// **'{name} is over 25 MB, too large to attach.'**
+  /// **'{name} is over 25 MB, too large to attach. Send a link to it instead, from Google Drive, Dropbox, iCloud or any cloud storage.'**
   String fileTooLarge(String name);
 
   /// No description provided for @secretsHelp.

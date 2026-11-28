@@ -1019,7 +1019,7 @@
   "messageNotSent": "Seus arquivos não foram enviados, então a mensagem não foi enviada. Ela voltou para a caixa.",
   "chatSendsWhenDone": "Envia quando esta resposta terminar",
   "noComputerForFiles": "Este bot não tem computador para guardar arquivos.",
-  "fileTooLarge": "{name} passa de 25 MB e é grande demais para anexar.",
+  "fileTooLarge": "{name} passa de 25 MB e é grande demais para anexar. Em vez disso, envie um link dele pelo Google Drive, Dropbox, iCloud ou qualquer armazenamento em nuvem.",
   "secretsHelp": "Os bots colocam um segredo nas solicitações pelo nome. Ele só é enviado aos hosts que você permitir e o modelo nunca o vê.",
   "deleteSecretTitle": "Excluir {name}?",
   "deleteSecretBody": "Bots que o usam deixarão de alcançar esse serviço.",

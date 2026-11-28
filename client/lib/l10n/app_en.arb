@@ -1532,7 +1532,7 @@
   "messageNotSent": "Your files didn't upload, so the message wasn't sent. It's back in the box.",
   "chatSendsWhenDone": "Sends when this reply is done",
   "noComputerForFiles": "This bot has no computer to keep files on.",
-  "fileTooLarge": "{name} is over 25 MB, too large to attach.",
+  "fileTooLarge": "{name} is over 25 MB, too large to attach. Send a link to it instead, from Google Drive, Dropbox, iCloud or any cloud storage.",
   "@fileTooLarge": {"placeholders": {"name": {"type": "String"}}},
   "secretsHelp": "Bots put a secret in requests by its name. It's only sent to the hosts you allow and the model never sees it.",
   "deleteSecretTitle": "Delete {name}?",

@@ -4907,7 +4907,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String fileTooLarge(String name) {
-    return '$name 超过了 25 MB，太大无法作为附件发送。';
+    return '$name 超过了 25 MB，太大无法作为附件发送。请改用 Google Drive、Dropbox、iCloud 或任意云存储发送链接。';
   }
 
   @override
@@ -32667,7 +32667,7 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String fileTooLarge(String name) {
-    return '「$name」超過 25 MB，檔案過大無法附加。';
+    return '「$name」超過 25 MB，檔案過大無法附加。請改為傳送 Google Drive、Dropbox、iCloud 或任何雲端儲存空間的連結。';
   }
 
   @override

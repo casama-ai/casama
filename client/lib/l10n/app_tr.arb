@@ -1019,7 +1019,7 @@
   "messageNotSent": "Dosyalarınız yüklenemediği için mesaj gönderilmedi. Mesajınız kutuda bekliyor.",
   "chatSendsWhenDone": "Bu yanıt bittiğinde gönderilir",
   "noComputerForFiles": "Bu botun dosya saklayabileceği bir bilgisayarı yok.",
-  "fileTooLarge": "{name} 25 MB'tan büyük olduğu için eklenemiyor.",
+  "fileTooLarge": "{name} 25 MB'tan büyük olduğu için eklenemiyor. Bunun yerine Google Drive, Dropbox, iCloud veya herhangi bir bulut depolamadan bağlantısını gönderin.",
   "secretsHelp": "Botlar isteklerde bir gizli anahtarı adıyla kullanır. Yalnızca izin verdiğiniz ana bilgisayarlara gönderilir ve model bunu asla görmez.",
   "deleteSecretTitle": "{name} silinsin mi?",
   "deleteSecretBody": "Bunu kullanan botlar artık o hizmete erişemeyecek.",

@@ -5077,7 +5077,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String fileTooLarge(String name) {
-    return '$name 25 MB\'tan büyük olduğu için eklenemiyor.';
+    return '$name 25 MB\'tan büyük olduğu için eklenemiyor. Bunun yerine Google Drive, Dropbox, iCloud veya herhangi bir bulut depolamadan bağlantısını gönderin.';
   }
 
   @override

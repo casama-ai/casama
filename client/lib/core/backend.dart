@@ -3787,14 +3787,3 @@ class PlanChangePriceChangedException implements Exception {
   const PlanChangePriceChangedException(this.preview);
   final PlanChangePreview preview;
 }
-
-/// The largest file [Backend.uploadMedia] takes: 500 MB of video or audio (sent in parts),
-/// 50 MB of anything else (SERVER-TOOLS-PLAN §12).
-int maxMediaUploadBytes(String? mime) {
-  final m = mime ?? '';
-  return m.startsWith('video/') || m.startsWith('audio/') ? 500 * 1024 * 1024 : 50 * 1024 * 1024;
-}
-
-/// Files bigger than this go up in parts (`/v1/media/uploads`): one request through Cloudflare
-/// stops at 100 MB, and the server reads a single request into memory.
-const mediaPartUploadThreshold = 48 * 1024 * 1024;

@@ -5082,7 +5082,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String fileTooLarge(String name) {
-    return '$name ist größer als 25 MB und zu groß zum Anhängen.';
+    return '$name ist größer als 25 MB und zu groß zum Anhängen. Sende stattdessen einen Link dazu – von Google Drive, Dropbox, iCloud oder einem beliebigen Cloud-Speicher.';
   }
 
   @override

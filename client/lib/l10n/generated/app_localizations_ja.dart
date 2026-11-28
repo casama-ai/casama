@@ -4965,7 +4965,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String fileTooLarge(String name) {
-    return '$nameは25MBを超えているため添付できません。';
+    return '$nameは25 MBを超えているため添付できません。代わりにGoogle Drive、Dropbox、iCloud、またはその他のクラウドストレージからリンクを送信してください。';
   }
 
   @override

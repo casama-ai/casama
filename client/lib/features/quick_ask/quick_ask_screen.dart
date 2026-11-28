@@ -77,6 +77,8 @@ class _QuickAskScreenState extends ConsumerState<QuickAskScreen> {
     super.dispose();
   }
 
+  static const _maxFileBytes = 25 * 1024 * 1024;
+
   Future<void> _send() async {
     final bot = _botId;
     if (bot == null || (_text.text.trim().isEmpty && _files.isEmpty && !(_ctx?.selection != null && _withSelection))) return;
@@ -93,8 +95,8 @@ class _QuickAskScreenState extends ConsumerState<QuickAskScreen> {
     for (final f in _files) {
       final bytes = await f.read().catchError((_) => Uint8List(0));
       if (!mounted) return;
-      final mime = (f.mimeType == null || f.mimeType!.isEmpty) ? mimeFor(f.name) : f.mimeType!;
-      if (bytes.length > maxMediaUploadBytes(mime)) {
+      if (bytes.length > _maxFileBytes) {
+        Analytics.log('attachment_too_large', {'source': 'quick_ask', 'size_mb': (bytes.length / (1024 * 1024)).ceil()});
         showWarning(context, l10n.fileTooLarge(f.name));
         setState(() => _busy = false);
         return;

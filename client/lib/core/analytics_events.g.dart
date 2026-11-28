@@ -26,6 +26,7 @@ const analyticsClientEvents = <String>{
   'skill_installed',
   'connection_started',
   'connection_failed',
+  'attachment_too_large',
   'live_view_failed',
   'screen_card_shown',
   'screen_card_opened',

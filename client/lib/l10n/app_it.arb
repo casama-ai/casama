@@ -1019,7 +1019,7 @@
   "messageNotSent": "I file non sono stati caricati, quindi il messaggio non è stato inviato. È di nuovo nella casella.",
   "chatSendsWhenDone": "Invia al termine di questa risposta",
   "noComputerForFiles": "Questo bot non ha un computer su cui tenere i file.",
-  "fileTooLarge": "{name} supera i 25 MB, è troppo grande per essere allegato.",
+  "fileTooLarge": "{name} supera i 25 MB, è troppo grande per essere allegato. Invia invece un link da Google Drive, Dropbox, iCloud o qualsiasi archivio cloud.",
   "secretsHelp": "I bot inseriscono un segreto nelle richieste usando il suo nome. Viene inviato solo agli host che consenti e il modello non lo vede mai.",
   "deleteSecretTitle": "Eliminare {name}?",
   "deleteSecretBody": "I bot che lo usano non potranno più raggiungere quel servizio.",

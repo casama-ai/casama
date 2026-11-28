@@ -1019,7 +1019,7 @@
   "messageNotSent": "Filemu gagal diunggah, jadi pesan tidak terkirim. Pesan dikembalikan ke kotak.",
   "chatSendsWhenDone": "Dikirim setelah balasan ini selesai",
   "noComputerForFiles": "Bot ini tidak punya komputer untuk menyimpan file.",
-  "fileTooLarge": "{name} melebihi 25 MB, terlalu besar untuk dilampirkan.",
+  "fileTooLarge": "{name} melebihi 25 MB, terlalu besar untuk dilampirkan. Kirim tautannya saja dari Google Drive, Dropbox, iCloud, atau penyimpanan cloud lainnya.",
   "secretsHelp": "Bot memasukkan rahasia ke permintaan lewat namanya. Rahasia hanya dikirim ke host yang kamu izinkan dan model tidak pernah melihatnya.",
   "deleteSecretTitle": "Hapus {name}?",
   "deleteSecretBody": "Bot yang memakainya tidak akan bisa lagi menjangkau layanan itu.",
