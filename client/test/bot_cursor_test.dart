@@ -225,6 +225,59 @@ void main() {
       expect(c.target, isNull);
     });
 
+    test('entering rests it in the middle of the area once the area is known', () {
+      final c = BotCursorController();
+      addTearDown(c.dispose);
+      c.enter();
+      expect(c.target, isNull, reason: 'no layer has said its size yet');
+      c.reportArea(const Size(400, 800));
+      expect(c.target!.at, const Offset(200, 336));
+      expect(c.target!.act, BotCursorAct.rest);
+      expect(c.target!.of, Size.zero);
+      // Typing and scrolling now have a cursor to show.
+      c.typing();
+      expect(c.target!.act, BotCursorAct.typing);
+      // Entering again while one shows moves nothing.
+      final step = c.target!.step;
+      c.enter();
+      expect(c.target!.step, step);
+    });
+
+    test('leaving cancels an entry still waiting for the area', () {
+      final c = BotCursorController();
+      addTearDown(c.dispose);
+      c.enter();
+      c.leave();
+      c.reportArea(const Size(400, 800));
+      expect(c.target, isNull);
+    });
+
+    testWidgets('a step that moves nothing restarts the idle clock and brings it back', (
+      tester,
+    ) async {
+      final c = BotCursorController()..reportArea(const Size(400, 800));
+      addTearDown(c.dispose);
+      c.pointTo(const Offset(10, 10), of: _page);
+      await tester.pump(const Duration(seconds: 19));
+      c.keepAlive();
+      await tester.pump(const Duration(seconds: 19));
+      expect(c.target!.at, const Offset(10, 10), reason: 'kept where it was');
+      await tester.pump(const Duration(seconds: 2));
+      expect(c.target, isNull);
+      c.keepAlive();
+      expect(c.target!.at, const Offset(200, 336));
+    });
+
+    testWidgets('with no idle clock it stays until it is told to leave', (tester) async {
+      final c = BotCursorController(idleLeave: null);
+      addTearDown(c.dispose);
+      c.pointTo(const Offset(10, 10), of: _page);
+      await tester.pump(const Duration(minutes: 5));
+      expect(c.target, isNotNull);
+      c.leave();
+      expect(c.target, isNull);
+    });
+
     test('nonsense is refused', () {
       final c = BotCursorController();
       addTearDown(c.dispose);

@@ -22855,6 +22855,25 @@ class AppLocalizationsZh extends AppLocalizations {
   String get appBrowserAway => '已暂停：聊天窗口未打开';
 
   @override
+  String appBrowserDone(String bot) {
+    return '$bot 已完成';
+  }
+
+  @override
+  String appBrowserDoneFailed(String bot) {
+    return '$bot 在完成前已停止';
+  }
+
+  @override
+  String get appBrowserDoneHint => '答案在你的聊天中。如果想随便看看，这个页面会保持打开。';
+
+  @override
+  String get appBrowserBackToChat => '返回聊天';
+
+  @override
+  String get appBrowserStayHere => '留在此处';
+
+  @override
   String get appBrowserAddress => '网站地址';
 
   @override
@@ -49179,6 +49198,25 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get appBrowserAway => '已暫停：對話未開啟';
+
+  @override
+  String appBrowserDone(String bot) {
+    return '$bot 已完成';
+  }
+
+  @override
+  String appBrowserDoneFailed(String bot) {
+    return '$bot 在完成前已停止';
+  }
+
+  @override
+  String get appBrowserDoneHint => '答案在你的對話中。如果想四處看看，這個頁面會保持開啟。';
+
+  @override
+  String get appBrowserBackToChat => '回到對話';
+
+  @override
+  String get appBrowserStayHere => '留在此頁';
 
   @override
   String get appBrowserAddress => '網址';

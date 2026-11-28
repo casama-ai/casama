@@ -1,22 +1,18 @@
 /** Copies the OpenAPI document into the site and writes the API reference page before a build. */
-import {
-  copyFileSync,
-  mkdirSync,
-  readdirSync,
-  readFileSync,
-  statSync,
-  writeFileSync,
-} from "node:fs";
+import { mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 
 const root = new URL("../../", import.meta.url);
 const here = new URL("../", import.meta.url);
 mkdirSync(new URL("public/api/", here), { recursive: true });
-copyFileSync(
-  new URL("packages/contracts/openapi.json", root),
-  new URL("public/api/openapi.json", here),
-);
-const version = JSON.parse(readFileSync(new URL("packages/contracts/openapi.json", root), "utf8"))
-  .info.version;
+// The contract lists only the local dev server; the published copy leads with Casama Cloud so tools
+// that import it (Postman, APIs.guru, SDK generators) point at the real API.
+const spec = JSON.parse(readFileSync(new URL("packages/contracts/openapi.json", root), "utf8"));
+spec.servers = [
+  { url: "https://api.casama.ai", description: "Casama Cloud" },
+  { url: "http://localhost:8787", description: "Self-hosted or local development" },
+];
+writeFileSync(new URL("public/api/openapi.json", here), `${JSON.stringify(spec, null, 2)}\n`);
+const version = spec.info.version;
 writeFileSync(
   new URL("public/api/index.html", here),
   `<!doctype html>

@@ -97,6 +97,7 @@ class AppBrowserSession {
     this.ask,
     this.handoffReason,
     this.person = false,
+    this.doneRun,
   });
 
   final AppBrowserPhase phase;
@@ -115,6 +116,10 @@ class AppBrowserSession {
 
   /// The person is browsing by hand (Sign In to a Site): no bot, only the first two gate steps.
   final bool person;
+
+  /// The run that just finished driving the page on its own (its reply ended; not Stop, not away),
+  /// until the person answers the full view's "done" card or another run starts.
+  final AppBrowserRun? doneRun;
 
   /// A bot is using the page now (working, asking, handed it over, or paused by the person).
   bool get botActive =>
@@ -149,6 +154,8 @@ class AppBrowserSession {
     String? handoffReason,
     bool clearHandoff = false,
     bool? person,
+    AppBrowserRun? doneRun,
+    bool clearDone = false,
   }) => AppBrowserSession(
     phase: phase ?? this.phase,
     run: clearRun ? null : run ?? this.run,
@@ -160,6 +167,7 @@ class AppBrowserSession {
     ask: clearAsk ? null : ask ?? this.ask,
     handoffReason: clearHandoff ? null : handoffReason ?? this.handoffReason,
     person: person ?? this.person,
+    doneRun: clearDone ? null : doneRun ?? this.doneRun,
   );
 }
 
@@ -258,7 +266,9 @@ class AppBrowserController extends Notifier<AppBrowserSession>
   /// The bot's cursor over the page (docs/BOT-CURSOR-PLAN.md §5): the screen draws it above the
   /// web area, never inside the page. Its spots are the page's own points, which are the web
   /// area's points too.
-  final cursor = BotCursorController();
+  /// No idle clock: it stays while the bot drives the page, however long it thinks between steps,
+  /// and leaves when the phase does.
+  final cursor = BotCursorController(idleLeave: null);
 
   @override
   AppBrowserSession build() {
@@ -277,7 +287,8 @@ class AppBrowserController extends Notifier<AppBrowserSession>
   AppBrowserTimings get _timings => ref.read(appBrowserTimingsProvider);
 
   void _set(AppBrowserSession s) {
-    // The cursor is there only while the bot is the one driving the page.
+    // The cursor is there only while the bot is the one driving the page, from the moment it
+    // starts (resting in the middle until its first click), not just from its first click.
     if (s.phase != AppBrowserPhase.working) cursor.leave();
     // The soft keyboard opens only once the person has the page: shut while the bot drives it or
     // asks, open on Take Over and "Your turn". Idle and away leave it as it is (a real touch opens
@@ -304,6 +315,8 @@ class AppBrowserController extends Notifier<AppBrowserSession>
       ),
     );
     if (ref.mounted) state = s;
+    // After the state, so the layers drawing it read this run's bot name.
+    if (s.phase == AppBrowserPhase.working) cursor.enter();
   }
 
   /// Shows the cursor at a spot the page script located, then waits the beat so it is seen to
@@ -372,6 +385,7 @@ class AppBrowserController extends Notifier<AppBrowserSession>
           run: run,
           person: false,
           clearAsk: true,
+          clearDone: true,
         ),
       );
     }
@@ -397,6 +411,8 @@ class AppBrowserController extends Notifier<AppBrowserSession>
 
   Future<Map<String, Object?>> _dispatch(AppBrowserCall call) async {
     final a = call.args;
+    // Every step, a read or a wait too, shows the bot is still here.
+    if (state.phase == AppBrowserPhase.working) cursor.keepAlive();
     switch (call.action) {
       case 'open':
         return _open('${a['url'] ?? ''}', call);
@@ -862,6 +878,8 @@ class AppBrowserController extends Notifier<AppBrowserSession>
     if (!ref.mounted || conversationId == null) return;
     if (state.run?.conversationId != conversationId) return;
     if (!state.botActive && state.phase != AppBrowserPhase.away) return;
+    // Finished while it had the page (not after it lost it): the full view says so.
+    final done = state.botActive ? state.run : null;
     _endRun(answer: 'away');
     _set(
       state.copyWith(
@@ -870,8 +888,16 @@ class AppBrowserController extends Notifier<AppBrowserSession>
         clearAsk: true,
         clearHandoff: true,
         loading: false,
+        doneRun: done,
       ),
     );
+  }
+
+  /// The person answered (or closed) the full view's "done" card.
+  void dismissDone() {
+    if (ref.mounted && state.doneRun != null) {
+      _set(state.copyWith(clearDone: true));
+    }
   }
 
   /// The chat [conversationId] left the screen: a run working from it is away.
@@ -897,6 +923,7 @@ class AppBrowserController extends Notifier<AppBrowserSession>
     _set(
       state.copyWith(
         person: true,
+        clearDone: true,
         phase: away ? AppBrowserPhase.idle : null,
         clearRun: away,
         clearAsk: away,
@@ -1136,6 +1163,7 @@ class AppBrowserController extends Notifier<AppBrowserSession>
         clearAsk: true,
         clearHandoff: true,
         person: false,
+        clearDone: true,
       ),
     );
   }

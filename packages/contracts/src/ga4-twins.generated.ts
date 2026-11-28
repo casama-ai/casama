@@ -217,6 +217,15 @@ export const ANALYTICS_CLIENT_EVENTS: Record<string, string[]> = {
     "reason",
     "system"
   ],
+  "app_browser_done_shown": [
+    "outcome",
+    "with_preview",
+    "system"
+  ],
+  "app_browser_done_answered": [
+    "choice",
+    "system"
+  ],
   "push_opened": [
     "kind"
   ],

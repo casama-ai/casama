@@ -23873,6 +23873,26 @@ class AppLocalizationsDe extends AppLocalizations {
   String get appBrowserAway => 'Pausiert: Der Chat ist nicht offen';
 
   @override
+  String appBrowserDone(String bot) {
+    return '$bot ist fertig';
+  }
+
+  @override
+  String appBrowserDoneFailed(String bot) {
+    return '$bot wurde vor dem Abschluss gestoppt';
+  }
+
+  @override
+  String get appBrowserDoneHint =>
+      'Die Antwort steht in deinem Chat. Diese Seite bleibt geöffnet, falls du dich umsehen möchtest.';
+
+  @override
+  String get appBrowserBackToChat => 'Zurück zum Chat';
+
+  @override
+  String get appBrowserStayHere => 'Hier bleiben';
+
+  @override
   String get appBrowserAddress => 'Website-Adresse';
 
   @override

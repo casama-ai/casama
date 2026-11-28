@@ -1993,6 +1993,41 @@
       "funnels": []
     },
     {
+      "name": "app_browser_done_shown",
+      "by": ["client"],
+      "description": "A bot's run ended on its own while the person watched the full-screen in-app browser, and the done card showed. outcome: done, or failed (the reply ended with a failure notice). with_preview: the card showed the start of the bot's reply.",
+      "properties": {
+        "outcome": {
+          "type": "string",
+          "values": ["done", "failed"]
+        },
+        "with_preview": {
+          "type": "boolean"
+        },
+        "system": {
+          "type": "string",
+          "values": ["ios", "android", "macos", "linux", "windows"]
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "app_browser_done_answered",
+      "by": ["client"],
+      "description": "What the person did with the in-app browser's done card. choice: back_to_chat (the card's button), stay (kept the page open) or closed (closed the browser with the card still showing).",
+      "properties": {
+        "choice": {
+          "type": "string",
+          "values": ["back_to_chat", "stay", "closed"]
+        },
+        "system": {
+          "type": "string",
+          "values": ["ios", "android", "macos", "linux", "windows"]
+        }
+      },
+      "funnels": []
+    },
+    {
       "name": "push_opened",
       "by": ["client"],
       "description": "A notification was opened.",

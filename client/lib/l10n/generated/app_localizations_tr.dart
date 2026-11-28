@@ -23815,6 +23815,26 @@ class AppLocalizationsTr extends AppLocalizations {
   String get appBrowserAway => 'Duraklatıldı: sohbet açık değil';
 
   @override
+  String appBrowserDone(String bot) {
+    return '$bot tamamladı';
+  }
+
+  @override
+  String appBrowserDoneFailed(String bot) {
+    return '$bot bitirmeden durdu';
+  }
+
+  @override
+  String get appBrowserDoneHint =>
+      'Yanıt sohbetinizde. Etrafa göz atmak isterseniz bu sayfa açık kalır.';
+
+  @override
+  String get appBrowserBackToChat => 'Sohbete dön';
+
+  @override
+  String get appBrowserStayHere => 'Burada kal';
+
+  @override
   String get appBrowserAddress => 'Site adresi';
 
   @override

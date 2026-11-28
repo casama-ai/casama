@@ -90,14 +90,25 @@ abstract final class BotCursorFits {
 /// The cursor of one screen: told where each step is about to act, it tells the layers drawing
 /// it. It only ever goes where a real step happens (plan §2).
 class BotCursorController extends ChangeNotifier {
-  /// With no screen step for this long the cursor fades out (the screen card's own clock).
-  static const idleLeave = Duration(seconds: 20);
+  /// [idleLeave]: with no step for this long the cursor fades out (the screen card's own clock).
+  /// Null keeps it until [leave], for a surface that knows when the bot stops driving (the phone
+  /// browser: the bot thinking for half a minute between clicks is still driving the page).
+  BotCursorController({this.idleLeave = defaultIdleLeave});
+
+  static const defaultIdleLeave = Duration(seconds: 20);
+
+  /// Where a cursor that has no step to show yet rests: the middle of the area, a little high.
+  static const restAt = Offset(0.5, 0.42);
+
+  final Duration? idleLeave;
 
   BotCursorTarget? _target;
   String? _typingCall;
   int _step = 0;
   Timer? _idle;
   bool _disposed = false;
+  bool _wantEnter = false;
+  Size? _area;
 
   /// Null while there is no cursor to show.
   BotCursorTarget? get target => _target;
@@ -105,9 +116,56 @@ class BotCursorController extends ChangeNotifier {
   void _set(BotCursorTarget? t) {
     if (_disposed) return;
     _target = t;
-    _idle?.cancel();
-    _idle = t == null ? null : Timer(idleLeave, leave);
+    _restartIdle();
     notifyListeners();
+  }
+
+  void _restartIdle() {
+    _idle?.cancel();
+    final wait = idleLeave;
+    _idle = _target == null || wait == null ? null : Timer(wait, leave);
+  }
+
+  /// The layer drawing the cursor reports its size in points, so [enter] knows where the middle
+  /// is. The phone browser's spots are in those same points.
+  void reportArea(Size area) {
+    if (_disposed || area.isEmpty || !area.isFinite) return;
+    _area = area;
+    if (_wantEnter && _target == null) _enterNow();
+  }
+
+  /// The bot started driving: a resting cursor in the middle of the area, so it is there before
+  /// the first click (and typing or scrolling has a cursor to show). Nothing when one is shown
+  /// already; waits for [reportArea] when no layer has drawn yet.
+  void enter() {
+    if (_disposed || _target != null) return;
+    _wantEnter = true;
+    if (_area != null) _enterNow();
+  }
+
+  void _enterNow() {
+    final a = _area!;
+    _wantEnter = false;
+    _typingCall = null;
+    _set(
+      BotCursorTarget(
+        at: Offset(a.width * restAt.dx, a.height * restAt.dy),
+        of: Size.zero,
+        act: BotCursorAct.rest,
+        step: ++_step,
+      ),
+    );
+  }
+
+  /// A step that moves nothing (a read, a wait) still counts as the bot being here: the idle
+  /// clock starts again, and a cursor that faded comes back.
+  void keepAlive() {
+    if (_disposed) return;
+    if (_target == null) {
+      enter();
+    } else {
+      _restartIdle();
+    }
   }
 
   /// A step is about to act at [at], measured against a picture of size [of].
@@ -172,6 +230,7 @@ class BotCursorController extends ChangeNotifier {
   /// The bot stopped driving this screen: the cursor fades out.
   void leave() {
     _typingCall = null;
+    _wantEnter = false;
     if (_target != null) _set(null);
   }
 
@@ -204,6 +263,8 @@ class BotCursor extends StatefulWidget {
     this.color,
     this.label,
     this.visible = true,
+    this.reportsArea = false,
+    this.drift = true,
   });
 
   final BotCursorController controller;
@@ -218,6 +279,14 @@ class BotCursor extends StatefulWidget {
 
   /// False hides it without losing its place (the person has the screen, the card is stale).
   final bool visible;
+
+  /// Tells [controller] this layer's size ([BotCursorController.reportArea]), so a cursor with no
+  /// step yet can rest in its middle. Only where the spots are the layer's own points.
+  final bool reportsArea;
+
+  /// False keeps a resting cursor still instead of drifting (tests: a cursor that keeps moving
+  /// never lets a frame settle).
+  final bool drift;
 
   @override
   State<BotCursor> createState() => _BotCursorState();
@@ -270,6 +339,7 @@ class _BotCursorState extends State<BotCursor> with TickerProviderStateMixin {
   bool _ringAfterGlide = false;
   Timer? _rest;
   bool _reduce = false;
+  Size? _reported;
 
   @override
   void initState() {
@@ -309,6 +379,7 @@ class _BotCursorState extends State<BotCursor> with TickerProviderStateMixin {
       _changed();
     }
     if (old.visible != widget.visible) _syncFade();
+    if (old.drift != widget.drift) _syncFloat();
   }
 
   @override
@@ -393,7 +464,7 @@ class _BotCursorState extends State<BotCursor> with TickerProviderStateMixin {
 
   void _restSoon() {
     _rest?.cancel();
-    if (_reduce || _shown == null) return;
+    if (_reduce || !widget.drift || _shown == null) return;
     _rest = Timer(_restBeforeFloat, () {
       if (!mounted || _shown == null) return;
       _floatAmount.forward();
@@ -407,7 +478,7 @@ class _BotCursorState extends State<BotCursor> with TickerProviderStateMixin {
 
   /// The drift and the typing dots run only while there is a cursor on screen to move.
   void _syncFloat() {
-    final run = !_reduce && _shown != null && widget.visible;
+    final run = !_reduce && widget.drift && _shown != null && widget.visible;
     if (run && !_float.isAnimating) {
       _float.repeat();
     } else if (!run && _float.isAnimating) {
@@ -425,6 +496,13 @@ class _BotCursorState extends State<BotCursor> with TickerProviderStateMixin {
           builder: (context, area) {
             final box = area.biggest;
             if (!box.isFinite || box.isEmpty) return const SizedBox.shrink();
+            if (widget.reportsArea && box != _reported) {
+              _reported = box;
+              // After the frame: the controller may place a cursor, which rebuilds this layer.
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (mounted) widget.controller.reportArea(box);
+              });
+            }
             return RepaintBoundary(
               child: AnimatedBuilder(
                 animation: _all,

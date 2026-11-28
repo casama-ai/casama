@@ -484,6 +484,93 @@ void main() {
     },
   );
 
+  testWidgets(
+    'the full view says when the bot is done: Stay Here keeps the page, Back to Chat leaves',
+    (tester) async {
+      await setSize(tester, const Size(400, 800));
+      await tester.pumpWidget(
+        app(
+          Builder(
+            builder: (context) => Scaffold(
+              body: TextButton(
+                key: const Key('openBrowser'),
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => const AppBrowserScreen(),
+                  ),
+                ),
+                child: const Text('open'),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.tap(find.byKey(const Key('openBrowser')));
+      await tester.pumpAndSettle();
+      final browser = containerOf(
+        tester,
+        AppBrowserScreen,
+      ).read(appBrowserProvider.notifier);
+      Future<void> runAndFinish(String run) async {
+        await tester.runAsync(
+          () => browser.handle(
+            browserCall(
+              'open',
+              args: {'url': 'https://shop.example/'},
+              run: run,
+            ),
+          ),
+        );
+        await tester.pump();
+        expect(find.byKey(const Key('appBrowserDone')), findsNothing);
+        browser.runOver('conv1');
+        await tester.pumpAndSettle();
+      }
+
+      await runAndFinish('run1');
+      expect(find.byKey(const Key('appBrowserDone')), findsOneWidget);
+      expect(find.text('Ada is done'), findsOneWidget);
+      expect(
+        find.text(
+          'The answer is in your chat. This page stays open if you want to look around.',
+        ),
+        findsOneWidget,
+      );
+      await tester.tap(find.byKey(const Key('appBrowserDoneStay')));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('appBrowserDone')), findsNothing);
+      expect(find.byType(AppBrowserScreen), findsOneWidget);
+      expect(find.byKey(const Key('fakeWebArea')), findsOneWidget);
+
+      await runAndFinish('run2');
+      await tester.tap(find.byKey(const Key('appBrowserDoneBack')));
+      await tester.pumpAndSettle();
+      expect(find.byType(AppBrowserScreen), findsNothing);
+      expect(find.byKey(const Key('openBrowser')), findsOneWidget);
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
+
+  testWidgets('Stop shows no done card: the person knows', (tester) async {
+    await setSize(tester, const Size(400, 800));
+    await tester.pumpWidget(app(const AppBrowserScreen()));
+    await tester.pumpAndSettle();
+    final browser = containerOf(
+      tester,
+      AppBrowserScreen,
+    ).read(appBrowserProvider.notifier);
+    await tester.runAsync(
+      () => browser.handle(
+        browserCall('open', args: {'url': 'https://shop.example/'}),
+      ),
+    );
+    await tester.pump();
+    await tester.tap(find.byKey(const Key('appBrowserStop')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('appBrowserDone')), findsNothing);
+    await tester.pumpWidget(const SizedBox());
+  });
+
   testWidgets('Sign In to a Site: an address, then Let My Bots Use This Site', (
     tester,
   ) async {
@@ -1037,6 +1124,10 @@ void main() {
       await tester.pump();
       expect(channel.overlayBounds.last['visible'], isTrue);
       expect(AppBrowserLinuxLive.showing.value, isTrue);
+      // The run started: the cursor rests in the middle before any click (step 1).
+      expect(channel.cursorCalls.last['visible'], isTrue);
+      expect(channel.cursorCalls.last['act'], 'rest');
+      expect(channel.cursorCalls.last['step'], 1);
 
       browser.cursor.pointTo(
         const Offset(120, 80),
@@ -1049,7 +1140,7 @@ void main() {
         'x': 120.0,
         'y': 80.0,
         'act': 'click',
-        'step': 1,
+        'step': 2,
         'label': 'Ada',
       });
       BotCursor flutterCursor() => tester.widget<BotCursor>(find.byType(BotCursor));

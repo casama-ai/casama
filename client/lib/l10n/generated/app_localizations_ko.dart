@@ -23269,6 +23269,25 @@ class AppLocalizationsKo extends AppLocalizations {
   String get appBrowserAway => '일시 중지됨: 채팅이 열려 있지 않음';
 
   @override
+  String appBrowserDone(String bot) {
+    return '$bot 봇 작업 완료';
+  }
+
+  @override
+  String appBrowserDoneFailed(String bot) {
+    return '$bot 봇이 끝내기 전에 멈췄어요';
+  }
+
+  @override
+  String get appBrowserDoneHint => '답변은 채팅에 있어요. 이 페이지는 열려 있으니 둘러봐도 좋아요.';
+
+  @override
+  String get appBrowserBackToChat => '채팅으로 돌아가기';
+
+  @override
+  String get appBrowserStayHere => '여기에 머물기';
+
+  @override
   String get appBrowserAddress => '사이트 주소';
 
   @override

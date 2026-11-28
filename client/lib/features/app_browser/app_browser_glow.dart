@@ -55,8 +55,9 @@ Color _bandLight(Color color) {
       .toColor();
 }
 
-/// Whether the glow may move (the travelling band, breathing and step pulse). Tests turn it off so
-/// `pumpAndSettle` settles; Reduce Motion turns it off too (plan §4.5).
+/// Whether the glow may move (the travelling band, breathing and step pulse), and the bot's cursor
+/// drift over the page. Tests turn it off so `pumpAndSettle` settles; Reduce Motion turns it off
+/// too (plan §4.5).
 final appBrowserGlowMotionProvider = Provider<bool>((ref) => true);
 
 /// The frame around [child] (the page area). The page is inset by [margin] while a frame shows and

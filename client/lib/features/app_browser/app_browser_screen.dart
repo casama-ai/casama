@@ -4,10 +4,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../../core/analytics.dart';
+import '../../core/haptics.dart';
 import '../../core/widgets.dart';
 import '../../theme/app_tokens.dart';
 import '../chat/chat_controller.dart';
 import 'app_browser_controller.dart';
+import 'app_browser_done.dart';
 import 'app_browser_flag.dart';
 import 'app_browser_pane.dart';
 import 'app_browser_linux.dart';
@@ -31,6 +34,8 @@ class _AppBrowserScreenState extends ConsumerState<AppBrowserScreen> {
   final _addressFocus = FocusNode();
   late final AppBrowserController _controller;
   VoidCallback? _releaseAskOverlay;
+  // The done card showing now, so closing the view with it up counts as an answer.
+  bool _doneShowing = false;
 
   void _syncAskOverlay(bool hasAsk) {
     if (hasAsk && _releaseAskOverlay == null) {
@@ -54,11 +59,40 @@ class _AppBrowserScreenState extends ConsumerState<AppBrowserScreen> {
     // After this frame: a provider can't change while the tree builds.
     if (widget.person) {
       Future.microtask(() => _controller.openForPerson(widget.startUrl));
+    } else {
+      // The done card is for a finish watched here; one from before this opened is old news.
+      Future.microtask(_controller.dismissDone);
     }
+  }
+
+  void _answerDone(String choice) {
+    if (!_doneShowing) return;
+    _doneShowing = false;
+    Analytics.log('app_browser_done_answered', {
+      'choice': choice,
+      'system': ?appBrowserSystem,
+    });
+  }
+
+  void _backToChat() {
+    Haptic.tap();
+    _answerDone('back_to_chat');
+    _controller.dismissDone();
+    Navigator.of(context).maybePop();
+  }
+
+  void _stay() {
+    Haptic.tap();
+    _answerDone('stay');
+    _controller.dismissDone();
   }
 
   @override
   void dispose() {
+    if (_doneShowing) {
+      _answerDone('closed');
+      Future.microtask(_controller.dismissDone);
+    }
     _releaseAskOverlay?.call();
     _releaseAskOverlay = null;
     if (widget.person) Future.microtask(_controller.closePerson);
@@ -116,6 +150,34 @@ class _AppBrowserScreenState extends ConsumerState<AppBrowserScreen> {
         },
       );
     }
+    // The bot finished with the page while the person watched: say so, with the way back.
+    final done = widget.person ? null : s.doneRun;
+    final outcome = done == null || done.botId.isEmpty
+        ? (failed: false, preview: null)
+        : appBrowserDoneOutcome(
+            ref.watch(chatControllerProvider(done.botId)),
+            done,
+          );
+    ref.listen(appBrowserProvider.select((v) => v.doneRun), (was, now) {
+      if (widget.person || now == null || was != null) return;
+      // Read after the frame: the chat's last reply may land in the same moment.
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted || ref.read(appBrowserProvider).doneRun == null) return;
+        final o = now.botId.isEmpty
+            ? (failed: false, preview: null)
+            : appBrowserDoneOutcome(
+                ref.read(chatControllerProvider(now.botId)),
+                now,
+              );
+        _doneShowing = true;
+        o.failed ? Haptic.warn() : Haptic.confirm();
+        Analytics.log('app_browser_done_shown', {
+          'outcome': o.failed ? 'failed' : 'done',
+          'with_preview': o.preview != null,
+          'system': ?appBrowserSystem,
+        });
+      });
+    });
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -149,7 +211,45 @@ class _AppBrowserScreenState extends ConsumerState<AppBrowserScreen> {
                 onGo: _go,
                 browser: _controller,
               ),
-            const Expanded(child: AppBrowserPageArea()),
+            Expanded(
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  const AppBrowserPageArea(),
+                  Positioned(
+                    left: AppSpace.sm,
+                    right: AppSpace.sm,
+                    bottom: AppSpace.sm,
+                    child: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 220),
+                      switchInCurve: Curves.easeOutCubic,
+                      switchOutCurve: Curves.easeInCubic,
+                      transitionBuilder: (child, a) => FadeTransition(
+                        opacity: a,
+                        child: SlideTransition(
+                          position: Tween(
+                            begin: const Offset(0, 0.25),
+                            end: Offset.zero,
+                          ).animate(a),
+                          child: child,
+                        ),
+                      ),
+                      child: done == null
+                          ? const SizedBox.shrink()
+                          : Material(
+                              type: MaterialType.transparency,
+                              child: AppBrowserDoneCard(
+                                botName: done.botName,
+                                outcome: outcome,
+                                onBackToChat: _backToChat,
+                                onStay: _stay,
+                              ),
+                            ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             // Not while typing: the keyboard leaves little room, and the page needs it.
             if (widget.person && MediaQuery.viewInsetsOf(context).bottom == 0)
               Padding(

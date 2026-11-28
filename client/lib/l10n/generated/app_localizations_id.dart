@@ -23798,6 +23798,26 @@ class AppLocalizationsId extends AppLocalizations {
   String get appBrowserAway => 'Dijeda: chat tidak terbuka';
 
   @override
+  String appBrowserDone(String bot) {
+    return '$bot selesai';
+  }
+
+  @override
+  String appBrowserDoneFailed(String bot) {
+    return '$bot berhenti sebelum selesai';
+  }
+
+  @override
+  String get appBrowserDoneHint =>
+      'Jawabannya ada di chat kamu. Halaman ini tetap terbuka kalau kamu mau melihat-lihat.';
+
+  @override
+  String get appBrowserBackToChat => 'Kembali ke chat';
+
+  @override
+  String get appBrowserStayHere => 'Tetap di sini';
+
+  @override
   String get appBrowserAddress => 'Alamat situs';
 
   @override

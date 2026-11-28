@@ -23907,6 +23907,26 @@ class AppLocalizationsFr extends AppLocalizations {
   String get appBrowserAway => 'En pause : la discussion n\'est pas ouverte';
 
   @override
+  String appBrowserDone(String bot) {
+    return '$bot a terminé';
+  }
+
+  @override
+  String appBrowserDoneFailed(String bot) {
+    return '$bot s\'est arrêté avant d\'avoir terminé';
+  }
+
+  @override
+  String get appBrowserDoneHint =>
+      'La réponse se trouve dans votre discussion. Cette page reste ouverte si vous voulez jeter un œil.';
+
+  @override
+  String get appBrowserBackToChat => 'Retour à la discussion';
+
+  @override
+  String get appBrowserStayHere => 'Rester ici';
+
+  @override
   String get appBrowserAddress => 'Adresse du site';
 
   @override

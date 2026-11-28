@@ -23766,6 +23766,26 @@ class AppLocalizationsVi extends AppLocalizations {
   String get appBrowserAway => 'Đã tạm dừng: cuộc trò chuyện đang không mở';
 
   @override
+  String appBrowserDone(String bot) {
+    return '$bot đã xong';
+  }
+
+  @override
+  String appBrowserDoneFailed(String bot) {
+    return '$bot đã dừng trước khi hoàn tất';
+  }
+
+  @override
+  String get appBrowserDoneHint =>
+      'Câu trả lời nằm trong cuộc trò chuyện của bạn. Trang này vẫn mở nếu bạn muốn xem thêm.';
+
+  @override
+  String get appBrowserBackToChat => 'Quay lại cuộc trò chuyện';
+
+  @override
+  String get appBrowserStayHere => 'Ở lại đây';
+
+  @override
   String get appBrowserAddress => 'Địa chỉ trang web';
 
   @override

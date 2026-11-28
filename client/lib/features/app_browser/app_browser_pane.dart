@@ -259,6 +259,8 @@ class AppBrowserPageArea extends ConsumerWidget {
                           )(at, pictureOf, box),
                     size: cursorSize,
                     label: s.run?.botName,
+                    reportsArea: true,
+                    drift: ref.watch(appBrowserGlowMotionProvider),
                     visible: !((defaultTargetPlatform == TargetPlatform.linux ||
                             defaultTargetPlatform == TargetPlatform.windows) &&
                         nativeCursor),

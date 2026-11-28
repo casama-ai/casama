@@ -9,7 +9,7 @@ import 'package:casama/features/app_browser/app_browser_sites.dart';
 import 'package:casama/ui/bot_cursor.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:material_ui/material_ui.dart' show Size;
+import 'package:material_ui/material_ui.dart' show Offset, Size;
 
 import 'app_browser_fakes.dart';
 import 'fake_backend.dart';
@@ -836,6 +836,50 @@ void main() {
       // A later call of the same run brings it back (a reply that only paused).
       expect((await controller().handle(browserCall('snapshot')))['ok'], isTrue);
       expect(session().botActive, isTrue);
+    });
+
+    test('the cursor shows from the run\'s first step, before any click, and stays', () async {
+      controller().cursor.reportArea(const Size(390, 700));
+      expect(controller().cursor.target, isNull);
+      await controller().handle(
+        browserCall('open', args: {'url': 'https://shop.example/'}),
+      );
+      final t = controller().cursor.target!;
+      expect(t.act, BotCursorAct.rest);
+      expect(t.at, const Offset(195, 294));
+      // A long think between steps doesn't send it away; only the phase does.
+      await controller().handle(browserCall('snapshot'));
+      expect(controller().cursor.target, isNotNull);
+      controller().takeOver();
+      expect(controller().cursor.target, isNull);
+      controller().handBack();
+      expect(controller().cursor.target, isNotNull, reason: 'back as the bot carries on');
+    });
+
+    test('a run that ends on its own is "done"; Stop and a new run are not', () async {
+      await controller().handle(browserCall('snapshot'));
+      controller().runOver('conv1');
+      expect(session().doneRun?.id, 'run1');
+      expect(controller().cursor.target, isNull);
+      // The next run clears it.
+      await controller().handle(browserCall('snapshot', run: 'run2'));
+      expect(session().doneRun, isNull);
+      controller().stopBot();
+      expect(session().doneRun, isNull);
+      // The person answering the card clears it.
+      await controller().handle(browserCall('snapshot', run: 'run3'));
+      controller().runOver('conv1');
+      expect(session().doneRun, isNotNull);
+      controller().dismissDone();
+      expect(session().doneRun, isNull);
+    });
+
+    test('a run that had lost the page (away) isn\'t "done"', () async {
+      await controller().handle(browserCall('snapshot'));
+      controller().leftChat('conv1');
+      expect(session().phase, AppBrowserPhase.away);
+      controller().runOver('conv1');
+      expect(session().doneRun, isNull);
     });
 
     test('a cancelled call stops waiting', () async {

@@ -53,6 +53,8 @@ const analyticsClientEvents = <String>{
   'message_reaction_removed',
   'push_permission_result',
   'app_browser_site_allowed',
+  'app_browser_done_shown',
+  'app_browser_done_answered',
   'push_opened',
   'app_startup_failed',
   'app_active_daily',

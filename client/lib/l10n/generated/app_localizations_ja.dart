@@ -23228,6 +23228,25 @@ class AppLocalizationsJa extends AppLocalizations {
   String get appBrowserAway => '一時停止：チャットが開いていません';
 
   @override
+  String appBrowserDone(String bot) {
+    return '$botが完了しました';
+  }
+
+  @override
+  String appBrowserDoneFailed(String bot) {
+    return '$botは完了する前に停止しました';
+  }
+
+  @override
+  String get appBrowserDoneHint => '回答はチャットにあります。このページは開いたままなので、見て回ることもできます。';
+
+  @override
+  String get appBrowserBackToChat => 'チャットに戻る';
+
+  @override
+  String get appBrowserStayHere => 'このまま見る';
+
+  @override
   String get appBrowserAddress => 'サイトのアドレス';
 
   @override

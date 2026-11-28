@@ -37797,6 +37797,36 @@ abstract class AppLocalizations {
   /// **'Paused: the chat isn\'t open'**
   String get appBrowserAway;
 
+  /// No description provided for @appBrowserDone.
+  ///
+  /// In en, this message translates to:
+  /// **'{bot} is done'**
+  String appBrowserDone(String bot);
+
+  /// No description provided for @appBrowserDoneFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'{bot} stopped before finishing'**
+  String appBrowserDoneFailed(String bot);
+
+  /// No description provided for @appBrowserDoneHint.
+  ///
+  /// In en, this message translates to:
+  /// **'The answer is in your chat. This page stays open if you want to look around.'**
+  String get appBrowserDoneHint;
+
+  /// No description provided for @appBrowserBackToChat.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Chat'**
+  String get appBrowserBackToChat;
+
+  /// No description provided for @appBrowserStayHere.
+  ///
+  /// In en, this message translates to:
+  /// **'Stay Here'**
+  String get appBrowserStayHere;
+
   /// No description provided for @appBrowserAddress.
   ///
   /// In en, this message translates to:
