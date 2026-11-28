@@ -126,6 +126,8 @@ export interface PackRoutine {
   icon: string;
   instructions_md: string;
   schedule_cron: string;
+  /** false: its runs need no computer (D-627). */
+  uses_computer?: boolean;
 }
 
 export interface PackApp {

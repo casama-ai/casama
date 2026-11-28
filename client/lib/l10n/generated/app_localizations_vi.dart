@@ -47,6 +47,13 @@ class AppLocalizationsVi extends AppLocalizations {
   String get keepGoingMessage => 'Làm tiếp từ chỗ đã dừng.';
 
   @override
+  String get startOver => 'Làm lại từ đầu';
+
+  @override
+  String get continueRunHint =>
+      'Làm tiếp từ chỗ đã dừng với ngân sách mới, thay vì làm lại yêu cầu từ đầu.';
+
+  @override
   String get cancel => 'Hủy';
 
   @override
@@ -777,6 +784,19 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get chooseModel => 'Chọn mô hình';
+
+  @override
+  String get createBotNeedsModel => 'Choose a model above to create this bot.';
+
+  @override
+  String get createBotKeyRejected =>
+      'The provider rejected this key. Check it in Settings → Model keys, or pick another key.';
+
+  @override
+  String get createBotDiscardTitle => 'Discard This Bot?';
+
+  @override
+  String get createBotDiscardBody => 'What you entered here will be lost.';
 
   @override
   String get searchModels => 'Tìm mô hình hoặc nhập ID mô hình';
@@ -2780,6 +2800,17 @@ class AppLocalizationsVi extends AppLocalizations {
       'Dùng cho việc trên tệp và ứng dụng của bạn. Lượt chạy sẽ báo lại nếu máy tính đang tắt.';
 
   @override
+  String get routineUsesComputer => 'Uses a computer';
+
+  @override
+  String get routineUsesComputerOn =>
+      'Can save files, run commands and browse pages.';
+
+  @override
+  String get routineUsesComputerOff =>
+      'Reads your apps, the web and memory only. Faster, and never wakes a computer.';
+
+  @override
   String get computerBotsAllowed => 'Bot được phép';
 
   @override
@@ -4351,6 +4382,12 @@ class AppLocalizationsVi extends AppLocalizations {
   String get chatViewFullTable => 'Xem toàn bộ bảng';
 
   @override
+  String get chatShowMore => 'Show more';
+
+  @override
+  String get chatShowLess => 'Show less';
+
+  @override
   String get chatTableTitle => 'Bảng';
 
   @override
@@ -4999,7 +5036,7 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String groupTipEveryone(String lead) {
-    return '@everyone nhờ $lead lập kế hoạch và chia việc cho từng bot.';
+    return '@everyone: $lead trả lời trước và chia việc khi có việc cần chia; nếu không, từng bot lần lượt trả lời và bot cuối cùng tổng kết.';
   }
 
   @override
@@ -7567,6 +7604,24 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
+  String get deleteBot => 'Delete Bot';
+
+  @override
+  String deleteBotTitle(String name) {
+    return 'Delete $name?';
+  }
+
+  @override
+  String deleteBotBody(String name) {
+    return 'Every chat with $name is deleted for good, with its messages, photos and files, and $name stops running and leaves the sidebar. Group chats and usage records stay. Its settings and memory move to Archived bots.';
+  }
+
+  @override
+  String botDeleted(String name) {
+    return '$name deleted.';
+  }
+
+  @override
   String get settingsHistory => 'Lịch sử cài đặt';
 
   @override
@@ -7772,6 +7827,9 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String get searchFilesAsleep =>
       'Không tìm trong tệp của máy tính đang ngủ. Khởi động máy tính để tìm các tệp đó.';
+
+  @override
+  String get searchSearching => 'Đang tìm…';
 
   @override
   String get searchJumpHint => 'Tìm hoặc chuyển tới…';
@@ -8695,6 +8753,16 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String get groupLeadHint =>
       'Bot trưởng lập kế hoạch khi bạn dùng @everyone. Chạm vào bot khác ở trên cùng để đổi trưởng nhóm.';
+
+  @override
+  String groupLeadIs(String name) {
+    return '$name leads: it plans the work when you @everyone. Tap another bot at the top to make it lead.';
+  }
+
+  @override
+  String groupPickOneMoreLead(String name) {
+    return 'Pick 1 more bot. $name leads; tap another bot at the top to make it lead.';
+  }
 
   @override
   String get groupNeedTwoBots =>
@@ -17610,6 +17678,16 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get appLockConfirmTitle => 'Xác nhận đó là bạn';
+
+  @override
+  String get approvalConfirmTitle => 'Allow This?';
+
+  @override
+  String get approvalConfirmBody =>
+      'This is a high-risk request. Allow the bot to go ahead?';
+
+  @override
+  String get approvalConfirmAllow => 'Allow';
 
   @override
   String appLockUnlockWith(String method) {

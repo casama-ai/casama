@@ -41,6 +41,8 @@ abstract class _$CreateRoutineRequestCWProxy {
 
   CreateRoutineRequest computer(CreateRoutineRequestComputerEnum? computer);
 
+  CreateRoutineRequest usesComputer(bool? usesComputer);
+
   /// Creates a new instance with the provided field values.
   /// Omitted fields keep their values; explicit `null` clears nullable fields.
   /// The public API rejects `null` for non-nullable fields. To update a single field use `CreateRoutineRequest(...).copyWith.fieldName(value)`.
@@ -67,6 +69,7 @@ abstract class _$CreateRoutineRequestCWProxy {
     String? galleryId,
     CreateRoutineRequestBrowserEnum? browser,
     CreateRoutineRequestComputerEnum? computer,
+    bool? usesComputer,
   });
 }
 
@@ -138,6 +141,10 @@ class _$CreateRoutineRequestCWProxyImpl
   CreateRoutineRequest computer(CreateRoutineRequestComputerEnum? computer) =>
       call(computer: computer);
 
+  @override
+  CreateRoutineRequest usesComputer(bool? usesComputer) =>
+      call(usesComputer: usesComputer);
+
   /// Creates a new instance with the provided field values.
   /// Omitted fields keep their values; explicit `null` clears nullable fields.
   /// The public API rejects `null` for non-nullable fields. To update a single field use `CreateRoutineRequest(...).copyWith.fieldName(value)`.
@@ -165,6 +172,7 @@ class _$CreateRoutineRequestCWProxyImpl
     Object? galleryId = const $CopyWithPlaceholder(),
     Object? browser = const $CopyWithPlaceholder(),
     Object? computer = const $CopyWithPlaceholder(),
+    Object? usesComputer = const $CopyWithPlaceholder(),
   }) {
     return CreateRoutineRequest(
       botId: botId == const $CopyWithPlaceholder() || botId == null
@@ -236,6 +244,10 @@ class _$CreateRoutineRequestCWProxyImpl
           ? _value.computer
           // ignore: cast_nullable_to_non_nullable
           : computer as CreateRoutineRequestComputerEnum?,
+      usesComputer: usesComputer == const $CopyWithPlaceholder()
+          ? _value.usesComputer
+          // ignore: cast_nullable_to_non_nullable
+          : usesComputer as bool?,
     );
   }
 }
@@ -311,6 +323,7 @@ CreateRoutineRequest _$CreateRoutineRequestFromJson(
         (v) =>
             $enumDecodeNullable(_$CreateRoutineRequestComputerEnumEnumMap, v),
       ),
+      usesComputer: $checkedConvert('uses_computer', (v) => v as bool?),
     );
     return val;
   },
@@ -321,6 +334,7 @@ CreateRoutineRequest _$CreateRoutineRequestFromJson(
     'endsAt': 'ends_at',
     'maxRuns': 'max_runs',
     'galleryId': 'gallery_id',
+    'usesComputer': 'uses_computer',
   },
 );
 
@@ -344,6 +358,7 @@ Map<String, dynamic> _$CreateRoutineRequestToJson(
   'gallery_id': ?instance.galleryId,
   'browser': ?_$CreateRoutineRequestBrowserEnumEnumMap[instance.browser],
   'computer': ?_$CreateRoutineRequestComputerEnumEnumMap[instance.computer],
+  'uses_computer': ?instance.usesComputer,
 };
 
 const _$RoutineTriggerEnumMap = {

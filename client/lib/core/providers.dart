@@ -264,6 +264,26 @@ class BotsNotifier extends AsyncNotifier<List<Bot>> {
     state = AsyncData([for (final b in list) b.id == bot.id ? bot : b]);
   }
 
+  /// Takes an archived or deleted bot off the list now, the saved copy included. The list is
+  /// read from that copy first, so after an archive the next read still had the bot: the chat
+  /// opened next was the gone bot's, with no name ("Say hello to ."; the customer's build 117
+  /// round, W-N9). A fetch already on its way can't put it back either.
+  Future<void> drop(String botId) async {
+    _generation++;
+    final list = state.value;
+    if (list != null) state = AsyncData([for (final b in list) if (b.id != botId) b]);
+    final orgId = ref.read(currentOrgIdProvider);
+    if (orgId == null) return;
+    final cache = ref.read(localCacheProvider);
+    final key = 'bots:$orgId';
+    final cached = await cacheRead(cache, key);
+    if (cached is! List) return;
+    await cacheWrite(cache, key, [
+      for (final j in cached)
+        if (j is! Map || j['id'] != botId) j,
+    ]);
+  }
+
   Future<void> _refetch(String orgId, String key) async {
     final gen = _generation;
     try {

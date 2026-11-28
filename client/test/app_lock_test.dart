@@ -573,6 +573,8 @@ void main() {
       WidgetTester tester,
       FakeUnlockers unlockers, {
       AppLockSettings? settings,
+      bool approval = false,
+      bool confirm = true,
     }) async {
       if (settings != null) await startLocked(settings);
       bool? answer;
@@ -586,7 +588,7 @@ void main() {
               body: Consumer(
                 builder: (context, ref, _) => TextButton(
                   onPressed: () async =>
-                      answer = await confirmIdentity(context, ref),
+                      answer = await confirmIdentity(context, ref, approval: approval),
                   child: const Text('Do it'),
                 ),
               ),
@@ -597,6 +599,15 @@ void main() {
       );
       await tester.tap(find.text('Do it'));
       await tester.pumpAndSettle();
+      final allow = find.byKey(const Key('approvalConfirmAllow'));
+      if (allow.evaluate().isNotEmpty) {
+        if (confirm) {
+          await tester.tap(allow);
+        } else {
+          await tester.tap(find.text('Cancel'));
+        }
+        await tester.pumpAndSettle();
+      }
       return answer;
     }
 
@@ -612,6 +623,23 @@ void main() {
       expect(await check(tester, unlockers), isFalse);
       expect(find.text("Couldn't confirm it's you."), findsOneWidget);
     });
+
+    testWidgets(
+      'on Windows, allowing an approval never opens Windows Hello: the PIN or an in-app check',
+      (tester) async {
+        debugDefaultTargetPlatformOverride = TargetPlatform.windows;
+        addTearDown(() => debugDefaultTargetPlatformOverride = null);
+        final unlockers = FakeUnlockers(deviceOn: true);
+        // No PIN: a confirmation inside the app, which can be cancelled.
+        expect(await check(tester, unlockers, approval: true), isTrue);
+        expect(await check(tester, unlockers, approval: true, confirm: false), isFalse);
+        expect(unlockers.reasons, isEmpty);
+        // Other risky actions on Windows still use Windows Hello.
+        expect(await check(tester, unlockers), isTrue);
+        expect(unlockers.reasons, ["Confirm it's you"]);
+        debugDefaultTargetPlatformOverride = null;
+      },
+    );
 
     testWidgets(
       'go straight through with nothing to ask with, or when turned off',

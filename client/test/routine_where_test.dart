@@ -104,4 +104,30 @@ void main() {
     expect(backend.routineUpdates.last.$2['computer'], 'my_computer');
     await tester.pumpWidget(const SizedBox());
   });
+
+  testWidgets('Uses a computer: off hides where it works and is saved', (
+    tester,
+  ) async {
+    await setSize(tester, const Size(700, 1400));
+    final backend = FakeBackend()..botPlacesByBot[botId] = _places(mine: true);
+    final routine = await _routine(backend);
+    await tester.pumpWidget(
+      harness(backend, Scaffold(body: EditRoutineSheet(routine: routine))),
+    );
+    await tester.pumpAndSettle();
+    final toggle = find.byKey(const Key('editRoutineUsesComputer'));
+    expect(tester.widget<SwitchListTile>(toggle).value, isTrue);
+    expect(find.byKey(const Key('editRoutineWhere')), findsOneWidget);
+
+    await tester.ensureVisible(toggle);
+    await tester.tap(toggle);
+    await tester.pumpAndSettle();
+    expect(tester.widget<SwitchListTile>(toggle).value, isFalse);
+    expect(find.byKey(const Key('editRoutineWhere')), findsNothing);
+
+    await tester.tap(find.byKey(const Key('saveRoutine')));
+    await tester.pumpAndSettle();
+    expect(backend.routineUpdates.last.$2['uses_computer'], isFalse);
+    await tester.pumpWidget(const SizedBox());
+  });
 }

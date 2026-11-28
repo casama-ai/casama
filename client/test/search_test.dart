@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
@@ -70,6 +72,26 @@ void main() {
     await tester.pumpAndSettle();
     return backend;
   }
+
+  testWidgets('messages show while awake computers are still being searched (build 117)', (tester) async {
+    final backend = FakeBackend()..holdFileSearch = Completer<void>();
+    await openSearch(tester, backend);
+    await tester.enterText(find.byKey(const Key('searchField')), 'invoice');
+    await tester.pump(const Duration(milliseconds: 300));
+    await tester.pump();
+    // The message is there before the computers answer, and no "sleeping computers" note yet.
+    expect(find.text('Please draft the invoice for Northwind'), findsOneWidget);
+    expect(find.text('invoice.md'), findsNothing);
+    expect(find.textContaining("Files on sleeping computers"), findsNothing);
+    expect(find.byKey(const Key('searchLoading')), findsOneWidget);
+    expect(backend.searches, ['invoice']);
+    expect(backend.fileSearches, ['invoice']);
+    backend.holdFileSearch!.complete();
+    await tester.pumpAndSettle();
+    expect(find.text('invoice.md'), findsOneWidget);
+    expect(find.text('Please draft the invoice for Northwind'), findsOneWidget);
+    expect(find.text('Files  1'), findsOneWidget);
+  });
 
   testWidgets('a message hit is named by its own words, with its chat below', (tester) async {
     await openSearch(tester, FakeBackend());

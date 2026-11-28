@@ -759,6 +759,13 @@ class _CreateBotSheetState extends ConsumerState<CreateBotSheet> {
     _autoName = name;
   }
 
+  /// Something the person entered or chose that closing would lose.
+  bool get _dirty =>
+      (_name.text.trim().isNotEmpty && _name.text != _autoName) ||
+      (_persona.text.trim().isNotEmpty && _persona.text != _autoPersona) ||
+      _templateId != null ||
+      _picture != null;
+
   String _finalName(BuildContext context) => _name.text.trim().isEmpty
       ? context.l10n.defaultBotName
       : _name.text.trim();
@@ -789,6 +796,15 @@ class _CreateBotSheetState extends ConsumerState<CreateBotSheet> {
     final needsKey = keysAsync.hasValue && keys.isEmpty;
     // Casama Cloud picks the key and the model (D-188): neither is shown.
     final fixedModel = casamaModelFixed(ref);
+    // The key failed its last check: its models can't be picked and Create says why.
+    final rejected = keys.any((k) => k.id == _credentialId && keyRejected(k));
+    // No default model for this key: the first recommended one from its list, so Create works
+    // without a trip to the picker. Still shown and changeable.
+    if (!fixedModel && !rejected && !_modelPicked && _model.isEmpty && _credentialId != null) {
+      final options = ref.watch(modelOptionsProvider(_credentialId!)).value?.items ?? const <ModelOption>[];
+      final first = options.where((m) => m.featured == true).firstOrNull ?? options.firstOrNull;
+      if (first != null) _model = first.id;
+    }
     final keyFields = [
       DropdownButtonFormField<String>(
         isExpanded: true,
@@ -799,7 +815,9 @@ class _CreateBotSheetState extends ConsumerState<CreateBotSheet> {
           for (final k in keys)
             DropdownMenuItem(
               value: k.id,
-              child: Text('${k.label} · ${providerLabel(k.provider)}'),
+              child: Text(
+                [k.label, providerLabel(k.provider), if (keyRejected(k)) l10n.keyFailing].join(' · '),
+              ),
             ),
         ],
         onChanged: hapticOnChanged(
@@ -821,16 +839,94 @@ class _CreateBotSheetState extends ConsumerState<CreateBotSheet> {
         }),
       ),
     ];
-    return SingleChildScrollView(
+    // Why Create can't be used yet, said under it instead of a silently grey button.
+    final String? missing = needsKey || _credentialId == null
+        ? null
+        : rejected
+        ? l10n.createBotKeyRejected
+        : (_model.isEmpty && !fixedModel)
+        ? l10n.createBotNeedsModel
+        : null;
+    final create = GlowButton(
+      style: FilledButton.styleFrom(
+        minimumSize: const Size.fromHeight(50),
+      ),
+      onPressed: _busy || _credentialId == null || missing != null
+          ? null
+          : () async {
+              setState(() => _busy = true);
+              final org = ref.read(currentOrgProvider)!;
+              final picture = _usePicture ? _picture : null;
+              var bot = await runGuarded(
+                context,
+                () => ref
+                    .read(backendProvider)
+                    .createBot(
+                      org.id,
+                      name: _finalName(context),
+                      credentialId: _credentialId!,
+                      model:
+                          casamaLockedModel(ref, _credentialId, listen: false) ??
+                          _model,
+                      persona: _persona.text.trim(),
+                      templateId: _templateId,
+                      // With a picture, the mascot picked is what it goes back to without one.
+                      avatarUrl: _avatar,
+                      // On Cloud with own providers, an untouched key means "follow the
+                      // workspace", not a pin to whichever key happened to be first (D-465).
+                      followWorkspace: !fixedModel &&
+                          !_keyPicked &&
+                          !_modelPicked &&
+                          ref.read(billingProvider).value?.enabled == true &&
+                          ref.read(backendProvider).ownProviders,
+                    ),
+              );
+              if (!context.mounted) return;
+              if (bot != null && picture != null) {
+                // The bot exists either way; a picture that didn't save can be set on its profile.
+                bot = await runGuarded(context, () => picture.save(ref, bot!.id)) ?? bot;
+                if (!context.mounted) return;
+              }
+              setState(() => _busy = false);
+              if (bot != null) {
+                ref.invalidate(botsProvider);
+                // The manual wizard ends with the first bot (the Welcome chat reports its own end).
+                if (widget.embedded) {
+                  Analytics.log('onboarding_complete', {'path': 'manual'});
+                  // Their first finished reply with this bot can ask for a store rating (D-460).
+                  unawaited(ref.read(reviewPromptProvider).markFirstRun());
+                }
+                // The new bot itself pops up to say hi.
+                showCelebration(context, l10n.celebrateNewBot(bot.name), mascot: Mascot.fromAvatar(bot.avatarUrl));
+                final router = GoRouter.of(context);
+                if (!widget.embedded) Navigator.of(context).pop();
+                router.go('/bots/${bot.id}/chat');
+              }
+            },
+      child: Text(l10n.create),
+    );
+    final actions = Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        create,
+        if (missing != null)
+          Padding(
+            padding: const EdgeInsets.only(top: AppSpace.xs),
+            child: Text(
+              missing,
+              key: const Key('createBotMissing'),
+              textAlign: TextAlign.center,
+              style: context.textTheme.bodySmall?.copyWith(color: context.colorScheme.onSurfaceVariant),
+            ),
+          ),
+      ],
+    );
+    final form = SingleChildScrollView(
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       padding: widget.embedded
           ? EdgeInsets.zero
-          : EdgeInsets.fromLTRB(
-              AppSpace.lg,
-              0,
-              AppSpace.lg,
-              BottomPadding.of(context, minimum: AppSpace.md),
-            ),
+          : const EdgeInsets.fromLTRB(AppSpace.lg, 0, AppSpace.lg, AppSpace.md),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -1023,66 +1119,42 @@ class _CreateBotSheetState extends ConsumerState<CreateBotSheet> {
               ],
             ),
           ],
-          const SizedBox(height: AppSpace.lg),
-          GlowButton(
-            style: FilledButton.styleFrom(
-              minimumSize: const Size.fromHeight(50),
+          if (widget.embedded) ...[const SizedBox(height: AppSpace.lg), actions],
+        ],
+      ),
+    );
+    if (widget.embedded) return form;
+    // Create and its hint stay in sight below the form at any window height; the form scrolls
+    // (the customer's build 117 report: at 1470×868 Create was cut off below the dialog).
+    return PopScope(
+      canPop: _busy || !_dirty,
+      onPopInvokedWithResult: (didPop, _) async {
+        if (didPop || _busy) return;
+        // A click outside the dialog or the X with something entered asks first.
+        final navigator = Navigator.of(context);
+        final discard = await showConfirm(
+          context: context,
+          title: l10n.createBotDiscardTitle,
+          message: l10n.createBotDiscardBody,
+          confirmLabel: l10n.discard,
+          confirmKey: const Key('createBotDiscard'),
+          destructive: true,
+        );
+        if (discard && mounted) navigator.pop();
+      },
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Flexible(child: form),
+          Padding(
+            padding: EdgeInsets.fromLTRB(
+              AppSpace.lg,
+              AppSpace.sm,
+              AppSpace.lg,
+              BottomPadding.of(context, minimum: AppSpace.md),
             ),
-            onPressed: _busy ||
-                    _credentialId == null ||
-                    (_model.isEmpty && !fixedModel)
-                ? null
-                : () async {
-                    setState(() => _busy = true);
-                    final org = ref.read(currentOrgProvider)!;
-                    final picture = _usePicture ? _picture : null;
-                    var bot = await runGuarded(
-                      context,
-                      () => ref
-                          .read(backendProvider)
-                          .createBot(
-                            org.id,
-                            name: _finalName(context),
-                            credentialId: _credentialId!,
-                            model:
-                                casamaLockedModel(ref, _credentialId, listen: false) ??
-                                _model,
-                            persona: _persona.text.trim(),
-                            templateId: _templateId,
-                            // With a picture, the mascot picked is what it goes back to without one.
-                            avatarUrl: _avatar,
-                            // On Cloud with own providers, an untouched key means "follow the
-                            // workspace", not a pin to whichever key happened to be first (D-465).
-                            followWorkspace: !fixedModel &&
-                                !_keyPicked &&
-                                !_modelPicked &&
-                                ref.read(billingProvider).value?.enabled == true &&
-                                ref.read(backendProvider).ownProviders,
-                          ),
-                    );
-                    if (!context.mounted) return;
-                    if (bot != null && picture != null) {
-                      // The bot exists either way; a picture that didn't save can be set on its profile.
-                      bot = await runGuarded(context, () => picture.save(ref, bot!.id)) ?? bot;
-                      if (!context.mounted) return;
-                    }
-                    setState(() => _busy = false);
-                    if (bot != null) {
-                      ref.invalidate(botsProvider);
-                      // The manual wizard ends with the first bot (the Welcome chat reports its own end).
-                      if (widget.embedded) {
-                        Analytics.log('onboarding_complete', {'path': 'manual'});
-                        // Their first finished reply with this bot can ask for a store rating (D-460).
-                        unawaited(ref.read(reviewPromptProvider).markFirstRun());
-                      }
-                      // The new bot itself pops up to say hi.
-                      showCelebration(context, l10n.celebrateNewBot(bot.name), mascot: Mascot.fromAvatar(bot.avatarUrl));
-                      final router = GoRouter.of(context);
-                      if (!widget.embedded) Navigator.of(context).pop();
-                      router.go('/bots/${bot.id}/chat');
-                    }
-                  },
-            child: Text(l10n.create),
+            child: actions,
           ),
         ],
       ),

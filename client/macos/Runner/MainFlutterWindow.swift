@@ -11,11 +11,53 @@ import WidgetKit
 import WebKit
 #endif
 
+/// Keeps Flutter's accessibility tree on for the life of the app, so Accessibility clients that
+/// aren't VoiceOver (System Events, Accessibility Inspector, Voice Control, test tools) see the
+/// app's buttons and text instead of only the window's title-bar buttons.
+///
+/// The macOS embedder turns semantics on only when VoiceOver posts its private "enhanced user
+/// interface" notification; until then it has no accessibility bridge and drops every semantics
+/// update. The switch (`FlutterEngine.semanticsEnabled`) isn't in the public header, so it's set
+/// through key-value coding, and only once the engine runs (it starts in `viewWillAppear`): set
+/// earlier, the engine would never tell Dart. Dart must not hold its own semantics handle (see
+/// `main.dart`): the framework would send its tree before the bridge exists and never again.
+class CasamaFlutterViewController: FlutterViewController {
+  private static let semanticsKey = "semanticsEnabled"
+  private static let voiceOverNotification = Notification.Name(
+    "NSApplicationDidChangeAccessibilityEnhancedUserInterfaceNotification")
+  private var voiceOverObserver: NSObjectProtocol?
+
+  override func viewWillAppear() {
+    super.viewWillAppear()
+    keepAccessibilityTreeOn()
+    if voiceOverObserver == nil {
+      // VoiceOver turning off turns semantics off in the engine; turn it back on right after.
+      voiceOverObserver = NotificationCenter.default.addObserver(
+        forName: Self.voiceOverNotification, object: nil, queue: .main
+      ) { [weak self] _ in
+        DispatchQueue.main.async { self?.keepAccessibilityTreeOn() }
+      }
+    }
+  }
+
+  deinit {
+    if let voiceOverObserver { NotificationCenter.default.removeObserver(voiceOverObserver) }
+  }
+
+  private func keepAccessibilityTreeOn() {
+    let engine = self.engine
+    guard engine.responds(to: NSSelectorFromString("setSemanticsEnabled:")),
+      (engine.value(forKey: Self.semanticsKey) as? Bool) == false
+    else { return }
+    engine.setValue(true, forKey: Self.semanticsKey)
+  }
+}
+
 class MainFlutterWindow: NSWindow {
   private static let frameName = "CasamaMainWindow"
 
   override func awakeFromNib() {
-    let flutterViewController = FlutterViewController()
+    let flutterViewController = CasamaFlutterViewController()
     var windowFrame = self.frame
     // First launch: sized for the sidebar, chat and computer panel on this screen's usable area
     // (menu bar and dock excluded), centered. After that macOS restores where it was left, and

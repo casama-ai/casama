@@ -28,7 +28,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('pick-$botId')));
     await tester.pumpAndSettle();
-    expect(find.text('Leads the group'), findsOneWidget);
+    expect(find.byKey(const Key('pickLead-$botId')), findsOneWidget);
     await tester.tap(find.byKey(const Key('pick-bot-b')));
     await tester.enterText(find.byKey(const Key('groupTitle')), 'Launch crew');
     await tester.pumpAndSettle();
@@ -36,6 +36,46 @@ void main() {
     await tester.pumpAndSettle();
     expect(backend.groups.single.botIds, [botId, 'bot-b']);
     expect(backend.groups.single.title, 'Launch crew');
+  });
+
+  testWidgets("picking bots doesn't move the list, and the note says who leads", (tester) async {
+    await setSize(tester, const Size(900, 1000));
+    final backend = FakeBackend();
+    backend.extraBots
+      ..add(backend.bot(id: 'bot-b', name: 'Bea'))
+      ..add(backend.bot(id: 'bot-c', name: 'Cy'));
+    await tester.pumpWidget(
+      harness(
+        backend,
+        Consumer(
+          builder: (context, ref, _) => Scaffold(
+            body: TextButton(onPressed: () => showNewGroupChat(context, ref), child: const Text('open')),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('open'));
+    await tester.pumpAndSettle();
+    Offset where(String id) => tester.getTopLeft(find.byKey(Key('pick-$id')));
+    final before = {for (final id in [botId, 'bot-b', 'bot-c']) id: where(id)};
+    await tester.tap(find.byKey(const Key('pick-bot-b')));
+    await tester.pumpAndSettle();
+    for (final id in [botId, 'bot-b', 'bot-c']) {
+      expect(where(id), before[id], reason: '$id moved after the first pick');
+    }
+    // The lead is said from the first pick.
+    expect(find.text('Pick 1 more bot. Bea leads; tap another bot at the top to make it lead.'), findsOneWidget);
+    await tester.tap(find.byKey(const Key('pick-bot-c')));
+    await tester.pumpAndSettle();
+    for (final id in [botId, 'bot-b', 'bot-c']) {
+      expect(where(id), before[id], reason: '$id moved after the second pick');
+    }
+    expect(find.textContaining('Bea leads: it plans the work'), findsOneWidget);
+    await tester.tap(find.byKey(const Key('crewLead-bot-c')));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Cy leads: it plans the work'), findsOneWidget);
+    expect(find.byKey(const Key('pickLead-bot-c')), findsOneWidget);
   });
 
   testWidgets('the new group sheet lets you change the lead and take a bot out', (tester) async {

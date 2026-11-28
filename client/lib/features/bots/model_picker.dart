@@ -70,6 +70,17 @@ String? preferredKeyId(WidgetRef ref, List<Credential> keys, {bool listen = true
   return keys.first.id;
 }
 
+/// The key failed its last check (Settings → Model keys): the provider refused it. Its models
+/// are marked and can't be picked anywhere a model is chosen, and creating a bot with it says why.
+/// A model list the provider wouldn't give is not this: some keys may chat but not list models.
+bool keyRejected(Credential k) => k.lastTestOk == false;
+
+/// Whether the key [credentialId] is known to be rejected, from the loaded keys.
+bool credentialRejected(WidgetRef ref, String? credentialId) {
+  final keys = ref.watch(credentialsProvider).value ?? const <Credential>[];
+  return keys.any((k) => k.id == credentialId && keyRejected(k));
+}
+
 /// A dropdown-style field for a bot's model. Opens a searchable list of the models the chosen key
 /// can use (recommended first) and still accepts any model id typed in. On Casama Cloud the
 /// model is fixed: the field shows what Casama runs and does not open.
@@ -124,6 +135,7 @@ class ModelPickerField extends ConsumerWidget {
           helperText: locked != null
               ? l10n.casamaCloudModelLocked
               : (selected?.tools == false ? l10n.modelNoToolsWarning : null),
+          errorText: locked == null && credentialRejected(ref, credentialId) ? l10n.createBotKeyRejected : null,
           prefixIcon: const Icon(LucideIcons.sparkles, size: 20),
           suffixIcon: Icon(
             locked == null ? LucideIcons.chevronDown : LucideIcons.lock,
@@ -175,10 +187,13 @@ class _ModelSheetState extends ConsumerState<_ModelSheet> {
     final cloud = widget.credentialId == casamaCloudCredentialId;
     final typed = _query.trim();
     bool shown(ModelOption m) => _matches(m);
+    // A rejected key's models are listed but can't be picked, with the reason on top.
+    final rejected = !cloud && credentialRejected(ref, widget.credentialId);
 
     // Just the friendly name: no raw ids or context sizes (D-182).
     Widget tile(ModelOption m) => ListTile(
       key: Key('model-${m.id}'),
+      enabled: !rejected,
       title: Text(m.name.isEmpty ? m.id : m.name),
       trailing: m.id == widget.current ? const Icon(LucideIcons.check) : null,
       onTap: () => Navigator.of(context).pop(m.id),
@@ -206,7 +221,7 @@ class _ModelSheetState extends ConsumerState<_ModelSheet> {
                 ),
                 onChanged: (v) => setState(() => _query = v),
                 onSubmitted: (v) {
-                  if (!cloud && v.trim().isNotEmpty) {
+                  if (!cloud && !credentialRejected(ref, widget.credentialId) && v.trim().isNotEmpty) {
                     Navigator.of(context).pop(v.trim());
                   }
                 },
@@ -230,7 +245,17 @@ class _ModelSheetState extends ConsumerState<_ModelSheet> {
               final exact = list.items.any((m) => m.id == typed);
               // Built lazily: OpenRouter alone lists several hundred models.
               final rows = <Widget Function()>[
+                if (rejected)
+                  () => Padding(
+                    key: const Key('modelKeyRejected'),
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                    child: Text(
+                      l10n.createBotKeyRejected,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.error),
+                    ),
+                  ),
                 if (!cloud &&
+                    !rejected &&
                     list.source_ == ModelOptionListSource_Enum.featured)
                   () => Padding(
                     padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
@@ -239,7 +264,7 @@ class _ModelSheetState extends ConsumerState<_ModelSheet> {
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ),
-                if (!cloud && typed.isNotEmpty && !exact)
+                if (!cloud && !rejected && typed.isNotEmpty && !exact)
                   () => ListTile(
                     key: const Key('customModel'),
                     leading: const Icon(LucideIcons.pencil),

@@ -84,6 +84,27 @@ void main() {
     expect(inputText(tester), 'Find three robot vacuums');
   });
 
+  testWidgets('the old chat\'s words handed back by the text input after a switch never show in the next chat (W-N10)', (tester) async {
+    await setSize(tester, const Size(700, 900));
+    final cache = MemoryCache();
+    final backend = FakeBackend();
+    final bot = ValueNotifier(botId);
+    await tester.pumpWidget(harness(backend, switcher(bot), cache: cache));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byKey(const Key('messageInput')), 'Stress draft');
+    bot.value = otherBotId;
+    await tester.pump();
+    expect(inputText(tester), isEmpty);
+    // The system's text input still had an edit of its own on the way: it puts the old text back.
+    tester.testTextInput.updateEditingValue(const TextEditingValue(text: 'Stress draft', selection: TextSelection.collapsed(offset: 12)));
+    await tester.pump();
+    expect(inputText(tester), isEmpty);
+    await tester.pumpAndSettle();
+    expect(inputText(tester), isEmpty);
+    expect(cache.data['draft:$otherBotId:$convId'], anyOf(isNull, 'null'));
+    expect(cache.data['draft:$botId:$convId'], '"Stress draft"');
+  });
+
   testWidgets('a send that fails after the person moved on goes back to its own chat, not the one on screen', (tester) async {
     await setSize(tester, const Size(700, 900));
     final cache = MemoryCache();

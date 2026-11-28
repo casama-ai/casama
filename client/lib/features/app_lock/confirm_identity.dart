@@ -88,10 +88,17 @@ Future<bool> turnOnAppLock(BuildContext context, WidgetRef ref) async {
 /// when the person has one, or nothing where there's nothing to ask with. Off when the person
 /// turned "Confirm risky actions" off, unless [always] (changing the lock itself). True to go
 /// ahead.
+///
+/// [approval] marks Allow on a bot's high-risk approval. On Windows that never asks Windows Hello:
+/// its prompt disables the whole app window until the PIN is typed at the PC, and it can't be
+/// closed from the app or over remote access, so someone away from the PC lost Casama until then
+/// (the customer's build 117 report). There it asks this device's Casama PIN when one is set, and
+/// otherwise an in-app confirmation that can be cancelled.
 Future<bool> confirmIdentity(
   BuildContext context,
   WidgetRef ref, {
   bool always = false,
+  bool approval = false,
 }) async {
   final settings = ref.read(appLockSettingsProvider);
   if (!settings.askBeforeRisky && !always) return true;
@@ -113,6 +120,22 @@ Future<bool> confirmIdentity(
     method = LockMethod.device;
   } else if (await unlockers.pinSet()) {
     method = LockMethod.pin;
+  }
+  if (approval && method == LockMethod.device && !kIsWeb && defaultTargetPlatform == TargetPlatform.windows) {
+    method = await unlockers.pinSet() ? LockMethod.pin : null;
+    if (!context.mounted) return false;
+    if (method == null) {
+      final ok = await showConfirm(
+        context: context,
+        title: l10n.approvalConfirmTitle,
+        message: l10n.approvalConfirmBody,
+        confirmLabel: l10n.approvalConfirmAllow,
+        confirmKey: const Key('approvalConfirmAllow'),
+        icon: LucideIcons.shieldAlert,
+      );
+      if (ok) Haptic.confirm();
+      return ok;
+    }
   }
   // Nothing on this device to ask with.
   if (method == null) return true;

@@ -1131,13 +1131,16 @@ void main() {
       expect(find.byKey(const Key('advanced-bot.create')), findsNothing);
       expect(find.text('Model key'), findsOneWidget);
       expect(find.byKey(const Key('modelPicker')), findsOneWidget);
+      // The first recommended model from the key's list is filled in, so Create works (the
+      // customer's build 117 report: it stayed grey with no hint until a model was picked).
+      expect(find.text('DeepSeek: DeepSeek V4.1 Flash 1017'), findsOneWidget);
       expect(
         tester
             .widget<FilledButton>(find.widgetWithText(FilledButton, 'Create'))
             .onPressed,
-        isNull,
+        isNotNull,
       );
-      // Picking one leaves them where they are.
+      // Picking another leaves them where they are.
       await tester.tap(find.byKey(const Key('modelPicker')));
       await tester.pumpAndSettle();
       await tester.tap(
@@ -1156,7 +1159,7 @@ void main() {
   );
 }
 
-/// A workspace whose key has no default model, so one must be picked by hand.
+/// A workspace whose key has no default model on the server.
 class _NoDefaultModel extends FakeBackend {
   @override
   String? defaultModelFor(String provider) => null;

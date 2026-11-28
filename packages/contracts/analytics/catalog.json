@@ -2976,11 +2976,11 @@
     {
       "name": "keep_going_tapped",
       "by": ["client"],
-      "description": "Keep Going under a reply whose run ran out of steps or time (D-505).",
+      "description": "Continue (was Keep Going) under a reply whose run ran out of steps, time or its budget (D-505, build 117).",
       "properties": {
         "reason": {
           "type": "string",
-          "values": ["max_steps_exceeded", "wall_time_exceeded"]
+          "values": ["max_steps_exceeded", "wall_time_exceeded", "budget_exceeded"]
         }
       },
       "funnels": []

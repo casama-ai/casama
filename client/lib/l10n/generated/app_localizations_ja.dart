@@ -47,6 +47,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get keepGoingMessage => '止まったところから続けてください。';
 
   @override
+  String get startOver => '最初からやり直す';
+
+  @override
+  String get continueRunHint => '止まったところから新しい予算で続けます。依頼を最初からやり直しません。';
+
+  @override
   String get cancel => 'キャンセル';
 
   @override
@@ -755,6 +761,19 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get chooseModel => 'モデルを選択';
+
+  @override
+  String get createBotNeedsModel => 'Choose a model above to create this bot.';
+
+  @override
+  String get createBotKeyRejected =>
+      'The provider rejected this key. Check it in Settings → Model keys, or pick another key.';
+
+  @override
+  String get createBotDiscardTitle => 'Discard This Bot?';
+
+  @override
+  String get createBotDiscardBody => 'What you entered here will be lost.';
 
   @override
   String get searchModels => 'モデルを検索またはモデルIDを入力';
@@ -2716,6 +2735,17 @@ class AppLocalizationsJa extends AppLocalizations {
       '自分のファイルやアプリでの作業向けです。コンピューターがオフだった場合は実行結果に表示されます。';
 
   @override
+  String get routineUsesComputer => 'Uses a computer';
+
+  @override
+  String get routineUsesComputerOn =>
+      'Can save files, run commands and browse pages.';
+
+  @override
+  String get routineUsesComputerOff =>
+      'Reads your apps, the web and memory only. Faster, and never wakes a computer.';
+
+  @override
   String get computerBotsAllowed => '許可されたボット';
 
   @override
@@ -4280,6 +4310,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get chatViewFullTable => '表全体を表示';
 
   @override
+  String get chatShowMore => 'Show more';
+
+  @override
+  String get chatShowLess => 'Show less';
+
+  @override
   String get chatTableTitle => '表';
 
   @override
@@ -4910,7 +4946,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String groupTipEveryone(String lead) {
-    return '@everyoneで$leadに作業計画と各ボットへの割り振りを頼めます。';
+    return '@everyone：$leadが最初に答え、分担する作業があれば割り振ります。そうでなければ各ボットが順番に答え、最後のボットがまとめます。';
   }
 
   @override
@@ -7417,6 +7453,24 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
+  String get deleteBot => 'Delete Bot';
+
+  @override
+  String deleteBotTitle(String name) {
+    return 'Delete $name?';
+  }
+
+  @override
+  String deleteBotBody(String name) {
+    return 'Every chat with $name is deleted for good, with its messages, photos and files, and $name stops running and leaves the sidebar. Group chats and usage records stay. Its settings and memory move to Archived bots.';
+  }
+
+  @override
+  String botDeleted(String name) {
+    return '$name deleted.';
+  }
+
+  @override
   String get settingsHistory => '設定履歴';
 
   @override
@@ -7618,6 +7672,9 @@ class AppLocalizationsJa extends AppLocalizations {
   @override
   String get searchFilesAsleep =>
       'スリープ中のコンピューターのファイルは検索されません。ファイルを検索に含めるにはコンピューターを起動してください。';
+
+  @override
+  String get searchSearching => '検索中…';
 
   @override
   String get searchJumpHint => '検索または移動…';
@@ -8526,6 +8583,16 @@ class AppLocalizationsJa extends AppLocalizations {
   @override
   String get groupLeadHint =>
       '@everyoneを使うと担当ボットが作業を計画します。上部の別のボットをタップすると担当を変更できます。';
+
+  @override
+  String groupLeadIs(String name) {
+    return '$name leads: it plans the work when you @everyone. Tap another bot at the top to make it lead.';
+  }
+
+  @override
+  String groupPickOneMoreLead(String name) {
+    return 'Pick 1 more bot. $name leads; tap another bot at the top to make it lead.';
+  }
 
   @override
   String get groupNeedTwoBots => 'グループチャットには少なくとも2体のボットが必要です。先に別のボットを作成してください。';
@@ -17191,6 +17258,16 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get appLockConfirmTitle => '本人確認';
+
+  @override
+  String get approvalConfirmTitle => 'Allow This?';
+
+  @override
+  String get approvalConfirmBody =>
+      'This is a high-risk request. Allow the bot to go ahead?';
+
+  @override
+  String get approvalConfirmAllow => 'Allow';
 
   @override
   String appLockUnlockWith(String method) {

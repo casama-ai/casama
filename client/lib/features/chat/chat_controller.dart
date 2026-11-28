@@ -1449,7 +1449,7 @@ class ChatController extends Notifier<ChatState> {
     if (run.status != RunStatus.failed || error == null) return;
     // Out of steps or time, the run's own last reply already says where it got to (D-214); only
     // the Keep going part brings the notice back (D-505).
-    if (partial && const {'max_steps_exceeded', 'wall_time_exceeded'}.contains(error.code)) return;
+    if (partial && continueReasons.contains(error.code)) return;
     if (state.conversationId != id || state.running) return;
     if (state.entries.any((e) => e is NoticeEntry && e.kind == NoticeKind.failed && e.refId == run.id)) return;
     state = state.copyWith(
@@ -2463,6 +2463,10 @@ Duration? rateLimitWait(Object e, {required DateTime since, Duration? patience})
 /// How long one Stop request may take before it is sent again (once).
 @visibleForTesting
 Duration cancelRequestTimeout = const Duration(seconds: 10);
+
+/// Run stops that offer Continue (D-505, build 117): out of steps, time or the run's own budget.
+/// The stopped reply carries what the run did, and the next run in the chat picks it up.
+const continueReasons = {'max_steps_exceeded', 'wall_time_exceeded', 'budget_exceeded'};
 
 /// How long Stop waits for the run's own run.cancelled before it puts the marker in itself.
 @visibleForTesting

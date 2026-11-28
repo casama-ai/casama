@@ -47,6 +47,12 @@ class AppLocalizationsKo extends AppLocalizations {
   String get keepGoingMessage => '멈춘 곳부터 계속 진행해 주세요.';
 
   @override
+  String get startOver => '처음부터 다시';
+
+  @override
+  String get continueRunHint => '멈춘 곳부터 새 예산으로 이어서 하며, 요청을 처음부터 다시 하지 않아요.';
+
+  @override
   String get cancel => '취소';
 
   @override
@@ -755,6 +761,19 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get chooseModel => '모델 선택';
+
+  @override
+  String get createBotNeedsModel => 'Choose a model above to create this bot.';
+
+  @override
+  String get createBotKeyRejected =>
+      'The provider rejected this key. Check it in Settings → Model keys, or pick another key.';
+
+  @override
+  String get createBotDiscardTitle => 'Discard This Bot?';
+
+  @override
+  String get createBotDiscardBody => 'What you entered here will be lost.';
 
   @override
   String get searchModels => '모델 검색 또는 모델 ID 입력';
@@ -2722,6 +2741,17 @@ class AppLocalizationsKo extends AppLocalizations {
       '내 컴퓨터의 파일과 앱을 다루는 작업용이에요. 컴퓨터가 꺼져 있었으면 실행 기록에 표시돼요.';
 
   @override
+  String get routineUsesComputer => 'Uses a computer';
+
+  @override
+  String get routineUsesComputerOn =>
+      'Can save files, run commands and browse pages.';
+
+  @override
+  String get routineUsesComputerOff =>
+      'Reads your apps, the web and memory only. Faster, and never wakes a computer.';
+
+  @override
   String get computerBotsAllowed => '허용된 봇';
 
   @override
@@ -4287,6 +4317,12 @@ class AppLocalizationsKo extends AppLocalizations {
   String get chatViewFullTable => '전체 표 보기';
 
   @override
+  String get chatShowMore => 'Show more';
+
+  @override
+  String get chatShowLess => 'Show less';
+
+  @override
   String get chatTableTitle => '표';
 
   @override
@@ -4916,7 +4952,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String groupTipEveryone(String lead) {
-    return '@everyone을 입력하면 $lead에게 작업을 계획하고 각 봇에게 역할을 나누어 달라고 요청해요.';
+    return '@everyone: $lead가 먼저 답하고 나눌 작업이 있으면 역할을 나눠요. 그렇지 않으면 봇들이 차례로 답하고 마지막 봇이 마무리해요.';
   }
 
   @override
@@ -7428,6 +7464,24 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
+  String get deleteBot => 'Delete Bot';
+
+  @override
+  String deleteBotTitle(String name) {
+    return 'Delete $name?';
+  }
+
+  @override
+  String deleteBotBody(String name) {
+    return 'Every chat with $name is deleted for good, with its messages, photos and files, and $name stops running and leaves the sidebar. Group chats and usage records stay. Its settings and memory move to Archived bots.';
+  }
+
+  @override
+  String botDeleted(String name) {
+    return '$name deleted.';
+  }
+
+  @override
   String get settingsHistory => '설정 기록';
 
   @override
@@ -7629,6 +7683,9 @@ class AppLocalizationsKo extends AppLocalizations {
   @override
   String get searchFilesAsleep =>
       '절전 상태인 컴퓨터의 파일은 검색되지 않아요. 파일을 포함하려면 컴퓨터를 시작하세요.';
+
+  @override
+  String get searchSearching => '검색 중…';
 
   @override
   String get searchJumpHint => '검색 또는 이동…';
@@ -8538,6 +8595,16 @@ class AppLocalizationsKo extends AppLocalizations {
   @override
   String get groupLeadHint =>
       '@everyone을 입력하면 대표 봇이 작업을 계획해요. 상단에서 다른 봇을 눌러 대표를 바꿀 수 있어요.';
+
+  @override
+  String groupLeadIs(String name) {
+    return '$name leads: it plans the work when you @everyone. Tap another bot at the top to make it lead.';
+  }
+
+  @override
+  String groupPickOneMoreLead(String name) {
+    return 'Pick 1 more bot. $name leads; tap another bot at the top to make it lead.';
+  }
 
   @override
   String get groupNeedTwoBots => '그룹 채팅에는 최소 2개의 봇이 필요해요. 먼저 다른 봇을 만들어 주세요.';
@@ -17223,6 +17290,16 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get appLockConfirmTitle => '본인 확인';
+
+  @override
+  String get approvalConfirmTitle => 'Allow This?';
+
+  @override
+  String get approvalConfirmBody =>
+      'This is a high-risk request. Allow the bot to go ahead?';
+
+  @override
+  String get approvalConfirmAllow => 'Allow';
 
   @override
   String appLockUnlockWith(String method) {

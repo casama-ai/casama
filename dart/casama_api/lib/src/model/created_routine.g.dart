@@ -45,6 +45,8 @@ abstract class _$CreatedRoutineCWProxy {
 
   CreatedRoutine computer(CreatedRoutineComputerEnum? computer);
 
+  CreatedRoutine usesComputer(bool? usesComputer);
+
   CreatedRoutine waitingForModel(bool? waitingForModel);
 
   CreatedRoutine conversationId(String? conversationId);
@@ -83,6 +85,7 @@ abstract class _$CreatedRoutineCWProxy {
     int? runCount,
     CreatedRoutineBrowserEnum? browser,
     CreatedRoutineComputerEnum? computer,
+    bool? usesComputer,
     bool? waitingForModel,
     String? conversationId,
     DateTime createdAt,
@@ -162,6 +165,10 @@ class _$CreatedRoutineCWProxyImpl implements _$CreatedRoutineCWProxy {
       call(computer: computer);
 
   @override
+  CreatedRoutine usesComputer(bool? usesComputer) =>
+      call(usesComputer: usesComputer);
+
+  @override
   CreatedRoutine waitingForModel(bool? waitingForModel) =>
       call(waitingForModel: waitingForModel);
 
@@ -208,6 +215,7 @@ class _$CreatedRoutineCWProxyImpl implements _$CreatedRoutineCWProxy {
     Object? runCount = const $CopyWithPlaceholder(),
     Object? browser = const $CopyWithPlaceholder(),
     Object? computer = const $CopyWithPlaceholder(),
+    Object? usesComputer = const $CopyWithPlaceholder(),
     Object? waitingForModel = const $CopyWithPlaceholder(),
     Object? conversationId = const $CopyWithPlaceholder(),
     Object? createdAt = const $CopyWithPlaceholder(),
@@ -293,6 +301,10 @@ class _$CreatedRoutineCWProxyImpl implements _$CreatedRoutineCWProxy {
           ? _value.computer
           // ignore: cast_nullable_to_non_nullable
           : computer as CreatedRoutineComputerEnum?,
+      usesComputer: usesComputer == const $CopyWithPlaceholder()
+          ? _value.usesComputer
+          // ignore: cast_nullable_to_non_nullable
+          : usesComputer as bool?,
       waitingForModel: waitingForModel == const $CopyWithPlaceholder()
           ? _value.waitingForModel
           // ignore: cast_nullable_to_non_nullable
@@ -405,6 +417,7 @@ CreatedRoutine _$CreatedRoutineFromJson(
         'computer',
         (v) => $enumDecodeNullable(_$CreatedRoutineComputerEnumEnumMap, v),
       ),
+      usesComputer: $checkedConvert('uses_computer', (v) => v as bool?),
       waitingForModel: $checkedConvert('waiting_for_model', (v) => v as bool?),
       conversationId: $checkedConvert('conversation_id', (v) => v as String?),
       createdAt: $checkedConvert(
@@ -425,6 +438,7 @@ CreatedRoutine _$CreatedRoutineFromJson(
     'endsAt': 'ends_at',
     'maxRuns': 'max_runs',
     'runCount': 'run_count',
+    'usesComputer': 'uses_computer',
     'waitingForModel': 'waiting_for_model',
     'conversationId': 'conversation_id',
     'createdAt': 'created_at',
@@ -454,6 +468,7 @@ Map<String, dynamic> _$CreatedRoutineToJson(CreatedRoutine instance) =>
       'run_count': ?instance.runCount,
       'browser': ?_$CreatedRoutineBrowserEnumEnumMap[instance.browser],
       'computer': ?_$CreatedRoutineComputerEnumEnumMap[instance.computer],
+      'uses_computer': ?instance.usesComputer,
       'waiting_for_model': ?instance.waitingForModel,
       'conversation_id': instance.conversationId,
       'created_at': instance.createdAt.toIso8601String(),

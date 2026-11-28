@@ -292,9 +292,24 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     _saveDraft();
     _draftKey = null;
     _draftConversation = null;
+    _leftText = _input.text.trim().isEmpty ? null : _input.text;
+    _leftAt = DateTime.now();
     if (_input.text.isNotEmpty) _input.clear();
     return ++_chatGen;
   }
+
+  /// What the box held in the chat just left. The box is emptied then, but the system's text
+  /// input can still hand that text back a moment later (it had an edit of its own on the way),
+  /// and the next chat took it for something typed while it opened and kept it as its own draft:
+  /// a draft showed in another bot's chat once in four switches (the customer's Windows build
+  /// 117 round, W-N10). The box goes back to what it held when that text comes back within
+  /// [_echoWindow] of the switch, and it is never kept as typed-while-opening.
+  String? _leftText;
+  DateTime? _leftAt;
+  static const _echoWindow = Duration(milliseconds: 1500);
+
+  /// The box's text as of its last change, for undoing an echo of [_leftText].
+  String _lastText = '';
 
   /// [message] goes back to its own chat's draft, when the screen has moved to another chat
   /// meanwhile; true when it did.
@@ -305,6 +320,17 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   }
 
   void _saveDraftSoon() {
+    // The old chat's words handed back by the text input after a switch ([_leftText]): out of
+    // this chat's box at once, not even for a frame, and never saved as its draft.
+    final left = _leftText;
+    if (left != null && _input.text == left && _input.text != _lastText) {
+      if (DateTime.now().difference(_leftAt!) < _echoWindow) {
+        _input.value = TextEditingValue(text: _lastText, selection: TextSelection.collapsed(offset: _lastText.length));
+        return;
+      }
+      _leftText = null;
+    }
+    _lastText = _input.text;
     if (_draftKey == null) return;
     _draftSave?.cancel();
     _draftSave = Timer(const Duration(milliseconds: 400), _saveDraft);
@@ -338,12 +364,16 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     final saved = await cacheRead(_cache, key);
     if (!mounted || _draftKey != key) return;
     final text = saved is String ? saved : '';
-    // On first open, what was typed while the chat loaded wins over an older draft.
-    if (!wasBound && _input.text.isNotEmpty) {
+    // On first open, what was typed while the chat loaded wins over an older draft; the old
+    // chat's words coming back from the text input don't count as typed ([_leftText]).
+    final echo = _leftText != null && _input.text == _leftText;
+    if (!wasBound && _input.text.isNotEmpty && !echo) {
       _saveDraft();
       return;
     }
     if (_input.text == text) return;
+    // This chat's own draft, even when it reads like the chat just left (not an echo).
+    _lastText = text;
     _input.value = TextEditingValue(text: text, selection: TextSelection.collapsed(offset: text.length));
   }
 
@@ -593,13 +623,15 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       // Coming back to the front marks them.
       if (_appInFront) Future.microtask(() => ref.read(notificationsProvider.notifier).markBotChatRead(botId, conversationId: ref.read(chatControllerProvider(botId)).conversationId));
     }, fireImmediately: true);
+    final gen = _chatGen;
     Future.microtask(() async {
       final c = ref.read(chatControllerProvider(widget.botId).notifier)..group = widget.group;
       try {
         await c.open(widget.conversationId, around: widget.focusMessageId);
       } finally {
-        if (mounted && _opening) setState(() => _opening = false);
-        if (mounted) unawaited(_bindDraft(ref.read(chatControllerProvider(widget.botId)).conversationId));
+        // Another chat opened meanwhile: that one binds its own draft.
+        if (mounted && _opening && gen == _chatGen) setState(() => _opening = false);
+        if (mounted && gen == _chatGen) unawaited(_bindDraft(ref.read(chatControllerProvider(widget.botId)).conversationId));
       }
     });
   }
@@ -2370,8 +2402,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
               if (!(last && n.kind == NoticeKind.failed && !chat.running)) return line;
               final fix = errorFix(context, ref, n, widget.botId);
               final canRetry = chat.canRetry;
-              // Out of steps or time (D-505): a new run picks the task up from the reply it left.
-              final keepGoing = n.errorCode == 'max_steps_exceeded' || n.errorCode == 'wall_time_exceeded';
+              // Out of steps, time or the run's budget (D-505, build 117): Continue starts a new run
+              // that picks the task up from where this one stopped; Try Again becomes Start Over.
+              final keepGoing = continueReasons.contains(n.errorCode);
               if (fix == null && !canRetry && !keepGoing) return line;
               return Column(
                 children: [
@@ -2414,21 +2447,25 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                           label: Text(context.l10n.seePlans),
                         ),
                       if (keepGoing)
-                        FilledButton.tonalIcon(
-                          key: const Key('noticeKeepGoing'),
-                          onPressed: () {
-                            Analytics.log('keep_going_tapped', {'reason': n.errorCode});
-                            final text = context.l10n.keepGoingMessage;
-                            runGuarded(context, () => ref.read(chatControllerProvider(widget.botId).notifier).send(text));
-                          },
-                          icon: const Icon(LucideIcons.play, size: 18),
-                          label: Text(context.l10n.keepGoing),
+                        Tooltip(
+                          message: context.l10n.continueRunHint,
+                          child: FilledButton.icon(
+                            key: const Key('noticeKeepGoing'),
+                            onPressed: () {
+                              Analytics.log('keep_going_tapped', {'reason': n.errorCode});
+                              final text = context.l10n.keepGoingMessage;
+                              runGuarded(context, () => ref.read(chatControllerProvider(widget.botId).notifier).send(text));
+                            },
+                            icon: const Icon(LucideIcons.play, size: 18),
+                            label: Text(context.l10n.keepGoing),
+                          ),
                         ),
                       if (canRetry)
                         TextButton.icon(
+                          key: const Key('noticeRetry'),
                           onPressed: () => runGuarded(context, ref.read(chatControllerProvider(widget.botId).notifier).retry),
                           icon: const Icon(LucideIcons.rotateCw, size: 18),
-                          label: Text(context.l10n.retry),
+                          label: Text(keepGoing ? context.l10n.startOver : context.l10n.retry),
                         ),
                     ],
                   ),

@@ -37,6 +37,10 @@ const CHALLENGE: RegExp[] = [
   /complete the (puzzle|verification) (below |to continue)/i,
   /(verify|prove) (that )?you('re| are) not a (robot|bot)/i,
   /unusual (activity|traffic) (has been )?detected/i,
+  // Cloudflare's newer check page, which a datacenter browser can sit on for ever (customer build 117).
+  /performing security verification/i,
+  /needs to review the security of your connection/i,
+  /verify you are human by completing the action below/i,
 ];
 
 /** Nothing to solve: the site refused. */
@@ -61,6 +65,7 @@ const STRONG: RegExp[] = [
   /attention required!? \| cloudflare/i,
   /press (and|&) hold to confirm/i,
   /whale ?guard/i,
+  /performing security verification/i,
 ];
 
 /** What kind of block [text] (a snapshot or page text) looks like, or null. */

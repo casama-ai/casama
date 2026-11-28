@@ -41,6 +41,8 @@ class UpdateRoutineRequest {
      this.browser,
 
      this.computer,
+
+     this.usesComputer,
   });
 
   @JsonKey(
@@ -183,6 +185,19 @@ class UpdateRoutineRequest {
 
 
 
+      /// Whether its runs may use a computer at all (D-627). Off: no files, shell or computer browser, and no computer is started. Defaults to off for briefs and check-ins, on otherwise
+  @JsonKey(
+    
+    name: r'uses_computer',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final bool? usesComputer;
+
+
+
 
 
     @override
@@ -197,7 +212,8 @@ class UpdateRoutineRequest {
       other.endsAt == endsAt &&
       other.maxRuns == maxRuns &&
       other.browser == browser &&
-      other.computer == computer;
+      other.computer == computer &&
+      other.usesComputer == usesComputer;
 
     @override
     int get hashCode =>
@@ -211,7 +227,8 @@ class UpdateRoutineRequest {
         (endsAt == null ? 0 : endsAt.hashCode) +
         (maxRuns == null ? 0 : maxRuns.hashCode) +
         browser.hashCode +
-        computer.hashCode;
+        computer.hashCode +
+        usesComputer.hashCode;
 
   factory UpdateRoutineRequest.fromJson(Map<String, dynamic> json) => _$UpdateRoutineRequestFromJson(json);
 

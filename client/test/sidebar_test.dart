@@ -1,12 +1,18 @@
+import 'package:flutter/gestures.dart' show PointerDeviceKind, kSecondaryMouseButton;
+import 'package:flutter/foundation.dart' show debugDefaultTargetPlatformOverride;
+import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:casama/app.dart';
 import 'package:casama/core/backend.dart';
 import 'package:casama/core/providers.dart';
+import 'package:casama/features/bots/bot_profile_screen.dart';
 import 'package:casama/features/chat/chat_screen.dart';
 import 'package:casama/features/groups/group_chats.dart';
 import 'package:casama/features/home/home_shell.dart' show groupBotsByFolder;
+import 'package:casama/ui/middle_ellipsis_text.dart';
 import 'package:casama_sdk/casama_sdk.dart';
 
 import 'app_test.dart' show setSize;
@@ -139,5 +145,145 @@ void main() {
     // The suggestion still waits in the inbox.
     expect(container.read(notificationsProvider).value!.firstWhere((n) => n.id == 's').readAt, isNull);
     expect(container.read(inboxBadgeProvider), 3);
+  });
+
+  double rowY(WidgetTester tester, String id) => tester.getTopLeft(find.byKey(Key('sidebar-bot-$id'))).dy;
+
+  Future<FakeBackend> openApp(WidgetTester tester, {List<Bot> Function(FakeBackend)? bots}) async {
+    await setSize(tester, const Size(1600, 1000));
+    final backend = FakeBackend();
+    backend.extraBots.addAll(bots?.call(backend) ?? [backend.bot(id: 'b', name: 'Bo'), backend.bot(id: 'c', name: 'Cy')]);
+    await tester.pumpWidget(ProviderScope(overrides: [backendProvider.overrideWithValue(backend)], child: const CasamaApp()));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('sidebar-bot-$botId')));
+    await tester.pumpAndSettle();
+    // Past the hold that opening a chat starts.
+    await tester.pump(const Duration(seconds: 5));
+    return backend;
+  }
+
+  String at(WidgetTester tester) => GoRouter.of(tester.element(find.byType(ChatScreen))).state.uri.toString();
+
+  Future<void> cyStartsWorking(WidgetTester tester, FakeBackend backend) async {
+    backend.extraBots[1] = backend.bot(id: 'c', name: 'Cy', status: BotStatusEnum.working);
+    backend.botsChangedController.add(null);
+    // The list refetches once a burst of changes settles (400 ms).
+    await tester.pump(const Duration(milliseconds: 450));
+    await tester.pump();
+  }
+
+  testWidgets('after the pointer leaves the sidebar the order holds a few seconds, then catches up (build 117 N1)', (tester) async {
+    final backend = await openApp(tester);
+    expect(rowY(tester, 'c'), greaterThan(rowY(tester, botId)));
+    final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+    await mouse.addPointer(location: tester.getCenter(find.byKey(const Key('sidebar-bot-b'))));
+    await tester.pump();
+    // Off to the composer, where the person types while the bot just messaged starts working.
+    await mouse.moveTo(const Offset(1000, 900));
+    await tester.pump();
+    await cyStartsWorking(tester, backend);
+    expect(rowY(tester, 'c'), greaterThan(rowY(tester, botId)), reason: 'still where the person last saw it');
+    await tester.pump(const Duration(seconds: 4));
+    await tester.pump();
+    expect(rowY(tester, 'c'), lessThan(rowY(tester, botId)), reason: 'working bots go first once it settles');
+    await mouse.removePointer();
+  });
+
+  testWidgets('a click that comes just as the rows move is dropped, not sent to the bot that slid under it (build 117 N1)', (tester) async {
+    final backend = await openApp(tester);
+    expect(at(tester), '/bots/$botId/chat');
+    await cyStartsWorking(tester, backend);
+    // Cy jumped to the top, where Ada was a moment ago.
+    expect(rowY(tester, 'c'), lessThan(rowY(tester, botId)));
+    await tester.tap(find.byKey(const Key('sidebar-bot-c')));
+    await tester.pump();
+    expect(at(tester), '/bots/$botId/chat');
+    await tester.pump(const Duration(milliseconds: 700));
+    await tester.tap(find.byKey(const Key('sidebar-bot-c')));
+    for (var i = 0; i < 5; i++) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+    expect(at(tester), '/bots/c/chat');
+  });
+
+  testWidgets('clicking the bot that is already open keeps its chat and topic (Windows 108 L4, 117 check 26)', (tester) async {
+    await openApp(tester);
+    GoRouter.of(tester.element(find.byType(ChatScreen))).go('/bots/$botId/chat?c=$convId');
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('sidebar-bot-$botId')));
+    await tester.pumpAndSettle();
+    expect(at(tester), '/bots/$botId/chat?c=$convId');
+    expect(find.byType(BotProfileScreen), findsNothing);
+  });
+
+  testWidgets('right-clicking a bot in the sidebar offers its profile, Archive and Delete (W-N2)', (tester) async {
+    final backend = await openApp(tester);
+    final row = find.byKey(const Key('sidebar-bot-b'));
+    await tester.tap(row, buttons: kSecondaryMouseButton, kind: PointerDeviceKind.mouse);
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('botMenuProfile')), findsOneWidget);
+    expect(find.byKey(const Key('botMenuArchive')), findsOneWidget);
+    await tester.tap(find.byKey(const Key('botMenuDelete')));
+    await tester.pumpAndSettle();
+    expect(find.text('Delete Bo?'), findsOneWidget);
+    await tester.tap(find.byKey(const Key('confirmDeleteBot')));
+    await tester.pumpAndSettle();
+    expect(backend.clearedBots, contains('b'));
+    expect(find.byKey(const Key('sidebar-bot-b')), findsNothing);
+    // The chat on screen (Ada's) stays.
+    expect(at(tester), '/bots/$botId/chat');
+
+    // A long press does the same on a touch screen.
+    await tester.longPress(find.byKey(const Key('sidebar-bot-c')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('botMenuProfile')));
+    await tester.pumpAndSettle();
+    expect(find.byType(BotProfileScreen), findsOneWidget);
+  });
+
+  testWidgets('Ctrl+2 goes to Needs you even when the keyboard focus is outside the shell (Windows 117 check 19)', (tester) async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.windows;
+    try {
+      await openApp(tester);
+      // The focus rests outside the shell, on a layer of the window's own (as after a menu, a
+      // sheet or a tooltip closed).
+      final outside = FocusNode();
+      addTearDown(outside.dispose);
+      final entry = OverlayEntry(builder: (_) => Focus(focusNode: outside, child: const SizedBox()));
+      Overlay.of(tester.element(find.byType(ChatScreen)), rootOverlay: true).insert(entry);
+      addTearDown(entry.remove);
+      await tester.pump();
+      outside.requestFocus();
+      await tester.pump();
+      expect(outside.hasPrimaryFocus, isTrue);
+      await tester.sendKeyDownEvent(LogicalKeyboardKey.controlLeft);
+      await tester.sendKeyEvent(LogicalKeyboardKey.digit2);
+      await tester.sendKeyUpEvent(LogicalKeyboardKey.controlLeft);
+      await tester.pumpAndSettle();
+      expect(GoRouter.of(tester.element(find.byType(Scaffold).first)).state.uri.toString(), '/inbox?tab=0');
+    } finally {
+      debugDefaultTargetPlatformOverride = null;
+    }
+  });
+
+  testWidgets('long names drop their middle, so names that differ at the end stay apart (W-N11)', (tester) async {
+    await setSize(tester, const Size(800, 600));
+    const style = TextStyle(fontSize: 16);
+    Future<String> shown(String name) async {
+      await tester.pumpWidget(
+        MaterialApp(home: Scaffold(body: Center(child: SizedBox(width: 150, child: MiddleEllipsisText(name, style: style))))),
+      );
+      return tester.widget<Text>(find.descendant(of: find.byType(MiddleEllipsisText), matching: find.byType(Text))).data!;
+    }
+
+    final a = await shown('UT 117 Win Research A');
+    final b = await shown('UT 117 Win Research B');
+    expect(a, isNot(b));
+    expect(a, endsWith('A'));
+    expect(a, contains('…'));
+    // Hovering shows the whole name.
+    expect(find.byTooltip('UT 117 Win Research B'), findsOneWidget);
+    expect(await shown('Ada'), 'Ada');
+    expect(find.byType(Tooltip), findsNothing);
   });
 }

@@ -3,7 +3,7 @@ import '../notifications/newsletter.dart';
 import 'dart:async';
 import 'dart:math' as math;
 
-import 'package:flutter/foundation.dart' show defaultTargetPlatform, kIsWeb;
+import 'package:flutter/foundation.dart' show defaultTargetPlatform, kIsWeb, listEquals;
 import 'package:flutter/gestures.dart' show kDoubleTapTimeout;
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
@@ -22,6 +22,8 @@ import '../../core/haptics.dart';
 import '../../core/media_cache.dart';
 import '../../ui/shell_layout.dart';
 import '../../ui/side_strip.dart';
+import '../../ui/middle_ellipsis_text.dart';
+import '../bots/bot_actions.dart';
 import '../library/library_providers.dart' show libraryHasNewProvider;
 import '../library/made_here.dart' show SidePanelTabs;
 import '../library/now_playing.dart';
@@ -366,7 +368,7 @@ class HomeShell extends ConsumerWidget {
       child: built,
     );
     if (size == LayoutSize.phone) return shell;
-    return CallbackShortcuts(
+    return GlobalShortcuts(
       bindings: {
         const SingleActivator(LogicalKeyboardKey.keyK, meta: true): () =>
             showWorkspaceSearch(context),
@@ -1191,25 +1193,144 @@ class _Sidebar extends StatefulWidget {
 
 /// Holds the bots' order while the pointer is over the sidebar: a bot that started working used
 /// to jump to the top under the cursor, so a click opened another bot (the customer's build 108
-/// round). Working bots still go first (E3), once the pointer leaves.
+/// round). Working bots still go first (E3), once the order is let go.
+///
+/// Build 117 still sent three messages to the wrong bot. The pointer arriving set a flag without a
+/// rebuild, so the held order only reached the list once something else rebuilt the sidebar (it
+/// held during a long hover, not as the pointer came in). And leaving let go at once, so the bot
+/// just messaged jumped to the top while the person typed. The list now asks for the order on
+/// every build ([_SidebarBody.hold]), and the order also holds for [settle] after the pointer leaves, after any press on the
+/// sidebar (a touch has no hover) and after any change of the open bot (a click, a shortcut, the
+/// keyboard). And a click that comes within [_tapGuard] of the rows moving is dropped rather
+/// than sent to whichever bot slid under it.
 class _SidebarState extends State<_Sidebar> {
+  /// How long the order keeps still after the pointer leaves, a press or a change of chat.
+  static const settle = Duration(seconds: 4);
+
+  /// A click this soon after the rows moved wasn't aimed at what is under it now.
+  static const _tapGuard = Duration(milliseconds: 600);
+
   var _hovering = false;
+  Timer? _settling;
   List<String>? _shown;
 
+  /// Runs for [_tapGuard] after the rows moved.
+  Timer? _moved;
+
+  bool get _holding => _hovering || (_settling?.isActive ?? false);
+
+  void _holdFor() {
+    _settling?.cancel();
+    _settling = Timer(settle, () {
+      if (mounted && !_hovering) setState(() {});
+    });
+  }
+
   @override
-  Widget build(BuildContext context) => MouseRegion(
-    onEnter: (_) => _hovering = true,
-    onExit: (_) => setState(() => _hovering = false),
-    child: _SidebarBody(
-      dests: widget.dests,
-      index: widget.index,
-      badge: widget.badge,
-      selectedBotId: widget.selectedBotId,
-      onSelected: widget.onSelected,
-      hold: _hovering ? _shown : null,
-      onOrder: (ids) => _shown = ids,
+  void didUpdateWidget(_Sidebar old) {
+    super.didUpdateWidget(old);
+    if (old.selectedBotId != widget.selectedBotId) _holdFor();
+  }
+
+  @override
+  void dispose() {
+    _settling?.cancel();
+    _moved?.cancel();
+    super.dispose();
+  }
+
+  void _order(List<String> ids) {
+    final before = _shown;
+    // Moved: a bot shown before now sits at another place (new bots only add to the end).
+    if (before != null) {
+      final kept = [for (final id in ids) if (before.contains(id)) id];
+      final was = [for (final id in before) if (ids.contains(id)) id];
+      if (!listEquals(kept, was)) {
+        _moved?.cancel();
+        _moved = Timer(_tapGuard, () {});
+      }
+    }
+    _shown = ids;
+  }
+
+  bool _mayTap() => !(_moved?.isActive ?? false);
+
+  @override
+  Widget build(BuildContext context) => Listener(
+    onPointerDown: (_) => _holdFor(),
+    child: MouseRegion(
+      onEnter: (_) => _hovering = true,
+      onExit: (_) {
+        _hovering = false;
+        _holdFor();
+      },
+      child: _SidebarBody(
+        dests: widget.dests,
+        index: widget.index,
+        badge: widget.badge,
+        selectedBotId: widget.selectedBotId,
+        onSelected: widget.onSelected,
+        hold: () => _holding ? _shown : null,
+        onOrder: _order,
+        mayTap: _mayTap,
+      ),
     ),
   );
+}
+
+/// A click on a bot's row in the sidebar. Its chat when another bot or another page of this bot
+/// is open; nothing when its chat already is, so the topic on screen stays (the customer's
+/// Windows rounds, 108 L4 and 117: clicking the open bot must leave you in the chat).
+void openBotRow(GoRouter router, String botId) {
+  final chat = '/bots/$botId/chat';
+  if (router.state.uri.path == chat) return;
+  router.go(chat);
+}
+
+/// The sidebar row's right-click (or long-press) menu: the bot's profile, Archive and Delete
+/// (W-N2). Works the same on every desktop.
+Future<void> showBotRowMenu(BuildContext context, WidgetRef ref, Bot bot, Offset at) async {
+  final l10n = context.l10n;
+  final overlay = Overlay.of(context).context.findRenderObject() as RenderBox?;
+  if (overlay == null) return;
+  final local = overlay.globalToLocal(at);
+  final choice = await showMenu<String>(
+    context: context,
+    position: RelativeRect.fromRect(local & const Size(1, 1), Offset.zero & overlay.size),
+    items: [
+      PopupMenuItem(
+        key: const Key('botMenuProfile'),
+        value: 'profile',
+        child: ListTile(dense: true, leading: const Icon(LucideIcons.circleUser, size: 18), title: Text(l10n.botProfile)),
+      ),
+      PopupMenuItem(
+        key: const Key('botMenuArchive'),
+        value: 'archive',
+        child: ListTile(dense: true, leading: const Icon(LucideIcons.archive, size: 18), title: Text(l10n.archive)),
+      ),
+      PopupMenuItem(
+        key: const Key('botMenuDelete'),
+        value: 'delete',
+        child: ListTile(
+          dense: true,
+          leading: Icon(LucideIcons.trash2, size: 18, color: context.colorScheme.error),
+          title: Text(l10n.delete, style: TextStyle(color: context.colorScheme.error)),
+        ),
+      ),
+    ],
+  );
+  if (!context.mounted) return;
+  switch (choice) {
+    case 'profile':
+      // Over its chat, as from the chat's header, so Back lands in the chat.
+      final router = GoRouter.of(context);
+      openBotRow(router, bot.id);
+      unawaited(router.pushOnce<Object?>('/bots/${bot.id}/settings'));
+    case 'archive':
+      await confirmArchiveBot(context, ref, bot);
+    case 'delete':
+      await confirmDeleteBot(context, ref, bot);
+  }
 }
 
 class _SidebarBody extends ConsumerWidget {
@@ -1219,8 +1340,9 @@ class _SidebarBody extends ConsumerWidget {
     required this.badge,
     required this.selectedBotId,
     required this.onSelected,
-    this.hold,
+    required this.hold,
     required this.onOrder,
+    required this.mayTap,
   });
   final List<_Dest> dests;
   final int index;
@@ -1228,16 +1350,22 @@ class _SidebarBody extends ConsumerWidget {
   final String? selectedBotId;
   final ValueChanged<int> onSelected;
 
-  /// The order to keep for bots outside folders (the pointer is over the sidebar).
-  final List<String>? hold;
+  /// The order to keep for bots outside folders, or null to sort afresh. Asked on every build
+  /// rather than passed in: the pointer arriving doesn't rebuild the sidebar, so a value passed
+  /// in stayed null until something else rebuilt it, and the rows moved under the arriving
+  /// pointer (the 108 fix; the customer's build 117 round, N1).
+  final List<String>? Function() hold;
 
   /// The order the bots outside folders were shown in.
   final ValueChanged<List<String>> onOrder;
 
+  /// False just after the rows moved: a click then is dropped (see [_SidebarState]).
+  final bool Function() mayTap;
+
   static const double width = 272;
 
   List<(BotFolder?, List<Bot>)> _grouped(List<Bot> bots, List<BotFolder> folders) {
-    final out = groupBotsByFolder(bots, folders, hold: hold);
+    final out = groupBotsByFolder(bots, folders, hold: hold());
     final loose = out.where((g) => g.$1 == null).firstOrNull?.$2 ?? const <Bot>[];
     onOrder([for (final b in loose) b.id]);
     return out;
@@ -1394,7 +1522,11 @@ class _SidebarBody extends ConsumerWidget {
                           count: ref.watch(botBadgeProvider(b.id)),
                           working: b.status == BotStatusEnum.working,
                         ),
-                        onTap: () => context.go('/bots/${b.id}/chat'),
+                        middleEllipsis: true,
+                        onTap: () {
+                          if (mayTap()) openBotRow(GoRouter.of(context), b.id);
+                        },
+                        onMenu: (at) => showBotRowMenu(context, ref, b, at),
                       ),
                       ),
                   ],
@@ -1508,6 +1640,8 @@ class _SidebarItem extends StatelessWidget {
     this.trailing,
     this.subtitle,
     this.height = 44,
+    this.onMenu,
+    this.middleEllipsis = false,
   });
 
   final Widget leading;
@@ -1518,11 +1652,22 @@ class _SidebarItem extends StatelessWidget {
   final Widget? trailing;
   final double height;
 
+  /// A right-click (or a long press) at this point opens the row's menu.
+  final void Function(Offset globalPosition)? onMenu;
+
+  /// Long labels drop their middle, not their end, and show in full on hover (W-N11).
+  final bool middleEllipsis;
+
   @override
   Widget build(BuildContext context) {
     final scheme = context.colorScheme;
     final tt = context.textTheme;
     final radius = AppRadius.rowAll;
+    final labelStyle = tt.bodyLarge?.copyWith(
+      color: selected ? scheme.primary : scheme.onSurface,
+      fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+      height: 1.2,
+    );
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
       child: Semantics(
@@ -1541,6 +1686,13 @@ class _SidebarItem extends StatelessWidget {
             type: MaterialType.transparency,
             child: InkWell(
               onTap: onTap,
+              onSecondaryTapUp: onMenu == null ? null : (d) => onMenu!(d.globalPosition),
+              onLongPress: onMenu == null
+                  ? null
+                  : () {
+                      final box = context.findRenderObject() as RenderBox?;
+                      if (box != null) onMenu!(box.localToGlobal(box.size.center(Offset.zero)));
+                    },
               borderRadius: radius,
               child: SizedBox(
                 height: height,
@@ -1555,20 +1707,15 @@ class _SidebarItem extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              label,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: tt.bodyLarge?.copyWith(
-                                color: selected
-                                    ? scheme.primary
-                                    : scheme.onSurface,
-                                fontWeight: selected
-                                    ? FontWeight.w700
-                                    : FontWeight.w500,
-                                height: 1.2,
+                            if (middleEllipsis)
+                              MiddleEllipsisText(label, style: labelStyle)
+                            else
+                              Text(
+                                label,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: labelStyle,
                               ),
-                            ),
                             if (subtitle != null)
                               Text(
                                 subtitle!,
@@ -2093,6 +2240,49 @@ class _ActiveRowState extends State<_ActiveRow> {
   void dispose() {
     _list?._remove(this);
     super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.child;
+}
+
+/// Keyboard shortcuts that work wherever the keyboard focus is. [CallbackShortcuts] only hears
+/// keys while the focus is inside it, and the focus isn't always: after a menu, a sheet or a
+/// tooltip closes it can rest on the window itself, outside the shell, and Ctrl+2 then did
+/// nothing from inside a chat (the customer's Windows build 117 round, check 19). This listens
+/// to the keyboard itself, and stands aside while a dialog or sheet is open over the shell.
+class GlobalShortcuts extends StatefulWidget {
+  const GlobalShortcuts({super.key, required this.bindings, required this.child});
+  final Map<ShortcutActivator, VoidCallback> bindings;
+  final Widget child;
+
+  @override
+  State<GlobalShortcuts> createState() => _GlobalShortcutsState();
+}
+
+class _GlobalShortcutsState extends State<GlobalShortcuts> {
+  @override
+  void initState() {
+    super.initState();
+    HardwareKeyboard.instance.addHandler(_onKey);
+  }
+
+  @override
+  void dispose() {
+    HardwareKeyboard.instance.removeHandler(_onKey);
+    super.dispose();
+  }
+
+  bool _onKey(KeyEvent e) {
+    if (e is! KeyDownEvent || !mounted) return false;
+    if (ModalRoute.of(context)?.isCurrent == false) return false;
+    for (final MapEntry(key: activator, value: run) in widget.bindings.entries) {
+      if (activator.accepts(e, HardwareKeyboard.instance)) {
+        run();
+        return true;
+      }
+    }
+    return false;
   }
 
   @override

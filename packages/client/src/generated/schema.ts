@@ -13261,6 +13261,8 @@ export interface components {
              * @enum {string}
              */
             computer?: "bot_computer" | "my_computer";
+            /** @description Whether its runs may use a computer at all (D-627). Off: no files, shell or computer browser, and no computer is started. Defaults to off for briefs and check-ins, on otherwise */
+            uses_computer?: boolean;
             /** @description True when a scheduled run was skipped because Casama's models are off for this plan and no own provider is connected (docs/OWN-KEYS-PLAN.md §3.4) */
             waiting_for_model?: boolean;
             /** Format: uuid */
@@ -13308,6 +13310,8 @@ export interface components {
              * @enum {string}
              */
             computer?: "bot_computer" | "my_computer";
+            /** @description Whether its runs may use a computer at all (D-627). Off: no files, shell or computer browser, and no computer is started. Defaults to off for briefs and check-ins, on otherwise */
+            uses_computer?: boolean;
         };
         Secret: {
             /** Format: uuid */
@@ -13626,6 +13630,8 @@ export interface components {
              * @enum {string}
              */
             computer?: "bot_computer" | "my_computer";
+            /** @description Whether its runs may use a computer at all (D-627). Off: no files, shell or computer browser, and no computer is started. Defaults to off for briefs and check-ins, on otherwise */
+            uses_computer?: boolean;
         };
         UpdateTaskRequest: {
             title?: string;

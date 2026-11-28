@@ -8,6 +8,26 @@
 #include "app_browser.h"
 #endif
 
+namespace {
+
+// Turns Flutter's accessibility tree on for the life of the app, so UI Automation clients that
+// aren't screen readers (Inspect, test tools, voice control) see the app's buttons and text
+// instead of one empty "FLUTTERVIEW" pane.
+//
+// The Windows embedder creates its accessibility bridge, and passes semantics on to it, only once
+// the view window has answered a WM_GETOBJECT for OBJID_CLIENT or UiaRootObjectId
+// (FlutterWindow::OnGetObject in the engine). Until then every semantics update from Dart is
+// dropped, and the framework never sends its whole tree again. Asking once here, right after the
+// view exists and before Dart has drawn anything, makes the bridge exist from the first frame.
+// The bridge is still empty at this point, so the engine hands back no COM object to release.
+void EnableAccessibilityTree(HWND view) {
+  if (view != nullptr) {
+    ::SendMessage(view, WM_GETOBJECT, 0, static_cast<LPARAM>(OBJID_CLIENT));
+  }
+}
+
+}  // namespace
+
 FlutterWindow::FlutterWindow(const flutter::DartProject& project)
     : project_(project) {}
 
@@ -30,6 +50,7 @@ bool FlutterWindow::OnCreate() {
   }
   RegisterPlugins(flutter_controller_->engine());
   SetChildContent(flutter_controller_->view()->GetNativeWindow());
+  EnableAccessibilityTree(flutter_controller_->view()->GetNativeWindow());
 #ifdef CASAMA_APP_BROWSER
   // The in-app browser (docs/WINDOWS-BROWSER-PLAN.md): a WebView2 child window over the view.
   CasamaAppBrowserAttach(flutter_controller_->engine()->messenger(), GetHandle(),

@@ -290,13 +290,17 @@ class _NewGroupState extends ConsumerState<_NewGroup> {
     final shown = q.isEmpty
         ? bots
         : bots.where((b) => b.name.toLowerCase().contains(q)).toList();
+    // Who leads is said from the first pick, never assigned silently (the customer's build 117
+    // report): the first bot picked leads until another is made lead at the top.
     final note = bots.length < 2
         ? l10n.groupNeedTwoBots
+        : picked.isEmpty
+        ? l10n.groupPickMore(2)
         : picked.length < 2
-        ? l10n.groupPickMore(2 - picked.length)
+        ? l10n.groupPickOneMoreLead(picked.first.name)
         : full
         ? l10n.groupFull
-        : l10n.groupLeadHint;
+        : l10n.groupLeadIs(picked.first.name);
     return FormSheet(
       icon: LucideIcons.users,
       hero: const MascotHero([Mascot.winky, Mascot.giggly, Mascot.wow]),
@@ -310,7 +314,7 @@ class _NewGroupState extends ConsumerState<_NewGroup> {
       footer: FormNote(
         note,
         key: const Key('groupNote'),
-        icon: picked.length < 2 ? LucideIcons.info : LucideIcons.crown,
+        icon: picked.isEmpty ? LucideIcons.info : LucideIcons.crown,
       ),
       children: [
         _Crew(bots: picked, onRemove: _toggle, onMakeLead: _makeLead),
@@ -433,8 +437,14 @@ class _Crew extends StatelessWidget {
           border: Border.all(color: context.appColors.hairline),
         ),
         child: bots.isEmpty
-            ? Center(
-                child: Row(
+            // As tall as a picked bot, so the first pick doesn't push the list down under the
+            // pointer (the customer's build 117 report: the next clicks landed on the wrong bot).
+            ? Row(
+                children: [
+                  const _CrewHeight(),
+                  Expanded(
+                    child: Center(
+                      child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     for (var i = 0; i < 3; i++)
@@ -468,7 +478,10 @@ class _Crew extends StatelessWidget {
                       ),
                     ),
                   ],
-                ),
+                      ),
+                    ),
+                  ),
+                ],
               )
             : SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
@@ -489,6 +502,34 @@ class _Crew extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Invisible, as tall as a [_CrewMember]: the same avatar, gap and two lines of text.
+class _CrewHeight extends StatelessWidget {
+  const _CrewHeight();
+
+  @override
+  Widget build(BuildContext context) => ExcludeSemantics(
+    child: Opacity(
+      opacity: 0,
+      child: SizedBox(
+        width: 1,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // The avatar (44) in its 2 px padding and 2 px ring.
+              const SizedBox(height: 52),
+              const SizedBox(height: 6),
+              Text(' ', maxLines: 1, style: context.textTheme.labelMedium?.copyWith(fontWeight: FontWeight.w700)),
+              Text(' ', maxLines: 1, style: context.textTheme.labelSmall),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
 }
 
 class _CrewMember extends StatelessWidget {
@@ -666,7 +707,9 @@ class _BotPickRow extends StatelessWidget {
       BotStatusEnum.disabled => l10n.botStatusDisabled,
       BotStatusEnum.idle => null,
     };
-    final subtitle = order == 0 ? l10n.groupLead : status;
+    // The lead is a badge beside the name, not an extra line: a row growing would move the rows
+    // below it under the pointer.
+    final subtitle = status;
     return Semantics(
       checked: picked,
       enabled: enabled,
@@ -698,13 +741,41 @@ class _BotPickRow extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(
-                          bot.name,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: context.textTheme.bodyLarge?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
+                        Row(
+                          children: [
+                            Flexible(
+                              child: Text(
+                                bot.name,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: context.textTheme.bodyLarge?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                            if (order == 0) ...[
+                              const SizedBox(width: AppSpace.xs),
+                              Tooltip(
+                                message: l10n.groupLead,
+                                child: Row(
+                                  key: Key('pickLead-${bot.id}'),
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(LucideIcons.crown, size: 12, color: scheme.primary),
+                                    const SizedBox(width: 2),
+                                    Text(
+                                      l10n.groupLeadShort,
+                                      maxLines: 1,
+                                      style: context.textTheme.labelSmall?.copyWith(
+                                        color: scheme.primary,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ],
                         ),
                         if (subtitle != null)
                           Text(
@@ -712,10 +783,7 @@ class _BotPickRow extends StatelessWidget {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: context.textTheme.bodySmall?.copyWith(
-                              color: order == 0
-                                  ? scheme.primary
-                                  : scheme.onSurfaceVariant,
-                              fontWeight: order == 0 ? FontWeight.w600 : null,
+                              color: scheme.onSurfaceVariant,
                             ),
                           ),
                       ],

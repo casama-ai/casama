@@ -205,6 +205,8 @@ export interface GalleryRoutineDocument {
   icon: string;
   instructions_md: string;
   schedule_cron: string;
+  /** false: its runs need no computer and never start one (D-627). Absent means on. */
+  uses_computer?: boolean;
 }
 
 export function checkRoutineDocument(raw: unknown): {
@@ -215,7 +217,7 @@ export function checkRoutineDocument(raw: unknown): {
   if (!isRecord(raw)) return { errors: ["routine.json must be an object"] };
   onlyKeys(
     raw,
-    ["description", "category", "icon", "instructions_md", "schedule_cron"],
+    ["description", "category", "icon", "instructions_md", "schedule_cron", "uses_computer"],
     "routine.json",
     errors,
   );
@@ -232,6 +234,8 @@ export function checkRoutineDocument(raw: unknown): {
       ? raw.schedule_cron
       : undefined;
   if (!cron) errors.push("schedule_cron must be a 5-field cron expression such as 0 9 * * 1-5");
+  if (raw.uses_computer !== undefined && typeof raw.uses_computer !== "boolean")
+    errors.push("uses_computer must be true or false");
   if (errors.length) return { errors };
   return {
     errors,
@@ -241,6 +245,7 @@ export function checkRoutineDocument(raw: unknown): {
       icon: icon as string,
       instructions_md: instructions as string,
       schedule_cron: cron as string,
+      ...(raw.uses_computer === false ? { uses_computer: false } : {}),
     },
   };
 }

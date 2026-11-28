@@ -16,6 +16,7 @@ import '../computer/bot_cursors.dart';
 import 'active_call.dart';
 import 'call_bubble.dart' show callClock;
 import '../../ui/decode_size.dart';
+import '../../ui/live_frames.dart';
 
 /// The bot's screen on a call (D-327 §6): the one-a-second screenshots the computer already
 /// makes, never video (video starts only in the full live view, after a tap). Amber when a job
@@ -48,6 +49,7 @@ class CallLiveTile extends ConsumerStatefulWidget {
 class _CallLiveTileState extends ConsumerState<CallLiveTile>
     with WidgetsBindingObserver {
   Uint8List? _shot;
+  final _frames = LiveFrames();
   String? _etag;
   Timer? _poll;
   var _busy = false;
@@ -118,6 +120,7 @@ class _CallLiveTileState extends ConsumerState<CallLiveTile>
 
   @override
   void dispose() {
+    _frames.dispose();
     WidgetsBinding.instance.removeObserver(this);
     _poll?.cancel();
     super.dispose();
@@ -156,7 +159,7 @@ class _CallLiveTileState extends ConsumerState<CallLiveTile>
               fit: StackFit.expand,
               children: [
                 if (shot != null) ...[
-                  LayoutBuilder(builder: (context, box) => Image(image: coverDecode(context, MemoryImage(shot), width: box.maxWidth, height: box.maxHeight), fit: BoxFit.cover, gaplessPlayback: true)),
+                  LayoutBuilder(builder: (context, box) => Image(image: _frames.track(coverDecode(context, MemoryImage(shot), width: box.maxWidth, height: box.maxHeight)), fit: BoxFit.cover, gaplessPlayback: true)),
                   // The bot's cursor (BOT-CURSOR-PLAN), while it is the one driving.
                   ScreenCursor(
                     computerId: widget.computerId,

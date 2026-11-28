@@ -37,6 +37,7 @@ import '../../ui/bot_avatar.dart';
 import '../../ui/bot_cursor.dart';
 import 'bot_cursors.dart';
 import '../app_lock/confirm_identity.dart';
+import '../../ui/live_frames.dart';
 
 /// Watch a computer's desktop live and take control (deep link: /computer/live?c=&takeover=).
 class LiveViewScreen extends ConsumerStatefulWidget {
@@ -62,6 +63,7 @@ class _LiveViewScreenState extends ConsumerState<LiveViewScreen> with WidgetsBin
   Object? _error;
   Lease? _lease;
   Uint8List? _shot;
+  final _frames = LiveFrames();
   double? _rtt;
   var _rightClick = false;
   var _busy = false;
@@ -141,6 +143,7 @@ class _LiveViewScreenState extends ConsumerState<LiveViewScreen> with WidgetsBin
   @override
   void dispose() {
     _disposed = true;
+    _frames.dispose();
     WidgetsBinding.instance.removeObserver(this);
     _leaseTimer?.cancel();
     _shotTimer?.cancel();
@@ -1241,7 +1244,7 @@ class _LiveViewScreenState extends ConsumerState<LiveViewScreen> with WidgetsBin
     final video = state == LiveState.fallback || state == LiveState.reconnecting || conn?.renderer == null
         ? (_shot == null
               ? Center(child: Text(state == LiveState.reconnecting ? l10n.liveReconnecting : l10n.connectingLive, style: const TextStyle(color: Colors.white70)))
-              : Image.memory(_shot!, gaplessPlayback: true, fit: BoxFit.fill))
+              : Image(image: _frames.track(MemoryImage(_shot!)), gaplessPlayback: true, fit: BoxFit.fill))
         : RTCVideoView(conn!.renderer!, objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitContain);
     if (_powerPaused) return _PausedToSavePower(onResume: _resume);
     return ColoredBox(

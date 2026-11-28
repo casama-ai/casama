@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:ui' show DartPluginRegistrant;
 
-import 'package:flutter/semantics.dart' show SemanticsHandle;
-
 import 'package:dio/dio.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,7 +10,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'app.dart';
 import 'core/linux_file_dialogs.dart';
-import 'core/windows_semantics.dart';
 import 'core/local_cache.dart';
 import 'core/ads_attribution.dart';
 import 'core/tracking_permission.dart';
@@ -163,8 +160,9 @@ bool tunnelSaysOffline(Object? error, String apiUrl) {
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // Windows: the accessibility tree stays on for UI Automation (D-616).
-  _semantics = keepWindowsSemanticsOn();
+  // The accessibility tree is turned on by the Windows and Mac runners, not here: a semantics handle
+  // taken in Dart makes the framework send its tree before the engine has anywhere to put it, and
+  // the framework never sends it whole again (D-616 kept Windows empty; see the runners).
   // A widget that fails to build shows a calm "Something went wrong" in the app's colors instead of
   // Flutter's red screen (debug) or an empty grey box (release). Telemetry still reports the error.
   ErrorWidget.builder = (details) => FriendlyErrorView(details: details);
@@ -175,10 +173,6 @@ Future<void> main() async {
   // Draw at once; connecting happens behind the startup gate (never block runApp on the network).
   await Telemetry.run(const StartupGate(config: AppConfig.fromEnvironment));
 }
-
-/// Held for the app's life: the tree stays on while a handle is open.
-// ignore: unused_element
-SemanticsHandle? _semantics;
 
 /// The Dart side of Casama's AppFunctions when Gemini calls one while the app isn't open
 /// (docs/ANDROID-APPFUNCTIONS-PLAN.md §7.2, D-567): `AppFunctionsBridge.kt` starts a headless engine

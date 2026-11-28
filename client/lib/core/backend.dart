@@ -1757,7 +1757,12 @@ abstract class Backend {
 
   /// Workspace search (D-103), including files on awake computers. [kinds] scopes it (D-235):
   /// message, chat, memory, skill, routine, ticket or file; files only when `file` is listed.
-  Future<SearchResponse> search(String orgId, String query, {List<String>? kinds});
+  /// [files] false leaves files out, so the answer doesn't wait on computers (build 117).
+  Future<SearchResponse> search(String orgId, String query, {List<String>? kinds, bool files = true});
+
+  /// Files only, on awake computers: asked beside a search without files, so messages show at once
+  /// while computers are searched (build 117: a busy computer held every result back).
+  Future<SearchResponse> searchFiles(String orgId, String query);
 
   // Bot folders, archive and settings history (D-100)
   Future<List<BotFolder>> botFolders(String orgId);
@@ -2300,7 +2305,8 @@ abstract class Backend {
 
   /// Changes what a routine does and when (D-262's full update): only the fields given change.
   /// [computer]: where its computer work happens, `bot_computer` or `my_computer` (computer places).
-  Future<void> updateRoutine(String routineId, {String? name, String? instructions, String? scheduleCron, String? timezone, DateTime? runAt, String? computer});
+  /// [usesComputer]: false keeps its runs off every computer (D-627).
+  Future<void> updateRoutine(String routineId, {String? name, String? instructions, String? scheduleCron, String? timezone, DateTime? runAt, String? computer, bool? usesComputer});
 
   /// A routine's latest runs, newest first.
   Future<List<RunSummary>> routineRuns(String routineId);

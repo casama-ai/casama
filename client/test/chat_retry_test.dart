@@ -102,7 +102,7 @@ void main() {
     await tester.pumpAndSettle();
   });
 
-  testWidgets('a run out of steps offers Keep Going, which sends a new message (D-505)', (tester) async {
+  testWidgets('a run out of steps offers Continue, which sends a new message (D-505)', (tester) async {
     await setSize(tester, const Size(500, 900));
     final backend = FakeBackend();
     await tester.pumpWidget(harness(backend, const ChatScreen(botId: botId, conversationId: convId)));
@@ -115,7 +115,27 @@ void main() {
     await tester.tap(find.byKey(const Key('noticeKeepGoing')));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 500));
-    expect(backend.sent, ['Go through all 80 files', 'Keep going from where you stopped.']);
+    expect(backend.sent, ['Go through all 80 files', 'Continue from where you stopped.']);
+    c.apply(ev(2, 'run.completed', {'final_message_id': 'x'}));
+    await tester.pumpAndSettle();
+  });
+
+  testWidgets('a run out of budget offers Continue first, and Try Again becomes Start Over (build 117)', (tester) async {
+    await setSize(tester, const Size(500, 900));
+    final backend = FakeBackend();
+    await tester.pumpWidget(harness(backend, const ChatScreen(botId: botId, conversationId: convId)));
+    await tester.pumpAndSettle();
+    final c = ProviderScope.containerOf(tester.element(find.byType(ChatScreen))).read(chatControllerProvider(botId).notifier);
+    await c.send('Write a 1,000-word sourced essay');
+    c.apply(ev(1, 'run.failed', {'error_code': 'budget_exceeded', 'message': r'This run reached its budget of $1.', 'retryable': false}));
+    await tester.pumpAndSettle();
+    expect(find.widgetWithText(FilledButton, 'Continue'), findsOneWidget);
+    expect(find.widgetWithText(TextButton, 'Start Over'), findsOneWidget);
+    expect(find.widgetWithText(TextButton, 'Try Again'), findsNothing);
+    await tester.tap(find.byKey(const Key('noticeKeepGoing')));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 500));
+    expect(backend.sent, ['Write a 1,000-word sourced essay', 'Continue from where you stopped.']);
     c.apply(ev(2, 'run.completed', {'final_message_id': 'x'}));
     await tester.pumpAndSettle();
   });

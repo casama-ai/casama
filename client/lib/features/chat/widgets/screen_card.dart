@@ -20,6 +20,7 @@ import '../../computer/bot_cursors.dart';
 import '../chat_controller.dart';
 import '../chat_detail.dart';
 import '../../../ui/decode_size.dart';
+import '../../../ui/live_frames.dart';
 
 /// Debug builds only: the screen card with a sample screen, to try its size, corners and states
 /// on a phone before it's wired to real pictures (SCREEN-CARD-PLAN Phase 0). Turn it on with
@@ -194,6 +195,7 @@ class _ScreenCardState extends ConsumerState<ScreenCard> with WidgetsBindingObse
   var _pictureGone = false;
 
   Uint8List? _picture;
+  final _frames = LiveFrames();
   String? _etag;
   String? _pictureOf;
   var _polling = false;
@@ -228,6 +230,7 @@ class _ScreenCardState extends ConsumerState<ScreenCard> with WidgetsBindingObse
 
   @override
   void dispose() {
+    _frames.dispose();
     WidgetsBinding.instance.removeObserver(this);
     for (final t in [_longLook, _movedOnTimer, _minShown, _doneTimer, _staleTimer, _goneTimer, _next, _back, _introTimer]) {
       t?.cancel();
@@ -616,7 +619,7 @@ class _ScreenCardState extends ConsumerState<ScreenCard> with WidgetsBindingObse
                               : Stack(
                                   fit: StackFit.expand,
                                   children: [
-                                    LayoutBuilder(builder: (context, box) => Image(image: coverDecode(context, MemoryImage(picture), width: box.maxWidth, height: box.maxHeight), fit: BoxFit.cover, alignment: Alignment.topCenter, gaplessPlayback: true)),
+                                    LayoutBuilder(builder: (context, box) => Image(image: _frames.track(coverDecode(context, MemoryImage(picture), width: box.maxWidth, height: box.maxHeight)), fit: BoxFit.cover, alignment: Alignment.topCenter, gaplessPlayback: true)),
                                     // The bot's cursor (BOT-CURSOR-PLAN), only while it is the one driving.
                                     if (_computer != null)
                                       ScreenCursor(

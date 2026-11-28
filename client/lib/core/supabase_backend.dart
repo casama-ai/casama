@@ -1373,8 +1373,12 @@ class SupabaseBackend implements Backend {
   }
 
   @override
-  Future<SearchResponse> search(String orgId, String query, {List<String>? kinds}) async =>
-      (await api.search.search(orgId: orgId, q: query, kinds: kinds?.join(','))).data!;
+  Future<SearchResponse> search(String orgId, String query, {List<String>? kinds, bool files = true}) async =>
+      (await api.search.search(orgId: orgId, q: query, kinds: kinds?.join(','), files: files ? null : 'false')).data!;
+
+  @override
+  Future<SearchResponse> searchFiles(String orgId, String query) async =>
+      (await api.search.search(orgId: orgId, q: query, kinds: 'file')).data!;
 
   @override
   Future<List<BotFolder>> botFolders(String orgId) async {
@@ -3935,7 +3939,7 @@ class SupabaseBackend implements Backend {
       (await api.routines.runRoutine(id: routineId)).data!.runId;
 
   @override
-  Future<void> updateRoutine(String routineId, {String? name, String? instructions, String? scheduleCron, String? timezone, DateTime? runAt, String? computer}) async =>
+  Future<void> updateRoutine(String routineId, {String? name, String? instructions, String? scheduleCron, String? timezone, DateTime? runAt, String? computer, bool? usesComputer}) async =>
       api.routines.updateRoutine(
         id: routineId,
         updateRoutineRequest: UpdateRoutineRequest(
@@ -3945,6 +3949,7 @@ class SupabaseBackend implements Backend {
           timezone: timezone,
           runAt: runAt?.toUtc(),
           computer: computer == null ? null : UpdateRoutineRequestComputerEnum.values.firstWhere((c) => c.value == computer),
+          usesComputer: usesComputer,
         ),
       );
 

@@ -2848,12 +2848,27 @@ class FakeBackend implements Backend {
   var searchFindsNothing = false;
   /// Errors the next searches throw, in order (a 429, say).
   final failSearches = <Object>[];
+  /// Files-only searches (build 117), and a gate that holds their answer back until completed.
+  final fileSearches = <String>[];
+  Completer<void>? holdFileSearch;
   @override
-  Future<SearchResponse> search(String orgId, String query, {List<String>? kinds}) async {
+  Future<SearchResponse> searchFiles(String orgId, String query) async {
+    fileSearches.add(query);
+    final hold = holdFileSearch;
+    if (hold != null) await hold.future;
+    return _searchResult(query, ['file'], true);
+  }
+
+  @override
+  Future<SearchResponse> search(String orgId, String query, {List<String>? kinds, bool files = true}) async {
     searches.add(query);
     searchKinds.add(kinds);
     if (failSearches.isNotEmpty) throw failSearches.removeAt(0);
-    bool wanted(String kind) => !searchFindsNothing && (kinds == null || kinds.contains(kind));
+    return _searchResult(query, kinds, files);
+  }
+
+  SearchResponse _searchResult(String query, List<String>? kinds, bool files) {
+    bool wanted(String kind) => !searchFindsNothing && (kinds == null || kinds.contains(kind)) && (files || kind != 'file');
     return SearchResponse(
       query: query,
       items: [
@@ -3121,7 +3136,7 @@ class FakeBackend implements Backend {
   @override
   Future<List<Bot>> bots(String orgId) async {
     if (offline) throw Exception('offline');
-    return [if (!archived.contains(botId)) bot(), ...extraBots];
+    return [if (!archived.contains(botId)) bot(), ...extraBots.where((b) => !archived.contains(b.id))];
   }
 
   /// More bots, for group chat tests.
@@ -5959,8 +5974,8 @@ class FakeBackend implements Backend {
   /// Routine changes saved from the edit sheet: (id, fields).
   final routineUpdates = <(String, Map<String, Object?>)>[];
   @override
-  Future<void> updateRoutine(String routineId, {String? name, String? instructions, String? scheduleCron, String? timezone, DateTime? runAt, String? computer}) async {
-    routineUpdates.add((routineId, {'name': name, 'instructions': instructions, 'schedule_cron': scheduleCron, 'timezone': timezone, 'run_at': runAt, 'computer': ?computer}));
+  Future<void> updateRoutine(String routineId, {String? name, String? instructions, String? scheduleCron, String? timezone, DateTime? runAt, String? computer, bool? usesComputer}) async {
+    routineUpdates.add((routineId, {'name': name, 'instructions': instructions, 'schedule_cron': scheduleCron, 'timezone': timezone, 'run_at': runAt, 'computer': ?computer, 'uses_computer': ?usesComputer}));
     final i = routineList.indexWhere((r) => r.id == routineId);
     if (i >= 0) {
       routineList[i] = Routine.fromJson({
@@ -5969,6 +5984,7 @@ class FakeBackend implements Backend {
         'instructions_md': ?instructions,
         'schedule_cron': ?scheduleCron,
         'timezone': ?timezone,
+        'uses_computer': ?usesComputer,
         if (runAt != null) 'next_run_at': runAt.toUtc().toIso8601String(),
       });
     }

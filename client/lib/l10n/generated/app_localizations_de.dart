@@ -47,6 +47,13 @@ class AppLocalizationsDe extends AppLocalizations {
   String get keepGoingMessage => 'Mach dort weiter, wo du aufgehört hast.';
 
   @override
+  String get startOver => 'Neu beginnen';
+
+  @override
+  String get continueRunHint =>
+      'Macht dort weiter, wo es aufgehört hat, mit neuem Budget, statt die Anfrage neu zu beginnen.';
+
+  @override
   String get cancel => 'Abbrechen';
 
   @override
@@ -778,6 +785,19 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get chooseModel => 'Modell wählen';
+
+  @override
+  String get createBotNeedsModel => 'Choose a model above to create this bot.';
+
+  @override
+  String get createBotKeyRejected =>
+      'The provider rejected this key. Check it in Settings → Model keys, or pick another key.';
+
+  @override
+  String get createBotDiscardTitle => 'Discard This Bot?';
+
+  @override
+  String get createBotDiscardBody => 'What you entered here will be lost.';
 
   @override
   String get searchModels => 'Modelle suchen oder Modell-ID eingeben';
@@ -2792,6 +2812,17 @@ class AppLocalizationsDe extends AppLocalizations {
       'Für Arbeit an deinen eigenen Dateien und Apps. Ein Durchlauf meldet es, wenn der Computer aus war.';
 
   @override
+  String get routineUsesComputer => 'Uses a computer';
+
+  @override
+  String get routineUsesComputerOn =>
+      'Can save files, run commands and browse pages.';
+
+  @override
+  String get routineUsesComputerOff =>
+      'Reads your apps, the web and memory only. Faster, and never wakes a computer.';
+
+  @override
   String get computerBotsAllowed => 'Erlaubte Bots';
 
   @override
@@ -4367,6 +4398,12 @@ class AppLocalizationsDe extends AppLocalizations {
   String get chatViewFullTable => 'Vollständige Tabelle ansehen';
 
   @override
+  String get chatShowMore => 'Show more';
+
+  @override
+  String get chatShowLess => 'Show less';
+
+  @override
   String get chatTableTitle => 'Tabelle';
 
   @override
@@ -5022,7 +5059,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String groupTipEveryone(String lead) {
-    return '@everyone bittet $lead, die Arbeit zu planen und jedem Bot einen Teil zu geben.';
+    return '@everyone: $lead antwortet zuerst und verteilt Teile, wenn es Arbeit aufzuteilen gibt; sonst antwortet jeder Bot der Reihe nach, und der letzte fasst zusammen.';
   }
 
   @override
@@ -7600,6 +7637,24 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String get deleteBot => 'Delete Bot';
+
+  @override
+  String deleteBotTitle(String name) {
+    return 'Delete $name?';
+  }
+
+  @override
+  String deleteBotBody(String name) {
+    return 'Every chat with $name is deleted for good, with its messages, photos and files, and $name stops running and leaves the sidebar. Group chats and usage records stay. Its settings and memory move to Archived bots.';
+  }
+
+  @override
+  String botDeleted(String name) {
+    return '$name deleted.';
+  }
+
+  @override
   String get settingsHistory => 'Einstellungsverlauf';
 
   @override
@@ -7807,6 +7862,9 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get searchFilesAsleep =>
       'Dateien auf schlafenden Computern werden nicht durchsucht. Starte einen Computer, um seine Dateien einzuschließen.';
+
+  @override
+  String get searchSearching => 'Wird gesucht…';
 
   @override
   String get searchJumpHint => 'Suchen oder springen zu…';
@@ -8733,6 +8791,16 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get groupLeadHint =>
       'Die Leitung plant die Arbeit, wenn du @everyone nutzt. Tippe oben auf einen anderen Bot, um ihn zur Leitung zu machen.';
+
+  @override
+  String groupLeadIs(String name) {
+    return '$name leads: it plans the work when you @everyone. Tap another bot at the top to make it lead.';
+  }
+
+  @override
+  String groupPickOneMoreLead(String name) {
+    return 'Pick 1 more bot. $name leads; tap another bot at the top to make it lead.';
+  }
 
   @override
   String get groupNeedTwoBots =>
@@ -17685,6 +17753,16 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get appLockConfirmTitle => 'Bestätige, dass du es bist';
+
+  @override
+  String get approvalConfirmTitle => 'Allow This?';
+
+  @override
+  String get approvalConfirmBody =>
+      'This is a high-risk request. Allow the bot to go ahead?';
+
+  @override
+  String get approvalConfirmAllow => 'Allow';
 
   @override
   String appLockUnlockWith(String method) {

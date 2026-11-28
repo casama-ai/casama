@@ -21,6 +21,17 @@ describe("pages that keep a bot's computer out", () => {
       "challenge",
     );
     expect(detectBrowserBlock("WhaleGuard: request intercepted")?.kind).toBe("denied");
+    // Cloudflare's newer check page, which a shop showed the computer for ever (customer build 117).
+    expect(
+      detectBrowserBlock(
+        "www.ao.com Performing security verification This website uses a security service to protect against malicious bots. This page is displayed while the website verifies you are not a bot.",
+      )?.kind,
+    ).toBe("challenge");
+    expect(
+      detectBrowserBlock(
+        "Verify you are human by completing the action below. www.example.co.uk needs to review the security of your connection before proceeding.",
+      )?.kind,
+    ).toBe("challenge");
   });
 
   it("leaves ordinary pages alone, even ones that mention a CAPTCHA", () => {

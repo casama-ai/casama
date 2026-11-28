@@ -47,6 +47,13 @@ class AppLocalizationsId extends AppLocalizations {
   String get keepGoingMessage => 'Lanjutkan dari bagian terakhir tadi.';
 
   @override
+  String get startOver => 'Mulai ulang';
+
+  @override
+  String get continueRunHint =>
+      'Lanjut dari bagian terakhir dengan anggaran baru, tanpa mengulang permintaan dari awal.';
+
+  @override
   String get cancel => 'Batal';
 
   @override
@@ -779,6 +786,19 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get chooseModel => 'Pilih model';
+
+  @override
+  String get createBotNeedsModel => 'Choose a model above to create this bot.';
+
+  @override
+  String get createBotKeyRejected =>
+      'The provider rejected this key. Check it in Settings → Model keys, or pick another key.';
+
+  @override
+  String get createBotDiscardTitle => 'Discard This Bot?';
+
+  @override
+  String get createBotDiscardBody => 'What you entered here will be lost.';
 
   @override
   String get searchModels => 'Cari model atau ketik ID model';
@@ -2791,6 +2811,17 @@ class AppLocalizationsId extends AppLocalizations {
       'Untuk pekerjaan pada file dan aplikasimu sendiri. Eksekusi akan memberi tahu jika komputer mati.';
 
   @override
+  String get routineUsesComputer => 'Uses a computer';
+
+  @override
+  String get routineUsesComputerOn =>
+      'Can save files, run commands and browse pages.';
+
+  @override
+  String get routineUsesComputerOff =>
+      'Reads your apps, the web and memory only. Faster, and never wakes a computer.';
+
+  @override
   String get computerBotsAllowed => 'Bot yang diizinkan';
 
   @override
@@ -4366,6 +4397,12 @@ class AppLocalizationsId extends AppLocalizations {
   String get chatViewFullTable => 'Lihat tabel penuh';
 
   @override
+  String get chatShowMore => 'Show more';
+
+  @override
+  String get chatShowLess => 'Show less';
+
+  @override
   String get chatTableTitle => 'Tabel';
 
   @override
@@ -5018,7 +5055,7 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String groupTipEveryone(String lead) {
-    return '@everyone meminta $lead merencanakan pekerjaan dan membagi tugas ke tiap bot.';
+    return '@everyone: $lead menjawab lebih dulu dan membagi tugas jika ada pekerjaan yang perlu dibagi; jika tidak, tiap bot menjawab bergiliran dan yang terakhir menutupnya.';
   }
 
   @override
@@ -7586,6 +7623,24 @@ class AppLocalizationsId extends AppLocalizations {
   }
 
   @override
+  String get deleteBot => 'Delete Bot';
+
+  @override
+  String deleteBotTitle(String name) {
+    return 'Delete $name?';
+  }
+
+  @override
+  String deleteBotBody(String name) {
+    return 'Every chat with $name is deleted for good, with its messages, photos and files, and $name stops running and leaves the sidebar. Group chats and usage records stay. Its settings and memory move to Archived bots.';
+  }
+
+  @override
+  String botDeleted(String name) {
+    return '$name deleted.';
+  }
+
+  @override
   String get settingsHistory => 'Riwayat pengaturan';
 
   @override
@@ -7790,6 +7845,9 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get searchFilesAsleep =>
       'File di komputer yang tidur tidak dicari. Nyalakan komputer untuk menyertakan filenya.';
+
+  @override
+  String get searchSearching => 'Mencari…';
 
   @override
   String get searchJumpHint => 'Cari atau lompat ke…';
@@ -8713,6 +8771,16 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get groupLeadHint =>
       'Pemimpin merencanakan pekerjaan saat kamu mengetik @everyone. Ketuk bot lain di atas untuk menjadikannya pemimpin.';
+
+  @override
+  String groupLeadIs(String name) {
+    return '$name leads: it plans the work when you @everyone. Tap another bot at the top to make it lead.';
+  }
+
+  @override
+  String groupPickOneMoreLead(String name) {
+    return 'Pick 1 more bot. $name leads; tap another bot at the top to make it lead.';
+  }
 
   @override
   String get groupNeedTwoBots =>
@@ -17634,6 +17702,16 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get appLockConfirmTitle => 'Konfirmasi bahwa ini kamu';
+
+  @override
+  String get approvalConfirmTitle => 'Allow This?';
+
+  @override
+  String get approvalConfirmBody =>
+      'This is a high-risk request. Allow the bot to go ahead?';
+
+  @override
+  String get approvalConfirmAllow => 'Allow';
 
   @override
   String appLockUnlockWith(String method) {

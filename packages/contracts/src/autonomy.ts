@@ -368,6 +368,10 @@ export const Routine = z
       description:
         'Where its computer work happens (computer places): "bot_computer" (the bot\'s own, the default) or "my_computer" (your own computer, when it is on and lets the bot in)',
     }),
+    uses_computer: z.boolean().optional().openapi({
+      description:
+        "Whether its runs may use a computer at all (D-627). Off: no files, shell or computer browser, and no computer is started. Defaults to off for briefs and check-ins, on otherwise",
+    }),
     waiting_for_model: z.boolean().optional().openapi({
       description:
         "True when a scheduled run was skipped because Casama's models are off for this plan and no own provider is connected (docs/OWN-KEYS-PLAN.md §3.4)",
@@ -431,6 +435,10 @@ export const CreateRoutineRequest = z
       description:
         'Where its computer work happens (computer places): "bot_computer" (the bot\'s own, the default) or "my_computer" (your own computer, when it is on and lets the bot in)',
     }),
+    uses_computer: z.boolean().optional().openapi({
+      description:
+        "Whether its runs may use a computer at all (D-627). Off: no files, shell or computer browser, and no computer is started. Defaults to off for briefs and check-ins, on otherwise",
+    }),
   })
   .openapi("CreateRoutineRequest");
 
@@ -473,6 +481,10 @@ export const UpdateRoutineRequest = z
     computer: z.enum(["bot_computer", "my_computer"]).optional().openapi({
       description:
         'Where its computer work happens (computer places): "bot_computer" (the bot\'s own, the default) or "my_computer" (your own computer, when it is on and lets the bot in)',
+    }),
+    uses_computer: z.boolean().optional().openapi({
+      description:
+        "Whether its runs may use a computer at all (D-627). Off: no files, shell or computer browser, and no computer is started. Defaults to off for briefs and check-ins, on otherwise",
     }),
   })
   .openapi("UpdateRoutineRequest");

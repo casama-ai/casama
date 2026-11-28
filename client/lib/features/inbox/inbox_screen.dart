@@ -876,7 +876,7 @@ class _ApprovalCardState extends ConsumerState<ApprovalCard> {
     final l10n = context.l10n;
     if (!approve) Haptic.tap();
     // Allowing a high-risk request asks to unlock again (D-375).
-    if (approve && widget.approval.risk == Risk.high && (!await confirmIdentity(context, ref) || !mounted)) return;
+    if (approve && widget.approval.risk == Risk.high && (!await confirmIdentity(context, ref, approval: true) || !mounted)) return;
     setState(() => _busy = true);
     final ok = await runGuarded(context, () async {
       await ref.read(backendProvider).decideApproval(widget.approval.id, approve: approve, alwaysAllow: always);

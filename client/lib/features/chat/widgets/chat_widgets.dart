@@ -504,27 +504,63 @@ class _AssistantMessageState extends State<AssistantMessage> {
 /// Words come in at a steady pace instead of a sentence every 200 ms (the server's batches), with
 /// half-written Markdown closed so it doesn't flash raw (see [healStreamingMarkdown]). The text
 /// grows smoothly when a word wraps to a new line, and the dots fade out once the last word shows.
-class _ReplyBody extends StatelessWidget {
+///
+/// A very long reply (an essay, a report) folds to [replyFoldHeight] with a fade and "Show more", the
+/// way tables get "View full table", so it doesn't fill the chat. A reply that streamed in on
+/// screen stays open (folding it as it ends would pull the text away mid-read) and gets
+/// "Show less" instead; it shows folded the next time the chat opens.
+class _ReplyBody extends StatefulWidget {
   const _ReplyBody({super.key, required this.text, required this.live});
   final String text;
   final bool live;
 
   @override
+  State<_ReplyBody> createState() => _ReplyBodyState();
+}
+
+/// Replies shorter than this never fold, so most replies skip the measuring.
+const replyFoldMinChars = 1500;
+
+/// How tall a folded reply is.
+const replyFoldHeight = 420.0;
+
+class _ReplyBodyState extends State<_ReplyBody> {
+  /// Open when it was seen streaming; folded when it was already done.
+  late var _open = widget.live;
+
+  /// The finished text is taller than [replyFoldHeight].
+  var _overflows = false;
+
+  @override
   Widget build(BuildContext context) {
     final duration = AppMotion.of(context, const Duration(milliseconds: 140));
     return SmoothReveal(
-      text: text,
-      live: live,
+      text: widget.text,
+      live: widget.live,
       builder: (visible, revealing) {
-        final going = live || revealing;
+        final going = widget.live || revealing;
+        final markdown = ChatMarkdown(data: going ? healStreamingMarkdown(visible) : visible, selectable: false);
+        // The same tree while it streams and after, so the parsed text is kept when it ends.
+        final foldable = widget.text.length >= replyFoldMinChars;
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
             _Grow(
               duration: duration,
-              child: ChatMarkdown(data: going ? healStreamingMarkdown(visible) : visible, selectable: false),
+              child: foldable ? _fold(context, markdown) : markdown,
             ),
+            if (foldable && !going && _overflows)
+              TextButton.icon(
+                key: const Key('replyFoldToggle'),
+                style: TextButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(horizontal: AppSpace.xs),
+                  visualDensity: VisualDensity.compact,
+                ),
+                onPressed: () => setState(() => _open = !_open),
+                icon: Icon(_open ? LucideIcons.chevronUp : LucideIcons.chevronDown, size: 16),
+                label: Text(_open ? context.l10n.chatShowLess : context.l10n.chatShowMore),
+              ),
             // Its own layer: the dots animate every frame without repainting the reply's text. Once
             // the last word shows they fold away instead of the bubble jumping a row shorter.
             _Grow(
@@ -539,6 +575,45 @@ class _ReplyBody extends StatelessWidget {
           ],
         );
       },
+    );
+  }
+
+  /// The text up to [replyFoldHeight] (all of it when open). A scroll view that can't be scrolled
+  /// measures it: wheel and drags go on to the chat, links and the message menu work as before.
+  Widget _fold(BuildContext context, Widget markdown) {
+    final folded = !_open && _overflows;
+    final view = NotificationListener<ScrollMetricsNotification>(
+      onNotification: (n) {
+        // Folded, the text runs past the view; open, the view is taller than the fold.
+        final over = n.metrics.maxScrollExtent > 0 || n.metrics.viewportDimension > replyFoldHeight + 1;
+        if (over != _overflows) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) setState(() => _overflows = over);
+          });
+        }
+        return true;
+      },
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: _open ? double.infinity : replyFoldHeight),
+        child: SingleChildScrollView(
+          key: const Key('replyFold'),
+          physics: const NeverScrollableScrollPhysics(),
+          primary: false,
+          child: markdown,
+        ),
+      ),
+    );
+    if (!folded) return view;
+    // The last lines fade into the bubble, so it reads as cut, not finished.
+    return ShaderMask(
+      blendMode: BlendMode.dstIn,
+      shaderCallback: (rect) => const LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [Colors.black, Colors.black, Colors.transparent],
+        stops: [0, 0.8, 1],
+      ).createShader(rect),
+      child: view,
     );
   }
 }
@@ -1663,7 +1738,7 @@ class _ApprovalPromptState extends ConsumerState<ApprovalPrompt> {
   Future<void> _decide(bool approve, {bool always = false}) async {
     if (!approve) Haptic.tap();
     // Allowing a high-risk request asks to unlock again (D-375).
-    if (approve && widget.entry.risk == 'high' && (!await confirmIdentity(context, ref) || !mounted)) return;
+    if (approve && widget.entry.risk == 'high' && (!await confirmIdentity(context, ref, approval: true) || !mounted)) return;
     setState(() => _busy = true);
     final ok = await runGuarded(context, () async {
       await ref

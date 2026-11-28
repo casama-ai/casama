@@ -29,6 +29,8 @@ abstract class _$UpdateRoutineRequestCWProxy {
 
   UpdateRoutineRequest computer(UpdateRoutineRequestComputerEnum? computer);
 
+  UpdateRoutineRequest usesComputer(bool? usesComputer);
+
   /// Creates a new instance with the provided field values.
   /// Omitted fields keep their values; explicit `null` clears nullable fields.
   /// The public API rejects `null` for non-nullable fields. To update a single field use `UpdateRoutineRequest(...).copyWith.fieldName(value)`.
@@ -49,6 +51,7 @@ abstract class _$UpdateRoutineRequestCWProxy {
     int? maxRuns,
     UpdateRoutineRequestBrowserEnum? browser,
     UpdateRoutineRequestComputerEnum? computer,
+    bool? usesComputer,
   });
 }
 
@@ -97,6 +100,10 @@ class _$UpdateRoutineRequestCWProxyImpl
   UpdateRoutineRequest computer(UpdateRoutineRequestComputerEnum? computer) =>
       call(computer: computer);
 
+  @override
+  UpdateRoutineRequest usesComputer(bool? usesComputer) =>
+      call(usesComputer: usesComputer);
+
   /// Creates a new instance with the provided field values.
   /// Omitted fields keep their values; explicit `null` clears nullable fields.
   /// The public API rejects `null` for non-nullable fields. To update a single field use `UpdateRoutineRequest(...).copyWith.fieldName(value)`.
@@ -118,6 +125,7 @@ class _$UpdateRoutineRequestCWProxyImpl
     Object? maxRuns = const $CopyWithPlaceholder(),
     Object? browser = const $CopyWithPlaceholder(),
     Object? computer = const $CopyWithPlaceholder(),
+    Object? usesComputer = const $CopyWithPlaceholder(),
   }) {
     return UpdateRoutineRequest(
       name: name == const $CopyWithPlaceholder()
@@ -164,6 +172,10 @@ class _$UpdateRoutineRequestCWProxyImpl
           ? _value.computer
           // ignore: cast_nullable_to_non_nullable
           : computer as UpdateRoutineRequestComputerEnum?,
+      usesComputer: usesComputer == const $CopyWithPlaceholder()
+          ? _value.usesComputer
+          // ignore: cast_nullable_to_non_nullable
+          : usesComputer as bool?,
     );
   }
 }
@@ -211,6 +223,7 @@ UpdateRoutineRequest _$UpdateRoutineRequestFromJson(
         (v) =>
             $enumDecodeNullable(_$UpdateRoutineRequestComputerEnumEnumMap, v),
       ),
+      usesComputer: $checkedConvert('uses_computer', (v) => v as bool?),
     );
     return val;
   },
@@ -219,6 +232,7 @@ UpdateRoutineRequest _$UpdateRoutineRequestFromJson(
     'runAt': 'run_at',
     'endsAt': 'ends_at',
     'maxRuns': 'max_runs',
+    'usesComputer': 'uses_computer',
   },
 );
 
@@ -236,6 +250,7 @@ Map<String, dynamic> _$UpdateRoutineRequestToJson(
   'max_runs': ?instance.maxRuns,
   'browser': ?_$UpdateRoutineRequestBrowserEnumEnumMap[instance.browser],
   'computer': ?_$UpdateRoutineRequestComputerEnumEnumMap[instance.computer],
+  'uses_computer': ?instance.usesComputer,
 };
 
 const _$UpdateRoutineRequestBrowserEnumEnumMap = {

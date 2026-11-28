@@ -62,6 +62,8 @@ class CreatedRoutine {
 
      this.computer,
 
+     this.usesComputer,
+
      this.waitingForModel,
 
     required  this.conversationId,
@@ -306,6 +308,19 @@ class CreatedRoutine {
 
 
 
+      /// Whether its runs may use a computer at all (D-627). Off: no files, shell or computer browser, and no computer is started. Defaults to off for briefs and check-ins, on otherwise
+  @JsonKey(
+    
+    name: r'uses_computer',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final bool? usesComputer;
+
+
+
       /// True when a scheduled run was skipped because Casama's models are off for this plan and no own provider is connected (docs/OWN-KEYS-PLAN.md §3.4)
   @JsonKey(
     
@@ -391,6 +406,7 @@ class CreatedRoutine {
       other.runCount == runCount &&
       other.browser == browser &&
       other.computer == computer &&
+      other.usesComputer == usesComputer &&
       other.waitingForModel == waitingForModel &&
       other.conversationId == conversationId &&
       other.createdAt == createdAt &&
@@ -418,6 +434,7 @@ class CreatedRoutine {
         runCount.hashCode +
         browser.hashCode +
         computer.hashCode +
+        usesComputer.hashCode +
         waitingForModel.hashCode +
         (conversationId == null ? 0 : conversationId.hashCode) +
         createdAt.hashCode +

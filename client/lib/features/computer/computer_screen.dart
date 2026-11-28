@@ -41,6 +41,7 @@ import '../chat/chat_screen.dart';
 import '../voice/active_call.dart' show liveViewPath;
 import '../files/file_preview.dart';
 import '../../ui/glow_button.dart';
+import '../../ui/live_frames.dart';
 
 String computerStateLabel(BuildContext context, ComputerState s) {
   final l10n = context.l10n;
@@ -1235,6 +1236,7 @@ class _ScreenStage extends ConsumerStatefulWidget {
 
 class _ScreenStageState extends ConsumerState<_ScreenStage> {
   Uint8List? _shot;
+  final _frames = LiveFrames();
   Timer? _timer;
 
   bool get _awake =>
@@ -1284,6 +1286,7 @@ class _ScreenStageState extends ConsumerState<_ScreenStage> {
   @override
   void dispose() {
     _timer?.cancel();
+    _frames.dispose();
     super.dispose();
   }
 
@@ -1317,8 +1320,8 @@ class _ScreenStageState extends ConsumerState<_ScreenStage> {
               AnimatedSwitcher(
                 duration: AppMotion.duration,
                 child: shot != null
-                    ? Image.memory(
-                        shot,
+                    ? Image(
+                        image: _frames.track(MemoryImage(shot)),
                         key: const ValueKey('shot'),
                         fit: BoxFit.cover,
                         gaplessPlayback: true,
@@ -1766,6 +1769,7 @@ class _ScreenTab extends ConsumerStatefulWidget {
 
 class _ScreenTabState extends ConsumerState<_ScreenTab> {
   Uint8List? _png;
+  final _frames = LiveFrames();
   var _loading = false;
   Timer? _timer;
 
@@ -1780,6 +1784,7 @@ class _ScreenTabState extends ConsumerState<_ScreenTab> {
   @override
   void dispose() {
     _timer?.cancel();
+    _frames.dispose();
     super.dispose();
   }
 
@@ -1847,7 +1852,7 @@ class _ScreenTabState extends ConsumerState<_ScreenTab> {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          Center(child: Image.memory(_png!, gaplessPlayback: true)),
+          Center(child: Image(image: _frames.track(MemoryImage(_png!)), gaplessPlayback: true)),
           // The bot's cursor (BOT-CURSOR-PLAN): it moves between the pictures, which come only
           // every few seconds here.
           ScreenCursor(

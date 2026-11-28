@@ -45,6 +45,8 @@ abstract class _$RoutineCWProxy {
 
   Routine computer(RoutineComputerEnum? computer);
 
+  Routine usesComputer(bool? usesComputer);
+
   Routine waitingForModel(bool? waitingForModel);
 
   Routine conversationId(String? conversationId);
@@ -79,6 +81,7 @@ abstract class _$RoutineCWProxy {
     int? runCount,
     RoutineBrowserEnum? browser,
     RoutineComputerEnum? computer,
+    bool? usesComputer,
     bool? waitingForModel,
     String? conversationId,
     DateTime createdAt,
@@ -152,6 +155,9 @@ class _$RoutineCWProxyImpl implements _$RoutineCWProxy {
   Routine computer(RoutineComputerEnum? computer) => call(computer: computer);
 
   @override
+  Routine usesComputer(bool? usesComputer) => call(usesComputer: usesComputer);
+
+  @override
   Routine waitingForModel(bool? waitingForModel) =>
       call(waitingForModel: waitingForModel);
 
@@ -191,6 +197,7 @@ class _$RoutineCWProxyImpl implements _$RoutineCWProxy {
     Object? runCount = const $CopyWithPlaceholder(),
     Object? browser = const $CopyWithPlaceholder(),
     Object? computer = const $CopyWithPlaceholder(),
+    Object? usesComputer = const $CopyWithPlaceholder(),
     Object? waitingForModel = const $CopyWithPlaceholder(),
     Object? conversationId = const $CopyWithPlaceholder(),
     Object? createdAt = const $CopyWithPlaceholder(),
@@ -274,6 +281,10 @@ class _$RoutineCWProxyImpl implements _$RoutineCWProxy {
           ? _value.computer
           // ignore: cast_nullable_to_non_nullable
           : computer as RoutineComputerEnum?,
+      usesComputer: usesComputer == const $CopyWithPlaceholder()
+          ? _value.usesComputer
+          // ignore: cast_nullable_to_non_nullable
+          : usesComputer as bool?,
       waitingForModel: waitingForModel == const $CopyWithPlaceholder()
           ? _value.waitingForModel
           // ignore: cast_nullable_to_non_nullable
@@ -376,6 +387,7 @@ Routine _$RoutineFromJson(Map<String, dynamic> json) => $checkedCreate(
         'computer',
         (v) => $enumDecodeNullable(_$RoutineComputerEnumEnumMap, v),
       ),
+      usesComputer: $checkedConvert('uses_computer', (v) => v as bool?),
       waitingForModel: $checkedConvert('waiting_for_model', (v) => v as bool?),
       conversationId: $checkedConvert('conversation_id', (v) => v as String?),
       createdAt: $checkedConvert(
@@ -394,6 +406,7 @@ Routine _$RoutineFromJson(Map<String, dynamic> json) => $checkedCreate(
     'endsAt': 'ends_at',
     'maxRuns': 'max_runs',
     'runCount': 'run_count',
+    'usesComputer': 'uses_computer',
     'waitingForModel': 'waiting_for_model',
     'conversationId': 'conversation_id',
     'createdAt': 'created_at',
@@ -420,6 +433,7 @@ Map<String, dynamic> _$RoutineToJson(Routine instance) => <String, dynamic>{
   'run_count': ?instance.runCount,
   'browser': ?_$RoutineBrowserEnumEnumMap[instance.browser],
   'computer': ?_$RoutineComputerEnumEnumMap[instance.computer],
+  'uses_computer': ?instance.usesComputer,
   'waiting_for_model': ?instance.waitingForModel,
   'conversation_id': instance.conversationId,
   'created_at': instance.createdAt.toIso8601String(),

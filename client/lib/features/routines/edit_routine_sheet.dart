@@ -52,6 +52,9 @@ class _EditRoutineSheetState extends ConsumerState<EditRoutineSheet> {
   /// Where its computer work happens (computer places): the bot's own computer, or the person's.
   late var _computer = widget.routine.computer?.value ?? 'bot_computer';
 
+  /// Whether its runs may use a computer at all (D-627).
+  late var _usesComputer = widget.routine.usesComputer ?? true;
+
   bool get _schedule => widget.routine.trigger == RoutineTrigger.schedule;
   bool get _once => widget.routine.trigger == RoutineTrigger.once;
 
@@ -104,12 +107,14 @@ class _EditRoutineSheetState extends ConsumerState<EditRoutineSheet> {
     final timezone = _schedule ? changed(_timezone.text, r.timezone) : null;
     final runAt = _once && _runAtChanged ? _runAt : null;
     final computer = _computer == (r.computer?.value ?? 'bot_computer') ? null : _computer;
+    final usesComputer = _usesComputer == (r.usesComputer ?? true) ? null : _usesComputer;
     if (name == null &&
         instructions == null &&
         cron == null &&
         timezone == null &&
         runAt == null &&
-        computer == null) {
+        computer == null &&
+        usesComputer == null) {
       Navigator.of(context).pop(false);
       return;
     }
@@ -125,6 +130,7 @@ class _EditRoutineSheetState extends ConsumerState<EditRoutineSheet> {
             timezone: timezone,
             runAt: runAt,
             computer: computer,
+            usesComputer: usesComputer,
           );
       return true;
     });
@@ -216,7 +222,16 @@ class _EditRoutineSheetState extends ConsumerState<EditRoutineSheet> {
             ),
             onTap: _pickTime,
           ),
-        if (canPickPlace)
+        SwitchListTile(
+          key: const Key('editRoutineUsesComputer'),
+          contentPadding: EdgeInsets.zero,
+          secondary: Icon(_usesComputer ? LucideIcons.monitor : LucideIcons.monitorOff),
+          title: Text(l10n.routineUsesComputer),
+          subtitle: Text(_usesComputer ? l10n.routineUsesComputerOn : l10n.routineUsesComputerOff),
+          value: _usesComputer,
+          onChanged: _busy ? null : (v) => setState(() => _usesComputer = v),
+        ),
+        if (canPickPlace && _usesComputer)
           ListTile(
             key: const Key('editRoutineWhere'),
             contentPadding: EdgeInsets.zero,

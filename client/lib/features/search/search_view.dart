@@ -159,6 +159,9 @@ class _SearchViewState extends ConsumerState<SearchView> {
   List<Creation> _creations = const [];
   Object? _error;
   var _loading = false;
+
+  /// Files on awake computers still being searched, after the rest has come back (build 117).
+  var _filesLoading = false;
   var _seq = 0;
   var _scope = SearchScope.all;
 
@@ -222,22 +225,42 @@ class _SearchViewState extends ConsumerState<SearchView> {
       final library = scope.coversLibrary
           ? backend.creations(org.id, q: q, limit: 20).then((l) => l.items).catchError((Object _) => const <Creation>[])
           : Future.value(const <Creation>[]);
-      final r = scope == SearchScope.library ? SearchResponse(query: q, items: const [], files: const [], filesSearched: 0) : await backend.search(org.id, q, kinds: scope.serverKinds);
+      // Everything at once, files beside it (build 117): files are searched by running a command
+      // on each awake computer, and a busy one held every message back until it answered, so a
+      // message from a few minutes ago looked missing. Messages and the rest now show first.
+      final split = scope == SearchScope.all;
+      final files = split ? backend.searchFiles(org.id, q).then<SearchResponse?>((f) => f).catchError((Object _) => null) : null;
+      final r = scope == SearchScope.library
+          ? SearchResponse(query: q, items: const [], files: const [], filesSearched: 0)
+          : await backend.search(org.id, q, kinds: scope.serverKinds, files: !split);
       final creations = await library;
       if (!mounted || seq != _seq) return;
+      void counts(SearchResponse r) {
+        if (scope != SearchScope.all) return;
+        _countsQuery = q;
+        _counts = {
+          for (final s in SearchScope.values.skip(1))
+            s: s == SearchScope.files ? r.files.length : s == SearchScope.library ? creations.length : r.items.where((i) => s.includes(i.kind)).length,
+        };
+      }
       setState(() {
         _results = r;
         _creations = creations;
         _error = null;
         _loading = false;
+        _filesLoading = files != null;
         _resetSelection();
-        if (scope == SearchScope.all) {
-          _countsQuery = q;
-          _counts = {
-            for (final s in SearchScope.values.skip(1))
-              s: s == SearchScope.files ? r.files.length : s == SearchScope.library ? creations.length : r.items.where((i) => s.includes(i.kind)).length,
-          };
-        }
+        counts(r);
+      });
+      if (files == null) return;
+      final f = await files;
+      if (!mounted || seq != _seq) return;
+      setState(() {
+        _filesLoading = false;
+        if (f == null) return;
+        final both = SearchResponse(query: r.query, items: r.items, files: f.files, filesSearched: f.filesSearched);
+        _results = both;
+        counts(both);
       });
     } catch (e) {
       if (!mounted || seq != _seq) return;
@@ -456,6 +479,9 @@ class _SearchViewState extends ConsumerState<SearchView> {
             label: Text(l10n.retry),
           ),
         )
+      else if (r == null && _loading)
+        // Nothing back yet: say so, instead of a list with only Quick ask that read as no results.
+        _Note(l10n.searchSearching)
       else if (nothing) ...[
         _Note(l10n.searchNoResults(q)),
         ?ask,
@@ -490,7 +516,7 @@ class _SearchViewState extends ConsumerState<SearchView> {
               },
             ),
         ],
-        if (searched && r.filesSearched == 0 && _scope.coversFiles) _Note(l10n.searchFilesAsleep),
+        if (searched && r.filesSearched == 0 && _scope.coversFiles && !_filesLoading) _Note(l10n.searchFilesAsleep),
         if (ask != null) ...[
           _Header(l10n.quickAsk),
           ask,
@@ -712,7 +738,7 @@ class _SearchViewState extends ConsumerState<SearchView> {
             ),
           ),
         ),
-        SizedBox(height: 2, child: _loading ? const LinearProgressIndicator(key: Key('searchLoading'), minHeight: 2) : null),
+        SizedBox(height: 2, child: _loading || _filesLoading ? const LinearProgressIndicator(key: Key('searchLoading'), minHeight: 2) : null),
         Expanded(
           child: ListView(
             controller: _list,

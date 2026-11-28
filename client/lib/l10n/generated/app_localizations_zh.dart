@@ -47,6 +47,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get keepGoingMessage => '从刚才停下的地方继续。';
 
   @override
+  String get startOver => '重新开始';
+
+  @override
+  String get continueRunHint => '用新的预算从停下的地方继续，而不是从头再做一遍。';
+
+  @override
   String get cancel => '取消';
 
   @override
@@ -749,6 +755,19 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get chooseModel => '选择模型';
+
+  @override
+  String get createBotNeedsModel => 'Choose a model above to create this bot.';
+
+  @override
+  String get createBotKeyRejected =>
+      'The provider rejected this key. Check it in Settings → Model keys, or pick another key.';
+
+  @override
+  String get createBotDiscardTitle => 'Discard This Bot?';
+
+  @override
+  String get createBotDiscardBody => 'What you entered here will be lost.';
 
   @override
   String get searchModels => '搜索模型或输入模型 ID';
@@ -2688,6 +2707,17 @@ class AppLocalizationsZh extends AppLocalizations {
   String get routineWhereMineHelp => '用于处理你本机上的文件和应用。电脑关机时，执行记录会说明情况。';
 
   @override
+  String get routineUsesComputer => 'Uses a computer';
+
+  @override
+  String get routineUsesComputerOn =>
+      'Can save files, run commands and browse pages.';
+
+  @override
+  String get routineUsesComputerOff =>
+      'Reads your apps, the web and memory only. Faster, and never wakes a computer.';
+
+  @override
   String get computerBotsAllowed => '允许的机器人';
 
   @override
@@ -4238,6 +4268,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get chatViewFullTable => '查看完整表格';
 
   @override
+  String get chatShowMore => 'Show more';
+
+  @override
+  String get chatShowLess => 'Show less';
+
+  @override
   String get chatTableTitle => '表格';
 
   @override
@@ -4855,7 +4891,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String groupTipEveryone(String lead) {
-    return '@everyone 会让 $lead 规划任务方案，并将各部分分配给每个机器人。';
+    return '@everyone：$lead 先回答，有可拆分的任务时会分配给各个机器人；否则各机器人依次回答，由最后一个收尾。';
   }
 
   @override
@@ -7324,6 +7360,24 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
+  String get deleteBot => 'Delete Bot';
+
+  @override
+  String deleteBotTitle(String name) {
+    return 'Delete $name?';
+  }
+
+  @override
+  String deleteBotBody(String name) {
+    return 'Every chat with $name is deleted for good, with its messages, photos and files, and $name stops running and leaves the sidebar. Group chats and usage records stay. Its settings and memory move to Archived bots.';
+  }
+
+  @override
+  String botDeleted(String name) {
+    return '$name deleted.';
+  }
+
+  @override
   String get settingsHistory => '设置历史记录';
 
   @override
@@ -7524,6 +7578,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get searchFilesAsleep => '处于休眠状态电脑上的文件不会被搜索。启动电脑即可将其文件纳入搜索。';
+
+  @override
+  String get searchSearching => '正在搜索…';
 
   @override
   String get searchJumpHint => '搜索或跳转至…';
@@ -8414,6 +8471,16 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get groupLeadHint => '当你 @everyone 时，由负责人负责规划工作。轻点顶部的其他机器人即可将其设为负责人。';
+
+  @override
+  String groupLeadIs(String name) {
+    return '$name leads: it plans the work when you @everyone. Tap another bot at the top to make it lead.';
+  }
+
+  @override
+  String groupPickOneMoreLead(String name) {
+    return 'Pick 1 more bot. $name leads; tap another bot at the top to make it lead.';
+  }
 
   @override
   String get groupNeedTwoBots => '群聊至少需要两个机器人。请先再创建一个机器人。';
@@ -16903,6 +16970,16 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get appLockConfirmTitle => '确认是你本人';
+
+  @override
+  String get approvalConfirmTitle => 'Allow This?';
+
+  @override
+  String get approvalConfirmBody =>
+      'This is a high-risk request. Allow the bot to go ahead?';
+
+  @override
+  String get approvalConfirmAllow => 'Allow';
 
   @override
   String appLockUnlockWith(String method) {
@@ -28578,6 +28655,12 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get keepGoingMessage => '從上次停下的地方繼續。';
 
   @override
+  String get startOver => '重新開始';
+
+  @override
+  String get continueRunHint => '用新的預算從停下的地方繼續，而不是從頭再做一遍。';
+
+  @override
   String get cancel => '取消';
 
   @override
@@ -32396,7 +32479,7 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String groupTipEveryone(String lead) {
-    return '輸入 @everyone 可請 $lead 規劃工作並指派部分任務給各個機器人。';
+    return '@everyone：$lead 先回答，有可拆分的工作時會分派給各個機器人；否則各機器人依序回答，由最後一個收尾。';
   }
 
   @override
@@ -34930,6 +35013,9 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get searchFilesAsleep => '不會搜尋休眠中電腦上的檔案。請先啟動電腦，才能將其檔案納入搜尋。';
+
+  @override
+  String get searchSearching => '正在搜尋…';
 
   @override
   String get searchJumpHint => '搜尋或跳轉至…';

@@ -30,6 +30,7 @@ import '../notifications/quiet_hours.dart';
 import '../settings/model_keys_screen.dart';
 import '../settings/settings_screen.dart' show VoiceSettingsDialog;
 import 'a2a_sheet.dart';
+import 'bot_actions.dart';
 import 'bot_email.dart';
 import 'bot_picture.dart';
 import 'bot_template.dart';
@@ -886,28 +887,16 @@ class _BotProfileScreenState extends ConsumerState<BotProfileScreen> {
               title: l10n.archiveBot,
               destructive: true,
               showChevron: false,
-              onTap: () async {
-                final ok = await showConfirm(
-                  context: context,
-                  title: l10n.archiveBotTitle(bot.name),
-                  message: l10n.archiveBotBody,
-                  confirmLabel: l10n.archive,
-                  destructive: true,
-                  icon: LucideIcons.archive,
-                  confirmKey: const Key('confirmArchive'),
-                );
-                if (!ok || !context.mounted) return;
-                final done = await runGuarded(context, () async {
-                  await ref.read(backendProvider).setBotArchived(bot.id, true);
-                  return true;
-                });
-                if (done != true || !context.mounted) return;
-                ref
-                  ..invalidate(botsProvider)
-                  ..invalidate(archivedBotsProvider);
-                showSuccess(context, l10n.botArchived(bot.name));
-                GoRouter.maybeOf(context)?.go('/bots');
-              },
+              onTap: () => confirmArchiveBot(context, ref, bot),
+            ),
+            // Delete (W-N2): its chats go for good and it is archived; see confirmDeleteBot.
+            GroupedTile(
+              key: const Key('deleteBot'),
+              icon: LucideIcons.trash2,
+              title: l10n.deleteBot,
+              destructive: true,
+              showChevron: false,
+              onTap: () => confirmDeleteBot(context, ref, bot),
             ),
           ],
         ),

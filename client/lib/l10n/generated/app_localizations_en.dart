@@ -41,10 +41,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get retry => 'Try Again';
 
   @override
-  String get keepGoing => 'Keep Going';
+  String get keepGoing => 'Continue';
 
   @override
-  String get keepGoingMessage => 'Keep going from where you stopped.';
+  String get keepGoingMessage => 'Continue from where you stopped.';
+
+  @override
+  String get startOver => 'Start Over';
+
+  @override
+  String get continueRunHint =>
+      'Picks up where it stopped, with a new budget, instead of starting the request again.';
 
   @override
   String get cancel => 'Cancel';
@@ -773,6 +780,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get chooseModel => 'Choose a model';
+
+  @override
+  String get createBotNeedsModel => 'Choose a model above to create this bot.';
+
+  @override
+  String get createBotKeyRejected =>
+      'The provider rejected this key. Check it in Settings → Model keys, or pick another key.';
+
+  @override
+  String get createBotDiscardTitle => 'Discard This Bot?';
+
+  @override
+  String get createBotDiscardBody => 'What you entered here will be lost.';
 
   @override
   String get searchModels => 'Search models or type a model id';
@@ -2775,6 +2795,17 @@ class AppLocalizationsEn extends AppLocalizations {
       'For work on your own files and apps. A run says so when the computer was off.';
 
   @override
+  String get routineUsesComputer => 'Uses a computer';
+
+  @override
+  String get routineUsesComputerOn =>
+      'Can save files, run commands and browse pages.';
+
+  @override
+  String get routineUsesComputerOff =>
+      'Reads your apps, the web and memory only. Faster, and never wakes a computer.';
+
+  @override
   String get computerBotsAllowed => 'Bots allowed';
 
   @override
@@ -4348,6 +4379,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chatViewFullTable => 'View full table';
 
   @override
+  String get chatShowMore => 'Show more';
+
+  @override
+  String get chatShowLess => 'Show less';
+
+  @override
   String get chatTableTitle => 'Table';
 
   @override
@@ -4995,7 +5032,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String groupTipEveryone(String lead) {
-    return '@everyone asks $lead to plan the work and hand a part to each bot.';
+    return '@everyone: $lead answers first and hands out parts when there\'s work to split; otherwise each bot answers in turn, and the last one wraps up.';
   }
 
   @override
@@ -7555,6 +7592,24 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get deleteBot => 'Delete Bot';
+
+  @override
+  String deleteBotTitle(String name) {
+    return 'Delete $name?';
+  }
+
+  @override
+  String deleteBotBody(String name) {
+    return 'Every chat with $name is deleted for good, with its messages, photos and files, and $name stops running and leaves the sidebar. Group chats and usage records stay. Its settings and memory move to Archived bots.';
+  }
+
+  @override
+  String botDeleted(String name) {
+    return '$name deleted.';
+  }
+
+  @override
   String get settingsHistory => 'Settings history';
 
   @override
@@ -7759,6 +7814,9 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get searchFilesAsleep =>
       'Files on sleeping computers aren\'t searched. Start a computer to include its files.';
+
+  @override
+  String get searchSearching => 'Searching…';
 
   @override
   String get searchJumpHint => 'Search or jump to…';
@@ -8680,6 +8738,16 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get groupLeadHint =>
       'The lead plans the work when you @everyone. Tap another bot at the top to make it lead.';
+
+  @override
+  String groupLeadIs(String name) {
+    return '$name leads: it plans the work when you @everyone. Tap another bot at the top to make it lead.';
+  }
+
+  @override
+  String groupPickOneMoreLead(String name) {
+    return 'Pick 1 more bot. $name leads; tap another bot at the top to make it lead.';
+  }
 
   @override
   String get groupNeedTwoBots =>
@@ -17545,6 +17613,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get appLockConfirmTitle => 'Confirm It\'s You';
+
+  @override
+  String get approvalConfirmTitle => 'Allow This?';
+
+  @override
+  String get approvalConfirmBody =>
+      'This is a high-risk request. Allow the bot to go ahead?';
+
+  @override
+  String get approvalConfirmAllow => 'Allow';
 
   @override
   String appLockUnlockWith(String method) {

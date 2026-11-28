@@ -172,17 +172,29 @@ abstract class AppLocalizations {
   /// **'Try Again'**
   String get retry;
 
-  /// Button under a reply whose run ran out of steps or time: starts a new run on the same task (D-505).
+  /// Button under a reply whose run ran out of steps, time or its budget: starts a new run in the chat that picks up the stopped run's work (D-505, build 117).
   ///
   /// In en, this message translates to:
-  /// **'Keep Going'**
+  /// **'Continue'**
   String get keepGoing;
 
   /// The chat message Keep Going sends to the bot.
   ///
   /// In en, this message translates to:
-  /// **'Keep going from where you stopped.'**
+  /// **'Continue from where you stopped.'**
   String get keepGoingMessage;
+
+  /// Button beside Continue under a run that stopped at a limit: runs the original request again from the start (build 117).
+  ///
+  /// In en, this message translates to:
+  /// **'Start Over'**
+  String get startOver;
+
+  /// Tooltip on Continue: the new run picks up where the stopped run was instead of redoing it (build 117).
+  ///
+  /// In en, this message translates to:
+  /// **'Picks up where it stopped, with a new budget, instead of starting the request again.'**
+  String get continueRunHint;
 
   /// No description provided for @cancel.
   ///
@@ -1425,6 +1437,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Choose a model'**
   String get chooseModel;
+
+  /// Under the disabled Create button of the New bot dialog.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a model above to create this bot.'**
+  String get createBotNeedsModel;
+
+  /// No description provided for @createBotKeyRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'The provider rejected this key. Check it in Settings → Model keys, or pick another key.'**
+  String get createBotKeyRejected;
+
+  /// No description provided for @createBotDiscardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard This Bot?'**
+  String get createBotDiscardTitle;
+
+  /// No description provided for @createBotDiscardBody.
+  ///
+  /// In en, this message translates to:
+  /// **'What you entered here will be lost.'**
+  String get createBotDiscardBody;
 
   /// No description provided for @searchModels.
   ///
@@ -4372,6 +4408,24 @@ abstract class AppLocalizations {
   /// **'For work on your own files and apps. A run says so when the computer was off.'**
   String get routineWhereMineHelp;
 
+  /// No description provided for @routineUsesComputer.
+  ///
+  /// In en, this message translates to:
+  /// **'Uses a computer'**
+  String get routineUsesComputer;
+
+  /// No description provided for @routineUsesComputerOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Can save files, run commands and browse pages.'**
+  String get routineUsesComputerOn;
+
+  /// No description provided for @routineUsesComputerOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Reads your apps, the web and memory only. Faster, and never wakes a computer.'**
+  String get routineUsesComputerOff;
+
   /// No description provided for @computerBotsAllowed.
   ///
   /// In en, this message translates to:
@@ -6724,6 +6778,18 @@ abstract class AppLocalizations {
   /// **'View full table'**
   String get chatViewFullTable;
 
+  /// Under a very long bot reply that is folded to a few screens' worth.
+  ///
+  /// In en, this message translates to:
+  /// **'Show more'**
+  String get chatShowMore;
+
+  /// No description provided for @chatShowLess.
+  ///
+  /// In en, this message translates to:
+  /// **'Show less'**
+  String get chatShowLess;
+
   /// No description provided for @chatTableTitle.
   ///
   /// In en, this message translates to:
@@ -7675,7 +7741,7 @@ abstract class AppLocalizations {
   /// No description provided for @groupTipEveryone.
   ///
   /// In en, this message translates to:
-  /// **'@everyone asks {lead} to plan the work and hand a part to each bot.'**
+  /// **'@everyone: {lead} answers first and hands out parts when there\'s work to split; otherwise each bot answers in turn, and the last one wraps up.'**
   String groupTipEveryone(String lead);
 
   /// No description provided for @groupTipNoMention.
@@ -11950,6 +12016,30 @@ abstract class AppLocalizations {
   /// **'{name} archived.'**
   String botArchived(String name);
 
+  /// No description provided for @deleteBot.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Bot'**
+  String get deleteBot;
+
+  /// No description provided for @deleteBotTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete {name}?'**
+  String deleteBotTitle(String name);
+
+  /// No description provided for @deleteBotBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Every chat with {name} is deleted for good, with its messages, photos and files, and {name} stops running and leaves the sidebar. Group chats and usage records stay. Its settings and memory move to Archived bots.'**
+  String deleteBotBody(String name);
+
+  /// No description provided for @botDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} deleted.'**
+  String botDeleted(String name);
+
   /// No description provided for @settingsHistory.
   ///
   /// In en, this message translates to:
@@ -12261,6 +12351,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Files on sleeping computers aren\'t searched. Start a computer to include its files.'**
   String get searchFilesAsleep;
+
+  /// Search: shown while the first results haven't come back yet (build 117).
+  ///
+  /// In en, this message translates to:
+  /// **'Searching…'**
+  String get searchSearching;
 
   /// No description provided for @searchJumpHint.
   ///
@@ -13701,6 +13797,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The lead plans the work when you @everyone. Tap another bot at the top to make it lead.'**
   String get groupLeadHint;
+
+  /// No description provided for @groupLeadIs.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} leads: it plans the work when you @everyone. Tap another bot at the top to make it lead.'**
+  String groupLeadIs(String name);
+
+  /// No description provided for @groupPickOneMoreLead.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick 1 more bot. {name} leads; tap another bot at the top to make it lead.'**
+  String groupPickOneMoreLead(String name);
 
   /// No description provided for @groupNeedTwoBots.
   ///
@@ -27591,6 +27699,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Confirm It\'s You'**
   String get appLockConfirmTitle;
+
+  /// Windows: asked in the app instead of Windows Hello before allowing a bot's high-risk request.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow This?'**
+  String get approvalConfirmTitle;
+
+  /// No description provided for @approvalConfirmBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This is a high-risk request. Allow the bot to go ahead?'**
+  String get approvalConfirmBody;
+
+  /// No description provided for @approvalConfirmAllow.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow'**
+  String get approvalConfirmAllow;
 
   /// No description provided for @appLockUnlockWith.
   ///
