@@ -30,6 +30,7 @@ class ShellHeader extends StatelessWidget implements PreferredSizeWidget {
     this.titleTooltip,
     this.showBack,
     this.phoneFallback,
+    this.titleShrinkToFit = false,
   });
 
   final String title;
@@ -63,10 +64,39 @@ class ShellHeader extends StatelessWidget implements PreferredSizeWidget {
   /// there is nothing to pop (a deep link).
   final String? phoneFallback;
 
+  /// A title too long for its room first gets smaller, down to [minTitleScale] of its size, and
+  /// only then is cut short (a bot's long name in a phone chat header).
+  final bool titleShrinkToFit;
+
+  static const double minTitleScale = 0.8;
+
   static const double toolbarHeight = 64;
 
   @override
   Size get preferredSize => Size.fromHeight(toolbarHeight + (bottom?.preferredSize.height ?? 0));
+
+  Widget _title(BuildContext context) {
+    final style = context.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800, fontSize: 22, letterSpacing: -0.4, height: 1.15);
+    Text text(TextStyle? s) => Text(title, maxLines: 1, overflow: TextOverflow.ellipsis, style: s);
+    if (!titleShrinkToFit || style == null) return text(style);
+    return LayoutBuilder(
+      builder: (context, box) {
+        if (!box.hasBoundedWidth) return text(style);
+        final painter = TextPainter(
+          text: TextSpan(text: title, style: style),
+          maxLines: 1,
+          textDirection: Directionality.of(context),
+          textScaler: MediaQuery.textScalerOf(context),
+        )..layout();
+        final wide = painter.width;
+        painter.dispose();
+        if (wide <= box.maxWidth) return text(style);
+        final scale = (box.maxWidth / wide).clamp(minTitleScale, 1.0);
+        // Whole points, so the name doesn't shimmer between sizes as the room changes slightly.
+        return text(style.copyWith(fontSize: (22 * scale).floorToDouble(), letterSpacing: -0.4 * scale));
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,12 +112,7 @@ class ShellHeader extends StatelessWidget implements PreferredSizeWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-          title,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: context.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800, fontSize: 22, letterSpacing: -0.4, height: 1.15),
-        ),
+        _title(context),
         // Coming and going (a bot starts or stops working) slides the title instead of jumping it.
         ShowHide(
           child: subtitle == null || subtitle!.isEmpty
@@ -280,6 +305,10 @@ class HeaderButtonGroup extends StatelessWidget {
   const HeaderButtonGroup({super.key, required this.children});
 
   final List<Widget> children;
+
+  /// Whether [context] is inside a group: its buttons are 36 wide there, with no padding around them.
+  static bool isInside(BuildContext context) =>
+      context.getInheritedWidgetOfExactType<_HeaderGroupScope>() != null;
 
   @override
   Widget build(BuildContext context) {

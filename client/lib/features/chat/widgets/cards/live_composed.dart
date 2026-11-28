@@ -423,49 +423,94 @@ final comparisonComponent = liveCard('Comparison', const ['title', 'items', 'row
     header: LiveHeader(icon: LucideIcons.columns3, title: p.s('title') ?? context.l10n.cardComparison, subtitle: items.join(' vs ')),
     body: LivePanel(
       padding: const EdgeInsets.all(4),
-      child: Table(
-        columnWidths: {0: const FlexColumnWidth(1.1), for (var i = 1; i <= items.length; i++) i: const FlexColumnWidth(1)},
-        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-        children: [
-          TableRow(
-            decoration: BoxDecoration(color: context.colorScheme.surfaceContainerHighest.withValues(alpha: 0.6), borderRadius: BorderRadius.circular(10)),
+      child: LayoutBuilder(
+        builder: (context, box) {
+          // Columns never get so narrow that words split letter by letter: past three or four
+          // items the table keeps a readable width and scrolls sideways instead.
+          final labelW = (box.maxWidth * 0.24).clamp(60.0, 110.0);
+          final fitW = (box.maxWidth - labelW) / items.length;
+          final itemW = fitW < 72 ? 96.0 : fitW;
+          final positive = context.appColors.positive;
+          final table = Table(
+            columnWidths: {0: FixedColumnWidth(labelW), for (var i = 1; i <= items.length; i++) i: FixedColumnWidth(itemW)},
+            defaultVerticalAlignment: TableCellVerticalAlignment.middle,
             children: [
-              const SizedBox(),
-              for (final (i, it) in items.indexed)
-                Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Column(
-                    children: [
-                      Text(it, textAlign: TextAlign.center, style: context.textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w800)),
-                      if (top > 0 && wins[i] == top) Padding(padding: const EdgeInsets.only(top: 2), child: FittedBox(fit: BoxFit.scaleDown, child: LivePill(text: context.l10n.cardWins(wins[i]), color: context.appColors.positive))),
-                    ],
-                  ),
+              TableRow(
+                decoration: BoxDecoration(color: context.colorScheme.surfaceContainerHighest.withValues(alpha: 0.6), borderRadius: BorderRadius.circular(10)),
+                children: [
+                  const SizedBox(),
+                  for (final (i, it) in items.indexed)
+                    TableCell(
+                      verticalAlignment: TableCellVerticalAlignment.top,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(6, 10, 6, 10),
+                        child: Column(
+                          children: [
+                            _WholeWords(it, maxLines: 3, style: context.textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w800)),
+                            if (top > 0 && wins[i] == top) Padding(padding: const EdgeInsets.only(top: 4), child: FittedBox(fit: BoxFit.scaleDown, child: LivePill(text: context.l10n.cardWins(wins[i]), color: positive))),
+                          ],
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+              for (final r in rows)
+                TableRow(
+                  children: [
+                    Padding(padding: const EdgeInsets.fromLTRB(8, 10, 4, 10), child: _WholeWords(r.s('label') ?? '', align: TextAlign.start, style: context.cardLabel?.copyWith(fontWeight: FontWeight.w600))),
+                    for (var i = 0; i < items.length; i++)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 3),
+                        child: Container(
+                          // The best value is marked by a tint, not an icon beside it, so it keeps
+                          // the cell's full width.
+                          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 7),
+                          decoration: r.i('best') == i ? BoxDecoration(color: positive.withValues(alpha: 0.14), borderRadius: BorderRadius.circular(8)) : null,
+                          child: _WholeWords(
+                            i < r.texts('values').length ? r.texts('values')[i] : '—',
+                            style: context.textTheme.bodySmall?.copyWith(fontWeight: r.i('best') == i ? FontWeight.w800 : null, color: r.i('best') == i ? positive : null),
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
             ],
-          ),
-          for (final r in rows)
-            TableRow(
-              children: [
-                Padding(padding: const EdgeInsets.all(8), child: Text(r.s('label') ?? '', style: context.cardLabel?.copyWith(fontWeight: FontWeight.w600))),
-                for (final (i, v) in r.texts('values').indexed)
-                  Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        if (r.i('best') == i) ...[Icon(LucideIcons.badgeCheck, size: 14, color: context.appColors.positive), const SizedBox(width: 3)],
-                        Flexible(child: Text(v, textAlign: TextAlign.center, style: context.textTheme.bodySmall?.copyWith(fontWeight: r.i('best') == i ? FontWeight.w800 : null))),
-                      ],
-                    ),
-                  ),
-              ],
-            ),
-        ],
+          );
+          return fitW < 72 ? SingleChildScrollView(scrollDirection: Axis.horizontal, child: table) : table;
+        },
       ),
     ),
     footer: composedFooter(context, p),
   );
 });
+
+/// Text that shrinks (down to 70%) so its longest word fits on one line, instead of breaking a
+/// word across lines ("Espress / o Roast").
+class _WholeWords extends StatelessWidget {
+  const _WholeWords(this.text, {this.style, this.align = TextAlign.center, this.maxLines});
+  final String text;
+  final TextStyle? style;
+  final TextAlign align;
+  final int? maxLines;
+  @override
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, box) {
+      final base = DefaultTextStyle.of(context).style.merge(style);
+      final size = base.fontSize ?? 14;
+      final scaler = MediaQuery.textScalerOf(context);
+      var widest = 0.0;
+      for (final w in text.split(RegExp(r'\s+'))) {
+        if (w.isEmpty) continue;
+        final tp = TextPainter(text: TextSpan(text: w, style: base), textDirection: Directionality.of(context), textScaler: scaler, maxLines: 1)..layout();
+        if (tp.width > widest) widest = tp.width;
+        tp.dispose();
+      }
+      final room = box.maxWidth.isFinite ? box.maxWidth : widest;
+      final k = widest > room && widest > 0 ? (room / widest).clamp(0.7, 1.0) : 1.0;
+      return Text(text, textAlign: align, maxLines: maxLines, overflow: maxLines == null ? null : TextOverflow.ellipsis, style: base.copyWith(fontSize: size * k));
+    },
+  );
+}
 
 final prosConsComponent = liveCard('ProsCons', const ['title', 'pros', 'cons', 'verdict'], (context, p, ctl) {
   final l = context.l10n;

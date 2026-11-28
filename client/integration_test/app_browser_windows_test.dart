@@ -96,6 +96,9 @@ class _Events implements AppBrowserNativeEvents {
   }
 
   @override
+  void urlChanged(String url, String title) => log.add('url $url "$title"');
+
+  @override
   void userTouched() => log.add('touched');
 
   @override

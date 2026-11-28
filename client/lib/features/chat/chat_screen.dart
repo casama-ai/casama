@@ -1588,7 +1588,10 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             : null,
         titleLeading: group != null
             ? GroupAvatar(bots: [for (final id in group.botIds) ?groupBots.where((b) => b.id == id).firstOrNull], size: 36)
-            : BotAvatar(name: name.isEmpty ? '?' : name, avatar: bot?.avatarUrl, size: 36, status: chat.running ? BotStatusEnum.working : bot?.status),
+            // Phones: a little smaller, for a few more letters of the name.
+            : BotAvatar(name: name.isEmpty ? '?' : name, avatar: bot?.avatarUrl, size: phone ? 32 : 36, status: chat.running ? BotStatusEnum.working : bot?.status),
+        // Phones: a long name gets a little smaller before it's cut short.
+        titleShrinkToFit: phone,
         // Phones: a small sheet with the bot's ways in (profile, topics, Made Here), since the
         // header has no room for them; wider screens go straight to the profile.
         onTitleTap: widget.group
@@ -3265,12 +3268,18 @@ class _MoreMenu extends ConsumerWidget {
       onPressed: onPressed,
       child: Padding(padding: const EdgeInsets.only(right: 24), child: Text(label)),
     );
-    // A fixed width lets the menu's right edge line up with the button (42 wide with its padding).
+    // A fixed width lets the menu's right edge line up with the button: 42 wide with its padding,
+    // 36 inside the phone header's capsule.
     const menuWidth = 260.0;
+    final buttonWidth = HeaderButtonGroup.isInside(context) ? 36.0 : 42.0;
     return MenuAnchor(
-      alignmentOffset: const Offset(-(menuWidth - 42), 6),
+      alignmentOffset: Offset(-(menuWidth - buttonWidth), 6),
       style: const MenuStyle(minimumSize: WidgetStatePropertyAll(Size(menuWidth, 0)), maximumSize: WidgetStatePropertyAll(Size(menuWidth, double.infinity))),
       menuChildren: [
+        // The panel sizes itself to its widest item (about 170 wide) whatever the style says, which
+        // put the menu toward the middle of a phone instead of under this button: this holds it at
+        // menuWidth so the offset above lines its right edge up with the button.
+        const SizedBox(width: menuWidth),
         if (onConversations != null) item(LucideIcons.messagesSquare, l10n.topics, onConversations!, key: const Key('openConversations')),
         if (madeHereIn case final conv?)
           if (ref.watch(madeHereProvider((botId: botId, conversationId: conv.isEmpty ? null : conv))).value case final made? when made.count > 0)

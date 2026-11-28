@@ -82,6 +82,35 @@ void main() {
     }
   }
 
+  testWidgets('a Comparison keeps long names whole and scrolls when there are many items', (tester) async {
+    Map<String, Object?> card(List<String> items) => {
+      'component': 'Comparison',
+      'title': 'Starbucks whole beans on Lazada',
+      'items': items,
+      'rows': [
+        {'label': 'Price', 'values': [for (final _ in items) '₱1,150 (was ₱1,300)'], 'best': items.length - 1},
+        {'label': 'Sold / rating', 'values': [for (final _ in items) '1.5K sold · 4.9 (327)'], 'best': 0},
+        {'label': 'Seller', 'values': [for (final _ in items) 'BARISTA HOUSE · 98%'], 'best': 0},
+        {'label': 'Delivery', 'values': ['5–10 Dec'], 'best': 0},
+      ],
+    };
+    await show(tester, [
+      {'id': 'root', ...card(['Espresso Roast', 'Sumatra Dark', 'House Blend (Japan)'])},
+    ], size: const Size(390, 2400));
+    _noErrors(tester);
+    expect(find.text('Espresso Roast'), findsOneWidget);
+    expect(find.text('Wins 3'), findsOneWidget);
+    // A row with fewer values than items fills the gap instead of shifting columns.
+    expect(find.text('—'), findsNWidgets(2));
+    await tester.pumpWidget(const SizedBox());
+    await show(tester, [
+      {'id': 'root', ...card(['Espresso Roast', 'Sumatra Dark', 'House Blend', 'Veranda Blend', 'Pike Place'])},
+    ], size: const Size(390, 2400));
+    _noErrors(tester);
+    expect(find.descendant(of: find.byKey(const Key('botUi-ui_live')), matching: find.byWidgetPredicate((w) => w is SingleChildScrollView && w.scrollDirection == Axis.horizontal)), findsOneWidget);
+    await tester.pumpWidget(const SizedBox());
+  });
+
   testWidgets('a Dashboard lays several cards out', (tester) async {
     await show(tester, [
       {'id': 'root', 'component': 'Dashboard', 'title': 'Morning brief', 'children': ['w', 'q', 'c']},
