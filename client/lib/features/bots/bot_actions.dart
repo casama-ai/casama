@@ -37,7 +37,7 @@ Future<bool> confirmArchiveBot(
     return true;
   });
   if (done != true || !context.mounted) return false;
-  await _gone(context, ref, bot);
+  await _gone(context, bot);
   if (context.mounted) showSuccess(context, l10n.botArchived(bot.name));
   return true;
 }
@@ -67,8 +67,7 @@ Future<bool> confirmDeleteBot(
     return skipped;
   });
   if (skipped == null || !context.mounted) return false;
-  ref.invalidate(conversationsProvider(bot.id));
-  await _gone(context, ref, bot);
+  await _gone(context, bot, chatsDeleted: true);
   if (!context.mounted) return true;
   if (skipped > 0) {
     showWarning(
@@ -81,16 +80,25 @@ Future<bool> confirmDeleteBot(
   return true;
 }
 
-/// Off the list at once (cache included), then away from its pages if one is open.
-Future<void> _gone(BuildContext context, WidgetRef ref, Bot bot) async {
+/// Away from its pages first, then off the list (cache included) on a later frame. Dropping the
+/// bot and refreshing its chats while its chat or profile was still on screen rebuilt the chat list
+/// twice in one frame, and the app froze (customer 117 checks, Delete on Windows). The screen that
+/// asked may close on the way, so the rest goes through the provider container.
+Future<void> _gone(
+  BuildContext context,
+  Bot bot, {
+  bool chatsDeleted = false,
+}) async {
+  final container = ProviderScope.containerOf(context, listen: false);
   final router = GoRouter.maybeOf(context);
-  await ref.read(botsProvider.notifier).drop(bot.id);
-  ref
+  final at = router?.state.uri.path;
+  if (router != null && at != null && (at.startsWith('/bots/${bot.id}/') || at == '/bots/${bot.id}')) {
+    router.go('/bots');
+    await WidgetsBinding.instance.endOfFrame;
+  }
+  await container.read(botsProvider.notifier).drop(bot.id);
+  container
     ..invalidate(botsProvider)
     ..invalidate(archivedBotsProvider);
-  if (router == null) return;
-  final at = router.state.uri.path;
-  if (at.startsWith('/bots/${bot.id}/') || at == '/bots/${bot.id}') {
-    router.go('/bots');
-  }
+  if (chatsDeleted) container.invalidate(conversationsProvider(bot.id));
 }

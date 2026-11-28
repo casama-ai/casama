@@ -263,6 +263,10 @@ class ChatScreen extends ConsumerStatefulWidget {
   ConsumerState<ChatScreen> createState() => _ChatScreenState();
 }
 
+/// How long a chat waits for its bot to show up in the list before it leaves (see `_watchGone`).
+@visibleForTesting
+const botGoneWait = Duration(seconds: 2);
+
 class _ChatScreenState extends ConsumerState<ChatScreen> {
   late final ChatFocusReporter _chatFocus;
   String? _focusedConversation;
@@ -737,8 +741,28 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     unawaited(ref.read(chatControllerProvider(widget.botId).notifier).open(widget.conversationId ?? chat.conversationId));
   }
 
+  /// A bot that's gone from the list (archived or deleted elsewhere: by itself in chat, on another
+  /// device, or before a restart that reopened its chat) leaves its chat for the bot list instead of
+  /// "Say hello to ." with no name (customer 117 checks). It waits a moment, so a bot made a moment
+  /// ago and not in the list yet isn't sent away.
+  Timer? _goneTimer;
+
+  void _watchGone(Bot? bot, bool listLoaded) {
+    if (bot != null || !listLoaded || widget.group) {
+      _goneTimer?.cancel();
+      _goneTimer = null;
+      return;
+    }
+    _goneTimer ??= Timer(botGoneWait, () {
+      _goneTimer = null;
+      if (!mounted || ref.read(botProvider(widget.botId)) != null) return;
+      GoRouter.maybeOf(context)?.go('/bots');
+    });
+  }
+
   @override
   void dispose() {
+    _goneTimer?.cancel();
     serverReachability.removeListener(_serverBack);
     DroppedFiles.release(_droppedFromApp);
     _chatFocus.close(_focusedConversation);
@@ -1412,6 +1436,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final bot = ref.watch(botProvider(widget.botId));
+    _watchGone(bot, ref.watch(botsProvider.select((b) => b.hasValue && !b.isLoading)));
     // Only what the screen around the thread shows. A streamed word changes none of it, so it
     // rebuilds the thread alone (the Consumer below), not the header and the composer.
     final chat = ref.watch(chatControllerProvider(widget.botId).select((c) => _chatFrame(c, group: widget.group)));

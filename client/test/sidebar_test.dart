@@ -163,6 +163,8 @@ void main() {
   }
 
   String at(WidgetTester tester) => GoRouter.of(tester.element(find.byType(ChatScreen))).state.uri.toString();
+  // Also when no chat is on screen.
+  String where(WidgetTester tester) => GoRouter.of(tester.element(find.byType(Navigator).last)).state.uri.toString();
 
   Future<void> cyStartsWorking(WidgetTester tester, FakeBackend backend) async {
     backend.extraBots[1] = backend.bot(id: 'c', name: 'Cy', status: BotStatusEnum.working);
@@ -239,6 +241,37 @@ void main() {
     await tester.tap(find.byKey(const Key('botMenuProfile')));
     await tester.pumpAndSettle();
     expect(find.byType(BotProfileScreen), findsOneWidget);
+  });
+
+  testWidgets('deleting the bot whose chat is open leaves its chat without a rebuild error (117 checks, Delete froze Windows)', (tester) async {
+    final backend = await openApp(tester);
+    final row = find.byKey(const Key('sidebar-bot-$botId'));
+    await tester.tap(row, buttons: kSecondaryMouseButton, kind: PointerDeviceKind.mouse);
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('botMenuDelete')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('confirmDeleteBot')));
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+    expect(backend.clearedBots, contains(botId));
+    expect(where(tester), isNot(startsWith('/bots/$botId')));
+    expect(find.text('Say hello to .'), findsNothing);
+  });
+
+  testWidgets('a chat whose bot left the list elsewhere goes to the bot list, not "Say hello to ." (117 checks)', (tester) async {
+    final backend = await openApp(tester);
+    expect(at(tester), startsWith('/bots/$botId'));
+    // Archived by itself in chat (or on another device): the next list read lacks it.
+    await backend.setBotArchived(botId, true);
+    ProviderScope.containerOf(tester.element(find.byType(ChatScreen))).invalidate(botsProvider);
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+    // Still there for a moment (a bot made a moment ago isn't in the list yet either)…
+    expect(where(tester), startsWith('/bots/$botId'));
+    // …then it leaves.
+    await tester.pump(botGoneWait + const Duration(milliseconds: 100));
+    await tester.pumpAndSettle();
+    expect(where(tester), isNot(startsWith('/bots/$botId')));
   });
 
   testWidgets('Ctrl+2 goes to Needs you even when the keyboard focus is outside the shell (Windows 117 check 19)', (tester) async {

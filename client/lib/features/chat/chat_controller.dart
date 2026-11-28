@@ -1366,6 +1366,8 @@ class ChatController extends Notifier<ChatState> {
       return true;
     }
     final key = 'msgs:$id';
+    await _restoreUnsent(cache, id);
+    if (stale()) return false;
     if (!showingCached || state.conversationId != id) {
       await loadCached(id);
       if (stale()) return false;
@@ -1644,6 +1646,7 @@ class ChatController extends Notifier<ChatState> {
           // The first failure counts for the resend window, however often it was tried since.
           final since = _firstFailure[key] ??= DateTime.now();
           _unsent[o.id] = (skills: skills, apps: apps, uiAction: uiAction, key: key, connection: isConnectionFailure(e), failedAt: since);
+          unawaited(_saveUnsent(chat));
         }
       }
       if (chat == null || state.conversationId == chat) state = state.copyWith(sending: false);
@@ -1785,6 +1788,7 @@ class ChatController extends Notifier<ChatState> {
     final m = state.entries[i] as MessageEntry;
     final extra = _unsent.remove(id);
     state = state.copyWith(entries: [...state.entries]..removeAt(i));
+    if (state.conversationId case final c?) unawaited(_saveUnsent(c));
     await send(m.text, attachments: m.attachments, skills: extra?.skills ?? const [], apps: extra?.apps ?? m.apps, uiAction: extra?.uiAction, idempotencyKey: extra?.key);
   }
 
@@ -1793,6 +1797,45 @@ class ChatController extends Notifier<ChatState> {
     final u = _unsent.remove(id);
     if (u != null) _firstFailure.remove(u.key);
     state = state.copyWith(entries: [for (final e in state.entries) if (!(e is MessageEntry && e.id == id && e.failed)) e]);
+    if (state.conversationId case final c?) unawaited(_saveUnsent(c));
+  }
+
+  /// Not sent messages are kept on this device too, so they keep their place after the app is
+  /// closed and opened again (the customer's Windows check 58: they were only in memory, and a
+  /// restart lost them). Words only: a message with files stays in memory as before.
+  Future<void> _saveUnsent(String conversationId) async {
+    final failed = [
+      for (final e in _notDelivered(conversationId))
+        if (e is MessageEntry && e.failed && e.attachments.isEmpty) e,
+    ];
+    final cache = ref.read(localCacheProvider);
+    await cacheWrite(cache, 'unsent:$conversationId', [
+      for (final m in failed)
+        {
+          'id': m.id,
+          'text': m.text,
+          'at': m.at?.toUtc().toIso8601String(),
+          'key': ?_unsent[m.id]?.key,
+        },
+    ]);
+  }
+
+  /// Brings back this chat's Not sent messages saved by [_saveUnsent], unless they're already here.
+  Future<void> _restoreUnsent(LocalCache cache, String conversationId) async {
+    if (_parked.containsKey(conversationId)) return;
+    if (state.conversationId == conversationId && state.entries.any(_local)) return;
+    final saved = await cacheRead(cache, 'unsent:$conversationId');
+    if (saved is! List || saved.isEmpty) return;
+    final back = <ChatEntry>[];
+    for (final j in saved) {
+      if (j is! Map || j['id'] is! String || j['text'] is! String) continue;
+      final id = j['id'] as String;
+      back.add(MessageEntry(id: id, role: 'user', text: j['text'] as String, failed: true, at: DateTime.tryParse('${j['at']}')?.toLocal()));
+      if (j['key'] case final String k) {
+        _unsent[id] = (skills: const [], apps: const [], uiAction: null, key: k, connection: false, failedAt: DateTime.now());
+      }
+    }
+    if (back.isNotEmpty) _parked[conversationId] = back;
   }
 
   /// Sends the last message again after its run failed: the words, the files, the skills picked

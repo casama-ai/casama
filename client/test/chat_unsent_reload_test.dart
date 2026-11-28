@@ -2,6 +2,7 @@
 import 'dart:async';
 
 import 'package:casama/core/backend.dart';
+import 'package:casama/core/local_cache.dart';
 import 'package:casama/core/providers.dart';
 import 'package:casama/features/chat/chat_controller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -63,5 +64,59 @@ void main() {
     expect(messages(container).last.uploading, isTrue);
     uploads.complete(true);
     await sending;
+  });
+  test('a Not sent message is still there, in its place, after the app is closed and opened again (117 Windows check 58)', () async {
+    final cache = MemoryCache();
+    ProviderContainer start(FakeBackend backend) {
+      final c = ProviderContainer(overrides: [backendProvider.overrideWithValue(backend), localCacheProvider.overrideWithValue(cache)]);
+      addTearDown(c.dispose);
+      c.listen(chatControllerProvider(botId), (_, _) {});
+      return c;
+    }
+
+    final backend = FakeBackend()
+      ..storedMessages = [ChatMessageView(id: 'm-1', role: 'assistant', text: 'Hello', createdAt: DateTime(2026))];
+    final first = start(backend);
+    final c1 = first.read(chatControllerProvider(botId).notifier);
+    await c1.open(convId);
+    backend.failNextSend = Exception('connection refused');
+    await expectLater(c1.send('Book the hotel'), throwsException);
+    await Future<void>.delayed(Duration.zero);
+    first.dispose();
+
+    // The app opens again.
+    final again = FakeBackend()..storedMessages = backend.storedMessages;
+    final second = start(again);
+    final c2 = second.read(chatControllerProvider(botId).notifier);
+    await c2.open(convId);
+    final kept = messages(second).last;
+    expect(kept.text, 'Book the hotel');
+    expect(kept.failed, isTrue);
+    expect(messages(second).first.text, 'Hello');
+
+    // Try Again sends it and it's no longer saved as Not sent.
+    await c2.resend(kept.id);
+    expect(again.sent, ['Book the hotel']);
+    await Future<void>.delayed(Duration.zero);
+    expect(await cache.read('unsent:$convId'), isEmpty);
+  });
+
+  test("a discarded Not sent message doesn't come back after a restart", () async {
+    final cache = MemoryCache();
+    final backend = FakeBackend();
+    final first = ProviderContainer(overrides: [backendProvider.overrideWithValue(backend), localCacheProvider.overrideWithValue(cache)]);
+    first.listen(chatControllerProvider(botId), (_, _) {});
+    final c1 = first.read(chatControllerProvider(botId).notifier);
+    await c1.open(convId);
+    backend.failNextSend = Exception('connection refused');
+    await expectLater(c1.send('Never mind'), throwsException);
+    c1.discardUnsent(messages(first).last.id);
+    await Future<void>.delayed(Duration.zero);
+    first.dispose();
+    final second = ProviderContainer(overrides: [backendProvider.overrideWithValue(FakeBackend()), localCacheProvider.overrideWithValue(cache)]);
+    addTearDown(second.dispose);
+    second.listen(chatControllerProvider(botId), (_, _) {});
+    await second.read(chatControllerProvider(botId).notifier).open(convId);
+    expect(messages(second).where((m) => m.failed), isEmpty);
   });
 }

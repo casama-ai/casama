@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:auto_updater/auto_updater.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:package_info_plus/package_info_plus.dart';
@@ -39,23 +40,49 @@ const _autoKey = 'updates.auto';
 const _checkEvery = 6 * 3600;
 
 /// Starts the updater once (watched by the app root): the feed, and background checks unless they
-/// were turned off.
+/// were turned off. It waits for the first frame first (`updaterGate`).
 final updaterProvider = Provider<void>((ref) {
   if (!selfUpdating) return;
+  Timer? pause;
+  var gone = false;
+  ref.onDispose(() {
+    gone = true;
+    pause?.cancel();
+  });
   unawaited(() async {
-    try {
-      final platform = defaultTargetPlatform == TargetPlatform.macOS ? 'macos' : 'windows';
-      await autoUpdater.setFeedURL('$kUpdateFeedBase/appcast-$platform.xml');
-      if (await autoUpdateChecks()) {
-        await autoUpdater.setScheduledCheckInterval(_checkEvery);
-        await autoUpdater.checkForUpdates(inBackground: true);
-      }
-    } catch (e, st) {
-      debugPrint('updater: $e');
-      Telemetry.captureException(e, st, context: {'service': 'updater'}, warning: true);
-    }
+    await updaterGate();
+    if (gone) return;
+    pause = Timer(updaterPause, () => unawaited(updaterStart()));
   }());
 });
+
+/// What the updater waits for before it starts: the first frame; then [updaterPause]. WinSparkle's
+/// "Check for updates automatically?" prompt (second launch) opened before Flutter's first frame,
+/// and the Windows window stayed white until the prompt was answered (customer build 117 checks).
+@visibleForTesting
+Future<void> Function() updaterGate = () => WidgetsBinding.instance.endOfFrame;
+
+/// The pause after the first frame before the updater starts (a timer the provider cancels when
+/// it's disposed, so a closed app or a finished test leaves nothing waiting).
+@visibleForTesting
+Duration updaterPause = const Duration(seconds: 3);
+
+@visibleForTesting
+Future<void> Function() updaterStart = _startUpdater;
+
+Future<void> _startUpdater() async {
+  try {
+    final platform = defaultTargetPlatform == TargetPlatform.macOS ? 'macos' : 'windows';
+    await autoUpdater.setFeedURL('$kUpdateFeedBase/appcast-$platform.xml');
+    if (await autoUpdateChecks()) {
+      await autoUpdater.setScheduledCheckInterval(_checkEvery);
+      await autoUpdater.checkForUpdates(inBackground: true);
+    }
+  } catch (e, st) {
+    debugPrint('updater: $e');
+    Telemetry.captureException(e, st, context: {'service': 'updater'}, warning: true);
+  }
+}
 
 /// "Check for updates": the updater's own window (found, downloading, up to date).
 Future<void> checkForUpdatesNow() => autoUpdater.checkForUpdates();
