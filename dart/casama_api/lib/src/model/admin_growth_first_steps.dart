@@ -22,6 +22,8 @@ class AdminGrowthFirstSteps {
 
     required  this.signedUp,
 
+     this.openedApp,
+
     required  this.madeBot,
 
     required  this.sentMessage,
@@ -29,6 +31,14 @@ class AdminGrowthFirstSteps {
     required  this.firstValue,
 
     required  this.cameBack,
+
+     this.returnedDay2,
+
+     this.habitWeek,
+
+     this.connectedApp,
+
+     this.usedRoutine,
   });
 
   @JsonKey(
@@ -40,6 +50,18 @@ class AdminGrowthFirstSteps {
 
 
   final int signedUp;
+
+
+
+  @JsonKey(
+    
+    name: r'opened_app',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final int? openedApp;
 
 
 
@@ -91,23 +113,81 @@ class AdminGrowthFirstSteps {
 
 
 
+  @JsonKey(
+    
+    name: r'returned_day2',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final int? returnedDay2;
+
+
+
+  @JsonKey(
+    
+    name: r'habit_week',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final int? habitWeek;
+
+
+
+  @JsonKey(
+    
+    name: r'connected_app',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final int? connectedApp;
+
+
+
+  @JsonKey(
+    
+    name: r'used_routine',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final int? usedRoutine;
+
+
+
 
 
     @override
     bool operator ==(Object other) => identical(this, other) || other is AdminGrowthFirstSteps &&
       other.signedUp == signedUp &&
+      other.openedApp == openedApp &&
       other.madeBot == madeBot &&
       other.sentMessage == sentMessage &&
       other.firstValue == firstValue &&
-      other.cameBack == cameBack;
+      other.cameBack == cameBack &&
+      other.returnedDay2 == returnedDay2 &&
+      other.habitWeek == habitWeek &&
+      other.connectedApp == connectedApp &&
+      other.usedRoutine == usedRoutine;
 
     @override
     int get hashCode =>
         signedUp.hashCode +
+        openedApp.hashCode +
         madeBot.hashCode +
         sentMessage.hashCode +
         firstValue.hashCode +
-        cameBack.hashCode;
+        cameBack.hashCode +
+        returnedDay2.hashCode +
+        habitWeek.hashCode +
+        connectedApp.hashCode +
+        usedRoutine.hashCode;
 
   factory AdminGrowthFirstSteps.fromJson(Map<String, dynamic> json) => _$AdminGrowthFirstStepsFromJson(json);
 

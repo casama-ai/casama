@@ -146,4 +146,9 @@
     <string name="watch_not_on_watch" formatted="false">이 워치에서는 응답할 수 없어요. 휴대폰에서 열어 주세요</string>
     <string name="watch_more_on_phone">휴대폰에 %1$s건 더 있음</string>
     <string name="watch_share_crash_reports" formatted="false">비정상 종료 리포트 공유</string>
+    <string name="watch_turn_on" formatted="false">켜기</string>
+    <string name="watch_got_it" formatted="false">확인</string>
+    <string name="watch_remind_me" formatted="false">알림 설정</string>
+    <string name="watch_later" formatted="false">나중에</string>
+    <string name="watch_open" formatted="false">열기</string>
 </resources>

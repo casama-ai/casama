@@ -146,4 +146,9 @@
     <string name="watch_not_on_watch" formatted="false">Đồng hồ chưa trả lời được mục này. Hãy mở trên điện thoại</string>
     <string name="watch_more_on_phone">còn %1$s mục nữa trên điện thoại</string>
     <string name="watch_share_crash_reports" formatted="false">Chia sẻ báo cáo sự cố</string>
+    <string name="watch_turn_on" formatted="false">Bật</string>
+    <string name="watch_got_it" formatted="false">Đã hiểu</string>
+    <string name="watch_remind_me" formatted="false">Nhắc nhở</string>
+    <string name="watch_later" formatted="false">Để sau</string>
+    <string name="watch_open" formatted="false">Mở</string>
 </resources>

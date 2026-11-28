@@ -146,4 +146,9 @@
     <string name="watch_not_on_watch" formatted="false">このリクエストにはウォッチから応答できません。スマートフォンで開いてください</string>
     <string name="watch_more_on_phone">スマートフォンにほか%1$s件</string>
     <string name="watch_share_crash_reports" formatted="false">クラッシュレポートを共有</string>
+    <string name="watch_turn_on" formatted="false">オンにする</string>
+    <string name="watch_got_it" formatted="false">了解</string>
+    <string name="watch_remind_me" formatted="false">リマインド</string>
+    <string name="watch_later" formatted="false">あとで</string>
+    <string name="watch_open" formatted="false">開く</string>
 </resources>

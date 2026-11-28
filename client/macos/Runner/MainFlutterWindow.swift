@@ -715,6 +715,9 @@ final class AppBrowser: NSObject, WKNavigationDelegate, WKUIDelegate, FlutterPla
   static let shared = AppBrowser()
   /// Fixed identifier for the bots' separate cookie store (requires macOS 14+).
   private static let store = UUID(uuidString: "6B0F4C1E-5C0A-4A7E-9C2B-CA5A3A0B0751")!
+  /// Safari on iPhone, sent while the window is phone-narrow (see decidePolicyFor).
+  fileprivate static let phoneUserAgent =
+    "Mozilla/5.0 (iPhone; CPU iPhone OS 18_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Mobile/15E148 Safari/604.1"
   private var channel: FlutterMethodChannel?
   private var registrar: FlutterPluginRegistrar?
   private weak var mainWindow: NSWindow?
@@ -980,6 +983,11 @@ final class AppBrowser: NSObject, WKNavigationDelegate, WKUIDelegate, FlutterPla
   func webView(_ webView: WKWebView, decidePolicyFor action: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
     guard action.targetFrame?.isMainFrame ?? true, let url = action.request.url else { return decisionHandler(.allow) }
     let raw = url.absoluteString
+    // A phone-narrow window gets sites' phone layouts: desktop layouts (Lazada, Shopee) have a
+    // minimum width and spill off the side of a 540-point browser. Wider windows stay desktop.
+    let narrow = webView.bounds.width > 0 && webView.bounds.width < 600
+    let agent: String? = narrow ? AppBrowser.phoneUserAgent : nil
+    if webView.customUserAgent != agent { webView.customUserAgent = agent }
     if raw == "about:blank" || approved.remove(raw) != nil { return decisionHandler(.allow) }
     let user = action.navigationType == .linkActivated || action.navigationType == .formSubmitted
     ask("navigate", ["url": raw, "redirect": action.navigationType == .other, "user": user]) { ok in

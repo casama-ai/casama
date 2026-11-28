@@ -146,4 +146,9 @@
     <string name="watch_not_on_watch" formatted="false">Diese Watch kann dies nicht beantworten. Öffne es auf deinem Telefon</string>
     <string name="watch_more_on_phone">%1$s weitere auf deinem Telefon</string>
     <string name="watch_share_crash_reports" formatted="false">Absturzberichte teilen</string>
+    <string name="watch_turn_on" formatted="false">Einschalten</string>
+    <string name="watch_got_it" formatted="false">Verstanden</string>
+    <string name="watch_remind_me" formatted="false">Erinnern</string>
+    <string name="watch_later" formatted="false">Später</string>
+    <string name="watch_open" formatted="false">Öffnen</string>
 </resources>

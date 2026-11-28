@@ -152,4 +152,8 @@
     <string name="siri_count_things_need_you">Có {count} việc cần bạn.</string>
     <string name="siri_unlock_phone">Mở khóa điện thoại rồi thử lại.</string>
     <string name="siri_gemini_off">Gemini đang tắt đối với Casama trên điện thoại này (Casama → Cài đặt → Quyền riêng tư).</string>
+    <string name="notif_turn_on">Bật</string>
+    <string name="notif_open">Mở</string>
+    <string name="notif_got_it">Đã hiểu</string>
+    <string name="notif_remind_me">Nhắc tôi</string>
 </resources>

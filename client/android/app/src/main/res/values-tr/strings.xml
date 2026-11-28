@@ -152,4 +152,8 @@
     <string name="siri_count_things_need_you">{count} şey sizden yanıt bekliyor.</string>
     <string name="siri_unlock_phone">Telefonunuzun kilidini açın ve tekrar deneyin.</string>
     <string name="siri_gemini_off">Bu telefonda Casama için Gemini kapalı (Casama → Ayarlar → Gizlilik).</string>
+    <string name="notif_turn_on">Aç</string>
+    <string name="notif_open">Aç</string>
+    <string name="notif_got_it">Anladım</string>
+    <string name="notif_remind_me">Bana hatırlat</string>
 </resources>

@@ -146,4 +146,9 @@
     <string name="watch_not_on_watch" formatted="false">L’orologio non può rispondere a questa. Aprila sul telefono</string>
     <string name="watch_more_on_phone">Altri %1$s sul telefono</string>
     <string name="watch_share_crash_reports" formatted="false">Condividi segnalazioni di arresto</string>
+    <string name="watch_turn_on" formatted="false">Attiva</string>
+    <string name="watch_got_it" formatted="false">Ho capito</string>
+    <string name="watch_remind_me" formatted="false">Ricorda</string>
+    <string name="watch_later" formatted="false">Più tardi</string>
+    <string name="watch_open" formatted="false">Apri</string>
 </resources>

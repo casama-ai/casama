@@ -152,4 +152,8 @@
     <string name="siri_count_things_need_you">{count} hal perlu kamu tangani.</string>
     <string name="siri_unlock_phone">Buka kunci ponselmu lalu coba lagi.</string>
     <string name="siri_gemini_off">Gemini dinonaktifkan untuk Casama di ponsel ini (Casama → Pengaturan → Privasi).</string>
+    <string name="notif_turn_on">Nyalakan</string>
+    <string name="notif_open">Buka</string>
+    <string name="notif_got_it">Mengerti</string>
+    <string name="notif_remind_me">Ingatkan saya</string>
 </resources>

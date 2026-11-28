@@ -152,4 +152,8 @@
     <string name="siri_count_things_need_you">{count} Dinge brauchen dich.</string>
     <string name="siri_unlock_phone">Entsperre dein Telefon und versuche es erneut.</string>
     <string name="siri_gemini_off">Gemini ist für Casama auf diesem Telefon ausgeschaltet (Casama → Einstellungen → Datenschutz).</string>
+    <string name="notif_turn_on">Einschalten</string>
+    <string name="notif_open">Öffnen</string>
+    <string name="notif_got_it">Verstanden</string>
+    <string name="notif_remind_me">Mich erinnern</string>
 </resources>

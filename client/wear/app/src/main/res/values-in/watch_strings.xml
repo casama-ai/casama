@@ -146,4 +146,9 @@
     <string name="watch_not_on_watch" formatted="false">Jam tangan ini tidak bisa menjawab yang satu ini. Buka di ponselmu</string>
     <string name="watch_more_on_phone">%1$s lagi di ponselmu</string>
     <string name="watch_share_crash_reports" formatted="false">Bagikan laporan kerusakan</string>
+    <string name="watch_turn_on" formatted="false">Nyalakan</string>
+    <string name="watch_got_it" formatted="false">Mengerti</string>
+    <string name="watch_remind_me" formatted="false">Ingatkan</string>
+    <string name="watch_later" formatted="false">Nanti</string>
+    <string name="watch_open" formatted="false">Buka</string>
 </resources>

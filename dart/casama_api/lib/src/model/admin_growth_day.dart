@@ -26,6 +26,8 @@ class AdminGrowthDay {
 
     required  this.activePeople,
 
+     this.typers,
+
     required  this.messages,
 
     required  this.runsChat,
@@ -78,6 +80,18 @@ class AdminGrowthDay {
 
 
   final int activePeople;
+
+
+
+  @JsonKey(
+    
+    name: r'typers',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final int? typers;
 
 
 
@@ -196,6 +210,7 @@ class AdminGrowthDay {
       other.date == date &&
       other.signups == signups &&
       other.activePeople == activePeople &&
+      other.typers == typers &&
       other.messages == messages &&
       other.runsChat == runsChat &&
       other.runsRoutine == runsRoutine &&
@@ -211,6 +226,7 @@ class AdminGrowthDay {
         date.hashCode +
         signups.hashCode +
         activePeople.hashCode +
+        typers.hashCode +
         messages.hashCode +
         runsChat.hashCode +
         runsRoutine.hashCode +

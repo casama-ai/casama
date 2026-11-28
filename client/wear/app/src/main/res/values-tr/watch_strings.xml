@@ -146,4 +146,9 @@
     <string name="watch_not_on_watch" formatted="false">Bu saat bunu yanıtlayamaz. Telefonunuzda açın</string>
     <string name="watch_more_on_phone">Telefonunuzda %1$s tane daha</string>
     <string name="watch_share_crash_reports" formatted="false">Çökme raporlarını paylaş</string>
+    <string name="watch_turn_on" formatted="false">Aç</string>
+    <string name="watch_got_it" formatted="false">Anladım</string>
+    <string name="watch_remind_me" formatted="false">Hatırlat</string>
+    <string name="watch_later" formatted="false">Daha sonra</string>
+    <string name="watch_open" formatted="false">Aç</string>
 </resources>

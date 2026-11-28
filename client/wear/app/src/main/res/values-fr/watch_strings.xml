@@ -146,4 +146,9 @@
     <string name="watch_not_on_watch" formatted="false">Cette montre ne peut pas répondre à celle-ci. Ouvrez-la sur votre téléphone</string>
     <string name="watch_more_on_phone">%1$s de plus sur votre téléphone</string>
     <string name="watch_share_crash_reports" formatted="false">Partager les rapports de plantage</string>
+    <string name="watch_turn_on" formatted="false">Activer</string>
+    <string name="watch_got_it" formatted="false">Compris</string>
+    <string name="watch_remind_me" formatted="false">Rappeler</string>
+    <string name="watch_later" formatted="false">Plus tard</string>
+    <string name="watch_open" formatted="false">Ouvrir</string>
 </resources>

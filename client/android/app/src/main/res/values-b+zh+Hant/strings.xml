@@ -152,4 +152,8 @@
     <string name="siri_count_things_need_you">有 {count} 件事項待你處理。</string>
     <string name="siri_unlock_phone">請先解鎖手機，然後重試。</string>
     <string name="siri_gemini_off">這支手機已關閉 Gemini 對 Casama 的存取權（Casama → 設定 → 隱私權）。</string>
+    <string name="notif_turn_on">開啟</string>
+    <string name="notif_open">開啟</string>
+    <string name="notif_got_it">我知道了</string>
+    <string name="notif_remind_me">提醒我</string>
 </resources>

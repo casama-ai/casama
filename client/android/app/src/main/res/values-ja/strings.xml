@@ -152,4 +152,8 @@
     <string name="siri_count_things_need_you">{count}件の確認待ちがあります。</string>
     <string name="siri_unlock_phone">スマートフォンのロックを解除してもう一度お試しください。</string>
     <string name="siri_gemini_off">このスマートフォンではCasamaに対するGeminiが無効になっています（Casama → 設定 → プライバシー）。</string>
+    <string name="notif_turn_on">オンにする</string>
+    <string name="notif_open">開く</string>
+    <string name="notif_got_it">了解</string>
+    <string name="notif_remind_me">リマインド</string>
 </resources>

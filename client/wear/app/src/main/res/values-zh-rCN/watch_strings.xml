@@ -146,4 +146,9 @@
     <string name="watch_not_on_watch" formatted="false">此手表无法回应这一项，请在手机上打开</string>
     <string name="watch_more_on_phone">另有 %1$s 项请在手机上查看</string>
     <string name="watch_share_crash_reports" formatted="false">分享崩溃报告</string>
+    <string name="watch_turn_on" formatted="false">开启</string>
+    <string name="watch_got_it" formatted="false">知道了</string>
+    <string name="watch_remind_me" formatted="false">提醒</string>
+    <string name="watch_later" formatted="false">稍后</string>
+    <string name="watch_open" formatted="false">打开</string>
 </resources>

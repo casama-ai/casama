@@ -146,4 +146,9 @@
     <string name="watch_not_on_watch" formatted="false">Este reloj no puede responder esto. Ábrelo en tu teléfono</string>
     <string name="watch_more_on_phone">%1$s más en tu teléfono</string>
     <string name="watch_share_crash_reports" formatted="false">Compartir informes de fallos</string>
+    <string name="watch_turn_on" formatted="false">Activar</string>
+    <string name="watch_got_it" formatted="false">Entendido</string>
+    <string name="watch_remind_me" formatted="false">Recordar</string>
+    <string name="watch_later" formatted="false">Más tarde</string>
+    <string name="watch_open" formatted="false">Abrir</string>
 </resources>

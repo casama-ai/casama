@@ -13,6 +13,8 @@ abstract class _$AdminGrowthDayCWProxy {
 
   AdminGrowthDay activePeople(int activePeople);
 
+  AdminGrowthDay typers(int? typers);
+
   AdminGrowthDay messages(int messages);
 
   AdminGrowthDay runsChat(int runsChat);
@@ -43,6 +45,7 @@ abstract class _$AdminGrowthDayCWProxy {
     String date,
     int signups,
     int activePeople,
+    int? typers,
     int messages,
     int runsChat,
     int runsRoutine,
@@ -71,6 +74,9 @@ class _$AdminGrowthDayCWProxyImpl implements _$AdminGrowthDayCWProxy {
   @override
   AdminGrowthDay activePeople(int activePeople) =>
       call(activePeople: activePeople);
+
+  @override
+  AdminGrowthDay typers(int? typers) => call(typers: typers);
 
   @override
   AdminGrowthDay messages(int messages) => call(messages: messages);
@@ -112,6 +118,7 @@ class _$AdminGrowthDayCWProxyImpl implements _$AdminGrowthDayCWProxy {
     Object? date = const $CopyWithPlaceholder(),
     Object? signups = const $CopyWithPlaceholder(),
     Object? activePeople = const $CopyWithPlaceholder(),
+    Object? typers = const $CopyWithPlaceholder(),
     Object? messages = const $CopyWithPlaceholder(),
     Object? runsChat = const $CopyWithPlaceholder(),
     Object? runsRoutine = const $CopyWithPlaceholder(),
@@ -136,6 +143,10 @@ class _$AdminGrowthDayCWProxyImpl implements _$AdminGrowthDayCWProxy {
           ? _value.activePeople
           // ignore: cast_nullable_to_non_nullable
           : activePeople as int,
+      typers: typers == const $CopyWithPlaceholder()
+          ? _value.typers
+          // ignore: cast_nullable_to_non_nullable
+          : typers as int?,
       messages: messages == const $CopyWithPlaceholder() || messages == null
           ? _value.messages
           // ignore: cast_nullable_to_non_nullable
@@ -217,6 +228,7 @@ AdminGrowthDay _$AdminGrowthDayFromJson(
       date: $checkedConvert('date', (v) => v as String),
       signups: $checkedConvert('signups', (v) => (v as num).toInt()),
       activePeople: $checkedConvert('active_people', (v) => (v as num).toInt()),
+      typers: $checkedConvert('typers', (v) => (v as num?)?.toInt()),
       messages: $checkedConvert('messages', (v) => (v as num).toInt()),
       runsChat: $checkedConvert('runs_chat', (v) => (v as num).toInt()),
       runsRoutine: $checkedConvert('runs_routine', (v) => (v as num).toInt()),
@@ -247,6 +259,7 @@ Map<String, dynamic> _$AdminGrowthDayToJson(AdminGrowthDay instance) =>
       'date': instance.date,
       'signups': instance.signups,
       'active_people': instance.activePeople,
+      'typers': ?instance.typers,
       'messages': instance.messages,
       'runs_chat': instance.runsChat,
       'runs_routine': instance.runsRoutine,

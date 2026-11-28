@@ -146,4 +146,9 @@
     <string name="watch_not_on_watch" formatted="false">這支手錶無法回覆此請求，請在手機上開啟</string>
     <string name="watch_more_on_phone">手機上還有 %1$s 項</string>
     <string name="watch_share_crash_reports" formatted="false">分享當機報告</string>
+    <string name="watch_turn_on" formatted="false">開啟</string>
+    <string name="watch_got_it" formatted="false">我知道了</string>
+    <string name="watch_remind_me" formatted="false">提醒</string>
+    <string name="watch_later" formatted="false">稍後再說</string>
+    <string name="watch_open" formatted="false">開啟</string>
 </resources>
