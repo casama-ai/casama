@@ -4907,7 +4907,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String fileTooLarge(String name) {
-    return '$name 超过了 25 MB，太大无法作为附件发送。请改用 Google Drive、Dropbox、iCloud 或任意云存储发送链接。';
+    return '$name 超过了 25 MB，太大无法作为附件发送。请改用 Google Drive、Dropbox、iCloud 或任意云端存储发送链接。';
   }
 
   @override
@@ -13249,6 +13249,16 @@ class AppLocalizationsZh extends AppLocalizations {
     final String hoursString = hoursNumberFormat.format(hours);
 
     return '$hoursString 小时电脑时长';
+  }
+
+  @override
+  String paywallFactRuns(int runs, String credits) {
+    final intl.NumberFormat runsNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String runsString = runsNumberFormat.format(runs);
+
+    return '每月约 $runsString 条回复（$credits）';
   }
 
   @override
@@ -23009,6 +23019,52 @@ class AppLocalizationsZh extends AppLocalizations {
       '允许成员在手机或电脑上的 Casama 内让机器人于其观看时使用浏览器。';
 
   @override
+  String appBrowserAwaySummary(String bot, int steps) {
+    String _temp0 = intl.Intl.pluralLogic(
+      steps,
+      locale: localeName,
+      other: '$steps 步',
+      one: '1 步',
+    );
+    return '$bot 在你离开期间继续执行 · $_temp0';
+  }
+
+  @override
+  String appBrowserNeedsYouTitle(String bot) {
+    return '$bot 需要你处理';
+  }
+
+  @override
+  String get appBrowserNeedsYouBody => '打开 Casama 继续。';
+
+  @override
+  String appBrowserStillUsingTitle(String bot) {
+    return '$bot 仍在使用你的浏览器';
+  }
+
+  @override
+  String get appBrowserStillUsingBody => '回来让它完成。';
+
+  @override
+  String appBrowserFinishedTitle(String bot) {
+    return '$bot 已完成';
+  }
+
+  @override
+  String appBrowserFinishedOnSiteTitle(String bot, String site) {
+    return '$bot 已在 $site 上完成';
+  }
+
+  @override
+  String get appBrowserFinishedBody => '轻点即可查看。';
+
+  @override
+  String get appBrowserKeepGoing => '离开应用时继续';
+
+  @override
+  String get appBrowserKeepGoingHelp => '通过静默通知在后台完成浏览器任务（最多 10 分钟，低电量时暂停）。';
+
+  @override
   String get adminAppBrowser => 'In-App Browser';
 
   @override
@@ -28775,27 +28831,23 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String upgradePromptIncludedIn(String plan) {
-    return 'Included in $plan and above.';
+    return '包含在 $plan 及以上方案中。';
   }
 
   @override
-  String get payFeedbackTitle => 'Quick question';
+  String get payFeedbackTitle => '一个小问题';
 
   @override
-  String get payFeedbackPrompt =>
-      'What would make Casama worth paying for to you?';
+  String get payFeedbackPrompt => '什么会让你觉得 Casama 值得付费？';
 
   @override
-  String get payFeedbackHint =>
-      'A feature, limit, or workflow you\'d happily pay for…';
+  String get payFeedbackHint => '让你乐意付费的功能、限制或工作流程…';
 
   @override
-  String get suggestBrowserLookup =>
-      'Look up today\'s top tech news in a browser and summarize the 3 best stories.';
+  String get suggestBrowserLookup => '在浏览器中查一下今天的热门科技新闻，总结最好的 3 篇报道。';
 
   @override
-  String get suggestMorningBrief =>
-      'Set up my morning brief for tomorrow at 8am with my priorities and weather.';
+  String get suggestMorningBrief => '为我设置明天早上 8:00 的晨间简报，包含我的优先事项和天气。';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -40830,6 +40882,16 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   }
 
   @override
+  String paywallFactRuns(int runs, String credits) {
+    final intl.NumberFormat runsNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String runsString = runsNumberFormat.format(runs);
+
+    return '每月約 $runsString 則回覆（$credits）';
+  }
+
+  @override
   String get billingChangePlan => '變更方案';
 
   @override
@@ -49378,6 +49440,52 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
       '成員可以在他們即時觀看時，讓機器人在手機或電腦上的 Casama 內建瀏覽器中執行操作。';
 
   @override
+  String appBrowserAwaySummary(String bot, int steps) {
+    String _temp0 = intl.Intl.pluralLogic(
+      steps,
+      locale: localeName,
+      other: '$steps 步',
+      one: '1 步',
+    );
+    return '$bot 在你離開期間繼續執行 · $_temp0';
+  }
+
+  @override
+  String appBrowserNeedsYouTitle(String bot) {
+    return '$bot 需要你處理';
+  }
+
+  @override
+  String get appBrowserNeedsYouBody => '開啟 Casama 以繼續。';
+
+  @override
+  String appBrowserStillUsingTitle(String bot) {
+    return '$bot 仍在使用你的瀏覽器';
+  }
+
+  @override
+  String get appBrowserStillUsingBody => '回來讓它完成。';
+
+  @override
+  String appBrowserFinishedTitle(String bot) {
+    return '$bot 已完成';
+  }
+
+  @override
+  String appBrowserFinishedOnSiteTitle(String bot, String site) {
+    return '$bot 已在 $site 上完成';
+  }
+
+  @override
+  String get appBrowserFinishedBody => '點一下即可查看。';
+
+  @override
+  String get appBrowserKeepGoing => '離開應用程式時繼續執行';
+
+  @override
+  String get appBrowserKeepGoingHelp => '透過無聲通知在背景完成瀏覽器任務（最多 10 分鐘，低電量時暫停）。';
+
+  @override
   String get vendorRenewalUsd => '單次續訂費用（美元）';
 
   @override
@@ -53705,4 +53813,24 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get vendorIncludedUsdHelp => '每個日曆月內不超過該額度的用量實付記為 \$0。';
+
+  @override
+  String upgradePromptIncludedIn(String plan) {
+    return '包含在 $plan 及以上方案中。';
+  }
+
+  @override
+  String get payFeedbackTitle => '一個小問題';
+
+  @override
+  String get payFeedbackPrompt => '什麼會讓你覺得 Casama 值得付費？';
+
+  @override
+  String get payFeedbackHint => '讓你樂意付費的功能、限制或工作流程…';
+
+  @override
+  String get suggestBrowserLookup => '在瀏覽器中搜尋今天的熱門科技新聞，並總結最精彩的 3 篇報導。';
+
+  @override
+  String get suggestMorningBrief => '幫我設定明天早上 8:00 的晨間簡報，包含我的優先事項和天氣。';
 }

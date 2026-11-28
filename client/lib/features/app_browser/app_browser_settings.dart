@@ -329,9 +329,8 @@ class _AppBrowserSettingsScreenState
                   if (system == 'android' && on && kAppBrowserBg)
                     GroupedTile(
                       icon: LucideIcons.play,
-                      title: 'Keep going when I leave the app',
-                      subtitle:
-                          'Finish browser tasks in the background with a quiet notification (up to 10 min, pauses on low battery).',
+                      title: context.l10n.appBrowserKeepGoing,
+                      subtitle: context.l10n.appBrowserKeepGoingHelp,
                       onTap: () {
                         final next = !ref.read(appBrowserKeepGoingProvider);
                         Haptic.toggle(next);

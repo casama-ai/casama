@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../../core/widgets.dart';
 import '../../theme/app_tokens.dart';
 import '../../ui/screen_tile.dart';
 import '../../ui/shell_layout.dart';
@@ -255,7 +256,6 @@ class _AwaySummaryPill extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
-    final stepWord = summary.steps == 1 ? '1 step' : '${summary.steps} steps';
     return Material(
       color: cs.secondaryContainer,
       borderRadius: BorderRadius.circular(AppRadius.row),
@@ -278,7 +278,7 @@ class _AwaySummaryPill extends StatelessWidget {
               const SizedBox(width: AppSpace.xs),
               Expanded(
                 child: Text(
-                  '${summary.botName} kept going while you were away · $stepWord',
+                  context.l10n.appBrowserAwaySummary(summary.botName, summary.steps),
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: cs.onSecondaryContainer,
                     fontWeight: FontWeight.w500,

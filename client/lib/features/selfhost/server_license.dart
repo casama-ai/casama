@@ -1,7 +1,8 @@
 import 'dart:async';
 
-import 'package:casama_sdk/casama_sdk.dart' show AuthSession, CasamaClient;
+import 'package:casama_sdk/casama_sdk.dart' show AuthSession, CasamaClient, signupProof, solveSignupChallenge;
 import 'package:dio/dio.dart' show DioException;
+import 'package:flutter/foundation.dart' show compute;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:material_ui/material_ui.dart';
@@ -66,8 +67,14 @@ class SdkCloudLicenseAuth implements CloudLicenseAuth {
   CasamaClient? _client;
   Future<CasamaClient> get _cloud async => _client ??= await CasamaClient.connect(casamaCloudApi);
 
+  /// A new person's code sign-in makes their Cloud account, and Cloud only makes one that carries
+  /// its sign-up proof (D-094), solved against Cloud's own config, not the server the app is on.
   @override
-  Future<void> sendCode(String email) async => (await _cloud).auth.sendMagicLink(email: email.trim());
+  Future<void> sendCode(String email) async {
+    final cloud = await _cloud;
+    final proof = await signupProof(cloud.api, cloud.config, solve: (c, d) => compute(_solveCloudPuzzle, (c, d)));
+    await cloud.auth.sendMagicLink(email: email.trim(), data: proof == null ? null : {'signup_proof': proof});
+  }
 
   @override
   Future<CloudSession> verify(String email, String code) async {
@@ -75,6 +82,8 @@ class SdkCloudLicenseAuth implements CloudLicenseAuth {
     return CloudSession(s.accessToken, email: s.email ?? email.trim(), session: s);
   }
 }
+
+String _solveCloudPuzzle((String, int) p) => solveSignupChallenge(p.$1, p.$2);
 
 final cloudLicenseAuthProvider = Provider<CloudLicenseAuth>((ref) => SdkCloudLicenseAuth());
 

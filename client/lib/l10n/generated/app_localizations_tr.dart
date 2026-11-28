@@ -5077,7 +5077,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String fileTooLarge(String name) {
-    return '$name 25 MB\'tan büyük olduğu için eklenemiyor. Bunun yerine Google Drive, Dropbox, iCloud veya herhangi bir bulut depolamadan bağlantısını gönderin.';
+    return '$name 25 MB\'tan büyük olduğu için eklenemiyor. Bunun yerine Google Drive, Dropbox, iCloud veya herhangi bir bulut depolama hizmetinden bağlantısını gönderin.';
   }
 
   @override
@@ -13790,6 +13790,16 @@ class AppLocalizationsTr extends AppLocalizations {
     final String hoursString = hoursNumberFormat.format(hours);
 
     return '$hoursString bilgisayar saati';
+  }
+
+  @override
+  String paywallFactRuns(int runs, String credits) {
+    final intl.NumberFormat runsNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String runsString = runsNumberFormat.format(runs);
+
+    return 'Ayda yaklaşık $runsString yanıt ($credits)';
   }
 
   @override
@@ -23976,6 +23986,53 @@ class AppLocalizationsTr extends AppLocalizations {
       'Üyeler izlerken botların telefonlarında veya bilgisayarlarında Casama içindeki bir tarayıcıyı kullanmasına izin verebilir.';
 
   @override
+  String appBrowserAwaySummary(String bot, int steps) {
+    String _temp0 = intl.Intl.pluralLogic(
+      steps,
+      locale: localeName,
+      other: '$steps adım',
+      one: '1 adım',
+    );
+    return '$bot siz yokken devam etti · $_temp0';
+  }
+
+  @override
+  String appBrowserNeedsYouTitle(String bot) {
+    return '$bot sizden yanıt bekliyor';
+  }
+
+  @override
+  String get appBrowserNeedsYouBody => 'Devam etmek için Casama\'yı açın.';
+
+  @override
+  String appBrowserStillUsingTitle(String bot) {
+    return '$bot hâlâ tarayıcınızı kullanıyor';
+  }
+
+  @override
+  String get appBrowserStillUsingBody => 'Bitirebilmesi için geri dönün.';
+
+  @override
+  String appBrowserFinishedTitle(String bot) {
+    return '$bot bitirdi';
+  }
+
+  @override
+  String appBrowserFinishedOnSiteTitle(String bot, String site) {
+    return '$bot, $site sitesinde bitirdi';
+  }
+
+  @override
+  String get appBrowserFinishedBody => 'Görmek için dokunun.';
+
+  @override
+  String get appBrowserKeepGoing => 'Uygulamadan çıktığımda devam et';
+
+  @override
+  String get appBrowserKeepGoingHelp =>
+      'Tarayıcı görevlerini arka planda sessiz bir bildirimle tamamlayın (en fazla 10 dk., düşük pilde duraklatılır).';
+
+  @override
   String get adminAppBrowser => 'In-App Browser';
 
   @override
@@ -29951,25 +30008,25 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String upgradePromptIncludedIn(String plan) {
-    return 'Included in $plan and above.';
+    return '$plan ve üzeri planlara dahil.';
   }
 
   @override
-  String get payFeedbackTitle => 'Quick question';
+  String get payFeedbackTitle => 'Kısa bir soru';
 
   @override
   String get payFeedbackPrompt =>
-      'What would make Casama worth paying for to you?';
+      'Casama\'yı sizin için ödemeye değer kılacak şey ne olurdu?';
 
   @override
   String get payFeedbackHint =>
-      'A feature, limit, or workflow you\'d happily pay for…';
+      'Memnuniyetle ödeme yapacağınız bir özellik, limit veya iş akışı…';
 
   @override
   String get suggestBrowserLookup =>
-      'Look up today\'s top tech news in a browser and summarize the 3 best stories.';
+      'Bir tarayıcıda bugünün öne çıkan teknoloji haberlerine bak ve en iyi 3 haberi özetle.';
 
   @override
   String get suggestMorningBrief =>
-      'Set up my morning brief for tomorrow at 8am with my priorities and weather.';
+      'Yarın saat 08:00 için önceliklerimi ve hava durumunu içeren sabah özetimi ayarla.';
 }

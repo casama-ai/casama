@@ -13720,6 +13720,16 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String paywallFactRuns(int runs, String credits) {
+    final intl.NumberFormat runsNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String runsString = runsNumberFormat.format(runs);
+
+    return 'About $runsString replies a month ($credits)';
+  }
+
+  @override
   String get billingChangePlan => 'Change plan';
 
   @override
@@ -23835,6 +23845,53 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get appBrowserWorkspaceSwitchHelp =>
       'Members can let bots use a browser inside Casama on their phone or computer, while they watch.';
+
+  @override
+  String appBrowserAwaySummary(String bot, int steps) {
+    String _temp0 = intl.Intl.pluralLogic(
+      steps,
+      locale: localeName,
+      other: '$steps steps',
+      one: '1 step',
+    );
+    return '$bot kept going while you were away · $_temp0';
+  }
+
+  @override
+  String appBrowserNeedsYouTitle(String bot) {
+    return '$bot needs you';
+  }
+
+  @override
+  String get appBrowserNeedsYouBody => 'Open Casama to continue.';
+
+  @override
+  String appBrowserStillUsingTitle(String bot) {
+    return '$bot is still using your browser';
+  }
+
+  @override
+  String get appBrowserStillUsingBody => 'Come back so it can finish.';
+
+  @override
+  String appBrowserFinishedTitle(String bot) {
+    return '$bot finished';
+  }
+
+  @override
+  String appBrowserFinishedOnSiteTitle(String bot, String site) {
+    return '$bot finished on $site';
+  }
+
+  @override
+  String get appBrowserFinishedBody => 'Tap to see.';
+
+  @override
+  String get appBrowserKeepGoing => 'Keep going when I leave the app';
+
+  @override
+  String get appBrowserKeepGoingHelp =>
+      'Finish browser tasks in the background with a quiet notification (up to 10 min, pauses on low battery).';
 
   @override
   String get adminAppBrowser => 'In-App Browser';

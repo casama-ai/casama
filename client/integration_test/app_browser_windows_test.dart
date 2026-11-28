@@ -99,6 +99,15 @@ class _Events implements AppBrowserNativeEvents {
   void urlChanged(String url, String title) => log.add('url $url "$title"');
 
   @override
+  void backgroundStarted({required int battery, required bool notificationsEnabled}) {}
+
+  @override
+  void backgroundStopped({required String reason, required int battery}) {}
+
+  @override
+  void reminderOpened({required String source, required String link}) {}
+
+  @override
   void userTouched() => log.add('touched');
 
   @override

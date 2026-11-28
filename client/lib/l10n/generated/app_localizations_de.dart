@@ -5082,7 +5082,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String fileTooLarge(String name) {
-    return '$name ist größer als 25 MB und zu groß zum Anhängen. Sende stattdessen einen Link dazu – von Google Drive, Dropbox, iCloud oder einem beliebigen Cloud-Speicher.';
+    return '$name ist über 25 MB groß – zu groß zum Anhängen. Sende stattdessen einen Link dazu, von Google Drive, Dropbox, iCloud oder einem beliebigen Cloud-Speicher.';
   }
 
   @override
@@ -13825,6 +13825,16 @@ class AppLocalizationsDe extends AppLocalizations {
     final String hoursString = hoursNumberFormat.format(hours);
 
     return '$hoursString Computerstunden';
+  }
+
+  @override
+  String paywallFactRuns(int runs, String credits) {
+    final intl.NumberFormat runsNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String runsString = runsNumberFormat.format(runs);
+
+    return 'Etwa $runsString Antworten pro Monat ($credits)';
   }
 
   @override
@@ -24034,6 +24044,54 @@ class AppLocalizationsDe extends AppLocalizations {
       'Mitglieder können Bots einen Browser in Casama auf ihrem Telefon oder Computer nutzen lassen, während sie zusehen.';
 
   @override
+  String appBrowserAwaySummary(String bot, int steps) {
+    String _temp0 = intl.Intl.pluralLogic(
+      steps,
+      locale: localeName,
+      other: '$steps Schritte',
+      one: '1 Schritt',
+    );
+    return '$bot hat weitergemacht, während du weg warst · $_temp0';
+  }
+
+  @override
+  String appBrowserNeedsYouTitle(String bot) {
+    return '$bot braucht dich';
+  }
+
+  @override
+  String get appBrowserNeedsYouBody => 'Öffne Casama, um fortzufahren.';
+
+  @override
+  String appBrowserStillUsingTitle(String bot) {
+    return '$bot nutzt noch deinen Browser';
+  }
+
+  @override
+  String get appBrowserStillUsingBody =>
+      'Komm zurück, damit der Bot fertig werden kann.';
+
+  @override
+  String appBrowserFinishedTitle(String bot) {
+    return '$bot ist fertig';
+  }
+
+  @override
+  String appBrowserFinishedOnSiteTitle(String bot, String site) {
+    return '$bot ist auf $site fertig';
+  }
+
+  @override
+  String get appBrowserFinishedBody => 'Zum Ansehen tippen.';
+
+  @override
+  String get appBrowserKeepGoing => 'Weitermachen, wenn ich die App verlasse';
+
+  @override
+  String get appBrowserKeepGoingHelp =>
+      'Browser-Aufgaben im Hintergrund mit stiller Benachrichtigung abschließen (bis zu 10 Min., pausiert bei schwachem Akku).';
+
+  @override
   String get adminAppBrowser => 'In-App Browser';
 
   @override
@@ -30021,25 +30079,25 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String upgradePromptIncludedIn(String plan) {
-    return 'Included in $plan and above.';
+    return 'Ab $plan enthalten.';
   }
 
   @override
-  String get payFeedbackTitle => 'Quick question';
+  String get payFeedbackTitle => 'Kurze Frage';
 
   @override
   String get payFeedbackPrompt =>
-      'What would make Casama worth paying for to you?';
+      'Was müsste Casama bieten, damit es dir den Preis wert ist?';
 
   @override
   String get payFeedbackHint =>
-      'A feature, limit, or workflow you\'d happily pay for…';
+      'Eine Funktion, ein Limit oder ein Ablauf, für den du gern zahlen würdest…';
 
   @override
   String get suggestBrowserLookup =>
-      'Look up today\'s top tech news in a browser and summarize the 3 best stories.';
+      'Schau im Browser nach den wichtigsten Tech-News von heute und fasse die 3 besten Artikel zusammen.';
 
   @override
   String get suggestMorningBrief =>
-      'Set up my morning brief for tomorrow at 8am with my priorities and weather.';
+      'Richte mein Morgen-Briefing für morgen um 8:00 Uhr mit meinen Prioritäten und dem Wetter ein.';
 }

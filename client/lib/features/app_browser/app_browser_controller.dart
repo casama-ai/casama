@@ -8,6 +8,7 @@ import 'package:flutter/widgets.dart' show FocusManager;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/analytics.dart';
+import '../../core/app_language.dart';
 import '../../core/chat_focus.dart';
 import '../../core/haptics.dart';
 import '../../core/providers.dart';
@@ -456,10 +457,10 @@ class AppBrowserController extends Notifier<AppBrowserSession>
           unawaited(
             _channel
                 .backgroundNeedsYou(
-                  title: '$bot needs you',
+                  title: AppLanguage.strings().appBrowserNeedsYouTitle(bot),
                   body:
                       (call.args['reason'] as String?) ??
-                      'Open Casama to continue.',
+                      AppLanguage.strings().appBrowserNeedsYouBody,
                   link: linkPath,
                   tag: 'browser-wait-${run.id}',
                 )

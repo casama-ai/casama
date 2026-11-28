@@ -4965,7 +4965,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String fileTooLarge(String name) {
-    return '$nameは25 MBを超えているため添付できません。代わりにGoogle Drive、Dropbox、iCloud、またはその他のクラウドストレージからリンクを送信してください。';
+    return '$nameは25MBを超えており、大きすぎて添付できません。代わりにGoogle Drive、Dropbox、iCloud、またはその他のクラウドストレージからリンクを送信してください。';
   }
 
   @override
@@ -13460,6 +13460,16 @@ class AppLocalizationsJa extends AppLocalizations {
     final String hoursString = hoursNumberFormat.format(hours);
 
     return 'コンピューター$hoursString時間';
+  }
+
+  @override
+  String paywallFactRuns(int runs, String credits) {
+    final intl.NumberFormat runsNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String runsString = runsNumberFormat.format(runs);
+
+    return '月に約$runsString回の返信（$credits）';
   }
 
   @override
@@ -23382,6 +23392,53 @@ class AppLocalizationsJa extends AppLocalizations {
       'メンバーは画面を見ながら、自分のスマートフォンやコンピューター上のCasama内ブラウザーをボットに使わせることができます。';
 
   @override
+  String appBrowserAwaySummary(String bot, int steps) {
+    String _temp0 = intl.Intl.pluralLogic(
+      steps,
+      locale: localeName,
+      other: '$stepsステップ',
+      one: '1ステップ',
+    );
+    return '$botはアプリを離れている間も続行しました・$_temp0';
+  }
+
+  @override
+  String appBrowserNeedsYouTitle(String bot) {
+    return '$botが確認を待っています';
+  }
+
+  @override
+  String get appBrowserNeedsYouBody => '続けるにはCasamaを開いてください。';
+
+  @override
+  String appBrowserStillUsingTitle(String bot) {
+    return '$botがまだブラウザーを使用しています';
+  }
+
+  @override
+  String get appBrowserStillUsingBody => '戻ると、ボットが完了できます。';
+
+  @override
+  String appBrowserFinishedTitle(String bot) {
+    return '$botが完了しました';
+  }
+
+  @override
+  String appBrowserFinishedOnSiteTitle(String bot, String site) {
+    return '$botが$siteでの作業を完了しました';
+  }
+
+  @override
+  String get appBrowserFinishedBody => 'タップして確認。';
+
+  @override
+  String get appBrowserKeepGoing => 'アプリを離れても続行する';
+
+  @override
+  String get appBrowserKeepGoingHelp =>
+      '控えめな通知でバックグラウンドのブラウザー作業を完了します（最大10分、バッテリー残量が少ないときは一時停止）。';
+
+  @override
   String get adminAppBrowser => 'In-App Browser';
 
   @override
@@ -29220,25 +29277,21 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String upgradePromptIncludedIn(String plan) {
-    return 'Included in $plan and above.';
+    return '$plan以上のプランに含まれます。';
   }
 
   @override
-  String get payFeedbackTitle => 'Quick question';
+  String get payFeedbackTitle => '簡単な質問';
 
   @override
-  String get payFeedbackPrompt =>
-      'What would make Casama worth paying for to you?';
+  String get payFeedbackPrompt => '何があれば、Casamaにお金を払う価値があると感じますか？';
 
   @override
-  String get payFeedbackHint =>
-      'A feature, limit, or workflow you\'d happily pay for…';
+  String get payFeedbackHint => '喜んでお金を払える機能、上限、ワークフローなど…';
 
   @override
-  String get suggestBrowserLookup =>
-      'Look up today\'s top tech news in a browser and summarize the 3 best stories.';
+  String get suggestBrowserLookup => 'ブラウザーで今日の注目テックニュースを調べて、ベスト3の記事をまとめて。';
 
   @override
-  String get suggestMorningBrief =>
-      'Set up my morning brief for tomorrow at 8am with my priorities and weather.';
+  String get suggestMorningBrief => '明日の8時に優先事項と天気を含めた朝のブリーフィングを設定して。';
 }

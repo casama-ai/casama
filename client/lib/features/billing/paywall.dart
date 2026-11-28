@@ -1317,7 +1317,10 @@ List<String> _facts(AppLocalizations l10n, Map<String, num> limits, {bool email 
   if (limits['max_bots'] case final v?) l10n.limitBots(v.toInt()) else l10n.limitBotsUnlimited,
   if (limits['computer_hours'] case final v?) l10n.paywallFactHours(v.toInt()),
   if (limits['monthly_credits_usd'] case final v? when v > 0)
-    '~${((v / 0.009) / 50).round() * 50} runs/mo (${l10n.limitCredits(v.humanizedCurrency(l10n.localeName, 'USD', decimalDigits: 0))})',
+    l10n.paywallFactRuns(
+      ((v / 0.009) / 50).round() * 50,
+      l10n.limitCredits(v.humanizedCurrency(l10n.localeName, 'USD', decimalDigits: 0)),
+    ),
   if (limits['seats'] case final v?) l10n.paywallPeople(v.toInt()),
   if (email && (limits['max_mail_addresses'] ?? 0) > 0) ...[
     l10n.botEmailPerkAddresses(limits['max_mail_addresses']!.toInt()),

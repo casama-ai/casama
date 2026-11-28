@@ -13758,6 +13758,16 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
+  String paywallFactRuns(int runs, String credits) {
+    final intl.NumberFormat runsNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String runsString = runsNumberFormat.format(runs);
+
+    return 'Khoảng $runsString câu trả lời mỗi tháng ($credits)';
+  }
+
+  @override
   String get billingChangePlan => 'Đổi gói';
 
   @override
@@ -23927,6 +23937,53 @@ class AppLocalizationsVi extends AppLocalizations {
       'Thành viên có thể cho bot dùng trình duyệt bên trong Casama trên điện thoại hoặc máy tính của họ trong lúc họ theo dõi.';
 
   @override
+  String appBrowserAwaySummary(String bot, int steps) {
+    String _temp0 = intl.Intl.pluralLogic(
+      steps,
+      locale: localeName,
+      other: '$steps bước',
+      one: '1 bước',
+    );
+    return '$bot vẫn tiếp tục khi bạn rời ứng dụng · $_temp0';
+  }
+
+  @override
+  String appBrowserNeedsYouTitle(String bot) {
+    return '$bot cần bạn';
+  }
+
+  @override
+  String get appBrowserNeedsYouBody => 'Mở Casama để tiếp tục.';
+
+  @override
+  String appBrowserStillUsingTitle(String bot) {
+    return '$bot vẫn đang dùng trình duyệt của bạn';
+  }
+
+  @override
+  String get appBrowserStillUsingBody => 'Quay lại để bot hoàn tất.';
+
+  @override
+  String appBrowserFinishedTitle(String bot) {
+    return '$bot đã xong';
+  }
+
+  @override
+  String appBrowserFinishedOnSiteTitle(String bot, String site) {
+    return '$bot đã xong trên $site';
+  }
+
+  @override
+  String get appBrowserFinishedBody => 'Chạm để xem.';
+
+  @override
+  String get appBrowserKeepGoing => 'Tiếp tục khi tôi rời ứng dụng';
+
+  @override
+  String get appBrowserKeepGoingHelp =>
+      'Hoàn tất tác vụ trình duyệt ở chế độ nền kèm thông báo im lặng (tối đa 10 phút, tạm dừng khi pin yếu).';
+
+  @override
   String get adminAppBrowser => 'In-App Browser';
 
   @override
@@ -29904,25 +29961,25 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String upgradePromptIncludedIn(String plan) {
-    return 'Included in $plan and above.';
+    return 'Bao gồm trong gói $plan trở lên.';
   }
 
   @override
-  String get payFeedbackTitle => 'Quick question';
+  String get payFeedbackTitle => 'Câu hỏi nhanh';
 
   @override
   String get payFeedbackPrompt =>
-      'What would make Casama worth paying for to you?';
+      'Điều gì sẽ khiến bạn thấy xứng đáng trả tiền cho Casama?';
 
   @override
   String get payFeedbackHint =>
-      'A feature, limit, or workflow you\'d happily pay for…';
+      'Tính năng, giới hạn hoặc quy trình làm việc bạn sẵn sàng trả phí…';
 
   @override
   String get suggestBrowserLookup =>
-      'Look up today\'s top tech news in a browser and summarize the 3 best stories.';
+      'Tìm tin tức công nghệ nổi bật hôm nay trên trình duyệt và tóm tắt 3 bài hay nhất.';
 
   @override
   String get suggestMorningBrief =>
-      'Set up my morning brief for tomorrow at 8am with my priorities and weather.';
+      'Thiết lập tóm tắt sáng cho 8:00 ngày mai gồm các ưu tiên của tôi và thời tiết.';
 }

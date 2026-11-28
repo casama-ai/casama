@@ -13799,6 +13799,16 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
+  String paywallFactRuns(int runs, String credits) {
+    final intl.NumberFormat runsNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String runsString = runsNumberFormat.format(runs);
+
+    return 'Cerca de $runsString respostas por mês ($credits)';
+  }
+
+  @override
   String get billingChangePlan => 'Mudar de plano';
 
   @override
@@ -23986,6 +23996,53 @@ class AppLocalizationsPt extends AppLocalizations {
       'Os membros podem permitir que bots usem um navegador dentro do Casama no celular ou computador deles, enquanto acompanham.';
 
   @override
+  String appBrowserAwaySummary(String bot, int steps) {
+    String _temp0 = intl.Intl.pluralLogic(
+      steps,
+      locale: localeName,
+      other: '$steps etapas',
+      one: '$steps etapa',
+    );
+    return '$bot continuou enquanto você estava fora · $_temp0';
+  }
+
+  @override
+  String appBrowserNeedsYouTitle(String bot) {
+    return '$bot precisa de você';
+  }
+
+  @override
+  String get appBrowserNeedsYouBody => 'Abra o Casama para continuar.';
+
+  @override
+  String appBrowserStillUsingTitle(String bot) {
+    return '$bot ainda está usando seu navegador';
+  }
+
+  @override
+  String get appBrowserStillUsingBody => 'Volte para que ele possa concluir.';
+
+  @override
+  String appBrowserFinishedTitle(String bot) {
+    return '$bot terminou';
+  }
+
+  @override
+  String appBrowserFinishedOnSiteTitle(String bot, String site) {
+    return '$bot terminou em $site';
+  }
+
+  @override
+  String get appBrowserFinishedBody => 'Toque para ver.';
+
+  @override
+  String get appBrowserKeepGoing => 'Continuar quando eu sair do app';
+
+  @override
+  String get appBrowserKeepGoingHelp =>
+      'Conclui tarefas do navegador em segundo plano com uma notificação silenciosa (até 10 min, pausa com bateria fraca).';
+
+  @override
   String get adminAppBrowser => 'In-App Browser';
 
   @override
@@ -29963,25 +30020,25 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String upgradePromptIncludedIn(String plan) {
-    return 'Included in $plan and above.';
+    return 'Incluído no plano $plan e superiores.';
   }
 
   @override
-  String get payFeedbackTitle => 'Quick question';
+  String get payFeedbackTitle => 'Pergunta rápida';
 
   @override
   String get payFeedbackPrompt =>
-      'What would make Casama worth paying for to you?';
+      'O que faria valer a pena pagar pelo Casama para você?';
 
   @override
   String get payFeedbackHint =>
-      'A feature, limit, or workflow you\'d happily pay for…';
+      'Um recurso, limite ou fluxo de trabalho pelo qual você pagaria com prazer…';
 
   @override
   String get suggestBrowserLookup =>
-      'Look up today\'s top tech news in a browser and summarize the 3 best stories.';
+      'Pesquise no navegador as principais notícias de tecnologia de hoje e resuma as 3 melhores matérias.';
 
   @override
   String get suggestMorningBrief =>
-      'Set up my morning brief for tomorrow at 8am with my priorities and weather.';
+      'Configure meu resumo da manhã para amanhã às 8h com minhas prioridades e a previsão do tempo.';
 }

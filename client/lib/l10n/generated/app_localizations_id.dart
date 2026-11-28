@@ -13782,6 +13782,16 @@ class AppLocalizationsId extends AppLocalizations {
   }
 
   @override
+  String paywallFactRuns(int runs, String credits) {
+    final intl.NumberFormat runsNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String runsString = runsNumberFormat.format(runs);
+
+    return 'Sekitar $runsString balasan per bulan ($credits)';
+  }
+
+  @override
   String get billingChangePlan => 'Ubah paket';
 
   @override
@@ -23957,6 +23967,55 @@ class AppLocalizationsId extends AppLocalizations {
       'Anggota dapat mengizinkan bot menggunakan browser di dalam Casama pada ponsel atau komputer mereka, sambil mengawasi.';
 
   @override
+  String appBrowserAwaySummary(String bot, int steps) {
+    String _temp0 = intl.Intl.pluralLogic(
+      steps,
+      locale: localeName,
+      other: '$steps langkah',
+      one: '1 langkah',
+    );
+    return '$bot terus berjalan saat kamu pergi · $_temp0';
+  }
+
+  @override
+  String appBrowserNeedsYouTitle(String bot) {
+    return '$bot memerlukanmu';
+  }
+
+  @override
+  String get appBrowserNeedsYouBody => 'Buka Casama untuk melanjutkan.';
+
+  @override
+  String appBrowserStillUsingTitle(String bot) {
+    return '$bot masih menggunakan browser kamu';
+  }
+
+  @override
+  String get appBrowserStillUsingBody =>
+      'Kembali agar bot bisa menyelesaikannya.';
+
+  @override
+  String appBrowserFinishedTitle(String bot) {
+    return '$bot selesai';
+  }
+
+  @override
+  String appBrowserFinishedOnSiteTitle(String bot, String site) {
+    return '$bot selesai di $site';
+  }
+
+  @override
+  String get appBrowserFinishedBody => 'Ketuk untuk melihat.';
+
+  @override
+  String get appBrowserKeepGoing =>
+      'Tetap lanjut saat saya keluar dari aplikasi';
+
+  @override
+  String get appBrowserKeepGoingHelp =>
+      'Selesaikan tugas browser di latar belakang dengan notifikasi senyap (hingga 10 menit, dijeda saat baterai lemah).';
+
+  @override
   String get adminAppBrowser => 'In-App Browser';
 
   @override
@@ -29933,25 +29992,25 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String upgradePromptIncludedIn(String plan) {
-    return 'Included in $plan and above.';
+    return 'Termasuk dalam paket $plan ke atas.';
   }
 
   @override
-  String get payFeedbackTitle => 'Quick question';
+  String get payFeedbackTitle => 'Pertanyaan singkat';
 
   @override
   String get payFeedbackPrompt =>
-      'What would make Casama worth paying for to you?';
+      'Menurutmu, apa yang membuat Casama layak dibayar?';
 
   @override
   String get payFeedbackHint =>
-      'A feature, limit, or workflow you\'d happily pay for…';
+      'Fitur, batas penggunaan, atau alur kerja yang rela kamu bayar…';
 
   @override
   String get suggestBrowserLookup =>
-      'Look up today\'s top tech news in a browser and summarize the 3 best stories.';
+      'Cari berita teknologi teratas hari ini di browser dan rangkum 3 berita terbaiknya.';
 
   @override
   String get suggestMorningBrief =>
-      'Set up my morning brief for tomorrow at 8am with my priorities and weather.';
+      'Siapkan ringkasan pagi saya untuk besok pukul 08.00 berisi prioritas saya dan cuaca.';
 }

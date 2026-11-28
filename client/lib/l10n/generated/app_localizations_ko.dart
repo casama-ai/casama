@@ -4969,7 +4969,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String fileTooLarge(String name) {
-    return '$name 파일 크기가 25 MB를 초과해 첨부할 수 없어요. 대신 Google Drive, Dropbox, iCloud 또는 다른 클라우드 저장소의 링크를 보내 주세요.';
+    return '$name 파일 크기가 25MB를 초과해 첨부할 수 없어요. 대신 Google Drive, Dropbox, iCloud 또는 다른 클라우드 저장소의 링크를 보내 주세요.';
   }
 
   @override
@@ -13477,6 +13477,16 @@ class AppLocalizationsKo extends AppLocalizations {
     final String hoursString = hoursNumberFormat.format(hours);
 
     return '컴퓨터 사용 시간 $hoursString시간';
+  }
+
+  @override
+  String paywallFactRuns(int runs, String credits) {
+    final intl.NumberFormat runsNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String runsString = runsNumberFormat.format(runs);
+
+    return '월 약 $runsString회 답장 ($credits)';
   }
 
   @override
@@ -23423,6 +23433,53 @@ class AppLocalizationsKo extends AppLocalizations {
       '멤버가 지켜보는 동안 봇이 휴대폰이나 컴퓨터의 Casama 내 브라우저를 사용할 수 있게 해요.';
 
   @override
+  String appBrowserAwaySummary(String bot, int steps) {
+    String _temp0 = intl.Intl.pluralLogic(
+      steps,
+      locale: localeName,
+      other: '$steps단계',
+      one: '1단계',
+    );
+    return '$bot 봇이 자리를 비운 사이에도 계속 진행했어요 · $_temp0';
+  }
+
+  @override
+  String appBrowserNeedsYouTitle(String bot) {
+    return '$bot 봇이 확인을 기다리고 있어요';
+  }
+
+  @override
+  String get appBrowserNeedsYouBody => '계속하려면 Casama를 열어 주세요.';
+
+  @override
+  String appBrowserStillUsingTitle(String bot) {
+    return '$bot 봇이 아직 브라우저를 사용 중이에요';
+  }
+
+  @override
+  String get appBrowserStillUsingBody => '봇이 마칠 수 있도록 돌아와 주세요.';
+
+  @override
+  String appBrowserFinishedTitle(String bot) {
+    return '$bot 봇이 완료했어요';
+  }
+
+  @override
+  String appBrowserFinishedOnSiteTitle(String bot, String site) {
+    return '$bot 봇이 $site에서 작업을 완료했어요';
+  }
+
+  @override
+  String get appBrowserFinishedBody => '탭하여 확인하세요.';
+
+  @override
+  String get appBrowserKeepGoing => '앱을 나가도 계속 진행하기';
+
+  @override
+  String get appBrowserKeepGoingHelp =>
+      '조용한 알림과 함께 백그라운드에서 브라우저 작업을 완료해요(최대 10분, 배터리가 부족하면 일시 정지).';
+
+  @override
   String get adminAppBrowser => 'In-App Browser';
 
   @override
@@ -29268,25 +29325,22 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String upgradePromptIncludedIn(String plan) {
-    return 'Included in $plan and above.';
+    return '$plan 이상 플랜에 포함돼요.';
   }
 
   @override
-  String get payFeedbackTitle => 'Quick question';
+  String get payFeedbackTitle => '간단한 질문';
 
   @override
-  String get payFeedbackPrompt =>
-      'What would make Casama worth paying for to you?';
+  String get payFeedbackPrompt => 'Casama가 돈을 낼 가치가 있으려면 무엇이 필요할까요?';
 
   @override
-  String get payFeedbackHint =>
-      'A feature, limit, or workflow you\'d happily pay for…';
+  String get payFeedbackHint => '기꺼이 돈을 낼 만한 기능, 한도 또는 워크플로…';
 
   @override
   String get suggestBrowserLookup =>
-      'Look up today\'s top tech news in a browser and summarize the 3 best stories.';
+      '브라우저에서 오늘의 주요 테크 뉴스를 찾아서 가장 좋은 기사 3개를 요약해 줘.';
 
   @override
-  String get suggestMorningBrief =>
-      'Set up my morning brief for tomorrow at 8am with my priorities and weather.';
+  String get suggestMorningBrief => '내일 오전 8시에 내 우선순위와 날씨를 담은 아침 브리핑을 설정해 줘.';
 }

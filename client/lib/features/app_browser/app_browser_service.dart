@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../core/app_language.dart';
 import '../../core/backend.dart';
 import '../../core/chat_focus.dart';
 import '../../core/providers.dart';
@@ -212,8 +213,8 @@ class AppBrowserService with WidgetsBindingObserver {
         final bot = run.botName.isEmpty ? 'Casama' : run.botName;
         await channel.scheduleReminder(
           delayMs: background.reminderDelay.inMilliseconds,
-          title: '$bot is still using your browser',
-          body: 'Come back so it can finish.',
+          title: AppLanguage.strings().appBrowserStillUsingTitle(bot),
+          body: AppLanguage.strings().appBrowserStillUsingBody,
           link: linkPath,
           tag: tag,
         );
@@ -337,13 +338,14 @@ class AppBrowserService with WidgetsBindingObserver {
     final status = await channel.batteryStatus();
     background.markBackgroundDone(endBattery: status.battery);
     final bot = run.botName.isEmpty ? 'Casama' : run.botName;
-    final where = (site != null && site.isNotEmpty) ? ' on $site' : '';
     final linkPath = run.conversationId != null
         ? '/bots/${run.botId}/chat?c=${run.conversationId}'
         : '/bots/${run.botId}/chat';
     await channel.backgroundStop(
-      title: '$bot finished$where',
-      body: 'Tap to see.',
+      title: (site != null && site.isNotEmpty)
+          ? AppLanguage.strings().appBrowserFinishedOnSiteTitle(bot, site)
+          : AppLanguage.strings().appBrowserFinishedTitle(bot),
+      body: AppLanguage.strings().appBrowserFinishedBody,
       link: linkPath,
       tag: 'browser-done-${run.id}',
     );

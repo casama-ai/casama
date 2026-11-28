@@ -21388,6 +21388,12 @@ abstract class AppLocalizations {
   /// **'{hours} computer hours'**
   String paywallFactHours(int hours);
 
+  /// Paywall plan fact: roughly how many bot replies the plan's monthly credits pay for; credits is the limitCredits text, e.g. '$10 credits a month'
+  ///
+  /// In en, this message translates to:
+  /// **'About {runs} replies a month ({credits})'**
+  String paywallFactRuns(int runs, String credits);
+
   /// No description provided for @billingChangePlan.
   ///
   /// In en, this message translates to:
@@ -38036,6 +38042,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Members can let bots use a browser inside Casama on their phone or computer, while they watch.'**
   String get appBrowserWorkspaceSwitchHelp;
+
+  /// Chat line after a bot used the phone's in-app browser while the person was in another app
+  ///
+  /// In en, this message translates to:
+  /// **'{bot} kept going while you were away · {steps, plural, =1{1 step} other{{steps} steps}}'**
+  String appBrowserAwaySummary(String bot, int steps);
+
+  /// Notification title: a bot using the in-app browser in the background needs the person
+  ///
+  /// In en, this message translates to:
+  /// **'{bot} needs you'**
+  String appBrowserNeedsYouTitle(String bot);
+
+  /// No description provided for @appBrowserNeedsYouBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Casama to continue.'**
+  String get appBrowserNeedsYouBody;
+
+  /// Reminder notification title after the person left the app while a bot was using the in-app browser
+  ///
+  /// In en, this message translates to:
+  /// **'{bot} is still using your browser'**
+  String appBrowserStillUsingTitle(String bot);
+
+  /// No description provided for @appBrowserStillUsingBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Come back so it can finish.'**
+  String get appBrowserStillUsingBody;
+
+  /// Notification title: the bot finished its in-app browser task in the background
+  ///
+  /// In en, this message translates to:
+  /// **'{bot} finished'**
+  String appBrowserFinishedTitle(String bot);
+
+  /// Notification title: the bot finished its in-app browser task on a website in the background
+  ///
+  /// In en, this message translates to:
+  /// **'{bot} finished on {site}'**
+  String appBrowserFinishedOnSiteTitle(String bot, String site);
+
+  /// No description provided for @appBrowserFinishedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to see.'**
+  String get appBrowserFinishedBody;
+
+  /// No description provided for @appBrowserKeepGoing.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep going when I leave the app'**
+  String get appBrowserKeepGoing;
+
+  /// No description provided for @appBrowserKeepGoingHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish browser tasks in the background with a quiet notification (up to 10 min, pauses on low battery).'**
+  String get appBrowserKeepGoingHelp;
 
   /// No description provided for @adminAppBrowser.
   ///
