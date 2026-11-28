@@ -35,11 +35,15 @@ class LimitCard extends ConsumerWidget {
     required this.entry,
     required this.canKeepGoing,
     this.onKeepGoing,
+    this.canRetry = false,
+    this.onRetry,
   });
 
   final NoticeEntry entry;
   final bool canKeepGoing;
   final VoidCallback? onKeepGoing;
+  final bool canRetry;
+  final VoidCallback? onRetry;
 
   String _title(String code) => switch (code) {
     'max_steps' || 'max_steps_exceeded' => 'Paused at this run\'s step limit',
@@ -75,6 +79,7 @@ class LimitCard extends ConsumerWidget {
     final billing = ref.watch(billingProvider).value;
     final reset = _resetLine(context, code, billing?.daily?.resetsAt);
     final showKeepGoing = canKeepGoing && onKeepGoing != null;
+    final showRetry = canRetry && onRetry != null;
 
     void seePlans() {
       Analytics.log('limit_card_action', {'code': code, 'action': 'see_plans'});
@@ -112,12 +117,22 @@ class LimitCard extends ConsumerWidget {
           ),
           const SizedBox(height: AppSpace.xs),
           Text(
-            reset ?? entry.text,
+            entry.text,
             style: context.textTheme.bodyMedium?.copyWith(
               color: scheme.onSurfaceVariant,
               height: 1.4,
             ),
           ),
+          if (reset != null) ...[
+            const SizedBox(height: 4),
+            Text(
+              reset,
+              style: context.textTheme.bodySmall?.copyWith(
+                color: scheme.onSurfaceVariant,
+                height: 1.4,
+              ),
+            ),
+          ],
           const SizedBox(height: AppSpace.sm),
           Wrap(
             spacing: AppSpace.xs,
@@ -125,7 +140,7 @@ class LimitCard extends ConsumerWidget {
             children: [
               if (showKeepGoing)
                 FilledButton.icon(
-                  key: const Key('limitCardKeepGoing'),
+                  key: const Key('noticeKeepGoing'),
                   onPressed: () {
                     Analytics.log('limit_card_action', {'code': code, 'action': 'keep_going'});
                     onKeepGoing?.call();
@@ -135,17 +150,24 @@ class LimitCard extends ConsumerWidget {
                 ),
               if (showKeepGoing)
                 OutlinedButton.icon(
-                  key: const Key('limitCardSeePlans'),
+                  key: const Key('noticeFix'),
                   onPressed: seePlans,
                   icon: const Icon(LucideIcons.sparkles, size: 16),
                   label: Text(context.l10n.seePlans),
                 )
               else
                 FilledButton.tonalIcon(
-                  key: const Key('limitCardSeePlans'),
+                  key: const Key('noticeFix'),
                   onPressed: seePlans,
                   icon: const Icon(LucideIcons.sparkles, size: 16),
                   label: Text(context.l10n.seePlans),
+                ),
+              if (showRetry)
+                TextButton.icon(
+                  key: const Key('noticeRetry'),
+                  onPressed: onRetry,
+                  icon: const Icon(LucideIcons.rotateCw, size: 16),
+                  label: Text(showKeepGoing ? context.l10n.startOver : context.l10n.retry),
                 ),
             ],
           ),

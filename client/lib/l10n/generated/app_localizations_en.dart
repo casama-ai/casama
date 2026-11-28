@@ -29782,4 +29782,28 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get vendorIncludedUsdHelp =>
       'Usage up to this amount each calendar month counts as \$0 paid.';
+
+  @override
+  String upgradePromptIncludedIn(String plan) {
+    return 'Included in $plan and above.';
+  }
+
+  @override
+  String get payFeedbackTitle => 'Quick question';
+
+  @override
+  String get payFeedbackPrompt =>
+      'What would make Casama worth paying for to you?';
+
+  @override
+  String get payFeedbackHint =>
+      'A feature, limit, or workflow you\'d happily pay for…';
+
+  @override
+  String get suggestBrowserLookup =>
+      'Look up today\'s top tech news in a browser and summarize the 3 best stories.';
+
+  @override
+  String get suggestMorningBrief =>
+      'Set up my morning brief for tomorrow at 8am with my priorities and weather.';
 }

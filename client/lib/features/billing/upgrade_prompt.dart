@@ -57,7 +57,7 @@ Future<void> showUpgradePrompt(
             ),
             const SizedBox(height: AppSpace.xs),
             Text(
-              'Included in $planName and above.',
+              ctx.l10n.upgradePromptIncludedIn(planName),
               style: ctx.textTheme.labelLarge?.copyWith(color: scheme.primary),
             ),
             const SizedBox(height: AppSpace.lg),
@@ -137,12 +137,12 @@ Future<void> showPayFeedbackSheet(BuildContext context, WidgetRef ref) async {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            'Quick question',
+            ctx.l10n.payFeedbackTitle,
             style: ctx.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: AppSpace.xs),
           Text(
-            'What would make Casama worth paying for to you?',
+            ctx.l10n.payFeedbackPrompt,
             style: ctx.textTheme.bodyMedium?.copyWith(
               color: ctx.colorScheme.onSurfaceVariant,
               height: 1.45,
@@ -153,15 +153,15 @@ Future<void> showPayFeedbackSheet(BuildContext context, WidgetRef ref) async {
             key: const Key('payFeedbackInput'),
             controller: controller,
             maxLines: 3,
-            decoration: const InputDecoration(
-              hintText: 'A feature, limit, or workflow you\'d happily pay for…',
+            decoration: InputDecoration(
+              hintText: ctx.l10n.payFeedbackHint,
             ),
           ),
           const SizedBox(height: AppSpace.md),
           FilledButton(
             key: const Key('payFeedbackSubmit'),
             onPressed: () => Navigator.of(ctx).pop(controller.text.trim()),
-            child: const Text('Send'),
+            child: Text(ctx.l10n.send),
           ),
           const SizedBox(height: AppSpace.xs),
           TextButton(
@@ -181,6 +181,7 @@ Future<void> showPayFeedbackSheet(BuildContext context, WidgetRef ref) async {
         FeedbackRequest(
           orgId: ref.read(currentOrgProvider)?.id,
           kind: FeedbackKind.idea,
+          // l10n-ok: English category prefix for Admin -> Feedback
           message: '[What would you pay for?] $answer',
         ),
       );

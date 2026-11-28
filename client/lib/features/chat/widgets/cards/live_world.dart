@@ -259,8 +259,10 @@ class _GameTile extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  if (state != 'pre' && !race)
+                  if (state != 'pre' && !race) ...[
+                    const SizedBox(width: 8),
                     Text(t.s('score') ?? '', style: context.textTheme.titleMedium?.copyWith(fontWeight: t.b('winner') == true || state == 'in' ? FontWeight.w800 : FontWeight.w500, fontFeatures: AppText.tabular)),
+                  ],
                 ],
               ),
             ),
@@ -338,13 +340,20 @@ class _StandRow extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 4),
       decoration: highlight ? BoxDecoration(color: context.colorScheme.primary.withValues(alpha: 0.10), borderRadius: BorderRadius.circular(8)) : null,
-      child: Row(
-        children: [
-          SizedBox(width: 24, child: Text(cells[0], style: style)),
-          if (!header) ...[Monogram(text: cells[1], url: logo, size: 20), const SizedBox(width: 6)] else const SizedBox(width: 26),
-          Expanded(child: Text(cells[1], maxLines: 1, overflow: TextOverflow.ellipsis, style: style)),
-          for (final c in cells.skip(2)) SizedBox(width: 34, child: Text(c, textAlign: TextAlign.right, style: style)),
-        ],
+      // On a narrow phone the crest goes and the numbers close up, so team names keep whole words
+      // ("Manchester City" on two lines, never "Manch / ester").
+      child: LayoutBuilder(
+        builder: (context, box) {
+          final narrow = box.maxWidth < 250;
+          return Row(
+            children: [
+              SizedBox(width: 24, child: Text(cells[0], style: style)),
+              if (!narrow) header ? const SizedBox(width: 26) : Padding(padding: const EdgeInsets.only(right: 6), child: Monogram(text: cells[1], url: logo, size: 20)),
+              Expanded(child: header ? Text(cells[1], maxLines: 1, overflow: TextOverflow.ellipsis, style: style) : WholeWords(cells[1], align: TextAlign.start, maxLines: 2, minScale: 0.8, style: style)),
+              for (final c in cells.skip(2)) SizedBox(width: narrow ? 26 : 30, child: Text(c, textAlign: TextAlign.right, style: style)),
+            ],
+          );
+        },
       ),
     );
   }

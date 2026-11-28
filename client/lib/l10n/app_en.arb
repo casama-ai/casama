@@ -10046,5 +10046,12 @@
   "vendorBillingFreeHelp": "Usage stops at the cap and counts as $0 paid.",
   "vendorBillingMeteredHelp": "Usage is paid at its recorded cost.",
   "vendorIncludedUsd": "Monthly included credit (USD)",
-  "vendorIncludedUsdHelp": "Usage up to this amount each calendar month counts as $0 paid."
+  "vendorIncludedUsdHelp": "Usage up to this amount each calendar month counts as $0 paid.",
+  "upgradePromptIncludedIn": "Included in {plan} and above.",
+  "@upgradePromptIncludedIn": {"placeholders": {"plan": {"type": "String"}}},
+  "payFeedbackTitle": "Quick question",
+  "payFeedbackPrompt": "What would make Casama worth paying for to you?",
+  "payFeedbackHint": "A feature, limit, or workflow you'd happily pay for…",
+  "suggestBrowserLookup": "Look up today's top tech news in a browser and summarize the 3 best stories.",
+  "suggestMorningBrief": "Set up my morning brief for tomorrow at 8am with my priorities and weather."
 }

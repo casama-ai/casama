@@ -47,7 +47,7 @@ void main() {
   });
 
   testWidgets(
-    'quick ask uploads a shared photo to the bot computer and sends it',
+    'quick ask uploads a shared photo to chat media and sends it',
     (tester) async {
       await setSize(tester, const Size(600, 900));
       final backend = FakeBackend();
@@ -88,13 +88,15 @@ void main() {
       // A photo alone can be sent.
       await tester.tap(find.byKey(const Key('quickAskSend')));
       await tester.pumpAndSettle();
-      final uploaded = backend.uploads.entries.single;
-      expect(uploaded.key, endsWith('-IMG_0042.jpg'));
-      expect(uploaded.value, photo);
+      // Shared files go to /v1/media, not onto the computer (SERVER-TOOLS-PLAN Phase 4).
+      expect(backend.uploads, isEmpty);
+      final (_, name, bytes) = backend.uploadedMedia.single;
+      expect(name, 'IMG_0042.jpg');
+      expect(bytes, photo);
       final sent = backend.sentAttachments.single.single;
       expect(sent.name, 'IMG_0042.jpg');
       expect(sent.mimeType, 'image/jpeg');
-      expect(sent.path, 'workspace/${uploaded.key}');
+      expect(sent.path, startsWith('media:'));
       expect(find.text('chat'), findsOneWidget);
     },
   );

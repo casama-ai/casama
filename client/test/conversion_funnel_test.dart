@@ -137,11 +137,11 @@ void main() {
       );
       await tester.pumpAndSettle();
       expect(find.byKey(const Key('limitCard-max_steps')), findsOneWidget);
-      expect(find.byKey(const Key('limitCardKeepGoing')), findsOneWidget);
-      expect(find.byKey(const Key('limitCardSeePlans')), findsOneWidget);
+      expect(find.byKey(const Key('noticeKeepGoing')), findsOneWidget);
+      expect(find.byKey(const Key('noticeFix')), findsOneWidget);
       expect(events, contains('limit_card_shown'));
 
-      await tester.tap(find.byKey(const Key('limitCardKeepGoing')));
+      await tester.tap(find.byKey(const Key('noticeKeepGoing')));
       await tester.pump();
       expect(keptGoing, isTrue);
       expect(events, contains('limit_card_action'));

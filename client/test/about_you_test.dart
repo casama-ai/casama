@@ -133,18 +133,26 @@ void main() {
     expect(undone, 'fact-1');
   });
 
-  testWidgets('the name step comes first, filled in from the sign-in name, and goes once saved', (tester) async {
+  testWidgets('the name step comes first when sign-in gave no name, and goes once saved', (tester) async {
     await setSize(tester, const Size(400, 800));
-    final backend = FakeBackend()..about = const AboutYouView(displayName: 'Robin Park', nameAsked: false);
+    final backend = FakeBackend()..about = const AboutYouView(displayName: '', nameAsked: false);
     await tester.pumpWidget(harness(backend, const _Steps()));
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('nameStep')), findsOneWidget);
-    expect(tester.widget<TextField>(find.byKey(const Key('nameStepField'))).controller!.text, 'Robin');
     await tester.enterText(find.byKey(const Key('nameStepField')), 'Rob');
     await tester.pump();
     await tester.tap(find.byKey(const Key('nameStepContinue')));
     await tester.pumpAndSettle();
     expect(backend.about.preferredName, 'Rob');
+    expect(find.byKey(const Key('nameStep')), findsNothing);
+    expect(find.text('app'), findsOneWidget);
+  });
+
+  testWidgets('the name step is skipped when sign-in already provided a name', (tester) async {
+    await setSize(tester, const Size(400, 800));
+    final backend = FakeBackend()..about = const AboutYouView(displayName: 'Robin Park', nameAsked: false);
+    await tester.pumpWidget(harness(backend, const _Steps()));
+    await tester.pumpAndSettle();
     expect(find.byKey(const Key('nameStep')), findsNothing);
     expect(find.text('app'), findsOneWidget);
   });
@@ -164,7 +172,7 @@ void main() {
   testWidgets('the name step waits for the two-step code and a new password', (tester) async {
     await setSize(tester, const Size(400, 800));
     final backend = FakeBackend()
-      ..about = const AboutYouView(displayName: 'Robin Park', nameAsked: false)
+      ..about = const AboutYouView(displayName: '', nameAsked: false)
       ..twoStepCodeNeeded = true;
     await tester.pumpWidget(harness(backend, const _Steps()));
     await tester.pumpAndSettle();

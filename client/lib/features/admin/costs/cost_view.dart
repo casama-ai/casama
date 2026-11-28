@@ -283,12 +283,15 @@ final _adminCostsRawProvider = FutureProvider.autoDispose
     }, retry: (_, _) => null);
 
 /// One view's numbers in the chosen [CostBasis]. Flipping the basis never asks the server again.
+/// Numbers already loaded come back at once, with no async gap: the Overview's spend card is there
+/// on the first frame, so the console's list doesn't jump when it slides in late.
 final adminCostsProvider = FutureProvider.autoDispose
-    .family<AdminCosts, CostQuery>((ref, query) async {
-      final raw = await ref.watch(_adminCostsRawProvider(query).future);
-      return ref.watch(costBasisProvider) == CostBasis.paid
-          ? costsAsPaid(raw)
-          : raw;
+    .family<AdminCosts, CostQuery>((ref, query) {
+      final raw = ref.watch(_adminCostsRawProvider(query));
+      final paid = ref.watch(costBasisProvider) == CostBasis.paid;
+      AdminCosts shown(AdminCosts c) => paid ? costsAsPaid(c) : c;
+      if (raw.hasValue && !raw.hasError) return shown(raw.requireValue);
+      return ref.watch(_adminCostsRawProvider(query).future).then(shown);
     }, retry: (_, _) => null);
 
 /// Asks the server again for one view, or for every view when [query] is null.

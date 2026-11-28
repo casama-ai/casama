@@ -120,15 +120,25 @@ class _ClockRow extends StatelessWidget {
           SizedBox(width: 40, height: 40, child: CustomPaint(painter: _DialPainter(t, night))),
           const SizedBox(width: 12),
           Expanded(
+            flex: 3,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(name, style: context.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700)),
+                WholeWords(name, align: TextAlign.start, style: context.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700)),
                 Text('$dayWord · $offset', style: context.cardLabel),
               ],
             ),
           ),
-          Text(clockOf(context, t), style: context.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w600, fontFeatures: AppText.tabular, color: night ? const Color(0xFF5B5FC7) : null)),
+          const SizedBox(width: 8),
+          // On a narrow phone the time shrinks rather than squeezing the city name.
+          Flexible(
+            flex: 2,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: AlignmentDirectional.centerEnd,
+              child: Text(clockOf(context, t), style: context.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w600, fontFeatures: AppText.tabular, color: night ? const Color(0xFF5B5FC7) : null)),
+            ),
+          ),
         ],
       ),
     );

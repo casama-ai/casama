@@ -1084,6 +1084,35 @@ class CardImage extends StatelessWidget {
   }
 }
 
+/// Text that shrinks (down to [minScale]) so its longest word fits on one line, instead of breaking a
+/// word across lines ("Espress / o Roast").
+class WholeWords extends StatelessWidget {
+  const WholeWords(this.text, {super.key, this.style, this.align = TextAlign.center, this.maxLines, this.minScale = 0.7});
+  final String text;
+  final TextStyle? style;
+  final TextAlign align;
+  final int? maxLines;
+  final double minScale;
+  @override
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, box) {
+      final base = DefaultTextStyle.of(context).style.merge(style);
+      final size = base.fontSize ?? 14;
+      final scaler = MediaQuery.textScalerOf(context);
+      var widest = 0.0;
+      for (final w in text.split(RegExp(r'\s+'))) {
+        if (w.isEmpty) continue;
+        final tp = TextPainter(text: TextSpan(text: w, style: base), textDirection: Directionality.of(context), textScaler: scaler, maxLines: 1)..layout();
+        if (tp.width > widest) widest = tp.width;
+        tp.dispose();
+      }
+      final room = box.maxWidth.isFinite ? box.maxWidth : widest;
+      final k = widest > room && widest > 0 ? (room / widest).clamp(minScale, 1.0) : 1.0;
+      return Text(text, textAlign: align, maxLines: maxLines, overflow: maxLines == null ? null : TextOverflow.ellipsis, style: base.copyWith(fontSize: size * k));
+    },
+  );
+}
+
 /// A logo or crest, or the first letters on a tinted circle.
 class Monogram extends StatelessWidget {
   const Monogram({super.key, required this.text, this.url, this.size = 34, this.color});
@@ -1094,13 +1123,16 @@ class Monogram extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = color ?? context.colorScheme.primary;
-    final letters = text.replaceAll(RegExp(r'[^A-Za-z0-9]'), '');
+    // A name of several words shows its initials ("Maria Santos" → MS, "Manchester City" → MC);
+    // one word or a ticker shows its first letters (AAPL → AA, BTC → BTC).
+    final words = text.split(RegExp(r'\s+')).map((w) => w.replaceAll(RegExp(r'[^\p{L}\p{N}]', unicode: true), '')).where((w) => w.isNotEmpty).toList();
+    final letters = words.length > 1 ? words.take(2).map((w) => w.characters.first).join() : (words.firstOrNull ?? '');
     final fallback = Container(
       width: size,
       height: size,
       alignment: Alignment.center,
       decoration: BoxDecoration(color: c.withValues(alpha: 0.14), shape: BoxShape.circle),
-      child: Text(letters.isEmpty ? '?' : letters.substring(0, math.min(letters.length, size > 30 ? 3 : 2)).toUpperCase(), style: context.textTheme.labelSmall?.copyWith(color: c, fontWeight: FontWeight.w800, fontSize: size * 0.3)),
+      child: Text(letters.isEmpty ? '?' : letters.characters.take(size > 30 ? 3 : 2).toString().toUpperCase(), style: context.textTheme.labelSmall?.copyWith(color: c, fontWeight: FontWeight.w800, fontSize: size * 0.3)),
     );
     final u = url;
     if (u == null || !u.startsWith('https://')) return fallback;

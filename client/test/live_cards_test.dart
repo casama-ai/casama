@@ -111,6 +111,16 @@ void main() {
     await tester.pumpWidget(const SizedBox());
   });
 
+  testWidgets('a Contact shows the initials of the name, not its first letters', (tester) async {
+    await show(tester, [
+      {'id': 'root', ...Map<String, Object?>.from(composed['contact']! as Map)},
+    ], size: const Size(320, 2400));
+    _noErrors(tester);
+    expect(find.text('MS'), findsOneWidget);
+    expect(find.text('MAR'), findsNothing);
+    await tester.pumpWidget(const SizedBox());
+  });
+
   testWidgets('a Dashboard lays several cards out', (tester) async {
     await show(tester, [
       {'id': 'root', 'component': 'Dashboard', 'title': 'Morning brief', 'children': ['w', 'q', 'c']},

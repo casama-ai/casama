@@ -47274,6 +47274,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Usage up to this amount each calendar month counts as \$0 paid.'**
   String get vendorIncludedUsdHelp;
+
+  /// No description provided for @upgradePromptIncludedIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Included in {plan} and above.'**
+  String upgradePromptIncludedIn(String plan);
+
+  /// No description provided for @payFeedbackTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick question'**
+  String get payFeedbackTitle;
+
+  /// No description provided for @payFeedbackPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'What would make Casama worth paying for to you?'**
+  String get payFeedbackPrompt;
+
+  /// No description provided for @payFeedbackHint.
+  ///
+  /// In en, this message translates to:
+  /// **'A feature, limit, or workflow you\'d happily pay for…'**
+  String get payFeedbackHint;
+
+  /// No description provided for @suggestBrowserLookup.
+  ///
+  /// In en, this message translates to:
+  /// **'Look up today\'s top tech news in a browser and summarize the 3 best stories.'**
+  String get suggestBrowserLookup;
+
+  /// No description provided for @suggestMorningBrief.
+  ///
+  /// In en, this message translates to:
+  /// **'Set up my morning brief for tomorrow at 8am with my priorities and weather.'**
+  String get suggestMorningBrief;
 }
 
 class _AppLocalizationsDelegate

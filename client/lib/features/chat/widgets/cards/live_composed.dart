@@ -93,13 +93,21 @@ final definitionComponent = liveCard('Definition', const ['word', 'phonetic', 'a
     body: Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
+        // The word gets the whole width (and shrinks before it would split); the pronunciation
+        // and play button sit beside it when there is room, else under it.
+        Wrap(
+          crossAxisAlignment: WrapCrossAlignment.end,
+          spacing: 10,
           children: [
-            Flexible(child: Text(word, style: context.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700, fontFamily: context.textTheme.headlineMedium?.fontFamily))),
-            const SizedBox(width: 10),
-            if (p.s('phonetic') case final ph?) Flexible(child: Padding(padding: const EdgeInsets.only(bottom: 5), child: Text(ph, maxLines: 1, overflow: TextOverflow.ellipsis, style: context.textTheme.titleSmall?.copyWith(color: context.colorScheme.onSurfaceVariant)))),
-            if (p.s('audioUrl') case final a?) _PlayButton(url: a),
+            WholeWords(word, align: TextAlign.start, minScale: 0.5, style: context.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700, fontFamily: context.textTheme.headlineMedium?.fontFamily)),
+            if (p.s('phonetic') != null || p.s('audioUrl') != null)
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (p.s('phonetic') case final ph?) Flexible(child: Padding(padding: const EdgeInsets.only(bottom: 5), child: Text(ph, maxLines: 1, overflow: TextOverflow.ellipsis, style: context.textTheme.titleSmall?.copyWith(color: context.colorScheme.onSurfaceVariant)))),
+                  if (p.s('audioUrl') case final a?) _PlayButton(url: a),
+                ],
+              ),
           ],
         ),
         const SizedBox(height: 10),
@@ -427,7 +435,7 @@ final comparisonComponent = liveCard('Comparison', const ['title', 'items', 'row
         builder: (context, box) {
           // Columns never get so narrow that words split letter by letter: past three or four
           // items the table keeps a readable width and scrolls sideways instead.
-          final labelW = (box.maxWidth * 0.24).clamp(60.0, 110.0);
+          final labelW = (box.maxWidth * 0.26).clamp(70.0, 110.0);
           final fitW = (box.maxWidth - labelW) / items.length;
           final itemW = fitW < 72 ? 96.0 : fitW;
           final positive = context.appColors.positive;
@@ -446,7 +454,7 @@ final comparisonComponent = liveCard('Comparison', const ['title', 'items', 'row
                         padding: const EdgeInsets.fromLTRB(6, 10, 6, 10),
                         child: Column(
                           children: [
-                            _WholeWords(it, maxLines: 3, style: context.textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w800)),
+                            WholeWords(it, maxLines: 3, style: context.textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w800)),
                             if (top > 0 && wins[i] == top) Padding(padding: const EdgeInsets.only(top: 4), child: FittedBox(fit: BoxFit.scaleDown, child: LivePill(text: context.l10n.cardWins(wins[i]), color: positive))),
                           ],
                         ),
@@ -457,7 +465,7 @@ final comparisonComponent = liveCard('Comparison', const ['title', 'items', 'row
               for (final r in rows)
                 TableRow(
                   children: [
-                    Padding(padding: const EdgeInsets.fromLTRB(8, 10, 4, 10), child: _WholeWords(r.s('label') ?? '', align: TextAlign.start, style: context.cardLabel?.copyWith(fontWeight: FontWeight.w600))),
+                    Padding(padding: const EdgeInsets.fromLTRB(8, 10, 4, 10), child: WholeWords(r.s('label') ?? '', align: TextAlign.start, style: context.cardLabel?.copyWith(fontWeight: FontWeight.w600))),
                     for (var i = 0; i < items.length; i++)
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 3),
@@ -466,7 +474,7 @@ final comparisonComponent = liveCard('Comparison', const ['title', 'items', 'row
                           // the cell's full width.
                           padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 7),
                           decoration: r.i('best') == i ? BoxDecoration(color: positive.withValues(alpha: 0.14), borderRadius: BorderRadius.circular(8)) : null,
-                          child: _WholeWords(
+                          child: WholeWords(
                             i < r.texts('values').length ? r.texts('values')[i] : '—',
                             style: context.textTheme.bodySmall?.copyWith(fontWeight: r.i('best') == i ? FontWeight.w800 : null, color: r.i('best') == i ? positive : null),
                           ),
@@ -483,34 +491,6 @@ final comparisonComponent = liveCard('Comparison', const ['title', 'items', 'row
     footer: composedFooter(context, p),
   );
 });
-
-/// Text that shrinks (down to 70%) so its longest word fits on one line, instead of breaking a
-/// word across lines ("Espress / o Roast").
-class _WholeWords extends StatelessWidget {
-  const _WholeWords(this.text, {this.style, this.align = TextAlign.center, this.maxLines});
-  final String text;
-  final TextStyle? style;
-  final TextAlign align;
-  final int? maxLines;
-  @override
-  Widget build(BuildContext context) => LayoutBuilder(
-    builder: (context, box) {
-      final base = DefaultTextStyle.of(context).style.merge(style);
-      final size = base.fontSize ?? 14;
-      final scaler = MediaQuery.textScalerOf(context);
-      var widest = 0.0;
-      for (final w in text.split(RegExp(r'\s+'))) {
-        if (w.isEmpty) continue;
-        final tp = TextPainter(text: TextSpan(text: w, style: base), textDirection: Directionality.of(context), textScaler: scaler, maxLines: 1)..layout();
-        if (tp.width > widest) widest = tp.width;
-        tp.dispose();
-      }
-      final room = box.maxWidth.isFinite ? box.maxWidth : widest;
-      final k = widest > room && widest > 0 ? (room / widest).clamp(0.7, 1.0) : 1.0;
-      return Text(text, textAlign: align, maxLines: maxLines, overflow: maxLines == null ? null : TextOverflow.ellipsis, style: base.copyWith(fontSize: size * k));
-    },
-  );
-}
 
 final prosConsComponent = liveCard('ProsCons', const ['title', 'pros', 'cons', 'verdict'], (context, p, ctl) {
   final l = context.l10n;

@@ -150,9 +150,10 @@ bool get _appInFront => switch (WidgetsBinding.instance.lifecycleState) {
 List<(String, String)> _suggestions(BuildContext context) {
   final l10n = context.l10n;
   return [
-    ('🌐', 'Look up today\'s top tech news in a browser and summarize the 3 best stories.'),
-    ('☀️', 'Set up my morning brief for tomorrow at 8am with my priorities and weather.'),
+    ('🌐', l10n.suggestBrowserLookup),
+    ('☀️', l10n.suggestMorningBrief),
     ('✅', l10n.suggestPlanDay),
+    ('💡', l10n.suggestCapabilities),
   ];
 }
 
@@ -2497,6 +2498,10 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                             () => ref.read(chatControllerProvider(widget.botId).notifier).send(text),
                           );
                         }
+                      : null,
+                  canRetry: canRetry,
+                  onRetry: canRetry
+                      ? () => runGuarded(context, ref.read(chatControllerProvider(widget.botId).notifier).retry)
                       : null,
                 );
               }

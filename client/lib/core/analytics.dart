@@ -159,7 +159,6 @@ class Analytics {
         setOnce: {'signup_platform': Telemetry.platformName},
       ),
     );
-    await trackAppOpenedFirst();
   }
 
   /// Sends `app_opened_first` once per device after the first signed-in open

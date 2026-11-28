@@ -238,9 +238,11 @@ void main() {
     await tester.sendKeyEvent(LogicalKeyboardKey.keyV);
     await tester.sendKeyUpEvent(LogicalKeyboardKey.controlLeft);
     await tester.pumpAndSettle();
-    final uploaded = b.uploads.entries.single;
-    expect(uploaded.key, contains('pasted-'));
-    expect(uploaded.key, endsWith('.png'));
-    expect(uploaded.value, png);
+    // Attachments go to /v1/media, not onto a computer (SERVER-TOOLS-PLAN Phase 4).
+    expect(b.uploads, isEmpty);
+    final (_, name, bytes) = b.uploadedMedia.single;
+    expect(name, contains('pasted-'));
+    expect(name, endsWith('.png'));
+    expect(bytes, png);
   });
 }

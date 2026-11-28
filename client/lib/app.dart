@@ -151,6 +151,7 @@ class CasamaApp extends ConsumerWidget {
         final userId = ref.read(backendProvider).userId;
         if (userId != null) {
           unawaited(Analytics.identify(userId));
+          unawaited(Analytics.trackAppOpenedFirst());
           unawaited(Analytics.syncInternal(userId, ref.read(backendProvider).isInternalAccount));
           unawaited(Analytics.syncOptOut(ref.read(backendProvider).setAnalyticsOptOut));
           unawaited(Attribution.sync(userId, ref.read(backendProvider).setAttribution));
