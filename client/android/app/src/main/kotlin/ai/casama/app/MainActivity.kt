@@ -139,16 +139,6 @@ class MainActivity : FlutterFragmentActivity() {
         handleBrowserNotificationIntent(intent)
     }
 
-    override fun onPause() {
-        AppBrowserBridge.onActivityPause()
-        super.onPause()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        AppBrowserBridge.onActivityResume()
-    }
-
     /**
      * Answer on a ring (D-424), tapped on the Lock Screen: the plugin's see-through activity shows
      * over the lock, but the app doesn't (it never shows over the lock), so the call screen would sit
@@ -183,6 +173,7 @@ class MainActivity : FlutterFragmentActivity() {
     }
 
     override fun onPause() {
+        AppBrowserBridge.onActivityPause()
         super.onPause()
         LiveRun.appInFront = false
         PushNotifications.foreground = false
@@ -194,6 +185,7 @@ class MainActivity : FlutterFragmentActivity() {
         LiveRun.appInFront = true
         PushNotifications.foreground = true
         SignInSheet.resumed()
+        AppBrowserBridge.onActivityResume()
     }
 }
 
