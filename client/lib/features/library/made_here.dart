@@ -1,3 +1,4 @@
+import '../../core/analytics.dart';
 import 'dart:math' as math;
 
 import 'package:casama_sdk/casama_sdk.dart';
@@ -244,21 +245,31 @@ class MadeHereButton extends ConsumerWidget {
         .value;
     if (made == null || made.count == 0) return const SizedBox.shrink();
     final count = made.more ? '${made.count}+' : '${made.count}';
+    final scheme = context.colorScheme;
+    // A total, not something waiting: a quiet count, not an alert's red.
     return Badge(
       key: const Key('madeHereCount'),
       label: Text(count, style: const TextStyle(fontFeatures: AppText.tabular)),
+      backgroundColor: scheme.surfaceContainerHighest,
+      textColor: scheme.onSurface,
       offset: const Offset(-2, 2),
       child: HeaderIconButton(
         key: const Key('madeHereButton'),
         icon: LucideIcons.library,
         tooltip: context.l10n.madeHereCount(count),
-        onPressed:
-            onDesktop ??
-            () => showMadeHereSheet(
-              context,
-              botId: botId,
-              conversationId: conversationId,
-            ),
+        onPressed: () {
+          Analytics.log('chat_header_action', {
+            'action': 'made_here',
+            'placement': 'header',
+          });
+          final desktop = onDesktop;
+          if (desktop != null) return desktop();
+          showMadeHereSheet(
+            context,
+            botId: botId,
+            conversationId: conversationId,
+          );
+        },
       ),
     );
   }

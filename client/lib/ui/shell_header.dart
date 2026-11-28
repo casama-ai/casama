@@ -227,8 +227,11 @@ class HeaderIconButton extends StatelessWidget {
   }
 
   Widget _headerButton(BuildContext context, ColorScheme scheme, Color fill) {
+    // Inside a [HeaderButtonGroup] the capsule is the button's surface: no circle or ring of its own.
+    final grouped = context.dependOnInheritedWidgetOfExactType<_HeaderGroupScope>() != null;
+    final surface = grouped && !selected ? Colors.transparent : fill;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 3),
+      padding: EdgeInsets.symmetric(horizontal: grouped ? 0 : 3),
       child: Stack(
         clipBehavior: Clip.none,
         children: [
@@ -241,10 +244,12 @@ class HeaderIconButton extends StatelessWidget {
               minimumSize: const Size(36, 36),
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               padding: EdgeInsets.zero,
-              backgroundColor: selected ? scheme.primary.withValues(alpha: 0.14) : fill,
+              backgroundColor: selected ? scheme.primary.withValues(alpha: 0.14) : surface,
               foregroundColor: selected ? scheme.primary : scheme.onSurface,
-              disabledBackgroundColor: fill.withValues(alpha: 0.5),
-              side: BorderSide(color: selected ? scheme.primary.withValues(alpha: 0.4) : context.appColors.hairline),
+              disabledBackgroundColor: grouped ? Colors.transparent : fill.withValues(alpha: 0.5),
+              side: grouped && !selected
+                  ? BorderSide.none
+                  : BorderSide(color: selected ? scheme.primary.withValues(alpha: 0.4) : context.appColors.hairline),
             ),
           ),
           if (badge)
@@ -267,6 +272,42 @@ class HeaderIconButton extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Several [HeaderIconButton]s in one capsule, so a row of actions reads as one control and
+/// takes less room than separate circles (the phone chat header: Call, New Topic, More).
+class HeaderButtonGroup extends StatelessWidget {
+  const HeaderButtonGroup({super.key, required this.children});
+
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = context.colorScheme;
+    final fill = context.isDark ? scheme.surfaceContainer : scheme.surfaceContainerLowest;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 3),
+      child: DecoratedBox(
+        decoration: ShapeDecoration(
+          color: fill,
+          shape: StadiumBorder(side: BorderSide(color: context.appColors.hairline)),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 2),
+          child: _HeaderGroupScope(
+            child: Row(mainAxisSize: MainAxisSize.min, spacing: 2, children: children),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _HeaderGroupScope extends InheritedWidget {
+  const _HeaderGroupScope({required super.child});
+
+  @override
+  bool updateShouldNotify(_HeaderGroupScope oldWidget) => false;
 }
 
 Widget _maybeShimmer(bool on, Color color, Text text) => on ? Shimmer(key: text.key, color: color, band: 0.35, duration: const Duration(milliseconds: 1100), child: text) : text;

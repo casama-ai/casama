@@ -5,6 +5,8 @@ import 'package:casama/core/backend.dart';
 import 'package:casama/features/chat/chat_screen.dart';
 import 'package:casama/features/chat/widgets/chat_widgets.dart';
 import 'package:casama/features/chat/widgets/composer.dart';
+import 'package:casama/ui/bot_avatar.dart';
+import 'package:casama/ui/shell_header.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
@@ -44,6 +46,15 @@ FakeBackend _backend() => FakeBackend()
 Future<FakeBackend> _open(WidgetTester tester) async {
   await setSize(tester, const Size(1200, 900));
   final b = _backend();
+  await tester.pumpWidget(
+    harness(b, const ChatScreen(botId: botId, conversationId: convId)),
+  );
+  await tester.pumpAndSettle();
+  return b;
+}
+
+Future<FakeBackend> _openWith(WidgetTester tester, FakeBackend b) async {
+  await setSize(tester, const Size(1200, 900));
   await tester.pumpWidget(
     harness(b, const ChatScreen(botId: botId, conversationId: convId)),
   );
@@ -148,6 +159,68 @@ void main() {
   test('findInEntries matches every word, ignoring case', () {
     // Pure function over the controller's entries.
     expect(findInEntries(const [], 'x'), isEmpty);
+  });
+
+  testWidgets(
+    'on a phone the header keeps Call, New Topic and More, so the name has room; Made Here is in More',
+    (tester) async {
+      await setSize(tester, const Size(390, 844));
+      final b = _backend()
+        ..creationList = [fakeCreation('c1'), fakeCreation('c2', title: 'Zebra game')];
+      await tester.pumpWidget(
+        harness(b, const ChatScreen(botId: botId, conversationId: convId)),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('callButton')), findsOneWidget);
+      expect(find.byKey(const Key('newChatButton')), findsOneWidget);
+      expect(find.byKey(const Key('madeHereButton')), findsNothing);
+      expect(find.byKey(const Key('appBrowserHeaderButton')), findsNothing);
+      // One capsule holds the three.
+      for (final k in ['callButton', 'newChatButton', 'chatMoreMenu']) {
+        expect(
+          find.descendant(of: find.byType(HeaderButtonGroup), matching: find.byKey(Key(k))),
+          findsOneWidget,
+        );
+      }
+
+      // The name opens the bot sheet: profile, topics and what it made.
+      await tester.tap(find.descendant(of: find.byType(ShellHeader), matching: find.byType(BotAvatar)));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('chatBotSheet')), findsOneWidget);
+      expect(find.byKey(const Key('botSheetProfile')), findsOneWidget);
+      expect(find.byKey(const Key('botSheetTopics')), findsOneWidget);
+      await tester.tap(find.byKey(const Key('botSheetMadeHere')));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('chatBotSheet')), findsNothing);
+      expect(find.text('Zebra game'), findsOneWidget);
+      await tester.tapAt(const Offset(195, 40));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const Key('chatMoreMenu')));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('openMadeHere')), findsOneWidget);
+      expect(
+        tester.widget<Text>(find.byKey(const Key('madeHereMenuCount'))).data,
+        '2',
+      );
+      await tester.tap(find.byKey(const Key('openMadeHere')));
+      await tester.pumpAndSettle();
+      expect(find.text('Zebra game'), findsOneWidget);
+    },
+  );
+
+  testWidgets('wider than a phone, Made Here keeps its header button', (
+    tester,
+  ) async {
+    final b = await _openWith(
+      tester,
+      _backend()..creationList = [fakeCreation('c1')],
+    );
+    expect(b.creationList, hasLength(1));
+    expect(find.byKey(const Key('madeHereButton')), findsOneWidget);
+    await tester.tap(find.byKey(const Key('chatMoreMenu')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('openMadeHere')), findsNothing);
   });
 
   testWidgets('pasting a picture attaches it', (tester) async {

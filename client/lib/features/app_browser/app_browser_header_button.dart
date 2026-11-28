@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../../core/analytics.dart';
 import '../../core/haptics.dart';
 import '../../core/providers.dart';
 import '../../core/widgets.dart';
@@ -59,6 +60,10 @@ class AppBrowserHeaderButton extends ConsumerWidget {
       selected: always,
       onPressed: () {
         Haptic.select();
+        Analytics.log('chat_header_action', {
+          'action': 'app_browser',
+          'placement': 'header',
+        });
         unawaited(openAppBrowserByHand(context, ref));
       },
       onLongPress: () => _showMenu(context, ref),

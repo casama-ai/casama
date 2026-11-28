@@ -226,6 +226,10 @@ export const ANALYTICS_CLIENT_EVENTS: Record<string, string[]> = {
     "choice",
     "system"
   ],
+  "chat_header_action": [
+    "action",
+    "placement"
+  ],
   "push_opened": [
     "kind"
   ],

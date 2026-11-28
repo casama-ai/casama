@@ -55,6 +55,7 @@ const analyticsClientEvents = <String>{
   'app_browser_site_allowed',
   'app_browser_done_shown',
   'app_browser_done_answered',
+  'chat_header_action',
   'push_opened',
   'app_startup_failed',
   'app_active_daily',

@@ -2012,6 +2012,18 @@
       "funnels": []
     },
     {
+      "name": "login_card_skipped",
+      "by": ["server"],
+      "description": "A bot asked to sign in to a site in the in-app browser, but a login for that site was already saved, so the Share Login card was not shown again. outcome: use_saved (the bot was told to fill the saved login) or on_page (the saved login didn't get it in, so the page was handed to the person to sign in themselves).",
+      "properties": {
+        "outcome": {
+          "type": "string",
+          "values": ["use_saved", "on_page"]
+        }
+      },
+      "funnels": []
+    },
+    {
       "name": "app_browser_done_answered",
       "by": ["client"],
       "description": "What the person did with the in-app browser's done card. choice: back_to_chat (the card's button), stay (kept the page open) or closed (closed the browser with the card still showing).",
@@ -2023,6 +2035,22 @@
         "system": {
           "type": "string",
           "values": ["ios", "android", "macos", "linux", "windows"]
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "chat_header_action",
+      "by": ["client"],
+      "description": "The person used one of a chat's header actions. placement: header (its own button), menu (the More menu; on phones Made Here and the browser live there so the bot's name has room) or sheet (the bot sheet a phone opens from the bot's name). action bot_sheet: that sheet opened.",
+      "properties": {
+        "action": {
+          "type": "string",
+          "values": ["call", "new_topic", "made_here", "app_browser", "bot_sheet", "profile", "topics"]
+        },
+        "placement": {
+          "type": "string",
+          "values": ["header", "menu", "sheet"]
         }
       },
       "funnels": []

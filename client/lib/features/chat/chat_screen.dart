@@ -57,7 +57,7 @@ import '../../ui/motion.dart';
 import '../../ui/shell_header.dart';
 import '../files/file_preview.dart';
 import '../home/home_shell.dart';
-import '../library/made_here.dart' show MadeHereButton, sidePanelMadeHereProvider;
+import '../library/made_here.dart' show MadeHereButton, madeHereProvider, showMadeHereSheet, sidePanelMadeHereProvider;
 import '../../core/dropped_files.dart';
 import '../../ui/shell_layout.dart';
 import '../projects/make_project.dart';
@@ -1521,6 +1521,45 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     final group = widget.group ? ref.watch(groupChatsProvider).value?.where((c) => c.id == widget.conversationId).firstOrNull : null;
     final groupBots = ref.watch(botsProvider).value ?? const <Bot>[];
 
+    final phone = layout == LayoutSize.phone;
+    // A call is with one bot; in a group only the lead would hear you, so group chats have none.
+    final Widget? callButton = widget.group
+        ? null
+        : HeaderIconButton(
+            key: const Key('callButton'),
+            icon: LucideIcons.phone,
+            tooltip: l10n.startCall,
+            onPressed: () {
+              Analytics.log('chat_header_action', {'action': 'call', 'placement': 'header'});
+              _callBack(chat.conversationId);
+            },
+          );
+    // Topics are a bot's own chats (D-253); a new one from a group would leave the group.
+    final Widget? newTopicButton = widget.group
+        ? null
+        : HeaderIconButton(
+            key: const Key('newChatButton'),
+            icon: LucideIcons.squarePen,
+            tooltip: l10n.newTopic,
+            onPressed: chat.running || chat.empty
+                ? null
+                : () {
+                    Analytics.log('chat_header_action', {'action': 'new_topic', 'placement': 'header'});
+                    controller.newChat();
+                  },
+          );
+    final Widget moreMenu = _MoreMenu(
+      botId: widget.botId,
+      showComputer: layout != LayoutSize.desktop && !teen,
+      madeHereIn: !widget.group && phone ? chat.conversationId ?? '' : null,
+      onConversations: widget.group ? null : () => _showConversations(context, chat.conversationId),
+      projectId: _currentConversation(chat.conversationId)?.projectId,
+      onMakeProject: _canMakeProject(chat.conversationId) ? () => _makeProject(chat.conversationId!) : null,
+      onFind: chat.empty ? null : _openFind,
+      onDelete: chat.running || !_canDeleteCurrent(chat.conversationId) ? null : () => _deleteCurrent(chat.conversationId!, name),
+      onMembers: widget.group ? () => _showMembers(context) : null,
+    );
+
     return Wallpaper(
       force: true,
       // The iOS status-bar tap scrolls this list back to its start; reversed, that's the latest
@@ -1550,7 +1589,13 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         titleLeading: group != null
             ? GroupAvatar(bots: [for (final id in group.botIds) ?groupBots.where((b) => b.id == id).firstOrNull], size: 36)
             : BotAvatar(name: name.isEmpty ? '?' : name, avatar: bot?.avatarUrl, size: 36, status: chat.running ? BotStatusEnum.working : bot?.status),
-        onTitleTap: widget.group ? null : () => context.pushOnce('/bots/${widget.botId}/settings'),
+        // Phones: a small sheet with the bot's ways in (profile, topics, Made Here), since the
+        // header has no room for them; wider screens go straight to the profile.
+        onTitleTap: widget.group
+            ? null
+            : phone
+            ? () => _showBotSheet(context, name: name, avatar: bot?.avatarUrl, status: status, working: chat.running, conversationId: chat.conversationId)
+            : () => context.pushOnce('/bots/${widget.botId}/settings'),
         titleTooltip: widget.group ? null : l10n.botProfile,
         actions: [
           // Two panes (D-411): the bot's computer takes the list's place beside this chat, and back.
@@ -1572,46 +1617,31 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
               child: HeaderIconButton(icon: LucideIcons.monitor, tooltip: l10n.chatComputerLive, onPressed: () => context.pushOnce('/computer?bot=${widget.botId}')),
             ),
           // This device's in-app browser: open it, or let bots browse here (APP-BROWSER-ALWAYS-PLAN §3 C).
-          if (!widget.group && kAppBrowserCode) const AppBrowserHeaderButton(),
-          // A call is with one bot; in a group only the lead would hear you, so group chats have none.
-          if (!widget.group)
-          HeaderIconButton(
-            key: const Key('callButton'),
-            icon: LucideIcons.phone,
-            tooltip: l10n.startCall,
-            onPressed: () => _callBack(chat.conversationId),
-          ),
-          // Topics are a bot's own chats (D-253); a new one from a group would leave the group.
-          if (!widget.group)
-            HeaderIconButton(
-              key: const Key('newChatButton'),
-              icon: LucideIcons.squarePen,
-              tooltip: l10n.newTopic,
-              onPressed: chat.running || chat.empty ? null : controller.newChat,
-            ),
-          // What the bot made, this chat's first (Library Phase 4). On desktop it opens beside the chat.
-          if (!widget.group)
-            MadeHereButton(
-              botId: widget.botId,
-              conversationId: chat.conversationId,
-              // Teen mode has no side panel (it holds the computer): the phone's way, then.
-              onDesktop: layout == LayoutSize.desktop && !teen
-                  ? () {
-                      ref.read(sidePanelMadeHereProvider.notifier).set(widget.botId, true);
-                      if (!ref.read(computerPanelProvider)) ref.read(computerPanelProvider.notifier).toggle();
-                    }
-                  : null,
-            ),
-          _MoreMenu(
-            botId: widget.botId,
-            showComputer: layout != LayoutSize.desktop && !teen,
-            onConversations: widget.group ? null : () => _showConversations(context, chat.conversationId),
-            projectId: _currentConversation(chat.conversationId)?.projectId,
-            onMakeProject: _canMakeProject(chat.conversationId) ? () => _makeProject(chat.conversationId!) : null,
-            onFind: chat.empty ? null : _openFind,
-            onDelete: chat.running || !_canDeleteCurrent(chat.conversationId) ? null : () => _deleteCurrent(chat.conversationId!, name),
-            onMembers: widget.group ? () => _showMembers(context) : null,
-          ),
+          // Phones keep the header to Call, New Topic and More, so the bot's name has room: the
+          // browser is in More there (it always was).
+          if (!widget.group && kAppBrowserCode && layout != LayoutSize.phone) const AppBrowserHeaderButton(),
+          // Phones: Call, New Topic and More in one capsule, so the bot's name keeps its room.
+          if (phone)
+            HeaderButtonGroup(children: [?callButton, ?newTopicButton, moreMenu])
+          else ...[
+            ?callButton,
+            ?newTopicButton,
+            // What the bot made, this chat's first (Library Phase 4). On desktop it opens beside the
+            // chat. Phones: in More, with its count.
+            if (!widget.group)
+              MadeHereButton(
+                botId: widget.botId,
+                conversationId: chat.conversationId,
+                // Teen mode has no side panel (it holds the computer): the phone's way, then.
+                onDesktop: layout == LayoutSize.desktop && !teen
+                    ? () {
+                        ref.read(sidePanelMadeHereProvider.notifier).set(widget.botId, true);
+                        if (!ref.read(computerPanelProvider)) ref.read(computerPanelProvider.notifier).toggle();
+                      }
+                    : null,
+              ),
+            moreMenu,
+          ],
           // Far right, next to the panel it opens and closes; the live dot shows while the bot works on its computer.
           // Group chats have no computer panel (the shell shows it only beside a bot's own chat).
           if (layout == LayoutSize.desktop && !widget.group && !teen)
@@ -2670,6 +2700,33 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     );
   }
 
+  Future<void> _showBotSheet(
+    BuildContext context, {
+    required String name,
+    String? avatar,
+    String? status,
+    required bool working,
+    String? conversationId,
+  }) {
+    Haptic.select();
+    Analytics.log('chat_header_action', {'action': 'bot_sheet', 'placement': 'header'});
+    return showAdaptiveSheet<void>(
+      context: context,
+      builder: (sheet) => _BotSheet(
+        botId: widget.botId,
+        name: name,
+        avatar: avatar,
+        status: status,
+        working: working,
+        conversationId: conversationId,
+        // The chat's context, not the sheet's: the sheet is gone by the time these run.
+        onProfile: () => context.pushOnce('/bots/${widget.botId}/settings'),
+        onTopics: () => _showConversations(context, conversationId),
+        onMadeHere: () => showMadeHereSheet(context, botId: widget.botId, conversationId: conversationId),
+      ),
+    );
+  }
+
   Future<void> _showConversations(BuildContext context, String? currentId) async {
     ref.invalidate(conversationsProvider(widget.botId));
     await showAdaptiveSheet<void>(
@@ -3174,8 +3231,12 @@ class _HeroMark extends StatelessWidget {
 /// The chat's … menu: its conversations, the computer (phones and tablets) and the bot's profile,
 /// where its memory, routines and apps live (and its activity, under Advanced).
 class _MoreMenu extends ConsumerWidget {
-  const _MoreMenu({required this.botId, required this.showComputer, required this.onConversations, this.projectId, this.onMakeProject, this.onFind, this.onDelete, this.onMembers});
+  const _MoreMenu({required this.botId, required this.showComputer, required this.onConversations, this.madeHereIn, this.projectId, this.onMakeProject, this.onFind, this.onDelete, this.onMembers});
   final String botId;
+
+  /// Phones: Made Here is in this menu with its count (the header keeps room for the name). The
+  /// chat it's opened from ('' before the chat has one); null leaves it out.
+  final String? madeHereIn;
 
   /// Group chats (D-118): the bots in it, each opening its own profile, in place of one bot's.
   final VoidCallback? onMembers;
@@ -3211,6 +3272,22 @@ class _MoreMenu extends ConsumerWidget {
       style: const MenuStyle(minimumSize: WidgetStatePropertyAll(Size(menuWidth, 0)), maximumSize: WidgetStatePropertyAll(Size(menuWidth, double.infinity))),
       menuChildren: [
         if (onConversations != null) item(LucideIcons.messagesSquare, l10n.topics, onConversations!, key: const Key('openConversations')),
+        if (madeHereIn case final conv?)
+          if (ref.watch(madeHereProvider((botId: botId, conversationId: conv.isEmpty ? null : conv))).value case final made? when made.count > 0)
+            MenuItemButton(
+              key: const Key('openMadeHere'),
+              leadingIcon: const Icon(LucideIcons.library, size: 20),
+              trailingIcon: Text(
+                made.more ? '${made.count}+' : '${made.count}',
+                key: const Key('madeHereMenuCount'),
+                style: TextStyle(color: context.colorScheme.onSurfaceVariant, fontFeatures: AppText.tabular),
+              ),
+              onPressed: () {
+                Analytics.log('chat_header_action', {'action': 'made_here', 'placement': 'menu'});
+                showMadeHereSheet(context, botId: botId, conversationId: conv.isEmpty ? null : conv);
+              },
+              child: Padding(padding: const EdgeInsets.only(right: 12), child: Text(l10n.madeHere)),
+            ),
         if (onFind != null) item(LucideIcons.textSearch, l10n.findInChat, onFind!, key: const Key('findInChat')),
         if (projectId != null)
           item(LucideIcons.folderKanban, l10n.openProject, () => context.pushOnce('/projects/$projectId'), key: const Key('openProject'))
@@ -3218,7 +3295,10 @@ class _MoreMenu extends ConsumerWidget {
           item(LucideIcons.folderPlus, l10n.makeProject, onMakeProject!, key: const Key('makeProject')),
         if (showComputer) item(LucideIcons.monitor, l10n.navComputer, () => context.pushOnce('/computer?bot=$botId'), key: const Key('openComputer')),
         if (ref.watch(appBrowserReadyProvider))
-          item(LucideIcons.globe, appBrowserTitleFor(l10n), () => openAppBrowserByHand(context, ref), key: const Key('openAppBrowser')),
+          item(LucideIcons.globe, appBrowserTitleFor(l10n), () {
+            Analytics.log('chat_header_action', {'action': 'app_browser', 'placement': 'menu'});
+            openAppBrowserByHand(context, ref);
+          }, key: const Key('openAppBrowser')),
         const Divider(),
         if (onMembers != null)
           item(LucideIcons.users, l10n.groupMembers, onMembers!, key: const Key('openGroupMembers'))
@@ -3887,6 +3967,100 @@ class _TopicsBar extends ConsumerWidget {
           padding: EdgeInsets.fromLTRB(side, AppSpace.xs, side, AppSpace.xs),
           child: Row(spacing: AppSpace.xs, children: chips),
         ),
+      ),
+    );
+  }
+}
+
+/// The phone chat's bot sheet, from the bot's name in the header: who it is and what it's doing,
+/// then its profile, its topics and what it made.
+class _BotSheet extends ConsumerWidget {
+  const _BotSheet({
+    required this.botId,
+    required this.name,
+    required this.avatar,
+    required this.status,
+    required this.working,
+    required this.conversationId,
+    required this.onProfile,
+    required this.onTopics,
+    required this.onMadeHere,
+  });
+
+  final String botId;
+  final String name;
+  final String? avatar;
+  final String? status;
+  final bool working;
+  final String? conversationId;
+  final VoidCallback onProfile;
+  final VoidCallback onTopics;
+  final VoidCallback onMadeHere;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final scheme = context.colorScheme;
+    final made = ref.watch(madeHereProvider((botId: botId, conversationId: conversationId))).value;
+    void go(String action, VoidCallback then) {
+      Analytics.log('chat_header_action', {'action': action, 'placement': 'sheet'});
+      Navigator.of(context).pop();
+      then();
+    }
+
+    return Padding(
+      key: const Key('chatBotSheet'),
+      padding: const EdgeInsets.fromLTRB(AppSpace.md, AppSpace.sm, AppSpace.md, AppSpace.md),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              BotAvatar(name: name.isEmpty ? '?' : name, avatar: avatar, size: 56, status: working ? BotStatusEnum.working : null),
+              const SizedBox(width: AppSpace.md),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(name, maxLines: 2, overflow: TextOverflow.ellipsis, style: context.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700)),
+                    if (status != null)
+                      Text(status!, style: context.textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant)),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpace.md),
+          GroupedCard(
+            children: [
+              GroupedTile(
+                key: const Key('botSheetProfile'),
+                icon: LucideIcons.circleUser,
+                title: l10n.botProfile,
+                onTap: () => go('profile', onProfile),
+              ),
+              GroupedTile(
+                key: const Key('botSheetTopics'),
+                icon: LucideIcons.messagesSquare,
+                title: l10n.topics,
+                onTap: () => go('topics', onTopics),
+              ),
+              if (made != null && made.count > 0)
+                GroupedTile(
+                  key: const Key('botSheetMadeHere'),
+                  icon: LucideIcons.library,
+                  title: l10n.madeHere,
+                  trailing: Text(
+                    made.more ? '${made.count}+' : '${made.count}',
+                    style: TextStyle(color: scheme.onSurfaceVariant, fontFeatures: AppText.tabular),
+                  ),
+                  onTap: () => go('made_here', onMadeHere),
+                ),
+            ],
+          ),
+        ],
       ),
     );
   }
