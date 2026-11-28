@@ -24,12 +24,15 @@ struct RunActivityAttributes: ActivityAttributes {
     var updatedAt: Double
     /// When the run ended, for Finished and Stopped with a problem.
     var endedAt: Double?
+    /// Countdown deadline when waiting on the person's phone browser (PHONE-BROWSER-BACKGROUND-PLAN §3).
+    var waitUntil: Double? = nil
 
     enum CodingKeys: String, CodingKey {
       case phase, step, detail, steps, risk
       case approvalId = "approval_id"
       case updatedAt = "updated_at"
       case endedAt = "ended_at"
+      case waitUntil = "wait_until"
     }
 
     var needsPerson: Bool { phase == "needsOk" || phase == "takeOver" }

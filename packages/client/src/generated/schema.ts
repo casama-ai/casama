@@ -10878,6 +10878,7 @@ export interface components {
             payload: {
                 /** @enum {string} */
                 outcome: "back" | "expired" | "cancelled";
+                visible_at_end?: boolean;
             };
         };
         LeaseChangedEvent: {

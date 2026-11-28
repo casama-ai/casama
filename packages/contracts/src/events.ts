@@ -195,6 +195,7 @@ export const runEventPayloads = {
   }),
   "browser.waiting_resolved": z.object({
     outcome: z.enum(["back", "expired", "cancelled"]),
+    visible_at_end: z.boolean().optional(),
   }),
   "lease.changed": z.object({
     computer_id: id,

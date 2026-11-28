@@ -13,6 +13,7 @@ import '../../core/haptics.dart';
 import '../../core/providers.dart';
 import '../../core/screen_awake.dart';
 import '../../ui/bot_cursor.dart';
+import 'app_browser_background.dart';
 import 'app_browser_channel.dart';
 import 'app_browser_flag.dart';
 import 'app_browser_overlay_guard.dart';
@@ -314,9 +315,46 @@ class AppBrowserController extends Notifier<AppBrowserSession>
         by: 'browser',
       ),
     );
+    final bgChanged =
+        s.botActive != state.botActive ||
+        s.host != state.host ||
+        s.run?.id != state.run?.id;
     if (ref.mounted) state = s;
+    if (bgChanged) syncBackgroundConfig();
     // After the state, so the layers drawing it read this run's bot name.
     if (s.phase == AppBrowserPhase.working) cursor.enter();
+  }
+
+  /// Syncs current browser task metadata to native Android so `MainActivity.onPause` can start
+  /// `AppBrowserKeepAlive` immediately while leaving a user-visible state (plan §5, §7).
+  void syncBackgroundConfig([String? stepLabel]) {
+    if (!ref.mounted ||
+        !kAppBrowserBg ||
+        kIsWeb ||
+        defaultTargetPlatform != TargetPlatform.android) {
+      return;
+    }
+    final keepGoing = ref.read(appBrowserKeepGoingProvider);
+    final run = state.run;
+    final active = state.botActive && run != null;
+    final linkPath = run?.conversationId != null
+        ? '/bots/${run!.botId}/chat?c=${run.conversationId}'
+        : run != null
+        ? '/bots/${run.botId}/chat'
+        : '/';
+    unawaited(
+      _channel
+          .backgroundConfig(
+            active: active,
+            keepGoing: keepGoing,
+            runId: run?.id,
+            bot: run?.botName.isNotEmpty == true ? run!.botName : 'Casama',
+            site: state.host ?? '',
+            step: stepLabel ?? 'Working in your browser',
+            link: linkPath,
+          )
+          .then((_) {}, onError: (_) {}),
+    );
   }
 
   /// Shows the cursor at a spot the page script located, then waits the beat so it is seen to
@@ -335,6 +373,9 @@ class AppBrowserController extends Notifier<AppBrowserSession>
 
   /// The paired device whose lists "Always" and "Never" change (the service keeps it current).
   LocalDevice? device;
+
+  /// Attached by [AppBrowserService] when running in the app (null in standalone controller tests).
+  AppBrowserService? backgroundService;
 
   /// What this phone's web area can do; asked once.
   Future<AppBrowserSupport> support() async =>
@@ -388,6 +429,44 @@ class AppBrowserController extends Notifier<AppBrowserSession>
           clearDone: true,
         ),
       );
+    }
+    final service = backgroundService;
+    if (service != null) {
+      service.background.noteStep(
+        run.id,
+        botName: run.botName,
+        conversationId: run.conversationId,
+        site: state.host,
+      );
+      if (service.backgroundKeepGoing) {
+        service.resetBackgroundIdleTimer();
+        final stepText = appBrowserStepLabel(call.action);
+        if (!service.background.shouldThrottleNotify()) {
+          unawaited(
+            _channel
+                .backgroundUpdate(step: stepText, site: state.host)
+                .then((_) {}, onError: (_) {}),
+          );
+        }
+        if (call.action == 'ask' || call.action == 'handoff') {
+          final bot = run.botName.isNotEmpty ? run.botName : 'Casama';
+          final linkPath = run.conversationId != null
+              ? '/bots/${run.botId}/chat?c=${run.conversationId}'
+              : '/bots/${run.botId}/chat';
+          unawaited(
+            _channel
+                .backgroundNeedsYou(
+                  title: '$bot needs you',
+                  body:
+                      (call.args['reason'] as String?) ??
+                      'Open Casama to continue.',
+                  link: linkPath,
+                  tag: 'browser-wait-${run.id}',
+                )
+                .then((_) {}, onError: (_) {}),
+          );
+        }
+      }
     }
     try {
       // Stop during a step ends it there: a wait that ran on would answer "waited" and the bot
@@ -880,6 +959,11 @@ class AppBrowserController extends Notifier<AppBrowserSession>
     if (!state.botActive && state.phase != AppBrowserPhase.away) return;
     // Finished while it had the page (not after it lost it): the full view says so.
     final done = state.botActive ? state.run : null;
+    final host = state.host;
+    final service = backgroundService;
+    if (done != null && service != null && service.backgroundKeepGoing) {
+      unawaited(service.finishBackgroundTask(done, host));
+    }
     _endRun(answer: 'away');
     _set(
       state.copyWith(
@@ -1144,11 +1228,54 @@ class AppBrowserController extends Notifier<AppBrowserSession>
     }
   }
 
+  @override
+  void backgroundStarted({
+    required int battery,
+    required bool notificationsEnabled,
+  }) {
+    if (!ref.mounted) return;
+    final bg = backgroundService?.background;
+    if (bg != null) {
+      bg.startBattery = battery;
+      bg.notificationsEnabled = notificationsEnabled;
+    }
+    if (!notificationsEnabled) {
+      Analytics.log('app_browser_background_stopped', {
+        'reason': 'notifications_off',
+      });
+    }
+  }
+
+  @override
+  void backgroundStopped({required String reason, required int battery}) {
+    if (!ref.mounted) return;
+    if (reason == 'user_stop' && state.botActive) {
+      stopBot();
+    }
+    final service = backgroundService;
+    if (service != null) {
+      unawaited(service.stopBackgroundEarly(reason, fromNative: true));
+    }
+  }
+
+  @override
+  void reminderOpened({required String source, required String link}) {
+    if (!ref.mounted) return;
+    backgroundService?.background.markReminderOpened(source);
+  }
+
   // --- helpers ---------------------------------------------------------------------------------
 
   bool _onScreen(AppBrowserRun run) {
     final c = run.conversationId;
-    return c != null && c == ref.read(appBrowserFocusProvider)();
+    if (c == null) return false;
+    if (c == ref.read(appBrowserFocusProvider)()) return true;
+    // Android keep-going mode: allow the active run to continue while the app is hidden (plan §7).
+    final service = backgroundService;
+    return service != null &&
+        service.backgroundKeepGoing &&
+        state.run?.conversationId == c &&
+        state.run?.id == run.id;
   }
 
   void _startRun(AppBrowserRun run) {

@@ -175,6 +175,14 @@ import WebKit
       )
       return
     }
+    #if CASAMA_APP_BROWSER
+    let notifInfo = response.notification.request.content.userInfo
+    if (notifInfo["kind"] as? String) == "browser_wait" {
+      let link = (notifInfo["link"] as? String) ?? "/"
+      let source = (notifInfo["source"] as? String) ?? "push"
+      AppBrowser.shared.onReminderOpened(link: link, source: source)
+    }
+    #endif
     var answered = false
     super.userNotificationCenter(center, didReceive: response) {
       guard !answered else { return }
@@ -1390,6 +1398,21 @@ final class AppBrowser: NSObject, WKNavigationDelegate, WKUIDelegate, FlutterPla
   private var holders: [WeakHolder] = []
   private var holder: UIView? { holders.last?.view }
   private var dialog: ((Bool, String?) -> Void)?
+  private var bgTaskId: UIBackgroundTaskIdentifier = .invalid
+
+  func onReminderOpened(link: String, source: String) {
+    DispatchQueue.main.async { [weak self] in
+      self?.channel?.invokeMethod("reminderOpened", arguments: ["link": link, "source": source])
+    }
+  }
+
+  private func endBgTask() {
+    if bgTaskId != .invalid {
+      let id = bgTaskId
+      bgTaskId = .invalid
+      UIApplication.shared.endBackgroundTask(id)
+    }
+  }
 
   private var world: WKContentWorld { WKContentWorld.world(name: "casama") }
 
@@ -1455,6 +1478,43 @@ final class AppBrowser: NSObject, WKNavigationDelegate, WKUIDelegate, FlutterPla
       clearData(args["host"] as? String) { result(nil) }
     case "dispose":
       dispose()
+      result(nil)
+    case "beginBackgroundTask":
+      // Task completion (App Store 2.5.4): finish the browser step in progress when leaving the app.
+      endBgTask()
+      bgTaskId = UIApplication.shared.beginBackgroundTask(withName: "casama.app_browser.finish_step") { [weak self] in
+        self?.endBgTask()
+      }
+      result(bgTaskId != .invalid)
+    case "endBackgroundTask":
+      endBgTask()
+      result(nil)
+    case "scheduleReminder":
+      let delayMs = (args["delayMs"] as? NSNumber)?.doubleValue ?? 3000.0
+      let title = (args["title"] as? String) ?? ""
+      let body = (args["body"] as? String) ?? ""
+      let link = (args["link"] as? String) ?? "/"
+      let tag = (args["tag"] as? String) ?? "browser-wait"
+      if !title.isEmpty {
+        let content = UNMutableNotificationContent()
+        content.title = title
+        content.body = body
+        content.sound = .default
+        if #available(iOS 15.0, *) {
+          content.interruptionLevel = .timeSensitive
+        }
+        content.userInfo = ["kind": "browser_wait", "link": link, "tag": tag, "source": "local"]
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: max(1.0, delayMs / 1000.0), repeats: false)
+        let req = UNNotificationRequest(identifier: tag, content: content, trigger: trigger)
+        UNUserNotificationCenter.current().add(req, withCompletionHandler: nil)
+      }
+      result(nil)
+    case "cancelReminder":
+      if let tag = args["tag"] as? String, !tag.isEmpty {
+        let center = UNUserNotificationCenter.current()
+        center.removePendingNotificationRequests(withIdentifiers: [tag])
+        center.removeDeliveredNotifications(withIdentifiers: [tag])
+      }
       result(nil)
     default:
       // "tap" included: there are no real taps on iOS (supported says realTaps false).

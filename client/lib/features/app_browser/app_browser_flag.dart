@@ -18,6 +18,14 @@ const kAppBrowser = bool.fromEnvironment(
 /// (and so tests) keep the code; [appBrowserBuildProvider] still says no unless a test overrides it.
 const kAppBrowserCode = kAppBrowser || kDebugMode;
 
+/// Android background keep-going (`AppBrowserKeepAlive` `specialUse` FGS, PHONE-BROWSER-BACKGROUND-PLAN).
+/// Off by default until we're ready to submit Play's foreground service declaration + demo video;
+/// enable with `CASAMA_APP_BROWSER_BG=1` (Gradle) and `--dart-define=CASAMA_APP_BROWSER_BG=true`.
+const kAppBrowserBg = bool.fromEnvironment(
+  'CASAMA_APP_BROWSER_BG',
+  defaultValue: false,
+);
+
 /// iPhone, iPad, Android, Mac (macOS 14+), Linux (WebKitGTK 4.1, 2.40+) and Windows (WebView2 120+):
 /// the places the in-app browser exists.
 bool get appBrowserPlatform =>

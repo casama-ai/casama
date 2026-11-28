@@ -226,6 +226,33 @@ export const ANALYTICS_CLIENT_EVENTS: Record<string, string[]> = {
     "choice",
     "system"
   ],
+  "app_browser_left_mid_task": [
+    "platform",
+    "mode",
+    "setting_on"
+  ],
+  "app_browser_reminder_shown": [
+    "source"
+  ],
+  "app_browser_reminder_opened": [
+    "source",
+    "after_s"
+  ],
+  "app_browser_returned": [
+    "after_s",
+    "via"
+  ],
+  "app_browser_background_done": [
+    "steps",
+    "minutes",
+    "battery_drop"
+  ],
+  "app_browser_background_stopped": [
+    "reason"
+  ],
+  "app_browser_keep_going_setting": [
+    "on"
+  ],
   "chat_header_action": [
     "action",
     "placement"

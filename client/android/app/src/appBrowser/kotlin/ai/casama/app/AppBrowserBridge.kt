@@ -90,12 +90,103 @@ object AppBrowserBridge {
      */
     private var keyboard = false
 
+    // Background keep-going state (docs/PHONE-BROWSER-BACKGROUND-PLAN.md §5–§7).
+    private var bgTaskActive = false
+    private var bgKeepGoing = true
+    private var bgHidden = false
+    private var bgState: AppBrowserKeepAlive.State? = null
+    private var lastReminderTag: String? = null
+
     fun attach(engine: FlutterEngine, activity: Activity) {
         this.activity = activity
         channel = MethodChannel(engine.dartExecutor.binaryMessenger, CHANNEL).also {
             it.setMethodCallHandler { call, result -> handle(call, result) }
         }
         engine.platformViewsController.registry.registerViewFactory(VIEW_TYPE, Factory)
+    }
+
+    /**
+     * Called from MainActivity.onPause while leaving a user-visible state (Android 12+ FGS rule,
+     * PHONE-BROWSER-BACKGROUND-PLAN §5). Starts the foreground service immediately if a task is
+     * active and the user's setting is on.
+     */
+    fun onActivityPause() {
+        bgHidden = true
+        val ctx = activity?.applicationContext ?: return
+        val s = bgState
+        if (bgTaskActive && bgKeepGoing && s != null) {
+            setWebHiddenMode(true)
+            val err = AppBrowserKeepAlive.start(ctx, s)
+            val battery = AppBrowserKeepAlive.batteryLevel(ctx)
+            if (err == null) {
+                val notifOn = AppBrowserKeepAlive.notificationsEnabled(ctx)
+                main.post {
+                    channel?.invokeMethod(
+                        "backgroundStarted",
+                        mapOf("battery" to battery, "notifications_enabled" to notifOn),
+                    )
+                }
+            } else {
+                setWebHiddenMode(false)
+                main.post {
+                    channel?.invokeMethod(
+                        "backgroundStopped",
+                        mapOf("reason" to err, "battery" to battery),
+                    )
+                }
+            }
+        }
+    }
+
+    fun onActivityResume() {
+        bgHidden = false
+        val ctx = activity?.applicationContext ?: return
+        setWebHiddenMode(false)
+        if (AppBrowserKeepAlive.running || AppBrowserKeepAlive.state != null) {
+            AppBrowserKeepAlive.stop(ctx)
+        }
+        AppBrowserKeepAlive.cancelLocalReminder(ctx, lastReminderTag)
+    }
+
+    fun onNotificationOpen(link: String?, source: String?) {
+        if (link.isNullOrBlank()) return
+        main.post {
+            channel?.invokeMethod(
+                "reminderOpened",
+                mapOf("source" to (source ?: "notification"), "link" to link),
+            )
+        }
+    }
+
+    fun notifyBackgroundStopped(reason: String) {
+        setWebHiddenMode(false)
+        val battery = activity?.applicationContext?.let { AppBrowserKeepAlive.batteryLevel(it) } ?: -1
+        main.post {
+            channel?.invokeMethod(
+                "backgroundStopped",
+                mapOf("reason" to reason, "battery" to battery),
+            )
+        }
+    }
+
+    private fun setWebHiddenMode(hidden: Boolean) {
+        val w = web ?: return
+        try {
+            if (WebViewFeature.isFeatureSupported(WebViewFeature.MUTE_AUDIO)) {
+                WebViewCompat.setAudioMuted(w, hidden)
+            }
+        } catch (_: Throwable) {}
+    }
+
+    private fun setRendererPriority(important: Boolean) {
+        val w = web ?: return
+        try {
+            if (important) {
+                w.setRendererPriorityPolicy(WebView.RENDERER_PRIORITY_IMPORTANT, false)
+            } else {
+                w.setRendererPriorityPolicy(WebView.RENDERER_PRIORITY_BOUND, true)
+            }
+        } catch (_: Throwable) {}
     }
 
     private fun unsupported(): String? = when {
@@ -128,7 +219,10 @@ object AppBrowserBridge {
                 }
                 "screenshot" -> {
                     val w = web ?: return result.error("no_page", "No page is open", null)
-                    result.success(mapOf("data" to w.picture(call.argument<Int>("quality") ?: 70)))
+                    val requested = call.argument<Int>("quality") ?: 70
+                    // Reduced screenshot quality while hidden to save battery (PHONE-BROWSER-BACKGROUND-PLAN §6).
+                    val quality = if (bgHidden) minOf(requested, 50) else requested
+                    result.success(mapOf("data" to w.picture(quality)))
                 }
                 "url" -> {
                     val w = web
@@ -157,6 +251,115 @@ object AppBrowserBridge {
                 "clearData" -> { clearData(call.argument<String>("host")); result.success(null) }
                 "dispose" -> { dispose(); result.success(null) }
                 "keyboard" -> { setKeyboard(call.argument<Boolean>("allowed") ?: false); result.success(null) }
+                "backgroundConfig" -> {
+                    val active = call.argument<Boolean>("active") ?: false
+                    val keepGoing = call.argument<Boolean>("keepGoing") ?: true
+                    bgTaskActive = active
+                    bgKeepGoing = keepGoing
+                    setRendererPriority(active)
+                    if (active) {
+                        bgState = AppBrowserKeepAlive.State(
+                            runId = call.argument<String>("runId") ?: "",
+                            bot = call.argument<String>("bot") ?: "Casama",
+                            site = call.argument<String>("site") ?: "",
+                            step = call.argument<String>("step") ?: "",
+                            link = call.argument<String>("link") ?: "/",
+                            openLabel = call.argument<String>("openLabel") ?: "Open",
+                            stopLabel = call.argument<String>("stopLabel") ?: "Stop",
+                            channelLabel = call.argument<String>("channelLabel") ?: "Browser tasks",
+                            pausedBatteryTitle = call.argument<String>("pausedBatteryTitle") ?: "Paused to save battery",
+                            pausedBatteryBody = call.argument<String>("pausedBatteryBody") ?: "Open Casama to carry on.",
+                            pausedCapTitle = call.argument<String>("pausedCapTitle") ?: "Browser task paused",
+                            pausedCapBody = call.argument<String>("pausedCapBody") ?: "Open Casama to carry on.",
+                        )
+                    } else {
+                        bgState = null
+                        setWebHiddenMode(false)
+                    }
+                    result.success(null)
+                }
+                "backgroundUpdate" -> {
+                    val ctx = activity?.applicationContext
+                    val step = call.argument<String>("step") ?: ""
+                    val site = call.argument<String>("site")
+                    bgState?.let {
+                        bgState = it.copy(
+                            step = step,
+                            site = if (!site.isNullOrBlank()) site else it.site,
+                        )
+                    }
+                    if (ctx != null) AppBrowserKeepAlive.updateStep(ctx, step, site)
+                    result.success(null)
+                }
+                "backgroundStop" -> {
+                    val ctx = activity?.applicationContext
+                    bgTaskActive = false
+                    bgState = null
+                    setRendererPriority(false)
+                    setWebHiddenMode(false)
+                    if (ctx != null) {
+                        AppBrowserKeepAlive.stop(ctx)
+                        val title = call.argument<String>("title")
+                        val body = call.argument<String>("body")
+                        val link = call.argument<String>("link") ?: "/"
+                        val tag = call.argument<String>("tag") ?: "browser-done"
+                        if (!title.isNullOrBlank() && !body.isNullOrBlank()) {
+                            AppBrowserKeepAlive.showStatusNotification(
+                                ctx,
+                                title = title,
+                                body = body,
+                                link = link,
+                                tag = tag,
+                                highPriority = false,
+                            )
+                        }
+                    }
+                    result.success(null)
+                }
+                "backgroundNeedsYou" -> {
+                    val ctx = activity?.applicationContext
+                    val title = call.argument<String>("title") ?: ""
+                    val body = call.argument<String>("body") ?: ""
+                    val link = call.argument<String>("link") ?: "/"
+                    val tag = call.argument<String>("tag") ?: "browser-wait"
+                    if (ctx != null && title.isNotBlank()) {
+                        AppBrowserKeepAlive.showStatusNotification(
+                            ctx,
+                            title = title,
+                            body = body,
+                            link = link,
+                            tag = tag,
+                            highPriority = true,
+                            source = "notification",
+                        )
+                    }
+                    result.success(null)
+                }
+                "scheduleReminder" -> {
+                    val ctx = activity?.applicationContext
+                    val delayMs = (call.argument<Number>("delayMs") ?: 3000).toLong()
+                    val title = call.argument<String>("title") ?: ""
+                    val body = call.argument<String>("body") ?: ""
+                    val link = call.argument<String>("link") ?: "/"
+                    val tag = call.argument<String>("tag") ?: "browser-wait"
+                    lastReminderTag = tag
+                    if (ctx != null && title.isNotBlank()) {
+                        AppBrowserKeepAlive.scheduleLocalReminder(ctx, delayMs, title, body, link, tag)
+                    }
+                    result.success(null)
+                }
+                "cancelReminder" -> {
+                    val ctx = activity?.applicationContext
+                    val tag = call.argument<String>("tag") ?: lastReminderTag
+                    if (ctx != null) AppBrowserKeepAlive.cancelLocalReminder(ctx, tag)
+                    result.success(null)
+                }
+                "batteryLevel" -> {
+                    val ctx = activity?.applicationContext
+                    val pct = if (ctx != null) AppBrowserKeepAlive.batteryLevel(ctx) else -1
+                    val notif = if (ctx != null) AppBrowserKeepAlive.notificationsEnabled(ctx) else true
+                    result.success(mapOf("battery" to pct, "notifications_enabled" to notif))
+                }
                 else -> result.notImplemented()
             }
         } catch (e: Throwable) {

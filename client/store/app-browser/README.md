@@ -30,6 +30,17 @@ privacy answers, in the onboarding consent (v2, naming web pages), and on the pr
 - [ ] Listing "What's new" and description updated from `listing.md`.
 - [ ] `docs-site/guide/in-app-browser.md` deployed with the web deploy.
 - [ ] `docs/STORES.md` updated as each store answers.
+- [ ] **Google Play — Foreground service permissions (`specialUse`):** submit the declaration for
+      `AppBrowserKeepAlive` (App content → Foreground service permissions) with the demo video
+      (ask bot for a web task, leave app, notification shows step, tap Stop, then a second run
+      finishes).
+      - Description: The assistant finishes a web task the user started in chat, in the in-app
+        browser, shown in an ongoing notification with Open and Stop buttons (10-minute cap,
+        stops on Battery Saver or < 15% battery, no wake locks).
+      - User impact if deferred: The browser task stops halfway (for example, a half-filled form
+        or a lost cart).
+- [ ] **App Store — Review notes (2.3.1(a), 2.5.4, 2.5.19):** include the background-reminder
+      paragraph below in Notes for Review (no new `UIBackgroundModes`).
 
 ## Review notes — iOS & Android (paste, then fill in the account)
 
@@ -58,6 +69,17 @@ privacy answers, in the onboarding consent (v2, naming web pages), and on the pr
 > - Banking, health, password manager and government ID sites are off by default.
 > - Sign-ins and cookies stay in a separate device-only store; never uploaded. Page script ships in the app.
 >
+> **Leaving the app mid-task:**
+> - **iOS:** Uses standard task completion (`beginBackgroundTask`) only to finish the step already
+>   in progress, then schedules a time-sensitive local reminder 3 seconds later (cancelled if the
+>   user returns immediately; deduplicated with the server backup push via `browser-wait-<run>`).
+>   The Live Activity shows "Waiting for you" with a system-drawn countdown timer. No new
+>   `UIBackgroundModes` are used.
+> - **Android:** Keeps the user-started browser task going via a `specialUse` foreground service
+>   (`AppBrowserKeepAlive`) with a quiet ongoing notification showing the current step plus Open
+>   and Stop buttons (no wake locks; stops on task end, Stop, 60 s idle, 10 min cap, Battery Saver,
+>   or battery < 15%; toggleable in Settings → Browser → "Keep going when I leave the app").
+>
 > Review account: (email and password from the vault item "App review account")
 
 ## Review notes — Mac App Store (paste, then fill in the account)
@@ -80,5 +102,16 @@ privacy answers, in the onboarding consent (v2, naming web pages), and on the pr
 > - Clicking or typing on the page pauses the bot. Risky steps ask first; purchases and password
 >   changes are handed to the user; password/card/code fields are never read.
 > - Separate `WKWebsiteDataStore` on macOS 14+ (disabled on macOS 13.x). Page script ships inside the app.
+>
+> **Leaving the app mid-task:**
+> - **iOS:** Uses standard task completion (`beginBackgroundTask`) only to finish the step already
+>   in progress, then schedules a time-sensitive local reminder 3 seconds later (cancelled if the
+>   user returns immediately; deduplicated with the server backup push via `browser-wait-<run>`).
+>   The Live Activity shows "Waiting for you" with a system-drawn countdown timer. No new
+>   `UIBackgroundModes` are used.
+> - **Android:** Keeps the user-started browser task going via a `specialUse` foreground service
+>   (`AppBrowserKeepAlive`) with a quiet ongoing notification showing the current step plus Open
+>   and Stop buttons (no wake locks; stops on task end, Stop, 60 s idle, 10 min cap, Battery Saver,
+>   or battery < 15%; toggleable in Settings → Browser → "Keep going when I leave the app").
 >
 > Review account: (email and password from the vault item "App review account")

@@ -11,6 +11,7 @@ import '../../core/backend.dart';
 import '../../core/chat_focus.dart';
 import '../../core/providers.dart';
 import '../../core/remote_config.dart' show appVersionProvider;
+import 'app_browser_background.dart';
 import 'app_browser_channel.dart';
 import 'app_browser_controller.dart';
 import 'app_browser_flag.dart';
@@ -99,6 +100,8 @@ class AppBrowserService with WidgetsBindingObserver {
     _active = _isActive(WidgetsBinding.instance.lifecycleState);
     _backend = _ref.read(backendProvider);
     _backend.addBeforeSignOut(unpairOnSignOut);
+    // Check if the OS killed a previous Android background browser session (plan §9, §10).
+    unawaited(AppBrowserBackgroundPolicy.checkUncleanExit());
     _ref.listen(
       appBrowserStatusProvider,
       (_, next) {
@@ -107,6 +110,9 @@ class AppBrowserService with WidgetsBindingObserver {
       },
       fireImmediately: true,
     );
+    _ref.listen(appBrowserKeepGoingProvider, (_, _) {
+      _ref.read(appBrowserProvider.notifier).syncBackgroundConfig();
+    });
     // Ask the server again now and then while not connected: the owner may switch this system on,
     // or the workspace switch may change, while the app stays open. A desktop window never goes
     // through "back in front", so without this a Linux or Mac app learned it only on restart.
@@ -125,9 +131,19 @@ class AppBrowserService with WidgetsBindingObserver {
   AppBrowserSocket? _socket;
   String? _socketDevice;
   bool _active = true;
+  bool _backgroundKeepGoing = false;
   bool _autoPairing = false;
   Future<LocalDevice>? _pairing;
   bool _disposed = false;
+  Timer? _bgIdleTimer;
+  Timer? _bgCapTimer;
+  String? _lastReminderTag;
+
+  /// Policy & analytics tracker shared with [AppBrowserController].
+  final background = AppBrowserBackgroundPolicy();
+
+  /// True while Android is keeping a phone-browser task going after the user left the app.
+  bool get backgroundKeepGoing => _backgroundKeepGoing;
 
   /// The socket's state, for the settings screen.
   final link = ValueNotifier(AppBrowserLink.off);
@@ -141,14 +157,197 @@ class AppBrowserService with WidgetsBindingObserver {
       s == AppLifecycleState.resumed ||
       s == AppLifecycleState.inactive;
 
+  bool get _isAndroidPhone =>
+      !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
+  bool get _isIosPhone =>
+      !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS;
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     final nowActive = _isActive(state);
     if (nowActive == _active) return;
     _active = nowActive;
-    unawaited(_sync(_ref.read(appBrowserStatusProvider).value));
+    if (!nowActive) {
+      unawaited(_onPaused());
+    } else {
+      unawaited(_onResumed());
+    }
+  }
+
+  Future<void> _onPaused() async {
+    final session = _ref.read(appBrowserProvider);
+    final run = session.run;
+    final botActive = session.botActive && run != null;
+    if (botActive && (_isAndroidPhone || _isIosPhone)) {
+      final settingOn = _isAndroidPhone && kAppBrowserBg
+          ? _ref.read(appBrowserKeepGoingProvider)
+          : false;
+      final keepGoing = _isAndroidPhone && kAppBrowserBg && settingOn;
+      final platform = _isAndroidPhone ? 'android' : 'ios';
+      final linkPath = run.conversationId != null
+          ? '/bots/${run.botId}/chat?c=${run.conversationId}'
+          : '/bots/${run.botId}/chat';
+      background.markLeft(
+        platform: platform,
+        keepGoing: keepGoing,
+        settingOn: settingOn,
+        runId: run.id,
+        botName: run.botName.isEmpty ? 'Casama' : run.botName,
+        conversationId: run.conversationId,
+        site: session.host,
+      );
+      if (keepGoing) {
+        _backgroundKeepGoing = true;
+        _socket?.setVisible(false);
+        unawaited(AppBrowserBackgroundPolicy.setBgActiveMarker(true));
+        _armBackgroundTimers();
+        return;
+      }
+      // iPhone, or Android with keep-going off: schedule instant local reminder (plan §3).
+      final channel = _ref.read(appBrowserChannelProvider);
+      if (background.shouldScheduleReminder(run.id)) {
+        final tag = 'browser-wait-${run.id}';
+        _lastReminderTag = tag;
+        background.markReminderScheduled(run.id);
+        final bot = run.botName.isEmpty ? 'Casama' : run.botName;
+        await channel.scheduleReminder(
+          delayMs: background.reminderDelay.inMilliseconds,
+          title: '$bot is still using your browser',
+          body: 'Come back so it can finish.',
+          link: linkPath,
+          tag: tag,
+        );
+        background.markReminderShown('local');
+      }
+      // iOS 2.5.4 task completion: let the in-flight step finish and send its result before closing.
+      if (_isIosPhone && (_socket?.hasInflight ?? false)) {
+        final started = await channel.beginBackgroundTask();
+        try {
+          await _socket?.drainInflight(const Duration(seconds: 20));
+        } finally {
+          await _stop();
+          if (started) await channel.endBackgroundTask();
+        }
+        return;
+      }
+    }
+    await _sync(_ref.read(appBrowserStatusProvider).value);
+  }
+
+  Future<void> _onResumed() async {
+    _cancelBackgroundTimers();
+    final channel = _ref.read(appBrowserChannelProvider);
+    if (_lastReminderTag != null) {
+      unawaited(channel.cancelReminder(tag: _lastReminderTag));
+      _lastReminderTag = null;
+    }
+    final wasKeepGoing = _backgroundKeepGoing;
+    _backgroundKeepGoing = false;
+    if (wasKeepGoing) {
+      unawaited(AppBrowserBackgroundPolicy.setBgActiveMarker(false));
+      unawaited(channel.backgroundStop());
+      _socket?.setVisible(true);
+    }
+    final summary = background.markReturned();
+    if (summary != null) {
+      _ref.read(appBrowserAwaySummaryProvider.notifier).show(summary);
+    }
+    await _sync(_ref.read(appBrowserStatusProvider).value);
     // Back in front: ask the server again (the stage or the workspace switch may have changed).
-    if (nowActive) _ref.invalidate(appBrowserStatusProvider);
+    if (!_disposed) _ref.invalidate(appBrowserStatusProvider);
+  }
+
+  void _armBackgroundTimers() {
+    _cancelBackgroundTimers();
+    _bgIdleTimer = Timer(background.idleLimit, () {
+      if (_backgroundKeepGoing) {
+        unawaited(stopBackgroundEarly('idle'));
+      }
+    });
+    _bgCapTimer = Timer(background.capLimit, () {
+      if (_backgroundKeepGoing) {
+        unawaited(stopBackgroundEarly('cap'));
+      }
+    });
+  }
+
+  void resetBackgroundIdleTimer() {
+    if (!_backgroundKeepGoing) return;
+    _bgIdleTimer?.cancel();
+    _bgIdleTimer = Timer(background.idleLimit, () {
+      if (_backgroundKeepGoing) {
+        unawaited(stopBackgroundEarly('idle'));
+      }
+    });
+  }
+
+  void _cancelBackgroundTimers() {
+    _bgIdleTimer?.cancel();
+    _bgIdleTimer = null;
+    _bgCapTimer?.cancel();
+    _bgCapTimer = null;
+  }
+
+  /// Called when Android background keep-going stops early (idle, cap, battery_saver, low_battery,
+  /// user_stop, os_killed): informs the server so D-529 wait takes over, updates analytics, and
+  /// stops the foreground service.
+  Future<void> stopBackgroundEarly(
+    String reason, {
+    bool fromNative = false,
+  }) async {
+    if (!_backgroundKeepGoing && !background.keepGoingActive) return;
+    _backgroundKeepGoing = false;
+    _cancelBackgroundTimers();
+    unawaited(AppBrowserBackgroundPolicy.setBgActiveMarker(false));
+    background.markBackgroundStopped(reason);
+    _socket?.sendBackgroundStopped(reason);
+    if (!fromNative) {
+      final run = _ref.read(appBrowserProvider).run;
+      final linkPath = run?.conversationId != null
+          ? '/bots/${run!.botId}/chat?c=${run.conversationId}'
+          : '/';
+      final (title, body) = switch (reason) {
+        'battery_saver' || 'low_battery' => (
+          'Paused to save battery',
+          'Open Casama to carry on.',
+        ),
+        'cap' => ('Browser task paused', 'Open Casama to carry on.'),
+        'idle' => ('Browser task paused', 'Open Casama to carry on.'),
+        _ => (null, null),
+      };
+      await _ref
+          .read(appBrowserChannelProvider)
+          .backgroundStop(
+            title: title,
+            body: body,
+            link: linkPath,
+            tag: run != null ? 'browser-wait-${run.id}' : null,
+          );
+    }
+    if (!_active) await _stop();
+  }
+
+  /// Called when the bot's run finishes cleanly while Android was keeping it going in the background.
+  Future<void> finishBackgroundTask(AppBrowserRun run, String? site) async {
+    if (!_backgroundKeepGoing) return;
+    _backgroundKeepGoing = false;
+    _cancelBackgroundTimers();
+    unawaited(AppBrowserBackgroundPolicy.setBgActiveMarker(false));
+    final channel = _ref.read(appBrowserChannelProvider);
+    final status = await channel.batteryStatus();
+    background.markBackgroundDone(endBattery: status.battery);
+    final bot = run.botName.isEmpty ? 'Casama' : run.botName;
+    final where = (site != null && site.isNotEmpty) ? ' on $site' : '';
+    final linkPath = run.conversationId != null
+        ? '/bots/${run.botId}/chat?c=${run.conversationId}'
+        : '/bots/${run.botId}/chat';
+    await channel.backgroundStop(
+      title: '$bot finished$where',
+      body: 'Tap to see.',
+      link: linkPath,
+      tag: 'browser-done-${run.id}',
+    );
+    if (!_active) await _stop();
   }
 
   /// Called on macOS when the main window hides (close button / Cmd+W) or reopens (§4).
@@ -184,6 +383,7 @@ class AppBrowserService with WidgetsBindingObserver {
     final device = status?.device;
     final controller = _ref.read(appBrowserProvider.notifier);
     controller.device = device;
+    controller.backgroundService = this;
     final token = device == null
         ? null
         : await _ref.read(appBrowserTokenStoreProvider).read(device.id);
@@ -223,7 +423,7 @@ class AppBrowserService with WidgetsBindingObserver {
         status.available &&
         device != null &&
         device.enabled &&
-        _active &&
+        (_active || _backgroundKeepGoing) &&
         token != null;
     if (!want) return _stop();
     if (_socket != null && _socketDevice == device.id) return;
@@ -342,6 +542,7 @@ class AppBrowserService with WidgetsBindingObserver {
   void dispose() {
     _disposed = true;
     _recheck?.cancel();
+    _cancelBackgroundTimers();
     _backend.removeBeforeSignOut(unpairOnSignOut);
     WidgetsBinding.instance.removeObserver(this);
     unawaited(_socket?.stop());

@@ -306,7 +306,8 @@ final class IslandActivities {
       approvalId: item["approval_id"] as? String,
       risk: item["risk"] as? String,
       updatedAt: Date().timeIntervalSince1970.rounded(),
-      endedAt: (item["ended_at"] as? NSNumber)?.doubleValue
+      endedAt: (item["ended_at"] as? NSNumber)?.doubleValue,
+      waitUntil: (item["wait_until"] as? NSNumber)?.doubleValue
     )
   }
 }

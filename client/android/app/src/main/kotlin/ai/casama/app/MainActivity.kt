@@ -136,6 +136,17 @@ class MainActivity : FlutterFragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         unlockForAnsweredRing(intent)
+        handleBrowserNotificationIntent(intent)
+    }
+
+    override fun onPause() {
+        AppBrowserBridge.onActivityPause()
+        super.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        AppBrowserBridge.onActivityResume()
     }
 
     /**
@@ -155,7 +166,15 @@ class MainActivity : FlutterFragmentActivity() {
         unlockForAnsweredRing(intent)
         // The call notification, tapped: the call screen.
         if (intent.action == CallService.ACTION_OPEN) CallBridge.send("open")
+        handleBrowserNotificationIntent(intent)
         PushNotifications.deliver(intent)
+    }
+
+    private fun handleBrowserNotificationIntent(intent: Intent?) {
+        if (intent?.action != "ai.casama.app.app_browser.OPEN") return
+        val link = intent.getStringExtra("link")
+        val source = intent.getStringExtra("source")
+        AppBrowserBridge.onNotificationOpen(link, source)
     }
 
     private companion object {

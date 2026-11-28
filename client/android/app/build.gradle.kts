@@ -19,6 +19,14 @@ val keyProperties = Properties().apply {
 // CASAMA_APP_BROWSER=1 in the environment, or the marker file scripts/app-browser-switch.sh writes.
 // Without it the app has a stub bridge and no WebView code or library.
 val appBrowser = System.getenv("CASAMA_APP_BROWSER") == "1" || rootProject.file("app-browser.on").exists()
+// Android background keep-going (FOREGROUND_SERVICE_SPECIAL_USE, PHONE-BROWSER-BACKGROUND-PLAN §5)
+// stays off by default until we're ready to submit Play's FGS declaration + demo video.
+val appBrowserBg = appBrowser && (System.getenv("CASAMA_APP_BROWSER_BG") == "1" || rootProject.file("app-browser-bg.on").exists())
+if (appBrowserBg) {
+    androidComponents {
+        onVariants { variant -> variant.sources.manifests.addStaticManifestFile("src/appBrowser/AndroidManifest.xml") }
+    }
+}
 
 // Gemini on Android 16+ (docs/ANDROID-APPFUNCTIONS-PLAN.md §7.4, D-567): AppFunctions are compiled
 // in only with CASAMA_APP_FUNCTIONS=1 or the marker scripts/app-functions-switch.sh writes. Google

@@ -16,6 +16,7 @@ import '../../ui/app_card.dart';
 import '../../ui/form_sheet.dart';
 import '../../ui/page.dart';
 import 'app_browser_ask.dart';
+import 'app_browser_background.dart';
 import 'app_browser_channel.dart';
 import 'app_browser_controller.dart';
 import 'app_browser_flag.dart';
@@ -325,6 +326,26 @@ class _AppBrowserSettingsScreenState
                           : null,
                     ),
                   ),
+                  if (system == 'android' && on && kAppBrowserBg)
+                    GroupedTile(
+                      icon: LucideIcons.play,
+                      title: 'Keep going when I leave the app',
+                      subtitle:
+                          'Finish browser tasks in the background with a quiet notification (up to 10 min, pauses on low battery).',
+                      onTap: () {
+                        final next = !ref.read(appBrowserKeepGoingProvider);
+                        Haptic.toggle(next);
+                        ref.read(appBrowserKeepGoingProvider.notifier).set(next);
+                      },
+                      trailing: Switch(
+                        key: const Key('appBrowserKeepGoingSwitch'),
+                        value: ref.watch(appBrowserKeepGoingProvider),
+                        onChanged: (v) {
+                          Haptic.toggle(v);
+                          ref.read(appBrowserKeepGoingProvider.notifier).set(v);
+                        },
+                      ),
+                    ),
                 ],
               ),
               // Windows without the WebView2 runtime (or an old one): Microsoft's download page.

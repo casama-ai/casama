@@ -107,6 +107,15 @@ abstract interface class AppBrowserNativeEvents {
 
   /// Linux (Wayland): the person closed the page's own window.
   void pageWindowClosed() {}
+
+  /// Android: foreground keep-going service started when leaving the app (PHONE-BROWSER-BACKGROUND-PLAN).
+  void backgroundStarted({required int battery, required bool notificationsEnabled}) {}
+
+  /// Android: foreground keep-going service stopped early (user_stop, cap, battery_saver, low_battery, os_killed).
+  void backgroundStopped({required String reason, required int battery}) {}
+
+  /// Phone: user tapped a local reminder or background status notification.
+  void reminderOpened({required String source, required String link}) {}
 }
 
 /// The `casama/app_browser` method channel (PROTOCOL.md §3): one web area per app, created on
@@ -173,6 +182,58 @@ abstract interface class AppBrowserChannel {
   /// Destroys the web view and its context. When [wipeData] is true (Linux sign-out, §4.1),
   /// deletes the separate data and cache folders after WebKit's helper processes stop.
   Future<void> dispose({bool wipeData = false});
+
+  /// Android: syncs current browser task metadata for `MainActivity.onPause` foreground service start.
+  Future<void> backgroundConfig({
+    required bool active,
+    required bool keepGoing,
+    String? runId,
+    String? bot,
+    String? site,
+    String? step,
+    String? link,
+  }) async {}
+
+  /// Android: updates the ongoing notification's step text while keeping going in the background.
+  Future<void> backgroundUpdate({required String step, String? site}) async {}
+
+  /// Android: stops the foreground service and optionally posts a finished or paused notification.
+  Future<void> backgroundStop({
+    String? title,
+    String? body,
+    String? link,
+    String? tag,
+  }) async {}
+
+  /// Android: posts a high-priority "needs you" notification while keeping going in the background.
+  Future<void> backgroundNeedsYou({
+    required String title,
+    required String body,
+    required String link,
+    required String tag,
+  }) async {}
+
+  /// Phone: schedules a local time-sensitive reminder with shared id [tag] (`browser-wait-<run>`).
+  Future<void> scheduleReminder({
+    required int delayMs,
+    required String title,
+    required String body,
+    required String link,
+    required String tag,
+  }) async {}
+
+  /// Phone: cancels any pending or delivered local reminder with [tag].
+  Future<void> cancelReminder({String? tag}) async {}
+
+  /// Android: reads current battery percentage (0..100, or -1) and whether notifications are enabled.
+  Future<({int battery, bool notificationsEnabled})> batteryStatus() async =>
+      (battery: -1, notificationsEnabled: true);
+
+  /// iOS: starts a `beginBackgroundTask` (2.5.4 task completion) to finish the step in progress.
+  Future<bool> beginBackgroundTask() async => false;
+
+  /// iOS: ends the active `beginBackgroundTask`.
+  Future<void> endBackgroundTask() async {}
 
   /// Who answers native's calls; one at a time (the controller).
   void setHandler(AppBrowserNativeEvents? handler);
@@ -313,6 +374,139 @@ class MethodAppBrowserChannel implements AppBrowserChannel {
       _call('dispose', {'wipeData': wipeData});
 
   @override
+  Future<void> backgroundConfig({
+    required bool active,
+    required bool keepGoing,
+    String? runId,
+    String? bot,
+    String? site,
+    String? step,
+    String? link,
+  }) async {
+    try {
+      await _call('backgroundConfig', {
+        'active': active,
+        'keepGoing': keepGoing,
+        'runId': runId,
+        'bot': bot,
+        'site': site,
+        'step': step,
+        'link': link,
+      });
+    } on MissingPluginException {
+      // Android only.
+    }
+  }
+
+  @override
+  Future<void> backgroundUpdate({required String step, String? site}) async {
+    try {
+      await _call('backgroundUpdate', {'step': step, 'site': site});
+    } on MissingPluginException {
+      // Android only.
+    }
+  }
+
+  @override
+  Future<void> backgroundStop({
+    String? title,
+    String? body,
+    String? link,
+    String? tag,
+  }) async {
+    try {
+      await _call('backgroundStop', {
+        'title': title,
+        'body': body,
+        'link': link,
+        'tag': tag,
+      });
+    } on MissingPluginException {
+      // Android only.
+    }
+  }
+
+  @override
+  Future<void> backgroundNeedsYou({
+    required String title,
+    required String body,
+    required String link,
+    required String tag,
+  }) async {
+    try {
+      await _call('backgroundNeedsYou', {
+        'title': title,
+        'body': body,
+        'link': link,
+        'tag': tag,
+      });
+    } on MissingPluginException {
+      // Android only.
+    }
+  }
+
+  @override
+  Future<void> scheduleReminder({
+    required int delayMs,
+    required String title,
+    required String body,
+    required String link,
+    required String tag,
+  }) async {
+    try {
+      await _call('scheduleReminder', {
+        'delayMs': delayMs,
+        'title': title,
+        'body': body,
+        'link': link,
+        'tag': tag,
+      });
+    } on MissingPluginException {
+      // Phones only.
+    }
+  }
+
+  @override
+  Future<void> cancelReminder({String? tag}) async {
+    try {
+      await _call('cancelReminder', {'tag': tag});
+    } on MissingPluginException {
+      // Phones only.
+    }
+  }
+
+  @override
+  Future<({int battery, bool notificationsEnabled})> batteryStatus() async {
+    try {
+      final m = await _call('batteryLevel');
+      return (
+        battery: (m?['battery'] as num?)?.toInt() ?? -1,
+        notificationsEnabled: m?['notifications_enabled'] != false,
+      );
+    } on MissingPluginException {
+      return (battery: -1, notificationsEnabled: true);
+    }
+  }
+
+  @override
+  Future<bool> beginBackgroundTask() async {
+    try {
+      return await _channel.invokeMethod<bool>('beginBackgroundTask') ?? false;
+    } on MissingPluginException {
+      return false;
+    }
+  }
+
+  @override
+  Future<void> endBackgroundTask() async {
+    try {
+      await _call('endBackgroundTask');
+    } on MissingPluginException {
+      // iOS only.
+    }
+  }
+
+  @override
   void setHandler(AppBrowserNativeEvents? handler) {
     _handler = handler;
     _channel.setMethodCallHandler(handler == null ? null : _onNative);
@@ -350,6 +544,18 @@ class MethodAppBrowserChannel implements AppBrowserChannel {
         h.windowShown();
       case 'pageWindowClosed':
         h.pageWindowClosed();
+      case 'backgroundStarted':
+        h.backgroundStarted(
+          battery: (a['battery'] as num?)?.toInt() ?? -1,
+          notificationsEnabled: a['notifications_enabled'] != false,
+        );
+      case 'backgroundStopped':
+        h.backgroundStopped(
+          reason: s('reason'),
+          battery: (a['battery'] as num?)?.toInt() ?? -1,
+        );
+      case 'reminderOpened':
+        h.reminderOpened(source: s('source'), link: s('link'));
       default:
         throw MissingPluginException(
           'casama/app_browser has no ${call.method}',

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../theme/app_tokens.dart';
@@ -9,6 +10,7 @@ import '../../ui/screen_tile.dart';
 import '../../ui/shell_layout.dart';
 import '../chat/widgets/screen_card.dart' show screenCardWidth;
 import 'app_browser_ask.dart';
+import 'app_browser_background.dart';
 import 'app_browser_controller.dart';
 import 'app_browser_flag.dart';
 import 'app_browser_panel.dart' show appBrowserInPanelProvider;
@@ -72,12 +74,32 @@ class _AppBrowserChatOverlayState extends ConsumerState<AppBrowserChatOverlay> {
     }
     _controller ??= ref.read(appBrowserProvider.notifier);
     final s = ref.watch(appBrowserProvider);
+    final awaySummary = ref.watch(appBrowserAwaySummaryProvider);
+    final showAwaySummary =
+        awaySummary != null &&
+        widget.conversationId != null &&
+        awaySummary.conversationId == widget.conversationId;
     final here =
         widget.conversationId != null &&
         s.run?.conversationId == widget.conversationId;
-    if (!here || !(s.botActive || s.phase == AppBrowserPhase.away)) {
+    final showBrowser = here && (s.botActive || s.phase == AppBrowserPhase.away);
+    if (!showBrowser && !showAwaySummary) {
       return const SizedBox.shrink();
     }
+    final isAndroid = !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
+    final isIos = !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS;
+    final keepGoingOn =
+        isAndroid && kAppBrowserBg && ref.watch(appBrowserKeepGoingProvider);
+    final notifOn =
+        _controller?.backgroundService?.background.notificationsEnabled ?? true;
+    final botLabel = (s.run?.botName.isNotEmpty == true) ? s.run!.botName : 'Casama';
+    final hintText = !showBrowser || !s.botActive || (!isAndroid && !isIos)
+        ? null
+        : keepGoingOn
+        ? (notifOn
+              ? 'You can leave the app. $botLabel keeps going, and you can stop it from the notification.'
+              : 'You can leave the app. $botLabel keeps going (notifications are off).')
+        : "Keep Casama open until $botLabel finishes. We'll remind you if you leave.";
     final ask = s.ask;
     final tileState = switch (s.phase) {
       AppBrowserPhase.working => ScreenTileState.watching,
@@ -95,7 +117,26 @@ class _AppBrowserChatOverlayState extends ConsumerState<AppBrowserChatOverlay> {
     final inPanel = ref.watch(appBrowserInPanelProvider) > 0;
     return Stack(
       children: [
-        if (_hiddenRun != s.run?.id && !inPanel)
+        if (showAwaySummary)
+          Positioned(
+            top: AppSpace.xs,
+            left: AppSpace.sm,
+            right: AppSpace.sm,
+            child: _AwaySummaryPill(
+              key: const Key('appBrowserAwaySummary'),
+              summary: awaySummary,
+              onTap: () {
+                ref
+                    .read(appBrowserAwaySummaryProvider.notifier)
+                    .clear(widget.conversationId);
+                openAppBrowser(context);
+              },
+              onDismiss: () => ref
+                  .read(appBrowserAwaySummaryProvider.notifier)
+                  .clear(widget.conversationId),
+            ),
+          ),
+        if (showBrowser && _hiddenRun != s.run?.id && !inPanel)
           LayoutBuilder(
             builder: (context, box) => ScreenTileCorner(
               width: screenCardWidth(box.maxWidth, widget.layout),
@@ -115,7 +156,17 @@ class _AppBrowserChatOverlayState extends ConsumerState<AppBrowserChatOverlay> {
               ),
             ),
           ),
-        if (ask != null && ask.conversationId == widget.conversationId)
+        if (hintText != null && ask == null)
+          Positioned(
+            left: AppSpace.sm,
+            right: AppSpace.sm,
+            bottom: AppSpace.xs,
+            child: _BrowserHintBanner(
+              key: const Key('appBrowserBackgroundHint'),
+              text: hintText,
+            ),
+          ),
+        if (showBrowser && ask != null && ask.conversationId == widget.conversationId)
           Positioned(
             left: AppSpace.sm,
             right: AppSpace.sm,
@@ -183,6 +234,105 @@ class _LivePictureState extends ConsumerState<_LivePicture> {
         fit: BoxFit.fitWidth,
         alignment: Alignment.topCenter,
         gaplessPlayback: true,
+      ),
+    );
+  }
+}
+
+/// One-line note shown at the top of chat after Android kept going in the background (plan §3).
+class _AwaySummaryPill extends StatelessWidget {
+  const _AwaySummaryPill({
+    super.key,
+    required this.summary,
+    required this.onTap,
+    required this.onDismiss,
+  });
+
+  final AppBrowserAwaySummary summary;
+  final VoidCallback onTap;
+  final VoidCallback onDismiss;
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final stepWord = summary.steps == 1 ? '1 step' : '${summary.steps} steps';
+    return Material(
+      color: cs.secondaryContainer,
+      borderRadius: BorderRadius.circular(AppRadius.row),
+      elevation: 1,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(AppRadius.row),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpace.sm,
+            vertical: AppSpace.xs,
+          ),
+          child: Row(
+            children: [
+              Icon(
+                LucideIcons.globe,
+                size: 16,
+                color: cs.onSecondaryContainer,
+              ),
+              const SizedBox(width: AppSpace.xs),
+              Expanded(
+                child: Text(
+                  '${summary.botName} kept going while you were away · $stepWord',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: cs.onSecondaryContainer,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              IconButton(
+                icon: Icon(
+                  LucideIcons.x,
+                  size: 14,
+                  color: cs.onSecondaryContainer,
+                ),
+                visualDensity: VisualDensity.compact,
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(minWidth: 28, minHeight: 28),
+                onPressed: onDismiss,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Quiet hint telling the person whether they can leave the app during a browser task (plan §3).
+class _BrowserHintBanner extends StatelessWidget {
+  const _BrowserHintBanner({super.key, required this.text});
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return IgnorePointer(
+      child: Center(
+        child: Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpace.sm,
+            vertical: AppSpace.xs,
+          ),
+          decoration: BoxDecoration(
+            color: cs.surfaceContainerHighest.withValues(alpha: 0.92),
+            borderRadius: BorderRadius.circular(AppRadius.row),
+          ),
+          child: Text(
+            text,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: cs.onSurfaceVariant,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
       ),
     );
   }

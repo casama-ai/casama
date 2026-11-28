@@ -63,6 +63,7 @@ void main() {
         'type': 'hello',
         'platform': 'app',
         'version': '1.2.3',
+        'visible': true,
       });
       await Future<void>.delayed(const Duration(milliseconds: 120));
       expect(c.sent.where((m) => m['type'] == 'hello').length, greaterThan(1));

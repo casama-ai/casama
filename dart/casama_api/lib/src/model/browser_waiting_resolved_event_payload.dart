@@ -21,6 +21,8 @@ class BrowserWaitingResolvedEventPayload {
   BrowserWaitingResolvedEventPayload({
 
     required  this.outcome,
+
+     this.visibleAtEnd,
   });
 
   @JsonKey(
@@ -35,15 +37,29 @@ class BrowserWaitingResolvedEventPayload {
 
 
 
+  @JsonKey(
+    
+    name: r'visible_at_end',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final bool? visibleAtEnd;
+
+
+
 
 
     @override
     bool operator ==(Object other) => identical(this, other) || other is BrowserWaitingResolvedEventPayload &&
-      other.outcome == outcome;
+      other.outcome == outcome &&
+      other.visibleAtEnd == visibleAtEnd;
 
     @override
     int get hashCode =>
-        outcome.hashCode;
+        outcome.hashCode +
+        visibleAtEnd.hashCode;
 
   factory BrowserWaitingResolvedEventPayload.fromJson(Map<String, dynamic> json) => _$BrowserWaitingResolvedEventPayloadFromJson(json);
 

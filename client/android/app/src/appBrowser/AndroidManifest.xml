@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Phone browser background keep-going foreground service (docs/PHONE-BROWSER-BACKGROUND-PLAN.md §5).
+     Merged only when the appBrowser build switch is on (app/build.gradle.kts). -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <application>
+        <service
+            android:name="ai.casama.app.AppBrowserKeepAlive"
+            android:exported="false"
+            android:foregroundServiceType="specialUse"
+            tools:targetApi="34">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Finishes a browser task the user started with their assistant, shown in an ongoing notification with a Stop button" />
+        </service>
+    </application>
+</manifest>

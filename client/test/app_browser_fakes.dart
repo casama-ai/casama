@@ -158,6 +158,58 @@ class FakeAppBrowserChannel implements AppBrowserChannel {
   });
 
   @override
+  Future<void> backgroundConfig({
+    required bool active,
+    required bool keepGoing,
+    String? runId,
+    String? bot,
+    String? site,
+    String? step,
+    String? link,
+  }) async {}
+
+  @override
+  Future<void> backgroundUpdate({required String step, String? site}) async {}
+
+  @override
+  Future<void> backgroundStop({
+    String? title,
+    String? body,
+    String? link,
+    String? tag,
+  }) async {}
+
+  @override
+  Future<void> backgroundNeedsYou({
+    required String title,
+    required String body,
+    required String link,
+    required String tag,
+  }) async {}
+
+  @override
+  Future<void> scheduleReminder({
+    required int delayMs,
+    required String title,
+    required String body,
+    required String link,
+    required String tag,
+  }) async {}
+
+  @override
+  Future<void> cancelReminder({String? tag}) async {}
+
+  @override
+  Future<({int battery, bool notificationsEnabled})> batteryStatus() async =>
+      (battery: 80, notificationsEnabled: true);
+
+  @override
+  Future<bool> beginBackgroundTask() async => true;
+
+  @override
+  Future<void> endBackgroundTask() async {}
+
+  @override
   Future<void> pageWindow({required bool open, String? title}) async =>
       calls.add(open ? 'pageWindow open ${title ?? ''}' : 'pageWindow close');
 

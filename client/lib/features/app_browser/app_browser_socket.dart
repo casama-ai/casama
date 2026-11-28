@@ -141,9 +141,44 @@ class AppBrowserSocket {
 
   var _running = false;
   var _generation = 0;
+  var _visible = true;
   AppBrowserConnection? _conn;
   Timer? _hello;
   final _inflight = <String, AppBrowserCall>{};
+  Completer<void>? _drained;
+
+  bool get visible => _visible;
+  bool get hasInflight => _inflight.isNotEmpty;
+
+  /// Updates whether the app is currently visible on screen (PHONE-BROWSER-BACKGROUND-PLAN §7).
+  void setVisible(bool value) {
+    if (_visible == value) return;
+    _visible = value;
+    final c = _conn;
+    if (c != null) {
+      try {
+        c.send(jsonEncode({'type': 'visibility', 'visible': value}));
+      } catch (_) {}
+    }
+  }
+
+  /// Reports that Android background keep-going stopped early so the server moves to D-529 wait.
+  void sendBackgroundStopped(String reason) {
+    _visible = false;
+    final c = _conn;
+    if (c != null) {
+      try {
+        c.send(jsonEncode({'type': 'background_stopped', 'reason': reason}));
+      } catch (_) {}
+    }
+  }
+
+  /// Waits up to [maxWait] for any in-flight browser step to finish and send its result (iOS 2.5.4).
+  Future<void> drainInflight(Duration maxWait) async {
+    if (_inflight.isEmpty) return;
+    final completer = _drained ??= Completer<void>();
+    await completer.future.timeout(maxWait, onTimeout: () {});
+  }
 
   Uri get url => Uri.parse(
     '${apiUrl.replaceFirst(RegExp('^http'), 'ws')}/v1/local-computer/connect',
@@ -229,7 +264,12 @@ class AppBrowserSocket {
   }
 
   void _sendHello(AppBrowserConnection conn) => conn.send(
-    jsonEncode({'type': 'hello', 'platform': 'app', 'version': version}),
+    jsonEncode({
+      'type': 'hello',
+      'platform': 'app',
+      'version': version,
+      'visible': _visible,
+    }),
   );
 
   void _onMessage(AppBrowserConnection conn, String raw) {
@@ -289,6 +329,10 @@ class AppBrowserSocket {
       result = {'ok': false, 'code': 'error', 'message': '$e'};
     }
     final stillOurs = identical(_inflight.remove(id), call);
+    if (_inflight.isEmpty && _drained != null && !_drained!.isCompleted) {
+      _drained!.complete();
+      _drained = null;
+    }
     // A cancelled call, or one whose socket closed, gets no answer.
     if (!stillOurs || call.isCancelled || !identical(_conn, conn)) return;
     _reply(conn, id, 200, result);

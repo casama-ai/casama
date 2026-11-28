@@ -97,6 +97,10 @@ struct RunTime: View {
     if let end = state.endedAt {
       Text(Duration.seconds(max(0, end - attributes.startedAt)).formatted(.time(pattern: .minuteSecond)))
         .monospacedDigit()
+    } else if let waitUntil = state.waitUntil, waitUntil > Date().timeIntervalSince1970 {
+      // System-drawn countdown while waiting on the phone browser (zero battery cost, PHONE-BROWSER-BACKGROUND-PLAN §3).
+      Text(timerInterval: Date()...Date(timeIntervalSince1970: waitUntil), countsDown: true)
+        .monospacedDigit()
     } else {
       Text(timerInterval: attributes.started...Date.distantFuture, countsDown: false)
         .monospacedDigit()

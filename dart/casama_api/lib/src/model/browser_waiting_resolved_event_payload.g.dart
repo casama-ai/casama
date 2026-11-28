@@ -11,6 +11,8 @@ abstract class _$BrowserWaitingResolvedEventPayloadCWProxy {
     BrowserWaitingResolvedEventPayloadOutcomeEnum outcome,
   );
 
+  BrowserWaitingResolvedEventPayload visibleAtEnd(bool? visibleAtEnd);
+
   /// Creates a new instance with the provided field values.
   /// Omitted fields keep their values; explicit `null` clears nullable fields.
   /// The public API rejects `null` for non-nullable fields. To update a single field use `BrowserWaitingResolvedEventPayload(...).copyWith.fieldName(value)`.
@@ -21,6 +23,7 @@ abstract class _$BrowserWaitingResolvedEventPayloadCWProxy {
   /// ```
   BrowserWaitingResolvedEventPayload call({
     BrowserWaitingResolvedEventPayloadOutcomeEnum outcome,
+    bool? visibleAtEnd,
   });
 }
 
@@ -37,6 +40,10 @@ class _$BrowserWaitingResolvedEventPayloadCWProxyImpl
     BrowserWaitingResolvedEventPayloadOutcomeEnum outcome,
   ) => call(outcome: outcome);
 
+  @override
+  BrowserWaitingResolvedEventPayload visibleAtEnd(bool? visibleAtEnd) =>
+      call(visibleAtEnd: visibleAtEnd);
+
   /// Creates a new instance with the provided field values.
   /// Omitted fields keep their values; explicit `null` clears nullable fields.
   /// The public API rejects `null` for non-nullable fields. To update a single field use `BrowserWaitingResolvedEventPayload(...).copyWith.fieldName(value)`.
@@ -48,12 +55,17 @@ class _$BrowserWaitingResolvedEventPayloadCWProxyImpl
   @override
   BrowserWaitingResolvedEventPayload call({
     Object? outcome = const $CopyWithPlaceholder(),
+    Object? visibleAtEnd = const $CopyWithPlaceholder(),
   }) {
     return BrowserWaitingResolvedEventPayload(
       outcome: outcome == const $CopyWithPlaceholder() || outcome == null
           ? _value.outcome
           // ignore: cast_nullable_to_non_nullable
           : outcome as BrowserWaitingResolvedEventPayloadOutcomeEnum,
+      visibleAtEnd: visibleAtEnd == const $CopyWithPlaceholder()
+          ? _value.visibleAtEnd
+          // ignore: cast_nullable_to_non_nullable
+          : visibleAtEnd as bool?,
     );
   }
 }
@@ -85,15 +97,17 @@ BrowserWaitingResolvedEventPayload _$BrowserWaitingResolvedEventPayloadFromJson(
         v,
       ),
     ),
+    visibleAtEnd: $checkedConvert('visible_at_end', (v) => v as bool?),
   );
   return val;
-});
+}, fieldKeyMap: const {'visibleAtEnd': 'visible_at_end'});
 
 Map<String, dynamic> _$BrowserWaitingResolvedEventPayloadToJson(
   BrowserWaitingResolvedEventPayload instance,
 ) => <String, dynamic>{
   'outcome':
       _$BrowserWaitingResolvedEventPayloadOutcomeEnumEnumMap[instance.outcome]!,
+  'visible_at_end': ?instance.visibleAtEnd,
 };
 
 const _$BrowserWaitingResolvedEventPayloadOutcomeEnumEnumMap = {

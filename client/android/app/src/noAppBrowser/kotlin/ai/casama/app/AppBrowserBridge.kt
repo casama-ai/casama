@@ -9,4 +9,7 @@ import io.flutter.embedding.engine.FlutterEngine
  */
 object AppBrowserBridge {
     fun attach(engine: FlutterEngine, activity: Activity) {}
+    fun onActivityPause() {}
+    fun onActivityResume() {}
+    fun onNotificationOpen(link: String?, source: String?) {}
 }
