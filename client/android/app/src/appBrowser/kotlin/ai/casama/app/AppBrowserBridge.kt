@@ -294,6 +294,13 @@ object AppBrowserBridge {
             channel?.invokeMethod("pageFinished", mapOf("url" to url, "title" to (view.title ?: "")))
         }
 
+        // The address changed without a page load (a site that changes it in place, or a
+        // #fragment): Dart's address bar and the bots' page facts follow it.
+        override fun doUpdateVisitedHistory(view: WebView, url: String?, isReload: Boolean) {
+            if (url.isNullOrEmpty() || url == "about:blank") return
+            channel?.invokeMethod("urlChanged", mapOf("url" to url, "title" to (view.title ?: "")))
+        }
+
         override fun onScaleChanged(view: WebView, oldScale: Float, newScale: Float) {
             scale = newScale
         }

@@ -5,7 +5,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// made with `--dart-define=CASAMA_CLOUD_MODELS=true` (`scripts/cloud-models-switch.sh on` prints
 /// it). Both stores forbid hidden features switched on later, so store builds stay off until the
 /// release whose review notes describe it. Never a remote flag.
-const kCloudModels = bool.fromEnvironment('CASAMA_CLOUD_MODELS');
+// On by default in release and profile builds (D-633); `--dart-define=CASAMA_CLOUD_MODELS=false`
+// leaves it out. Debug runs and tests stay off unless they pass the define.
+const kCloudModels = bool.fromEnvironment(
+  'CASAMA_CLOUD_MODELS',
+  defaultValue: kReleaseMode || kProfileMode,
+);
 
 /// Whether the Cloud models code is in this build at all. Every entry point checks this first, as
 /// a constant, so a release build without [kCloudModels] drops the whole folder. Debug builds (and

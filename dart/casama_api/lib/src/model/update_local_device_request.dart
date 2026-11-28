@@ -242,7 +242,9 @@ ask(r'ask'),
 @JsonValue(r'computer')
 computer(r'computer'),
 @JsonValue(r'device')
-device(r'device');
+device(r'device'),
+@JsonValue(r'always')
+always(r'always');
 
 const UpdateLocalDeviceRequestBrowserModeEnum(this.value);
 

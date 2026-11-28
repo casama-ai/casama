@@ -4,6 +4,7 @@
 import 'dart:typed_data';
 
 import 'package:casama/features/chat/chat_screen.dart';
+import 'package:casama_sdk/casama_sdk.dart';
 // The picker's file type hands back an XFile; cross_file comes with file_picker.
 // ignore: depend_on_referenced_packages
 import 'package:cross_file/cross_file.dart';
@@ -54,30 +55,36 @@ final class _Picker extends FilePickerPlatform {
   ];
 }
 
-/// The computer can't start: every upload is refused the way the server refuses it.
-class _NoHoursBackend extends FakeBackend {
+/// Media upload fails (e.g. Library storage full): every upload is refused the way the server refuses it.
+class _FailingMediaBackend extends FakeBackend {
   @override
-  Future<void> uploadFile(
-    String computerId,
-    String path,
-    Uint8List bytes,
-  ) async {
-    final req = RequestOptions(path: '/v1/computers/$computerId/files');
+  Future<String> uploadMedia(
+    String orgId,
+    String name,
+    Uint8List bytes, {
+    String? contentType,
+  }) async {
+    final req = RequestOptions(path: '/v1/media');
     throw DioException(
       requestOptions: req,
       response: Response(
         requestOptions: req,
-        statusCode: 402,
+        statusCode: 409,
         data: {
           'type': 'about:blank',
-          'title': 'Payment Required',
-          'status': 402,
-          'code': 'computer_hours_exceeded',
-          'detail': 'The workspace used its computer hours for this month.',
+          'title': 'Conflict',
+          'status': 409,
+          'code': 'storage_full',
+          'detail': 'Your workspace storage is full.',
         },
       ),
     );
   }
+}
+
+class _NoComputerBackend extends FakeBackend {
+  @override
+  Future<List<Computer>> computers(String orgId) async => const [];
 }
 
 void main() {
@@ -90,7 +97,7 @@ void main() {
     'a failed file keeps the message in the box until Send without it',
     (tester) async {
       await setSize(tester, const Size(430, 932));
-      final backend = _NoHoursBackend();
+      final backend = _FailingMediaBackend();
       await tester.pumpWidget(
         harness(
           backend,
@@ -105,7 +112,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(
         find.text(
-          "Couldn't attach report.pdf: The workspace used its computer hours for this month.",
+          "Couldn't attach report.pdf: Your workspace storage is full.",
         ),
         findsOneWidget,
       );
@@ -141,6 +148,39 @@ void main() {
       expect(backend.sent.last, 'Summarize this');
       expect(backend.sentAttachments.last, isEmpty);
       expect(find.byKey(const Key('pending-report.pdf')), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'a bot with no computer can attach and send a file via /v1/media',
+    (tester) async {
+      await setSize(tester, const Size(430, 932));
+      final backend = _NoComputerBackend();
+      await tester.pumpWidget(
+        harness(
+          backend,
+          const ChatScreen(botId: botId, conversationId: convId),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const Key('attachButton')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('attachFiles')));
+      await tester.pumpAndSettle();
+      expect(backend.uploadedMedia.length, 1);
+      expect(backend.uploadedMedia.first.$2, 'report.pdf');
+
+      await tester.enterText(
+        find.byKey(const Key('messageInput')),
+        'Read this PDF',
+      );
+      await tester.tap(find.byKey(const Key('sendButton')));
+      for (var i = 0; i < 10; i++) {
+        await tester.pump(const Duration(milliseconds: 100));
+      }
+      expect(backend.sentAttachments.last.length, 1);
+      expect(backend.sentAttachments.last.first.path, startsWith('media:'));
     },
   );
 }

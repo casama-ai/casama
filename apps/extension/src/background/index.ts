@@ -11,7 +11,7 @@ import {
   registerPush,
   updateBadge,
 } from "../lib/alerts.ts";
-import { IS_FIREFOX, sidebarAction } from "../lib/browser.ts";
+import { IS_FIREFOX, openSettings, sidebarAction } from "../lib/browser.ts";
 import { flushQueue } from "../lib/capture.ts";
 import { hasConsent } from "../lib/consent.ts";
 import { installCrashReporting } from "../lib/crash.ts";
@@ -24,9 +24,16 @@ import { installAct, onActMessage, onAskNotification } from "./act/index.ts";
 import { deviceTick, installDevice, onDeviceMessage } from "./device/index.ts";
 import { handleHandover } from "./handover.ts";
 import { onKitMessage, refreshKits, syncKit } from "./kit.ts";
-import { installMenus, onCommand, onMenuClick, onOmnibox, trackWindows } from "./menus.ts";
+import {
+  installMenus,
+  onCommand,
+  onMenuClick,
+  onOmnibox,
+  refreshLastWindow,
+  trackWindows,
+} from "./menus.ts";
 
-const openOptions = () => chrome.runtime.openOptionsPage();
+const openOptions = () => openSettings();
 installCrashReporting("background");
 
 /** What's new and the uninstall feedback page (G6). */
@@ -102,6 +109,7 @@ chrome.permissions?.onRemoved?.addListener(() => void syncKit().catch(() => {}))
 
 chrome.contextMenus?.onClicked?.addListener(onMenuClick);
 chrome.commands?.onCommand?.addListener((command, tab) => void onCommand(command, tab));
+chrome.omnibox?.onInputStarted?.addListener(refreshLastWindow);
 chrome.omnibox?.onInputEntered?.addListener(onOmnibox);
 trackWindows();
 chrome.omnibox?.setDefaultSuggestion?.({ description: "Ask Casama: %s" });

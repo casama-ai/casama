@@ -224,6 +224,7 @@ export class LibraryView {
       { "aria-label": "Project", "data-testid": "project-select" },
       h("option", { value: "" }, "No project"),
     ) as HTMLSelectElement;
+    // Until the list loads, the select shows "No project": the picked one is restored below.
     projectSelect.addEventListener("change", () => {
       this.captures.projectId = projectSelect.value || undefined;
     });
@@ -339,14 +340,19 @@ export class LibraryView {
     );
     void api
       .unwrap(api.GET("/v1/projects", { params: { query: { org_id: org.id } }, signal: T() }))
-      .then((p) =>
-        projectSelect.append(
-          ...(p.items as Schemas["Project"][])
-            .filter((x) => x.status !== "done" && x.status !== "cancelled")
-            .map((x) => h("option", { value: x.id }, x.title)),
-        ),
-      )
-      .catch(() => {});
+      .then((p) => {
+        const open = (p.items as Schemas["Project"][]).filter(
+          (x) => x.status !== "done" && x.status !== "cancelled",
+        );
+        projectSelect.append(...open.map((x) => h("option", { value: x.id }, x.title)));
+        // Show the project saves still go into, or forget it when it's gone.
+        const kept = this.captures.projectId;
+        if (kept && open.some((x) => x.id === kept)) projectSelect.value = kept;
+        else this.captures.projectId = undefined;
+      })
+      .catch(() => {
+        this.captures.projectId = undefined;
+      });
     void api
       .unwrap(api.GET("/v1/bots", { params: { query: { org_id: org.id } }, signal: T() }))
       .then((b) => bots.append(...b.items.map((x) => h("option", { value: x.id }, x.name))))

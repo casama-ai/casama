@@ -295,6 +295,7 @@ const _$UpdateLocalDeviceRequestBrowserModeEnumEnumMap = {
   UpdateLocalDeviceRequestBrowserModeEnum.ask: 'ask',
   UpdateLocalDeviceRequestBrowserModeEnum.computer: 'computer',
   UpdateLocalDeviceRequestBrowserModeEnum.device: 'device',
+  UpdateLocalDeviceRequestBrowserModeEnum.always: 'always',
 };
 
 const _$SiteKindEnumMap = {

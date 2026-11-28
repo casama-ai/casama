@@ -141,6 +141,7 @@ Methods native calls on Dart:
 | `navigate` | `url`, `redirect: bool`, `user: bool` (started by a real touch) | `true` to let it load. While a bot works, a new site shows the site ask first, so the answer can take up to 5 minutes: don't block the UI thread on it (Android: cancel the navigation and `load` the address again when Dart says `true`) |
 | `pageStarted` | `url` | |
 | `pageFinished` | `url`, `title` | |
+| `urlChanged` | `url`, `title` | The address or title changed without a page load (an address changed in place by the site, a `#fragment`, a new title). iOS/macOS: KVO on `url` and `title`; Android: `doUpdateVisitedHistory`; Linux: `notify::uri`/`notify::title`; Windows: `SourceChanged`/`DocumentTitleChanged` |
 | `landed` | `url` (the address actually committed, after redirects) | `true` to keep it; `false` makes native load `about:blank` (it can also wait for a site ask) |
 | `userTouched` | | (a real finger touched the web area; **never** for native's own `tap`. Dart also ignores one within 800 ms of a `tap` it sent) |
 | `dialog` | `kind` (`alert`/`confirm`/`prompt`), `message` | (answered later with `answerDialog`) |

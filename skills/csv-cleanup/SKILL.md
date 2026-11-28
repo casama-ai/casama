@@ -6,7 +6,9 @@ description: Clean a messy CSV file - trim spaces, normalize headers, drop empty
 
 # CSV cleanup
 
-Use the bundled script on your computer; it only reads the input and writes a new file.
+**Use file tools first (no computer needed):** for inspecting, filtering, deduplicating, or aggregating a CSV from chat or Library, use `data.query` or `sheets.edit` / `sheets.make`.
+
+For bulk whitespace trimming and snake_case header normalization on a computer file, use the bundled script on your computer; it only reads the input and writes a new file.
 
 ```
 python3 ~/skills/csv-cleanup/scripts/clean.py input.csv cleaned.csv

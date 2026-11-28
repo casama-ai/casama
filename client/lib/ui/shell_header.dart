@@ -196,7 +196,7 @@ class ListPaneToggle extends ConsumerWidget {
 
 /// 36px round icon button used in [ShellHeader].
 class HeaderIconButton extends StatelessWidget {
-  const HeaderIconButton({super.key, required this.icon, required this.tooltip, required this.onPressed, this.badge = false, this.selected = false});
+  const HeaderIconButton({super.key, required this.icon, required this.tooltip, required this.onPressed, this.badge = false, this.selected = false, this.onLongPress});
 
   final IconData icon;
   final String tooltip;
@@ -208,17 +208,32 @@ class HeaderIconButton extends StatelessWidget {
   /// Accent-tinted when its panel is open.
   final bool selected;
 
+  /// A second action on a long press or a right click (a menu). The tooltip then shows on hover
+  /// only, so it doesn't take the long press.
+  final VoidCallback? onLongPress;
+
   @override
   Widget build(BuildContext context) {
     final scheme = context.colorScheme;
     final fill = context.isDark ? scheme.surfaceContainer : scheme.surfaceContainerLowest;
+    final button = _headerButton(context, scheme, fill);
+    final more = onLongPress;
+    if (more == null) return button;
+    return Tooltip(
+      message: tooltip,
+      triggerMode: TooltipTriggerMode.manual,
+      child: GestureDetector(onLongPress: more, onSecondaryTap: more, child: button),
+    );
+  }
+
+  Widget _headerButton(BuildContext context, ColorScheme scheme, Color fill) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 3),
       child: Stack(
         clipBehavior: Clip.none,
         children: [
           IconButton(
-            tooltip: tooltip,
+            tooltip: onLongPress == null ? tooltip : null,
             onPressed: onPressed,
             icon: Icon(icon, size: 20),
             style: IconButton.styleFrom(

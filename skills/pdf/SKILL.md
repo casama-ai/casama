@@ -8,6 +8,19 @@ Adapted for Casama from anthropics/skills@2c5958ec (Apache-2.0). LibreOffice, Po
 
 # PDF Processing Guide
 
+## Use File Tools First (No Computer Needed)
+
+For chat attachments (`media:<id>`) and Library files (`library:<id>`), prefer the built-in server file tools before waking a computer:
+- **Read text:** `documents.read`
+- **Merge, split, keep, reorder, drop, rotate, fill forms, stamp text/signature/watermark/page numbers, or render pages to images:** `documents.pdf`
+- **Make a PDF from Markdown:** `documents.make`
+- **Convert Word/Excel/PowerPoint/HTML to PDF:** `documents.convert`
+- **Shrink, repair, or linearize a PDF:** `documents.compress`
+- **OCR a scanned PDF:** `documents.ocr`
+- **Permanently redact regions:** `documents.redact`
+
+Fall back to the computer shell tools below only when working on files already on an awake computer or doing custom layout/scripting that file tools don't cover.
+
 ## Overview
 
 This guide covers essential PDF processing operations using Python libraries and command-line tools. For advanced features, JavaScript libraries, and detailed examples, see REFERENCE.md. If you need to fill out a PDF form, read FORMS.md and follow its instructions.
@@ -218,16 +231,16 @@ qpdf input.pdf output.pdf --rotate=+90:1  # Rotate page 1 by 90 degrees
 qpdf --password=mypassword --decrypt encrypted.pdf decrypted.pdf
 ```
 
-### pdftk (if available)
+### qpdf (merge, split, rotate)
 ```bash
 # Merge
-pdftk file1.pdf file2.pdf cat output merged.pdf
+qpdf --empty --pages file1.pdf file2.pdf -- merged.pdf
 
-# Split
-pdftk input.pdf burst
+# Split into single-page files
+qpdf --split-pages input.pdf page_%d.pdf
 
-# Rotate
-pdftk input.pdf rotate 1east output rotated.pdf
+# Rotate page 1 clockwise 90 degrees
+qpdf input.pdf rotated.pdf --rotate=+90:1
 ```
 
 ## Common Tasks

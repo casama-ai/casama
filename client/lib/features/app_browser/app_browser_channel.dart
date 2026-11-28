@@ -83,6 +83,10 @@ abstract interface class AppBrowserNativeEvents {
   void pageStarted(String url);
   void pageFinished(String url, String title);
 
+  /// The address or title changed without a page load (a site that changes its address in
+  /// place, as single-page shops and mail do, or a #fragment).
+  void urlChanged(String url, String title) {}
+
   /// The address actually committed (after redirects); false makes native load about:blank.
   Future<bool> landed(String url);
 
@@ -330,6 +334,8 @@ class MethodAppBrowserChannel implements AppBrowserChannel {
         h.pageStarted(s('url'));
       case 'pageFinished':
         h.pageFinished(s('url'), s('title'));
+      case 'urlChanged':
+        h.urlChanged(s('url'), s('title'));
       case 'landed':
         return h.landed(s('url'));
       case 'userTouched':

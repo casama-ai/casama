@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:material_ui/material_ui.dart';
 
-import '../../../core/backend.dart' show CostQuery;
 import '../../../core/widgets.dart';
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_tokens.dart';
@@ -25,7 +24,7 @@ class CostSpendCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // The same request the Costs tab starts with, so opening the tab shows at once.
-    final costs = ref.watch(adminCostsProvider(const CostQuery())).value;
+    final costs = ref.watch(adminCostsProvider(const CostView().query)).value;
     // It loads after the screen: it slides in rather than pushing what's around it.
     return ShowHide(child: costs == null ? null : _card(context, costs));
   }
@@ -34,7 +33,12 @@ class CostSpendCard extends ConsumerWidget {
     final l10n = context.l10n;
     final locale = l10n.localeName;
     final t = costs.totals;
-    final margin = marginShare(t.chargedTrackedUsd, t.spentUsd);
+    final basis = ProviderScope.containerOf(context, listen: false).read(costBasisProvider);
+    // The margin is always at list prices, so a free plan never shows as a 100% margin.
+    final margin = marginShare(
+      t.chargedTrackedUsd,
+      listSpentUsd(t, includeFixed: costs.includeFixed),
+    );
     final daily = [
       for (final d in costs.byDay)
         d.values.fold<double>(0, (n, v) => n + v.toDouble()),
@@ -46,11 +50,17 @@ class CostSpendCard extends ConsumerWidget {
       child: Semantics(
         container: true,
         button: true,
-        label: l10n.costSpendCardSemantics(
-          costUsd(t.spentUsd, locale),
-          costUsd(t.chargedUsd, locale),
-          costPercent(margin),
-        ),
+        label: basis == CostBasis.paid
+            ? l10n.costSpendCardPaidSemantics(
+                costUsd(t.spentUsd, locale),
+                costUsd(t.chargedUsd, locale),
+                costPercent(margin),
+              )
+            : l10n.costSpendCardSemantics(
+                costUsd(t.spentUsd, locale),
+                costUsd(t.chargedUsd, locale),
+                costPercent(margin),
+              ),
         hint: l10n.costSpendCardHint,
         onTap: onOpen,
         excludeSemantics: true,
@@ -97,7 +107,7 @@ class CostSpendCard extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         CostFact(
-                          label: l10n.costSpent,
+                          label: costSpendLabel(l10n, basis),
                           value: costUsd(t.spentUsd, locale),
                           valueKey: const Key('spendCard-spent'),
                         ),
@@ -121,7 +131,7 @@ class CostSpendCard extends ConsumerWidget {
                   Expanded(
                     flex: 2,
                     child: CostFact(
-                      label: l10n.costMargin,
+                      label: l10n.costMarginListPrices,
                       value: costPercent(margin),
                       valueKey: const Key('spendCard-margin'),
                     ),

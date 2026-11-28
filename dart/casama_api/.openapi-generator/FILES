@@ -137,10 +137,13 @@ lib/src/model/admin_domains_counts.dart
 lib/src/model/admin_growth.dart
 lib/src/model/admin_growth_cohort.dart
 lib/src/model/admin_growth_cohort_week.dart
+lib/src/model/admin_growth_connection_failure.dart
+lib/src/model/admin_growth_conversion.dart
 lib/src/model/admin_growth_day.dart
 lib/src/model/admin_growth_failure.dart
 lib/src/model/admin_growth_first_steps.dart
 lib/src/model/admin_growth_money.dart
+lib/src/model/admin_growth_paywall_source.dart
 lib/src/model/admin_growth_plan.dart
 lib/src/model/admin_growth_platform.dart
 lib/src/model/admin_growth_revenue.dart
@@ -401,6 +404,7 @@ lib/src/model/conversation.dart
 lib/src/model/conversation_list.dart
 lib/src/model/conversation_thread.dart
 lib/src/model/cost_group.dart
+lib/src/model/cost_row_billing.dart
 lib/src/model/cost_source.dart
 lib/src/model/create_action_rule_request.dart
 lib/src/model/create_admin_discount_request.dart
@@ -936,6 +940,7 @@ lib/src/model/put_away_suggestions_request.dart
 lib/src/model/put_away_suggestions_response.dart
 lib/src/model/reaction_summary.dart
 lib/src/model/reasoning_effort.dart
+lib/src/model/record_funnel_event_request.dart
 lib/src/model/redeem_comp_request.dart
 lib/src/model/redeem_invite_request.dart
 lib/src/model/redeem_referral_request.dart
@@ -1052,6 +1057,11 @@ lib/src/model/send_message_request.dart
 lib/src/model/send_message_response.dart
 lib/src/model/server_capacity.dart
 lib/src/model/server_capacity_alerts_inner.dart
+lib/src/model/server_capacity_computer_metrics.dart
+lib/src/model/server_capacity_computer_metrics_job_boxes7d.dart
+lib/src/model/server_capacity_computer_metrics_shell_programs7d_inner.dart
+lib/src/model/server_capacity_computer_metrics_wake_times_inner.dart
+lib/src/model/server_capacity_computer_metrics_wakes_by_caller7d_inner.dart
 lib/src/model/server_capacity_days_inner.dart
 lib/src/model/server_capacity_latest.dart
 lib/src/model/set_admin_bot_request.dart
@@ -1278,6 +1288,7 @@ lib/src/model/usage_report_by_source_inner.dart
 lib/src/model/usage_source.dart
 lib/src/model/user_fact.dart
 lib/src/model/user_fact_list.dart
+lib/src/model/vendor_billing.dart
 lib/src/model/vendor_reading.dart
 lib/src/model/vendor_settings.dart
 lib/src/model/visibility.dart

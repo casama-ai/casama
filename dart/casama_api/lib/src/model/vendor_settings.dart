@@ -3,6 +3,7 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:casama_api/src/model/vendor_billing.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -37,6 +38,10 @@ class VendorSettings {
      this.renewalUsd,
 
      this.renewalMonths,
+
+     this.billing,
+
+     this.includedUsd,
   });
 
           // minimum: 0
@@ -154,6 +159,31 @@ class VendorSettings {
 
 
 
+  @JsonKey(
+    
+    name: r'billing',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final VendorBilling? billing;
+
+
+
+          // minimum: 0
+  @JsonKey(
+    
+    name: r'included_usd',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final num? includedUsd;
+
+
+
 
 
     @override
@@ -166,7 +196,9 @@ class VendorSettings {
       other.enabled == enabled &&
       other.balanceWarnBelow == balanceWarnBelow &&
       other.renewalUsd == renewalUsd &&
-      other.renewalMonths == renewalMonths;
+      other.renewalMonths == renewalMonths &&
+      other.billing == billing &&
+      other.includedUsd == includedUsd;
 
     @override
     int get hashCode =>
@@ -178,7 +210,9 @@ class VendorSettings {
         enabled.hashCode +
         balanceWarnBelow.hashCode +
         (renewalUsd == null ? 0 : renewalUsd.hashCode) +
-        renewalMonths.hashCode;
+        renewalMonths.hashCode +
+        billing.hashCode +
+        (includedUsd == null ? 0 : includedUsd.hashCode);
 
   factory VendorSettings.fromJson(Map<String, dynamic> json) => _$VendorSettingsFromJson(json);
 

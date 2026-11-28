@@ -10954,6 +10954,48 @@ abstract class AppLocalizations {
   /// **'No alarm pushes until {time}, unless it gets fuller'**
   String adminCapacitySnoozedDone(String time);
 
+  /// No description provided for @adminCapacityComputersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Computers & file jobs (7 days)'**
+  String get adminCapacityComputersTitle;
+
+  /// No description provided for @adminCapacityWakeTime.
+  ///
+  /// In en, this message translates to:
+  /// **'{mode} wake: {p50} p50 / {p90} p90 ({count})'**
+  String adminCapacityWakeTime(String mode, String p50, String p90, int count);
+
+  /// No description provided for @adminCapacityFileJobs.
+  ///
+  /// In en, this message translates to:
+  /// **'File jobs: {count}'**
+  String adminCapacityFileJobs(int count);
+
+  /// No description provided for @adminCapacityFileJobsTimed.
+  ///
+  /// In en, this message translates to:
+  /// **'File jobs: {count} ({p50} p50 / {p90} p90)'**
+  String adminCapacityFileJobsTimed(int count, String p50, String p90);
+
+  /// No description provided for @adminCapacityBrowserOoms.
+  ///
+  /// In en, this message translates to:
+  /// **'Browser out-of-memory restarts: {count}'**
+  String adminCapacityBrowserOoms(int count);
+
+  /// No description provided for @adminCapacityWakesByCaller.
+  ///
+  /// In en, this message translates to:
+  /// **'Wakes by caller: {list}'**
+  String adminCapacityWakesByCaller(String list);
+
+  /// No description provided for @adminCapacityShellPrograms.
+  ///
+  /// In en, this message translates to:
+  /// **'Top shell programs: {list}'**
+  String adminCapacityShellPrograms(String list);
+
   /// No description provided for @adminNoAbuse.
   ///
   /// In en, this message translates to:
@@ -37293,6 +37335,36 @@ abstract class AppLocalizations {
   /// **'When a Bot Needs a Browser'**
   String get appBrowserModeHeader;
 
+  /// No description provided for @appBrowserModeAlways.
+  ///
+  /// In en, this message translates to:
+  /// **'Always this device'**
+  String get appBrowserModeAlways;
+
+  /// No description provided for @appBrowserModeAlwaysHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Bots open every page here while you have their chat open. Their computer is used only when you ask for it.'**
+  String get appBrowserModeAlwaysHelp;
+
+  /// No description provided for @appBrowserOpenTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the browser'**
+  String get appBrowserOpenTooltip;
+
+  /// No description provided for @appBrowserBotsBrowseHere.
+  ///
+  /// In en, this message translates to:
+  /// **'Bots browse here'**
+  String get appBrowserBotsBrowseHere;
+
+  /// No description provided for @appBrowserBotsBrowseHereHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Every page in your chats opens in this browser while you watch'**
+  String get appBrowserBotsBrowseHereHelp;
+
   /// No description provided for @appBrowserModeAsk.
   ///
   /// In en, this message translates to:
@@ -47028,6 +47100,150 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Open'**
   String get watchOpen;
+
+  /// No description provided for @costModeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cost view'**
+  String get costModeLabel;
+
+  /// No description provided for @costModePaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid'**
+  String get costModePaid;
+
+  /// No description provided for @costModeEstimated.
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated'**
+  String get costModeEstimated;
+
+  /// No description provided for @costPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid'**
+  String get costPaid;
+
+  /// No description provided for @costEstimatedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated'**
+  String get costEstimatedTitle;
+
+  /// No description provided for @costMarginListPrices.
+  ///
+  /// In en, this message translates to:
+  /// **'Margin at list prices'**
+  String get costMarginListPrices;
+
+  /// No description provided for @costFreePlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Free plan'**
+  String get costFreePlan;
+
+  /// No description provided for @costFreePlanCalls.
+  ///
+  /// In en, this message translates to:
+  /// **'Free plan · {count} calls'**
+  String costFreePlanCalls(String count);
+
+  /// No description provided for @costCapUsage.
+  ///
+  /// In en, this message translates to:
+  /// **'{used} / {limit} {unit}'**
+  String costCapUsage(String used, String limit, String unit);
+
+  /// No description provided for @costShareOfOwnServers.
+  ///
+  /// In en, this message translates to:
+  /// **'Share of own servers'**
+  String get costShareOfOwnServers;
+
+  /// No description provided for @costIncludedCredit.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount}/mo included'**
+  String costIncludedCredit(String amount);
+
+  /// No description provided for @costAtListPrices.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} at list prices'**
+  String costAtListPrices(String amount);
+
+  /// No description provided for @costEmptyPaidDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{days, plural, =1{Nothing was paid in this day} other{Nothing was paid in these {days} days}}'**
+  String costEmptyPaidDays(int days);
+
+  /// No description provided for @costEmptyPaidRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing was paid in these days'**
+  String get costEmptyPaidRange;
+
+  /// No description provided for @costEmptyPaidFiltered.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing was paid that matches these filters'**
+  String get costEmptyPaidFiltered;
+
+  /// No description provided for @costSpokenPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'paid {amount}'**
+  String costSpokenPaid(String amount);
+
+  /// No description provided for @costSpokenEstimated.
+  ///
+  /// In en, this message translates to:
+  /// **'estimated {amount}'**
+  String costSpokenEstimated(String amount);
+
+  /// No description provided for @costSpendCardPaidSemantics.
+  ///
+  /// In en, this message translates to:
+  /// **'Spend in the last 30 days: {paid} paid, {charged} charged, {margin} margin at list prices'**
+  String costSpendCardPaidSemantics(String paid, String charged, String margin);
+
+  /// No description provided for @vendorBillingFree.
+  ///
+  /// In en, this message translates to:
+  /// **'Free plan'**
+  String get vendorBillingFree;
+
+  /// No description provided for @vendorBillingMetered.
+  ///
+  /// In en, this message translates to:
+  /// **'Metered'**
+  String get vendorBillingMetered;
+
+  /// No description provided for @vendorBillingFreeHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Usage stops at the cap and counts as \$0 paid.'**
+  String get vendorBillingFreeHelp;
+
+  /// No description provided for @vendorBillingMeteredHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Usage is paid at its recorded cost.'**
+  String get vendorBillingMeteredHelp;
+
+  /// No description provided for @vendorIncludedUsd.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly included credit (USD)'**
+  String get vendorIncludedUsd;
+
+  /// No description provided for @vendorIncludedUsdHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Usage up to this amount each calendar month counts as \$0 paid.'**
+  String get vendorIncludedUsdHelp;
 }
 
 class _AppLocalizationsDelegate

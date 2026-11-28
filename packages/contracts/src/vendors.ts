@@ -12,6 +12,8 @@ export const VendorReading = z
     error: z.string().nullable(),
   })
   .openapi("VendorReading");
+export const VendorBilling = z.enum(["free", "metered"]).openapi("VendorBilling");
+
 export const VendorSettings = z
   .object({
     limit_value: z.number().positive().nullable(),
@@ -24,6 +26,10 @@ export const VendorSettings = z
     /** A fixed bill: what one renewal costs and how many months it covers (Costs tab). */
     renewal_usd: z.number().nonnegative().nullable().optional(),
     renewal_months: z.number().int().min(1).max(120).optional(),
+    /** How usage is paid for: free (caps out, $0 paid) or metered (paid at recorded cost). */
+    billing: VendorBilling.optional(),
+    /** Monthly usage credit included in a paid plan (USD); paid is max(0, estimated - included). */
+    included_usd: z.number().nonnegative().nullable().optional(),
   })
   .openapi("VendorSettings");
 export const AdminVendor = VendorSettings.extend({

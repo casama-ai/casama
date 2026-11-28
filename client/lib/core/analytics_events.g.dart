@@ -51,6 +51,7 @@ const analyticsClientEvents = <String>{
   'message_reacted',
   'message_reaction_removed',
   'push_permission_result',
+  'app_browser_site_allowed',
   'push_opened',
   'app_startup_failed',
   'app_active_daily',
@@ -91,6 +92,15 @@ const analyticsClientEvents = <String>{
   'cloud_models_fallback_used',
   'cloud_models_fallback_off',
   'cloud_models_disabled',
+  'app_opened_first',
+  'starter_card_tapped',
+  'brief_action_tapped',
+  'limit_card_shown',
+  'limit_card_action',
+  'upgrade_prompt_shown',
+  'upgrade_prompt_action',
+  'pay_feedback_shown',
+  'pay_feedback_submitted',
 };
 
 /// The closed list of `feature_used` features.
@@ -136,7 +146,7 @@ const analyticsFeatures = <String>{
 /// Events Google Analytics 4 also gets as one of its recommended events (D-398): the twin's name, the
 /// event properties it copies and constants it adds.
 const analyticsGa4Twins = <String, ({String name, List<String> params, Map<String, Object> set})>{
-  'sign_in_completed': (name: 'login', params: <String>[], set: <String, Object>{}),
+  'sign_in_completed': (name: 'login', params: <String>['method'], set: <String, Object>{}),
   'onboarding_complete': (name: 'tutorial_complete', params: <String>['path'], set: <String, Object>{}),
   'invite_shared': (name: 'share', params: <String>['method'], set: <String, Object>{'content_type': 'invite'}),
   'referral_shared': (name: 'share', params: <String>['method'], set: <String, Object>{'content_type': 'referral'}),

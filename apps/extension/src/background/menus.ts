@@ -171,13 +171,22 @@ export async function onCommand(command: string, tab?: chrome.tabs.Tab) {
  * keypress: Chrome only opens it during the user's gesture, which an await would lose.
  */
 let lastWindow: number | undefined;
-export function trackWindows() {
+
+/** Refreshes the cached focused window (e.g. when the user starts typing `ca ` in the address bar). */
+export function refreshLastWindow() {
+  if (!chrome.windows?.getLastFocused) return;
   void chrome.windows
     .getLastFocused()
     .then((w) => {
-      lastWindow ??= w.id;
+      if (w.id !== undefined) lastWindow = w.id;
     })
     .catch(() => {});
+}
+
+export function trackWindows() {
+  // Firefox for Android has no windows API; throwing here would stop the worker's other listeners.
+  if (!chrome.windows) return;
+  refreshLastWindow();
   chrome.windows.onFocusChanged.addListener((id) => {
     if (id !== chrome.windows.WINDOW_ID_NONE) lastWindow = id;
   });
@@ -197,8 +206,20 @@ export function trackWindows() {
 export function onOmnibox(text: string) {
   const q = text.trim();
   if (!q) return;
-  void openPanel(
-    lastWindow !== undefined ? ({ windowId: lastWindow } as chrome.tabs.Tab) : undefined,
-  );
+  // After the service worker wakes from idle, lastWindow may not be populated yet; look up the
+  // focused window before falling back to a tab so Chrome still opens the side panel.
+  if (!IS_FIREFOX && !IS_SAFARI && lastWindow === undefined && chrome.windows?.getLastFocused) {
+    void chrome.windows
+      .getLastFocused()
+      .then((w) => {
+        if (w.id !== undefined) lastWindow = w.id;
+        return openPanel(w.id !== undefined ? ({ windowId: w.id } as chrome.tabs.Tab) : undefined);
+      })
+      .catch(() => openPanel(undefined));
+  } else {
+    void openPanel(
+      lastWindow !== undefined ? ({ windowId: lastWindow } as chrome.tabs.Tab) : undefined,
+    );
+  }
   void setIntent({ text: q, send: true });
 }

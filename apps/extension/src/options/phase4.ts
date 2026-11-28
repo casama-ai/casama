@@ -67,10 +67,17 @@ export async function deviceCard(account: Account): Promise<HTMLElement> {
     h("h2", {}, "This browser as a device"),
   );
   const status = h("p", { className: "muted", role: "status", "data-testid": "device-status" });
-  const got = await send<{ device: BrowserDevice | null; listening: boolean }>({
-    type: "device:get",
-  }).catch(() => ({ device: null, listening: false }));
+  const [got, granted] = await Promise.all([
+    send<{ device: BrowserDevice | null; listening: boolean }>({
+      type: "device:get",
+    }).catch(() => ({ device: null, listening: false })),
+    chrome.permissions
+      ?.getAll()
+      .then((a) => new Set(a.permissions ?? []))
+      .catch(() => null) ?? Promise.resolve(null),
+  ]);
   const d = got.device;
+  const hasPerms = (perms: Perm[]) => !granted || perms.every((p) => granted.has(p));
   const set = async (patch: BrowserDevicePatch) => {
     status.textContent = "Saving…";
     try {
@@ -84,7 +91,7 @@ export async function deviceCard(account: Account): Promise<HTMLElement> {
   for (const k of KINDS) {
     const box = h("input", {
       type: "checkbox",
-      checked: !!d?.[k.key],
+      checked: !!d?.[k.key] && hasPerms(k.perms),
       "data-testid": `device-${k.key}`,
     }) as HTMLInputElement;
     box.addEventListener("change", async () => {
@@ -147,7 +154,7 @@ export async function deviceCard(account: Account): Promise<HTMLElement> {
         "Open Device connections",
       ),
     ),
-    ...(d && (d.tab || d.history)
+    ...(d && ((d.tab && hasPerms(["tabs"])) || (d.history && hasPerms(["history", "bookmarks"])))
       ? [
           h(
             "p",
@@ -179,17 +186,28 @@ export async function bookmarksCard(preloaded?: {
   );
   const w = preloaded ?? (await here().catch(() => null));
   if (!w) return card;
-  const bots =
-    preloaded?.bots ??
-    (await w.api.unwrap(w.api.GET("/v1/bots", { params: { query: { org_id: w.org.id } } }))).items;
+  let bots: { id: string; name: string }[];
+  try {
+    bots =
+      preloaded?.bots ??
+      (await w.api.unwrap(w.api.GET("/v1/bots", { params: { query: { org_id: w.org.id } } })))
+        .items;
+  } catch {
+    // A failed bot list mustn't take the whole Settings section down with it.
+    card.append(
+      h("p", { className: "muted" }, "Couldn't load your bots. Reopen Settings to try again."),
+    );
+    return card;
+  }
   const select = h(
     "select",
     { "aria-label": "Bot", "data-testid": "bookmarks-bot" },
     ...bots.map((b) => h("option", { value: b.id }, b.name)),
   ) as HTMLSelectElement;
+  const canReadList = FEATURES.readingList && browserName() !== "Edge" && browserName() !== "Opera";
   const reading = h("input", {
     type: "checkbox",
-    checked: FEATURES.readingList,
+    checked: canReadList,
     "data-testid": "bookmarks-reading",
   }) as HTMLInputElement;
   const status = h("p", { className: "muted", role: "status", "data-testid": "bookmarks-status" });
@@ -199,14 +217,29 @@ export async function bookmarksCard(preloaded?: {
       className: "primary",
       "data-testid": "bookmarks-go",
       onClick: async () => {
-        const perms: Perm[] = reading.checked ? ["bookmarks", "readingList"] : ["bookmarks"];
-        // Firefox also asks the person's consent to send bookmarks (its data consent, Phase 5).
-        const ok = await chrome.permissions
-          .request({
-            permissions: perms,
-            ...(IS_FIREFOX ? { data_collection: ["bookmarksInfo"] } : {}),
-          } as chrome.permissions.Permissions)
-          .catch(() => false);
+        let includeReading = canReadList && reading.checked;
+        let ok = false;
+        if (includeReading) {
+          try {
+            ok = await chrome.permissions.request({
+              permissions: ["bookmarks", "readingList"],
+            });
+          } catch {
+            // Browser lacks the readingList API (e.g. a Chromium fork): import bookmarks only.
+            includeReading = false;
+            ok = await chrome.permissions
+              .request({ permissions: ["bookmarks"] })
+              .catch(() => false);
+          }
+        } else {
+          // Firefox also asks the person's consent to send bookmarks (its data consent, Phase 5).
+          ok = await chrome.permissions
+            .request({
+              permissions: ["bookmarks"],
+              ...(IS_FIREFOX ? { data_collection: ["bookmarksInfo"] } : {}),
+            } as chrome.permissions.Permissions)
+            .catch(() => false);
+        }
         if (!ok) {
           status.textContent = `${browserName()} didn't give the permission.`;
           return;
@@ -226,7 +259,7 @@ export async function bookmarksCard(preloaded?: {
             return;
           }
           const { bookmarksMarkdown } = await import("../lib/device/bookmarks.ts");
-          const md = await bookmarksMarkdown(reading.checked);
+          const md = await bookmarksMarkdown(includeReading);
           if (!md.count) {
             status.textContent = "There are no bookmarks to bring in.";
             return;
@@ -257,7 +290,7 @@ export async function bookmarksCard(preloaded?: {
   ) as HTMLButtonElement;
   card.append(
     h("div", { className: "row" }, select, go),
-    ...(FEATURES.readingList
+    ...(canReadList
       ? [h("label", { className: "choice" }, reading, h("span", {}, "Include the reading list"))]
       : []),
     status,
@@ -270,9 +303,14 @@ export async function captionsCard(account: Account): Promise<HTMLElement | null
   const config = await remoteConfig(account.server).catch(() => null);
   if (!config || !flag(config, "chrome_meeting_captions", false)) return null;
   const s = await getSettings();
+  const hasMeet = chrome.permissions?.contains
+    ? await chrome.permissions
+        .contains({ origins: ["https://meet.google.com/*"] })
+        .catch(() => false)
+    : true;
   const box = h("input", {
     type: "checkbox",
-    checked: s.meetingCaptions,
+    checked: s.meetingCaptions && hasMeet,
     "data-testid": "captions-switch",
   }) as HTMLInputElement;
   const status = h("p", { className: "muted", role: "status" });

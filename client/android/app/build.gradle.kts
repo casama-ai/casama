@@ -1,3 +1,4 @@
+import groovy.json.JsonSlurper
 import java.util.Properties
 
 plugins {
@@ -60,6 +61,10 @@ androidComponents {
 android {
     namespace = "ai.casama.app"
 
+    buildFeatures {
+        resValues = true
+    }
+
     sourceSets {
         getByName("main") {
             kotlin.srcDir(if (appBrowser) "src/appBrowser/kotlin" else "src/noAppBrowser/kotlin")
@@ -89,6 +94,31 @@ android {
         // flag during build.
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+
+        // Google Analytics (D-532): the Android Firebase Analytics SDK reads the app id from
+        // Android string resources (what google-services.json would make), not from the options
+        // Dart starts Firebase with. Read client/config/firebase.json here so every build (plain
+        // `flutter run` and `flutter build`, not only scripts/package-android.sh) gets them.
+        // Remove any legacy generated firebase_ids.xml so it can't collide with these resValues.
+        file("src/main/res/values/firebase_ids.xml").delete()
+        val firebaseConfigFile = rootProject.file("../config/firebase.json")
+        if (firebaseConfigFile.exists()) {
+            @Suppress("UNCHECKED_CAST")
+            val firebase = JsonSlurper().parse(firebaseConfigFile) as? Map<String, Any?>
+            val appId = firebase?.get("FIREBASE_ANDROID_APP_ID")?.toString()?.takeIf { it.isNotBlank() }
+            if (appId != null) {
+                listOf(
+                    "google_app_id" to appId,
+                    "google_api_key" to firebase["FIREBASE_ANDROID_API_KEY"]?.toString(),
+                    "gcm_defaultSenderId" to firebase["FIREBASE_MESSAGING_SENDER_ID"]?.toString(),
+                    "project_id" to firebase["FIREBASE_PROJECT_ID"]?.toString(),
+                ).forEach { (key, value) ->
+                    if (!value.isNullOrBlank()) {
+                        resValue("string", key, value)
+                    }
+                }
+            }
+        }
     }
 
     signingConfigs {

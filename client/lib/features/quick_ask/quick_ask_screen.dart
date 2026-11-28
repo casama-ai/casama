@@ -19,8 +19,6 @@ import '../../ui/edge_fade.dart';
 import '../../ui/reveal_when_selected.dart';
 import '../../ui/page.dart';
 import '../../ui/glow_button.dart';
-import '../chat/chat_screen.dart' show computerForBot;
-import '../computer/bot_places.dart' show botPlacesProvider;
 import '../desktop/desktop_context.dart';
 import '../files/file_preview.dart' show mimeFor;
 import '../../core/analytics.dart';
@@ -79,22 +77,15 @@ class _QuickAskScreenState extends ConsumerState<QuickAskScreen> {
     super.dispose();
   }
 
-  static const _maxFileBytes = 25 * 1024 * 1024;
-
   Future<void> _send() async {
     final bot = _botId;
     if (bot == null || (_text.text.trim().isEmpty && _files.isEmpty && !(_ctx?.selection != null && _withSelection))) return;
     final l10n = context.l10n;
-    // The screenshot and shared files go to the bot's computer, like a file attached in chat.
+    // Screenshots and shared files go to `/v1/media` (never wakes a computer, SERVER-TOOLS-PLAN Phase 4).
     final b = ref.read(botsProvider).value?.where((x) => x.id == bot).firstOrNull;
-    final computer = computerForBot(
-      ref.read(computersProvider).value ?? const [],
-      bot,
-      defaultComputerId: b?.defaultComputerId,
-      places: ref.read(botPlacesProvider(bot)).value,
-    );
-    if (_files.isNotEmpty && computer == null) {
-      showWarning(context, l10n.noComputerForFiles);
+    final orgId = b?.orgId ?? ref.read(currentOrgIdProvider);
+    if (orgId == null) {
+      showWarning(context, l10n.somethingWentWrong);
       return;
     }
     setState(() => _busy = true);
@@ -102,7 +93,8 @@ class _QuickAskScreenState extends ConsumerState<QuickAskScreen> {
     for (final f in _files) {
       final bytes = await f.read().catchError((_) => Uint8List(0));
       if (!mounted) return;
-      if (bytes.length > _maxFileBytes) {
+      final mime = (f.mimeType == null || f.mimeType!.isEmpty) ? mimeFor(f.name) : f.mimeType!;
+      if (bytes.length > maxMediaUploadBytes(mime)) {
         showWarning(context, l10n.fileTooLarge(f.name));
         setState(() => _busy = false);
         return;
@@ -117,18 +109,14 @@ class _QuickAskScreenState extends ConsumerState<QuickAskScreen> {
       final c = await backend.createConversation(bot);
       final attachments = <AttachmentRef>[];
       final shot = _shot;
-      if (shot != null && computer != null) {
-        final path = 'uploads/screenshot-${DateTime.now().millisecondsSinceEpoch}.png';
-        await backend.uploadFile(computer.id, path, shot);
-        attachments.add(AttachmentRef(path: 'workspace/$path', name: 'screenshot.png', mimeType: 'image/png', size: shot.length));
+      if (shot != null) {
+        final mediaRef = await backend.uploadMedia(orgId, 'screenshot.png', shot, contentType: 'image/png');
+        attachments.add(AttachmentRef(path: mediaRef, name: 'screenshot.png', mimeType: 'image/png', size: shot.length));
       }
       for (final (f, bytes) in shared) {
-        final stamp = DateTime.now().millisecondsSinceEpoch;
-        final safe = f.name.replaceAll(RegExp(r'[^A-Za-z0-9._-]+'), '_');
-        final path = 'uploads/$stamp-$safe';
-        await backend.uploadFile(computer!.id, path, bytes);
-        final mime = f.mimeType;
-        attachments.add(AttachmentRef(path: 'workspace/$path', name: f.name, mimeType: (mime == null || mime.isEmpty) ? mimeFor(f.name) : mime, size: bytes.length));
+        final mime = (f.mimeType == null || f.mimeType!.isEmpty) ? mimeFor(f.name) : f.mimeType!;
+        final mediaRef = await backend.uploadMedia(orgId, f.name, bytes, contentType: mime);
+        attachments.add(AttachmentRef(path: mediaRef, name: f.name, mimeType: mime, size: bytes.length));
       }
       await backend.send(c.id, text, attachments: attachments);
       return c;

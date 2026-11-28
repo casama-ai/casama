@@ -277,31 +277,33 @@ export function takeoverCard(
 
   if (info.id) {
     const takeoverId = info.id;
-    actions.append(
-      h(
-        "button",
-        {
-          type: "button",
-          className: "link",
-          "data-testid": "takeover-dismiss",
-          onClick: async () => {
-            try {
-              await here.api.unwrap(
-                here.api.POST("/v1/takeovers/{id}/dismiss", {
-                  params: { path: { id: takeoverId } },
-                  body: {},
-                  signal: T(),
-                }),
-              );
-              resolve("Dismissed.", "dismissed");
-            } catch (e) {
-              toast(message(e));
-            }
-          },
+    const dismissBtn = h(
+      "button",
+      {
+        type: "button",
+        className: "link",
+        "data-testid": "takeover-dismiss",
+        onClick: async () => {
+          if (dismissBtn.disabled) return;
+          dismissBtn.disabled = true;
+          try {
+            await here.api.unwrap(
+              here.api.POST("/v1/takeovers/{id}/dismiss", {
+                params: { path: { id: takeoverId } },
+                body: {},
+                signal: T(),
+              }),
+            );
+            resolve("Dismissed.", "dismissed");
+          } catch (e) {
+            dismissBtn.disabled = false;
+            toast(message(e));
+          }
         },
-        "Dismiss",
-      ),
-    );
+      },
+      "Dismiss",
+    ) as HTMLButtonElement;
+    actions.append(dismissBtn);
   }
 
   card.append(actions, formWrap);
@@ -347,11 +349,30 @@ export function inlineSecretCard(here: Here, s: SecretInfo) {
     input,
     errSlot,
   );
+  let busy = false;
+  const sendBtn = h(
+    "button",
+    { className: "primary", type: "submit", "data-testid": "inline-secret-send" },
+    "Send to Vault",
+  ) as HTMLButtonElement;
+  const declineBtn = h(
+    "button",
+    { type: "button", onClick: () => void decline() },
+    "Decline",
+  ) as HTMLButtonElement;
+  const setBusy = (on: boolean) => {
+    busy = on;
+    sendBtn.disabled = on;
+    declineBtn.disabled = on;
+    input.disabled = on;
+  };
   const finish = (text: string) => {
     input.value = "";
     card.replaceChildren(h("div", { className: "meta" }, text));
   };
   const decline = async () => {
+    if (busy) return;
+    setBusy(true);
     try {
       await here.api.unwrap(
         here.api.POST("/v1/secrets/requests/{id}/decline", {
@@ -361,25 +382,16 @@ export function inlineSecretCard(here: Here, s: SecretInfo) {
       );
       finish("Declined.");
     } catch (e) {
+      setBusy(false);
       errSlot.replaceChildren(errorBox(e));
     }
   };
-  card.append(
-    h(
-      "div",
-      { className: "row" },
-      h(
-        "button",
-        { className: "primary", type: "submit", "data-testid": "inline-secret-send" },
-        "Send to Vault",
-      ),
-      h("button", { type: "button", onClick: () => void decline() }, "Decline"),
-    ),
-  );
+  card.append(h("div", { className: "row" }, sendBtn, declineBtn));
   card.addEventListener("submit", async (ev) => {
     ev.preventDefault();
     const val = input.value;
-    if (!val) return;
+    if (busy || !val) return;
+    setBusy(true);
     errSlot.replaceChildren();
     try {
       await here.api.unwrap(
@@ -391,6 +403,7 @@ export function inlineSecretCard(here: Here, s: SecretInfo) {
       );
       finish("Sent to Vault. The bot can use it now.");
     } catch (e) {
+      setBusy(false);
       errSlot.replaceChildren(errorBox(e));
     }
   });
@@ -469,10 +482,28 @@ export function mcpQuestionCard(here: Here, q: McpQuestionInfo) {
     fields,
     errSlot,
   );
+  let busy = false;
+  const submitBtn = h(
+    "button",
+    { type: "submit", className: "primary", "data-testid": "mcp-question-submit" },
+    "Submit",
+  ) as HTMLButtonElement;
+  const declineBtn = h(
+    "button",
+    { type: "button", onClick: () => void answer("decline") },
+    "Decline",
+  ) as HTMLButtonElement;
+  const setBusy = (on: boolean) => {
+    busy = on;
+    submitBtn.disabled = on;
+    declineBtn.disabled = on;
+  };
   const finish = (text: string) => {
     form.replaceChildren(h("div", { className: "meta" }, text));
   };
   const answer = async (action: "accept" | "decline") => {
+    if (busy) return;
+    setBusy(true);
     errSlot.replaceChildren();
     try {
       const content: Record<string, unknown> = {};
@@ -488,21 +519,11 @@ export function mcpQuestionCard(here: Here, q: McpQuestionInfo) {
       );
       finish(action === "accept" ? "Answered." : "Declined.");
     } catch (e) {
+      setBusy(false);
       errSlot.replaceChildren(errorBox(e));
     }
   };
-  form.append(
-    h(
-      "div",
-      { className: "row" },
-      h(
-        "button",
-        { type: "submit", className: "primary", "data-testid": "mcp-question-submit" },
-        "Submit",
-      ),
-      h("button", { type: "button", onClick: () => void answer("decline") }, "Decline"),
-    ),
-  );
+  form.append(h("div", { className: "row" }, submitBtn, declineBtn));
   form.addEventListener("submit", (ev) => {
     ev.preventDefault();
     void answer("accept");
@@ -688,6 +709,8 @@ export function mcpConnectCard(
               } else if (res.status === "authorize" && res.authorize_url && res.flow_id) {
                 await chrome.tabs.create({ url: res.authorize_url });
                 await pollFlow(res.flow_id, status);
+                // Still here: the sign-in failed or timed out, so it can be tried again.
+                if (card.isConnected) connectBtn.disabled = false;
               } else {
                 status.textContent = res.error || "Couldn't connect.";
                 connectBtn.disabled = false;

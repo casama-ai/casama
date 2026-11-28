@@ -492,6 +492,7 @@ const _$CreatedLocalDeviceBrowserModeEnumEnumMap = {
   CreatedLocalDeviceBrowserModeEnum.ask: 'ask',
   CreatedLocalDeviceBrowserModeEnum.computer: 'computer',
   CreatedLocalDeviceBrowserModeEnum.device: 'device',
+  CreatedLocalDeviceBrowserModeEnum.always: 'always',
 };
 
 const _$SiteKindEnumMap = {

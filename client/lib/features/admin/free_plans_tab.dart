@@ -487,7 +487,8 @@ class _NewCodeSheetState extends State<_NewCodeSheet> {
   late var _months = widget.settings.maxMonths >= 3 ? 3 : 1;
   final _uses = TextEditingController(text: '1');
   final _note = TextEditingController();
-  DateTime? _by;
+  // A lost code shouldn't stay live forever: 30 days unless another day is picked.
+  DateTime? _by = DateUtils.dateOnly(DateTime.now()).add(const Duration(days: 30));
 
   @override
   void dispose() {

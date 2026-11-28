@@ -27,6 +27,10 @@ abstract class _$AdminCostKeyCWProxy {
 
   AdminCostKey spentUsd(num spentUsd);
 
+  AdminCostKey paidUsd(num? paidUsd);
+
+  AdminCostKey billing(CostRowBilling? billing);
+
   AdminCostKey calls(int calls);
 
   AdminCostKey lastUsedAt(String? lastUsedAt);
@@ -56,6 +60,8 @@ abstract class _$AdminCostKeyCWProxy {
     String? billingUrl,
     bool configured,
     num spentUsd,
+    num? paidUsd,
+    CostRowBilling? billing,
     int calls,
     String? lastUsedAt,
     num? reportedUsd,
@@ -103,6 +109,12 @@ class _$AdminCostKeyCWProxyImpl implements _$AdminCostKeyCWProxy {
   AdminCostKey spentUsd(num spentUsd) => call(spentUsd: spentUsd);
 
   @override
+  AdminCostKey paidUsd(num? paidUsd) => call(paidUsd: paidUsd);
+
+  @override
+  AdminCostKey billing(CostRowBilling? billing) => call(billing: billing);
+
+  @override
   AdminCostKey calls(int calls) => call(calls: calls);
 
   @override
@@ -138,6 +150,8 @@ class _$AdminCostKeyCWProxyImpl implements _$AdminCostKeyCWProxy {
     Object? billingUrl = const $CopyWithPlaceholder(),
     Object? configured = const $CopyWithPlaceholder(),
     Object? spentUsd = const $CopyWithPlaceholder(),
+    Object? paidUsd = const $CopyWithPlaceholder(),
+    Object? billing = const $CopyWithPlaceholder(),
     Object? calls = const $CopyWithPlaceholder(),
     Object? lastUsedAt = const $CopyWithPlaceholder(),
     Object? reportedUsd = const $CopyWithPlaceholder(),
@@ -187,6 +201,14 @@ class _$AdminCostKeyCWProxyImpl implements _$AdminCostKeyCWProxy {
           ? _value.spentUsd
           // ignore: cast_nullable_to_non_nullable
           : spentUsd as num,
+      paidUsd: paidUsd == const $CopyWithPlaceholder()
+          ? _value.paidUsd
+          // ignore: cast_nullable_to_non_nullable
+          : paidUsd as num?,
+      billing: billing == const $CopyWithPlaceholder()
+          ? _value.billing
+          // ignore: cast_nullable_to_non_nullable
+          : billing as CostRowBilling?,
       calls: calls == const $CopyWithPlaceholder() || calls == null
           ? _value.calls
           // ignore: cast_nullable_to_non_nullable
@@ -258,6 +280,11 @@ AdminCostKey _$AdminCostKeyFromJson(Map<String, dynamic> json) =>
           billingUrl: $checkedConvert('billing_url', (v) => v as String?),
           configured: $checkedConvert('configured', (v) => v as bool),
           spentUsd: $checkedConvert('spent_usd', (v) => v as num),
+          paidUsd: $checkedConvert('paid_usd', (v) => v as num?),
+          billing: $checkedConvert(
+            'billing',
+            (v) => $enumDecodeNullable(_$CostRowBillingEnumMap, v),
+          ),
           calls: $checkedConvert('calls', (v) => (v as num).toInt()),
           lastUsedAt: $checkedConvert('last_used_at', (v) => v as String?),
           reportedUsd: $checkedConvert('reported_usd', (v) => v as num?),
@@ -276,6 +303,7 @@ AdminCostKey _$AdminCostKeyFromJson(Map<String, dynamic> json) =>
         'vaultItem': 'vault_item',
         'billingUrl': 'billing_url',
         'spentUsd': 'spent_usd',
+        'paidUsd': 'paid_usd',
         'lastUsedAt': 'last_used_at',
         'reportedUsd': 'reported_usd',
         'limitUsd': 'limit_usd',
@@ -295,9 +323,17 @@ Map<String, dynamic> _$AdminCostKeyToJson(AdminCostKey instance) =>
       'billing_url': instance.billingUrl,
       'configured': instance.configured,
       'spent_usd': instance.spentUsd,
+      'paid_usd': ?instance.paidUsd,
+      'billing': ?_$CostRowBillingEnumMap[instance.billing],
       'calls': instance.calls,
       'last_used_at': instance.lastUsedAt,
       'reported_usd': instance.reportedUsd,
       'limit_usd': instance.limitUsd,
       'limit_remaining_usd': instance.limitRemainingUsd,
     };
+
+const _$CostRowBillingEnumMap = {
+  CostRowBilling.free: 'free',
+  CostRowBilling.metered: 'metered',
+  CostRowBilling.ownServers: 'own_servers',
+};

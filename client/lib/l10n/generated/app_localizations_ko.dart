@@ -41,10 +41,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get retry => '다시 시도';
 
   @override
-  String get keepGoing => '계속하기';
+  String get keepGoing => '계속';
 
   @override
-  String get keepGoingMessage => '멈춘 곳부터 계속 진행해 주세요.';
+  String get keepGoingMessage => '멈춘 곳부터 계속 진행해 줘.';
 
   @override
   String get startOver => '처음부터 다시';
@@ -763,17 +763,17 @@ class AppLocalizationsKo extends AppLocalizations {
   String get chooseModel => '모델 선택';
 
   @override
-  String get createBotNeedsModel => 'Choose a model above to create this bot.';
+  String get createBotNeedsModel => '이 봇을 만들려면 위에서 모델을 선택해 주세요.';
 
   @override
   String get createBotKeyRejected =>
-      'The provider rejected this key. Check it in Settings → Model keys, or pick another key.';
+      '제공업체에서 이 키를 거부했어요. 설정 → 모델 키에서 확인하거나 다른 키를 선택해 주세요.';
 
   @override
-  String get createBotDiscardTitle => 'Discard This Bot?';
+  String get createBotDiscardTitle => '이 봇을 버릴까요?';
 
   @override
-  String get createBotDiscardBody => 'What you entered here will be lost.';
+  String get createBotDiscardBody => '여기에 입력한 내용이 사라져요.';
 
   @override
   String get searchModels => '모델 검색 또는 모델 ID 입력';
@@ -2741,15 +2741,13 @@ class AppLocalizationsKo extends AppLocalizations {
       '내 컴퓨터의 파일과 앱을 다루는 작업용이에요. 컴퓨터가 꺼져 있었으면 실행 기록에 표시돼요.';
 
   @override
-  String get routineUsesComputer => 'Uses a computer';
+  String get routineUsesComputer => '컴퓨터 사용';
 
   @override
-  String get routineUsesComputerOn =>
-      'Can save files, run commands and browse pages.';
+  String get routineUsesComputerOn => '파일을 저장하고, 명령을 실행하고, 페이지를 탐색할 수 있어요.';
 
   @override
-  String get routineUsesComputerOff =>
-      'Reads your apps, the web and memory only. Faster, and never wakes a computer.';
+  String get routineUsesComputerOff => '내 앱과 웹, 기억만 읽어요. 더 빠르고 컴퓨터를 깨우지 않아요.';
 
   @override
   String get computerBotsAllowed => '허용된 봇';
@@ -4317,10 +4315,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get chatViewFullTable => '전체 표 보기';
 
   @override
-  String get chatShowMore => 'Show more';
+  String get chatShowMore => '더 보기';
 
   @override
-  String get chatShowLess => 'Show less';
+  String get chatShowLess => '접기';
 
   @override
   String get chatTableTitle => '표';
@@ -4952,7 +4950,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String groupTipEveryone(String lead) {
-    return '@everyone: $lead가 먼저 답하고 나눌 작업이 있으면 역할을 나눠요. 그렇지 않으면 봇들이 차례로 답하고 마지막 봇이 마무리해요.';
+    return '@everyone: $lead 봇이 먼저 답하고 나눌 작업이 있으면 역할을 나눠요. 그렇지 않으면 봇들이 차례로 답하고 마지막 봇이 마무리해요.';
   }
 
   @override
@@ -6839,6 +6837,39 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
+  String get adminCapacityComputersTitle => 'Computers & file jobs (7 days)';
+
+  @override
+  String adminCapacityWakeTime(String mode, String p50, String p90, int count) {
+    return '$mode wake: $p50 p50 / $p90 p90 ($count)';
+  }
+
+  @override
+  String adminCapacityFileJobs(int count) {
+    return 'File jobs: $count';
+  }
+
+  @override
+  String adminCapacityFileJobsTimed(int count, String p50, String p90) {
+    return 'File jobs: $count ($p50 p50 / $p90 p90)';
+  }
+
+  @override
+  String adminCapacityBrowserOoms(int count) {
+    return 'Browser out-of-memory restarts: $count';
+  }
+
+  @override
+  String adminCapacityWakesByCaller(String list) {
+    return 'Wakes by caller: $list';
+  }
+
+  @override
+  String adminCapacityShellPrograms(String list) {
+    return 'Top shell programs: $list';
+  }
+
+  @override
   String get adminNoAbuse => 'Nothing suspicious so far.';
 
   @override
@@ -7464,21 +7495,21 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get deleteBot => 'Delete Bot';
+  String get deleteBot => '봇 삭제';
 
   @override
   String deleteBotTitle(String name) {
-    return 'Delete $name?';
+    return '$name 테마를 삭제할까요?';
   }
 
   @override
   String deleteBotBody(String name) {
-    return 'Every chat with $name is deleted for good, with its messages, photos and files, and $name stops running and leaves the sidebar. Group chats and usage records stay. Its settings and memory move to Archived bots.';
+    return '$name 봇과의 모든 채팅이 메시지, 사진, 파일과 함께 영구 삭제되며, $name 봇은 실행을 멈추고 사이드바에서 사라져요. 그룹 채팅과 사용량 기록은 그대로 남아요. 설정과 기억은 ‘보관된 봇’으로 이동해요.';
   }
 
   @override
   String botDeleted(String name) {
-    return '$name deleted.';
+    return '$name 봇을 삭제했어요.';
   }
 
   @override
@@ -8598,12 +8629,12 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String groupLeadIs(String name) {
-    return '$name leads: it plans the work when you @everyone. Tap another bot at the top to make it lead.';
+    return '$name 봇이 대표예요: @everyone을 입력하면 작업을 계획해요. 상단에서 다른 봇을 눌러 대표를 바꿀 수 있어요.';
   }
 
   @override
   String groupPickOneMoreLead(String name) {
-    return 'Pick 1 more bot. $name leads; tap another bot at the top to make it lead.';
+    return '봇 1개 더 선택하세요. $name 봇이 대표예요. 상단에서 다른 봇을 눌러 대표를 바꿀 수 있어요.';
   }
 
   @override
@@ -17292,14 +17323,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get appLockConfirmTitle => '본인 확인';
 
   @override
-  String get approvalConfirmTitle => 'Allow This?';
+  String get approvalConfirmTitle => '이 작업을 허용할까요?';
 
   @override
-  String get approvalConfirmBody =>
-      'This is a high-risk request. Allow the bot to go ahead?';
+  String get approvalConfirmBody => '고위험 요청이에요. 봇이 계속 진행하도록 허용할까요?';
 
   @override
-  String get approvalConfirmAllow => 'Allow';
+  String get approvalConfirmAllow => '허용';
 
   @override
   String appLockUnlockWith(String method) {
@@ -22960,6 +22990,22 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get appBrowserModeHeader => '봇이 브라우저를 필요로 할 때';
+
+  @override
+  String get appBrowserModeAlways => '항상 이 기기 사용';
+
+  @override
+  String get appBrowserModeAlwaysHelp =>
+      '대화를 열어 둔 동안 봇이 모든 페이지를 여기서 열어요. 봇의 컴퓨터는 직접 요청할 때만 사용해요.';
+
+  @override
+  String get appBrowserOpenTooltip => '브라우저 열기';
+
+  @override
+  String get appBrowserBotsBrowseHere => '봇이 여기서 탐색';
+
+  @override
+  String get appBrowserBotsBrowseHereHelp => '지켜보는 동안 대화의 모든 페이지가 이 브라우저에서 열려요';
 
   @override
   String get appBrowserModeAsk => '도움이 될 때 물어보기';
@@ -29103,4 +29149,101 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get watchOpen => '열기';
+
+  @override
+  String get costModeLabel => '비용 보기';
+
+  @override
+  String get costModePaid => '실제 지출';
+
+  @override
+  String get costModeEstimated => '추정치';
+
+  @override
+  String get costPaid => '실제 지출';
+
+  @override
+  String get costEstimatedTitle => '추정치';
+
+  @override
+  String get costMarginListPrices => '정가 기준 마진';
+
+  @override
+  String get costFreePlan => '무료 플랜';
+
+  @override
+  String costFreePlanCalls(String count) {
+    return '무료 플랜 · $count회 호출';
+  }
+
+  @override
+  String costCapUsage(String used, String limit, String unit) {
+    return '$used / $limit $unit';
+  }
+
+  @override
+  String get costShareOfOwnServers => '자체 서버 몫';
+
+  @override
+  String costIncludedCredit(String amount) {
+    return '월 $amount 포함';
+  }
+
+  @override
+  String costAtListPrices(String amount) {
+    return '정가 기준 $amount';
+  }
+
+  @override
+  String costEmptyPaidDays(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '이 $days일 동안 실제 지출이 없습니다',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get costEmptyPaidRange => '이 기간에 실제 지출이 없습니다';
+
+  @override
+  String get costEmptyPaidFiltered => '이 필터에 해당하는 실제 지출이 없습니다';
+
+  @override
+  String costSpokenPaid(String amount) {
+    return '실제 지출 $amount';
+  }
+
+  @override
+  String costSpokenEstimated(String amount) {
+    return '추정치 $amount';
+  }
+
+  @override
+  String costSpendCardPaidSemantics(
+    String paid,
+    String charged,
+    String margin,
+  ) {
+    return '지난 30일 지출: 실제 지출 $paid, 청구 $charged, 정가 기준 마진 $margin';
+  }
+
+  @override
+  String get vendorBillingFree => '무료 플랜';
+
+  @override
+  String get vendorBillingMetered => '종량제';
+
+  @override
+  String get vendorBillingFreeHelp => '한도에서 멈추며 실제 지출은 \$0로 계산됩니다.';
+
+  @override
+  String get vendorBillingMeteredHelp => '기록된 비용만큼 실제 지출로 계산됩니다.';
+
+  @override
+  String get vendorIncludedUsd => '월 포함 크레딧 (USD)';
+
+  @override
+  String get vendorIncludedUsdHelp => '매달 이 금액까지의 사용량은 실제 지출 \$0로 계산됩니다.';
 }

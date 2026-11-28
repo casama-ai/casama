@@ -66,6 +66,28 @@ String? costRowTag(AdminCostRow r) {
   return id == null ? null : costTidyId(id);
 }
 
+/// What a row's plan means for its paid figure (REAL-COSTS-PLAN): a free plan, a share of our
+/// own servers, or a plan's included monthly credit. Null when it is paid as recorded.
+String? costPlanNote(AppLocalizations l10n, AdminCostRow r) {
+  final locale = l10n.localeName;
+  return switch (r.billing) {
+    CostRowBilling.free => l10n.costFreePlanCalls(
+      r.calls.humanizedCount(locale),
+    ),
+    CostRowBilling.ownServers => l10n.costShareOfOwnServers,
+    _ =>
+      (r.includedUsd ?? 0) > 0
+          ? l10n.costIncludedCredit(costUsd(r.includedUsd, locale))
+          : null,
+  };
+}
+
+/// The small words beside a row's name: its tag, then what its plan means.
+String? costRowTags(AppLocalizations l10n, AdminCostRow r) {
+  final parts = [?costRowTag(r), ?costPlanNote(l10n, r)];
+  return parts.isEmpty ? null : parts.join(' · ');
+}
+
 const _costIdNames = {
   'openrouter': 'OpenRouter',
   'openai': 'OpenAI',
@@ -92,17 +114,21 @@ String costRowSpoken(
   AppLocalizations l10n,
   AdminCostRow r,
   num total,
-  CostGroup group,
-) {
+  CostGroup group, [
+  CostBasis basis = CostBasis.paid,
+]) {
   final locale = l10n.localeName;
   final rate = costFailureRate(r);
   return [
     costRowLabel(l10n, r.id, r.label),
     ?costRowTag(r),
+    ?costPlanNote(l10n, r),
     if (group == CostGroup.app)
       l10n.costSpokenFees(costUsd(r.spentUsd, locale))
+    else if (basis == CostBasis.paid)
+      l10n.costSpokenPaid(costUsd(r.spentUsd, locale))
     else
-      l10n.costSpokenSpent(costUsd(r.spentUsd, locale)),
+      l10n.costSpokenEstimated(costUsd(r.spentUsd, locale)),
     if (group != CostGroup.app && total > 0)
       l10n.costSpokenShare(costShare(r.spentUsd, total)),
     CostChange.of(l10n, r.spentUsd, r.previousSpentUsd).spoken,
@@ -184,7 +210,11 @@ class CostTable extends StatelessWidget {
               _Column(CostColumn.change, l10n.costColChange, 92 * grow),
           ]
         : [
-            _Column(CostColumn.spent, l10n.costSpent, 92 * grow),
+            _Column(
+              CostColumn.spent,
+              costSpendLabel(l10n, costBasisOf(context)),
+              92 * grow,
+            ),
             _Column(CostColumn.share, l10n.costColShare, 68 * grow),
             _Column(CostColumn.change, l10n.costColChange, 92 * grow),
             if (!compact) ...[
@@ -383,7 +413,7 @@ class _WideRow extends StatelessWidget {
     final text = context.textTheme;
     final number = text.bodyMedium?.copyWith(fontFeatures: AppText.tabular);
     final muted = scheme.onSurfaceVariant;
-    final tag = costRowTag(row);
+    final tag = costRowTags(l10n, row);
     final rate = costFailureRate(row);
 
     Widget fit(Widget child) => FittedBox(
@@ -453,7 +483,7 @@ class _WideRow extends StatelessWidget {
     return Semantics(
       button: true,
       selected: selected,
-      label: costRowSpoken(l10n, row, total, group),
+      label: costRowSpoken(l10n, row, total, group, costBasisOf(context)),
       hint: l10n.costOpenRowHint,
       onTap: onOpen,
       excludeSemantics: true,
@@ -588,7 +618,7 @@ class CostList extends StatelessWidget {
               ),
             Semantics(
               button: true,
-              label: costRowSpoken(l10n, r, total, group),
+              label: costRowSpoken(l10n, r, total, group, costBasisOf(context)),
               hint: l10n.costOpenRowHint,
               onTap: () => onOpen(r),
               excludeSemantics: true,
@@ -705,7 +735,7 @@ class _PhoneMeta extends StatelessWidget {
             if (row.tokenUsdEst != null)
               l10n.costTokensEstimated(costUsd(row.tokenUsdEst, locale)),
           ]
-        : [costShare(row.spentUsd, total)];
+        : [costShare(row.spentUsd, total), ?costPlanNote(l10n, row)];
     return Text.rich(
       TextSpan(
         children: [

@@ -785,6 +785,35 @@ void OnViewEvents() {
           .Get(),
       &token);
 
+  // The address or title changed without a page load (a site that changes its address in place,
+  // or a #fragment): Dart's address bar and the bots' page facts follow it.
+  auto address_changed = [](ICoreWebView2* sender) {
+    LPWSTR src = nullptr, title = nullptr;
+    sender->get_Source(&src);
+    sender->get_DocumentTitle(&title);
+    std::string url = TakeString(src);
+    std::string name = TakeString(title);
+    if (url.empty() || url == "about:blank") return;
+    InvokeDart("urlChanged", EncodableMap{{EncodableValue("url"), EncodableValue(url)},
+                                          {EncodableValue("title"), EncodableValue(name)}});
+  };
+  g->view->add_SourceChanged(
+      Callback<ICoreWebView2SourceChangedEventHandler>(
+          [address_changed](ICoreWebView2* sender, ICoreWebView2SourceChangedEventArgs*) -> HRESULT {
+            address_changed(sender);
+            return S_OK;
+          })
+          .Get(),
+      &token);
+  g->view->add_DocumentTitleChanged(
+      Callback<ICoreWebView2DocumentTitleChangedEventHandler>(
+          [address_changed](ICoreWebView2* sender, IUnknown*) -> HRESULT {
+            address_changed(sender);
+            return S_OK;
+          })
+          .Get(),
+      &token);
+
   // A new window opens in place, as a navigation of the main frame (checked like any other).
   g->view->add_NewWindowRequested(
       Callback<ICoreWebView2NewWindowRequestedEventHandler>(

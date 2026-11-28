@@ -51,10 +51,13 @@ import 'package:casama_api/src/model/admin_domains_counts.dart';
 import 'package:casama_api/src/model/admin_growth.dart';
 import 'package:casama_api/src/model/admin_growth_cohort.dart';
 import 'package:casama_api/src/model/admin_growth_cohort_week.dart';
+import 'package:casama_api/src/model/admin_growth_connection_failure.dart';
+import 'package:casama_api/src/model/admin_growth_conversion.dart';
 import 'package:casama_api/src/model/admin_growth_day.dart';
 import 'package:casama_api/src/model/admin_growth_failure.dart';
 import 'package:casama_api/src/model/admin_growth_first_steps.dart';
 import 'package:casama_api/src/model/admin_growth_money.dart';
+import 'package:casama_api/src/model/admin_growth_paywall_source.dart';
 import 'package:casama_api/src/model/admin_growth_plan.dart';
 import 'package:casama_api/src/model/admin_growth_platform.dart';
 import 'package:casama_api/src/model/admin_growth_revenue.dart';
@@ -815,6 +818,7 @@ import 'package:casama_api/src/model/purchase_request.dart';
 import 'package:casama_api/src/model/put_away_suggestions_request.dart';
 import 'package:casama_api/src/model/put_away_suggestions_response.dart';
 import 'package:casama_api/src/model/reaction_summary.dart';
+import 'package:casama_api/src/model/record_funnel_event_request.dart';
 import 'package:casama_api/src/model/redeem_comp_request.dart';
 import 'package:casama_api/src/model/redeem_invite_request.dart';
 import 'package:casama_api/src/model/redeem_referral_request.dart';
@@ -923,6 +927,11 @@ import 'package:casama_api/src/model/send_message_request.dart';
 import 'package:casama_api/src/model/send_message_response.dart';
 import 'package:casama_api/src/model/server_capacity.dart';
 import 'package:casama_api/src/model/server_capacity_alerts_inner.dart';
+import 'package:casama_api/src/model/server_capacity_computer_metrics.dart';
+import 'package:casama_api/src/model/server_capacity_computer_metrics_job_boxes7d.dart';
+import 'package:casama_api/src/model/server_capacity_computer_metrics_shell_programs7d_inner.dart';
+import 'package:casama_api/src/model/server_capacity_computer_metrics_wake_times_inner.dart';
+import 'package:casama_api/src/model/server_capacity_computer_metrics_wakes_by_caller7d_inner.dart';
 import 'package:casama_api/src/model/server_capacity_days_inner.dart';
 import 'package:casama_api/src/model/server_capacity_latest.dart';
 import 'package:casama_api/src/model/set_admin_bot_request.dart';
@@ -1345,6 +1354,10 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return AdminGrowthCohort.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'AdminGrowthCohortWeek':
           return AdminGrowthCohortWeek.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'AdminGrowthConnectionFailure':
+          return AdminGrowthConnectionFailure.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'AdminGrowthConversion':
+          return AdminGrowthConversion.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'AdminGrowthDay':
           return AdminGrowthDay.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'AdminGrowthFailure':
@@ -1353,6 +1366,8 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return AdminGrowthFirstSteps.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'AdminGrowthMoney':
           return AdminGrowthMoney.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'AdminGrowthPaywallSource':
+          return AdminGrowthPaywallSource.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'AdminGrowthPlan':
           return AdminGrowthPlan.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'AdminGrowthPlatform':
@@ -1879,6 +1894,9 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
         case 'ConversationThread':
           return ConversationThread.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'CostGroup':
+          
+          
+        case 'CostRowBilling':
           
           
         case 'CostSource':
@@ -2978,6 +2996,8 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
         case 'ReasoningEffort':
           
           
+        case 'RecordFunnelEventRequest':
+          return RecordFunnelEventRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'RedeemCompRequest':
           return RedeemCompRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'RedeemInviteRequest':
@@ -3218,6 +3238,16 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return ServerCapacity.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'ServerCapacityAlertsInner':
           return ServerCapacityAlertsInner.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'ServerCapacityComputerMetrics':
+          return ServerCapacityComputerMetrics.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'ServerCapacityComputerMetricsJobBoxes7d':
+          return ServerCapacityComputerMetricsJobBoxes7d.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'ServerCapacityComputerMetricsShellPrograms7dInner':
+          return ServerCapacityComputerMetricsShellPrograms7dInner.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'ServerCapacityComputerMetricsWakeTimesInner':
+          return ServerCapacityComputerMetricsWakeTimesInner.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'ServerCapacityComputerMetricsWakesByCaller7dInner':
+          return ServerCapacityComputerMetricsWakesByCaller7dInner.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'ServerCapacityDaysInner':
           return ServerCapacityDaysInner.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'ServerCapacityLatest':
@@ -3680,6 +3710,9 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return UserFact.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'UserFactList':
           return UserFactList.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'VendorBilling':
+          
+          
         case 'VendorReading':
           return VendorReading.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'VendorSettings':

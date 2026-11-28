@@ -270,6 +270,34 @@ class _CostExportButtonState extends ConsumerState<CostExportButton> {
   }
 }
 
+/// Paid or Estimated (REAL-COSTS-PLAN): what actually leaves the account, or the same usage at
+/// list prices. Flipping it never asks the server again.
+class CostBasisControl extends ConsumerWidget {
+  const CostBasisControl({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    return Semantics(
+      label: l10n.costModeLabel,
+      container: true,
+      child: AppSegmentedControl<CostBasis>(
+        key: const Key('costBasis'),
+        values: CostBasis.values,
+        labels: {
+          CostBasis.paid: l10n.costModePaid,
+          CostBasis.estimated: l10n.costModeEstimated,
+        },
+        groupValue: ref.watch(costBasisProvider),
+        onValueChanged: (b) {
+          HapticsHelper.selection();
+          ref.read(costBasisProvider.notifier).set(b);
+        },
+      ),
+    );
+  }
+}
+
 /// "Include fixed bills": adds subscriptions and renewals, spread over their periods, to spent.
 class CostFixedSwitch extends ConsumerWidget {
   const CostFixedSwitch({super.key});
@@ -397,7 +425,7 @@ class _CostOptionsSheet extends ConsumerWidget {
             CostColumn.name,
           ],
           labels: {
-            CostColumn.spent: l10n.costSpent,
+            CostColumn.spent: costSpendLabel(l10n, ref.watch(costBasisProvider)),
             CostColumn.change: l10n.costColChange,
             CostColumn.calls: l10n.costColCalls,
             CostColumn.name: l10n.costSortName,

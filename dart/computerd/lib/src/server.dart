@@ -815,7 +815,18 @@ class Computerd {
   Future<void> _archive(HttpRequest req) async {
     final body = await _body(req);
     final path = _resolve((body['path'] as String?) ?? config.home);
-    final excludes = <String>[...((body['exclude'] as List?)?.cast<String>() ?? const []), '.cache/ms-playwright', '.npm/_cacache', '.cache/pip', '.cache/casama/thumbs', '.cache/casama/home-ready', '.casama-restore-*'];
+    final excludes = <String>[
+      ...((body['exclude'] as List?)?.cast<String>() ?? const []),
+      '.cache',
+      '.npm/_cacache',
+      '.browser-profile/Default/Cache',
+      '.browser-profile/Default/Code Cache',
+      '.browser-profile/Default/Service Worker',
+      '.browser-profile/GrShaderCache',
+      '.browser-profile/ShaderCache',
+      '.browser-profile/GraphiteDawnCache',
+      '.casama-restore-*',
+    ];
     final process = await Process.start('tar', ['-czf', '-', for (final e in excludes) '--exclude=./$e', '-C', path, '.']);
     final res = req.response;
     res.headers.contentType = ContentType('application', 'gzip');
@@ -862,10 +873,19 @@ class Computerd {
     await process.stdin.close();
     final err = await utf8.decodeStream(process.stderr);
     final code = await process.exitCode;
-    if (code != 0) {
+    // A hard link whose target was left out of the archive (an older save that dropped a cache
+    // folder) fails on its own; everything else is extracted, so that alone doesn't stop the restore.
+    final onlyLinks = code == 2 &&
+        err
+            .split('\n')
+            .map((l) => l.trim())
+            .where((l) => l.isNotEmpty)
+            .every((l) => l.contains('Cannot hard link') || l.contains('Exiting with failure status'));
+    if (code != 0 && !onlyLinks) {
       staging.deleteSync(recursive: true);
       throw _ApiError(400, 'restore_failed', err.trim());
     }
+    if (onlyLinks) stderr.writeln('restore: skipped broken hard links: ${err.trim()}');
     // Swap contents in place (the directory itself may be a mount point). Entries that can't be
     // removed (for example root-owned files from an older image) are kept and merged into, so a
     // restore never stops halfway with the user's files left in staging.

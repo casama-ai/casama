@@ -215,7 +215,7 @@ class LocalDevice {
 
 
 
-      /// In-app browser: \"ask\" (choice card when it helps), \"computer\" (always the bot's computer), \"device\" (prefer this device)
+      /// In-app browser: \"ask\" (choice card when it helps), \"computer\" (always the bot's computer), \"device\" (prefer this device for sign-ins and blocked sites), \"always\" (every page in this device's browser while the person has the chat open there)
   @JsonKey(
     
     name: r'browser_mode',
@@ -458,17 +458,20 @@ String toString() => value;
 }
 
 
-/// In-app browser: \"ask\" (choice card when it helps), \"computer\" (always the bot's computer), \"device\" (prefer this device)
+/// In-app browser: \"ask\" (choice card when it helps), \"computer\" (always the bot's computer), \"device\" (prefer this device for sign-ins and blocked sites), \"always\" (every page in this device's browser while the person has the chat open there)
 enum LocalDeviceBrowserModeEnum {
-    /// In-app browser: \"ask\" (choice card when it helps), \"computer\" (always the bot's computer), \"device\" (prefer this device)
+    /// In-app browser: \"ask\" (choice card when it helps), \"computer\" (always the bot's computer), \"device\" (prefer this device for sign-ins and blocked sites), \"always\" (every page in this device's browser while the person has the chat open there)
 @JsonValue(r'ask')
 ask(r'ask'),
-    /// In-app browser: \"ask\" (choice card when it helps), \"computer\" (always the bot's computer), \"device\" (prefer this device)
+    /// In-app browser: \"ask\" (choice card when it helps), \"computer\" (always the bot's computer), \"device\" (prefer this device for sign-ins and blocked sites), \"always\" (every page in this device's browser while the person has the chat open there)
 @JsonValue(r'computer')
 computer(r'computer'),
-    /// In-app browser: \"ask\" (choice card when it helps), \"computer\" (always the bot's computer), \"device\" (prefer this device)
+    /// In-app browser: \"ask\" (choice card when it helps), \"computer\" (always the bot's computer), \"device\" (prefer this device for sign-ins and blocked sites), \"always\" (every page in this device's browser while the person has the chat open there)
 @JsonValue(r'device')
-device(r'device');
+device(r'device'),
+    /// In-app browser: \"ask\" (choice card when it helps), \"computer\" (always the bot's computer), \"device\" (prefer this device for sign-ins and blocked sites), \"always\" (every page in this device's browser while the person has the chat open there)
+@JsonValue(r'always')
+always(r'always');
 
 const LocalDeviceBrowserModeEnum(this.value);
 

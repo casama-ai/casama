@@ -4806,6 +4806,26 @@ export interface paths {
         patch: operations["updateOrgSettings"];
         trace?: never;
     };
+    "/v1/me/funnel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Record a first-party paywall or checkout funnel step
+         * @description Writes a paywall_view, paywall_plan_select, or purchase_started step to first-party Admin -> Growth reporting (docs/CONVERSION-FUNNEL-PLAN.md §2.1). Respects analytics_opt_out. Always 204.
+         */
+        post: operations["recordFunnelEvent"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/analytics/events": {
         parameters: {
             query?: never;
@@ -13921,10 +13941,10 @@ export interface components {
             /** @description In-app browser: every bot the person can chat with may use it; false limits it to allowed_bot_ids */
             all_bots?: boolean;
             /**
-             * @description In-app browser: "ask" (choice card when it helps), "computer" (always the bot's computer), "device" (prefer this device)
+             * @description In-app browser: "ask" (choice card when it helps), "computer" (always the bot's computer), "device" (prefer this device for sign-ins and blocked sites), "always" (every page in this device's browser while the person has the chat open there)
              * @enum {string}
              */
-            browser_mode?: "ask" | "computer" | "device";
+            browser_mode?: "ask" | "computer" | "device" | "always";
             /** @description Browser: sites bots may act on without asking (D-323 C6) */
             allowed_sites?: string[];
             /** @description Browser: sites bots may never act on */
@@ -14065,7 +14085,7 @@ export interface components {
             allowed_bot_ids?: string[];
             all_bots?: boolean;
             /** @enum {string} */
-            browser_mode?: "ask" | "computer" | "device";
+            browser_mode?: "ask" | "computer" | "device" | "always";
             allowed_sites?: string[];
             blocked_sites?: string[];
             never_ask_sites?: string[];
@@ -14198,6 +14218,29 @@ export interface components {
                 body: string;
             }[];
             alarm?: components["schemas"]["CapacityAlarm"];
+            /** @description Wake timings, OOM kills, shell programs, and job-box stats (7d) */
+            computer_metrics?: {
+                wake_times: {
+                    mode: string;
+                    count: number;
+                    p50_ms: number;
+                    p90_ms: number;
+                }[];
+                browser_ooms_7d: number;
+                wakes_by_caller_7d: {
+                    caller: string;
+                    count: number;
+                }[];
+                shell_programs_7d: {
+                    program: string;
+                    count: number;
+                }[];
+                job_boxes_7d: {
+                    count: number;
+                    p50_ms: number | null;
+                    p90_ms: number | null;
+                };
+            };
         };
         /** @description Missing on servers before D-601 */
         CapacityAlarm: {
@@ -14261,12 +14304,16 @@ export interface components {
             billing_url: string | null;
             configured: boolean;
             spent_usd: number;
+            paid_usd?: number;
+            billing?: components["schemas"]["CostRowBilling"];
             calls: number;
             last_used_at: string | null;
             reported_usd: number | null;
             limit_usd: number | null;
             limit_remaining_usd: number | null;
         };
+        /** @enum {string} */
+        CostRowBilling: "free" | "metered" | "own_servers";
         AdminCosts: {
             /** @description First UTC day, YYYY-MM-DD */
             from: string;
@@ -14283,6 +14330,7 @@ export interface components {
             by_day: {
                 date: string;
                 values: number[];
+                paid_values?: number[];
             }[];
             rows: components["schemas"]["AdminCostRow"][];
             updated_at: string | null;
@@ -14290,15 +14338,17 @@ export interface components {
         /** @enum {string} */
         CostGroup: "service" | "key" | "app" | "feature" | "model" | "workspace";
         AdminCostTotals: {
-            /** @description What the server paid, fees included */
+            /** @description Estimated usage cost at list prices, plus fixed bills when asked */
             spent_usd: number;
+            /** @description Money that actually leaves the account (free plans and own-server shares are $0; included credits subtracted; fixed bills included when asked) */
+            paid_usd?: number;
             /** @description Taken from credits for usage */
             charged_usd: number;
             /** @description The charged part whose cost is known per row: the margin's base */
             charged_tracked_usd: number;
             /** @description Paid by workspaces on their own keys: not the server's money */
             own_usd: number;
-            /** @description Fixed bills in the period; inside spent_usd only when asked for */
+            /** @description Fixed bills in the period; inside spent_usd and paid_usd only when asked for */
             fixed_usd: number;
             /** @description What vendors report above what the server recorded */
             not_recorded_usd: number;
@@ -14309,11 +14359,20 @@ export interface components {
             id: string;
             label: string;
             spent_usd: number;
+            paid_usd?: number;
             charged_usd: number;
             charged_tracked_usd: number;
             calls: number;
             previous_spent_usd: number | null;
+            previous_paid_usd?: number | null;
             source: components["schemas"]["CostSource"];
+            billing?: components["schemas"]["CostRowBilling"];
+            included_usd?: number | null;
+            cap_used?: number | null;
+            cap_limit?: number | null;
+            cap_unit?: string | null;
+            /** @enum {string|null} */
+            cap_period?: "day" | "month" | "billing_period" | "prepaid" | null;
             reported_usd?: number | null;
             vendor?: string | null;
             last_used_at?: string | null;
@@ -14439,11 +14498,13 @@ export interface components {
             failures: components["schemas"]["AdminGrowthFailure"][];
             by_platform?: components["schemas"]["AdminGrowthPlatform"][];
             by_source?: components["schemas"]["AdminGrowthSource"][];
+            conversion?: components["schemas"]["AdminGrowthConversion"];
         };
         AdminGrowthDay: {
             date: string;
             signups: number;
             active_people: number;
+            typers?: number;
             messages: number;
             runs_chat: number;
             runs_routine: number;
@@ -14456,10 +14517,15 @@ export interface components {
         };
         AdminGrowthFirstSteps: {
             signed_up: number;
+            opened_app?: number;
             made_bot: number;
             sent_message: number;
             first_value: number;
             came_back: number;
+            returned_day2?: number;
+            habit_week?: number;
+            connected_app?: number;
+            used_routine?: number;
         };
         AdminGrowthCohort: {
             week: string;
@@ -14520,6 +14586,25 @@ export interface components {
         AdminGrowthSource: {
             source: string;
             signups: number;
+        };
+        AdminGrowthConversion: {
+            hit_limit: number;
+            saw_paywall: number;
+            selected_plan: number;
+            started_checkout: number;
+            started_trial: number;
+            paid: number;
+            by_source: components["schemas"]["AdminGrowthPaywallSource"][];
+            connection_failures: components["schemas"]["AdminGrowthConnectionFailure"][];
+        };
+        AdminGrowthPaywallSource: {
+            source: string;
+            views: number;
+            checkouts: number;
+        };
+        AdminGrowthConnectionFailure: {
+            detail: string;
+            count: number;
         };
         AdminInactivity: {
             settings: components["schemas"]["InactivitySettings"];
@@ -14816,6 +14901,8 @@ export interface components {
             latest: components["schemas"]["VendorReading"];
             history: components["schemas"]["VendorReading"][];
         };
+        /** @enum {string} */
+        VendorBilling: "free" | "metered";
         VendorReading: {
             checked_at: string;
             used: number | null;
@@ -14842,6 +14929,8 @@ export interface components {
             balance_warn_below: number;
             renewal_usd?: number | null;
             renewal_months?: number;
+            billing?: components["schemas"]["VendorBilling"];
+            included_usd?: number | null;
         };
         AnnounceInactivityResult: {
             queued: number;
@@ -15679,6 +15768,14 @@ export interface components {
             app_browser?: boolean;
             /** @description Sites bots may never act on in members' browsers */
             chrome_blocked_sites?: string[];
+        };
+        RecordFunnelEventRequest: {
+            /** @enum {string} */
+            event: "paywall_view" | "paywall_plan_select" | "purchase_started";
+            /** Format: uuid */
+            org_id?: string;
+            source?: string;
+            detail?: string;
         };
         RelayAnalyticsRequest: {
             /** @enum {string} */
@@ -38529,6 +38626,46 @@ export interface operations {
             };
             /** @description Not found */
             404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    recordFunnelEvent: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RecordFunnelEventRequest"];
+            };
+        };
+        responses: {
+            /** @description Recorded or skipped */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not authenticated */
+            401: {
                 headers: {
                     [name: string]: unknown;
                 };

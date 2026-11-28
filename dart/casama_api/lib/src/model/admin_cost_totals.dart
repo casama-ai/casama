@@ -22,6 +22,8 @@ class AdminCostTotals {
 
     required  this.spentUsd,
 
+     this.paidUsd,
+
     required  this.chargedUsd,
 
     required  this.chargedTrackedUsd,
@@ -35,7 +37,7 @@ class AdminCostTotals {
     required  this.calls,
   });
 
-      /// What the server paid, fees included
+      /// Estimated usage cost at list prices, plus fixed bills when asked
   @JsonKey(
     
     name: r'spent_usd',
@@ -45,6 +47,19 @@ class AdminCostTotals {
 
 
   final num spentUsd;
+
+
+
+      /// Money that actually leaves the account (free plans and own-server shares are $0; included credits subtracted; fixed bills included when asked)
+  @JsonKey(
+    
+    name: r'paid_usd',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final num? paidUsd;
 
 
 
@@ -87,7 +102,7 @@ class AdminCostTotals {
 
 
 
-      /// Fixed bills in the period; inside spent_usd only when asked for
+      /// Fixed bills in the period; inside spent_usd and paid_usd only when asked for
   @JsonKey(
     
     name: r'fixed_usd',
@@ -130,6 +145,7 @@ class AdminCostTotals {
     @override
     bool operator ==(Object other) => identical(this, other) || other is AdminCostTotals &&
       other.spentUsd == spentUsd &&
+      other.paidUsd == paidUsd &&
       other.chargedUsd == chargedUsd &&
       other.chargedTrackedUsd == chargedTrackedUsd &&
       other.ownUsd == ownUsd &&
@@ -140,6 +156,7 @@ class AdminCostTotals {
     @override
     int get hashCode =>
         spentUsd.hashCode +
+        paidUsd.hashCode +
         chargedUsd.hashCode +
         chargedTrackedUsd.hashCode +
         ownUsd.hashCode +

@@ -3069,6 +3069,15 @@ class FakeBackend implements Backend {
   Future<void> lessLikeThis(String notificationId) async =>
       lessLiked.add(notificationId);
 
+  final funnelEvents = <(RecordFunnelEventRequestEventEnum, String?, String?, String?)>[];
+  @override
+  Future<void> recordFunnelEvent({
+    required RecordFunnelEventRequestEventEnum event,
+    String? orgId,
+    String? source,
+    String? detail,
+  }) async => funnelEvents.add((event, orgId, source, detail));
+
   final reportedEvents = <(String, DeviceEventInput)>[];
   final places = <DevicePlace>[];
   @override
@@ -9209,6 +9218,21 @@ class FakeBackend implements Backend {
   @override
   Future<Uint8List> downloadFile(String computerId, String path) async =>
       uploads[path] ?? Uint8List.fromList(utf8.encode('# Hello\n\nfile $path'));
+  int _mediaSeq = 0;
+  final List<(String, String, Uint8List)> uploadedMedia = [];
+
+  @override
+  Future<String> uploadMedia(
+    String orgId,
+    String name,
+    Uint8List bytes, {
+    String? contentType,
+  }) async {
+    uploadedMedia.add((orgId, name, bytes));
+    final n = (++_mediaSeq).toString().padLeft(12, '0');
+    return 'media:00000000-0000-4000-8000-$n';
+  }
+
   @override
   Future<void> uploadFile(
     String computerId,

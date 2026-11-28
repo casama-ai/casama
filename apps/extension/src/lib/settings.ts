@@ -108,3 +108,38 @@ export function originsFor(access: SiteAccess, sites: string[]): string[] {
   if (access === "sites") return sites.flatMap((s) => [`https://${s}/*`, `https://*.${s}/*`]);
   return [];
 }
+
+/**
+ * The site-access mode the browser actually allows right now, given the saved setting and the
+ * extension's currently granted host permissions (the user may have revoked access in browser
+ * extension settings).
+ */
+export function effectiveSiteAccess(
+  s: Pick<Settings, "siteAccess" | "sites">,
+  grantedOrigins: readonly string[],
+): SiteAccess {
+  const have = new Set(grantedOrigins);
+  const hasAll = have.has("<all_urls>") || have.has("https://*/*") || have.has("http://*/*");
+  if (s.siteAccess === "all") {
+    if (hasAll) return "all";
+    if (s.sites.length && originsFor("sites", s.sites).some((o) => have.has(o))) return "sites";
+    return "click";
+  }
+  if (s.siteAccess === "sites") {
+    if (hasAll) return "sites";
+    return s.sites.length && originsFor("sites", s.sites).some((o) => have.has(o))
+      ? "sites"
+      : "click";
+  }
+  return "click";
+}
+
+/** Reads what the browser currently allows for site access, falling back to the saved mode. */
+export async function currentSiteAccess(
+  s: Pick<Settings, "siteAccess" | "sites">,
+): Promise<SiteAccess> {
+  if (!chrome.permissions?.getAll) return s.siteAccess;
+  const all = await chrome.permissions.getAll().catch(() => null);
+  if (!all) return s.siteAccess;
+  return effectiveSiteAccess(s, all.origins ?? []);
+}

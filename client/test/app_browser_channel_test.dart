@@ -13,6 +13,9 @@ class _Recorder implements AppBrowserNativeEvents {
   void windowShown() => calls.add('shown');
 
   @override
+  void urlChanged(String url, String title) => calls.add('url $url $title');
+
+  @override
   dynamic noSuchMethod(Invocation invocation) => null;
 }
 
@@ -40,4 +43,23 @@ void main() {
       expect(recorder.calls, ['hidden', 'shown']);
     },
   );
+
+  test('an address changed in place reaches the controller', () async {
+    final channel = MethodAppBrowserChannel();
+    final recorder = _Recorder();
+    channel.setHandler(recorder);
+    addTearDown(() => channel.setHandler(null));
+    await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .handlePlatformMessage(
+          MethodAppBrowserChannel.name,
+          const StandardMethodCodec().encodeMethodCall(
+            MethodCall('urlChanged', {
+              'url': 'https://shop.example/item/42',
+              'title': 'Item',
+            }),
+          ),
+          (_) {},
+        );
+    expect(recorder.calls, ['url https://shop.example/item/42 Item']);
+  });
 }

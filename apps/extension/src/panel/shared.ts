@@ -79,7 +79,15 @@ export function errorBox(e: unknown, retry?: () => void): HTMLElement {
           className: "link",
           "data-testid": "allow-site",
           onClick: async () => {
-            if (await chrome.permissions.request({ origins: [origin] })) retry?.();
+            let granted = false;
+            try {
+              granted = await chrome.permissions.request({ origins: [origin] });
+            } catch (err) {
+              return toast(message(err));
+            }
+            if (!granted) return toast("Casama still can't read this site.");
+            if (retry) retry();
+            else toast("Allowed. Try again.");
           },
         },
         "Allow on this site",

@@ -144,4 +144,71 @@ void main() {
     expect(find.byKey(const Key('capacityNoData')), findsOneWidget);
     expect(find.byKey(const Key('capacityMeter')), findsNothing);
   });
+
+  testWidgets('shows Phase 0 computer wake, OOM, shell program, and file-job metrics (D-629/D-630)', (
+    tester,
+  ) async {
+    await setSize(tester, const Size(900, 1600));
+    final backend = FakeBackend()
+      ..capacity = ServerCapacity(
+        budgetMb: 9216,
+        latest: ServerCapacityLatest(
+          at: '2026-11-28T10:00:00Z',
+          memTotalMb: 11960,
+          memAvailableMb: 5000,
+          load1: 0.8,
+          cpus: 6,
+          diskUsedPct: 35,
+          computersRunning: 1,
+          computersMemMb: 1024,
+        ),
+        days: const [],
+        refusals30d: 0,
+        fullInWeeks: null,
+        alerts: const [],
+        computerMetrics: ServerCapacityComputerMetrics(
+          wakeTimes: [
+            ServerCapacityComputerMetricsWakeTimesInner(
+              mode: 'warm',
+              count: 14,
+              p50Ms: 1200,
+              p90Ms: 2400,
+            ),
+          ],
+          browserOoms7d: 2,
+          wakesByCaller7d: [
+            ServerCapacityComputerMetricsWakesByCaller7dInner(
+              caller: 'browser.open',
+              count: 9,
+            ),
+          ],
+          shellPrograms7d: [
+            ServerCapacityComputerMetricsShellPrograms7dInner(
+              program: 'ffmpeg',
+              count: 6,
+            ),
+            ServerCapacityComputerMetricsShellPrograms7dInner(
+              program: 'qpdf',
+              count: 3,
+            ),
+          ],
+          jobBoxes7d: ServerCapacityComputerMetricsJobBoxes7d(
+            count: 12,
+            p50Ms: 850,
+            p90Ms: 1900,
+          ),
+        ),
+      );
+    await tester.pumpWidget(harness(backend, const AdminScreen()));
+    await tester.pumpAndSettle();
+    await unlockAdmin(tester);
+    await tester.ensureVisible(find.byKey(const Key('capacityComputerMetrics')));
+    await tester.pumpAndSettle();
+    expect(find.text('Computers & file jobs (7 days)'), findsOneWidget);
+    expect(find.text('warm wake: 1.2s p50 / 2.4s p90 (14)'), findsOneWidget);
+    expect(find.text('File jobs: 12 (850ms p50 / 1.9s p90)'), findsOneWidget);
+    expect(find.text('Browser out-of-memory restarts: 2'), findsOneWidget);
+    expect(find.text('Wakes by caller: browser.open (9)'), findsOneWidget);
+    expect(find.text('Top shell programs: ffmpeg (6), qpdf (3)'), findsOneWidget);
+  });
 }

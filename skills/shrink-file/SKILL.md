@@ -5,7 +5,13 @@ description: Use when a file is too big to send or upload (a PDF, photo, video, 
 
 # Shrink a file
 
-The tools are already on your computer: Ghostscript, qpdf, ocrmypdf, ImageMagick, cwebp, ffmpeg, LibreOffice, zip and 7z. Don't install anything.
+**Use file tools first (no computer needed):**
+- **PDF:** `documents.compress` (presets: `screen`, `ebook`, `printer`, or linearize).
+- **Photo:** `media.image.edit` with `max_bytes` (e.g., `1000000` for under 1 MB) or lower `quality` / `format: "webp"`.
+- **Video:** `media.video.edit` (`compress` with target size or resolution).
+- **Archive/many files:** `documents.archive` (`zip`).
+
+Fall back to the computer shell tools below only for files already on an awake computer or custom two-pass/slide-media shrinking: Ghostscript, qpdf, ocrmypdf, ImageMagick, cwebp, ffmpeg, LibreOffice, zip and 7z. Don't install anything.
 
 1. Ask for the size limit if they didn't say one (email is often 20–25 MB, many forms 2–5 MB). Check the current size with `ls -lh`.
 2. Pick by type, mildest first, and stop once it fits:

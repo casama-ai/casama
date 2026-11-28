@@ -143,14 +143,34 @@ class Analytics {
       final prefs = await SharedPreferences.getInstance();
       cachedInternal = prefs.getBool(_internalKey(userId));
     } catch (_) {}
+    final isTest = await isTestInstall();
+    final setProps = <String, Object>{
+      if (cachedInternal != null) ...{
+        'is_internal': cachedInternal,
+        'is_team': cachedInternal,
+      },
+      'is_emulator': isTest,
+    };
     await _each(
       sinks,
       (s) => s.identify(
         userId,
-        set: cachedInternal != null ? {'is_internal': cachedInternal} : null,
+        set: setProps,
         setOnce: {'signup_platform': Telemetry.platformName},
       ),
     );
+    await trackAppOpenedFirst();
+  }
+
+  /// Sends `app_opened_first` once per device after the first signed-in open
+  /// (docs/CONVERSION-FUNNEL-PLAN.md §2.1 step 5).
+  static Future<void> trackAppOpenedFirst() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      if (prefs.getBool('casama.app_opened_first') == true) return;
+      await prefs.setBool('casama.app_opened_first', true);
+      await capture('app_opened_first', properties: {'platform': Telemetry.platformName});
+    } catch (_) {}
   }
 
   /// Fetches whether [userId] is an internal/test account from `/v1/me` and applies it to all active sinks.
@@ -180,8 +200,22 @@ class Analytics {
     await _each(_sinks, (s) => s.reset());
   }
 
+  /// Last sign-in method started on this device so `sign_in_completed` always records it
+  /// (CONVERSION-FUNNEL-PLAN §2.3).
+  static String? _lastSignInMethod;
+
+  /// Consumes and returns the last sign-in method started, or `'unknown'`.
+  static String takeSignInMethod() {
+    final m = _lastSignInMethod ?? 'unknown';
+    _lastSignInMethod = null;
+    return m;
+  }
+
   /// Records a catalog-typed event if telemetry & consent are active.
   static Future<void> capture(String event, {Map<String, Object?>? properties}) async {
+    if (event == 'sign_in_started' && properties?['method'] is String) {
+      _lastSignInMethod = properties!['method'] as String;
+    }
     final clean = properties != null
         ? {
             for (final e in properties.entries)

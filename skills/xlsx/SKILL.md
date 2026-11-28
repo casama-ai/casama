@@ -8,6 +8,15 @@ Adapted for Casama from anthropics/skills@2c5958ec (Apache-2.0). openpyxl, panda
 
 # XLSX creation, editing, and analysis
 
+**Use file tools first (no computer needed):**
+- **Read** an `.xlsx` or `.csv`: `documents.read`
+- **Create** an `.xlsx` (with formulas, multiple sheets, number formats) or `.csv`: `sheets.make`
+- **Edit** cells, rows, sheets, or formulas in an `.xlsx`: `sheets.edit`
+- **Query** totals, filters, groups, or joins over CSV/Excel/JSON: `data.query`
+- **Convert** `.xlsx` → PDF: `documents.convert`
+
+Fall back to the computer tools below only for complex styling, pivot tables, or embedded Excel charts:
+
 | Task | Approach |
 |---|---|
 | **Create** or **edit** with formulas/formatting | `openpyxl` — see gotchas below |

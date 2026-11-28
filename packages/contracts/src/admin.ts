@@ -118,6 +118,7 @@ export const AdminGrowth = z
           date: z.string(),
           signups: z.number().int(),
           active_people: z.number().int(),
+          typers: z.number().int().optional(),
           messages: z.number().int(),
           runs_chat: z.number().int(),
           runs_routine: z.number().int(),
@@ -134,10 +135,15 @@ export const AdminGrowth = z
     first_steps: z
       .object({
         signed_up: z.number().int(),
+        opened_app: z.number().int().optional(),
         made_bot: z.number().int(),
         sent_message: z.number().int(),
         first_value: z.number().int(),
         came_back: z.number().int(),
+        returned_day2: z.number().int().optional(),
+        habit_week: z.number().int().optional(),
+        connected_app: z.number().int().optional(),
+        used_routine: z.number().int().optional(),
       })
       .openapi("AdminGrowthFirstSteps"),
     /**
@@ -230,6 +236,32 @@ export const AdminGrowth = z
       .array(
         z.object({ source: z.string(), signups: z.number().int() }).openapi("AdminGrowthSource"),
       )
+      .optional(),
+    /** First-party conversion funnel in the range, team accounts excluded (CONVERSION-FUNNEL-PLAN §2.1). */
+    conversion: z
+      .object({
+        hit_limit: z.number().int(),
+        saw_paywall: z.number().int(),
+        selected_plan: z.number().int(),
+        started_checkout: z.number().int(),
+        started_trial: z.number().int(),
+        paid: z.number().int(),
+        by_source: z.array(
+          z
+            .object({
+              source: z.string(),
+              views: z.number().int(),
+              checkouts: z.number().int(),
+            })
+            .openapi("AdminGrowthPaywallSource"),
+        ),
+        connection_failures: z.array(
+          z
+            .object({ detail: z.string(), count: z.number().int() })
+            .openapi("AdminGrowthConnectionFailure"),
+        ),
+      })
+      .openapi("AdminGrowthConversion")
       .optional(),
   })
   .openapi("AdminGrowth");
@@ -848,6 +880,27 @@ export const ServerCapacity = z
       .openapi({ description: "Weeks until daily peaks reach the budget at the 30-day trend" }),
     alerts: z.array(z.object({ kind: AlertKind, day: z.string(), body: z.string() })),
     alarm: CapacityAlarm.optional().openapi({ description: "Missing on servers before D-601" }),
+    computer_metrics: z
+      .object({
+        wake_times: z.array(
+          z.object({
+            mode: z.string(),
+            count: z.number().int(),
+            p50_ms: z.number().int(),
+            p90_ms: z.number().int(),
+          }),
+        ),
+        browser_ooms_7d: z.number().int(),
+        wakes_by_caller_7d: z.array(z.object({ caller: z.string(), count: z.number().int() })),
+        shell_programs_7d: z.array(z.object({ program: z.string(), count: z.number().int() })),
+        job_boxes_7d: z.object({
+          count: z.number().int(),
+          p50_ms: z.number().int().nullable(),
+          p90_ms: z.number().int().nullable(),
+        }),
+      })
+      .optional()
+      .openapi({ description: "Wake timings, OOM kills, shell programs, and job-box stats (7d)" }),
   })
   .openapi("ServerCapacity");
 

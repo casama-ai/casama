@@ -9,6 +9,7 @@ import 'package:casama_api/src/model/admin_growth_first_steps.dart';
 import 'package:casama_api/src/model/admin_growth_day.dart';
 import 'package:casama_api/src/model/admin_growth_failure.dart';
 import 'package:casama_api/src/model/admin_growth_source.dart';
+import 'package:casama_api/src/model/admin_growth_conversion.dart';
 import 'package:casama_api/src/model/admin_growth_cohort.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -60,6 +61,8 @@ class AdminGrowth {
      this.byPlatform,
 
      this.bySource,
+
+     this.conversion,
   });
 
   @JsonKey(
@@ -266,6 +269,18 @@ class AdminGrowth {
 
 
 
+  @JsonKey(
+    
+    name: r'conversion',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final AdminGrowthConversion? conversion;
+
+
+
 
 
     @override
@@ -286,7 +301,8 @@ class AdminGrowth {
       other.money == money &&
       other.failures == failures &&
       other.byPlatform == byPlatform &&
-      other.bySource == bySource;
+      other.bySource == bySource &&
+      other.conversion == conversion;
 
     @override
     int get hashCode =>
@@ -306,7 +322,8 @@ class AdminGrowth {
         money.hashCode +
         failures.hashCode +
         byPlatform.hashCode +
-        bySource.hashCode;
+        bySource.hashCode +
+        conversion.hashCode;
 
   factory AdminGrowth.fromJson(Map<String, dynamic> json) => _$AdminGrowthFromJson(json);
 

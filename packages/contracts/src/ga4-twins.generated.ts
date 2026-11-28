@@ -44,7 +44,9 @@ export const ANALYTICS_CLIENT_EVENTS: Record<string, string[]> = {
     "is_sign_up",
     "reason"
   ],
-  "sign_in_completed": [],
+  "sign_in_completed": [
+    "method"
+  ],
   "two_step_completed": [],
   "signed_out": [],
   "guided_setup_opened": [],
@@ -165,7 +167,8 @@ export const ANALYTICS_CLIENT_EVENTS: Record<string, string[]> = {
   "purchase_started": [
     "store",
     "kind",
-    "product_id"
+    "product_id",
+    "source"
   ],
   "review_prompt_shown": [
     "moment",
@@ -204,6 +207,11 @@ export const ANALYTICS_CLIENT_EVENTS: Record<string, string[]> = {
   ],
   "push_permission_result": [
     "result"
+  ],
+  "app_browser_site_allowed": [
+    "outcome",
+    "reason",
+    "system"
   ],
   "push_opened": [
     "kind"
@@ -331,6 +339,35 @@ export const ANALYTICS_CLIENT_EVENTS: Record<string, string[]> = {
   "cloud_models_fallback_off": [],
   "cloud_models_disabled": [
     "reason"
+  ],
+  "app_opened_first": [
+    "platform"
+  ],
+  "starter_card_tapped": [
+    "card_id"
+  ],
+  "brief_action_tapped": [
+    "action"
+  ],
+  "limit_card_shown": [
+    "code",
+    "surface"
+  ],
+  "limit_card_action": [
+    "code",
+    "action"
+  ],
+  "upgrade_prompt_shown": [
+    "feature",
+    "plan"
+  ],
+  "upgrade_prompt_action": [
+    "feature",
+    "action"
+  ],
+  "pay_feedback_shown": [],
+  "pay_feedback_submitted": [
+    "action"
   ]
 };
 
@@ -338,7 +375,9 @@ export const ANALYTICS_CLIENT_EVENTS: Record<string, string[]> = {
 export const GA4_CLIENT_TWINS: Record<string, { name: string; params: string[]; set?: Record<string, string | number> }> = {
   "sign_in_completed": {
     "name": "login",
-    "params": []
+    "params": [
+      "method"
+    ]
   },
   "onboarding_complete": {
     "name": "tutorial_complete",

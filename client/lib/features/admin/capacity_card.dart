@@ -23,6 +23,92 @@ final adminCapacityProvider = FutureProvider.autoDispose<ServerCapacity?>(
 
 String _gb(num mb) => '${(mb / 1024).toStringAsFixed(1)} GB';
 
+String _ms(int ms) =>
+    ms >= 1000 ? '${(ms / 1000).toStringAsFixed(1)}s' : '${ms}ms';
+
+bool _hasComputerMetrics(ServerCapacityComputerMetrics m) =>
+    m.wakeTimes.isNotEmpty ||
+    m.browserOoms7d > 0 ||
+    m.wakesByCaller7d.isNotEmpty ||
+    m.shellPrograms7d.isNotEmpty ||
+    m.jobBoxes7d.count > 0;
+
+class _ComputerMetricsSection extends StatelessWidget {
+  const _ComputerMetricsSection({required this.metrics});
+  final ServerCapacityComputerMetrics metrics;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = context.colorScheme;
+    final colors = context.appColors;
+    final muted = context.textTheme.bodySmall?.copyWith(
+      color: scheme.onSurfaceVariant,
+      fontFeatures: AppText.tabular,
+    );
+    final label = context.textTheme.labelMedium?.copyWith(
+      color: scheme.onSurfaceVariant,
+      fontWeight: FontWeight.w600,
+    );
+    final jobs = metrics.jobBoxes7d;
+    final l10n = context.l10n;
+    return Column(
+      key: const Key('capacityComputerMetrics'),
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(l10n.adminCapacityComputersTitle, style: label),
+        if (metrics.wakeTimes.isNotEmpty) ...[
+          const SizedBox(height: AppSpace.xs),
+          Wrap(
+            spacing: AppSpace.md,
+            runSpacing: AppSpace.xs,
+            children: [
+              for (final w in metrics.wakeTimes)
+                Text(
+                  l10n.adminCapacityWakeTime(w.mode, _ms(w.p50Ms), _ms(w.p90Ms), w.count),
+                  style: muted,
+                ),
+            ],
+          ),
+        ],
+        if (jobs.count > 0) ...[
+          const SizedBox(height: AppSpace.xs),
+          Text(
+            jobs.p50Ms != null && jobs.p90Ms != null
+                ? l10n.adminCapacityFileJobsTimed(jobs.count, _ms(jobs.p50Ms!), _ms(jobs.p90Ms!))
+                : l10n.adminCapacityFileJobs(jobs.count),
+            style: muted,
+          ),
+        ],
+        if (metrics.browserOoms7d > 0) ...[
+          const SizedBox(height: AppSpace.xs),
+          Text(
+            l10n.adminCapacityBrowserOoms(metrics.browserOoms7d),
+            style: muted?.copyWith(color: colors.negative),
+          ),
+        ],
+        if (metrics.wakesByCaller7d.isNotEmpty) ...[
+          const SizedBox(height: AppSpace.xs),
+          Text(
+            l10n.adminCapacityWakesByCaller(
+              metrics.wakesByCaller7d.take(5).map((w) => '${w.caller} (${w.count})').join(', '),
+            ),
+            style: muted,
+          ),
+        ],
+        if (metrics.shellPrograms7d.isNotEmpty) ...[
+          const SizedBox(height: AppSpace.xs),
+          Text(
+            l10n.adminCapacityShellPrograms(
+              metrics.shellPrograms7d.take(8).map((p) => '${p.program} (${p.count})').join(', '),
+            ),
+            style: muted,
+          ),
+        ],
+      ],
+    );
+  }
+}
+
 /// How full the server is: computers against their memory budget now, the daily peak over 30 days
 /// with the budget line, when it fills up at the current trend, refusals and recent alerts.
 class CapacityCard extends ConsumerWidget {
@@ -187,6 +273,13 @@ class CapacityCard extends ConsumerWidget {
               for (final a in c.alerts.take(3)) ...[
                 const SizedBox(height: AppSpace.xs),
                 Text('${a.day}: ${a.body}', style: muted),
+              ],
+              if (c.computerMetrics != null &&
+                  _hasComputerMetrics(c.computerMetrics!)) ...[
+                const SizedBox(height: AppSpace.md),
+                Divider(height: 1, color: colors.hairline),
+                const SizedBox(height: AppSpace.md),
+                _ComputerMetricsSection(metrics: c.computerMetrics!),
               ],
             ],
           ),

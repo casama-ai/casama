@@ -24,13 +24,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash - \
     && apt-get install -y --no-install-recommends nodejs && rm -rf /var/lib/apt/lists/*
 
-# agent-browser plus Playwright's Chromium build (Chrome for Testing has no Linux arm64 build).
-# Installed outside the home directory so it is not archived on sleep.
+# agent-browser plus Playwright's chrome-headless-shell (half the memory of full Chromium;
+# full Chromium moves to Dockerfile.desktop for takeovers and live view, COMPUTER-SLIM-PLAN).
+# Playwright runs via npx at build time only so the global package isn't kept in the image.
 ARG PLAYWRIGHT_VERSION=1.65.1
-RUN npm install -g agent-browser@${AGENT_BROWSER_VERSION} playwright@${PLAYWRIGHT_VERSION} \
-    && PLAYWRIGHT_BROWSERS_PATH=/opt/browser playwright install --with-deps --no-shell chromium \
-    && rm -rf /var/lib/apt/lists/* \
-    && CHROME="$(find /opt/browser -type f -name chrome -perm -u+x | head -1)" \
+RUN npm install -g agent-browser@${AGENT_BROWSER_VERSION} \
+    && PLAYWRIGHT_BROWSERS_PATH=/opt/browser npx --yes playwright@${PLAYWRIGHT_VERSION} install --with-deps --only-shell chromium-headless-shell \
+    && apt-get purge -y --auto-remove fonts-wqy-zenhei fonts-unifont fonts-ipafont-gothic fonts-tlwg-loma-otf fonts-freefont-ttf 2>/dev/null || true \
+    && rm -rf /var/lib/apt/lists/* /root/.npm /tmp/* \
+    && CHROME="$(find /opt/browser -type f \( -name chrome-headless-shell -o -name headless_shell -o -name chrome \) -perm -u+x | head -1)" \
     && test -n "$CHROME" && ln -sf "$CHROME" /usr/local/bin/chrome \
     && chmod -R a+rX /opt/browser \
     && chrome --version
@@ -57,21 +59,21 @@ RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg -o 
     && apt-get update && apt-get install -y --no-install-recommends \
       gh git-lfs sqlite3 postgresql-client openssl rsync tree fd-find htop bc \
       imagemagick libimage-exiftool-perl libheif-examples libheif-plugin-libde265 webp graphviz \
-      ocrmypdf ghostscript pdftk-java \
+      ocrmypdf ghostscript \
       tesseract-ocr-spa tesseract-ocr-fra tesseract-ocr-deu tesseract-ocr-por tesseract-ocr-ita \
       tesseract-ocr-jpn tesseract-ocr-chi-sim tesseract-ocr-kor \
       unar p7zip-full zbar-tools fonts-noto-cjk \
-    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /var/lib/apt/lists/* /usr/share/doc /usr/share/man /usr/share/info \
     && ln -sf /usr/bin/fdfind /usr/local/bin/fd \
     && pip3 install --break-system-packages --no-cache-dir \
       pillow-heif icalendar vobject qrcode segno matplotlib beautifulsoup4 requests python-pptx python-docx \
     && curl -LsSf https://astral.sh/uv/install.sh | env UV_INSTALL_DIR=/usr/local/bin UV_NO_MODIFY_PATH=1 sh \
     && uv --version
 
-# Unprivileged user; home is the only persistent, writable place (plus /tmp).
+# Unprivileged user; home is the only persistent, writable place (plus /tmp and /work for job boxes).
 RUN userdel -r ubuntu 2>/dev/null || true \
     && useradd --create-home --uid 1000 --shell /bin/bash casama \
-    && mkdir -p /home/casama/workspace && chown -R casama:casama /home/casama
+    && mkdir -p /home/casama/workspace /work && chown -R casama:casama /home/casama /work
 COPY --from=computerd /out/computerd /usr/local/bin/computerd
 COPY infra/images/computer/bashrc /etc/casama-bashrc
 RUN echo '. /etc/casama-bashrc' >> /etc/bash.bashrc
@@ -82,7 +84,9 @@ ENV HOME=/home/casama \
     AGENT_BROWSER_PROFILE=/home/casama/.browser-profile \
     AGENT_BROWSER_SOCKET_DIR=/tmp/agent-browser \
     AGENT_BROWSER_NO_VERSION_CHECK=1 \
+    AGENT_BROWSER_ARGS=--disk-cache-size=67108864 \
     PIP_USER=1 \
+    UV_LINK_MODE=copy \
     NPM_CONFIG_PREFIX=/home/casama/.npm-global \
     PATH=/home/casama/.npm-global/bin:/home/casama/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 

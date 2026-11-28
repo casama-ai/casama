@@ -1,0 +1,1 @@
+OTHER_SWIFT_FLAGS = $(inherited) -D CASAMA_APP_BROWSER

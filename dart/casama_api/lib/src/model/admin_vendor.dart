@@ -4,6 +4,7 @@
 
 // ignore_for_file: unused_element
 import 'package:casama_api/src/model/vendor_reading.dart';
+import 'package:casama_api/src/model/vendor_billing.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -38,6 +39,10 @@ class AdminVendor {
      this.renewalUsd,
 
      this.renewalMonths,
+
+     this.billing,
+
+     this.includedUsd,
 
     required  this.billingUrl,
 
@@ -173,6 +178,31 @@ class AdminVendor {
 
   @JsonKey(
     
+    name: r'billing',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final VendorBilling? billing;
+
+
+
+          // minimum: 0
+  @JsonKey(
+    
+    name: r'included_usd',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final num? includedUsd;
+
+
+
+  @JsonKey(
+    
     name: r'billing_url',
     required: true,
     includeIfNull: true,
@@ -280,6 +310,8 @@ class AdminVendor {
       other.balanceWarnBelow == balanceWarnBelow &&
       other.renewalUsd == renewalUsd &&
       other.renewalMonths == renewalMonths &&
+      other.billing == billing &&
+      other.includedUsd == includedUsd &&
       other.billingUrl == billingUrl &&
       other.impact == impact &&
       other.vendor == vendor &&
@@ -300,6 +332,8 @@ class AdminVendor {
         balanceWarnBelow.hashCode +
         (renewalUsd == null ? 0 : renewalUsd.hashCode) +
         renewalMonths.hashCode +
+        billing.hashCode +
+        (includedUsd == null ? 0 : includedUsd.hashCode) +
         (billingUrl == null ? 0 : billingUrl.hashCode) +
         (impact == null ? 0 : impact.hashCode) +
         vendor.hashCode +

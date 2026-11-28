@@ -11,6 +11,7 @@ import '../../../ui/app_card.dart';
 import '../../../ui/form_sheet.dart';
 import 'cost_format.dart';
 import 'cost_parts.dart';
+import 'cost_view.dart';
 
 /// The four numbers above everything else: spent (the headline), charged, margin, and what the
 /// vendors report above what the server recorded. Four across on a wide window, two by two on a
@@ -45,7 +46,12 @@ class CostTiles extends StatelessWidget {
     final locale = l10n.localeName;
     final t = costs.totals;
     final p = costs.previous;
-    final margin = marginShare(t.chargedTrackedUsd, t.spentUsd);
+    // The margin is always at list prices, so a free plan never shows as a 100% margin.
+    final margin = marginShare(
+      t.chargedTrackedUsd,
+      listSpentUsd(t, includeFixed: costs.includeFixed),
+    );
+    final basis = costBasisOf(context);
     final before = l10n.costVsBefore(days);
     final gaps = costGaps(services);
     // With no vendor reporting a figure, zero isn't "all recorded": it isn't known.
@@ -54,7 +60,7 @@ class CostTiles extends StatelessWidget {
     final tiles = [
       CostTile(
         key: const Key('costTile-spent'),
-        label: l10n.costSpent,
+        label: costSpendLabel(l10n, basis),
         value: costUsd(t.spentUsd, locale),
         headline: true,
         change: CostChange.of(l10n, t.spentUsd, p?.spentUsd),
@@ -69,7 +75,7 @@ class CostTiles extends StatelessWidget {
       ),
       CostTile(
         key: const Key('costTile-margin'),
-        label: l10n.costMargin,
+        label: l10n.costMarginListPrices,
         value: costPercent(margin),
         valueColor: margin != null && margin < 0
             ? context.appColors.negative
@@ -79,7 +85,12 @@ class CostTiles extends StatelessWidget {
             : CostChange.points(
                 l10n,
                 margin,
-                p == null ? null : marginShare(p.chargedTrackedUsd, p.spentUsd),
+                p == null
+                    ? null
+                    : marginShare(
+                        p.chargedTrackedUsd,
+                        listSpentUsd(p, includeFixed: costs.includeFixed),
+                      ),
               ),
         changeSuffix: before,
         caption: margin == null ? l10n.costMarginNone : null,
@@ -124,10 +135,13 @@ costGaps(AdminCosts? services) {
   final rows = services?.rows ?? const <AdminCostRow>[];
   final reporting = rows.where((r) => r.reportedUsd != null).toList();
   final behind =
-      reporting.where((r) => r.reportedUsd! - r.spentUsd > 0.00005).toList()
+      // What vendors report is set against what was recorded, at list prices.
+      reporting
+          .where((r) => r.reportedUsd! - listRowSpentUsd(r) > 0.00005)
+          .toList()
         ..sort(
-          (a, b) => (b.reportedUsd! - b.spentUsd).compareTo(
-            a.reportedUsd! - a.spentUsd,
+          (a, b) => (b.reportedUsd! - listRowSpentUsd(b)).compareTo(
+            a.reportedUsd! - listRowSpentUsd(a),
           ),
         );
   final silent = rows
@@ -312,7 +326,7 @@ Future<void> showNotRecordedSheet(
                               Text(
                                 l10n.costTheySayWeRecorded(
                                   costUsd(r.reportedUsd, locale),
-                                  costUsd(r.spentUsd, locale),
+                                  costUsd(listRowSpentUsd(r), locale),
                                 ),
                                 style: text.bodySmall?.copyWith(color: muted),
                               ),
@@ -321,7 +335,7 @@ Future<void> showNotRecordedSheet(
                         ),
                         const SizedBox(width: AppSpace.sm),
                         Text(
-                          costUsd(r.reportedUsd! - r.spentUsd, locale),
+                          costUsd(r.reportedUsd! - listRowSpentUsd(r), locale),
                           style: text.titleSmall?.copyWith(
                             fontWeight: FontWeight.w700,
                             fontFeatures: AppText.tabular,

@@ -43,7 +43,7 @@ class _CostsTabState extends ConsumerState<CostsTab> {
   AdminCosts? _last;
 
   void _refresh() {
-    ref.invalidate(adminCostsProvider);
+    refreshCosts(ref);
     ref.invalidate(adminCostKeysProvider);
   }
 
@@ -265,10 +265,13 @@ class _CostsBody extends ConsumerWidget {
       child: child,
     );
 
+    final paid = ref.watch(costBasisProvider) == CostBasis.paid;
     final emptyText = view.filters.isNotEmpty
-        ? l10n.costEmptyFiltered
+        ? (paid ? l10n.costEmptyPaidFiltered : l10n.costEmptyFiltered)
         : view.period == CostPeriod.custom
-        ? l10n.costEmptyRange
+        ? (paid ? l10n.costEmptyPaidRange : l10n.costEmptyRange)
+        : paid
+        ? l10n.costEmptyPaidDays(view.period.days)
         : l10n.costEmptyDays(view.period.days);
 
     return RefreshIndicator(
@@ -302,6 +305,7 @@ class _CostsBody extends ConsumerWidget {
                           icon: const Icon(LucideIcons.calendarRange, size: 18),
                           label: Text(l10n.costChangeDates),
                         ),
+                      const SizedBox(width: 220, child: CostBasisControl()),
                       const SizedBox(width: 380, child: CostPeriodControl()),
                     ],
                   )
@@ -455,6 +459,8 @@ class _CostsBody extends ConsumerWidget {
               ),
             ),
           ] else ...[
+            pad(const CostBasisControl()),
+            const SizedBox(height: AppSpace.xs),
             pad(const CostGroupControl(wide: false), bleed: true),
             if (view.filters.isNotEmpty)
               pad(

@@ -3,7 +3,7 @@
  * send these tabs), search (D4), routines with Run now and Pause (D6), usage (D7), settings.
  */
 
-import { FEATURES, openShortcuts } from "../lib/browser.ts";
+import { canOpenShortcuts, FEATURES, openSettings, openShortcuts } from "../lib/browser.ts";
 import {
   type CaptionsState,
   captionsState,
@@ -167,14 +167,15 @@ export class MoreView {
         { className: "row", style: "margin-top:0" },
         h(
           "button",
-          { "data-testid": "open-settings", onClick: () => chrome.runtime.openOptionsPage() },
+          { "data-testid": "open-settings", onClick: () => void openSettings() },
           "Settings",
         ),
-        h(
-          "button",
-          { "data-testid": "open-shortcuts", onClick: () => void openShortcuts() },
-          "Keyboard shortcuts",
-        ),
+        canOpenShortcuts() &&
+          h(
+            "button",
+            { "data-testid": "open-shortcuts", onClick: () => void openShortcuts() },
+            "Keyboard shortcuts",
+          ),
       ),
     );
     await Promise.all([
@@ -264,51 +265,53 @@ export class MoreView {
                   `${r.botName} · ${r.enabled ? (r.next_run_at ? `next ${new Date(r.next_run_at).toLocaleString("en-US", { weekday: "short", hour: "numeric", minute: "2-digit" })}` : "on") : "paused"}`,
                 ),
               );
-              card.append(
-                h(
-                  "div",
-                  { className: "row" },
-                  h(
-                    "button",
-                    {
-                      onClick: async () => {
-                        try {
-                          await api.unwrap(
-                            api.POST("/v1/routines/{id}/run", {
-                              params: { path: { id: r.id } },
-                              signal: T(),
-                            }),
-                          );
-                          toast(`${r.name} is running.`);
-                        } catch (e) {
-                          toast(message(e));
-                        }
-                      },
-                    },
-                    "Run now",
-                  ),
-                  h(
-                    "button",
-                    {
-                      onClick: async () => {
-                        try {
-                          await api.unwrap(
-                            api.PATCH("/v1/routines/{id}", {
-                              params: { path: { id: r.id } },
-                              body: { enabled: !r.enabled },
-                              signal: T(),
-                            }),
-                          );
-                          await this.routines(el);
-                        } catch (e) {
-                          toast(message(e));
-                        }
-                      },
-                    },
-                    r.enabled ? "Pause" : "Resume",
-                  ),
-                ),
-              );
+              const runBtn = h(
+                "button",
+                {
+                  onClick: async () => {
+                    if (runBtn.disabled) return;
+                    runBtn.disabled = true;
+                    try {
+                      await api.unwrap(
+                        api.POST("/v1/routines/{id}/run", {
+                          params: { path: { id: r.id } },
+                          signal: T(),
+                        }),
+                      );
+                      toast(`${r.name} is running.`);
+                    } catch (e) {
+                      toast(message(e));
+                    } finally {
+                      runBtn.disabled = false;
+                    }
+                  },
+                },
+                "Run now",
+              ) as HTMLButtonElement;
+              const toggleBtn = h(
+                "button",
+                {
+                  onClick: async () => {
+                    if (toggleBtn.disabled) return;
+                    toggleBtn.disabled = true;
+                    try {
+                      await api.unwrap(
+                        api.PATCH("/v1/routines/{id}", {
+                          params: { path: { id: r.id } },
+                          body: { enabled: !r.enabled },
+                          signal: T(),
+                        }),
+                      );
+                      await this.routines(el);
+                    } catch (e) {
+                      toggleBtn.disabled = false;
+                      toast(message(e));
+                    }
+                  },
+                },
+                r.enabled ? "Pause" : "Resume",
+              ) as HTMLButtonElement;
+              card.append(h("div", { className: "row" }, runBtn, toggleBtn));
               return card;
             })
           : [emptyState({ mascot: "sleepy", compact: true, message: "No routines yet." })]),
@@ -360,10 +363,16 @@ export class MoreView {
           disabled: true,
           "data-testid": "captions-start",
           onClick: async () => {
-            const s = await run<CaptionsState>(startCaptions, [
-              "Casama is taking notes from the captions",
-            ]);
-            if (!s.found) toast("Turn on captions in Meet (the CC button): notes come from them.");
+            // The Meet tab may have closed or moved on: say so rather than doing nothing.
+            try {
+              const s = await run<CaptionsState>(startCaptions, [
+                "Casama is taking notes from the captions",
+              ]);
+              if (!s?.found)
+                toast("Turn on captions in Meet (the CC button): notes come from them.");
+            } catch (e) {
+              toast(message(e));
+            }
             await this.captions(el);
           },
         },
@@ -423,12 +432,15 @@ export class MoreView {
               className: "primary",
               "data-testid": "captions-stop",
               onClick: async () => {
-                const r = await run<{
-                  lines: { speaker: string; text: string; at: number }[];
-                  title: string;
-                }>(stopCaptions);
+                let r: { lines: { speaker: string; text: string; at: number }[]; title: string };
+                try {
+                  r = await run(stopCaptions);
+                } catch (e) {
+                  toast(message(e));
+                  return this.captions(el);
+                }
                 await this.captions(el);
-                if (!r.lines.length) return toast("No captions were collected.");
+                if (!r?.lines?.length) return toast("No captions were collected.");
                 this.hooks?.addTab(
                   `Transcript: ${r.title || "Meet call"}`,
                   transcript(r.lines, r.title),
@@ -446,8 +458,12 @@ export class MoreView {
             {
               "data-testid": "captions-discard",
               onClick: async () => {
-                await run(stopCaptions);
-                toast("Stopped. Nothing was sent.");
+                try {
+                  await run(stopCaptions);
+                  toast("Stopped. Nothing was sent.");
+                } catch (e) {
+                  toast(message(e));
+                }
                 await this.captions(el);
               },
             },

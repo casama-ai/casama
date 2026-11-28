@@ -25,6 +25,10 @@ abstract class _$VendorSettingsCWProxy {
 
   VendorSettings renewalMonths(int? renewalMonths);
 
+  VendorSettings billing(VendorBilling? billing);
+
+  VendorSettings includedUsd(num? includedUsd);
+
   /// Creates a new instance with the provided field values.
   /// Omitted fields keep their values; explicit `null` clears nullable fields.
   /// The public API rejects `null` for non-nullable fields. To update a single field use `VendorSettings(...).copyWith.fieldName(value)`.
@@ -43,6 +47,8 @@ abstract class _$VendorSettingsCWProxy {
     num? balanceWarnBelow,
     num? renewalUsd,
     int? renewalMonths,
+    VendorBilling? billing,
+    num? includedUsd,
   });
 }
 
@@ -84,6 +90,13 @@ class _$VendorSettingsCWProxyImpl implements _$VendorSettingsCWProxy {
   VendorSettings renewalMonths(int? renewalMonths) =>
       call(renewalMonths: renewalMonths);
 
+  @override
+  VendorSettings billing(VendorBilling? billing) => call(billing: billing);
+
+  @override
+  VendorSettings includedUsd(num? includedUsd) =>
+      call(includedUsd: includedUsd);
+
   /// Creates a new instance with the provided field values.
   /// Omitted fields keep their values; explicit `null` clears nullable fields.
   /// The public API rejects `null` for non-nullable fields. To update a single field use `VendorSettings(...).copyWith.fieldName(value)`.
@@ -103,6 +116,8 @@ class _$VendorSettingsCWProxyImpl implements _$VendorSettingsCWProxy {
     Object? balanceWarnBelow = const $CopyWithPlaceholder(),
     Object? renewalUsd = const $CopyWithPlaceholder(),
     Object? renewalMonths = const $CopyWithPlaceholder(),
+    Object? billing = const $CopyWithPlaceholder(),
+    Object? includedUsd = const $CopyWithPlaceholder(),
   }) {
     return VendorSettings(
       limitValue: limitValue == const $CopyWithPlaceholder()
@@ -141,6 +156,14 @@ class _$VendorSettingsCWProxyImpl implements _$VendorSettingsCWProxy {
           ? _value.renewalMonths
           // ignore: cast_nullable_to_non_nullable
           : renewalMonths as int?,
+      billing: billing == const $CopyWithPlaceholder()
+          ? _value.billing
+          // ignore: cast_nullable_to_non_nullable
+          : billing as VendorBilling?,
+      includedUsd: includedUsd == const $CopyWithPlaceholder()
+          ? _value.includedUsd
+          // ignore: cast_nullable_to_non_nullable
+          : includedUsd as num?,
     );
   }
 }
@@ -197,6 +220,11 @@ VendorSettings _$VendorSettingsFromJson(Map<String, dynamic> json) =>
             'renewal_months',
             (v) => (v as num?)?.toInt(),
           ),
+          billing: $checkedConvert(
+            'billing',
+            (v) => $enumDecodeNullable(_$VendorBillingEnumMap, v),
+          ),
+          includedUsd: $checkedConvert('included_usd', (v) => v as num?),
         );
         return val;
       },
@@ -208,6 +236,7 @@ VendorSettings _$VendorSettingsFromJson(Map<String, dynamic> json) =>
         'balanceWarnBelow': 'balance_warn_below',
         'renewalUsd': 'renewal_usd',
         'renewalMonths': 'renewal_months',
+        'includedUsd': 'included_usd',
       },
     );
 
@@ -222,6 +251,8 @@ Map<String, dynamic> _$VendorSettingsToJson(VendorSettings instance) =>
       'balance_warn_below': ?instance.balanceWarnBelow,
       'renewal_usd': ?instance.renewalUsd,
       'renewal_months': ?instance.renewalMonths,
+      'billing': ?_$VendorBillingEnumMap[instance.billing],
+      'included_usd': ?instance.includedUsd,
     };
 
 const _$VendorSettingsPeriodEnumEnumMap = {
@@ -229,4 +260,9 @@ const _$VendorSettingsPeriodEnumEnumMap = {
   VendorSettingsPeriodEnum.month: 'month',
   VendorSettingsPeriodEnum.billingPeriod: 'billing_period',
   VendorSettingsPeriodEnum.prepaid: 'prepaid',
+};
+
+const _$VendorBillingEnumMap = {
+  VendorBilling.free: 'free',
+  VendorBilling.metered: 'metered',
 };

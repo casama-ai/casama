@@ -455,6 +455,19 @@ void OnLandedReply(GObject* source, GAsyncResult* res, gpointer) {
   }
 }
 
+// The address or title changed without a page load (a site that changes its address in place, or
+// a #fragment): Dart's address bar and the bots' page facts follow it.
+void OnAddressChanged(WebKitWebView* web_view, GParamSpec*, gpointer) {
+  if (!g_state || !g_state->channel) return;
+  const char* uri = webkit_web_view_get_uri(web_view);
+  if (!uri || !*uri || std::strcmp(uri, "about:blank") == 0) return;
+  const char* title = webkit_web_view_get_title(web_view);
+  FlValue* args = fl_value_new_map();
+  fl_value_set_string_take(args, "url", fl_value_new_string(uri));
+  fl_value_set_string_take(args, "title", fl_value_new_string(title ? title : ""));
+  InvokeDart("urlChanged", args);
+}
+
 void OnLoadChanged(WebKitWebView* web_view,
                    WebKitLoadEvent event,
                    gpointer) {
@@ -772,6 +785,8 @@ WebKitWebView* EnsureWebView() {
 
   g_signal_connect(web, "decide-policy", G_CALLBACK(OnDecidePolicy), nullptr);
   g_signal_connect(web, "load-changed", G_CALLBACK(OnLoadChanged), nullptr);
+  g_signal_connect(web, "notify::uri", G_CALLBACK(OnAddressChanged), nullptr);
+  g_signal_connect(web, "notify::title", G_CALLBACK(OnAddressChanged), nullptr);
   g_signal_connect(web, "web-process-terminated",
                    G_CALLBACK(OnWebProcessTerminated), nullptr);
   g_signal_connect(web, "script-dialog", G_CALLBACK(OnScriptDialog), nullptr);

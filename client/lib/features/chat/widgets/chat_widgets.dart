@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../core/analytics.dart';
 import '../../../core/haptics.dart';
 import '../../../core/number_format.dart';
 import '../../../core/providers.dart';
@@ -3353,6 +3354,9 @@ class _SuggestionPromptState extends ConsumerState<SuggestionPrompt> {
       context,
       () => ref.read(backendProvider).acceptSuggestion(s.id, said: said, choice: choice),
     );
+    if (r != null) {
+      Analytics.log('brief_action_tapped', {'action': s.kind.name});
+    }
     if (!mounted) return;
     setState(() {
       _busy = false;

@@ -6,9 +6,11 @@ description: Turn a table or CSV into a clear chart, choosing the right chart ty
 
 # Chart from data
 
+**Use file tools first (no computer needed):** inspect CSV/Excel/JSON data with `data.query` or `documents.read`, and render clean PNG or SVG charts directly with `media.chart.make` (Vega-Lite).
+
 1. Look at the data first: columns, types, row count and any gaps or odd values. Mention problems before charting.
 2. Find the question the chart should answer, then pick the type: lines for change over time, bars for comparing categories, a scatter plot for relationships. Avoid pie charts beyond three slices.
-3. Make the chart on your computer (Python with matplotlib is fine): a title that states the takeaway, labelled axes with units, readable fonts and no 3D.
+3. Make the chart with `media.chart.make` (or Python with matplotlib on your computer for custom layouts): a title that states the takeaway, labelled axes with units, readable fonts and no 3D.
 4. Save it as a PNG and share the file. Also share the script so it can be rerun.
 5. Write one sentence on what the chart shows and one on what it doesn't.
 

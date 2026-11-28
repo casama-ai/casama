@@ -150,6 +150,16 @@ export const SetAttributionRequest = z
   })
   .openapi("SetAttributionRequest");
 
+/** First-party client conversion funnel event (docs/CONVERSION-FUNNEL-PLAN.md §2.1). */
+export const RecordFunnelEventRequest = z
+  .object({
+    event: z.enum(["paywall_view", "paywall_plan_select", "purchase_started"]),
+    org_id: z.uuid().optional(),
+    source: z.string().trim().max(64).optional(),
+    detail: z.string().trim().max(120).optional(),
+  })
+  .openapi("RecordFunnelEventRequest");
+
 /** Declared Age Range band (docs/APPLE-INTEGRATIONS-PLAN.md §5.2): never stores a birth date. */
 export const AccountAgeBand = z
   .enum(["under13", "13to15", "16to17", "18plus", "declined"])

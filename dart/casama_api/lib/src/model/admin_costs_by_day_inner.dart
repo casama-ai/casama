@@ -23,6 +23,8 @@ class AdminCostsByDayInner {
     required  this.date,
 
     required  this.values,
+
+     this.paidValues,
   });
 
   @JsonKey(
@@ -49,17 +51,31 @@ class AdminCostsByDayInner {
 
 
 
+  @JsonKey(
+    
+    name: r'paid_values',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final List<num>? paidValues;
+
+
+
 
 
     @override
     bool operator ==(Object other) => identical(this, other) || other is AdminCostsByDayInner &&
       other.date == date &&
-      other.values == values;
+      other.values == values &&
+      other.paidValues == paidValues;
 
     @override
     int get hashCode =>
         date.hashCode +
-        values.hashCode;
+        values.hashCode +
+        paidValues.hashCode;
 
   factory AdminCostsByDayInner.fromJson(Map<String, dynamic> json) => _$AdminCostsByDayInnerFromJson(json);
 

@@ -21,7 +21,7 @@ void main() {
       final backend = FakeBackend()
         ..aiConsent = null
         ..about = const AboutYouView(
-          displayName: 'Robin Park',
+          displayName: '',
           nameAsked: false,
         );
       await tester.pumpWidget(

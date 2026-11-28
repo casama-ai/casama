@@ -9,6 +9,7 @@ import type { ActStatus } from "../background/act/device.ts";
 import type { TeachState } from "../background/act/teach.ts";
 import { getManaged } from "../lib/act/managed.ts";
 import { teachFailure } from "../lib/billing.ts";
+import { openSettings } from "../lib/browser.ts";
 import { h } from "../lib/dom.ts";
 import { emptyState } from "../lib/look.ts";
 import { activeTab } from "../lib/page.ts";
@@ -224,14 +225,18 @@ export class YourBrowser {
           {
             "data-testid": "act-unpair",
             onClick: async () => {
-              await act({ type: "act:unpair" }).catch((e) => toast(message(e)));
+              try {
+                await act({ type: "act:unpair" });
+              } catch (e) {
+                return toast(message(e));
+              }
               toast("Unpaired. Bots can't use this browser now.");
               await this.load();
             },
           },
           "Unpair this browser",
         ),
-        h("button", { onClick: () => chrome.runtime.openOptionsPage() }, "Sites"),
+        h("button", { onClick: () => void openSettings() }, "Sites"),
       ),
     );
     void this.renderLive();
@@ -264,7 +269,12 @@ export class YourBrowser {
             ).map(([label, answer]) =>
               h(
                 "button",
-                { onClick: () => void act({ type: "act:answer", id: a.id, answer }) },
+                {
+                  onClick: () =>
+                    void act({ type: "act:answer", id: a.id, answer }).catch((e) =>
+                      toast(message(e)),
+                    ),
+                },
                 label,
               ),
             ),
@@ -300,7 +310,8 @@ export class YourBrowser {
                 "button",
                 {
                   "data-testid": "act-stop",
-                  onClick: () => void act({ type: "act:stop", key: r.key }),
+                  onClick: () =>
+                    void act({ type: "act:stop", key: r.key }).catch((e) => toast(message(e))),
                 },
                 "Stop",
               ),
@@ -309,7 +320,10 @@ export class YourBrowser {
                     "button",
                     {
                       "data-testid": "act-handback",
-                      onClick: () => void act({ type: "act:handback", key: r.key }),
+                      onClick: () =>
+                        void act({ type: "act:handback", key: r.key }).catch((e) =>
+                          toast(message(e)),
+                        ),
                     },
                     "Hand back",
                   )

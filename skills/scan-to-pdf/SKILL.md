@@ -5,7 +5,11 @@ description: Use when the person shares phone photos or scans of paper (receipts
 
 # Scan to PDF
 
-The tools are already on your computer: ImageMagick, heif-convert, ocrmypdf, Tesseract with English, Spanish, French, German, Portuguese, Italian, Japanese, Chinese and Korean, and pdftk. Don't install anything.
+**Use file tools first (no computer needed):**
+- Single photo/receipt/screenshot text: call `media.image.look` on the `media:<id>` and read it directly.
+- Scanned PDF or images → searchable PDF + text: call `documents.ocr` (or combine photos into a PDF with `documents.pdf` first, then `documents.ocr`).
+
+Fall back to the computer shell tools below only for custom image deskewing/cleanup before OCR: ImageMagick, heif-convert, ocrmypdf, Tesseract (English, Spanish, French, German, Portuguese, Italian, Japanese, Chinese and Korean), and qpdf. Don't install anything.
 
 1. Put the pages in order. Ask if the order isn't clear from the file names.
 2. Convert iPhone HEIC photos first: `heif-convert in.heic in.jpg`.

@@ -12487,9 +12487,10 @@
             "enum": [
               "ask",
               "computer",
-              "device"
+              "device",
+              "always"
             ],
-            "description": "In-app browser: \"ask\" (choice card when it helps), \"computer\" (always the bot's computer), \"device\" (prefer this device)"
+            "description": "In-app browser: \"ask\" (choice card when it helps), \"computer\" (always the bot's computer), \"device\" (prefer this device for sign-ins and blocked sites), \"always\" (every page in this device's browser while the person has the chat open there)"
           },
           "allowed_sites": {
             "type": "array",
@@ -13052,7 +13053,8 @@
             "enum": [
               "ask",
               "computer",
-              "device"
+              "device",
+              "always"
             ]
           },
           "allowed_sites": {
@@ -13559,6 +13561,109 @@
           },
           "alarm": {
             "$ref": "#/components/schemas/CapacityAlarm"
+          },
+          "computer_metrics": {
+            "type": "object",
+            "properties": {
+              "wake_times": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "mode": {
+                      "type": "string"
+                    },
+                    "count": {
+                      "type": "integer"
+                    },
+                    "p50_ms": {
+                      "type": "integer"
+                    },
+                    "p90_ms": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "mode",
+                    "count",
+                    "p50_ms",
+                    "p90_ms"
+                  ]
+                }
+              },
+              "browser_ooms_7d": {
+                "type": "integer"
+              },
+              "wakes_by_caller_7d": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "caller": {
+                      "type": "string"
+                    },
+                    "count": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "caller",
+                    "count"
+                  ]
+                }
+              },
+              "shell_programs_7d": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "program": {
+                      "type": "string"
+                    },
+                    "count": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "program",
+                    "count"
+                  ]
+                }
+              },
+              "job_boxes_7d": {
+                "type": "object",
+                "properties": {
+                  "count": {
+                    "type": "integer"
+                  },
+                  "p50_ms": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ]
+                  },
+                  "p90_ms": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ]
+                  }
+                },
+                "required": [
+                  "count",
+                  "p50_ms",
+                  "p90_ms"
+                ]
+              }
+            },
+            "required": [
+              "wake_times",
+              "browser_ooms_7d",
+              "wakes_by_caller_7d",
+              "shell_programs_7d",
+              "job_boxes_7d"
+            ],
+            "description": "Wake timings, OOM kills, shell programs, and job-box stats (7d)"
           }
         },
         "required": [
@@ -13780,6 +13885,12 @@
           "spent_usd": {
             "type": "number"
           },
+          "paid_usd": {
+            "type": "number"
+          },
+          "billing": {
+            "$ref": "#/components/schemas/CostRowBilling"
+          },
           "calls": {
             "type": "integer"
           },
@@ -13824,6 +13935,14 @@
           "reported_usd",
           "limit_usd",
           "limit_remaining_usd"
+        ]
+      },
+      "CostRowBilling": {
+        "type": "string",
+        "enum": [
+          "free",
+          "metered",
+          "own_servers"
         ]
       },
       "AdminCosts": {
@@ -13890,6 +14009,12 @@
                   "items": {
                     "type": "number"
                   }
+                },
+                "paid_values": {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  }
                 }
               },
               "required": [
@@ -13940,7 +14065,11 @@
         "properties": {
           "spent_usd": {
             "type": "number",
-            "description": "What the server paid, fees included"
+            "description": "Estimated usage cost at list prices, plus fixed bills when asked"
+          },
+          "paid_usd": {
+            "type": "number",
+            "description": "Money that actually leaves the account (free plans and own-server shares are $0; included credits subtracted; fixed bills included when asked)"
           },
           "charged_usd": {
             "type": "number",
@@ -13956,7 +14085,7 @@
           },
           "fixed_usd": {
             "type": "number",
-            "description": "Fixed bills in the period; inside spent_usd only when asked for"
+            "description": "Fixed bills in the period; inside spent_usd and paid_usd only when asked for"
           },
           "not_recorded_usd": {
             "type": "number",
@@ -13989,6 +14118,9 @@
           "spent_usd": {
             "type": "number"
           },
+          "paid_usd": {
+            "type": "number"
+          },
           "charged_usd": {
             "type": "number"
           },
@@ -14004,8 +14136,54 @@
               "null"
             ]
           },
+          "previous_paid_usd": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
           "source": {
             "$ref": "#/components/schemas/CostSource"
+          },
+          "billing": {
+            "$ref": "#/components/schemas/CostRowBilling"
+          },
+          "included_usd": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "cap_used": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "cap_limit": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "cap_unit": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "cap_period": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "day",
+              "month",
+              "billing_period",
+              "prepaid",
+              null
+            ]
           },
           "reported_usd": {
             "type": [
@@ -14542,6 +14720,9 @@
             "items": {
               "$ref": "#/components/schemas/AdminGrowthSource"
             }
+          },
+          "conversion": {
+            "$ref": "#/components/schemas/AdminGrowthConversion"
           }
         },
         "required": [
@@ -14572,6 +14753,9 @@
             "type": "integer"
           },
           "active_people": {
+            "type": "integer"
+          },
+          "typers": {
             "type": "integer"
           },
           "messages": {
@@ -14629,6 +14813,9 @@
           "signed_up": {
             "type": "integer"
           },
+          "opened_app": {
+            "type": "integer"
+          },
           "made_bot": {
             "type": "integer"
           },
@@ -14639,6 +14826,18 @@
             "type": "integer"
           },
           "came_back": {
+            "type": "integer"
+          },
+          "returned_day2": {
+            "type": "integer"
+          },
+          "habit_week": {
+            "type": "integer"
+          },
+          "connected_app": {
+            "type": "integer"
+          },
+          "used_routine": {
             "type": "integer"
           }
         },
@@ -14896,6 +15095,85 @@
         "required": [
           "source",
           "signups"
+        ]
+      },
+      "AdminGrowthConversion": {
+        "type": "object",
+        "properties": {
+          "hit_limit": {
+            "type": "integer"
+          },
+          "saw_paywall": {
+            "type": "integer"
+          },
+          "selected_plan": {
+            "type": "integer"
+          },
+          "started_checkout": {
+            "type": "integer"
+          },
+          "started_trial": {
+            "type": "integer"
+          },
+          "paid": {
+            "type": "integer"
+          },
+          "by_source": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdminGrowthPaywallSource"
+            }
+          },
+          "connection_failures": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdminGrowthConnectionFailure"
+            }
+          }
+        },
+        "required": [
+          "hit_limit",
+          "saw_paywall",
+          "selected_plan",
+          "started_checkout",
+          "started_trial",
+          "paid",
+          "by_source",
+          "connection_failures"
+        ]
+      },
+      "AdminGrowthPaywallSource": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string"
+          },
+          "views": {
+            "type": "integer"
+          },
+          "checkouts": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "source",
+          "views",
+          "checkouts"
+        ]
+      },
+      "AdminGrowthConnectionFailure": {
+        "type": "object",
+        "properties": {
+          "detail": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "detail",
+          "count"
         ]
       },
       "AdminInactivity": {
@@ -16045,6 +16323,13 @@
           }
         ]
       },
+      "VendorBilling": {
+        "type": "string",
+        "enum": [
+          "free",
+          "metered"
+        ]
+      },
       "VendorReading": {
         "type": [
           "object",
@@ -16174,6 +16459,16 @@
             "type": "integer",
             "minimum": 1,
             "maximum": 120
+          },
+          "billing": {
+            "$ref": "#/components/schemas/VendorBilling"
+          },
+          "included_usd": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0
           }
         },
         "required": [
@@ -19091,6 +19386,34 @@
           "allow_bot_to_bot",
           "a2a_enabled",
           "llm_tracing"
+        ]
+      },
+      "RecordFunnelEventRequest": {
+        "type": "object",
+        "properties": {
+          "event": {
+            "type": "string",
+            "enum": [
+              "paywall_view",
+              "paywall_plan_select",
+              "purchase_started"
+            ]
+          },
+          "org_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "source": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "detail": {
+            "type": "string",
+            "maxLength": 120
+          }
+        },
+        "required": [
+          "event"
         ]
       },
       "RelayAnalyticsRequest": {
@@ -64190,6 +64513,56 @@
           },
           "404": {
             "description": "Not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/me/funnel": {
+      "post": {
+        "operationId": "recordFunnelEvent",
+        "tags": [
+          "privacy"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Record a first-party paywall or checkout funnel step",
+        "description": "Writes a paywall_view, paywall_plan_select, or purchase_started step to first-party Admin -> Growth reporting (docs/CONVERSION-FUNNEL-PLAN.md §2.1). Respects analytics_opt_out. Always 204.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecordFunnelEventRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Recorded or skipped"
+          },
+          "400": {
+            "description": "Validation failed",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
             "content": {
               "application/problem+json": {
                 "schema": {

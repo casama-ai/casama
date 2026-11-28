@@ -4,6 +4,7 @@
 
 // ignore_for_file: unused_element
 import 'package:casama_api/src/model/cost_source.dart';
+import 'package:casama_api/src/model/cost_row_billing.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -27,6 +28,8 @@ class AdminCostRow {
 
     required  this.spentUsd,
 
+     this.paidUsd,
+
     required  this.chargedUsd,
 
     required  this.chargedTrackedUsd,
@@ -35,7 +38,21 @@ class AdminCostRow {
 
     required  this.previousSpentUsd,
 
+     this.previousPaidUsd,
+
     required  this.source_,
+
+     this.billing,
+
+     this.includedUsd,
+
+     this.capUsed,
+
+     this.capLimit,
+
+     this.capUnit,
+
+     this.capPeriod,
 
      this.reportedUsd,
 
@@ -91,6 +108,18 @@ class AdminCostRow {
 
   @JsonKey(
     
+    name: r'paid_usd',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final num? paidUsd;
+
+
+
+  @JsonKey(
+    
     name: r'charged_usd',
     required: true,
     includeIfNull: false,
@@ -139,6 +168,18 @@ class AdminCostRow {
 
   @JsonKey(
     
+    name: r'previous_paid_usd',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final num? previousPaidUsd;
+
+
+
+  @JsonKey(
+    
     name: r'source',
     required: true,
     includeIfNull: false,
@@ -146,6 +187,78 @@ class AdminCostRow {
 
 
   final CostSource source_;
+
+
+
+  @JsonKey(
+    
+    name: r'billing',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final CostRowBilling? billing;
+
+
+
+  @JsonKey(
+    
+    name: r'included_usd',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final num? includedUsd;
+
+
+
+  @JsonKey(
+    
+    name: r'cap_used',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final num? capUsed;
+
+
+
+  @JsonKey(
+    
+    name: r'cap_limit',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final num? capLimit;
+
+
+
+  @JsonKey(
+    
+    name: r'cap_unit',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final String? capUnit;
+
+
+
+  @JsonKey(
+    
+    name: r'cap_period',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final AdminCostRowCapPeriodEnum? capPeriod;
 
 
 
@@ -240,11 +353,19 @@ class AdminCostRow {
       other.id == id &&
       other.label == label &&
       other.spentUsd == spentUsd &&
+      other.paidUsd == paidUsd &&
       other.chargedUsd == chargedUsd &&
       other.chargedTrackedUsd == chargedTrackedUsd &&
       other.calls == calls &&
       other.previousSpentUsd == previousSpentUsd &&
+      other.previousPaidUsd == previousPaidUsd &&
       other.source_ == source_ &&
+      other.billing == billing &&
+      other.includedUsd == includedUsd &&
+      other.capUsed == capUsed &&
+      other.capLimit == capLimit &&
+      other.capUnit == capUnit &&
+      other.capPeriod == capPeriod &&
       other.reportedUsd == reportedUsd &&
       other.vendor == vendor &&
       other.lastUsedAt == lastUsedAt &&
@@ -258,11 +379,19 @@ class AdminCostRow {
         id.hashCode +
         label.hashCode +
         spentUsd.hashCode +
+        paidUsd.hashCode +
         chargedUsd.hashCode +
         chargedTrackedUsd.hashCode +
         calls.hashCode +
         (previousSpentUsd == null ? 0 : previousSpentUsd.hashCode) +
+        (previousPaidUsd == null ? 0 : previousPaidUsd.hashCode) +
         source_.hashCode +
+        billing.hashCode +
+        (includedUsd == null ? 0 : includedUsd.hashCode) +
+        (capUsed == null ? 0 : capUsed.hashCode) +
+        (capLimit == null ? 0 : capLimit.hashCode) +
+        (capUnit == null ? 0 : capUnit.hashCode) +
+        (capPeriod == null ? 0 : capPeriod.hashCode) +
         (reportedUsd == null ? 0 : reportedUsd.hashCode) +
         (vendor == null ? 0 : vendor.hashCode) +
         (lastUsedAt == null ? 0 : lastUsedAt.hashCode) +
@@ -281,4 +410,24 @@ class AdminCostRow {
   }
 
 }
+
+
+enum AdminCostRowCapPeriodEnum {
+@JsonValue(r'day')
+day(r'day'),
+@JsonValue(r'month')
+month(r'month'),
+@JsonValue(r'billing_period')
+billingPeriod(r'billing_period'),
+@JsonValue(r'prepaid')
+prepaid(r'prepaid');
+
+const AdminCostRowCapPeriodEnum(this.value);
+
+final String value;
+
+@override
+String toString() => value;
+}
+
 

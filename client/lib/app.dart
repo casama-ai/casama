@@ -32,6 +32,7 @@ import 'core/updater.dart';
 import 'features/notifications/notifications_primer.dart';
 import 'features/settings/name_step.dart';
 import 'features/privacy/ai_consent_step.dart';
+import 'features/welcome/first_value_gate.dart';
 import 'features/welcome/gallery_picks_step.dart';
 import 'features/welcome/heard_from_step.dart';
 import 'features/companion/companion_controller.dart';
@@ -139,7 +140,14 @@ class CasamaApp extends ConsumerWidget {
         }());
       } else if (next.value == true) {
         // Signed out, then in (not a cold start with a saved session): the sign-in funnel's end (F1).
-        if (prev?.value == false) unawaited(Analytics.capture('sign_in_completed'));
+        if (prev?.value == false) {
+          unawaited(
+            Analytics.capture(
+              'sign_in_completed',
+              properties: {'method': Analytics.takeSignInMethod()},
+            ),
+          );
+        }
         final userId = ref.read(backendProvider).userId;
         if (userId != null) {
           unawaited(Analytics.identify(userId));
@@ -257,15 +265,18 @@ class _FirstRunSteps extends ConsumerWidget {
     final nameNeeded = ref.watch(nameStepNeededProvider);
     final nameKnown = nameNeeded != null;
     final name = nameNeeded ?? false;
-    // "How did you hear about us?" (ADS-ATTRIBUTION-PLAN §6.3): once, on a new account's first run.
-    final heardFrom = ref.watch(heardFromNeededProvider);
-    // "Picks for you" (D-315) follows the name step on first run, when the gallery has sets.
-    final picks = ref.watch(galleryPicksNeededProvider);
+    // Collapse secondary first-run overlays until the person gets their first reply
+    // (docs/CONVERSION-FUNNEL-PLAN.md §3.3), so they reach the chat composer immediately.
+    final deferSecondary = ref.watch(deferSecondaryOnboardingProvider);
+    // "How did you hear about us?" (ADS-ATTRIBUTION-PLAN §6.3): once, after first value on first run.
+    final heardFrom = !deferSecondary && ref.watch(heardFromNeededProvider);
+    // "Picks for you" (D-315) follows after first value on first run, when the gallery has sets.
+    final picks = !deferSecondary && ref.watch(galleryPicksNeededProvider);
     // The guided setup (D-309) asks for the name itself and is a page of its own: these wait.
     return ListenableBuilder(
       listenable: Listenable.merge([push.needsAsk, GuidedSetup.active]),
       builder: (context, _) {
-        final ask = push.needsAsk.value;
+        final ask = !deferSecondary && push.needsAsk.value;
         // Apple's tracking prompt (D-589) waits until none of these pages is up, nor sign-in.
         final clear =
             signInDone &&
@@ -277,7 +288,13 @@ class _FirstRunSteps extends ConsumerWidget {
             !picks &&
             !ask;
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (context.mounted) ref.read(trackingPermissionProvider.notifier).firstRunClear(clear);
+          if (!context.mounted) return;
+          ref.read(trackingPermissionProvider.notifier).firstRunClear(clear);
+          // If the visitor clicked a paid plan on casama.ai/pricing (?plan=plus|pro|max), open
+          // the paywall on that tier once sign-in and consent are clear (§3.1).
+          if (clear) {
+            unawaited(ref.read(pricingHandoffProvider).openPendingPricingPlan());
+          }
         });
         if (consent) {
           return Stack(children: [ExcludeSemantics(child: child), _cover(context, const AiConsentStep())]);

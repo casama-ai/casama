@@ -13,9 +13,20 @@ export const CostSource = z
   .enum(["metered", "counted", "fixed", "estimated"])
   .openapi("CostSource");
 
+export const CostRowBilling = z.enum(["free", "metered", "own_servers"]).openapi("CostRowBilling");
+
 const CostTotals = z
   .object({
-    spent_usd: z.number().openapi({ description: "What the server paid, fees included" }),
+    spent_usd: z
+      .number()
+      .openapi({ description: "Estimated usage cost at list prices, plus fixed bills when asked" }),
+    paid_usd: z
+      .number()
+      .optional()
+      .openapi({
+        description:
+          "Money that actually leaves the account (free plans and own-server shares are $0; included credits subtracted; fixed bills included when asked)",
+      }),
     charged_usd: z.number().openapi({ description: "Taken from credits for usage" }),
     charged_tracked_usd: z
       .number()
@@ -25,7 +36,9 @@ const CostTotals = z
       .openapi({ description: "Paid by workspaces on their own keys: not the server's money" }),
     fixed_usd: z
       .number()
-      .openapi({ description: "Fixed bills in the period; inside spent_usd only when asked for" }),
+      .openapi({
+        description: "Fixed bills in the period; inside spent_usd and paid_usd only when asked for",
+      }),
     not_recorded_usd: z
       .number()
       .openapi({ description: "What vendors report above what the server recorded" }),
@@ -38,11 +51,22 @@ export const AdminCostRow = z
     id: z.string().openapi({ description: "The group's key; empty for rows that carry no label" }),
     label: z.string(),
     spent_usd: z.number(),
+    paid_usd: z.number().optional(),
     charged_usd: z.number(),
     charged_tracked_usd: z.number(),
     calls: z.number().int(),
     previous_spent_usd: z.number().nullable(),
+    previous_paid_usd: z.number().nullable().optional(),
     source: CostSource,
+    /** How this service or key is billed: free ($0 paid), metered, or own_servers ($0 paid). */
+    billing: CostRowBilling.optional(),
+    /** Monthly usage credit (USD) included in this service's paid plan, when set. */
+    included_usd: z.number().nullable().optional(),
+    /** Free-plan quota cap meter (service rows when Vendors defines a cap). */
+    cap_used: z.number().nullable().optional(),
+    cap_limit: z.number().nullable().optional(),
+    cap_unit: z.string().nullable().optional(),
+    cap_period: z.enum(["day", "month", "billing_period", "prepaid"]).nullable().optional(),
     /** The vendor's own figure for this service or key, when it reports one. */
     reported_usd: z.number().nullable().optional(),
     /** Key rows: the service the key belongs to. */
@@ -68,8 +92,14 @@ export const AdminCosts = z
     previous: CostTotals.nullable(),
     /** The chart's stacks: the biggest groups, then "other" (id `__other`). */
     series: z.array(z.object({ id: z.string(), label: z.string() })),
-    /** One entry per day; `values` lines up with `series`. */
-    by_day: z.array(z.object({ date: z.string(), values: z.array(z.number()) })),
+    /** One entry per day; `values` (estimated) and `paid_values` (paid) line up with `series`. */
+    by_day: z.array(
+      z.object({
+        date: z.string(),
+        values: z.array(z.number()),
+        paid_values: z.array(z.number()).optional(),
+      }),
+    ),
     rows: z.array(AdminCostRow),
     /** When the daily tables were last rebuilt. */
     updated_at: z.string().nullable(),
@@ -91,6 +121,8 @@ export const AdminCostKey = z
     billing_url: z.string().nullable(),
     configured: z.boolean(),
     spent_usd: z.number(),
+    paid_usd: z.number().optional(),
+    billing: CostRowBilling.optional(),
     calls: z.number().int(),
     last_used_at: z.string().nullable(),
     reported_usd: z.number().nullable(),

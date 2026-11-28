@@ -3,9 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../l10n/generated/app_localizations.dart';
 
-/// The phone browser's build switch (docs/PHONE-BROWSER-PLAN.md §8.7, PROTOCOL.md §4): on only in
-/// builds made with `--dart-define=CASAMA_APP_BROWSER=true`.
-const kAppBrowser = bool.fromEnvironment('CASAMA_APP_BROWSER');
+/// The in-app browser's build switch (docs/PHONE-BROWSER-PLAN.md §8.7, PROTOCOL.md §4). On by
+/// default in every release and profile build, a plain `flutter build` or `flutter run --release`
+/// included (D-633); the package scripts pass `--dart-define=CASAMA_APP_BROWSER=false` only when
+/// `scripts/app-browser-switch.sh off` took the native half out. Debug runs and tests stay off
+/// unless they pass the define (tests override [appBrowserBuildProvider]).
+const kAppBrowser = bool.fromEnvironment(
+  'CASAMA_APP_BROWSER',
+  defaultValue: kReleaseMode || kProfileMode,
+);
 
 /// Whether the phone browser's code is in this build at all. Every entry point checks this first,
 /// as a constant, so a release build without [kAppBrowser] drops the whole folder. Debug builds

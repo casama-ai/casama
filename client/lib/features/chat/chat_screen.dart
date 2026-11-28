@@ -76,8 +76,10 @@ import 'widgets/composer.dart';
 import 'widgets/screen_card.dart';
 import '../app_browser/app_browser_chat.dart';
 import '../app_browser/app_browser_flag.dart';
+import '../app_browser/app_browser_header_button.dart';
 import '../app_browser/app_browser_settings.dart' show appBrowserReadyProvider, openAppBrowserByHand;
 import 'widgets/error_details.dart';
+import 'widgets/limit_card.dart';
 import 'widgets/reply_usage.dart';
 import 'widgets/screen_held_actions.dart';
 import 'widgets/reactions.dart';
@@ -142,11 +144,16 @@ bool get _appInFront => switch (WidgetsBinding.instance.lifecycleState) {
   _ => false,
 };
 
-/// The app's own starter requests, for when the server can't give personal ones (D-338): everyday
-/// help anyone can use. The emoji is decoration; tapping sends the sentence.
+/// The app's own starter requests, for when the server can't give personal ones (D-338,
+/// CONVERSION-FUNNEL-PLAN §3): three one-tap tasks that show what Casama does that a plain chat
+/// app can't (real browser lookup, tomorrow's morning brief, sorting today's to-dos).
 List<(String, String)> _suggestions(BuildContext context) {
   final l10n = context.l10n;
-  return [('☀️', l10n.suggestPlanDay), ('✍️', l10n.suggestWriteMessage), ('🔎', l10n.suggestExplain), ('💡', l10n.suggestCapabilities)];
+  return [
+    ('🌐', 'Look up today\'s top tech news in a browser and summarize the 3 best stories.'),
+    ('☀️', 'Set up my morning brief for tomorrow at 8am with my priorities and weather.'),
+    ('✅', l10n.suggestPlanDay),
+  ];
 }
 
 /// The thread while it opens: your message on the right and the bot's turns (its avatar and name
@@ -433,8 +440,6 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   final _pickedSkills = <String>[];
   var _dragging = false;
 
-  static const _maxFileBytes = 25 * 1024 * 1024;
-
   /// File links found in each reply (by entry: a changed reply is a new entry).
   final _sharedFiles = Expando<List<AttachmentRef>>();
 
@@ -452,32 +457,26 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     return built;
   }
 
-  String? _computerId() {
-    final bot = ref.read(botProvider(widget.botId));
-    return computerForBot(
-      ref.read(computersProvider).value ?? const [],
-      widget.botId,
-      defaultComputerId: bot?.defaultComputerId,
-      places: ref.read(botPlacesProvider(widget.botId)).value,
-    )?.id;
-  }
-
-  /// Uploads each file to the bot's computer right away (workspace/uploads), so Send only waits
-  /// for what is still in flight.
+  /// Uploads each file to `/v1/media` right away (never wakes a computer, works for bots with
+  /// no computer; SERVER-TOOLS-PLAN Phase 4), so Send only waits for what is still in flight.
   Future<void> _addFiles(List<(String, Uint8List, String?)> files) async {
-    final computerId = _computerId();
-    if (computerId == null) {
-      showWarning(context, context.l10n.noComputerForFiles);
+    final bot = ref.read(botsProvider).value?.where((b) => b.id == widget.botId).firstOrNull;
+    final orgId = bot?.orgId ?? ref.read(currentOrgIdProvider);
+    if (orgId == null) {
+      showWarning(context, context.l10n.somethingWentWrong);
       return;
     }
     for (final (name, bytes, mime) in files) {
-      if (bytes.length > _maxFileBytes) {
+      if (bytes.length > maxMediaUploadBytes((mime == null || mime.isEmpty) ? mimeFor(name) : mime)) {
         showWarning(context, context.l10n.fileTooLarge(name));
         continue;
       }
-      final stamp = DateTime.now().toIso8601String().replaceAll(RegExp(r'[^0-9]'), '').substring(0, 14);
-      final safe = name.replaceAll(RegExp(r'[^A-Za-z0-9._-]+'), '_');
-      final item = _Pending(name: name, bytes: bytes, mime: (mime == null || mime.isEmpty) ? mimeFor(name) : mime, apiPath: 'uploads/$stamp-$safe', computerId: computerId);
+      final item = _Pending(
+        name: name,
+        bytes: bytes,
+        mime: (mime == null || mime.isEmpty) ? mimeFor(name) : mime,
+        orgId: orgId,
+      );
       setState(() => _pending.add(item));
       _upload(item);
     }
@@ -491,21 +490,30 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       ..failed = false
       ..error = null
       ..ref = null;
-    // The chat shows the picture from the device right away, and never downloads it back.
-    unawaited(MediaCache.write(MediaCache.keyFor(item.computerId, item.apiPath), item.bytes));
     final backend = ref.read(backendProvider);
     item.upload = () async {
       try {
-        await backend.uploadFile(item.computerId, item.apiPath, item.bytes);
+        final mediaRef = await backend.uploadMedia(
+          item.orgId,
+          item.name,
+          item.bytes,
+          contentType: item.mime,
+        );
         if (try_ != item.attempt) return false;
-        item.ref = item.plannedRef;
+        // The chat shows the picture from the device, and never downloads it back.
+        unawaited(MediaCache.write(MediaCache.keyFor('', mediaRef), item.bytes));
+        item.ref = AttachmentRef(
+          path: mediaRef,
+          name: item.name,
+          mimeType: item.mime,
+          size: item.bytes.length,
+        );
         if (mounted) setState(() {});
         return true;
       } catch (e) {
         if (try_ != item.attempt) return false;
         item.failed = true;
         if (mounted) {
-          // Why, in the server's words: no computer hours left, the computer is off, too big.
           item.error = errorText(context, e);
           setState(() {});
           showFailure(context, context.l10n.attachFailed(item.name, item.error!));
@@ -519,15 +527,13 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   Future<void> _editPending(_Pending item) async {
     final edited = await editPhoto(context, item.bytes);
     if (edited == null || !mounted || !_pending.contains(item)) return;
-    final stamp = DateTime.now().toIso8601String().replaceAll(RegExp(r'[^0-9]'), '').substring(0, 14);
     final base = item.name.contains('.') ? item.name.substring(0, item.name.lastIndexOf('.')) : item.name;
     final name = '$base.jpg';
     setState(() {
       item
         ..name = name
         ..bytes = edited
-        ..mime = 'image/jpeg'
-        ..apiPath = 'uploads/$stamp-${name.replaceAll(RegExp(r'[^A-Za-z0-9._-]+'), '_')}';
+        ..mime = 'image/jpeg';
     });
     _upload(item);
   }
@@ -932,13 +938,21 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       if (!without || !mounted) return;
       setState(() => _pending.removeWhere(failed.contains));
     }
-    // The rest go with the message, finished or not.
+    // The rest go with the message. A file's media:<id> exists only once its upload is done, so Send
+    // waits for the ones still in flight (each started the moment it was picked).
     final items = text == null ? [for (final p in _pending) if (!p.failed) p] : const <_Pending>[];
-    final attachments = [for (final p in items) p.plannedRef];
-    if (message.trim().isEmpty && attachments.isEmpty) return;
+    if (message.trim().isEmpty && items.isEmpty) return;
     final inFlight = [for (final p in items) if (p.ref == null) p];
-    // The message shows at once and is delivered when its files are up (no waiting at Send).
-    final uploads = inFlight.isEmpty ? null : Future.wait([for (final p in inFlight) p.upload!]).then((r) => r.every((ok) => ok));
+    if (inFlight.isNotEmpty) {
+      final results = await Future.wait([for (final p in inFlight) p.upload!]);
+      if (!mounted) return;
+      if (!results.every((ok) => ok)) {
+        showFailure(context, context.l10n.messageNotSent);
+        return;
+      }
+    }
+    final attachments = [for (final p in items) if (p.ref != null) p.ref!];
+    if (message.trim().isEmpty && attachments.isEmpty) return;
     final skills = text == null ? [..._pickedSkills] : const <String>[];
     final apps = text == null ? [..._mentions.pickedApps] : const <MessageAppMention>[];
     if (text == null) {
@@ -959,7 +973,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     final fromConversation = ref.read(chatControllerProvider(fromBot)).conversationId;
     final ok = await runGuarded(context, () async {
       try {
-        await ref.read(chatControllerProvider(fromBot).notifier).send(message, attachments: attachments, skills: skills, apps: apps, uploads: uploads);
+        await ref.read(chatControllerProvider(fromBot).notifier).send(message, attachments: attachments, skills: skills, apps: apps);
       } on UploadsFailed {
         notSent = true;
       }
@@ -1554,6 +1568,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
               live: true,
               child: HeaderIconButton(icon: LucideIcons.monitor, tooltip: l10n.chatComputerLive, onPressed: () => context.pushOnce('/computer?bot=${widget.botId}')),
             ),
+          // This device's in-app browser: open it, or let bots browse here (APP-BROWSER-ALWAYS-PLAN §3 C).
+          if (!widget.group && kAppBrowserCode) const AppBrowserHeaderButton(),
           // A call is with one bot; in a group only the lead would hear you, so group chats have none.
           if (!widget.group)
           HeaderIconButton(
@@ -2430,6 +2446,24 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
               // Out of steps, time or the run's budget (D-505, build 117): Continue starts a new run
               // that picks the task up from where this one stopped; Try Again becomes Start Over.
               final keepGoing = continueReasons.contains(n.errorCode);
+              if (n.kind == NoticeKind.failed &&
+                  n.errorCode != null &&
+                  limitCardCodes.contains(n.errorCode)) {
+                return LimitCard(
+                  entry: n,
+                  canKeepGoing: keepGoing,
+                  onKeepGoing: keepGoing
+                      ? () {
+                          Analytics.log('keep_going_tapped', {'reason': n.errorCode});
+                          final text = context.l10n.keepGoingMessage;
+                          runGuarded(
+                            context,
+                            () => ref.read(chatControllerProvider(widget.botId).notifier).send(text),
+                          );
+                        }
+                      : null,
+                );
+              }
               if (fix == null && !canRetry && !keepGoing) return line;
               return Column(
                 children: [
@@ -2450,7 +2484,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                               return;
                             }
                             if (fix.route == '/settings/plans') {
-                              openPaywall(context, source: 'limit');
+                              openPaywall(context, reason: n.text, source: 'limit');
                               return;
                             }
                             if (n.errorCode == 'own_provider_required') {
@@ -2484,6 +2518,14 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                             icon: const Icon(LucideIcons.play, size: 18),
                             label: Text(context.l10n.keepGoing),
                           ),
+                        ),
+                      if (n.errorCode == 'max_steps' &&
+                          ref.watch(billingProvider).value?.planCode == 'free')
+                        FilledButton.tonalIcon(
+                          key: const Key('noticeMaxStepsUpgrade'),
+                          onPressed: () => openPaywall(context, reason: n.text, source: 'limit'),
+                          icon: const Icon(LucideIcons.sparkles, size: 18),
+                          label: Text(context.l10n.seePlans),
                         ),
                       if (canRetry)
                         TextButton.icon(
@@ -2655,28 +2697,24 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   }
 }
 
-/// A file chosen for the next message: uploading until [ref] is set.
+/// A file chosen for the next message: uploading to `/v1/media` until [ref] is set.
 class _Pending {
-  _Pending({required this.name, required this.bytes, required this.mime, required this.apiPath, required this.computerId});
+  _Pending({required this.name, required this.bytes, required this.mime, required this.orgId});
   String name;
   Uint8List bytes;
   String mime;
-  String apiPath;
-  final String computerId;
+  final String orgId;
 
-  /// Set once the upload finished.
+  /// Set once the upload finished (`path: "media:<id>"`).
   AttachmentRef? ref;
   var failed = false;
 
   /// Why the last upload failed, for the person.
   String? error;
 
-  /// The current upload: true when it is on the computer.
+  /// The current upload: true when it is stored in `/v1/media`.
   Future<bool>? upload;
   var attempt = 0;
-
-  /// What the message will point at, known before the upload ends.
-  AttachmentRef get plannedRef => AttachmentRef(path: 'workspace/$apiPath', name: name, mimeType: mime, size: bytes.length);
 
   bool get isEditablePhoto => mime.startsWith('image/') && mime != 'image/heic' && mime != 'image/gif' && mime != 'image/svg+xml';
 }
@@ -3059,6 +3097,7 @@ class _EmptyThread extends ConsumerWidget {
                                   ? null
                                   : () {
                                       Analytics.log('starter_tapped', {'source': source, 'position': i});
+                                      Analytics.log('starter_card_tapped', {'card_id': '$source:$i'});
                                       onAsk(suggestions[i].$2);
                                     },
                               radius: AppRadius.tile,

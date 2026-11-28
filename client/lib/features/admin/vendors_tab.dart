@@ -551,6 +551,10 @@ class _VendorDetailState extends ConsumerState<VendorDetail> {
   // A renewal: what one costs and how long it lasts, so its bill can be spread over its months.
   late final renewalUsd = TextEditingController(text: vendor.renewalUsd?.toString() ?? '');
   late final renewalMonths = TextEditingController(text: vendor.renewalMonths?.toString() ?? '');
+  // How its usage is paid for (REAL-COSTS-PLAN): a free plan costs $0 and stops at its cap; a
+  // metered one is paid as recorded, less any monthly credit the plan includes.
+  late bool freePlan = vendor.billing == VendorBilling.free;
+  late final includedUsd = TextEditingController(text: vendor.includedUsd?.toString() ?? '');
   late double warnAt = vendor.warnAt.toDouble();
   late DateTime? periodStart = vendor.periodStart;
   late DateTime? expiresAt = vendor.expiresAt;
@@ -574,6 +578,7 @@ class _VendorDetailState extends ConsumerState<VendorDetail> {
     balanceWarning.dispose();
     renewalUsd.dispose();
     renewalMonths.dispose();
+    includedUsd.dispose();
     super.dispose();
   }
 
@@ -604,13 +609,17 @@ class _VendorDetailState extends ConsumerState<VendorDetail> {
     final bwText = balanceWarning.text.trim();
     final bw = !balance ? vendor.balanceWarnBelow : (bwText.isEmpty ? null : num.tryParse(bwText));
     if (balance && bwText.isNotEmpty && (bw == null || !bw.isFinite || bw < 0)) problems['balance'] = words.vendorAmountInvalid;
-    final renewal = vendor.kind.value == 'renewal';
+    // A prepaid balance has no bill to spread; every other kind can carry one (a paid plan).
+    final renewal = !balance;
     final ruText = renewalUsd.text.trim();
     final rmText = renewalMonths.text.trim();
     final ru = !renewal || ruText.isEmpty ? null : num.tryParse(ruText);
     final rm = !renewal || rmText.isEmpty ? null : int.tryParse(rmText);
     if (renewal && ruText.isNotEmpty && (ru == null || !ru.isFinite || ru < 0)) problems['renewalUsd'] = words.vendorAmountInvalid;
     if (renewal && rmText.isNotEmpty && (rm == null || rm < 1 || rm > 120)) problems['renewalMonths'] = words.vendorMonthsInvalid;
+    final incText = includedUsd.text.trim();
+    final inc = freePlan || incText.isEmpty ? null : num.tryParse(incText);
+    if (!freePlan && incText.isNotEmpty && (inc == null || !inc.isFinite || inc < 0)) problems['includedUsd'] = words.vendorAmountInvalid;
     setState(() => errors = problems);
     if (problems.isNotEmpty) return;
     final saved = await act(
@@ -628,6 +637,8 @@ class _VendorDetailState extends ConsumerState<VendorDetail> {
               expiresAt: expiresAt?.toUtc(),
               renewalUsd: ru,
               renewalMonths: rm,
+              billing: freePlan ? VendorBilling.free : VendorBilling.metered,
+              includedUsd: inc,
             ),
           ),
     );
@@ -867,7 +878,28 @@ class _VendorDetailState extends ConsumerState<VendorDetail> {
                           value: expiresAt,
                           onChanged: busy ? null : (d) => setState(() => expiresAt = d),
                         ),
-                        if (v.kind.value == 'renewal') ...[
+                        SwitchListTile(
+                          key: const Key('vendorFreePlan'),
+                          contentPadding: EdgeInsets.zero,
+                          title: Text(words.vendorBillingFree),
+                          subtitle: Text(words.vendorBillingFreeHelp, style: muted),
+                          value: freePlan,
+                          onChanged: busy ? null : (on) => setState(() => freePlan = on),
+                        ),
+                        if (!freePlan)
+                          TextField(
+                            key: const Key('vendorIncludedUsd'),
+                            controller: includedUsd,
+                            decoration: InputDecoration(
+                              labelText: words.vendorIncludedUsd,
+                              helperText: words.vendorIncludedUsdHelp,
+                              helperMaxLines: 3,
+                              prefixText: r'$ ',
+                              errorText: errors['includedUsd'],
+                            ),
+                            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                          ),
+                        if (v.kind.value != 'balance') ...[
                           TextField(
                             key: const Key('vendorRenewalUsd'),
                             controller: renewalUsd,

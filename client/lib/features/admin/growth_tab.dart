@@ -91,6 +91,8 @@ class _GrowthTabState extends ConsumerState<GrowthTab> {
           _PeopleCard(growth: g),
           _RunsCard(growth: g),
           _FirstStepsCard(steps: g.firstSteps),
+          if (g.conversion case final conv?)
+            _ConversionCard(conversion: conv, signedUp: g.firstSteps.signedUp),
           _AcquisitionCard(
             byPlatform: g.byPlatform ?? const [],
             bySource: g.bySource ?? const [],
@@ -641,9 +643,14 @@ class _FirstStepsCard extends StatelessWidget {
     final total = steps.signedUp;
     final rows = [
       (l10n.adminGrowthStepSignedUp, steps.signedUp),
+      if (steps.openedApp != null) ('Opened app', steps.openedApp!),
       (l10n.adminGrowthStepMadeBot, steps.madeBot),
       (l10n.adminGrowthStepSentMessage, steps.sentMessage),
       (l10n.adminGrowthStepFirstValue, steps.firstValue),
+      if (steps.returnedDay2 != null) ('Typed day 2+', steps.returnedDay2!),
+      if (steps.habitWeek != null) ('Typed 3+ days/wk', steps.habitWeek!),
+      if (steps.connectedApp != null) ('Connected an app', steps.connectedApp!),
+      if (steps.usedRoutine != null) ('Used a routine', steps.usedRoutine!),
       (l10n.adminGrowthStepCameBack, steps.cameBack),
     ];
     final muted = context.textTheme.bodySmall?.copyWith(
@@ -691,6 +698,127 @@ class _FirstStepsCard extends StatelessWidget {
                 ],
               ],
             ),
+    );
+  }
+}
+
+class _ConversionCard extends StatelessWidget {
+  const _ConversionCard({required this.conversion, required this.signedUp});
+  final AdminGrowthConversion conversion;
+  final int signedUp;
+
+  @override
+  Widget build(BuildContext context) {
+    final locale = context.l10n.localeName;
+    final base = math.max(
+      1,
+      math.max(signedUp, math.max(conversion.hitLimit, conversion.sawPaywall)),
+    );
+    final rows = [
+      ('Hit a limit', conversion.hitLimit),
+      ('Saw paywall', conversion.sawPaywall),
+      ('Selected a plan', conversion.selectedPlan),
+      ('Started checkout', conversion.startedCheckout),
+      ('Started trial', conversion.startedTrial),
+      ('Paid', conversion.paid),
+    ];
+    final muted = context.textTheme.bodySmall?.copyWith(
+      color: context.colorScheme.onSurfaceVariant,
+      fontFeatures: AppText.tabular,
+    );
+    return _Card(
+      key: const Key('growthConversion'),
+      title: 'Conversion funnel',
+      help: 'Unique non-team users in range who reached each monetization step.',
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          for (final (i, (label, count)) in rows.indexed) ...[
+            if (i > 0) const SizedBox(height: AppSpace.sm),
+            Row(
+              children: [
+                Expanded(
+                  child: Text(label, style: context.textTheme.bodyMedium),
+                ),
+                Text(
+                  count.humanizedCount(locale),
+                  style: context.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                    fontFeatures: AppText.tabular,
+                  ),
+                ),
+                SizedBox(
+                  width: 56,
+                  child: Text(
+                    _percent(context, count / base),
+                    textAlign: TextAlign.end,
+                    style: muted,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 4),
+            AdminMeter(
+              fraction: count / base,
+              tone: i >= 4 ? AdminTone.positive : AdminTone.info,
+              warnAt: 2,
+            ),
+          ],
+          if (conversion.bySource.isNotEmpty) ...[
+            const SizedBox(height: AppSpace.md),
+            Text(
+              'By paywall source',
+              style: context.textTheme.labelLarge?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: AppSpace.xs),
+            for (final s in conversion.bySource)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 2),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(s.source_, style: context.textTheme.bodySmall),
+                    ),
+                    Text(
+                      '${s.views.humanizedCount(locale)} views · ${s.checkouts.humanizedCount(locale)} checkouts',
+                      style: muted,
+                    ),
+                  ],
+                ),
+              ),
+          ],
+          if (conversion.connectionFailures.isNotEmpty) ...[
+            const SizedBox(height: AppSpace.md),
+            Text(
+              'Connection failures',
+              style: context.textTheme.labelLarge?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: AppSpace.xs),
+            for (final f in conversion.connectionFailures)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 2),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        f.detail,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: context.textTheme.bodySmall,
+                      ),
+                    ),
+                    const SizedBox(width: AppSpace.sm),
+                    Text(f.count.humanizedCount(locale), style: muted),
+                  ],
+                ),
+              ),
+          ],
+        ],
+      ),
     );
   }
 }

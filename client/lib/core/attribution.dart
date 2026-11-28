@@ -15,13 +15,28 @@ class Attribution {
   static const _sentPrefix = 'casama.attribution_sent.';
   static const _linkedPrefix = 'casama.install_linked.';
   static Map<String, String>? _initialWeb;
+  static String? _pendingPlan;
 
   /// Call once at startup (before GoRouter modifies the browser URL on web).
   static void captureInitial() {
     _initialWeb ??= readInitialWebAttribution();
+    _pendingPlan ??= readInitialWebPlan();
     // A creator's code from casama.ai/c/<code> (D-543), claimed after sign-in.
     final partner = readInitialWebPartner();
     if (partner != null) unawaited(PartnerCodeStore.save(partner, via: 'link_web'));
+  }
+
+  /// Returns and clears any plan tier (`plus`, `pro`, `max`) clicked on casama.ai/pricing before sign-in.
+  static String? takePendingPlan() {
+    final tier = _pendingPlan ?? readInitialWebPlan();
+    _pendingPlan = null;
+    clearInitialWebPlan();
+    return tier;
+  }
+
+  /// Testing hook for pending pricing-page plan tier.
+  static void setPendingPlanForTest(String? tier) {
+    _pendingPlan = tier;
   }
 
   /// The web app's first-touch source, landing page and website click id (`click`); null elsewhere.

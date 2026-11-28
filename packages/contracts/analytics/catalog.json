@@ -76,9 +76,23 @@
       "name": "sign_in_completed",
       "by": ["client"],
       "description": "Signed out then in on this device (not a cold start with a saved session).",
-      "properties": {},
+      "properties": {
+        "method": {
+          "type": "string",
+          "values": [
+            "password",
+            "email_code",
+            "apple",
+            "google",
+            "passkey",
+            "sso",
+            "desktop_browser",
+            "unknown"
+          ]
+        }
+      },
       "funnels": ["F1"],
-      "ga4_twin": { "name": "login", "params": [] }
+      "ga4_twin": { "name": "login", "params": ["method"] }
     },
     {
       "name": "two_step_completed",
@@ -1131,6 +1145,28 @@
         },
         "size_bytes": {
           "type": "number"
+        },
+        "parts": {
+          "type": "number"
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "media_upload_failed",
+      "by": ["server"],
+      "description": "A big file sent in parts (over 48 MB, up to 500 MB for video and audio) didn't finish. reason: too_large, storage_full, rate_limited, expired (the upload was gone, often after a server restart), bad_part (a part of the wrong size) or incomplete (finished before every part arrived). stage: start, part or complete.",
+      "properties": {
+        "reason": {
+          "type": "string",
+          "values": ["too_large", "storage_full", "rate_limited", "expired", "bad_part", "incomplete"]
+        },
+        "stage": {
+          "type": "string",
+          "values": ["start", "part", "complete"]
+        },
+        "size_bytes": {
+          "type": "number"
         }
       },
       "funnels": []
@@ -1580,6 +1616,9 @@
         },
         "product_id": {
           "type": "string"
+        },
+        "source": {
+          "type": "string"
         }
       },
       "funnels": ["F6"],
@@ -1936,6 +1975,26 @@
         "result": {
           "type": "string",
           "values": ["granted", "denied", "snoozed", "dismissed"]
+        }
+      },
+      "funnels": []
+    },
+    {
+      "name": "app_browser_site_allowed",
+      "by": ["client"],
+      "description": "The person tapped Let My Bots Use This Site in their device's in-app browser (Sign In to a Site). outcome: saved, failed (reason says why) or already (the site was allowed before).",
+      "properties": {
+        "outcome": {
+          "type": "string",
+          "values": ["saved", "failed", "already"]
+        },
+        "reason": {
+          "type": "string",
+          "values": ["no_device", "save_error"]
+        },
+        "system": {
+          "type": "string",
+          "values": ["ios", "android", "macos", "linux", "windows"]
         }
       },
       "funnels": []
@@ -3065,6 +3124,107 @@
         "reason": { "type": "string", "values": ["admin"] }
       },
       "funnels": []
+    },
+    {
+      "name": "app_opened_first",
+      "by": ["client"],
+      "description": "First signed-in app open on this device (CONVERSION-FUNNEL-PLAN §2.1 step 5).",
+      "properties": {
+        "platform": { "type": "string" }
+      },
+      "funnels": ["F1", "F2"]
+    },
+    {
+      "name": "returned_day2",
+      "by": ["server"],
+      "description": "Person typed a non-routine message at least 24 hours after signing up (CONVERSION-FUNNEL-PLAN §2.1 step 8).",
+      "properties": {
+        "minutes_since_signup": { "type": "number" }
+      },
+      "funnels": ["F2"]
+    },
+    {
+      "name": "habit_week",
+      "by": ["server"],
+      "description": "Person typed non-routine messages on 3 or more distinct days in a 7-day window (CONVERSION-FUNNEL-PLAN §2.1 step 9).",
+      "properties": {
+        "minutes_since_signup": { "type": "number" }
+      },
+      "funnels": ["F2"]
+    },
+    {
+      "name": "starter_card_tapped",
+      "by": ["client"],
+      "description": "Person tapped a one-tap starter task card in an empty chat (CONVERSION-FUNNEL-PLAN §3).",
+      "properties": {
+        "card_id": { "type": "string" }
+      },
+      "funnels": ["F2"]
+    },
+    {
+      "name": "brief_action_tapped",
+      "by": ["client"],
+      "description": "Person tapped a quick-reply button on a morning brief (CONVERSION-FUNNEL-PLAN §4).",
+      "properties": {
+        "action": { "type": "string" }
+      },
+      "funnels": ["F2"]
+    },
+    {
+      "name": "limit_card_shown",
+      "by": ["client"],
+      "description": "A clear limit explanation card was shown in chat instead of a raw failure (CONVERSION-FUNNEL-PLAN §5).",
+      "properties": {
+        "code": { "type": "string" },
+        "surface": { "type": "string" }
+      },
+      "funnels": ["F6"]
+    },
+    {
+      "name": "limit_card_action",
+      "by": ["client"],
+      "description": "Person tapped an action on a chat limit card (CONVERSION-FUNNEL-PLAN §5).",
+      "properties": {
+        "code": { "type": "string" },
+        "action": { "type": "string", "values": ["keep_going", "see_plans", "dismiss"] }
+      },
+      "funnels": ["F6"]
+    },
+    {
+      "name": "upgrade_prompt_shown",
+      "by": ["client"],
+      "description": "An inline paid-feature upgrade sheet opened when a person tapped a paid feature (CONVERSION-FUNNEL-PLAN §6).",
+      "properties": {
+        "feature": { "type": "string" },
+        "plan": { "type": "string" }
+      },
+      "funnels": ["F6"]
+    },
+    {
+      "name": "upgrade_prompt_action",
+      "by": ["client"],
+      "description": "Person acted on a paid-feature upgrade sheet (CONVERSION-FUNNEL-PLAN §6).",
+      "properties": {
+        "feature": { "type": "string" },
+        "action": { "type": "string", "values": ["see_plans", "dismiss"] }
+      },
+      "funnels": ["F6"]
+    },
+    {
+      "name": "pay_feedback_shown",
+      "by": ["client"],
+      "description": "In-app 'What would you pay for?' question was shown to a person who typed on 2+ days (CONVERSION-FUNNEL-PLAN §6).",
+      "properties": {},
+      "funnels": ["F6"]
+    },
+    {
+      "name": "pay_feedback_submitted",
+      "by": ["client"],
+      "description": "Person answered or dismissed the 'What would you pay for?' question (CONVERSION-FUNNEL-PLAN §6).",
+      "properties": {
+        "action": { "type": "string", "values": ["submitted", "dismissed"] }
+      },
+      "funnels": ["F6"]
     }
   ]
 }

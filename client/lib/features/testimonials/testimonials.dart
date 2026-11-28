@@ -22,8 +22,8 @@ import '../../ui/form_sheet.dart';
 /// the paywall and the sign-in screen. And, behind the remote flag `testimonial_ask` (off unless the
 /// owner turns it on), it can ask "Enjoying Casama? Tell us in a sentence." after a good moment.
 
-/// Fewer live quotes than this and the app shows none: one lonely quote looks worse than none (§7).
-const kMinTestimonials = 2;
+/// Fewer live quotes than this and the app shows none (CONVERSION-FUNNEL-PLAN §5.2).
+const kMinTestimonials = 1;
 
 /// How long a fetched list is kept before it's asked for again.
 const kTestimonialsCacheFor = Duration(days: 1);

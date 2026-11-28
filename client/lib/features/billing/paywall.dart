@@ -226,41 +226,57 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen>
 
   void _close() => Navigator.of(context).pop(false);
 
-  // Every web plan purchase goes through the confirmation sheet (D-540): it previews the charge
-  // for someone who already pays, and sends a new subscriber on to Dodo's checkout page.
-  Future<void> _web(Plan p) => _run(() async {
-    final outcome = await showPlanChangeSheet(
-      context,
-      ref,
-      orgId: _orgId,
-      planCode: p.code,
-      planName: p.name,
-    );
-    if (outcome == PlanChangeOutcome.cancelled) return;
-    unawaited(
-      Analytics.capture(
-        'purchase_started',
-        properties: {
-          'store': 'dodo',
-          'kind': 'subscription',
-          'product_id': p.code,
-        },
-      ),
-    );
-    // Moved to the new plan in place (D-248); the billing listener celebrates it.
-    if (outcome == PlanChangeOutcome.changed) ref.invalidate(billingProvider);
+  // First-time Free -> Paid web checkouts go straight to Dodo checkout (CONVERSION-FUNNEL-PLAN §5.3)
+  // so there is no extra confirmation round-trip before the checkout page; existing web subscribers
+  // still see the proration preview and app-lock confirmation sheet (D-540).
+  Future<void> _web(Plan p, {required bool existingSub}) => _run(() async {
+    if (existingSub) {
+      final outcome = await showPlanChangeSheet(
+        context,
+        ref,
+        orgId: _orgId,
+        planCode: p.code,
+        planName: p.name,
+      );
+      if (outcome == PlanChangeOutcome.cancelled) return;
+      _trackPurchaseStarted(store: 'dodo', productId: p.code);
+      if (outcome == PlanChangeOutcome.changed) ref.invalidate(billingProvider);
+      return;
+    }
+    _trackPurchaseStarted(store: 'dodo', productId: p.code);
+    final url = await ref.read(backendProvider).checkoutUrl(_orgId, planCode: p.code);
+    if (url != null) {
+      await ref.read(openUrlProvider)(url);
+    } else if (mounted) {
+      ref.invalidate(billingProvider);
+    }
   });
 
-  Future<void> _store(StoreProduct product) => _run(() {
+  void _trackPurchaseStarted({required String store, required String productId}) {
     unawaited(
       Analytics.capture(
         'purchase_started',
         properties: {
-          'store': ref.read(storeProvider).source ?? 'store',
+          'store': store,
           'kind': 'subscription',
-          'product_id': product.id,
+          'product_id': productId,
         },
       ),
+    );
+    unawaited(
+      ref.read(backendProvider).recordFunnelEvent(
+        event: RecordFunnelEventRequestEventEnum.purchaseStarted,
+        orgId: _orgId,
+        source: widget.source,
+        detail: productId,
+      ),
+    );
+  }
+
+  Future<void> _store(StoreProduct product) => _run(() {
+    _trackPurchaseStarted(
+      store: ref.read(storeProvider).source ?? 'store',
+      productId: product.id,
     );
     return ref.read(storeProvider).buy(product, orgId: _orgId);
   });
@@ -357,6 +373,14 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen>
         'default_plan': selected.code,
         'default_period': (selectedPeriod ?? period).name,
       });
+      unawaited(
+        ref.read(backendProvider).recordFunnelEvent(
+          event: RecordFunnelEventRequestEventEnum.paywallView,
+          orgId: org?.id,
+          source: widget.source,
+          detail: selected.code,
+        ),
+      );
     }
     final yearly = selectedPeriod == PaywallPeriod.year;
     final weekly = selectedPeriod == PaywallPeriod.week;
@@ -547,7 +571,7 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen>
             : switchLabel ?? (storeTrial != null ? l10n.paywallStartFreeTrial : l10n.subscribeFor(product.price));
         termsStore = source;
       } else if (channels.contains(PurchaseChannel.web) && selected.web) {
-        buy = () => _web(selected);
+        buy = () => _web(selected, existingSub: webSub);
         buyLabel = keepComp ? l10n.compKeepPlan(tier?.name ?? selected.name) : switchLabel ?? startLabel;
       } else if (webSub) {
         // Where web checkout may not be offered, the note says only where billing happens, never
@@ -585,7 +609,7 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen>
                     onBuy: isCurrent ? null : (isAdmin ? buy : _close),
                     busy: _busy,
                     inline: inlineBuy,
-                    onWeb: webToo ? () => _web(selected) : null,
+                    onWeb: webToo ? () => _web(selected, existingSub: webSub) : null,
                     terms: PurchaseTerms(
                       price: selected == null || isCurrent ? null : priceFor(selected),
                       yearly: yearly,
@@ -642,6 +666,14 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen>
                                           'plan': picked.code,
                                           'interval': picked.interval.value,
                                         });
+                                        unawaited(
+                                          ref.read(backendProvider).recordFunnelEvent(
+                                            event: RecordFunnelEventRequestEventEnum.paywallPlanSelect,
+                                            orgId: org?.id,
+                                            source: widget.source,
+                                            detail: picked.code,
+                                          ),
+                                        );
                                       }
                                     },
                                   ),
@@ -705,6 +737,14 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen>
                                           'plan': picked.code,
                                           'interval': picked.interval.value,
                                         });
+                                        unawaited(
+                                          ref.read(backendProvider).recordFunnelEvent(
+                                            event: RecordFunnelEventRequestEventEnum.paywallPlanSelect,
+                                            orgId: org?.id,
+                                            source: widget.source,
+                                            detail: picked.code,
+                                          ),
+                                        );
                                       }
                                     },
                                   ),
@@ -1276,8 +1316,8 @@ List<String> _facts(AppLocalizations l10n, Map<String, num> limits, {bool email 
   // No bot limit on a plan means unlimited (D-249).
   if (limits['max_bots'] case final v?) l10n.limitBots(v.toInt()) else l10n.limitBotsUnlimited,
   if (limits['computer_hours'] case final v?) l10n.paywallFactHours(v.toInt()),
-  if (limits['monthly_credits_usd'] case final v?)
-    l10n.limitCredits(v.humanizedCurrency(l10n.localeName, 'USD', decimalDigits: 0)),
+  if (limits['monthly_credits_usd'] case final v? when v > 0)
+    '~${((v / 0.009) / 50).round() * 50} runs/mo (${l10n.limitCredits(v.humanizedCurrency(l10n.localeName, 'USD', decimalDigits: 0))})',
   if (limits['seats'] case final v?) l10n.paywallPeople(v.toInt()),
   if (email && (limits['max_mail_addresses'] ?? 0) > 0) ...[
     l10n.botEmailPerkAddresses(limits['max_mail_addresses']!.toInt()),

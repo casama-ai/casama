@@ -41,6 +41,8 @@ abstract class _$AdminGrowthCWProxy {
 
   AdminGrowth bySource(List<AdminGrowthSource>? bySource);
 
+  AdminGrowth conversion(AdminGrowthConversion? conversion);
+
   /// Creates a new instance with the provided field values.
   /// Omitted fields keep their values; explicit `null` clears nullable fields.
   /// The public API rejects `null` for non-nullable fields. To update a single field use `AdminGrowth(...).copyWith.fieldName(value)`.
@@ -67,6 +69,7 @@ abstract class _$AdminGrowthCWProxy {
     List<AdminGrowthFailure> failures,
     List<AdminGrowthPlatform>? byPlatform,
     List<AdminGrowthSource>? bySource,
+    AdminGrowthConversion? conversion,
   });
 }
 
@@ -133,6 +136,10 @@ class _$AdminGrowthCWProxyImpl implements _$AdminGrowthCWProxy {
   AdminGrowth bySource(List<AdminGrowthSource>? bySource) =>
       call(bySource: bySource);
 
+  @override
+  AdminGrowth conversion(AdminGrowthConversion? conversion) =>
+      call(conversion: conversion);
+
   /// Creates a new instance with the provided field values.
   /// Omitted fields keep their values; explicit `null` clears nullable fields.
   /// The public API rejects `null` for non-nullable fields. To update a single field use `AdminGrowth(...).copyWith.fieldName(value)`.
@@ -160,6 +167,7 @@ class _$AdminGrowthCWProxyImpl implements _$AdminGrowthCWProxy {
     Object? failures = const $CopyWithPlaceholder(),
     Object? byPlatform = const $CopyWithPlaceholder(),
     Object? bySource = const $CopyWithPlaceholder(),
+    Object? conversion = const $CopyWithPlaceholder(),
   }) {
     return AdminGrowth(
       days: days == const $CopyWithPlaceholder() || days == null
@@ -233,6 +241,10 @@ class _$AdminGrowthCWProxyImpl implements _$AdminGrowthCWProxy {
           ? _value.bySource
           // ignore: cast_nullable_to_non_nullable
           : bySource as List<AdminGrowthSource>?,
+      conversion: conversion == const $CopyWithPlaceholder()
+          ? _value.conversion
+          // ignore: cast_nullable_to_non_nullable
+          : conversion as AdminGrowthConversion?,
     );
   }
 }
@@ -323,6 +335,12 @@ AdminGrowth _$AdminGrowthFromJson(Map<String, dynamic> json) => $checkedCreate(
             ?.map((e) => AdminGrowthSource.fromJson(e as Map<String, dynamic>))
             .toList(),
       ),
+      conversion: $checkedConvert(
+        'conversion',
+        (v) => v == null
+            ? null
+            : AdminGrowthConversion.fromJson(v as Map<String, dynamic>),
+      ),
     );
     return val;
   },
@@ -359,4 +377,5 @@ Map<String, dynamic> _$AdminGrowthToJson(AdminGrowth instance) =>
       'failures': instance.failures.map((e) => e.toJson()).toList(),
       'by_platform': ?instance.byPlatform?.map((e) => e.toJson()).toList(),
       'by_source': ?instance.bySource?.map((e) => e.toJson()).toList(),
+      'conversion': ?instance.conversion?.toJson(),
     };

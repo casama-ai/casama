@@ -797,6 +797,7 @@ export const BOT_NAMES = [
   "Lia",
   "Gabe",
   "Sol",
+  "Pia",
 ] as const;
 
 /**
@@ -854,6 +855,7 @@ const STARTER_BOT_NAMES: Record<string, (typeof BOT_NAMES)[number] | "Casama"> =
   "people-ops": "Tess",
   "shop-manager": "Lia",
   "investor-updates": "Gabe",
+  "habit-coach": "Pia",
 };
 
 /** Names no Casama starter bot has, for community starter bots, so theirs don't echo Casama's own. */

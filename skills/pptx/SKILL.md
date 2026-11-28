@@ -8,7 +8,11 @@ Adapted for Casama from anthropics/skills@2c5958ec (Apache-2.0). pptxgenjs, mark
 
 # PPTX creation, editing, and analysis
 
-A `.pptx` is a ZIP archive of XML files. Choose your approach by task:
+**Use file tools first (no computer needed):**
+- **Read** slide text from a `.pptx`: `documents.read`
+- **Convert** `.pptx` → PDF: `documents.convert`
+
+For creating or editing slide decks, use the computer below. A `.pptx` is a ZIP archive of XML files. Choose your approach by task:
 
 | Task | Approach |
 |---|---|

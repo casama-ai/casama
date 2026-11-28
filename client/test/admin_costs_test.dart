@@ -38,14 +38,58 @@ class _Gated extends FakeBackend {
   }
 }
 
+/// The everyday month as a server with real costs sends it (REAL-COSTS-PLAN): Composio is on its
+/// free plan, so it costs nothing paid; everything else is paid as recorded.
+AdminCosts _withPaid(CostQuery q) {
+  final c = everydayCosts(q);
+  num paidOf(AdminCostRow r) => r.id == 'composio' ? 0 : r.spentUsd;
+  final free = c.rows
+      .where((r) => r.id == 'composio')
+      .fold<num>(0, (n, r) => n + r.spentUsd);
+  final freeIndex = c.series.indexWhere((s) => s.id == 'composio');
+  return c.copyWith(
+    totals: c.totals.copyWith(paidUsd: c.totals.spentUsd - free),
+    previous: c.previous?.copyWith(paidUsd: c.previous!.spentUsd),
+    rows: [
+      for (final r in c.rows)
+        r.copyWith(
+          paidUsd: paidOf(r),
+          previousPaidUsd: r.previousSpentUsd,
+          billing: r.id == 'composio' ? CostRowBilling.free : CostRowBilling.metered,
+        ),
+    ],
+    byDay: [
+      for (final d in c.byDay)
+        d.copyWith(
+          paidValues: [
+            for (final (i, v) in d.values.indexed) i == freeIndex ? 0 : v,
+          ],
+        ),
+    ],
+  );
+}
+
 FakeBackend _backend([AdminCosts Function(CostQuery)? costs]) => FakeBackend()
   ..costs = costs ?? everydayCosts
   ..costKeys = everydayKeys();
 
-Future<void> _open(WidgetTester tester, FakeBackend backend, Size size) async {
+/// Opens the tab. Most tests here check the list-price view the tab had before REAL-COSTS-PLAN,
+/// so they start in Estimated (no fixed bills), with only that view's requests recorded.
+Future<void> _open(
+  WidgetTester tester,
+  FakeBackend backend,
+  Size size, {
+  bool estimated = true,
+}) async {
   await setSize(tester, size);
   await tester.pumpWidget(harness(backend, const Scaffold(body: CostsTab())));
   await tester.pumpAndSettle();
+  if (!estimated) return;
+  ProviderScope.containerOf(tester.element(find.byType(CostsTab)))
+      .read(costBasisProvider.notifier)
+      .set(CostBasis.estimated);
+  await tester.pumpAndSettle();
+  backend.costQueries.removeWhere((q) => q.includeFixed);
 }
 
 CostViewNotifier _view(WidgetTester tester) =>
@@ -113,8 +157,9 @@ void main() {
   });
 
   test('the request carries the grouping, the period and the filters', () {
+    // Paid is the default, and fixed bills are real money: the first view includes them.
     const view = CostView();
-    expect(view.query, const CostQuery());
+    expect(view.query, const CostQuery(includeFixed: true));
     final q = costFiltered(
       view.query,
       CostGroup.service,
@@ -128,6 +173,7 @@ void main() {
       const CostQuery(
         group: CostGroup.key,
         filters: {CostGroup.service: 'openrouter'},
+        includeFixed: true,
       ),
     );
     expect(q == view.query, isFalse);
@@ -696,7 +742,13 @@ void main() {
     await _open(tester, backend, _wide);
     await tester.tap(find.byKey(const Key('costIncludeFixed')));
     await tester.pumpAndSettle();
-    expect(backend.costQueries.last.includeFixed, isTrue);
+    // That view was already loaded for Paid, so it is shown without asking again.
+    expect(
+      ProviderScope.containerOf(
+        tester.element(find.byType(CostsTab)),
+      ).read(costViewProvider).query.includeFixed,
+      isTrue,
+    );
     expect(
       find.descendant(
         of: find.byKey(const Key('costTile-spent')),
@@ -925,7 +977,7 @@ void main() {
       expect(_top(tester, 'composio'), lessThan(_top(tester, 'openrouter')));
       expect(_top(tester, 'openrouter'), lessThan(_top(tester, 'gemini')));
 
-      await sort('Spent');
+      await sort('Estimated');
       expect(_top(tester, 'openrouter'), lessThan(_top(tester, 'gemini')));
       // Regrouping keeps the sort.
       await sort('Calls');
@@ -1265,12 +1317,12 @@ void main() {
         await _open(tester, _backend(), _wide);
         expect(
           find.bySemanticsLabel(
-            RegExp(r'^Spent, \$5\.91, up 12% vs the 30 days before$'),
+            RegExp(r'^Estimated, \$5\.91, up 12% vs the 30 days before$'),
           ),
           findsOneWidget,
         );
         expect(
-          find.bySemanticsLabel(RegExp(r'^Margin, 26%, ')),
+          find.bySemanticsLabel(RegExp(r'^Margin at list prices, 26%, ')),
           findsOneWidget,
         );
         expect(
@@ -1287,18 +1339,18 @@ void main() {
         );
         expect(
           find.bySemanticsLabel(
-            r'OpenRouter, spent $4.44, 75% of the total, up 14%, 9,769 calls, charged $6.16, Metered',
+            r'OpenRouter, estimated $4.44, 75% of the total, up 14%, 9,769 calls, charged $6.16, Metered',
           ),
           findsOneWidget,
         );
         expect(
           find.bySemanticsLabel(
-            RegExp(r'^Not labelled, spent \$0\.02, <1% of the total, down 60%'),
+            RegExp(r'^Not labelled, estimated \$0\.02, <1% of the total, down 60%'),
           ),
           findsOneWidget,
         );
         expect(
-          find.bySemanticsLabel('Spent, sorted high to low'),
+          find.bySemanticsLabel('Estimated, sorted high to low'),
           findsOneWidget,
         );
         expect(find.bySemanticsLabel('Sort by Calls'), findsOneWidget);
@@ -1308,7 +1360,7 @@ void main() {
         );
 
         final row = tester.getSemantics(
-          find.bySemanticsLabel(RegExp(r'^OpenRouter, spent')),
+          find.bySemanticsLabel(RegExp(r'^OpenRouter, estimated')),
         );
         expect(row.flagsCollection.isButton, isTrue);
         expect(row.getSemanticsData().hasAction(SemanticsAction.tap), isTrue);
@@ -1432,8 +1484,9 @@ void main() {
         await tester.pumpAndSettle();
         expect(find.text('Spend, last 30 days'), findsOneWidget);
         expect(
+          // Paid, with the fixed bills: real money.
           tester.widget<Text>(find.byKey(const Key('spendCard-spent'))).data,
-          r'$5.91',
+          r'$37.41',
         );
         expect(
           tester.widget<Text>(find.byKey(const Key('spendCard-charged'))).data,
@@ -1451,7 +1504,9 @@ void main() {
         expect(find.byKey(const Key('costTile-spent')), findsOneWidget);
         // The card's request is the tab's first view: nothing is fetched twice.
         expect(
-          backend.costQueries.where((q) => q == const CostQuery()).length,
+          backend.costQueries
+              .where((q) => q == const CostQuery(includeFixed: true))
+              .length,
           1,
         );
       },
@@ -1542,15 +1597,49 @@ void main() {
             const CostQuery(
               group: CostGroup.key,
               filters: {CostGroup.service: 'apple_developer'},
+              includeFixed: true,
             ),
           ),
         );
       },
     );
 
-    testWidgets('other vendors have no renewal fields', (tester) async {
+    testWidgets(
+      'a vendor saves its plan: included credit while metered, none on a free plan',
+      (tester) async {
+        await setSize(tester, const Size(900, 2400));
+        final backend = _RenewalVendor()..kind = 'quota';
+        await tester.pumpWidget(
+          harness(backend, const Scaffold(body: VendorsTab())),
+        );
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Apple Developer'));
+        await tester.pumpAndSettle();
+        // A quota can carry a paid plan's bill too (Composio Pro: $29 a month).
+        expect(find.byKey(const Key('vendorRenewalUsd')), findsOneWidget);
+        await tester.ensureVisible(find.byKey(const Key('vendorIncludedUsd')));
+        await tester.enterText(find.byKey(const Key('vendorIncludedUsd')), '29');
+        await tester.ensureVisible(find.text('Save'));
+        await tester.tap(find.text('Save'));
+        await tester.pumpAndSettle();
+        expect(backend.saved!.billing, VendorBilling.metered);
+        expect(backend.saved!.includedUsd, 29);
+
+        await tester.ensureVisible(find.byKey(const Key('vendorFreePlan')));
+        await tester.tap(find.byKey(const Key('vendorFreePlan')));
+        await tester.pumpAndSettle();
+        expect(find.byKey(const Key('vendorIncludedUsd')), findsNothing);
+        await tester.ensureVisible(find.text('Save'));
+        await tester.tap(find.text('Save'));
+        await tester.pumpAndSettle();
+        expect(backend.saved!.billing, VendorBilling.free);
+        expect(backend.saved!.includedUsd, isNull);
+      },
+    );
+
+    testWidgets('a prepaid balance has no renewal fields', (tester) async {
       await setSize(tester, const Size(900, 2400));
-      final backend = _RenewalVendor()..kind = 'quota';
+      final backend = _RenewalVendor()..kind = 'balance';
       await tester.pumpWidget(
         harness(backend, const Scaffold(body: VendorsTab())),
       );
@@ -1562,6 +1651,64 @@ void main() {
       expect(find.byKey(const Key('vendorSeeSpend')), findsNothing);
     });
   });
+
+  testWidgets(
+    'paid by default: free plans cost nothing, Estimated shows list prices',
+    (tester) async {
+      final backend = _backend(_withPaid);
+      await _open(tester, backend, _wide, estimated: false);
+      final costs = _withPaid(const CostView().query);
+      String tile(String key) => tester
+          .widgetList<Text>(
+            find.descendant(
+              of: find.byKey(Key(key)),
+              matching: find.byType(Text),
+            ),
+          )
+          .map((t) => t.data ?? '')
+          .join(' | ');
+
+      expect(backend.costQueries.last.includeFixed, isTrue);
+      expect(tile('costTile-spent'), contains('Paid'));
+      expect(
+        tile('costTile-spent'),
+        contains(costUsd(costs.totals.paidUsd!, 'en')),
+      );
+      expect(tile('costTile-margin'), contains('Margin at list prices'));
+      expect(find.textContaining('Free plan ·'), findsWidgets);
+
+      await tester.tap(
+        find.descendant(
+          of: find.byKey(const Key('costBasis')),
+          matching: find.text('Estimated'),
+        ),
+      );
+      await tester.pumpAndSettle();
+      // Estimated starts without fixed bills, as before.
+      expect(backend.costQueries.last.includeFixed, isFalse);
+      final estimated = _withPaid(const CostView(includeFixed: false).query);
+      expect(tile('costTile-spent'), contains('Estimated'));
+      expect(
+        tile('costTile-spent'),
+        contains(costUsd(estimated.totals.spentUsd, 'en')),
+      );
+
+      // Back to Paid: that view is known, so nothing is asked again.
+      final before = backend.costQueries.length;
+      await tester.tap(
+        find.descendant(
+          of: find.byKey(const Key('costBasis')),
+          matching: find.text('Paid'),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(backend.costQueries.length, before);
+      expect(
+        tile('costTile-spent'),
+        contains(costUsd(costs.totals.paidUsd!, 'en')),
+      );
+    },
+  );
 }
 
 class _RenewalVendor extends FakeBackend {

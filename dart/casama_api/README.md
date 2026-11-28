@@ -607,6 +607,7 @@ Class | Method | HTTP request | Description
 [*PrivacyApi*](doc/PrivacyApi.md) | [**deleteMyAccount**](doc/PrivacyApi.md#deletemyaccount) | **DELETE** /v1/me | Delete your account: you are signed out now, web plans you pay for are cancelled, and your data, workspaces you solely own and their computer snapshots are purged after the grace period. App Store and Google Play subscriptions must be cancelled in the store
 [*PrivacyApi*](doc/PrivacyApi.md) | [**exportMyData**](doc/PrivacyApi.md#exportmydata) | **GET** /v1/me/export | Download everything you can see as a ZIP of JSON files
 [*PrivacyApi*](doc/PrivacyApi.md) | [**getOrgSettings**](doc/PrivacyApi.md#getorgsettings) | **GET** /v1/orgs/{id}/settings | 
+[*PrivacyApi*](doc/PrivacyApi.md) | [**recordFunnelEvent**](doc/PrivacyApi.md#recordfunnelevent) | **POST** /v1/me/funnel | Record a first-party paywall or checkout funnel step
 [*PrivacyApi*](doc/PrivacyApi.md) | [**relayAnalytics**](doc/PrivacyApi.md#relayanalytics) | **POST** /v1/analytics/events | Relay desktop or extension product events to Google Analytics 4
 [*PrivacyApi*](doc/PrivacyApi.md) | [**renameTwoStepFactor**](doc/PrivacyApi.md#renametwostepfactor) | **PATCH** /v1/me/two-step/{id} | Rename one of your authenticator apps (two-step sign-in)
 [*PrivacyApi*](doc/PrivacyApi.md) | [**saveAppleSignInToken**](doc/PrivacyApi.md#saveapplesignintoken) | **POST** /v1/me/apple-sign-in | Hand over what Sign in with Apple returned, so deleting the account can revoke it
@@ -863,10 +864,13 @@ Class | Method | HTTP request | Description
  - [AdminGrowth](doc/AdminGrowth.md)
  - [AdminGrowthCohort](doc/AdminGrowthCohort.md)
  - [AdminGrowthCohortWeek](doc/AdminGrowthCohortWeek.md)
+ - [AdminGrowthConnectionFailure](doc/AdminGrowthConnectionFailure.md)
+ - [AdminGrowthConversion](doc/AdminGrowthConversion.md)
  - [AdminGrowthDay](doc/AdminGrowthDay.md)
  - [AdminGrowthFailure](doc/AdminGrowthFailure.md)
  - [AdminGrowthFirstSteps](doc/AdminGrowthFirstSteps.md)
  - [AdminGrowthMoney](doc/AdminGrowthMoney.md)
+ - [AdminGrowthPaywallSource](doc/AdminGrowthPaywallSource.md)
  - [AdminGrowthPlan](doc/AdminGrowthPlan.md)
  - [AdminGrowthPlatform](doc/AdminGrowthPlatform.md)
  - [AdminGrowthRevenue](doc/AdminGrowthRevenue.md)
@@ -1127,6 +1131,7 @@ Class | Method | HTTP request | Description
  - [ConversationList](doc/ConversationList.md)
  - [ConversationThread](doc/ConversationThread.md)
  - [CostGroup](doc/CostGroup.md)
+ - [CostRowBilling](doc/CostRowBilling.md)
  - [CostSource](doc/CostSource.md)
  - [CreateActionRuleRequest](doc/CreateActionRuleRequest.md)
  - [CreateAdminDiscountRequest](doc/CreateAdminDiscountRequest.md)
@@ -1662,6 +1667,7 @@ Class | Method | HTTP request | Description
  - [PutAwaySuggestionsResponse](doc/PutAwaySuggestionsResponse.md)
  - [ReactionSummary](doc/ReactionSummary.md)
  - [ReasoningEffort](doc/ReasoningEffort.md)
+ - [RecordFunnelEventRequest](doc/RecordFunnelEventRequest.md)
  - [RedeemCompRequest](doc/RedeemCompRequest.md)
  - [RedeemInviteRequest](doc/RedeemInviteRequest.md)
  - [RedeemReferralRequest](doc/RedeemReferralRequest.md)
@@ -1778,6 +1784,11 @@ Class | Method | HTTP request | Description
  - [SendMessageResponse](doc/SendMessageResponse.md)
  - [ServerCapacity](doc/ServerCapacity.md)
  - [ServerCapacityAlertsInner](doc/ServerCapacityAlertsInner.md)
+ - [ServerCapacityComputerMetrics](doc/ServerCapacityComputerMetrics.md)
+ - [ServerCapacityComputerMetricsJobBoxes7d](doc/ServerCapacityComputerMetricsJobBoxes7d.md)
+ - [ServerCapacityComputerMetricsShellPrograms7dInner](doc/ServerCapacityComputerMetricsShellPrograms7dInner.md)
+ - [ServerCapacityComputerMetricsWakeTimesInner](doc/ServerCapacityComputerMetricsWakeTimesInner.md)
+ - [ServerCapacityComputerMetricsWakesByCaller7dInner](doc/ServerCapacityComputerMetricsWakesByCaller7dInner.md)
  - [ServerCapacityDaysInner](doc/ServerCapacityDaysInner.md)
  - [ServerCapacityLatest](doc/ServerCapacityLatest.md)
  - [SetAdminBotRequest](doc/SetAdminBotRequest.md)
@@ -2004,6 +2015,7 @@ Class | Method | HTTP request | Description
  - [UsageSource](doc/UsageSource.md)
  - [UserFact](doc/UserFact.md)
  - [UserFactList](doc/UserFactList.md)
+ - [VendorBilling](doc/VendorBilling.md)
  - [VendorReading](doc/VendorReading.md)
  - [VendorSettings](doc/VendorSettings.md)
  - [Visibility](doc/Visibility.md)

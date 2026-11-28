@@ -6957,6 +6957,39 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get adminCapacityComputersTitle => 'Computers & file jobs (7 days)';
+
+  @override
+  String adminCapacityWakeTime(String mode, String p50, String p90, int count) {
+    return '$mode wake: $p50 p50 / $p90 p90 ($count)';
+  }
+
+  @override
+  String adminCapacityFileJobs(int count) {
+    return 'File jobs: $count';
+  }
+
+  @override
+  String adminCapacityFileJobsTimed(int count, String p50, String p90) {
+    return 'File jobs: $count ($p50 p50 / $p90 p90)';
+  }
+
+  @override
+  String adminCapacityBrowserOoms(int count) {
+    return 'Browser out-of-memory restarts: $count';
+  }
+
+  @override
+  String adminCapacityWakesByCaller(String list) {
+    return 'Wakes by caller: $list';
+  }
+
+  @override
+  String adminCapacityShellPrograms(String list) {
+    return 'Top shell programs: $list';
+  }
+
+  @override
   String get adminNoAbuse => 'Nothing suspicious so far.';
 
   @override
@@ -23363,6 +23396,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appBrowserModeHeader => 'When a Bot Needs a Browser';
 
   @override
+  String get appBrowserModeAlways => 'Always this device';
+
+  @override
+  String get appBrowserModeAlwaysHelp =>
+      'Bots open every page here while you have their chat open. Their computer is used only when you ask for it.';
+
+  @override
+  String get appBrowserOpenTooltip => 'Open the browser';
+
+  @override
+  String get appBrowserBotsBrowseHere => 'Bots browse here';
+
+  @override
+  String get appBrowserBotsBrowseHereHelp =>
+      'Every page in your chats opens in this browser while you watch';
+
+  @override
   String get appBrowserModeAsk => 'Ask when it helps';
 
   @override
@@ -29611,4 +29661,105 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get watchOpen => 'Open';
+
+  @override
+  String get costModeLabel => 'Cost view';
+
+  @override
+  String get costModePaid => 'Paid';
+
+  @override
+  String get costModeEstimated => 'Estimated';
+
+  @override
+  String get costPaid => 'Paid';
+
+  @override
+  String get costEstimatedTitle => 'Estimated';
+
+  @override
+  String get costMarginListPrices => 'Margin at list prices';
+
+  @override
+  String get costFreePlan => 'Free plan';
+
+  @override
+  String costFreePlanCalls(String count) {
+    return 'Free plan · $count calls';
+  }
+
+  @override
+  String costCapUsage(String used, String limit, String unit) {
+    return '$used / $limit $unit';
+  }
+
+  @override
+  String get costShareOfOwnServers => 'Share of own servers';
+
+  @override
+  String costIncludedCredit(String amount) {
+    return '$amount/mo included';
+  }
+
+  @override
+  String costAtListPrices(String amount) {
+    return '$amount at list prices';
+  }
+
+  @override
+  String costEmptyPaidDays(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'Nothing was paid in these $days days',
+      one: 'Nothing was paid in this day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get costEmptyPaidRange => 'Nothing was paid in these days';
+
+  @override
+  String get costEmptyPaidFiltered =>
+      'Nothing was paid that matches these filters';
+
+  @override
+  String costSpokenPaid(String amount) {
+    return 'paid $amount';
+  }
+
+  @override
+  String costSpokenEstimated(String amount) {
+    return 'estimated $amount';
+  }
+
+  @override
+  String costSpendCardPaidSemantics(
+    String paid,
+    String charged,
+    String margin,
+  ) {
+    return 'Spend in the last 30 days: $paid paid, $charged charged, $margin margin at list prices';
+  }
+
+  @override
+  String get vendorBillingFree => 'Free plan';
+
+  @override
+  String get vendorBillingMetered => 'Metered';
+
+  @override
+  String get vendorBillingFreeHelp =>
+      'Usage stops at the cap and counts as \$0 paid.';
+
+  @override
+  String get vendorBillingMeteredHelp => 'Usage is paid at its recorded cost.';
+
+  @override
+  String get vendorIncludedUsd => 'Monthly included credit (USD)';
+
+  @override
+  String get vendorIncludedUsdHelp =>
+      'Usage up to this amount each calendar month counts as \$0 paid.';
 }

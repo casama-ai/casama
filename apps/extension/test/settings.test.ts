@@ -1,8 +1,14 @@
-import { beforeEach, describe, expect, it } from "vitest";
-import { intentFor } from "../src/background/menus.ts";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { intentFor, onOmnibox } from "../src/background/menus.ts";
 import { approvalIdOf, onPush, SHOWN_KINDS } from "../src/lib/alerts.ts";
 import { setIntent, takeIntent } from "../src/lib/intent.ts";
-import { cleanHost, getSettings, originsFor, updateSettings } from "../src/lib/settings.ts";
+import {
+  cleanHost,
+  effectiveSiteAccess,
+  getSettings,
+  originsFor,
+  updateSettings,
+} from "../src/lib/settings.ts";
 import { installFakeChrome } from "./fake-chrome.ts";
 
 beforeEach(() => {
@@ -33,6 +39,40 @@ describe("settings (G1–G3)", () => {
       "https://*.example.com/*",
     ]);
     expect(originsFor("click", ["example.com"])).toEqual([]);
+  });
+
+  it("reflects browser-revoked host permissions in effectiveSiteAccess", () => {
+    expect(effectiveSiteAccess({ siteAccess: "all", sites: [] }, ["https://*/*"])).toBe("all");
+    expect(effectiveSiteAccess({ siteAccess: "all", sites: [] }, [])).toBe("click");
+    expect(
+      effectiveSiteAccess({ siteAccess: "all", sites: ["docs.example.com"] }, [
+        "https://docs.example.com/*",
+      ]),
+    ).toBe("sites");
+    expect(effectiveSiteAccess({ siteAccess: "sites", sites: ["docs.example.com"] }, [])).toBe(
+      "click",
+    );
+    expect(
+      effectiveSiteAccess({ siteAccess: "sites", sites: ["docs.example.com"] }, [
+        "https://docs.example.com/*",
+      ]),
+    ).toBe("sites");
+  });
+});
+
+describe("omnibox after idle", () => {
+  it("looks up the focused window and opens the side panel instead of a tab", async () => {
+    const open = vi.fn(async () => {});
+    const createTab = vi.fn(async () => ({}));
+    const c = globalThis.chrome as unknown as Record<string, unknown>;
+    c.windows = { getLastFocused: vi.fn(async () => ({ id: 42 })) };
+    c.sidePanel = { open };
+    c.tabs = { create: createTab };
+
+    onOmnibox("what is this page?");
+    await vi.waitFor(() => expect(open).toHaveBeenCalledWith({ windowId: 42 }));
+    expect(createTab).not.toHaveBeenCalled();
+    expect((await takeIntent())?.text).toBe("what is this page?");
   });
 });
 

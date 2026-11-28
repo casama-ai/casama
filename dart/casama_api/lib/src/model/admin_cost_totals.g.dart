@@ -9,6 +9,8 @@ part of 'admin_cost_totals.dart';
 abstract class _$AdminCostTotalsCWProxy {
   AdminCostTotals spentUsd(num spentUsd);
 
+  AdminCostTotals paidUsd(num? paidUsd);
+
   AdminCostTotals chargedUsd(num chargedUsd);
 
   AdminCostTotals chargedTrackedUsd(num chargedTrackedUsd);
@@ -31,6 +33,7 @@ abstract class _$AdminCostTotalsCWProxy {
   /// ```
   AdminCostTotals call({
     num spentUsd,
+    num? paidUsd,
     num chargedUsd,
     num chargedTrackedUsd,
     num ownUsd,
@@ -49,6 +52,9 @@ class _$AdminCostTotalsCWProxyImpl implements _$AdminCostTotalsCWProxy {
 
   @override
   AdminCostTotals spentUsd(num spentUsd) => call(spentUsd: spentUsd);
+
+  @override
+  AdminCostTotals paidUsd(num? paidUsd) => call(paidUsd: paidUsd);
 
   @override
   AdminCostTotals chargedUsd(num chargedUsd) => call(chargedUsd: chargedUsd);
@@ -81,6 +87,7 @@ class _$AdminCostTotalsCWProxyImpl implements _$AdminCostTotalsCWProxy {
   @override
   AdminCostTotals call({
     Object? spentUsd = const $CopyWithPlaceholder(),
+    Object? paidUsd = const $CopyWithPlaceholder(),
     Object? chargedUsd = const $CopyWithPlaceholder(),
     Object? chargedTrackedUsd = const $CopyWithPlaceholder(),
     Object? ownUsd = const $CopyWithPlaceholder(),
@@ -93,6 +100,10 @@ class _$AdminCostTotalsCWProxyImpl implements _$AdminCostTotalsCWProxy {
           ? _value.spentUsd
           // ignore: cast_nullable_to_non_nullable
           : spentUsd as num,
+      paidUsd: paidUsd == const $CopyWithPlaceholder()
+          ? _value.paidUsd
+          // ignore: cast_nullable_to_non_nullable
+          : paidUsd as num?,
       chargedUsd:
           chargedUsd == const $CopyWithPlaceholder() || chargedUsd == null
           ? _value.chargedUsd
@@ -156,6 +167,7 @@ AdminCostTotals _$AdminCostTotalsFromJson(Map<String, dynamic> json) =>
         );
         final val = AdminCostTotals(
           spentUsd: $checkedConvert('spent_usd', (v) => v as num),
+          paidUsd: $checkedConvert('paid_usd', (v) => v as num?),
           chargedUsd: $checkedConvert('charged_usd', (v) => v as num),
           chargedTrackedUsd: $checkedConvert(
             'charged_tracked_usd',
@@ -170,6 +182,7 @@ AdminCostTotals _$AdminCostTotalsFromJson(Map<String, dynamic> json) =>
       },
       fieldKeyMap: const {
         'spentUsd': 'spent_usd',
+        'paidUsd': 'paid_usd',
         'chargedUsd': 'charged_usd',
         'chargedTrackedUsd': 'charged_tracked_usd',
         'ownUsd': 'own_usd',
@@ -181,6 +194,7 @@ AdminCostTotals _$AdminCostTotalsFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$AdminCostTotalsToJson(AdminCostTotals instance) =>
     <String, dynamic>{
       'spent_usd': instance.spentUsd,
+      'paid_usd': ?instance.paidUsd,
       'charged_usd': instance.chargedUsd,
       'charged_tracked_usd': instance.chargedTrackedUsd,
       'own_usd': instance.ownUsd,

@@ -7,6 +7,8 @@ import 'package:casama/features/app_browser/app_browser_channel.dart';
 import 'package:casama/features/app_browser/app_browser_chat.dart';
 import 'package:casama/features/app_browser/app_browser_controller.dart';
 import 'package:casama/features/app_browser/app_browser_flag.dart';
+import 'package:casama/features/app_browser/app_browser_header_button.dart';
+import 'package:casama/ui/shell_header.dart' show HeaderIconButton;
 import 'package:casama/features/app_browser/app_browser_linux.dart';
 import 'package:casama/features/app_browser/app_browser_linux_io.dart';
 import 'package:casama/features/app_browser/app_browser_screen.dart';
@@ -112,6 +114,63 @@ void main() {
   });
 
   testWidgets(
+    "the chat header's browser button shows once it's on here, opens the menu, and switches 'Bots browse here'",
+    (tester) async {
+      await setSize(tester, const Size(400, 900));
+      backend.appBrowserDevice = null;
+      await tester.pumpWidget(
+        app(const Scaffold(body: Center(child: AppBrowserHeaderButton()))),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('appBrowserHeaderButton')), findsNothing);
+
+      await backend.pairAppBrowser(
+        orgId,
+        name: 'Mac',
+        system: 'macos',
+        clientId: 'client-1',
+      );
+      final c = containerOf(tester, AppBrowserHeaderButton);
+      c.invalidate(appBrowserStatusProvider);
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('appBrowserHeaderButton')), findsOneWidget);
+      expect(
+        tester
+            .widget<HeaderIconButton>(
+              find.byKey(const Key('appBrowserHeaderButton')),
+            )
+            .selected,
+        isFalse,
+      );
+
+      // Long press: the menu with "Bots browse here", which sets the device to "always".
+      await tester.longPress(find.byKey(const Key('appBrowserHeaderButton')));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('appBrowserMenuOpen')), findsOneWidget);
+      await tester.tap(find.byKey(const Key('appBrowserMenuAlways')));
+      await tester.pumpAndSettle();
+      expect(backend.appBrowserUpdates.last, 'mode:always');
+      expect(
+        tester.widget<Switch>(find.byKey(const Key('appBrowserMenuAlways'))).value,
+        isTrue,
+      );
+      // Off again: back to the mode it had.
+      await tester.tap(find.byKey(const Key('appBrowserMenuAlways')));
+      await tester.pumpAndSettle();
+      expect(backend.appBrowserUpdates.last, 'mode:ask');
+
+      // Not allowed here any more: the button goes.
+      backend
+        ..appBrowserAvailable = false
+        ..appBrowserReason = 'workspace_off';
+      c.invalidate(appBrowserStatusProvider);
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('appBrowserHeaderButton')), findsNothing);
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
+
+  testWidgets(
     "the chat's menu offers the browser only once it's on for this phone",
     (tester) async {
       await setSize(tester, const Size(400, 900));
@@ -210,6 +269,12 @@ void main() {
       await tester.tap(find.byKey(const Key('appBrowserMode-device')));
       await tester.pumpAndSettle();
       expect(backend.appBrowserUpdates.last, 'mode:device');
+      // "Always this device" (APP-BROWSER-ALWAYS-PLAN §3 B).
+      await tester.tap(find.byKey(const Key('appBrowserMode-always')));
+      await tester.pumpAndSettle();
+      expect(backend.appBrowserUpdates.last, 'mode:always');
+      await tester.tap(find.byKey(const Key('appBrowserMode-device')));
+      await tester.pumpAndSettle();
 
       // All bots is on by default (§1.4); turning it off reveals per-bot switches.
       expect(
@@ -447,10 +512,103 @@ void main() {
     await tester.tap(find.byKey(const Key('appBrowserAllowSite')));
     await tester.pumpAndSettle();
     expect(backend.appBrowserDevice!.allowedSites, ['mail.example']);
+    // The button gives way to the "added" line; it isn't offered again for the same site.
+    expect(find.byKey(const Key('appBrowserAllowSite')), findsNothing);
+    expect(find.byKey(const Key('appBrowserSiteAllowed')), findsOneWidget);
     expect(
       find.text('mail.example added. Your bots can use it here.'),
-      findsOneWidget,
+      findsWidgets,
     );
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('the address bar follows the page, but not while typing', (
+    tester,
+  ) async {
+    await setSize(tester, const Size(400, 800));
+    await tester.pumpWidget(app(const AppBrowserScreen(person: true)));
+    await tester.pumpAndSettle();
+    final browser = containerOf(
+      tester,
+      AppBrowserScreen,
+    ).read(appBrowserProvider.notifier);
+    await tester.enterText(
+      find.byKey(const Key('appBrowserAddress')),
+      'shop.example',
+    );
+    await tester.testTextInput.receiveAction(TextInputAction.go);
+    await tester.pumpAndSettle();
+    String field() => tester
+        .widget<TextField>(find.byKey(const Key('appBrowserAddress')))
+        .controller!
+        .text;
+    expect(field(), 'https://shop.example');
+    // A single-page site changes its address in place: no page load, only urlChanged.
+    browser.urlChanged('https://shop.example/item/42', 'Item');
+    await tester.pump();
+    expect(field(), 'https://shop.example/item/42');
+    // While the person types, a page change doesn't overwrite what they typed.
+    await tester.tap(find.byKey(const Key('appBrowserAddress')));
+    await tester.enterText(find.byKey(const Key('appBrowserAddress')), 'other');
+    browser.urlChanged('https://shop.example/item/43', 'Item');
+    await tester.pump();
+    expect(field(), 'other');
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('a site allowed before shows as added, not the button again', (
+    tester,
+  ) async {
+    await setSize(tester, const Size(400, 800));
+    await backend.pairAppBrowser(
+      orgId,
+      name: 'Mac',
+      system: 'macos',
+      clientId: 'client-1',
+    );
+    await tester.pumpWidget(app(const AppBrowserScreen(person: true)));
+    await tester.pumpAndSettle();
+    final browser = containerOf(
+      tester,
+      AppBrowserScreen,
+    ).read(appBrowserProvider.notifier);
+    browser.device = await backend.updateAppBrowser(
+      backend.appBrowserDevice!.id,
+      allowedSites: ['mail.example'],
+    );
+    await tester.enterText(
+      find.byKey(const Key('appBrowserAddress')),
+      'www.mail.example/inbox',
+    );
+    await tester.testTextInput.receiveAction(TextInputAction.go);
+    await tester.pump();
+    await tester.pump();
+    expect(find.byKey(const Key('appBrowserAllowSite')), findsNothing);
+    expect(find.byKey(const Key('appBrowserSiteAllowed')), findsOneWidget);
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('Let My Bots Use This Site says so when it can\'t save', (
+    tester,
+  ) async {
+    await setSize(tester, const Size(400, 800));
+    await tester.pumpWidget(app(const AppBrowserScreen(person: true)));
+    await tester.pumpAndSettle();
+    await tester.enterText(
+      find.byKey(const Key('appBrowserAddress')),
+      'mail.example',
+    );
+    await tester.testTextInput.receiveAction(TextInputAction.go);
+    await tester.pump();
+    await tester.pump();
+    // No paired device: nothing is saved, so it isn't shown as added.
+    await tester.tap(find.byKey(const Key('appBrowserAllowSite')));
+    await tester.pumpAndSettle();
+    expect(
+      find.text('mail.example added. Your bots can use it here.'),
+      findsNothing,
+    );
+    expect(find.byKey(const Key('appBrowserAllowSite')), findsOneWidget);
     await tester.pumpWidget(const SizedBox());
   });
 

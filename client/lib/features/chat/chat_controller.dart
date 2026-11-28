@@ -22,6 +22,8 @@ import '../permissions/permissions_request.dart';
 import '../community/community.dart';
 import '../referrals/invite_ask.dart' show inviteAskProvider;
 import '../testimonials/testimonials.dart';
+import '../billing/upgrade_prompt.dart' show PayFeedbackTracker;
+import '../welcome/first_value_gate.dart' show firstValueReachedProvider;
 
 enum ToolStatus { running, done, failed }
 
@@ -2421,6 +2423,10 @@ class ChatController extends Notifier<ChatState> {
         final testimonial = ref.read(testimonialAskProvider);
         final star = ref.read(starAskProvider);
         final invite = ref.read(inviteAskProvider);
+        if (personAsked) {
+          ref.read(firstValueReachedProvider.notifier).mark();
+          unawaited(PayFeedbackTracker.recordTypedToday());
+        }
         unawaited(() async {
           var shown = await review.moment(
             ReviewMoment.replyFinished,

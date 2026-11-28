@@ -2,9 +2,12 @@ import 'dart:async';
 
 import 'package:casama_sdk/casama_sdk.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:material_ui/material_ui.dart' show BuildContext;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/backend.dart' show CostQuery;
 import '../../../core/providers.dart';
+import '../../../l10n/generated/app_localizations.dart';
 
 /// The periods the Costs tab offers. [custom] is a range of UTC days picked on a calendar.
 enum CostPeriod {
@@ -16,6 +19,58 @@ enum CostPeriod {
   const CostPeriod(this.days);
   final int days;
 }
+
+/// Which cost the tab shows (REAL-COSTS-PLAN): [paid] is money that actually leaves the account
+/// (free plans and own-server shares are \$0, included credit is taken off); [estimated] is the
+/// same usage at list prices.
+enum CostBasis { paid, estimated }
+
+/// The admin's choice of [CostBasis], remembered on this device. Paid until they pick otherwise.
+class CostBasisNotifier extends Notifier<CostBasis> {
+  static const _key = 'admin.costs.basis';
+  bool _picked = false;
+
+  @override
+  CostBasis build() {
+    SharedPreferences.getInstance()
+        .then((p) {
+          if (_picked || p.getString(_key) != CostBasis.estimated.name) return;
+          _apply(CostBasis.estimated);
+        })
+        .catchError((_) {});
+    return CostBasis.paid;
+  }
+
+  void set(CostBasis basis) {
+    _picked = true;
+    if (basis == state) return;
+    _apply(basis);
+    SharedPreferences.getInstance()
+        .then((p) => p.setString(_key, basis.name))
+        .catchError((_) => false);
+  }
+
+  /// Fixed bills are real money: Paid shows them, Estimated starts without them, as before.
+  void _apply(CostBasis basis) {
+    state = basis;
+    ref
+        .read(costViewProvider.notifier)
+        .setIncludeFixed(basis == CostBasis.paid);
+  }
+}
+
+final costBasisProvider = NotifierProvider<CostBasisNotifier, CostBasis>(
+  CostBasisNotifier.new,
+);
+
+/// The basis the Costs tab shows now, for widgets that only draw what they are given: a flip
+/// rebuilds them anyway, since the report they are handed changes with it.
+CostBasis costBasisOf(BuildContext context) =>
+    ProviderScope.containerOf(context, listen: false).read(costBasisProvider);
+
+/// The name of the headline figure: "Paid" or "Estimated".
+String costSpendLabel(AppLocalizations l10n, CostBasis basis) =>
+    basis == CostBasis.paid ? l10n.costPaid : l10n.costEstimatedTitle;
 
 /// The table's columns, for sorting.
 enum CostColumn { name, spent, share, change, calls, charged, failed, tokens }
@@ -36,7 +91,7 @@ class CostView {
     this.to,
     this.group = CostGroup.service,
     this.filters = const {},
-    this.includeFixed = false,
+    this.includeFixed = true,
     this.sort = CostColumn.spent,
     this.ascending = false,
     this.selectedId,
@@ -216,15 +271,82 @@ final costViewProvider = NotifierProvider<CostViewNotifier, CostView>(
   CostViewNotifier.new,
 );
 
-/// One view's numbers. A view that was just open stays for a few minutes, so going back to a
-/// grouping or a period shows at once. No automatic retries: the tab has its own Try again.
-final adminCostsProvider = FutureProvider.autoDispose
+/// One view's numbers as the server sent them. A view that was just open stays for a few minutes,
+/// so going back to a grouping or a period shows at once. No automatic retries: the tab has its
+/// own Try again.
+final _adminCostsRawProvider = FutureProvider.autoDispose
     .family<AdminCosts, CostQuery>((ref, query) {
       final link = ref.keepAlive();
       final timer = Timer(const Duration(minutes: 5), link.close);
       ref.onDispose(timer.cancel);
       return ref.watch(backendProvider).adminCosts(query);
     }, retry: (_, _) => null);
+
+/// One view's numbers in the chosen [CostBasis]. Flipping the basis never asks the server again.
+final adminCostsProvider = FutureProvider.autoDispose
+    .family<AdminCosts, CostQuery>((ref, query) async {
+      final raw = await ref.watch(_adminCostsRawProvider(query).future);
+      return ref.watch(costBasisProvider) == CostBasis.paid
+          ? costsAsPaid(raw)
+          : raw;
+    }, retry: (_, _) => null);
+
+/// Asks the server again for one view, or for every view when [query] is null.
+void refreshCosts(WidgetRef ref, [CostQuery? query]) {
+  if (query == null) {
+    ref.invalidate(_adminCostsRawProvider);
+    ref.invalidate(adminCostsProvider);
+  } else {
+    ref.invalidate(_adminCostsRawProvider(query));
+    ref.invalidate(adminCostsProvider(query));
+  }
+}
+
+/// What the same usage costs at list prices, kept for a report shown as paid: the margin is
+/// always worked out at list prices, so free plans never look like a 100% margin.
+final _listSpent = Expando<num>('listSpent');
+
+/// [t]'s usage at list prices, whichever basis it is shown in: what the margin is set against.
+/// Fixed bills are left out ([includeFixed] says they are in [t]), since no charge covers them.
+num listSpentUsd(AdminCostTotals t, {required bool includeFixed}) =>
+    (_listSpent[t] ?? t.spentUsd) - (includeFixed ? t.fixedUsd : 0);
+
+/// [r]'s spend at list prices, whichever basis it is shown in.
+num listRowSpentUsd(AdminCostRow r) => _listSpent[r] ?? r.spentUsd;
+
+AdminCostRow _paidRow(AdminCostRow r) {
+  final out = r.copyWith(
+    spentUsd: r.paidUsd ?? r.spentUsd,
+    previousSpentUsd: r.previousSpentUsd == null
+        ? null
+        : (r.previousPaidUsd ?? r.previousSpentUsd),
+  );
+  _listSpent[out] = r.spentUsd;
+  return out;
+}
+
+/// [costs] with every spend figure swapped for what was actually paid. An older server that sends
+/// no paid figures is shown unchanged.
+AdminCosts costsAsPaid(AdminCosts costs) {
+  if (costs.totals.paidUsd == null) return costs;
+  AdminCostTotals totals(AdminCostTotals t) {
+    final out = t.copyWith(spentUsd: t.paidUsd ?? t.spentUsd);
+    _listSpent[out] = t.spentUsd;
+    return out;
+  }
+
+  return costs.copyWith(
+    totals: totals(costs.totals),
+    previous: costs.previous == null ? null : totals(costs.previous!),
+    rows: [
+      for (final r in costs.rows) _paidRow(r),
+    ],
+    byDay: [
+      for (final d in costs.byDay)
+        d.copyWith(values: d.paidValues ?? d.values),
+    ],
+  );
+}
 
 /// The server's own paid keys for a period (only the period of the query matters).
 final adminCostKeysProvider = FutureProvider.autoDispose

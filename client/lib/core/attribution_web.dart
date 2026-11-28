@@ -85,3 +85,29 @@ String? readInitialWebPartner() {
   } catch (_) {}
   return null;
 }
+
+const _planStorageKey = 'casama.pending_plan';
+const _validPlans = {'plus', 'pro', 'max'};
+
+/// Reads `?plan=plus|pro|max` from the initial browser URL (docs/CONVERSION-FUNNEL-PLAN.md §3.1)
+/// and keeps it in sessionStorage across OAuth redirects until the paywall consumes it.
+String? readInitialWebPlan() {
+  try {
+    final uri = Uri.tryParse(web.window.location.href);
+    final fromQuery = uri?.queryParameters['plan']?.trim().toLowerCase();
+    if (fromQuery != null && _validPlans.contains(fromQuery)) {
+      web.window.sessionStorage.setItem(_planStorageKey, fromQuery);
+      return fromQuery;
+    }
+    final stored = web.window.sessionStorage.getItem(_planStorageKey)?.trim().toLowerCase();
+    if (stored != null && _validPlans.contains(stored)) return stored;
+  } catch (_) {}
+  return null;
+}
+
+/// Clears any stored pricing-page plan tier once the paywall has opened for it.
+void clearInitialWebPlan() {
+  try {
+    web.window.sessionStorage.removeItem(_planStorageKey);
+  } catch (_) {}
+}

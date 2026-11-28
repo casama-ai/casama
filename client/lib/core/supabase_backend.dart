@@ -6124,6 +6124,27 @@ class SupabaseBackend implements Backend {
   }
 
   @override
+  Future<void> recordFunnelEvent({
+    required RecordFunnelEventRequestEventEnum event,
+    String? orgId,
+    String? source,
+    String? detail,
+  }) async {
+    try {
+      await api.privacy.recordFunnelEvent(
+        recordFunnelEventRequest: RecordFunnelEventRequest(
+          event: event,
+          orgId: orgId,
+          source_: source,
+          detail: detail,
+        ),
+      );
+    } catch (_) {
+      // Best-effort telemetry; never interrupt paywall or checkout flows.
+    }
+  }
+
+  @override
   Future<void> postInstallEvent(Map<String, Object?> body) async {
     await api.api.dio.post<Map<String, dynamic>>('/v1/install-events', data: body);
   }
@@ -7539,6 +7560,101 @@ class SupabaseBackend implements Backend {
       );
     } catch (_) {
       return null;
+    }
+  }
+
+  @override
+  Future<String> uploadMedia(
+    String orgId,
+    String name,
+    Uint8List bytes, {
+    String? contentType,
+  }) async {
+    if (bytes.length > mediaPartUploadThreshold) {
+      return _uploadMediaInParts(orgId, name, bytes, contentType: contentType);
+    }
+    final res = await api.api.dio.post<Map<String, dynamic>>(
+      '/v1/media',
+      queryParameters: {'org_id': orgId, 'name': name, 'purpose': 'attachment'},
+      data: Stream.fromIterable([bytes]),
+      options: Options(
+        headers: {
+          ...authHeaders,
+          Headers.contentLengthHeader: bytes.length,
+        },
+        contentType: contentType ?? 'application/octet-stream',
+        sendTimeout: const Duration(seconds: 180),
+        receiveTimeout: const Duration(seconds: 120),
+      ),
+    );
+    final data = res.data;
+    final ref = data?['path'] as String? ?? (data?['id'] != null ? 'media:${data!['id']}' : null);
+    if (ref == null || ref.isEmpty) {
+      throw StateError('Upload returned no media reference');
+    }
+    return ref;
+  }
+
+  /// A big file in parts (SERVER-TOOLS-PLAN §12): starts the upload, sends each part (one retry
+  /// each), then joins them. A server without big-file support answers 409, which the caller
+  /// shows as "too large".
+  Future<String> _uploadMediaInParts(
+    String orgId,
+    String name,
+    Uint8List bytes, {
+    String? contentType,
+  }) async {
+    final dio = api.api.dio;
+    final started = await dio.post<Map<String, dynamic>>(
+      '/v1/media/uploads',
+      data: {
+        'org_id': orgId,
+        'name': name,
+        'size': bytes.length,
+        'content_type': ?contentType,
+        'purpose': 'attachment',
+      },
+      options: Options(headers: authHeaders),
+    );
+    final id = started.data!['upload_id'] as String;
+    final partSize = (started.data!['part_size'] as num).toInt();
+    final parts = (started.data!['parts'] as num).toInt();
+    try {
+      for (var n = 0; n < parts; n++) {
+        final start = n * partSize;
+        final end = start + partSize < bytes.length ? start + partSize : bytes.length;
+        final part = Uint8List.sublistView(bytes, start, end);
+        Future<void> send() => dio.put<void>(
+          '/v1/media/uploads/$id/parts/$n',
+          data: Stream.fromIterable([part]),
+          options: Options(
+            headers: {...authHeaders, Headers.contentLengthHeader: part.length},
+            contentType: 'application/octet-stream',
+            sendTimeout: const Duration(seconds: 180),
+            receiveTimeout: const Duration(seconds: 120),
+          ),
+        );
+        try {
+          await send();
+        } on DioException catch (e) {
+          // A dropped connection is tried once more; a refusal (wrong size, gone) is not.
+          if (e.response != null) rethrow;
+          await send();
+        }
+      }
+      final res = await dio.post<Map<String, dynamic>>(
+        '/v1/media/uploads/$id/complete',
+        options: Options(headers: authHeaders, receiveTimeout: const Duration(seconds: 180)),
+      );
+      final data = res.data;
+      final ref = data?['path'] as String? ?? (data?['id'] != null ? 'media:${data!['id']}' : null);
+      if (ref == null || ref.isEmpty) throw StateError('Upload returned no media reference');
+      return ref;
+    } catch (_) {
+      unawaited(
+        dio.delete<void>('/v1/media/uploads/$id', options: Options(headers: authHeaders)).then((_) {}, onError: (_) {}),
+      );
+      rethrow;
     }
   }
 

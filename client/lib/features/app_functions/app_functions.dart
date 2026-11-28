@@ -18,7 +18,12 @@ import '../siri/siri_bridge.dart';
 /// Compiled in only with `--dart-define=CASAMA_APP_FUNCTIONS=true`, which follows the Android build
 /// switch (scripts/app-functions-switch.sh); store builds stay without it until the release that
 /// describes the feature (plan §7.4).
-const kAppFunctions = bool.fromEnvironment('CASAMA_APP_FUNCTIONS');
+// On by default in release and profile builds (D-633); scripts/package-android.sh passes false
+// when the native half is out. Debug runs and tests stay off unless they pass the define.
+const kAppFunctions = bool.fromEnvironment(
+  'CASAMA_APP_FUNCTIONS',
+  defaultValue: kReleaseMode || kProfileMode,
+);
 
 const appFunctionsChannelName = 'casama/app_functions';
 

@@ -17,6 +17,16 @@ while you do other things. Casama uses or offers your device's browser when it h
   you decide.
 - **A site you remembered for this device.** Once you pick "Remember for this site" (or add a site
   in Settings), your bots open it there directly without asking.
+- **You chose "Always this device".** Then every page a bot opens in a chat you have open goes to
+  this browser, so you watch everything it does. Its own computer is used only when you ask for it,
+  for things this browser can't do, or when you aren't in the chat (routines keep running there).
+
+## The browser button
+
+A **globe button** sits in the top bar of a bot's chat, next to the call button, wherever this
+device's browser is ready. Tap it to open the browser: the page a bot is using, or else your own
+browsing with an address field. Long-press it (right-click on a computer) for **Bots browse here**,
+the same switch as **Always this device** in Settings. The button is tinted while it's on.
 
 If you have the same chat open on more than one device (for example your phone and your Mac or Linux
 computer), Casama opens the in-app browser on the device you sent your last message from.
@@ -27,8 +37,8 @@ There is no manual pairing step: once you sign in on a supported phone, Mac or L
 ready for all your bots. You can adjust it any time in **Settings → Device Connections → Browser on
 This Phone** (or **Browser on This Mac** / **Browser on This Computer**):
 
-- **When a bot needs a browser:** **Ask when it helps** (default), **Always the bot's computer**, or
-  **Prefer this device**.
+- **When a bot needs a browser:** **Always this device**, **Ask when it helps** (default),
+  **Always the bot's computer**, or **Prefer this device** (sign-ins and blocked sites only).
 - **Bots that may use it:** **All your bots** (default), or turn that off to pick individual bots.
 - **Sites:** view and remove remembered sites (**Always**, **Bot's computer (don't ask)**, or
   **Never**).

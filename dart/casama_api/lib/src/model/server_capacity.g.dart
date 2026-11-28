@@ -21,6 +21,10 @@ abstract class _$ServerCapacityCWProxy {
 
   ServerCapacity alarm(CapacityAlarm? alarm);
 
+  ServerCapacity computerMetrics(
+    ServerCapacityComputerMetrics? computerMetrics,
+  );
+
   /// Creates a new instance with the provided field values.
   /// Omitted fields keep their values; explicit `null` clears nullable fields.
   /// The public API rejects `null` for non-nullable fields. To update a single field use `ServerCapacity(...).copyWith.fieldName(value)`.
@@ -37,6 +41,7 @@ abstract class _$ServerCapacityCWProxy {
     num? fullInWeeks,
     List<ServerCapacityAlertsInner> alerts,
     CapacityAlarm? alarm,
+    ServerCapacityComputerMetrics? computerMetrics,
   });
 }
 
@@ -70,6 +75,11 @@ class _$ServerCapacityCWProxyImpl implements _$ServerCapacityCWProxy {
   @override
   ServerCapacity alarm(CapacityAlarm? alarm) => call(alarm: alarm);
 
+  @override
+  ServerCapacity computerMetrics(
+    ServerCapacityComputerMetrics? computerMetrics,
+  ) => call(computerMetrics: computerMetrics);
+
   /// Creates a new instance with the provided field values.
   /// Omitted fields keep their values; explicit `null` clears nullable fields.
   /// The public API rejects `null` for non-nullable fields. To update a single field use `ServerCapacity(...).copyWith.fieldName(value)`.
@@ -87,6 +97,7 @@ class _$ServerCapacityCWProxyImpl implements _$ServerCapacityCWProxy {
     Object? fullInWeeks = const $CopyWithPlaceholder(),
     Object? alerts = const $CopyWithPlaceholder(),
     Object? alarm = const $CopyWithPlaceholder(),
+    Object? computerMetrics = const $CopyWithPlaceholder(),
   }) {
     return ServerCapacity(
       budgetMb: budgetMb == const $CopyWithPlaceholder() || budgetMb == null
@@ -118,6 +129,10 @@ class _$ServerCapacityCWProxyImpl implements _$ServerCapacityCWProxy {
           ? _value.alarm
           // ignore: cast_nullable_to_non_nullable
           : alarm as CapacityAlarm?,
+      computerMetrics: computerMetrics == const $CopyWithPlaceholder()
+          ? _value.computerMetrics
+          // ignore: cast_nullable_to_non_nullable
+          : computerMetrics as ServerCapacityComputerMetrics?,
     );
   }
 }
@@ -184,6 +199,12 @@ ServerCapacity _$ServerCapacityFromJson(
             ? null
             : CapacityAlarm.fromJson(v as Map<String, dynamic>),
       ),
+      computerMetrics: $checkedConvert(
+        'computer_metrics',
+        (v) => v == null
+            ? null
+            : ServerCapacityComputerMetrics.fromJson(v as Map<String, dynamic>),
+      ),
     );
     return val;
   },
@@ -191,6 +212,7 @@ ServerCapacity _$ServerCapacityFromJson(
     'budgetMb': 'budget_mb',
     'refusals30d': 'refusals_30d',
     'fullInWeeks': 'full_in_weeks',
+    'computerMetrics': 'computer_metrics',
   },
 );
 
@@ -203,4 +225,5 @@ Map<String, dynamic> _$ServerCapacityToJson(ServerCapacity instance) =>
       'full_in_weeks': instance.fullInWeeks,
       'alerts': instance.alerts.map((e) => e.toJson()).toList(),
       'alarm': ?instance.alarm?.toJson(),
+      'computer_metrics': ?instance.computerMetrics?.toJson(),
     };

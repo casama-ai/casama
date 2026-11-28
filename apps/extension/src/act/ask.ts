@@ -21,7 +21,11 @@ async function main() {
     setTimeout(() => window.close(), 1500);
     return;
   }
+  let sent = false;
   const send = async (answer: string) => {
+    if (sent) return;
+    sent = true;
+    for (const btn of app.querySelectorAll("button")) btn.disabled = true;
     await chrome.runtime.sendMessage({ type: "act:answer", id, answer }).catch(() => {});
     window.close();
   };

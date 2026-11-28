@@ -668,9 +668,9 @@ async function homeScreen(accounts: Account[], account: Account) {
     orgs = (await api.unwrap(api.GET("/v1/orgs", { signal: AbortSignal.timeout(20_000) }))).items;
   } catch (e) {
     botsSlot.replaceChildren(errorView(e, () => void refresh(true)));
-    void settingsSection(account, () => void refresh(true)).then((el) =>
-      settingsSlot.replaceChildren(el),
-    );
+    void settingsSection(account, () => void refresh(true))
+      .then((el) => settingsSlot.replaceChildren(el))
+      .catch((e) => settingsSlot.replaceChildren(errorView(e, () => void refresh(true))));
     return;
   }
   const org = orgs.find((o) => o.id === account.orgId) ?? orgs[0];
@@ -702,9 +702,9 @@ async function homeScreen(accounts: Account[], account: Account) {
     botsSlot.replaceChildren(
       h("p", {}, "You're not in a workspace yet. Create one in the Casama app."),
     );
-    void settingsSection(account, () => void refresh(true)).then((el) =>
-      settingsSlot.replaceChildren(el),
-    );
+    void settingsSection(account, () => void refresh(true))
+      .then((el) => settingsSlot.replaceChildren(el))
+      .catch((e) => settingsSlot.replaceChildren(errorView(e, () => void refresh(true))));
     return;
   }
   try {
@@ -738,14 +738,14 @@ async function homeScreen(accounts: Account[], account: Account) {
           ),
     );
     // B21: pass already-fetched org + bots to settingsSection to avoid duplicate /v1/orgs & /v1/bots calls.
-    void settingsSection(account, () => void refresh(true), { api, org, bots }).then((el) =>
-      settingsSlot.replaceChildren(el),
-    );
+    void settingsSection(account, () => void refresh(true), { api, org, bots })
+      .then((el) => settingsSlot.replaceChildren(el))
+      .catch((e) => settingsSlot.replaceChildren(errorView(e, () => void refresh(true))));
   } catch (e) {
     botsSlot.replaceChildren(errorView(e, () => void refresh(true)));
-    void settingsSection(account, () => void refresh(true)).then((el) =>
-      settingsSlot.replaceChildren(el),
-    );
+    void settingsSection(account, () => void refresh(true))
+      .then((el) => settingsSlot.replaceChildren(el))
+      .catch((e) => settingsSlot.replaceChildren(errorView(e, () => void refresh(true))));
   }
 }
 
@@ -807,6 +807,7 @@ async function draw(force: boolean) {
     accounts: state.accounts.map((a) => [a.id, a.orgId]),
     active: account?.id,
     ui,
+    hash: location.hash,
   });
   if (key === shown && !force) return;
   shown = key;
@@ -832,5 +833,11 @@ chrome.storage.onChanged.addListener((changes, area) => {
   if (after > before) ui.adding = false;
   void refresh();
 });
+
+// openSettings("microphone") on an open Settings tab only changes the hash.
+window.addEventListener("hashchange", () => void refresh(true));
+
+// Permissions revoked in the browser's own extension settings update the switches here.
+chrome.permissions?.onRemoved?.addListener(() => void refresh(true));
 
 void refresh();

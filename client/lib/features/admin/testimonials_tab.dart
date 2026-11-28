@@ -565,7 +565,10 @@ class _TestimonialEditSheetState extends ConsumerState<TestimonialEditSheet> {
           spacing: AppSpace.xs,
           runSpacing: AppSpace.xs,
           children: [
+            // The app's sign-in screen no longer shows quotes (Oliver, 2026-11-28); a quote saved
+            // there before keeps the chip so it can be taken off.
             for (final p in TestimonialPlace.values)
+              if (p != TestimonialPlace.appSignin || _places.contains(p))
               FilterChip(
                 key: Key('adminTestimonialPlace-${p.value}'),
                 label: Text(testimonialPlaceLabel(context, p)),

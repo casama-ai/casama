@@ -24,6 +24,7 @@ RUN go build -trimpath -ldflags "-s -w -X 'm1k1o/neko.gitTag=${NEKO_REF}'" -o /o
 # --- runtime ---
 FROM ${BASE}
 ARG AGENT_DESKTOP_VERSION=1.3.1
+ARG PLAYWRIGHT_VERSION=1.65.1
 USER root
 RUN apt-get update && apt-get install -y --no-install-recommends \
       xserver-xorg-core xserver-xorg-video-dummy x11-utils x11-xserver-utils openbox xdotool xclip \
@@ -31,7 +32,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       at-spi2-core libatk-adaptor dbus-x11 fonts-dejavu-core \
       libxcvt0 libxrandr2 libxtst6 libgtk-3-0 libopus0 libvpx9 \
       gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly \
-    && rm -rf /var/lib/apt/lists/* \
+    # Full Chromium for visible takeover windows (headless base ships chrome-headless-shell).
+    && PLAYWRIGHT_BROWSERS_PATH=/opt/browser-desktop npx --yes playwright@${PLAYWRIGHT_VERSION} install --with-deps --no-shell chromium \
+    && apt-get purge -y --auto-remove fonts-wqy-zenhei fonts-unifont fonts-ipafont-gothic fonts-tlwg-loma-otf fonts-freefont-ttf 2>/dev/null || true \
+    && rm -rf /var/lib/apt/lists/* /root/.npm /usr/share/doc /usr/share/man /usr/share/info \
+    && CHROME="$(find /opt/browser-desktop -type f -name chrome -perm -u+x | head -1)" \
+    && test -n "$CHROME" && ln -sf "$CHROME" /usr/local/bin/chrome \
+    && chmod -R a+rX /opt/browser-desktop \
     # Installed outside the home folder: root-owned files there break restores and get archived on sleep.
     && NPM_CONFIG_PREFIX=/usr/local npm_config_cache=/tmp/npm-cache npm install -g agent-desktop@${AGENT_DESKTOP_VERSION} \
     && rm -rf /tmp/npm-cache \
@@ -56,6 +63,7 @@ COPY infra/images/computer/casama-proxy-relay.mjs /usr/local/lib/casama/proxy-re
 RUN chmod +x /usr/local/bin/casama-open-browser
 COPY infra/images/computer/casama-browser.desktop /usr/share/applications/casama-browser.desktop
 # The bot's browser runs as a visible window here, so a person taking over sees what the bot sees.
-ENV DISPLAY=:1 CASAMA_PROFILE=desktop AGENT_BROWSER_HEADED=1 AGENT_BROWSER_ARGS=--start-maximized,--hide-crash-restore-bubble,--test-type,--no-default-browser-check
+# Memory-saving flags + 64 MB disk cache cap (COMPUTER-SLIM-PLAN Phase 2).
+ENV DISPLAY=:1 CASAMA_PROFILE=desktop AGENT_BROWSER_HEADED=1 AGENT_BROWSER_ARGS=--start-maximized,--hide-crash-restore-bubble,--test-type,--no-default-browser-check,--renderer-process-limit=1,--disable-features=IsolateOrigins,site-per-process,Translate,--disable-component-update,--disable-background-networking,--disk-cache-size=67108864
 USER casama
 CMD ["desktop-start"]

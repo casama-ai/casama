@@ -5,7 +5,9 @@ description: Use when the person shares photos to convert, resize, compress, rot
 
 # Convert photos
 
-The tools are already on your computer: heif-convert, ImageMagick (`convert`, `mogrify`, `identify`), cwebp, exiftool and Python Pillow with pillow-heif. Don't install anything.
+**Use `media.image.edit` first (no computer needed):** pass the `media:<id>` or `library:<id>` to crop, resize, rotate, flip, convert (PNG, JPEG, WebP, HEIC/TIFF), set quality or a target file size (`max_bytes`), and strip metadata automatically.
+
+Fall back to the computer shell tools below only for batch renaming by EXIF date or contact sheets/collages: heif-convert, ImageMagick (`convert`, `mogrify`, `identify`), cwebp, exiftool and Python Pillow with pillow-heif. Don't install anything.
 
 1. Copy the photos into a working folder and check what they are: `identify -format '%f %m %wx%h %b\n' *`.
 2. HEIC or HEIF (iPhone): `heif-convert -q 90 in.heic out.jpg`. For many files, loop over them; keep the original names.

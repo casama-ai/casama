@@ -40,7 +40,9 @@ final nameStepNeededProvider = Provider.autoDispose<bool?>((ref) {
   return ref
       .watch(aboutYouProvider)
       .when(
-        data: (a) => !a.nameAsked,
+        // Skip the name step when sign-in (Google/Apple) already gave a name
+        // (docs/CONVERSION-FUNNEL-PLAN.md §3).
+        data: (a) => !a.nameAsked && a.name.trim().isEmpty,
         loading: () => null,
         error: (_, _) => false,
       );

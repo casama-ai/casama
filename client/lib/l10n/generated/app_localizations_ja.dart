@@ -763,17 +763,17 @@ class AppLocalizationsJa extends AppLocalizations {
   String get chooseModel => 'モデルを選択';
 
   @override
-  String get createBotNeedsModel => 'Choose a model above to create this bot.';
+  String get createBotNeedsModel => 'このボットを作成するには、上でモデルを選択してください。';
 
   @override
   String get createBotKeyRejected =>
-      'The provider rejected this key. Check it in Settings → Model keys, or pick another key.';
+      'プロバイダーがこのキーを拒否しました。設定 → モデルキーで確認するか、別のキーを選択してください。';
 
   @override
-  String get createBotDiscardTitle => 'Discard This Bot?';
+  String get createBotDiscardTitle => 'このボットを破棄しますか？';
 
   @override
-  String get createBotDiscardBody => 'What you entered here will be lost.';
+  String get createBotDiscardBody => 'ここに入力した内容は失われます。';
 
   @override
   String get searchModels => 'モデルを検索またはモデルIDを入力';
@@ -2735,15 +2735,14 @@ class AppLocalizationsJa extends AppLocalizations {
       '自分のファイルやアプリでの作業向けです。コンピューターがオフだった場合は実行結果に表示されます。';
 
   @override
-  String get routineUsesComputer => 'Uses a computer';
+  String get routineUsesComputer => 'コンピューターを使用';
 
   @override
-  String get routineUsesComputerOn =>
-      'Can save files, run commands and browse pages.';
+  String get routineUsesComputerOn => 'ファイルの保存、コマンドの実行、ページの閲覧ができます。';
 
   @override
   String get routineUsesComputerOff =>
-      'Reads your apps, the web and memory only. Faster, and never wakes a computer.';
+      'アプリ、Web、メモリーのみを読み取ります。高速で、コンピューターを起動することもありません。';
 
   @override
   String get computerBotsAllowed => '許可されたボット';
@@ -4310,10 +4309,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get chatViewFullTable => '表全体を表示';
 
   @override
-  String get chatShowMore => 'Show more';
+  String get chatShowMore => 'もっと見る';
 
   @override
-  String get chatShowLess => 'Show less';
+  String get chatShowLess => '折りたたむ';
 
   @override
   String get chatTableTitle => '表';
@@ -6829,6 +6828,39 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
+  String get adminCapacityComputersTitle => 'Computers & file jobs (7 days)';
+
+  @override
+  String adminCapacityWakeTime(String mode, String p50, String p90, int count) {
+    return '$mode wake: $p50 p50 / $p90 p90 ($count)';
+  }
+
+  @override
+  String adminCapacityFileJobs(int count) {
+    return 'File jobs: $count';
+  }
+
+  @override
+  String adminCapacityFileJobsTimed(int count, String p50, String p90) {
+    return 'File jobs: $count ($p50 p50 / $p90 p90)';
+  }
+
+  @override
+  String adminCapacityBrowserOoms(int count) {
+    return 'Browser out-of-memory restarts: $count';
+  }
+
+  @override
+  String adminCapacityWakesByCaller(String list) {
+    return 'Wakes by caller: $list';
+  }
+
+  @override
+  String adminCapacityShellPrograms(String list) {
+    return 'Top shell programs: $list';
+  }
+
+  @override
   String get adminNoAbuse => 'Nothing suspicious so far.';
 
   @override
@@ -7453,21 +7485,21 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
-  String get deleteBot => 'Delete Bot';
+  String get deleteBot => 'ボットを削除';
 
   @override
   String deleteBotTitle(String name) {
-    return 'Delete $name?';
+    return '「$name」を削除しますか？';
   }
 
   @override
   String deleteBotBody(String name) {
-    return 'Every chat with $name is deleted for good, with its messages, photos and files, and $name stops running and leaves the sidebar. Group chats and usage records stay. Its settings and memory move to Archived bots.';
+    return '$nameとのチャットは、メッセージ、写真、ファイルとともにすべて完全に削除され、$nameは動作を停止してサイドバーから消えます。グループチャットと利用状況の記録は残ります。設定とメモリーは「アーカイブ済みボット」に移動します。';
   }
 
   @override
   String botDeleted(String name) {
-    return '$name deleted.';
+    return '$nameを削除しました。';
   }
 
   @override
@@ -8586,12 +8618,12 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String groupLeadIs(String name) {
-    return '$name leads: it plans the work when you @everyone. Tap another bot at the top to make it lead.';
+    return '$nameが担当です：@everyoneを使うと作業を計画します。上部の別のボットをタップすると担当を変更できます。';
   }
 
   @override
   String groupPickOneMoreLead(String name) {
-    return 'Pick 1 more bot. $name leads; tap another bot at the top to make it lead.';
+    return 'あと1体のボットを選択してください。$nameが担当です。上部の別のボットをタップすると担当を変更できます。';
   }
 
   @override
@@ -17260,14 +17292,13 @@ class AppLocalizationsJa extends AppLocalizations {
   String get appLockConfirmTitle => '本人確認';
 
   @override
-  String get approvalConfirmTitle => 'Allow This?';
+  String get approvalConfirmTitle => 'これを許可しますか？';
 
   @override
-  String get approvalConfirmBody =>
-      'This is a high-risk request. Allow the bot to go ahead?';
+  String get approvalConfirmBody => 'これは高リスクなリクエストです。ボットの続行を許可しますか？';
 
   @override
-  String get approvalConfirmAllow => 'Allow';
+  String get approvalConfirmAllow => '許可';
 
   @override
   String appLockUnlockWith(String method) {
@@ -22918,6 +22949,23 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get appBrowserModeHeader => 'ボットがブラウザーを必要とするとき';
+
+  @override
+  String get appBrowserModeAlways => '常にこのデバイスを使う';
+
+  @override
+  String get appBrowserModeAlwaysHelp =>
+      'チャットを開いている間、ボットはすべてのページをここで開きます。ボットのコンピューターはあなたが頼んだときだけ使われます。';
+
+  @override
+  String get appBrowserOpenTooltip => 'ブラウザーを開く';
+
+  @override
+  String get appBrowserBotsBrowseHere => 'ボットがここでブラウズ';
+
+  @override
+  String get appBrowserBotsBrowseHereHelp =>
+      'チャット内のすべてのページが、見ている間にこのブラウザーで開きます';
 
   @override
   String get appBrowserModeAsk => '必要なときに確認する';
@@ -29053,4 +29101,101 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get watchOpen => '開く';
+
+  @override
+  String get costModeLabel => 'コスト表示';
+
+  @override
+  String get costModePaid => '実費';
+
+  @override
+  String get costModeEstimated => '見積もり';
+
+  @override
+  String get costPaid => '実費';
+
+  @override
+  String get costEstimatedTitle => '見積もり';
+
+  @override
+  String get costMarginListPrices => '定価ベースの利益率';
+
+  @override
+  String get costFreePlan => '無料プラン';
+
+  @override
+  String costFreePlanCalls(String count) {
+    return '無料プラン · $count回';
+  }
+
+  @override
+  String costCapUsage(String used, String limit, String unit) {
+    return '$used / $limit $unit';
+  }
+
+  @override
+  String get costShareOfOwnServers => '自社サーバー分';
+
+  @override
+  String costIncludedCredit(String amount) {
+    return '月$amount分込み';
+  }
+
+  @override
+  String costAtListPrices(String amount) {
+    return '定価で$amount';
+  }
+
+  @override
+  String costEmptyPaidDays(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'この$days日間の支払いはありません',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get costEmptyPaidRange => 'この期間の支払いはありません';
+
+  @override
+  String get costEmptyPaidFiltered => 'この条件に一致する支払いはありません';
+
+  @override
+  String costSpokenPaid(String amount) {
+    return '実費 $amount';
+  }
+
+  @override
+  String costSpokenEstimated(String amount) {
+    return '見積もり $amount';
+  }
+
+  @override
+  String costSpendCardPaidSemantics(
+    String paid,
+    String charged,
+    String margin,
+  ) {
+    return '過去30日間の支出: 実費 $paid、請求 $charged、定価ベース利益率 $margin';
+  }
+
+  @override
+  String get vendorBillingFree => '無料プラン';
+
+  @override
+  String get vendorBillingMetered => '従量課金';
+
+  @override
+  String get vendorBillingFreeHelp => '上限で停止するため、実費は\$0として計算されます。';
+
+  @override
+  String get vendorBillingMeteredHelp => '記録されたコストがそのまま実費として計算されます。';
+
+  @override
+  String get vendorIncludedUsd => '月間込みクレジット (USD)';
+
+  @override
+  String get vendorIncludedUsdHelp => '各暦月のこの金額までの利用は実費\$0として計算されます。';
 }

@@ -27,6 +27,8 @@ class AppBrowserScreen extends ConsumerStatefulWidget {
 
 class _AppBrowserScreenState extends ConsumerState<AppBrowserScreen> {
   final _address = TextEditingController();
+  // While the person is typing an address, a page change doesn't overwrite it.
+  final _addressFocus = FocusNode();
   late final AppBrowserController _controller;
   VoidCallback? _releaseAskOverlay;
 
@@ -43,6 +45,12 @@ class _AppBrowserScreenState extends ConsumerState<AppBrowserScreen> {
   void initState() {
     super.initState();
     _controller = ref.read(appBrowserProvider.notifier);
+    // Leaving the field without going anywhere shows where the page really is again.
+    _addressFocus.addListener(() {
+      if (_addressFocus.hasFocus || !mounted) return;
+      final url = ref.read(appBrowserProvider).url;
+      if (url != null && url != 'about:blank') _address.text = url;
+    });
     // After this frame: a provider can't change while the tree builds.
     if (widget.person) {
       Future.microtask(() => _controller.openForPerson(widget.startUrl));
@@ -55,10 +63,13 @@ class _AppBrowserScreenState extends ConsumerState<AppBrowserScreen> {
     _releaseAskOverlay = null;
     if (widget.person) Future.microtask(_controller.closePerson);
     _address.dispose();
+    _addressFocus.dispose();
     super.dispose();
   }
 
   Future<void> _go(String text) async {
+    // Hand the field back so later page changes show in it.
+    _addressFocus.unfocus();
     final ok = await _controller.loadForPerson(text);
     if (!ok && mounted) {
       showWarning(context, context.l10n.appBrowserAddressRefused);
@@ -68,6 +79,8 @@ class _AppBrowserScreenState extends ConsumerState<AppBrowserScreen> {
   Future<void> _allowSite() async {
     final host = await runGuarded(context, _controller.allowCurrentSite);
     if (host != null && mounted) {
+      // The button gives way to "added" for this site.
+      setState(() {});
       showSuccess(context, context.l10n.appBrowserSiteAdded(host));
     }
   }
@@ -84,7 +97,7 @@ class _AppBrowserScreenState extends ConsumerState<AppBrowserScreen> {
       if (widget.person &&
           url != null &&
           url != 'about:blank' &&
-          !_address.selection.isValid) {
+          !_addressFocus.hasFocus) {
         _address.text = url;
       }
     });
@@ -131,6 +144,7 @@ class _AppBrowserScreenState extends ConsumerState<AppBrowserScreen> {
             if (widget.person)
               _AddressBar(
                 controller: _address,
+                focusNode: _addressFocus,
                 session: s,
                 onGo: _go,
                 browser: _controller,
@@ -145,15 +159,34 @@ class _AppBrowserScreenState extends ConsumerState<AppBrowserScreen> {
                   AppSpace.md,
                   AppSpace.xs,
                 ),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: FilledButton.icon(
-                    key: const Key('appBrowserAllowSite'),
-                    onPressed: s.host == null ? null : _allowSite,
-                    icon: const Icon(LucideIcons.check, size: 18),
-                    label: Text(l10n.appBrowserAllowSite),
-                  ),
-                ),
+                // A site bots may already use says so instead of offering the button again.
+                child: s.host != null && _controller.siteAllowed(s.host!)
+                    ? Row(
+                        key: const Key('appBrowserSiteAllowed'),
+                        children: [
+                          Icon(
+                            LucideIcons.check,
+                            size: 18,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                          const SizedBox(width: AppSpace.xs),
+                          Expanded(
+                            child: Text(
+                              l10n.appBrowserSiteAdded(s.host!),
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                          ),
+                        ],
+                      )
+                    : SizedBox(
+                        width: double.infinity,
+                        child: FilledButton.icon(
+                          key: const Key('appBrowserAllowSite'),
+                          onPressed: s.host == null ? null : _allowSite,
+                          icon: const Icon(LucideIcons.check, size: 18),
+                          label: Text(l10n.appBrowserAllowSite),
+                        ),
+                      ),
               ),
           ],
         ),
@@ -165,11 +198,13 @@ class _AppBrowserScreenState extends ConsumerState<AppBrowserScreen> {
 class _AddressBar extends StatelessWidget {
   const _AddressBar({
     required this.controller,
+    required this.focusNode,
     required this.session,
     required this.onGo,
     required this.browser,
   });
   final TextEditingController controller;
+  final FocusNode focusNode;
   final AppBrowserSession session;
   final ValueChanged<String> onGo;
   final AppBrowserController browser;
@@ -202,6 +237,7 @@ class _AddressBar extends StatelessWidget {
             child: TextField(
               key: const Key('appBrowserAddress'),
               controller: controller,
+              focusNode: focusNode,
               keyboardType: TextInputType.url,
               textInputAction: TextInputAction.go,
               autocorrect: false,

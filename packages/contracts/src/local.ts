@@ -68,9 +68,9 @@ export const LocalDevice = z
       description:
         "In-app browser: every bot the person can chat with may use it; false limits it to allowed_bot_ids",
     }),
-    browser_mode: z.enum(["ask", "computer", "device"]).optional().openapi({
+    browser_mode: z.enum(["ask", "computer", "device", "always"]).optional().openapi({
       description:
-        'In-app browser: "ask" (choice card when it helps), "computer" (always the bot\'s computer), "device" (prefer this device)',
+        'In-app browser: "ask" (choice card when it helps), "computer" (always the bot\'s computer), "device" (prefer this device for sign-ins and blocked sites), "always" (every page in this device\'s browser while the person has the chat open there)',
     }),
     allowed_sites: z
       .array(z.string())
@@ -126,7 +126,7 @@ export const UpdateLocalDeviceRequest = z
     allowed_roots: z.array(z.string().min(1).max(1000)).max(20).optional(),
     allowed_bot_ids: z.array(Uuid).max(100).optional(),
     all_bots: z.boolean().optional(),
-    browser_mode: z.enum(["ask", "computer", "device"]).optional(),
+    browser_mode: z.enum(["ask", "computer", "device", "always"]).optional(),
     allowed_sites: z.array(z.string().min(1).max(253)).max(500).optional(),
     blocked_sites: z.array(z.string().min(1).max(253)).max(500).optional(),
     never_ask_sites: z.array(z.string().min(1).max(253)).max(500).optional(),

@@ -11,6 +11,8 @@ abstract class _$AdminCostsByDayInnerCWProxy {
 
   AdminCostsByDayInner values(List<num> values);
 
+  AdminCostsByDayInner paidValues(List<num>? paidValues);
+
   /// Creates a new instance with the provided field values.
   /// Omitted fields keep their values; explicit `null` clears nullable fields.
   /// The public API rejects `null` for non-nullable fields. To update a single field use `AdminCostsByDayInner(...).copyWith.fieldName(value)`.
@@ -19,7 +21,11 @@ abstract class _$AdminCostsByDayInnerCWProxy {
   /// ```dart
   /// AdminCostsByDayInner(...).copyWith(id: 12, name: "My name")
   /// ```
-  AdminCostsByDayInner call({String date, List<num> values});
+  AdminCostsByDayInner call({
+    String date,
+    List<num> values,
+    List<num>? paidValues,
+  });
 }
 
 /// Callable proxy for `copyWith` functionality.
@@ -36,6 +42,10 @@ class _$AdminCostsByDayInnerCWProxyImpl
   @override
   AdminCostsByDayInner values(List<num> values) => call(values: values);
 
+  @override
+  AdminCostsByDayInner paidValues(List<num>? paidValues) =>
+      call(paidValues: paidValues);
+
   /// Creates a new instance with the provided field values.
   /// Omitted fields keep their values; explicit `null` clears nullable fields.
   /// The public API rejects `null` for non-nullable fields. To update a single field use `AdminCostsByDayInner(...).copyWith.fieldName(value)`.
@@ -48,6 +58,7 @@ class _$AdminCostsByDayInnerCWProxyImpl
   AdminCostsByDayInner call({
     Object? date = const $CopyWithPlaceholder(),
     Object? values = const $CopyWithPlaceholder(),
+    Object? paidValues = const $CopyWithPlaceholder(),
   }) {
     return AdminCostsByDayInner(
       date: date == const $CopyWithPlaceholder() || date == null
@@ -58,6 +69,10 @@ class _$AdminCostsByDayInnerCWProxyImpl
           ? _value.values
           // ignore: cast_nullable_to_non_nullable
           : values as List<num>,
+      paidValues: paidValues == const $CopyWithPlaceholder()
+          ? _value.paidValues
+          // ignore: cast_nullable_to_non_nullable
+          : paidValues as List<num>?,
     );
   }
 }
@@ -84,10 +99,18 @@ AdminCostsByDayInner _$AdminCostsByDayInnerFromJson(
       'values',
       (v) => (v as List<dynamic>).map((e) => e as num).toList(),
     ),
+    paidValues: $checkedConvert(
+      'paid_values',
+      (v) => (v as List<dynamic>?)?.map((e) => e as num).toList(),
+    ),
   );
   return val;
-});
+}, fieldKeyMap: const {'paidValues': 'paid_values'});
 
 Map<String, dynamic> _$AdminCostsByDayInnerToJson(
   AdminCostsByDayInner instance,
-) => <String, dynamic>{'date': instance.date, 'values': instance.values};
+) => <String, dynamic>{
+  'date': instance.date,
+  'values': instance.values,
+  'paid_values': ?instance.paidValues,
+};

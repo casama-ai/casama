@@ -55,13 +55,19 @@ void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
   group('quotes on the paywall and sign-in screen', () {
-    testWidgets('one quote is not enough: nothing shows', (tester) async {
+    testWidgets('one quote shows; empty list shows nothing', (tester) async {
       final backend = FakeBackend()
         ..testimonialsState = [_q('It does my errands.', 'Matt W.')];
       await tester.pumpWidget(_quote(backend));
       await tester.pumpAndSettle();
-      expect(find.textContaining('errands'), findsNothing);
+      expect(find.textContaining('errands'), findsOneWidget);
       expect(backend.testimonialPlacesAsked, [TestimonialPlace.appPaywall]);
+
+      SharedPreferences.setMockInitialValues({});
+      final empty = FakeBackend()..testimonialsState = [];
+      await tester.pumpWidget(KeyedSubtree(key: const ValueKey('empty'), child: _quote(empty)));
+      await tester.pumpAndSettle();
+      expect(find.byType(Text), findsNothing);
     });
 
     testWidgets(
@@ -197,7 +203,7 @@ void main() {
     });
 
     testWidgets(
-      'the sign-in screen shows a quote, and still fits a small phone',
+      'the sign-in screen shows no quotes (Oliver, 2026-11-28), and fits a small phone',
       (tester) async {
         await setSize(tester, const Size(320, 640));
         final backend = FakeBackend()
@@ -207,7 +213,8 @@ void main() {
         for (var i = 0; i < 5; i++) {
           await tester.pump(const Duration(milliseconds: 200));
         }
-        expect(find.text('“It does my errands.”'), findsOneWidget);
+        expect(find.byType(TestimonialQuote), findsNothing);
+        expect(find.text('“It does my errands.”'), findsNothing);
         expect(find.byKey(const Key('openSignIn')), findsOneWidget);
         expect(tester.takeException(), isNull);
         await tester.pumpWidget(const SizedBox());

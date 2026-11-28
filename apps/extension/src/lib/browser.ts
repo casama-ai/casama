@@ -66,15 +66,49 @@ export function shortcutsUrl(name: BrowserName = browserName()): string {
   return "chrome://extensions/shortcuts";
 }
 
+/** Whether this browser has a shortcut page to open (not Safari, not Firefox for Android). */
+export function canOpenShortcuts(): boolean {
+  const commands = chrome.commands as
+    | (typeof chrome.commands & { openShortcutSettings?: () => Promise<void> })
+    | undefined;
+  if (!commands) return false;
+  if (IS_FIREFOX) return !!commands.openShortcutSettings;
+  return !!shortcutsUrl();
+}
+
 /** Opens the browser's keyboard shortcut settings (Firefox uses its own API; Chromium browsers open a tab). */
 export async function openShortcuts(): Promise<void> {
   const commands = chrome.commands as typeof chrome.commands & {
     openShortcutSettings?: () => Promise<void>;
   };
-  if (IS_FIREFOX && commands.openShortcutSettings) return commands.openShortcutSettings();
+  if (IS_FIREFOX && commands?.openShortcutSettings) return commands.openShortcutSettings();
   const url = shortcutsUrl();
   if (!url) return;
   await chrome.tabs.create({ url });
+}
+
+/**
+ * Opens Settings (optionally at a #section), reusing its tab when one is open, and brings that
+ * window forward. runtime.openOptionsPage() did nothing visible from the side panel or when the
+ * panel was a window of its own, so this opens the tab directly.
+ */
+export async function openSettings(hash = ""): Promise<void> {
+  const base = chrome.runtime.getURL("options/options.html");
+  const url = hash ? `${base}#${hash.replace(/^#/, "")}` : base;
+  try {
+    const [open] = await chrome.tabs.query({ url: `${base}*` });
+    if (open?.id !== undefined) {
+      await chrome.tabs.update(open.id, { active: true, ...(hash ? { url } : {}) });
+      if (open.windowId !== undefined)
+        await chrome.windows?.update(open.windowId, { focused: true }).catch(() => {});
+      return;
+    }
+  } catch {
+    // Can't look for it; open a new one.
+  }
+  const tab = await chrome.tabs.create({ url });
+  if (tab.windowId !== undefined)
+    await chrome.windows?.update(tab.windowId, { focused: true }).catch(() => {});
 }
 
 /** Firefox's sidebar, where Chrome and Edge have the side panel. */

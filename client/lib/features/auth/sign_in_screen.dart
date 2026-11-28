@@ -5,7 +5,6 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import 'package:casama_sdk/casama_sdk.dart' show TestimonialPlace;
 import 'package:supabase_flutter/supabase_flutter.dart' as sb;
 
 import '../../core/auth_return_error.dart';
@@ -24,7 +23,6 @@ import '../../ui/splash_scene.dart';
 import 'floating_mascots.dart';
 import 'invite_gate.dart';
 import 'welcome_tagline.dart';
-import '../testimonials/testimonials.dart';
 import '../../ui/glow_button.dart';
 import '../../core/analytics.dart';
 import '../../core/install_tracker.dart';
@@ -131,11 +129,6 @@ class SignInScreen extends ConsumerWidget {
                                   height: 1.4,
                                   fontWeight: FontWeight.w400,
                                 ),
-                              ),
-                              // A quote from a real person (D-545); nothing until there are two.
-                              const TestimonialQuote(
-                                place: TestimonialPlace.appSignin,
-                                padding: EdgeInsets.only(top: AppSpace.lg),
                               ),
                               const Spacer(flex: 6),
                               // At least 56 tall but free to grow, so large text sizes and longer

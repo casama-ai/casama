@@ -8,7 +8,13 @@ Adapted for Casama from anthropics/skills@2c5958ec (Apache-2.0). pandoc, LibreOf
 
 # DOCX creation, editing, and analysis
 
-A `.docx` is a ZIP archive of XML files. Choose your approach by task:
+**Use file tools first (no computer needed):**
+- **Read** a `.docx`: `documents.read`
+- **Create** a `.docx` from Markdown: `documents.make` (`format: "docx"`)
+- **Find-and-replace text** in an existing `.docx` preserving formatting: `documents.edit`
+- **Convert** `.docx` ↔ PDF / HTML / Markdown: `documents.convert`
+
+For complex layouts, tracked changes, or comments, fall back to the computer below. A `.docx` is a ZIP archive of XML files. Choose your approach by task:
 
 | Task | Approach |
 |---|---|

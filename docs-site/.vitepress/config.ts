@@ -90,6 +90,7 @@ const searchTitles: Record<string, string> = {
   "guide/skills.md": "Skills: a repeatable way of working for a bot",
   "guide/routines.md": "Routines: scheduled and triggered bot work",
   "guide/computers.md": "Computers: a Linux machine for every Casama bot",
+  "guide/file-tools.md": "File tools: PDFs, images, video, spreadsheets and SQL without a computer",
   "guide/in-app-browser.md": "In-app browser: bots browse on your device",
   "guide/limits.md": "Limits: every default cap, timeout and budget",
   "guide/pages.md": "Pages: reports and dashboards a bot publishes",
@@ -309,6 +310,7 @@ export default defineConfig({
         collapsed: false,
         items: [
           { text: "Computers", link: "/guide/computers" },
+          { text: "File tools", link: "/guide/file-tools" },
           { text: "Your own computer", link: "/guide/companion" },
           { text: "In-app browser", link: "/guide/in-app-browser" },
           { text: "Casama for Chrome", link: "/guide/chrome" },

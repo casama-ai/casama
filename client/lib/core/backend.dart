@@ -3112,6 +3112,14 @@ abstract class Backend {
     String? installId,
   });
 
+  /// Records a first-party paywall or checkout funnel step (docs/CONVERSION-FUNNEL-PLAN.md §2.1).
+  Future<void> recordFunnelEvent({
+    required RecordFunnelEventRequestEventEnum event,
+    String? orgId,
+    String? source,
+    String? detail,
+  }) async {}
+
   /// The app's first open or first sign-in attempt on this install (D-537). No sign-in needed.
   Future<void> postInstallEvent(Map<String, Object?> body);
 
@@ -3628,6 +3636,8 @@ abstract class Backend {
   /// Its bytes (pictures, documents and files to preview or save).
   Future<Uint8List> creationContent(String id);
   Future<void> uploadFile(String computerId, String path, Uint8List bytes);
+  /// Uploads a chat attachment straight to `/v1/media` (never wakes a computer) and returns `media:<id>`.
+  Future<String> uploadMedia(String orgId, String name, Uint8List bytes, {String? contentType});
   Future<void> deleteFile(String computerId, String path);
   Future<List<Checkpoint>> checkpoints(String computerId);
   Future<void> restoreCheckpoint(String computerId, String checkpointId);
@@ -3777,3 +3787,14 @@ class PlanChangePriceChangedException implements Exception {
   const PlanChangePriceChangedException(this.preview);
   final PlanChangePreview preview;
 }
+
+/// The largest file [Backend.uploadMedia] takes: 500 MB of video or audio (sent in parts),
+/// 50 MB of anything else (SERVER-TOOLS-PLAN §12).
+int maxMediaUploadBytes(String? mime) {
+  final m = mime ?? '';
+  return m.startsWith('video/') || m.startsWith('audio/') ? 500 * 1024 * 1024 : 50 * 1024 * 1024;
+}
+
+/// Files bigger than this go up in parts (`/v1/media/uploads`): one request through Cloudflare
+/// stops at 100 MB, and the server reads a single request into memory.
+const mediaPartUploadThreshold = 48 * 1024 * 1024;

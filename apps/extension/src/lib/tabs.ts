@@ -10,7 +10,8 @@ export const SET_MAX = 10;
 
 /** Asks for `tabs` if it isn't granted. Must run from a click or a key press. */
 export async function ensureTabs(): Promise<boolean> {
-  if (await chrome.permissions.contains({ permissions: ["tabs"] })) return true;
+  // No contains() first: Firefox only lets request() run straight from the click, before any
+  // await. It resolves true without asking when `tabs` is already granted.
   return chrome.permissions.request({ permissions: ["tabs"] }).catch(() => false);
 }
 

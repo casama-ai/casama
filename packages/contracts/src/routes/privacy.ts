@@ -7,6 +7,7 @@ import {
   AppleSignInTokenResult,
   DeleteAccountRequest,
   OrgSettings,
+  RecordFunnelEventRequest,
   RelayAnalyticsRequest,
   SetAgeBandRequest,
   SetAttributionRequest,
@@ -134,6 +135,19 @@ export const setAttribution = createRoute({
     "Written once per account (COALESCE when null) right after sign-in, respecting analytics_opt_out (D-533). Never stores personal details or query strings beyond utm_source, utm_medium, utm_campaign and path.",
   request: { body: jsonBody(SetAttributionRequest) },
   responses: { 204: { description: "Recorded or already set" }, 400: e400, 401: e401 },
+});
+
+export const recordFunnelEvent = createRoute({
+  operationId: "recordFunnelEvent",
+  method: "post",
+  path: "/v1/me/funnel",
+  tags,
+  security,
+  summary: "Record a first-party paywall or checkout funnel step",
+  description:
+    "Writes a paywall_view, paywall_plan_select, or purchase_started step to first-party Admin -> Growth reporting (docs/CONVERSION-FUNNEL-PLAN.md §2.1). Respects analytics_opt_out. Always 204.",
+  request: { body: jsonBody(RecordFunnelEventRequest) },
+  responses: { 204: { description: "Recorded or skipped" }, 400: e400, 401: e401 },
 });
 
 export const setMyAgeBand = createRoute({

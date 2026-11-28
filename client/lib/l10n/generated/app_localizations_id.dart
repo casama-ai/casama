@@ -788,17 +788,18 @@ class AppLocalizationsId extends AppLocalizations {
   String get chooseModel => 'Pilih model';
 
   @override
-  String get createBotNeedsModel => 'Choose a model above to create this bot.';
+  String get createBotNeedsModel =>
+      'Pilih model di atas untuk membuat bot ini.';
 
   @override
   String get createBotKeyRejected =>
-      'The provider rejected this key. Check it in Settings → Model keys, or pick another key.';
+      'Penyedia menolak kunci ini. Periksa di Pengaturan → Kunci model, atau pilih kunci lain.';
 
   @override
-  String get createBotDiscardTitle => 'Discard This Bot?';
+  String get createBotDiscardTitle => 'Buang bot ini?';
 
   @override
-  String get createBotDiscardBody => 'What you entered here will be lost.';
+  String get createBotDiscardBody => 'Yang kamu isi di sini akan hilang.';
 
   @override
   String get searchModels => 'Cari model atau ketik ID model';
@@ -2811,15 +2812,15 @@ class AppLocalizationsId extends AppLocalizations {
       'Untuk pekerjaan pada file dan aplikasimu sendiri. Eksekusi akan memberi tahu jika komputer mati.';
 
   @override
-  String get routineUsesComputer => 'Uses a computer';
+  String get routineUsesComputer => 'Memakai komputer';
 
   @override
   String get routineUsesComputerOn =>
-      'Can save files, run commands and browse pages.';
+      'Bisa menyimpan file, menjalankan perintah, dan menjelajahi halaman.';
 
   @override
   String get routineUsesComputerOff =>
-      'Reads your apps, the web and memory only. Faster, and never wakes a computer.';
+      'Hanya membaca aplikasimu, web, dan memori. Lebih cepat, dan tidak pernah membangunkan komputer.';
 
   @override
   String get computerBotsAllowed => 'Bot yang diizinkan';
@@ -4397,10 +4398,10 @@ class AppLocalizationsId extends AppLocalizations {
   String get chatViewFullTable => 'Lihat tabel penuh';
 
   @override
-  String get chatShowMore => 'Show more';
+  String get chatShowMore => 'Tampilkan lebih banyak';
 
   @override
-  String get chatShowLess => 'Show less';
+  String get chatShowLess => 'Tampilkan lebih sedikit';
 
   @override
   String get chatTableTitle => 'Tabel';
@@ -5055,7 +5056,7 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String groupTipEveryone(String lead) {
-    return '@everyone: $lead menjawab lebih dulu dan membagi tugas jika ada pekerjaan yang perlu dibagi; jika tidak, tiap bot menjawab bergiliran dan yang terakhir menutupnya.';
+    return '@everyone: $lead menjawab lebih dulu dan membagi tugas jika ada yang bisa dibagi; jika tidak, tiap bot menjawab bergiliran, dan bot terakhir merangkumnya.';
   }
 
   @override
@@ -6986,6 +6987,39 @@ class AppLocalizationsId extends AppLocalizations {
   }
 
   @override
+  String get adminCapacityComputersTitle => 'Computers & file jobs (7 days)';
+
+  @override
+  String adminCapacityWakeTime(String mode, String p50, String p90, int count) {
+    return '$mode wake: $p50 p50 / $p90 p90 ($count)';
+  }
+
+  @override
+  String adminCapacityFileJobs(int count) {
+    return 'File jobs: $count';
+  }
+
+  @override
+  String adminCapacityFileJobsTimed(int count, String p50, String p90) {
+    return 'File jobs: $count ($p50 p50 / $p90 p90)';
+  }
+
+  @override
+  String adminCapacityBrowserOoms(int count) {
+    return 'Browser out-of-memory restarts: $count';
+  }
+
+  @override
+  String adminCapacityWakesByCaller(String list) {
+    return 'Wakes by caller: $list';
+  }
+
+  @override
+  String adminCapacityShellPrograms(String list) {
+    return 'Top shell programs: $list';
+  }
+
+  @override
   String get adminNoAbuse => 'Nothing suspicious so far.';
 
   @override
@@ -7623,21 +7657,21 @@ class AppLocalizationsId extends AppLocalizations {
   }
 
   @override
-  String get deleteBot => 'Delete Bot';
+  String get deleteBot => 'Hapus bot';
 
   @override
   String deleteBotTitle(String name) {
-    return 'Delete $name?';
+    return 'Hapus $name?';
   }
 
   @override
   String deleteBotBody(String name) {
-    return 'Every chat with $name is deleted for good, with its messages, photos and files, and $name stops running and leaves the sidebar. Group chats and usage records stay. Its settings and memory move to Archived bots.';
+    return 'Semua chat dengan $name dihapus permanen beserta pesan, foto, dan file, lalu $name berhenti berjalan dan keluar dari bilah samping. Chat grup dan catatan penggunaan tetap ada. Pengaturan dan memorinya dipindahkan ke Bot yang diarsipkan.';
   }
 
   @override
   String botDeleted(String name) {
-    return '$name deleted.';
+    return '$name dihapus.';
   }
 
   @override
@@ -8774,12 +8808,12 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String groupLeadIs(String name) {
-    return '$name leads: it plans the work when you @everyone. Tap another bot at the top to make it lead.';
+    return '$name memimpin: bot ini merencanakan pekerjaan saat kamu mengetik @everyone. Ketuk bot lain di atas untuk menjadikannya pemimpin.';
   }
 
   @override
   String groupPickOneMoreLead(String name) {
-    return 'Pick 1 more bot. $name leads; tap another bot at the top to make it lead.';
+    return 'Pilih 1 bot lagi. $name memimpin; ketuk bot lain di atas untuk menjadikannya pemimpin.';
   }
 
   @override
@@ -17704,14 +17738,14 @@ class AppLocalizationsId extends AppLocalizations {
   String get appLockConfirmTitle => 'Konfirmasi bahwa ini kamu';
 
   @override
-  String get approvalConfirmTitle => 'Allow This?';
+  String get approvalConfirmTitle => 'Izinkan ini?';
 
   @override
   String get approvalConfirmBody =>
-      'This is a high-risk request. Allow the bot to go ahead?';
+      'Ini permintaan berisiko tinggi. Izinkan bot melanjutkan?';
 
   @override
-  String get approvalConfirmAllow => 'Allow';
+  String get approvalConfirmAllow => 'Izinkan';
 
   @override
   String appLockUnlockWith(String method) {
@@ -23476,6 +23510,23 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get appBrowserModeHeader => 'Saat bot membutuhkan browser';
+
+  @override
+  String get appBrowserModeAlways => 'Selalu perangkat ini';
+
+  @override
+  String get appBrowserModeAlwaysHelp =>
+      'Bot membuka setiap halaman di sini selama chat-nya terbuka. Komputernya hanya digunakan saat kamu memintanya.';
+
+  @override
+  String get appBrowserOpenTooltip => 'Buka browser';
+
+  @override
+  String get appBrowserBotsBrowseHere => 'Bot menjelajah di sini';
+
+  @override
+  String get appBrowserBotsBrowseHereHelp =>
+      'Setiap halaman di chat-mu terbuka di browser ini sambil kamu mengawasi';
 
   @override
   String get appBrowserModeAsk => 'Tanyakan saat membantu';
@@ -29757,4 +29808,106 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get watchOpen => 'Buka';
+
+  @override
+  String get costModeLabel => 'Tampilan biaya';
+
+  @override
+  String get costModePaid => 'Dibayar';
+
+  @override
+  String get costModeEstimated => 'Perkiraan';
+
+  @override
+  String get costPaid => 'Dibayar';
+
+  @override
+  String get costEstimatedTitle => 'Perkiraan';
+
+  @override
+  String get costMarginListPrices => 'Margin harga daftar';
+
+  @override
+  String get costFreePlan => 'Paket gratis';
+
+  @override
+  String costFreePlanCalls(String count) {
+    return 'Paket gratis · $count panggilan';
+  }
+
+  @override
+  String costCapUsage(String used, String limit, String unit) {
+    return '$used / $limit $unit';
+  }
+
+  @override
+  String get costShareOfOwnServers => 'Bagian server sendiri';
+
+  @override
+  String costIncludedCredit(String amount) {
+    return '$amount/bln termasuk';
+  }
+
+  @override
+  String costAtListPrices(String amount) {
+    return '$amount pada harga daftar';
+  }
+
+  @override
+  String costEmptyPaidDays(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'Tidak ada yang dibayar dalam $days hari ini',
+      one: 'Tidak ada yang dibayar pada hari ini',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get costEmptyPaidRange => 'Tidak ada yang dibayar pada hari-hari ini';
+
+  @override
+  String get costEmptyPaidFiltered =>
+      'Tidak ada yang dibayar yang cocok dengan filter ini';
+
+  @override
+  String costSpokenPaid(String amount) {
+    return 'dibayar $amount';
+  }
+
+  @override
+  String costSpokenEstimated(String amount) {
+    return 'perkiraan $amount';
+  }
+
+  @override
+  String costSpendCardPaidSemantics(
+    String paid,
+    String charged,
+    String margin,
+  ) {
+    return 'Pengeluaran 30 hari terakhir: $paid dibayar, $charged ditagih, $margin margin harga daftar';
+  }
+
+  @override
+  String get vendorBillingFree => 'Paket gratis';
+
+  @override
+  String get vendorBillingMetered => 'Terukur';
+
+  @override
+  String get vendorBillingFreeHelp =>
+      'Penggunaan berhenti di batas dan dihitung \$0 dibayar.';
+
+  @override
+  String get vendorBillingMeteredHelp =>
+      'Penggunaan dibayar sesuai biaya yang tercatat.';
+
+  @override
+  String get vendorIncludedUsd => 'Kredit bulanan termasuk (USD)';
+
+  @override
+  String get vendorIncludedUsdHelp =>
+      'Penggunaan hingga jumlah ini tiap bulan kalender dihitung \$0 dibayar.';
 }

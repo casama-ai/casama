@@ -6,12 +6,19 @@
 
 import type { CasamaClient, Schemas } from "@casama/client";
 import { logout } from "../lib/auth.ts";
-import { browserName, FEATURES, openShortcuts } from "../lib/browser.ts";
+import {
+  browserName,
+  canOpenShortcuts,
+  FEATURES,
+  IS_SAFARI,
+  openShortcuts,
+} from "../lib/browser.ts";
 import { h } from "../lib/dom.ts";
 import { accessToken, signOut } from "../lib/session.ts";
 import {
   type Chips,
   cleanHost,
+  currentSiteAccess,
   getSettings,
   originsFor,
   type SiteAccess,
@@ -54,12 +61,14 @@ export async function applySiteAccess(access: SiteAccess, sites: string[]): Prom
   const want = originsFor(access, sites);
   if (want.length && !(await chrome.permissions.request({ origins: want }))) return false;
   const have = (await chrome.permissions.getAll()).origins ?? [];
-  const extra = have.filter(
-    (o) =>
-      !want.includes(o) &&
-      /^https?:\/\/\*?/.test(o) &&
-      (access !== "sites" || o === "https://*/*" || o === "http://*/*"),
-  );
+  // Only what this card granted: the all-sites patterns and the previous list. Origins granted
+  // elsewhere stay (a self-hosted server, Meet for captions, "Allow on this site" in the panel).
+  const mine = new Set([
+    "https://*/*",
+    "http://*/*",
+    ...originsFor("sites", (await getSettings()).sites ?? []),
+  ]);
+  const extra = have.filter((o) => !want.includes(o) && mine.has(o));
   if (access !== "all" && extra.length)
     await chrome.permissions.remove({ origins: extra }).catch(() => false);
   await updateSettings((s) => {
@@ -72,6 +81,8 @@ export async function applySiteAccess(access: SiteAccess, sites: string[]): Prom
 
 export async function siteAccessCard(onDone: () => void, firstRun = false): Promise<HTMLElement> {
   const s = await getSettings();
+  const actualAccess = firstRun ? "all" : await currentSiteAccess(s);
+  const revoked = !firstRun && actualAccess !== s.siteAccess;
   const sitesInput = h("textarea", {
     placeholder: "docs.example.com\nmail.example.com",
     "data-testid": "sites-input",
@@ -88,6 +99,15 @@ export async function siteAccessCard(onDone: () => void, firstRun = false): Prom
       { className: "muted" },
       "Pages are read only when you ask a bot about them or save them. You can change this any time.",
     ),
+    ...(revoked
+      ? [
+          h(
+            "p",
+            { className: "muted", "data-testid": "site-access-revoked" },
+            `${browserName()} currently limits Casama's site access more than your saved choice. Pick an option below and click Save to change it.`,
+          ),
+        ]
+      : []),
     ...ACCESS.map((a) =>
       h(
         "label",
@@ -96,7 +116,7 @@ export async function siteAccessCard(onDone: () => void, firstRun = false): Prom
           type: "radio",
           name: "access",
           value: a.value,
-          checked: (firstRun ? "all" : s.siteAccess) === a.value,
+          checked: actualAccess === a.value,
           "data-testid": `access-${a.value}`,
         }),
         h("span", {}, h("strong", {}, a.title), h("br"), h("span", { className: "muted" }, a.text)),
@@ -410,7 +430,8 @@ export async function settingsSection(
     // Phase 5: Firefox has no Act and isn't a device source (src/lib/browser.ts).
     ...(FEATURES.act ? [await actSitesCard()] : []),
     ...(FEATURES.device ? [await deviceCard(account)] : []),
-    await bookmarksCard(preloaded),
+    // Safari has no bookmarks API, so the import could never get its permission there.
+    ...(IS_SAFARI ? [] : [await bookmarksCard(preloaded)]),
     ...(FEATURES.device ? [await captionsCard(account)] : []).filter((c): c is HTMLElement => !!c),
     await accountCard(account),
     h(
@@ -420,11 +441,12 @@ export async function settingsSection(
       h(
         "div",
         { className: "row" },
-        h(
-          "button",
-          { "data-testid": "open-shortcuts", onClick: () => void openShortcuts() },
-          "Keyboard shortcuts",
-        ),
+        canOpenShortcuts() &&
+          h(
+            "button",
+            { "data-testid": "open-shortcuts", onClick: () => void openShortcuts() },
+            "Keyboard shortcuts",
+          ),
         h(
           "a",
           { href: "https://casama.ai/chrome/whats-new", target: "_blank", rel: "noopener" },
@@ -448,27 +470,45 @@ export async function microphoneScreen(): Promise<HTMLElement> {
     { className: "muted", role: "status" },
     `${browserName()} will ask to use your microphone.`,
   );
+  const button = h(
+    "button",
+    {
+      className: "primary",
+      onClick: async () => {
+        try {
+          const s = await navigator.mediaDevices.getUserMedia({ audio: true });
+          for (const t of s.getTracks()) t.stop();
+          allowed();
+        } catch {
+          status.textContent = `${browserName()} didn't allow it. Check the microphone setting for Casama in ${browserName()}'s site settings.`;
+        }
+      },
+    },
+    "Allow the microphone",
+  ) as HTMLButtonElement;
+  const allowed = () => {
+    status.textContent = "Done. Close this tab and use the Mic button in the panel.";
+    button.textContent = "Microphone allowed";
+    button.disabled = true;
+  };
+  const blocked = () => {
+    button.textContent = "Allow the microphone";
+    button.disabled = false;
+  };
+  // Already allowed (or allowed later in the browser's own settings): show it, not the ask.
+  try {
+    const perm = await navigator.permissions.query({ name: "microphone" as PermissionName });
+    if (perm.state === "granted") allowed();
+    perm.onchange = () => (perm.state === "granted" ? allowed() : blocked());
+  } catch {
+    // This browser can't tell; the button asks.
+  }
   const card = h(
     "div",
     { className: "card", "data-testid": "microphone" },
     h("h1", {}, "Dictation"),
     status,
-    h(
-      "button",
-      {
-        className: "primary",
-        onClick: async () => {
-          try {
-            const s = await navigator.mediaDevices.getUserMedia({ audio: true });
-            for (const t of s.getTracks()) t.stop();
-            status.textContent = "Done. Close this tab and use the Mic button in the panel.";
-          } catch {
-            status.textContent = `${browserName()} didn't allow it. Check the microphone setting for Casama in ${browserName()}'s site settings.`;
-          }
-        },
-      },
-      "Allow the microphone",
-    ),
+    button,
   );
   return card;
 }

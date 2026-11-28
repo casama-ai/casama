@@ -41,7 +41,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get retry => 'Erneut versuchen';
 
   @override
-  String get keepGoing => 'Weitermachen';
+  String get keepGoing => 'Weiter';
 
   @override
   String get keepGoingMessage => 'Mach dort weiter, wo du aufgehört hast.';
@@ -787,17 +787,19 @@ class AppLocalizationsDe extends AppLocalizations {
   String get chooseModel => 'Modell wählen';
 
   @override
-  String get createBotNeedsModel => 'Choose a model above to create this bot.';
+  String get createBotNeedsModel =>
+      'Wähle oben ein Modell, um diesen Bot zu erstellen.';
 
   @override
   String get createBotKeyRejected =>
-      'The provider rejected this key. Check it in Settings → Model keys, or pick another key.';
+      'Der Anbieter hat diesen Schlüssel abgelehnt. Prüfe ihn unter Einstellungen → Modellschlüssel oder wähle einen anderen Schlüssel.';
 
   @override
-  String get createBotDiscardTitle => 'Discard This Bot?';
+  String get createBotDiscardTitle => 'Diesen Bot verwerfen?';
 
   @override
-  String get createBotDiscardBody => 'What you entered here will be lost.';
+  String get createBotDiscardBody =>
+      'Was du hier eingegeben hast, geht verloren.';
 
   @override
   String get searchModels => 'Modelle suchen oder Modell-ID eingeben';
@@ -2812,15 +2814,15 @@ class AppLocalizationsDe extends AppLocalizations {
       'Für Arbeit an deinen eigenen Dateien und Apps. Ein Durchlauf meldet es, wenn der Computer aus war.';
 
   @override
-  String get routineUsesComputer => 'Uses a computer';
+  String get routineUsesComputer => 'Nutzt einen Computer';
 
   @override
   String get routineUsesComputerOn =>
-      'Can save files, run commands and browse pages.';
+      'Kann Dateien speichern, Befehle ausführen und Seiten aufrufen.';
 
   @override
   String get routineUsesComputerOff =>
-      'Reads your apps, the web and memory only. Faster, and never wakes a computer.';
+      'Liest nur deine Apps, das Web und das Gedächtnis. Schneller und weckt nie einen Computer auf.';
 
   @override
   String get computerBotsAllowed => 'Erlaubte Bots';
@@ -4398,10 +4400,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get chatViewFullTable => 'Vollständige Tabelle ansehen';
 
   @override
-  String get chatShowMore => 'Show more';
+  String get chatShowMore => 'Mehr anzeigen';
 
   @override
-  String get chatShowLess => 'Show less';
+  String get chatShowLess => 'Weniger anzeigen';
 
   @override
   String get chatTableTitle => 'Tabelle';
@@ -5059,7 +5061,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String groupTipEveryone(String lead) {
-    return '@everyone: $lead antwortet zuerst und verteilt Teile, wenn es Arbeit aufzuteilen gibt; sonst antwortet jeder Bot der Reihe nach, und der letzte fasst zusammen.';
+    return '@everyone: $lead antwortet zuerst und verteilt Aufgaben, wenn es Arbeit aufzuteilen gibt; sonst antwortet jeder Bot der Reihe nach, und der letzte fasst zusammen.';
   }
 
   @override
@@ -6999,6 +7001,39 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String get adminCapacityComputersTitle => 'Computers & file jobs (7 days)';
+
+  @override
+  String adminCapacityWakeTime(String mode, String p50, String p90, int count) {
+    return '$mode wake: $p50 p50 / $p90 p90 ($count)';
+  }
+
+  @override
+  String adminCapacityFileJobs(int count) {
+    return 'File jobs: $count';
+  }
+
+  @override
+  String adminCapacityFileJobsTimed(int count, String p50, String p90) {
+    return 'File jobs: $count ($p50 p50 / $p90 p90)';
+  }
+
+  @override
+  String adminCapacityBrowserOoms(int count) {
+    return 'Browser out-of-memory restarts: $count';
+  }
+
+  @override
+  String adminCapacityWakesByCaller(String list) {
+    return 'Wakes by caller: $list';
+  }
+
+  @override
+  String adminCapacityShellPrograms(String list) {
+    return 'Top shell programs: $list';
+  }
+
+  @override
   String get adminNoAbuse => 'Nothing suspicious so far.';
 
   @override
@@ -7637,21 +7672,21 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get deleteBot => 'Delete Bot';
+  String get deleteBot => 'Bot löschen';
 
   @override
   String deleteBotTitle(String name) {
-    return 'Delete $name?';
+    return '$name löschen?';
   }
 
   @override
   String deleteBotBody(String name) {
-    return 'Every chat with $name is deleted for good, with its messages, photos and files, and $name stops running and leaves the sidebar. Group chats and usage records stay. Its settings and memory move to Archived bots.';
+    return 'Alle Chats mit $name werden endgültig gelöscht, samt Nachrichten, Fotos und Dateien, und $name arbeitet nicht mehr und verlässt die Seitenleiste. Gruppenchats und Nutzungsdaten bleiben erhalten. Einstellungen und Gedächtnis werden in Archivierte Bots verschoben.';
   }
 
   @override
   String botDeleted(String name) {
-    return '$name deleted.';
+    return '$name gelöscht.';
   }
 
   @override
@@ -8794,12 +8829,12 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String groupLeadIs(String name) {
-    return '$name leads: it plans the work when you @everyone. Tap another bot at the top to make it lead.';
+    return '$name hat die Leitung: Der Bot plant die Arbeit, wenn du @everyone nutzt. Tippe oben auf einen anderen Bot, um ihn zur Leitung zu machen.';
   }
 
   @override
   String groupPickOneMoreLead(String name) {
-    return 'Pick 1 more bot. $name leads; tap another bot at the top to make it lead.';
+    return 'Wähle noch 1 Bot. $name hat die Leitung; tippe oben auf einen anderen Bot, um ihn zur Leitung zu machen.';
   }
 
   @override
@@ -17755,14 +17790,14 @@ class AppLocalizationsDe extends AppLocalizations {
   String get appLockConfirmTitle => 'Bestätige, dass du es bist';
 
   @override
-  String get approvalConfirmTitle => 'Allow This?';
+  String get approvalConfirmTitle => 'Das erlauben?';
 
   @override
   String get approvalConfirmBody =>
-      'This is a high-risk request. Allow the bot to go ahead?';
+      'Das ist eine Anfrage mit hohem Risiko. Darf der Bot weitermachen?';
 
   @override
-  String get approvalConfirmAllow => 'Allow';
+  String get approvalConfirmAllow => 'Erlauben';
 
   @override
   String appLockUnlockWith(String method) {
@@ -23548,6 +23583,23 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get appBrowserModeHeader => 'Wenn ein Bot einen Browser braucht';
+
+  @override
+  String get appBrowserModeAlways => 'Immer dieses Gerät';
+
+  @override
+  String get appBrowserModeAlwaysHelp =>
+      'Bots öffnen hier jede Seite, solange du ihren Chat geöffnet hast. Ihr Computer wird nur genutzt, wenn du darum bittest.';
+
+  @override
+  String get appBrowserOpenTooltip => 'Browser öffnen';
+
+  @override
+  String get appBrowserBotsBrowseHere => 'Bots surfen hier';
+
+  @override
+  String get appBrowserBotsBrowseHereHelp =>
+      'Jede Seite in deinen Chats wird in diesem Browser geöffnet, während du zusiehst';
 
   @override
   String get appBrowserModeAsk => 'Fragen, wenn es hilft';
@@ -29845,4 +29897,105 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get watchOpen => 'Öffnen';
+
+  @override
+  String get costModeLabel => 'Kostenansicht';
+
+  @override
+  String get costModePaid => 'Bezahlt';
+
+  @override
+  String get costModeEstimated => 'Geschätzt';
+
+  @override
+  String get costPaid => 'Bezahlt';
+
+  @override
+  String get costEstimatedTitle => 'Geschätzt';
+
+  @override
+  String get costMarginListPrices => 'Marge zu Listenpreisen';
+
+  @override
+  String get costFreePlan => 'Kostenloser Tarif';
+
+  @override
+  String costFreePlanCalls(String count) {
+    return 'Kostenloser Tarif · $count Aufrufe';
+  }
+
+  @override
+  String costCapUsage(String used, String limit, String unit) {
+    return '$used / $limit $unit';
+  }
+
+  @override
+  String get costShareOfOwnServers => 'Anteil eigener Server';
+
+  @override
+  String costIncludedCredit(String amount) {
+    return '$amount/Monat inklusive';
+  }
+
+  @override
+  String costAtListPrices(String amount) {
+    return '$amount zu Listenpreisen';
+  }
+
+  @override
+  String costEmptyPaidDays(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'In diesen $days Tagen wurde nichts bezahlt',
+      one: 'An diesem Tag wurde nichts bezahlt',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get costEmptyPaidRange => 'In diesen Tagen wurde nichts bezahlt';
+
+  @override
+  String get costEmptyPaidFiltered => 'Für diese Filter wurde nichts bezahlt';
+
+  @override
+  String costSpokenPaid(String amount) {
+    return 'bezahlt $amount';
+  }
+
+  @override
+  String costSpokenEstimated(String amount) {
+    return 'geschätzt $amount';
+  }
+
+  @override
+  String costSpendCardPaidSemantics(
+    String paid,
+    String charged,
+    String margin,
+  ) {
+    return 'Ausgaben in den letzten 30 Tagen: $paid bezahlt, $charged berechnet, $margin Marge zu Listenpreisen';
+  }
+
+  @override
+  String get vendorBillingFree => 'Kostenloser Tarif';
+
+  @override
+  String get vendorBillingMetered => 'Nutzungsbasiert';
+
+  @override
+  String get vendorBillingFreeHelp =>
+      'Nutzung stoppt am Limit und zählt als 0 \$ bezahlt.';
+
+  @override
+  String get vendorBillingMeteredHelp =>
+      'Nutzung wird zu den erfassten Kosten bezahlt.';
+
+  @override
+  String get vendorIncludedUsd => 'Monatliches Inklusivguthaben (USD)';
+
+  @override
+  String get vendorIncludedUsdHelp =>
+      'Nutzung bis zu diesem Betrag pro Kalendermonat zählt als 0 \$ bezahlt.';
 }

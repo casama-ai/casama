@@ -51,6 +51,8 @@ void main() {
     expect(r.months, 3);
     expect(r.maxRedemptions, 1);
     expect(r.note, 'For Maya');
+    // Redeemable for 30 days unless another day is picked.
+    expect(r.redeemBy!.difference(DateTime.now()).inDays, inInclusiveRange(29, 30));
     expect(find.byKey(const Key('freeMadeCode')), findsOneWidget);
     expect(find.text('G-ABCDE-F7KQ2'), findsOneWidget);
 

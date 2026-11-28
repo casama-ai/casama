@@ -757,17 +757,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get chooseModel => '选择模型';
 
   @override
-  String get createBotNeedsModel => 'Choose a model above to create this bot.';
+  String get createBotNeedsModel => '先在上方选择一个模型，再创建此机器人。';
 
   @override
-  String get createBotKeyRejected =>
-      'The provider rejected this key. Check it in Settings → Model keys, or pick another key.';
+  String get createBotKeyRejected => '提供商拒绝了此密钥。请在“设置 → 模型密钥”中检查，或选择其他密钥。';
 
   @override
-  String get createBotDiscardTitle => 'Discard This Bot?';
+  String get createBotDiscardTitle => '放弃这个机器人？';
 
   @override
-  String get createBotDiscardBody => 'What you entered here will be lost.';
+  String get createBotDiscardBody => '你在这里填写的内容将会丢失。';
 
   @override
   String get searchModels => '搜索模型或输入模型 ID';
@@ -2707,15 +2706,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get routineWhereMineHelp => '用于处理你本机上的文件和应用。电脑关机时，执行记录会说明情况。';
 
   @override
-  String get routineUsesComputer => 'Uses a computer';
+  String get routineUsesComputer => '使用电脑';
 
   @override
-  String get routineUsesComputerOn =>
-      'Can save files, run commands and browse pages.';
+  String get routineUsesComputerOn => '可以保存文件、运行命令和浏览页面。';
 
   @override
-  String get routineUsesComputerOff =>
-      'Reads your apps, the web and memory only. Faster, and never wakes a computer.';
+  String get routineUsesComputerOff => '仅读取你的应用、网页和记忆。速度更快，且绝不会唤醒电脑。';
 
   @override
   String get computerBotsAllowed => '允许的机器人';
@@ -4268,10 +4265,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get chatViewFullTable => '查看完整表格';
 
   @override
-  String get chatShowMore => 'Show more';
+  String get chatShowMore => '展开更多';
 
   @override
-  String get chatShowLess => 'Show less';
+  String get chatShowLess => '收起';
 
   @override
   String get chatTableTitle => '表格';
@@ -6746,6 +6743,39 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
+  String get adminCapacityComputersTitle => 'Computers & file jobs (7 days)';
+
+  @override
+  String adminCapacityWakeTime(String mode, String p50, String p90, int count) {
+    return '$mode wake: $p50 p50 / $p90 p90 ($count)';
+  }
+
+  @override
+  String adminCapacityFileJobs(int count) {
+    return 'File jobs: $count';
+  }
+
+  @override
+  String adminCapacityFileJobsTimed(int count, String p50, String p90) {
+    return 'File jobs: $count ($p50 p50 / $p90 p90)';
+  }
+
+  @override
+  String adminCapacityBrowserOoms(int count) {
+    return 'Browser out-of-memory restarts: $count';
+  }
+
+  @override
+  String adminCapacityWakesByCaller(String list) {
+    return 'Wakes by caller: $list';
+  }
+
+  @override
+  String adminCapacityShellPrograms(String list) {
+    return 'Top shell programs: $list';
+  }
+
+  @override
   String get adminNoAbuse => 'Nothing suspicious so far.';
 
   @override
@@ -7360,21 +7390,21 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get deleteBot => 'Delete Bot';
+  String get deleteBot => '删除机器人';
 
   @override
   String deleteBotTitle(String name) {
-    return 'Delete $name?';
+    return '要删除 $name 吗？';
   }
 
   @override
   String deleteBotBody(String name) {
-    return 'Every chat with $name is deleted for good, with its messages, photos and files, and $name stops running and leaves the sidebar. Group chats and usage records stay. Its settings and memory move to Archived bots.';
+    return '与 $name 的所有聊天都会永久删除，其中的消息、照片和文件也会一并删除，$name 也会停止运行并从侧边栏移除。群聊和用量记录会保留。它的设置和记忆会移至“已归档的机器人”。';
   }
 
   @override
   String botDeleted(String name) {
-    return '$name deleted.';
+    return '已删除 $name。';
   }
 
   @override
@@ -8474,12 +8504,12 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String groupLeadIs(String name) {
-    return '$name leads: it plans the work when you @everyone. Tap another bot at the top to make it lead.';
+    return '$name 担任负责人：当你 @everyone 时，由它规划工作。轻点顶部的其他机器人即可将其设为负责人。';
   }
 
   @override
   String groupPickOneMoreLead(String name) {
-    return 'Pick 1 more bot. $name leads; tap another bot at the top to make it lead.';
+    return '再选择 1 个机器人。$name 担任负责人；轻点顶部的其他机器人即可将其设为负责人。';
   }
 
   @override
@@ -16972,14 +17002,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get appLockConfirmTitle => '确认是你本人';
 
   @override
-  String get approvalConfirmTitle => 'Allow This?';
+  String get approvalConfirmTitle => '允许此操作？';
 
   @override
-  String get approvalConfirmBody =>
-      'This is a high-risk request. Allow the bot to go ahead?';
+  String get approvalConfirmBody => '这是一项高风险请求。允许机器人继续吗？';
 
   @override
-  String get approvalConfirmAllow => 'Allow';
+  String get approvalConfirmAllow => '允许';
 
   @override
   String appLockUnlockWith(String method) {
@@ -22556,6 +22585,22 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get appBrowserModeHeader => '当机器人需要浏览器时';
+
+  @override
+  String get appBrowserModeAlways => '始终使用此设备';
+
+  @override
+  String get appBrowserModeAlwaysHelp =>
+      '只要你打开了机器人的聊天，它就会在这里打开每个网页。仅在你主动要求时才使用机器人的电脑。';
+
+  @override
+  String get appBrowserOpenTooltip => '打开浏览器';
+
+  @override
+  String get appBrowserBotsBrowseHere => '机器人在此浏览';
+
+  @override
+  String get appBrowserBotsBrowseHereHelp => '你观看时，聊天中的每个网页都会在此浏览器中打开';
 
   @override
   String get appBrowserModeAsk => '有需要时先询问';
@@ -28611,6 +28656,103 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get watchOpen => '打开';
+
+  @override
+  String get costModeLabel => '费用视图';
+
+  @override
+  String get costModePaid => '实付';
+
+  @override
+  String get costModeEstimated => '估算';
+
+  @override
+  String get costPaid => '实付';
+
+  @override
+  String get costEstimatedTitle => '估算';
+
+  @override
+  String get costMarginListPrices => '按标价计算的利润率';
+
+  @override
+  String get costFreePlan => '免费套餐';
+
+  @override
+  String costFreePlanCalls(String count) {
+    return '免费套餐 · $count 次调用';
+  }
+
+  @override
+  String costCapUsage(String used, String limit, String unit) {
+    return '$used / $limit $unit';
+  }
+
+  @override
+  String get costShareOfOwnServers => '自有服务器分摊';
+
+  @override
+  String costIncludedCredit(String amount) {
+    return '每月含 $amount';
+  }
+
+  @override
+  String costAtListPrices(String amount) {
+    return '按标价 $amount';
+  }
+
+  @override
+  String costEmptyPaidDays(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '这 $days 天无实际支出',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get costEmptyPaidRange => '这段时间无实际支出';
+
+  @override
+  String get costEmptyPaidFiltered => '符合这些筛选条件的实际支出为 0';
+
+  @override
+  String costSpokenPaid(String amount) {
+    return '实付 $amount';
+  }
+
+  @override
+  String costSpokenEstimated(String amount) {
+    return '估算 $amount';
+  }
+
+  @override
+  String costSpendCardPaidSemantics(
+    String paid,
+    String charged,
+    String margin,
+  ) {
+    return '过去 30 天支出：实付 $paid，已收 $charged，按标价利润率 $margin';
+  }
+
+  @override
+  String get vendorBillingFree => '免费套餐';
+
+  @override
+  String get vendorBillingMetered => '按量计费';
+
+  @override
+  String get vendorBillingFreeHelp => '达到上限即停止，实付记为 \$0。';
+
+  @override
+  String get vendorBillingMeteredHelp => '按记录的用量成本实际支付。';
+
+  @override
+  String get vendorIncludedUsd => '每月赠送额度 (USD)';
+
+  @override
+  String get vendorIncludedUsdHelp => '每个自然月内不超过该额度的用量实付记为 \$0。';
 }
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
@@ -28649,7 +28791,7 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get retry => '重試';
 
   @override
-  String get keepGoing => '繼續執行';
+  String get keepGoing => '繼續';
 
   @override
   String get keepGoingMessage => '從上次停下的地方繼續。';
@@ -29363,6 +29505,18 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get chooseModel => '選擇模型';
+
+  @override
+  String get createBotNeedsModel => '先在上方選擇一個模型，再建立此機器人。';
+
+  @override
+  String get createBotKeyRejected => '供應商拒絕了這組金鑰。請前往「設定 → 模型金鑰」檢查，或改選其他金鑰。';
+
+  @override
+  String get createBotDiscardTitle => '要捨棄這個機器人嗎？';
+
+  @override
+  String get createBotDiscardBody => '你在這裡輸入的內容將會遺失。';
 
   @override
   String get searchModels => '搜尋模型或輸入模型 ID';
@@ -31302,6 +31456,15 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get routineWhereMineHelp => '適合處理你自己電腦上的檔案與應用程式。若電腦當時關機，執行紀錄會註明此事。';
 
   @override
+  String get routineUsesComputer => '使用電腦';
+
+  @override
+  String get routineUsesComputerOn => '可儲存檔案、執行指令與瀏覽頁面。';
+
+  @override
+  String get routineUsesComputerOff => '僅讀取你的應用程式、網頁與記憶。速度更快，且絕不會喚醒電腦。';
+
+  @override
   String get computerBotsAllowed => '允許使用的機器人';
 
   @override
@@ -31861,6 +32024,12 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get chatViewFullTable => '檢視完整表格';
+
+  @override
+  String get chatShowMore => '顯示更多';
+
+  @override
+  String get chatShowLess => '顯示較少';
 
   @override
   String get chatTableTitle => '表格';
@@ -34813,6 +34982,24 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   }
 
   @override
+  String get deleteBot => '刪除機器人';
+
+  @override
+  String deleteBotTitle(String name) {
+    return '要刪除「$name」嗎？';
+  }
+
+  @override
+  String deleteBotBody(String name) {
+    return '與 $name 的所有對話都會永久刪除，裡面的訊息、照片與檔案也會一併刪除，$name 也會停止運作並從側邊欄移除。群組對話與用量紀錄會保留。它的設定與記憶會移至「已封存的機器人」。';
+  }
+
+  @override
+  String botDeleted(String name) {
+    return '已刪除「$name」。';
+  }
+
+  @override
   String get settingsHistory => '設定紀錄';
 
   @override
@@ -35908,6 +36095,16 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   @override
   String get groupLeadHint =>
       '當你輸入 @everyone 時，將由主導機器人統籌規劃工作。輕點上方的其他機器人即可更換主導角色。';
+
+  @override
+  String groupLeadIs(String name) {
+    return '$name 擔任主導：當你輸入 @everyone 時，由它統籌規劃工作。輕點上方的其他機器人即可更換主導角色。';
+  }
+
+  @override
+  String groupPickOneMoreLead(String name) {
+    return '再選擇 1 個機器人。$name 擔任主導；輕點上方的其他機器人即可更換主導角色。';
+  }
 
   @override
   String get groupNeedTwoBots => '群組對話至少需要兩個機器人。請先建立另一個機器人。';
@@ -43979,6 +44176,15 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get appLockConfirmTitle => '確認是你本人';
 
   @override
+  String get approvalConfirmTitle => '允許這項操作嗎？';
+
+  @override
+  String get approvalConfirmBody => '這是一項高風險請求。要允許機器人繼續嗎？';
+
+  @override
+  String get approvalConfirmAllow => '允許';
+
+  @override
   String appLockUnlockWith(String method) {
     return '請使用$method。';
   }
@@ -48718,6 +48924,22 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get appBrowserModeHeader => '當機器人需要使用瀏覽器時';
 
   @override
+  String get appBrowserModeAlways => '一律使用此裝置';
+
+  @override
+  String get appBrowserModeAlwaysHelp =>
+      '只要你開啟機器人的對話，它就會在這裡開啟每個頁面。只有在你主動要求時才會使用機器人的電腦。';
+
+  @override
+  String get appBrowserOpenTooltip => '開啟瀏覽器';
+
+  @override
+  String get appBrowserBotsBrowseHere => '機器人在此瀏覽';
+
+  @override
+  String get appBrowserBotsBrowseHereHelp => '你觀看時，對話中的每個頁面都會在此瀏覽器中開啟';
+
+  @override
   String get appBrowserModeAsk => '有需要時再詢問';
 
   @override
@@ -53324,4 +53546,101 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get watchOpen => '開啟';
+
+  @override
+  String get costModeLabel => '費用檢視';
+
+  @override
+  String get costModePaid => '實付';
+
+  @override
+  String get costModeEstimated => '估算';
+
+  @override
+  String get costPaid => '實付';
+
+  @override
+  String get costEstimatedTitle => '估算';
+
+  @override
+  String get costMarginListPrices => '按標價計算的利潤率';
+
+  @override
+  String get costFreePlan => '免費方案';
+
+  @override
+  String costFreePlanCalls(String count) {
+    return '免費方案 · $count 次呼叫';
+  }
+
+  @override
+  String costCapUsage(String used, String limit, String unit) {
+    return '$used / $limit $unit';
+  }
+
+  @override
+  String get costShareOfOwnServers => '自有伺服器分攤';
+
+  @override
+  String costIncludedCredit(String amount) {
+    return '每月含 $amount';
+  }
+
+  @override
+  String costAtListPrices(String amount) {
+    return '按標價 $amount';
+  }
+
+  @override
+  String costEmptyPaidDays(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '這 $days 天無實際支出',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get costEmptyPaidRange => '這段期間無實際支出';
+
+  @override
+  String get costEmptyPaidFiltered => '符合這些篩選條件的實際支出為 0';
+
+  @override
+  String costSpokenPaid(String amount) {
+    return '實付 $amount';
+  }
+
+  @override
+  String costSpokenEstimated(String amount) {
+    return '估算 $amount';
+  }
+
+  @override
+  String costSpendCardPaidSemantics(
+    String paid,
+    String charged,
+    String margin,
+  ) {
+    return '過去 30 天支出：實付 $paid，已收 $charged，按標價利潤率 $margin';
+  }
+
+  @override
+  String get vendorBillingFree => '免費方案';
+
+  @override
+  String get vendorBillingMetered => '按量計費';
+
+  @override
+  String get vendorBillingFreeHelp => '達到上限即停止，實付記為 \$0。';
+
+  @override
+  String get vendorBillingMeteredHelp => '按記錄的用量成本實際支付。';
+
+  @override
+  String get vendorIncludedUsd => '每月內含額度 (USD)';
+
+  @override
+  String get vendorIncludedUsdHelp => '每個日曆月內不超過該額度的用量實付記為 \$0。';
 }

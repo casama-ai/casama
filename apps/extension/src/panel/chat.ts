@@ -9,7 +9,7 @@ import { CasamaError, type RunEvent, type Schemas } from "@casama/client";
 import { trackFeature } from "../lib/analytics.ts";
 import { onAudioState, playAudio, playingAudioId, stopAudio } from "../lib/audio.ts";
 import { responseError } from "../lib/billing.ts";
-import { FEATURES } from "../lib/browser.ts";
+import { FEATURES, IS_FIREFOX, openSettings } from "../lib/browser.ts";
 import { uploadMedia } from "../lib/capture.ts";
 import { renderSurface, type UiAction } from "../lib/cards.ts";
 import { ChatFocus } from "../lib/chat-focus.ts";
@@ -34,7 +34,14 @@ import {
   quickAnswer,
   quickKinds,
 } from "../lib/ondevice.ts";
-import { activeTab, blockedReason, readTab, regionScreenshot, screenshot } from "../lib/page.ts";
+import {
+  activeTab,
+  blockedReason,
+  NoAccessError,
+  readTab,
+  regionScreenshot,
+  screenshot,
+} from "../lib/page.ts";
 import { noteConversation, pageEntry, pageKey } from "../lib/page-index.ts";
 import { looksLikePdf } from "../lib/pdf.ts";
 import { botIsPrivate, carriesPage, privateVerdict, REFUSED } from "../lib/private-model.ts";
@@ -158,6 +165,7 @@ export class ChatView {
   }
   private ctx: PageContext = {};
   private ctxError: unknown = null;
+  private callStarting = false;
   /** The tab (id and address) the context was last read from; null until the person asks. */
   private readFor: string | null = null;
   /** Bumped on every context change, so a slow read never overwrites a newer one. */
@@ -360,7 +368,8 @@ export class ChatView {
     form.addEventListener("submit", (e) => {
       e.preventDefault();
       if (this.running) void this.stop();
-      else void this.send();
+      // Enter submits even while Send is disabled: a message still sending mustn't go twice.
+      else if (!this.sendBtn.disabled) void this.send();
     });
     // Starting a message is asking about the page: read it now, once per page.
     this.input.addEventListener("focus", () => void this.refreshContext());
@@ -606,8 +615,14 @@ export class ChatView {
         )
       ).items.slice(0, 25);
     } catch (e) {
-      if (this.bot?.id === id)
+      if (this.bot?.id === id) {
+        // Not the previous bot's conversation: a message sent now starts a new one with this bot.
+        this.convs = [];
+        this.convId = null;
+        this.topConvs.replaceChildren(h("option", { value: NEW }, "New conversation"));
+        this.topConvs.value = NEW;
         this.thread.replaceChildren(errorBox(e, () => void this.pickBot(id)));
+      }
       return;
     }
     // Another bot was picked while this one's conversations loaded.
@@ -1535,7 +1550,8 @@ export class ChatView {
           h("span", { className: "x", "aria-hidden": "true" }, "×"),
         ),
       );
-    if (this.ctxError) row.push(errorBox(this.ctxError, () => void this.refreshContext()));
+    // fresh: the failed read is cached for this page, so a plain refresh would do nothing.
+    if (this.ctxError) row.push(errorBox(this.ctxError, () => void this.refreshContext(true)));
     this.chipRow.replaceChildren(...row);
     void this.drawQuick();
   }
@@ -1631,7 +1647,7 @@ export class ChatView {
       } catch {
         // The side panel can't ask for the microphone itself: Settings asks once, then it works here.
         toast("Allow the microphone in the tab that opens, then try again.");
-        void chrome.tabs.create({ url: chrome.runtime.getURL("options/options.html#microphone") });
+        void openSettings("microphone");
         return;
       }
       const chunks: Blob[] = [];
@@ -2506,11 +2522,8 @@ export class ChatView {
       this.addExtra({ kind: "part", label: picked.label, text: picked.text });
       this.input.focus();
     } catch (e) {
-      this.ctxError = /permission|Cannot access/i.test(message(e))
-        ? new Error(
-            "Casama can't reach this tab. Click the Casama button first, or allow this site in Settings.",
-          )
-        : e;
+      // NoAccessError, so the box offers "Allow on this site" rather than a re-read.
+      this.ctxError = /permission|Cannot access/i.test(message(e)) ? new NoAccessError(tab.url) : e;
       this.drawChips();
     }
   }
@@ -2533,7 +2546,7 @@ export class ChatView {
           await this.here.api.unwrap(this.here.api.GET("/v1/me/page-commands", { signal: T() }))
         ).items.map((c) => ({ name: c.name, prompt: c.prompt }));
       } catch {
-        this.commands = [];
+        // Left unloaded, so the next "/" tries again instead of showing none until a reload.
       }
     }
     if (!this.bot || this.skillsBotId === this.bot.id) return;
@@ -2655,6 +2668,7 @@ export class ChatView {
     }
 
     // Browser Tabs section (A14)
+    let needsTabPerm = false;
     if (!this.tabList) {
       const hasTabs = await chrome.permissions
         .contains({ permissions: ["tabs"] })
@@ -2664,19 +2678,43 @@ export class ChatView {
         setTimeout(() => {
           this.tabList = null;
         }, 30_000);
-      } else if (!items.length) {
+      } else if (!IS_FIREFOX && !items.length) {
         if (await ensureTabs()) {
           this.tabList = await tabChoices((await activeTab())?.id);
           setTimeout(() => {
             this.tabList = null;
           }, 30_000);
         } else {
-          this.closeMenu();
-          return toast(
-            "Casama needs to see your tabs' titles to add one. Try @ again to allow it.",
-          );
+          needsTabPerm = true;
         }
+      } else {
+        // Firefox requires permissions.request() directly inside a click or keydown, before any
+        // await; offer a menu item so clicking or pressing Enter asks inside the user gesture.
+        needsTabPerm = true;
       }
+    }
+    if (needsTabPerm) {
+      items.push({
+        group: "Tabs",
+        label: "Allow Casama to list open tabs",
+        hint: "Needed to pick another tab with @",
+        testid: "menu-allow-tabs",
+        run: () => {
+          // Must call ensureTabs() synchronously inside the click/keydown gesture for Firefox.
+          const req = ensureTabs();
+          void req.then(async (ok) => {
+            if (!ok) {
+              this.closeMenu();
+              return toast("Casama needs to see your tabs' titles to add one.");
+            }
+            this.tabList = await tabChoices((await activeTab())?.id);
+            setTimeout(() => {
+              this.tabList = null;
+            }, 30_000);
+            void this.onTyping();
+          });
+        },
+      });
     }
     for (const c of filterChoices(this.tabList ?? [], q)) {
       items.push({
@@ -2934,8 +2972,19 @@ export class ChatView {
 
   private async startCall() {
     if (this.call && (this.call.state === "live" || this.call.state === "connecting")) return;
+    // A second click while the call is being set up would start a second call that keeps the mic.
+    if (this.callStarting) return;
     const bot = this.bot;
     if (!bot) return;
+    this.callStarting = true;
+    try {
+      await this.startCallNow(bot);
+    } finally {
+      this.callStarting = false;
+    }
+  }
+
+  private async startCallNow(bot: Bot) {
     let session: Schemas["VoiceSession"];
     try {
       session = await this.here.api.unwrap(
@@ -3015,7 +3064,7 @@ export class ChatView {
         .catch(() => {});
       if (e instanceof MicPermissionError) {
         toast("Allow the microphone in the tab that opens, then try again.");
-        void chrome.tabs.create({ url: chrome.runtime.getURL("options/options.html#microphone") });
+        void openSettings("microphone");
       } else {
         toast(message(e));
       }

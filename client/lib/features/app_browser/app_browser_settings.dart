@@ -408,6 +408,12 @@ class _AppBrowserSettingsScreenState
       GroupedCard(
         children: [
           for (final (value, title, subtitle) in [
+            // Every page here while the chat is open (APP-BROWSER-ALWAYS-PLAN §3 B).
+            (
+              'always',
+              l10n.appBrowserModeAlways,
+              l10n.appBrowserModeAlwaysHelp,
+            ),
             ('ask', l10n.appBrowserModeAsk, l10n.appBrowserModeAskHelp),
             (
               'computer',
@@ -422,7 +428,9 @@ class _AppBrowserSettingsScreenState
           ])
             GroupedTile(
               key: Key('appBrowserMode-$value'),
-              icon: value == 'ask'
+              icon: value == 'always'
+                  ? LucideIcons.globe
+                  : value == 'ask'
                   ? LucideIcons.circleHelp
                   : value == 'computer'
                   ? LucideIcons.monitor

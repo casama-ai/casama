@@ -25,6 +25,10 @@ abstract class _$AdminVendorCWProxy {
 
   AdminVendor renewalMonths(int? renewalMonths);
 
+  AdminVendor billing(VendorBilling? billing);
+
+  AdminVendor includedUsd(num? includedUsd);
+
   AdminVendor billingUrl(String? billingUrl);
 
   AdminVendor impact(String? impact);
@@ -59,6 +63,8 @@ abstract class _$AdminVendorCWProxy {
     num? balanceWarnBelow,
     num? renewalUsd,
     int? renewalMonths,
+    VendorBilling? billing,
+    num? includedUsd,
     String? billingUrl,
     String? impact,
     String vendor,
@@ -108,6 +114,12 @@ class _$AdminVendorCWProxyImpl implements _$AdminVendorCWProxy {
       call(renewalMonths: renewalMonths);
 
   @override
+  AdminVendor billing(VendorBilling? billing) => call(billing: billing);
+
+  @override
+  AdminVendor includedUsd(num? includedUsd) => call(includedUsd: includedUsd);
+
+  @override
   AdminVendor billingUrl(String? billingUrl) => call(billingUrl: billingUrl);
 
   @override
@@ -150,6 +162,8 @@ class _$AdminVendorCWProxyImpl implements _$AdminVendorCWProxy {
     Object? balanceWarnBelow = const $CopyWithPlaceholder(),
     Object? renewalUsd = const $CopyWithPlaceholder(),
     Object? renewalMonths = const $CopyWithPlaceholder(),
+    Object? billing = const $CopyWithPlaceholder(),
+    Object? includedUsd = const $CopyWithPlaceholder(),
     Object? billingUrl = const $CopyWithPlaceholder(),
     Object? impact = const $CopyWithPlaceholder(),
     Object? vendor = const $CopyWithPlaceholder(),
@@ -196,6 +210,14 @@ class _$AdminVendorCWProxyImpl implements _$AdminVendorCWProxy {
           ? _value.renewalMonths
           // ignore: cast_nullable_to_non_nullable
           : renewalMonths as int?,
+      billing: billing == const $CopyWithPlaceholder()
+          ? _value.billing
+          // ignore: cast_nullable_to_non_nullable
+          : billing as VendorBilling?,
+      includedUsd: includedUsd == const $CopyWithPlaceholder()
+          ? _value.includedUsd
+          // ignore: cast_nullable_to_non_nullable
+          : includedUsd as num?,
       billingUrl: billingUrl == const $CopyWithPlaceholder()
           ? _value.billingUrl
           // ignore: cast_nullable_to_non_nullable
@@ -291,6 +313,11 @@ AdminVendor _$AdminVendorFromJson(Map<String, dynamic> json) => $checkedCreate(
         'renewal_months',
         (v) => (v as num?)?.toInt(),
       ),
+      billing: $checkedConvert(
+        'billing',
+        (v) => $enumDecodeNullable(_$VendorBillingEnumMap, v),
+      ),
+      includedUsd: $checkedConvert('included_usd', (v) => v as num?),
       billingUrl: $checkedConvert('billing_url', (v) => v as String?),
       impact: $checkedConvert('impact', (v) => v as String?),
       vendor: $checkedConvert('vendor', (v) => v as String),
@@ -323,6 +350,7 @@ AdminVendor _$AdminVendorFromJson(Map<String, dynamic> json) => $checkedCreate(
     'balanceWarnBelow': 'balance_warn_below',
     'renewalUsd': 'renewal_usd',
     'renewalMonths': 'renewal_months',
+    'includedUsd': 'included_usd',
     'billingUrl': 'billing_url',
   },
 );
@@ -338,6 +366,8 @@ Map<String, dynamic> _$AdminVendorToJson(AdminVendor instance) =>
       'balance_warn_below': ?instance.balanceWarnBelow,
       'renewal_usd': ?instance.renewalUsd,
       'renewal_months': ?instance.renewalMonths,
+      'billing': ?_$VendorBillingEnumMap[instance.billing],
+      'included_usd': ?instance.includedUsd,
       'billing_url': instance.billingUrl,
       'impact': instance.impact,
       'vendor': instance.vendor,
@@ -353,6 +383,11 @@ const _$AdminVendorPeriodEnumEnumMap = {
   AdminVendorPeriodEnum.month: 'month',
   AdminVendorPeriodEnum.billingPeriod: 'billing_period',
   AdminVendorPeriodEnum.prepaid: 'prepaid',
+};
+
+const _$VendorBillingEnumMap = {
+  VendorBilling.free: 'free',
+  VendorBilling.metered: 'metered',
 };
 
 const _$AdminVendorKindEnumEnumMap = {

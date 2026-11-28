@@ -34,6 +34,16 @@ const pending = new Map<
   }
 >();
 
+let windowListenerAdded = false;
+function watchWindowClose() {
+  if (windowListenerAdded || !chrome.windows?.onRemoved) return;
+  windowListenerAdded = true;
+  chrome.windows.onRemoved.addListener((windowId) => {
+    // Closing the ask window with X counts as declining, so the bot doesn't sit for 5 minutes.
+    for (const [id, e] of [...pending]) if (e.windowId === windowId) answer(id, "deny");
+  });
+}
+
 async function saveAsks() {
   const all = ((await chrome.storage.session.get("actAsks")).actAsks as Ask[] | undefined) ?? [];
   return all.filter((a) => pending.has(a.id));
@@ -41,6 +51,7 @@ async function saveAsks() {
 
 /** Asks and waits for the answer. */
 export async function ask(input: Omit<Ask, "id" | "created">): Promise<Answer> {
+  watchWindowClose();
   const a: Ask = { ...input, id: crypto.randomUUID(), created: Date.now() };
   const list = await saveAsks();
   const p = new Promise<Answer>((resolve) => {

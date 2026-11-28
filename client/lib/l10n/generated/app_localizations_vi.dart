@@ -41,7 +41,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get retry => 'Thử lại';
 
   @override
-  String get keepGoing => 'Làm tiếp';
+  String get keepGoing => 'Tiếp tục';
 
   @override
   String get keepGoingMessage => 'Làm tiếp từ chỗ đã dừng.';
@@ -786,17 +786,17 @@ class AppLocalizationsVi extends AppLocalizations {
   String get chooseModel => 'Chọn mô hình';
 
   @override
-  String get createBotNeedsModel => 'Choose a model above to create this bot.';
+  String get createBotNeedsModel => 'Chọn mô hình ở trên để tạo bot này.';
 
   @override
   String get createBotKeyRejected =>
-      'The provider rejected this key. Check it in Settings → Model keys, or pick another key.';
+      'Nhà cung cấp đã từ chối khóa này. Kiểm tra trong Cài đặt → Khóa mô hình hoặc chọn khóa khác.';
 
   @override
-  String get createBotDiscardTitle => 'Discard This Bot?';
+  String get createBotDiscardTitle => 'Hủy bot này?';
 
   @override
-  String get createBotDiscardBody => 'What you entered here will be lost.';
+  String get createBotDiscardBody => 'Thông tin bạn đã nhập ở đây sẽ bị mất.';
 
   @override
   String get searchModels => 'Tìm mô hình hoặc nhập ID mô hình';
@@ -2800,15 +2800,15 @@ class AppLocalizationsVi extends AppLocalizations {
       'Dùng cho việc trên tệp và ứng dụng của bạn. Lượt chạy sẽ báo lại nếu máy tính đang tắt.';
 
   @override
-  String get routineUsesComputer => 'Uses a computer';
+  String get routineUsesComputer => 'Dùng máy tính';
 
   @override
   String get routineUsesComputerOn =>
-      'Can save files, run commands and browse pages.';
+      'Có thể lưu tệp, chạy lệnh và duyệt trang.';
 
   @override
   String get routineUsesComputerOff =>
-      'Reads your apps, the web and memory only. Faster, and never wakes a computer.';
+      'Chỉ đọc ứng dụng của bạn, web và trí nhớ. Nhanh hơn và không bao giờ đánh thức máy tính.';
 
   @override
   String get computerBotsAllowed => 'Bot được phép';
@@ -4382,10 +4382,10 @@ class AppLocalizationsVi extends AppLocalizations {
   String get chatViewFullTable => 'Xem toàn bộ bảng';
 
   @override
-  String get chatShowMore => 'Show more';
+  String get chatShowMore => 'Xem thêm';
 
   @override
-  String get chatShowLess => 'Show less';
+  String get chatShowLess => 'Thu gọn';
 
   @override
   String get chatTableTitle => 'Bảng';
@@ -6967,6 +6967,39 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
+  String get adminCapacityComputersTitle => 'Computers & file jobs (7 days)';
+
+  @override
+  String adminCapacityWakeTime(String mode, String p50, String p90, int count) {
+    return '$mode wake: $p50 p50 / $p90 p90 ($count)';
+  }
+
+  @override
+  String adminCapacityFileJobs(int count) {
+    return 'File jobs: $count';
+  }
+
+  @override
+  String adminCapacityFileJobsTimed(int count, String p50, String p90) {
+    return 'File jobs: $count ($p50 p50 / $p90 p90)';
+  }
+
+  @override
+  String adminCapacityBrowserOoms(int count) {
+    return 'Browser out-of-memory restarts: $count';
+  }
+
+  @override
+  String adminCapacityWakesByCaller(String list) {
+    return 'Wakes by caller: $list';
+  }
+
+  @override
+  String adminCapacityShellPrograms(String list) {
+    return 'Top shell programs: $list';
+  }
+
+  @override
   String get adminNoAbuse => 'Nothing suspicious so far.';
 
   @override
@@ -7604,21 +7637,21 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
-  String get deleteBot => 'Delete Bot';
+  String get deleteBot => 'Xóa bot';
 
   @override
   String deleteBotTitle(String name) {
-    return 'Delete $name?';
+    return 'Xóa $name?';
   }
 
   @override
   String deleteBotBody(String name) {
-    return 'Every chat with $name is deleted for good, with its messages, photos and files, and $name stops running and leaves the sidebar. Group chats and usage records stay. Its settings and memory move to Archived bots.';
+    return 'Mọi cuộc trò chuyện với $name sẽ bị xóa vĩnh viễn cùng tin nhắn, ảnh và tệp, và $name ngừng chạy, rời khỏi thanh bên. Trò chuyện nhóm và bản ghi sử dụng vẫn giữ lại. Cài đặt và trí nhớ của bot chuyển sang mục Bot đã lưu trữ.';
   }
 
   @override
   String botDeleted(String name) {
-    return '$name deleted.';
+    return 'Đã xóa $name.';
   }
 
   @override
@@ -8756,12 +8789,12 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String groupLeadIs(String name) {
-    return '$name leads: it plans the work when you @everyone. Tap another bot at the top to make it lead.';
+    return '$name là trưởng nhóm: bot lập kế hoạch khi bạn dùng @everyone. Chạm vào bot khác ở trên cùng để đổi trưởng nhóm.';
   }
 
   @override
   String groupPickOneMoreLead(String name) {
-    return 'Pick 1 more bot. $name leads; tap another bot at the top to make it lead.';
+    return 'Chọn thêm 1 bot. $name là trưởng nhóm; chạm vào bot khác ở trên cùng để đổi trưởng nhóm.';
   }
 
   @override
@@ -17680,14 +17713,14 @@ class AppLocalizationsVi extends AppLocalizations {
   String get appLockConfirmTitle => 'Xác nhận đó là bạn';
 
   @override
-  String get approvalConfirmTitle => 'Allow This?';
+  String get approvalConfirmTitle => 'Cho phép thao tác này?';
 
   @override
   String get approvalConfirmBody =>
-      'This is a high-risk request. Allow the bot to go ahead?';
+      'Đây là yêu cầu có rủi ro cao. Cho phép bot tiếp tục?';
 
   @override
-  String get approvalConfirmAllow => 'Allow';
+  String get approvalConfirmAllow => 'Cho phép';
 
   @override
   String appLockUnlockWith(String method) {
@@ -23446,6 +23479,23 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get appBrowserModeHeader => 'Khi bot cần dùng trình duyệt';
+
+  @override
+  String get appBrowserModeAlways => 'Luôn dùng thiết bị này';
+
+  @override
+  String get appBrowserModeAlwaysHelp =>
+      'Bot sẽ mở mọi trang tại đây trong lúc bạn mở cuộc trò chuyện với chúng. Máy tính của bot chỉ được dùng khi bạn yêu cầu.';
+
+  @override
+  String get appBrowserOpenTooltip => 'Mở trình duyệt';
+
+  @override
+  String get appBrowserBotsBrowseHere => 'Bot duyệt web tại đây';
+
+  @override
+  String get appBrowserBotsBrowseHereHelp =>
+      'Mọi trang trong các cuộc trò chuyện của bạn sẽ mở trong trình duyệt này khi bạn xem';
 
   @override
   String get appBrowserModeAsk => 'Hỏi khi cần thiết';
@@ -29729,4 +29779,106 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get watchOpen => 'Mở';
+
+  @override
+  String get costModeLabel => 'Chế độ xem chi phí';
+
+  @override
+  String get costModePaid => 'Đã trả';
+
+  @override
+  String get costModeEstimated => 'Ước tính';
+
+  @override
+  String get costPaid => 'Đã trả';
+
+  @override
+  String get costEstimatedTitle => 'Ước tính';
+
+  @override
+  String get costMarginListPrices => 'Biên lợi nhuận theo giá niêm yết';
+
+  @override
+  String get costFreePlan => 'Gói miễn phí';
+
+  @override
+  String costFreePlanCalls(String count) {
+    return 'Gói miễn phí · $count lượt gọi';
+  }
+
+  @override
+  String costCapUsage(String used, String limit, String unit) {
+    return '$used / $limit $unit';
+  }
+
+  @override
+  String get costShareOfOwnServers => 'Phần máy chủ riêng';
+
+  @override
+  String costIncludedCredit(String amount) {
+    return 'gồm $amount/tháng';
+  }
+
+  @override
+  String costAtListPrices(String amount) {
+    return '$amount theo giá niêm yết';
+  }
+
+  @override
+  String costEmptyPaidDays(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'Không có khoản chi thực tế nào trong $days ngày này',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get costEmptyPaidRange =>
+      'Không có khoản chi thực tế nào trong những ngày này';
+
+  @override
+  String get costEmptyPaidFiltered =>
+      'Không có khoản chi thực tế nào khớp bộ lọc này';
+
+  @override
+  String costSpokenPaid(String amount) {
+    return 'đã trả $amount';
+  }
+
+  @override
+  String costSpokenEstimated(String amount) {
+    return 'ước tính $amount';
+  }
+
+  @override
+  String costSpendCardPaidSemantics(
+    String paid,
+    String charged,
+    String margin,
+  ) {
+    return 'Chi tiêu 30 ngày qua: đã trả $paid, đã thu $charged, biên lợi nhuận theo giá niêm yết $margin';
+  }
+
+  @override
+  String get vendorBillingFree => 'Gói miễn phí';
+
+  @override
+  String get vendorBillingMetered => 'Theo mức dùng';
+
+  @override
+  String get vendorBillingFreeHelp =>
+      'Mức dùng dừng ở hạn mức và tính là \$0 đã trả.';
+
+  @override
+  String get vendorBillingMeteredHelp =>
+      'Mức dùng được tính theo chi phí đã ghi nhận.';
+
+  @override
+  String get vendorIncludedUsd => 'Hạn mức tặng kèm mỗi tháng (USD)';
+
+  @override
+  String get vendorIncludedUsdHelp =>
+      'Mức dùng trong khoản này mỗi tháng dương lịch tính là \$0 đã trả.';
 }

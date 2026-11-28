@@ -1,5 +1,6 @@
 import { CASAMA_DOMAINS, siteMatches as serverSiteMatches } from "@casama/safety";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+import { ask } from "../src/background/act/ask.ts";
 import { cleanManaged } from "../src/lib/act/managed.ts";
 import {
   clickVerdict,
@@ -18,6 +19,7 @@ import {
   SNAPSHOT_STYLES,
 } from "../src/lib/act/snapshot.ts";
 import { guardUrl } from "../src/lib/guard.ts";
+import { installFakeChrome } from "./fake-chrome.ts";
 
 const ax = (
   nodeId: string,
@@ -373,5 +375,36 @@ describe("managed settings", () => {
     });
     expect(cleanManaged(null)).toEqual({});
     expect(cleanManaged({ ServerAddress: "javascript:alert(1)" })).toEqual({});
+  });
+});
+
+describe("ask window", () => {
+  it("resolves with deny immediately when the user closes the popup window", async () => {
+    installFakeChrome();
+    const removed: Array<(id: number) => void> = [];
+    const cleared: string[] = [];
+    const c = globalThis.chrome as unknown as Record<string, unknown>;
+    c.windows = {
+      create: vi.fn(async () => ({ id: 77 })),
+      remove: vi.fn(async () => {}),
+      onRemoved: { addListener: (fn: (id: number) => void) => removed.push(fn) },
+    };
+    const notifCreate = vi.fn(async () => {});
+    c.notifications = {
+      create: notifCreate,
+      clear: vi.fn(async (id: string) => void cleared.push(id)),
+    };
+
+    const p = ask({
+      kind: "step",
+      bot: "Ada",
+      title: "Let Ada send?",
+      detail: "Clicking Send",
+    });
+    await vi.waitFor(() => expect(notifCreate).toHaveBeenCalledOnce());
+    // Simulate closing the popup window with X.
+    for (const fn of removed) fn(77);
+    await expect(p).resolves.toBe("deny");
+    expect(cleared).toHaveLength(1);
   });
 });

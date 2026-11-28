@@ -60,10 +60,25 @@ export class InboxView {
     briefs: Schemas["ForYouBrief"][];
     updates: NotificationRow[];
   } | null = null;
+  /** In-progress secret inputs survive background refreshes until submitted, declined or gone. */
+  private secretDrafts = new Map<string, string>();
   onCount: (n: number) => void = () => {};
 
   constructor(here: Here) {
     this.here = here;
+  }
+
+  private updateCount() {
+    const d = this.lastData;
+    if (!d) return;
+    const unreadUpdates = d.updates.filter((u) => !u.read_at).length;
+    this.onCount(
+      d.approvals.length +
+        d.secrets.length +
+        d.takeovers.length +
+        d.proposals.length +
+        unreadUpdates,
+    );
   }
 
   private loads = 0;
@@ -131,14 +146,9 @@ export class InboxView {
       const pendingSecrets = secrets.items.filter((s) => s.status === "pending");
       const pendingTakeovers = takeovers.filter((t) => t.status === "pending");
       const pendingProposals = proposals.filter((p) => p.status === "pending");
-      const unreadUpdates = updates.filter((u) => !u.read_at);
-      this.onCount(
-        approvals.items.length +
-          pendingSecrets.length +
-          pendingTakeovers.length +
-          pendingProposals.length +
-          unreadUpdates.length,
-      );
+      const secretIds = new Set(pendingSecrets.map((s) => s.id));
+      for (const id of [...this.secretDrafts.keys()])
+        if (!secretIds.has(id)) this.secretDrafts.delete(id);
       this.lastData = {
         approvals: approvals.items,
         secrets: pendingSecrets,
@@ -149,6 +159,7 @@ export class InboxView {
         briefs: feed?.briefs ?? [],
         updates,
       };
+      this.updateCount();
       this.render();
     } catch (e) {
       if (mine === this.loads) this.el.replaceChildren(errorBox(e, () => void this.load()));
@@ -225,7 +236,16 @@ export class InboxView {
                   botName: this.name(t.bot_id),
                   createdAt: t.created_at,
                 },
-                { onResolved: () => void updateBadge().catch(() => {}) },
+                {
+                  onResolved: () => {
+                    if (this.lastData)
+                      this.lastData.takeovers = this.lastData.takeovers.filter(
+                        (x) => x.id !== t.id,
+                      );
+                    this.updateCount();
+                    void updateBadge().catch(() => {});
+                  },
+                },
               ).el,
           ),
         );
@@ -259,21 +279,34 @@ export class InboxView {
           { className: "section-title section-row" },
           h("span", {}, "Updates"),
           unread.length
-            ? h(
-                "button",
-                {
-                  type: "button",
-                  className: "link",
-                  "data-testid": "mark-all-read",
-                  onClick: () => void this.markAllRead(unread),
-                },
-                "Mark all read",
-              )
+            ? (() => {
+                const btn = h(
+                  "button",
+                  {
+                    type: "button",
+                    className: "link",
+                    "data-testid": "mark-all-read",
+                    onClick: () => void this.markAllRead(unread, btn),
+                  },
+                  "Mark all read",
+                ) as HTMLButtonElement;
+                return btn;
+              })()
             : "",
         ),
         ...d.updates.slice(0, 20).map((u) => this.updateRow(u)),
       );
     }
+
+    const active = document.activeElement;
+    const focusedSecret =
+      active instanceof HTMLInputElement && this.el.contains(active) && active.dataset.secretId
+        ? {
+            id: active.dataset.secretId,
+            start: active.selectionStart,
+            end: active.selectionEnd,
+          }
+        : null;
 
     this.el.replaceChildren(
       bar,
@@ -291,6 +324,22 @@ export class InboxView {
             }),
           ]),
     );
+
+    if (focusedSecret) {
+      const next = [...this.el.querySelectorAll<HTMLInputElement>("input[data-secret-id]")].find(
+        (el) => el.dataset.secretId === focusedSecret.id,
+      );
+      if (next) {
+        next.focus();
+        if (focusedSecret.start !== null && focusedSecret.end !== null) {
+          try {
+            next.setSelectionRange(focusedSecret.start, focusedSecret.end);
+          } catch {
+            // Selection unsupported on this input in the current environment.
+          }
+        }
+      }
+    }
   }
 
   /** D9: today's brief, as the bot wrote it, with a link to its conversation. */
@@ -353,40 +402,53 @@ export class InboxView {
           )
         : "",
     );
+    let busy = false;
+    const buttons: HTMLButtonElement[] = [];
+    const setBusy = (on: boolean) => {
+      busy = on;
+      for (const b of buttons) b.disabled = on;
+    };
     const decide = async (decision: "approved" | "denied", alwaysAllow = false) => {
+      if (busy) return;
+      setBusy(true);
       try {
         await this.here.api.decideApproval(a.id, decision, { alwaysAllow });
+        if (this.lastData)
+          this.lastData.approvals = this.lastData.approvals.filter((x) => x.id !== a.id);
+        this.updateCount();
         card.replaceChildren(
           h("div", { className: "meta" }, decision === "approved" ? "Approved" : "Denied"),
         );
         void updateBadge().catch(() => {});
       } catch (e) {
+        setBusy(false);
         card.append(errorBox(e));
       }
     };
-    card.append(
-      h(
-        "div",
-        { className: "row" },
-        h(
-          "button",
-          {
-            className: "primary",
-            "data-testid": "approve",
-            onClick: () => void decide("approved"),
-          },
-          "Approve",
-        ),
-        h("button", { "data-testid": "deny", onClick: () => void decide("denied") }, "Deny"),
-        a.risk !== "high"
-          ? h(
-              "button",
-              { className: "link", onClick: () => void decide("approved", true) },
-              "Always allow",
-            )
-          : "",
-      ),
-    );
+    const approveBtn = h(
+      "button",
+      {
+        className: "primary",
+        "data-testid": "approve",
+        onClick: () => void decide("approved"),
+      },
+      "Approve",
+    ) as HTMLButtonElement;
+    const denyBtn = h(
+      "button",
+      { "data-testid": "deny", onClick: () => void decide("denied") },
+      "Deny",
+    ) as HTMLButtonElement;
+    const alwaysBtn =
+      a.risk !== "high"
+        ? (h(
+            "button",
+            { className: "link", onClick: () => void decide("approved", true) },
+            "Always allow",
+          ) as HTMLButtonElement)
+        : null;
+    buttons.push(approveBtn, denyBtn, ...(alwaysBtn ? [alwaysBtn] : []));
+    card.append(h("div", { className: "row" }, approveBtn, denyBtn, alwaysBtn ?? ""));
     return card;
   }
 
@@ -410,7 +472,15 @@ export class InboxView {
           )
         : "",
     );
+    let busy = false;
+    const buttons: HTMLButtonElement[] = [];
+    const setBusy = (on: boolean) => {
+      busy = on;
+      for (const b of buttons) b.disabled = on;
+    };
     const decide = async (accept: boolean) => {
+      if (busy) return;
+      setBusy(true);
       try {
         if (accept) {
           await this.here.api.unwrap(
@@ -428,34 +498,34 @@ export class InboxView {
             }),
           );
         }
+        if (this.lastData)
+          this.lastData.proposals = this.lastData.proposals.filter((x) => x.id !== p.id);
+        this.updateCount();
         card.replaceChildren(
           h("div", { className: "meta" }, accept ? `Saved skill "${p.name}".` : "Dismissed."),
         );
         void updateBadge().catch(() => {});
       } catch (e) {
+        setBusy(false);
         toast(message(e));
       }
     };
-    card.append(
-      h(
-        "div",
-        { className: "row" },
-        h(
-          "button",
-          {
-            className: "primary",
-            "data-testid": "proposal-approve",
-            onClick: () => void decide(true),
-          },
-          "Approve",
-        ),
-        h(
-          "button",
-          { "data-testid": "proposal-dismiss", onClick: () => void decide(false) },
-          "Dismiss",
-        ),
-      ),
-    );
+    const approveBtn = h(
+      "button",
+      {
+        className: "primary",
+        "data-testid": "proposal-approve",
+        onClick: () => void decide(true),
+      },
+      "Approve",
+    ) as HTMLButtonElement;
+    const dismissBtn = h(
+      "button",
+      { "data-testid": "proposal-dismiss", onClick: () => void decide(false) },
+      "Dismiss",
+    ) as HTMLButtonElement;
+    buttons.push(approveBtn, dismissBtn);
+    card.append(h("div", { className: "row" }, approveBtn, dismissBtn));
     return card;
   }
 
@@ -466,7 +536,30 @@ export class InboxView {
       autocomplete: "off",
       placeholder: s.kind === "totp" ? "Setup key" : "Value",
       "aria-label": s.name,
+      "data-secret-id": s.id,
     }) as HTMLInputElement;
+    input.value = this.secretDrafts.get(s.id) ?? "";
+    input.addEventListener("input", () => {
+      if (input.value) this.secretDrafts.set(s.id, input.value);
+      else this.secretDrafts.delete(s.id);
+    });
+    let busy = false;
+    const sendBtn = h(
+      "button",
+      { className: "primary", type: "submit" },
+      "Send to the server",
+    ) as HTMLButtonElement;
+    const declineBtn = h(
+      "button",
+      { type: "button", onClick: () => void decline() },
+      "Decline",
+    ) as HTMLButtonElement;
+    const setBusy = (on: boolean) => {
+      busy = on;
+      sendBtn.disabled = on;
+      declineBtn.disabled = on;
+      input.disabled = on;
+    };
     const card = h(
       "form",
       { className: "item", "data-testid": "secret" },
@@ -476,14 +569,11 @@ export class InboxView {
         `${s.service} · ${s.reason}`,
       ),
       input,
-      h(
-        "div",
-        { className: "row" },
-        h("button", { className: "primary", type: "submit" }, "Send to the server"),
-        h("button", { type: "button", onClick: () => void decline() }, "Decline"),
-      ),
+      h("div", { className: "row" }, sendBtn, declineBtn),
     );
     const decline = async () => {
+      if (busy) return;
+      setBusy(true);
       try {
         await this.here.api.unwrap(
           this.here.api.POST("/v1/secrets/requests/{id}/decline", {
@@ -491,15 +581,21 @@ export class InboxView {
             signal: T(),
           }),
         );
+        this.secretDrafts.delete(s.id);
+        if (this.lastData)
+          this.lastData.secrets = this.lastData.secrets.filter((x) => x.id !== s.id);
+        this.updateCount();
         card.replaceChildren(h("div", { className: "meta" }, "Declined"));
         void updateBadge().catch(() => {});
       } catch (e) {
+        setBusy(false);
         card.append(errorBox(e));
       }
     };
     card.addEventListener("submit", async (ev) => {
       ev.preventDefault();
-      if (!input.value) return;
+      if (busy || !input.value) return;
+      setBusy(true);
       try {
         await this.here.api.unwrap(
           this.here.api.POST("/v1/secrets/requests/{id}/fulfill", {
@@ -509,9 +605,14 @@ export class InboxView {
           }),
         );
         input.value = "";
+        this.secretDrafts.delete(s.id);
+        if (this.lastData)
+          this.lastData.secrets = this.lastData.secrets.filter((x) => x.id !== s.id);
+        this.updateCount();
         card.replaceChildren(h("div", { className: "meta" }, "Sent. The bot can use it now."));
         void updateBadge().catch(() => {});
       } catch (e) {
+        setBusy(false);
         card.append(errorBox(e));
       }
     });
@@ -526,7 +627,15 @@ export class InboxView {
       this.head(s.bot_id, s.title, `${this.name(s.bot_id)} · ${ago(s.created_at)}${exp}`),
       s.body_md ? h("p", {}, s.body_md.slice(0, 280)) : "",
     );
+    let busy = false;
+    const buttons: HTMLButtonElement[] = [];
+    const setBusy = (on: boolean) => {
+      busy = on;
+      for (const b of buttons) b.disabled = on;
+    };
     const act = async (what: "accept" | "dismiss", neverAgain = false) => {
+      if (busy) return;
+      setBusy(true);
       try {
         if (what === "accept")
           await this.here.api.unwrap(
@@ -543,6 +652,8 @@ export class InboxView {
               signal: T(),
             }),
           );
+        if (this.lastData)
+          this.lastData.suggestions = this.lastData.suggestions.filter((x) => x.id !== s.id);
         card.replaceChildren(
           h(
             "div",
@@ -551,26 +662,31 @@ export class InboxView {
           ),
         );
       } catch (e) {
+        setBusy(false);
         toast(message(e));
       }
     };
-    card.append(
-      h(
-        "div",
-        { className: "row" },
-        h("button", { className: "primary", onClick: () => void act("accept") }, "Do it"),
-        h("button", { onClick: () => void act("dismiss", false) }, "Not now"),
-        h(
-          "button",
-          {
-            className: "link",
-            "data-testid": "suggestion-never",
-            onClick: () => void act("dismiss", true),
-          },
-          "Don't suggest again",
-        ),
-      ),
-    );
+    const doBtn = h(
+      "button",
+      { className: "primary", onClick: () => void act("accept") },
+      "Do it",
+    ) as HTMLButtonElement;
+    const notNowBtn = h(
+      "button",
+      { onClick: () => void act("dismiss", false) },
+      "Not now",
+    ) as HTMLButtonElement;
+    const neverBtn = h(
+      "button",
+      {
+        className: "link",
+        "data-testid": "suggestion-never",
+        onClick: () => void act("dismiss", true),
+      },
+      "Don't suggest again",
+    ) as HTMLButtonElement;
+    buttons.push(doBtn, notNowBtn, neverBtn);
+    card.append(h("div", { className: "row" }, doBtn, notNowBtn, neverBtn));
     return card;
   }
 
@@ -599,36 +715,45 @@ export class InboxView {
             )
           : "",
         !u.read_at
-          ? h(
-              "button",
-              {
-                type: "button",
-                className: "link",
-                "data-testid": "mark-read",
-                onClick: async () => {
-                  try {
-                    await rest(this.here.account, `notifications?id=eq.${u.id}`, {
-                      method: "PATCH",
-                      headers: { prefer: "return=minimal" },
-                      body: JSON.stringify({ read_at: new Date().toISOString() }),
-                    });
-                    u.read_at = new Date().toISOString();
-                    this.render();
-                    void updateBadge().catch(() => {});
-                  } catch (e) {
-                    toast(message(e));
-                  }
+          ? (() => {
+              const btn = h(
+                "button",
+                {
+                  type: "button",
+                  className: "link",
+                  "data-testid": "mark-read",
+                  onClick: async () => {
+                    if (btn.disabled) return;
+                    btn.disabled = true;
+                    try {
+                      await rest(this.here.account, `notifications?id=eq.${u.id}`, {
+                        method: "PATCH",
+                        headers: { prefer: "return=minimal" },
+                        body: JSON.stringify({ read_at: new Date().toISOString() }),
+                      });
+                      u.read_at = new Date().toISOString();
+                      this.updateCount();
+                      this.render();
+                      void updateBadge().catch(() => {});
+                    } catch (e) {
+                      btn.disabled = false;
+                      toast(message(e));
+                    }
+                  },
                 },
-              },
-              "Mark read",
-            )
+                "Mark read",
+              ) as HTMLButtonElement;
+              return btn;
+            })()
           : "",
       ),
     );
     return card;
   }
 
-  private async markAllRead(unread: NotificationRow[]) {
+  private async markAllRead(unread: NotificationRow[], btn?: HTMLButtonElement) {
+    if (btn?.disabled) return;
+    if (btn) btn.disabled = true;
     try {
       const now = new Date().toISOString();
       await rest(
@@ -641,9 +766,11 @@ export class InboxView {
         },
       );
       for (const u of unread) u.read_at = now;
+      this.updateCount();
       this.render();
       void updateBadge().catch(() => {});
     } catch (e) {
+      if (btn) btn.disabled = false;
       toast(message(e));
     }
   }
@@ -658,24 +785,29 @@ export class InboxView {
         `${r.trigger} · started ${ago(r.created_at)}`,
       ),
     );
+    const stopBtn = h(
+      "button",
+      {
+        onClick: async () => {
+          if (stopBtn.disabled) return;
+          stopBtn.disabled = true;
+          try {
+            await this.here.api.cancelRun(r.id);
+            if (this.lastData) this.lastData.runs = this.lastData.runs.filter((x) => x.id !== r.id);
+            card.replaceChildren(h("div", { className: "meta" }, "Stopped"));
+          } catch (e) {
+            stopBtn.disabled = false;
+            toast(message(e));
+          }
+        },
+      },
+      "Stop",
+    ) as HTMLButtonElement;
     card.append(
       h(
         "div",
         { className: "row" },
-        h(
-          "button",
-          {
-            onClick: async () => {
-              try {
-                await this.here.api.cancelRun(r.id);
-                card.replaceChildren(h("div", { className: "meta" }, "Stopped"));
-              } catch (e) {
-                toast(message(e));
-              }
-            },
-          },
-          "Stop",
-        ),
+        stopBtn,
         h(
           "a",
           {

@@ -92,7 +92,10 @@ class _CostDetailState extends ConsumerState<CostDetail> {
         : null;
     final reported = row.reportedUsd ?? key?.reportedUsd;
     final spent = row.spentUsd;
-    final margin = marginShare(row.chargedTrackedUsd, spent);
+    final basis = costBasisOf(context);
+    // The margin is always at list prices, so a free plan never shows as a 100% margin.
+    final listSpent = listRowSpentUsd(row);
+    final margin = marginShare(row.chargedTrackedUsd, listSpent);
     final rate = costFailureRate(row);
 
     final query = costFiltered(widget.base, group, row.id, _split);
@@ -131,8 +134,11 @@ class _CostDetailState extends ConsumerState<CostDetail> {
           ]
         : [
             CostFact(
-              label: l10n.costSpent,
+              label: costSpendLabel(l10n, basis),
               value: costUsd(spent, locale),
+              note: basis == CostBasis.paid && (listSpent - spent).abs() > 0.000001
+                  ? l10n.costAtListPrices(costUsd(listSpent, locale))
+                  : null,
               valueKey: const Key('costDetail-spent'),
             ),
             CostFact(
@@ -141,15 +147,28 @@ class _CostDetailState extends ConsumerState<CostDetail> {
               valueKey: const Key('costDetail-charged'),
             ),
             CostFact(
-              label: l10n.costMargin,
+              label: l10n.costMarginListPrices,
               value: costPercent(margin),
               valueKey: const Key('costDetail-margin'),
             ),
             CostFact(
               label: l10n.costColCalls,
               value: row.calls.humanizedCount(locale),
+              note: costPlanNote(l10n, row),
               valueKey: const Key('costDetail-calls'),
             ),
+            if (row.capLimit != null && row.capLimit! > 0)
+              CostFact(
+                label: l10n.costFreePlan,
+                value: l10n.costCapUsage(
+                  row.capUsed == null
+                      ? kMissingValue
+                      : row.capUsed!.humanizedCount(locale),
+                  row.capLimit!.humanizedCount(locale),
+                  row.capUnit ?? '',
+                ),
+                valueKey: const Key('costDetail-cap'),
+              ),
           ];
 
     return ListView(
@@ -206,7 +225,7 @@ class _CostDetailState extends ConsumerState<CostDetail> {
             children: [
               if (widget.onClose == null) CostDot(color, size: 12),
               Text(
-                [costGroupLabel(l10n, group), ?costRowTag(row)].join(' · '),
+                [costGroupLabel(l10n, group), ?costRowTags(l10n, row)].join(' · '),
                 style: text.bodySmall?.copyWith(color: muted),
               ),
               CostSourceBadge(row.source_),
@@ -277,7 +296,7 @@ class _CostDetailState extends ConsumerState<CostDetail> {
                       ? InlineError(
                           error: async.error!,
                           onRetry: () =>
-                              ref.invalidate(adminCostsProvider(query)),
+                              refreshCosts(ref, query),
                         )
                       : const SkeletonScope(
                           child: SkeletonBone(
@@ -329,7 +348,7 @@ class _CostDetailState extends ConsumerState<CostDetail> {
           if (async!.hasError && !async.isLoading)
             InlineError(
               error: async.error!,
-              onRetry: () => ref.invalidate(adminCostsProvider(query)),
+              onRetry: () => refreshCosts(ref, query),
             )
           else if (split != null)
             // The last split stays, dimmed, while the next one loads.
@@ -603,7 +622,7 @@ class _AppTools extends ConsumerWidget {
       body = AppCard(
         child: InlineError(
           error: async.error!,
-          onRetry: () => ref.invalidate(adminCostsProvider(query)),
+          onRetry: () => refreshCosts(ref, query),
         ),
       );
     } else if (async.value == null) {

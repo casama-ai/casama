@@ -3,6 +3,7 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:casama_api/src/model/cost_row_billing.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -39,6 +40,10 @@ class AdminCostKey {
     required  this.configured,
 
     required  this.spentUsd,
+
+     this.paidUsd,
+
+     this.billing,
 
     required  this.calls,
 
@@ -175,6 +180,30 @@ class AdminCostKey {
 
   @JsonKey(
     
+    name: r'paid_usd',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final num? paidUsd;
+
+
+
+  @JsonKey(
+    
+    name: r'billing',
+    required: false,
+    includeIfNull: false,
+  )
+
+
+  final CostRowBilling? billing;
+
+
+
+  @JsonKey(
+    
     name: r'calls',
     required: true,
     includeIfNull: false,
@@ -247,6 +276,8 @@ class AdminCostKey {
       other.billingUrl == billingUrl &&
       other.configured == configured &&
       other.spentUsd == spentUsd &&
+      other.paidUsd == paidUsd &&
+      other.billing == billing &&
       other.calls == calls &&
       other.lastUsedAt == lastUsedAt &&
       other.reportedUsd == reportedUsd &&
@@ -265,6 +296,8 @@ class AdminCostKey {
         (billingUrl == null ? 0 : billingUrl.hashCode) +
         configured.hashCode +
         spentUsd.hashCode +
+        paidUsd.hashCode +
+        billing.hashCode +
         calls.hashCode +
         (lastUsedAt == null ? 0 : lastUsedAt.hashCode) +
         (reportedUsd == null ? 0 : reportedUsd.hashCode) +

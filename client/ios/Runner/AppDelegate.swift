@@ -1366,6 +1366,24 @@ final class AppBrowser: NSObject, WKNavigationDelegate, WKUIDelegate, FlutterPla
   private var channel: FlutterMethodChannel?
   private var registrar: FlutterPluginRegistrar?
   private var web: WKWebView?
+
+  /// The address or title changed without a page load (a site that changes its address in place,
+  /// or a #fragment): Dart's address bar and the bots' page facts follow it.
+  private var addressWatch: [NSKeyValueObservation] = []
+  private func watchAddress(_ w: WKWebView) {
+    let report: (WKWebView) -> Void = { [weak self] wv in
+      DispatchQueue.main.async {
+        guard let self, wv === self.web else { return }
+        let raw = wv.url?.absoluteString ?? ""
+        if raw.isEmpty || raw == "about:blank" { return }
+        self.channel?.invokeMethod("urlChanged", arguments: ["url": raw, "title": wv.title ?? ""])
+      }
+    }
+    addressWatch = [
+      w.observe(\.url, options: [.new]) { wv, _ in report(wv) },
+      w.observe(\.title, options: [.new]) { wv, _ in report(wv) },
+    ]
+  }
   /// The frames that can show the page, oldest first; the newest has it. When it closes, the page
   /// goes back to the one under it if that one is still there (the side panel under the full
   /// view on an iPad, APP-BROWSER-PANEL-PLAN §3), else it waits behind the app.
@@ -1475,6 +1493,7 @@ final class AppBrowser: NSObject, WKNavigationDelegate, WKUIDelegate, FlutterPla
     touch.delegate = self
     w.addGestureRecognizer(touch)
     web = w
+    watchAddress(w)
     if let holder = holder { put(w, into: holder) } else { park(w) }
     return w
   }
@@ -1647,6 +1666,7 @@ final class AppBrowser: NSObject, WKNavigationDelegate, WKUIDelegate, FlutterPla
     approved.removeAll()
     web?.stopLoading()
     web?.removeFromSuperview()
+    addressWatch = []
     web = nil
   }
 

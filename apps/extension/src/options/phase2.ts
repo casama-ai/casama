@@ -5,7 +5,7 @@
 import { HELPER_LABELS, HELPERS } from "../content/protocol.ts";
 import { h } from "../lib/dom.ts";
 import { clientFor } from "../lib/session.ts";
-import { getSettings, updateSettings } from "../lib/settings.ts";
+import { currentSiteAccess, getSettings, updateSettings } from "../lib/settings.ts";
 import type { Account } from "../lib/store.ts";
 
 const T = () => AbortSignal.timeout(15_000);
@@ -37,6 +37,7 @@ function toggle(
 
 export async function onPagesCard(): Promise<HTMLElement> {
   const s = await getSettings();
+  const actualAccess = await currentSiteAccess(s);
   const misses = ((await chrome.storage.session.get("helperMisses")).helperMisses ?? {}) as Record<
     string,
     number
@@ -48,7 +49,7 @@ export async function onPagesCard(): Promise<HTMLElement> {
     h(
       "p",
       { className: "muted" },
-      s.siteAccess === "click"
+      actualAccess === "click"
         ? 'These need site access (on all sites, or on sites you pick) above. With "When you click", they stay off.'
         : "Only on the sites Casama has access to. They read nothing until you tap them.",
     ),

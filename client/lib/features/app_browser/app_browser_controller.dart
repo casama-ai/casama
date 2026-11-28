@@ -7,12 +7,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart' show FocusManager;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/analytics.dart';
 import '../../core/chat_focus.dart';
 import '../../core/haptics.dart';
 import '../../core/providers.dart';
 import '../../core/screen_awake.dart';
 import '../../ui/bot_cursor.dart';
 import 'app_browser_channel.dart';
+import 'app_browser_flag.dart';
 import 'app_browser_overlay_guard.dart';
 import 'app_browser_service.dart';
 import 'app_browser_sites.dart';
@@ -784,9 +786,11 @@ class AppBrowserController extends Notifier<AppBrowserSession>
     if (a != null && !a.isCompleted) a.complete(value);
   }
 
-  Future<void> _saveSite(String host, {required bool always}) async {
+  /// Saves [host] in this device's allowed (or blocked) sites; false when it didn't reach the
+  /// server (no paired device, or the request failed).
+  Future<bool> _saveSite(String host, {required bool always}) async {
     final d = device;
-    if (d == null) return;
+    if (d == null) return false;
     final allowed = [...?d.allowedSites];
     final blocked = [...?d.blockedSites];
     if (always) {
@@ -800,10 +804,19 @@ class AppBrowserController extends Notifier<AppBrowserSession>
       device = await ref
           .read(backendProvider)
           .updateAppBrowser(d.id, allowedSites: allowed, blockedSites: blocked);
+      return true;
     } catch (e) {
       debugPrint('phone browser: saving $host failed: $e');
+      return false;
     }
   }
+
+  /// Whether bots may already use [host] on this device: saved in its allowed sites, or allowed
+  /// earlier in this session.
+  bool siteAllowed(String host) => [
+    ...?device?.allowedSites,
+    ..._addedAllowed,
+  ].any((p) => siteMatches(host, p));
 
   // --- the person's controls -------------------------------------------------------------------
 
@@ -919,12 +932,35 @@ class AppBrowserController extends Notifier<AppBrowserSession>
   Future<void> reload() => _channel.reload();
 
   /// "Let My Bots Use This Site": the page's site joins this phone's always list.
+  /// Let My Bots Use This Site. Throws when the site couldn't be saved, so the screen says so
+  /// instead of showing it as added.
   Future<String?> allowCurrentSite() async {
     final url = state.url;
     final host = url == null ? null : cleanSitePattern(hostOf(url) ?? '');
     if (host == null) return null;
+    final system = appBrowserSystem;
+    if (siteAllowed(host)) {
+      Analytics.log('app_browser_site_allowed', {'outcome': 'already', 'system': ?system});
+      return host;
+    }
+    if (device == null) {
+      Analytics.log('app_browser_site_allowed', {
+        'outcome': 'failed',
+        'reason': 'no_device',
+        'system': ?system,
+      });
+      throw StateError('This device isn\'t connected');
+    }
+    if (!await _saveSite(host, always: true)) {
+      Analytics.log('app_browser_site_allowed', {
+        'outcome': 'failed',
+        'reason': 'save_error',
+        'system': ?system,
+      });
+      throw StateError('Saving $host failed');
+    }
     _addedAllowed.add(host);
-    await _saveSite(host, always: true);
+    Analytics.log('app_browser_site_allowed', {'outcome': 'saved', 'system': ?system});
     return host;
   }
 
@@ -1009,6 +1045,13 @@ class AppBrowserController extends Notifier<AppBrowserSession>
     _set(state.copyWith(url: url, title: title, loading: false));
     _completeNav(const _Nav.settled());
     unawaited(_refreshPage().then((_) {}, onError: (_) {}));
+  }
+
+  @override
+  void urlChanged(String url, String title) {
+    if (url.isEmpty || url == 'about:blank') return;
+    if (url == state.url && (title.isEmpty || title == state.title)) return;
+    _set(state.copyWith(url: url, title: title.isEmpty ? state.title : title));
   }
 
   @override

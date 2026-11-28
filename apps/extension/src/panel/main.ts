@@ -5,7 +5,7 @@
 
 import { updateBadge } from "../lib/alerts.ts";
 import { trackFeature, trackTab } from "../lib/analytics.ts";
-import { FEATURES, IS_SAFARI, productName } from "../lib/browser.ts";
+import { FEATURES, IS_SAFARI, openSettings, productName } from "../lib/browser.ts";
 import { hasConsent } from "../lib/consent.ts";
 import { installCrashReporting } from "../lib/crash.ts";
 import { Realtime } from "../lib/device/realtime.ts";
@@ -60,8 +60,6 @@ function centered(
   );
 }
 
-const openSettings = () => chrome.runtime.openOptionsPage();
-
 type TabName = "chat" | "inbox" | "library" | "more";
 let views: { chat: ChatView; inbox: InboxView; library: LibraryView; more: MoreView } | null = null;
 let realtime: Realtime | null = null;
@@ -76,7 +74,7 @@ async function start() {
       {
         label: "Open Settings",
         testid: "finish-setup",
-        run: openSettings,
+        run: () => void openSettings(),
       },
     );
   const account = await activeAccount();
@@ -99,7 +97,7 @@ async function start() {
       {
         label: "Sign in",
         testid: "sign-in",
-        run: openSettings,
+        run: () => void openSettings(),
       },
     );
   let h_: Here | null;
